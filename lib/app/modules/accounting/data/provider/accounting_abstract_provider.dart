@@ -6,4 +6,6 @@ abstract class AccountingAbstractProvider {
   String generateMnemonics();
   XCBPrivateKey generatePrivateKeyFromMnemonic(String seed, int index);
   Wallet createWalletFromCredentials(XCBPrivateKey privateKey, String password, Random random);
+  String getPublicKeyFromPrivate(String privateKey);
+  String getAddressFromPrivateKey(String privateKey, int networkId);
 }

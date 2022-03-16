@@ -24,4 +24,14 @@ class AccountingRepo implements AccountingAbstractRepo {
   Wallet createWalletFromCredentials(XCBPrivateKey privateKey, String password, [Random? random]) {
     return provider.createWalletFromCredentials(privateKey, password, random ?? Random.secure());
   }
+
+  @override
+  String getPublicKeyFromPrivate(String privateKey) {
+    return provider.getPublicKeyFromPrivate(privateKey);
+  }
+
+  @override
+  String getAddressFromPrivateKey(String privateKey, int networkId) {
+    return provider.getAddressFromPrivateKey(privateKey, networkId);
+  }
 }
