@@ -1,4 +1,8 @@
 name: heyo
+description: Heyo messeging application
+
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
 version: 1.0.0+1
 publish_to: none
 description: Heyo messeging application
@@ -22,6 +26,32 @@ dev_dependencies:
   flutter_bip39:
     git:
       url: git@git.energy:corepass/flutter_bip39.git
+      url: git@git.energy:corepass/core_flutter_lint.git
+  flutter_launcher_icons: "^0.9.2"
+  flutter_native_splash: ^2.1.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/icon.png"
+
+flutter_native_splash:
+  background_image: "assets/images/splash.png"
+  android_gravity: fill
+  ios_content_mode: scaleAspectFill
+
+flutter:
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  # assets:
+  #   - images/a_dot_burr.jpeg
+  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware.
 
 flutter: 
   uses-material-design: true
