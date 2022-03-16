@@ -1,11 +1,11 @@
 import 'dart:math';
 
-import 'package:heyo/app/modules/accounting/data/provider/accounting_abstract_provider.dart';
+import 'package:heyo/app/modules/auth/data/provider/auth_abstract_provider.dart';
 import 'package:flutter_bip39/bip39.dart';
 import 'package:core_web3dart/crypto.dart';
 import 'package:core_web3dart/web3dart.dart';
 
-class AccountingProvider implements AccountingAbstractProvider {
+class AuthProvider implements AuthAbstractProvider {
   @override
   String generateMnemonics() {
     return generateMnemonic();
