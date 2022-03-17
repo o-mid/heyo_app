@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 class FONTS {
-  static const String family = "Inter";
+  static const String interFamily = "Inter";
 
   static const FontWeight Regular = FontWeight.normal;
   static const FontWeight Light = FontWeight.w400;
