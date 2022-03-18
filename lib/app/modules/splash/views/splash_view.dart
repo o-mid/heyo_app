@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/generated/locales.g.dart';
+import '../../shared/utils/constants/textStyles.dart';
 import '../controllers/splash_controller.dart';
 
 class SplashView extends GetView<SplashController> {
@@ -15,7 +16,7 @@ class SplashView extends GetView<SplashController> {
         child: Text(
           //test to see generated locals are working
           LocaleKeys.registration_WelcomePage_title.tr,
-          style: TextStyle(fontSize: 20),
+          style: TEXTSTYLES.kHeaderLarge,
         ),
       ),
     );
