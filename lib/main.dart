@@ -9,6 +9,7 @@ void main() {
       /// about ```translationsKeys``` see the Getx package on internationalization https://pub.dev/packages/get#internationalization
       // translationsKeys: AppTranslation.translations,
       title: 'Flutter app structure',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(),
       locale: Locale("en", "EN"),
       fallbackLocale: const Locale(

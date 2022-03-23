@@ -13,8 +13,12 @@ dependencies:
   get: 4.6.1
   flutter:
     sdk: flutter
+  flutter_svg: ^1.0.3
+  shimmer_animation: ^2.1.0+1
 
 dev_dependencies:
+  build_runner:
+  flutter_gen_runner:
   flutter_test:
     sdk: flutter
   core_flutter_lint:
@@ -29,13 +33,20 @@ dev_dependencies:
   flutter_launcher_icons: "^0.9.2"
   flutter_native_splash: ^2.1.1
 
+flutter_gen:
+  output: lib/generated/ # Optional (default: lib/gen/)
+  line_length: 80 # Optional (default: 80)
+
+  integrations:
+    flutter_svg: true
+
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/icon.png"
+  image_path: "assets/png/icon.png"
 
 flutter_native_splash:
-  background_image: "assets/images/splash.png"
+  background_image: "assets/png/splash.png"
   android_gravity: fill
   ios_content_mode: scaleAspectFill
 
@@ -47,7 +58,9 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets:
-    - assets/images/
+    - assets/svg/
+    - assets/png/
+
   fonts:
     - family: Inter
       fonts:
