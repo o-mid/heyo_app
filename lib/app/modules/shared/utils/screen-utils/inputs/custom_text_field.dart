@@ -130,25 +130,27 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return IndexedStack(
       key: this.widget.key,
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Container(
+          height: 48,
+          child: textFieldSection(),
+        ),
         Container(
           height: 48,
           decoration: BoxDecoration(
             color: fillColor,
             boxShadow: [
-              // BoxShadow(
-              //   color: COLORS.kGreenLighterColor,
-              //   spreadRadius: 3,
-              //   blurRadius: 0,
-              //   offset: Offset(0, 1), // changes position of shadow
-              // ),
+              BoxShadow(
+                color: COLORS.kGreenLighterColor,
+                spreadRadius: 3,
+                blurRadius: 0,
+                offset: Offset(0, 1), // changes position of shadow
+              ),
             ],
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
-          child: textFieldSection(),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 4.0),
