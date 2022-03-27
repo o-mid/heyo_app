@@ -35,7 +35,7 @@ class TEXTSTYLES {
       fontSize: 15.0,
       height: 1.46);
 
-  TextStyle kBodySmall = TextStyle(
+  static const TextStyle kBodySmall = TextStyle(
     fontFamily: FONTS.interFamily,
     fontStyle: FontStyle.normal,
     fontWeight: FONTS.Regular,
