@@ -16,7 +16,7 @@ class SplashView extends GetView<SplashController> {
         child: Container(
             width: double.infinity,
             height: MediaQuery.of(context).size.height,
-            color: COLORS.kGreenMainColor,
+            color: COLORS.kWhiteColor,
             // child: Center(child: Assets.svg.heyoLogo.svg())
             child: Center(
                 child: Column(
@@ -24,6 +24,7 @@ class SplashView extends GetView<SplashController> {
               children: [
                 Container(
                   height: 60,
+                  width: MediaQuery.of(context).size.width * 0.8,
                   child: CUSTOMTEXTFIELD(
                     labelText: "FFFFFF",
                     rightWidget: Icon(

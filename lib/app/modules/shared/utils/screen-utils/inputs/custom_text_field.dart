@@ -1,11 +1,8 @@
-import 'dart:ui';
-
+import '../../constants/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_input_border.dart';
-
-import '../../constants/textStyles.dart';
 
 enum CustomTextFieldHeight { Small, Regular }
 
@@ -22,7 +19,6 @@ class CUSTOMTEXTFIELD extends StatefulWidget {
   final bool obscureText;
   final Widget? rightWidget, leftWidget;
   final TextInputType keyboardType;
-
   final FormFieldValidator<String>? validator;
   final bool? initialFocus;
   final CustomTextFieldHeight heightType;
@@ -52,14 +48,12 @@ class CUSTOMTEXTFIELD extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
+  TextEditingController controller = TextEditingController();
+  FocusNode focusNode = FocusNode();
   InputBorder? border;
   Color? fillColor;
   Color? iconColor;
   bool hasFocus = false;
-
-  FocusNode focusNode = FocusNode();
-
-  TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
@@ -78,9 +72,12 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
     } else {
       controller.value = TextEditingValue(text: widget.initialValue);
       controller.selection = controller.selection.copyWith(
-          baseOffset: widget.initialValue.length, extentOffset: widget.initialValue.length);
+          baseOffset: widget.initialValue.length,
+          extentOffset: widget.initialValue.length);
       controller.addListener(() {
-        widget.onChanged == null ? null : widget.onChanged!((controller.value.text));
+        widget.onChanged == null
+            ? null
+            : widget.onChanged!((controller.value.text));
       });
     }
   }
@@ -94,12 +91,14 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
 
   switchBorders() {
     OutlineInputBorder focusedBorder = CustomInputBorder(
-      gapPadding: 11,
-      borderSide: BorderSide(
-        color: COLORS.kGreenMainColor,
-        width: 2.0,
-      ),
-    );
+        gapPadding: 11,
+        borderSide: BorderSide(
+          color: COLORS.kGreenMainColor,
+          width: 2.0,
+        ),
+        secondBorderWidth: 3,
+        fillColor: fillColor,
+        secondBorderColor: COLORS.kGreenLighterColor);
 
     OutlineInputBorder errorBorder = OutlineInputBorder(
         gapPadding: 11,
@@ -108,7 +107,8 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
             width: widget.heightType == CustomTextFieldHeight.Small ? 1 : 2.0));
 
     OutlineInputBorder unFocusedBorder = OutlineInputBorder(
-        gapPadding: 11, borderSide: BorderSide(color: COLORS.kTextSoftBlueColor, width: 1.0));
+        gapPadding: 11,
+        borderSide: BorderSide(color: COLORS.kTextSoftBlueColor, width: 1.0));
 
     iconColor = widget.hasError
         ? COLORS.kStatesErrorColor
@@ -134,14 +134,15 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         textFieldSection(),
-        // Padding(
-        //   padding: const EdgeInsets.only(top: 4.0),
-        //   child: Visibility(
-        //     visible: widget.hasError && widget.error.isNotEmpty,
-        //     child: Text(widget.error,
-        //         style: TEXTSTYLES.kButtonSmall.copyWith(color: COLORS.kStatesErrorColor)),
-        //   ),
-        // )
+        Padding(
+          padding: const EdgeInsets.only(top: 4.0),
+          child: Visibility(
+            visible: widget.hasError && widget.error.isNotEmpty,
+            child: Text(widget.error,
+                style: TEXTSTYLES.kButtonSmall
+                    .copyWith(color: COLORS.kStatesErrorColor)),
+          ),
+        )
       ],
     );
   }
@@ -160,7 +161,8 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
               obscureText: widget.obscureText,
               keyboardType: widget.keyboardType,
               controller: controller,
-              style: TEXTSTYLES.kHeaderMedium.copyWith(color: COLORS.kBlackColor),
+              style:
+                  TEXTSTYLES.kHeaderMedium.copyWith(color: COLORS.kBlackColor),
               inputFormatters: widget.inputFormatters,
               decoration: InputDecoration(
                 //errorText: widget.validator(controller.value.text),
@@ -170,17 +172,18 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
                 prefixIcon: widget.leftWidget,
                 hintText: widget.hintText ?? widget.labelText,
                 labelText: widget.labelText,
-                hintStyle:
-                    TEXTSTYLES.kBodyBasic.copyWith(color: COLORS.kTextSoftBlueColor, fontSize: 15),
-                labelStyle: TEXTSTYLES.kBodySmall
-                    .copyWith(color: COLORS.kBlackColor, height: 1, fontSize: 15),
+                hintStyle: TEXTSTYLES.kBodyBasic
+                    .copyWith(color: COLORS.kTextSoftBlueColor, fontSize: 15),
+                labelStyle: TEXTSTYLES.kBodySmall.copyWith(
+                    color: COLORS.kBlackColor, height: 1, fontSize: 15),
                 border: border,
 
                 focusedBorder: border,
                 enabledBorder: border,
                 errorBorder: border,
                 disabledBorder: border,
-                contentPadding: EdgeInsets.only(left: 16, bottom: 15, top: 15, right: 16),
+                contentPadding:
+                    EdgeInsets.only(left: 16, bottom: 15, top: 15, right: 16),
               ),
             ),
           ),
@@ -214,7 +217,8 @@ Widget removeSign({required Function onPressed, bool hasError = false}) {
       width: 24,
       decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: hasError ? COLORS.kStatesErrorColor : COLORS.kTextSoftBlueColor),
+          color:
+              hasError ? COLORS.kStatesErrorColor : COLORS.kTextSoftBlueColor),
       // child: SvgPicture.asset(ImageAsset.closeSign.path),
     ),
   );

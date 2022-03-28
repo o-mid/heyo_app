@@ -1,21 +1,21 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-import '../../constants/colors.dart';
-
 class CustomInputBorder extends OutlineInputBorder {
   final double gapPadding;
-
   final BorderRadius borderRadius;
-
-  const CustomInputBorder({
+  final Color? secondBorderColor;
+  final double? secondBorderWidth;
+  final Color? fillColor;
+  CustomInputBorder({
+    this.secondBorderColor,
+    this.secondBorderWidth,
+    this.fillColor,
     BorderSide borderSide = const BorderSide(),
     this.borderRadius = const BorderRadius.all(Radius.circular(4.0)),
     this.gapPadding = 4.0,
-  })  : assert(borderRadius != null),
-        assert(gapPadding != null && gapPadding >= 0.0),
+  })  : assert(gapPadding >= 0.0),
         super(borderSide: borderSide);
 
   @override
@@ -31,33 +31,37 @@ class CustomInputBorder extends OutlineInputBorder {
     if (gapStart == null || gapExtent <= 0.0 || gapPercentage == 0.0) {
       canvas.drawRRect(center, paint);
     } else {
-      final double extent = lerpDouble(0.0, gapExtent + gapPadding * 2.0, gapPercentage)!;
+      final double extent =
+          lerpDouble(0.0, gapExtent + gapPadding * 2.0, gapPercentage)!;
       switch (textDirection!) {
         case TextDirection.rtl:
-          final Path path =
-              _gapBorderPath(canvas, center, math.max(0.0, gapStart + gapPadding - extent), extent);
+          final Path path = _gapBorderPath(canvas, center,
+              math.max(0.0, gapStart + gapPadding - extent), extent);
           canvas.drawPath(path, paint);
           break;
 
         case TextDirection.ltr:
-          final Path path =
-              _gapBorderPath(canvas, center, math.max(0.0, gapStart - gapPadding), extent);
-          final Path shadowPath =
-              _gapBorderPathShadow(canvas, center, math.max(0.0, gapStart - gapPadding), extent);
+          final Path path = _gapBorderPath(
+              canvas, center, math.max(0.0, gapStart - gapPadding), extent);
+          final Path shadowPath = _gapBorderPathShadow(
+              canvas, center, math.max(0.0, gapStart - gapPadding), extent);
 
-          final shadowPaint = borderSide.toPaint();
-          shadowPaint
-            ..strokeWidth = 6
-            ..color = COLORS.kGreenLighterColor;
+          // check if the second border is available and draw it
+          if (secondBorderWidth != null && secondBorderColor != null) {
+            final shadowPaint = borderSide.toPaint();
+            shadowPaint
+              // second Border Width  = First border width + given value for second border * 2
+              ..strokeWidth = secondBorderWidth! * 2 + borderSide.width
+              ..color = secondBorderColor!;
 
-          canvas.drawPath(shadowPath, shadowPaint);
+            canvas.drawPath(shadowPath, shadowPaint);
+          }
           canvas.drawPath(path, paint);
-
+          // This will override the area where second border is painting under the first border
           final fillPaint = Paint();
           fillPaint
             ..strokeWidth = 0
-            ..color =
-                Colors.white // Todo: should be replaced with fillColor and provided to constructor
+            ..color = fillColor ?? Colors.white
             ..style = PaintingStyle.fill;
           canvas.drawRRect(center, fillPaint);
           break;
@@ -65,7 +69,8 @@ class CustomInputBorder extends OutlineInputBorder {
     }
   }
 
-  Path _gapBorderPath(Canvas canvas, RRect center, double start, double extent) {
+  Path _gapBorderPath(
+      Canvas canvas, RRect center, double start, double extent) {
     // When the corner radii on any side add up to be greater than the
     // given height, each radius has to be scaled to not exceed the
     // size of the width/height of the RRect.
@@ -105,7 +110,8 @@ class CustomInputBorder extends OutlineInputBorder {
 
     final Path path = Path()..addArc(tlCorner, math.pi, tlCornerArcSweep);
 
-    if (start > scaledRRect.tlRadiusX) path.lineTo(scaledRRect.left + start, scaledRRect.top);
+    if (start > scaledRRect.tlRadiusX)
+      path.lineTo(scaledRRect.left + start, scaledRRect.top);
 
     const double trCornerArcStart = (3 * math.pi) / 2.0;
     const double trCornerArcSweep = cornerArcSweep;
@@ -130,7 +136,8 @@ class CustomInputBorder extends OutlineInputBorder {
       ..lineTo(scaledRRect.left, scaledRRect.top + scaledRRect.tlRadiusY);
   }
 
-  Path _gapBorderPathShadow(Canvas canvas, RRect center, double start, double extent) {
+  Path _gapBorderPathShadow(
+      Canvas canvas, RRect center, double start, double extent) {
     // When the corner radii on any side add up to be greater than the
     // given height, each radius has to be scaled to not exceed the
     // size of the width/height of the RRect.
@@ -170,7 +177,8 @@ class CustomInputBorder extends OutlineInputBorder {
 
     final Path path = Path()..addArc(tlCorner, math.pi, tlCornerArcSweep);
 
-    if (start > scaledRRect.tlRadiusX) path.lineTo(scaledRRect.left + start, scaledRRect.top);
+    if (start > scaledRRect.tlRadiusX)
+      path.lineTo(scaledRRect.left + start, scaledRRect.top);
 
     const double trCornerArcStart = (3 * math.pi) / 2.0;
     const double trCornerArcSweep = cornerArcSweep;
