@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import '../../constants/colors.dart';
+
 class CustomInputBorder extends OutlineInputBorder {
   final double gapPadding;
 
@@ -26,13 +28,6 @@ class CustomInputBorder extends OutlineInputBorder {
     final RRect outer = borderRadius.toRRect(rect);
     final RRect center = outer.deflate(borderSide.width / 2.0);
 
-    final shadowPaint = Paint();
-    shadowPaint
-      ..strokeWidth = 0
-      ..color = Colors.white // Todo: should be replaced with fillColor and provided to constructor
-      ..style = PaintingStyle.fill;
-    canvas.drawRRect(center, shadowPaint);
-
     if (gapStart == null || gapExtent <= 0.0 || gapPercentage == 0.0) {
       canvas.drawRRect(center, paint);
     } else {
@@ -50,12 +45,24 @@ class CustomInputBorder extends OutlineInputBorder {
           final Path shadowPath =
               _gapBorderPathShadow(canvas, center, math.max(0.0, gapStart - gapPadding), extent);
 
+          final shadowPaint = borderSide.toPaint();
+          shadowPaint
+            ..strokeWidth = 6
+            ..color = COLORS.kGreenLighterColor;
+
+          canvas.drawPath(shadowPath, shadowPaint);
           canvas.drawPath(path, paint);
-          canvas.drawPath(shadowPath, paint..color = Colors.red); // Todo: use correct color
+
+          final fillPaint = Paint();
+          fillPaint
+            ..strokeWidth = 0
+            ..color =
+                Colors.white // Todo: should be replaced with fillColor and provided to constructor
+            ..style = PaintingStyle.fill;
+          canvas.drawRRect(center, fillPaint);
           break;
       }
     }
-    // super.paint(canvas, rect, gapStart, gapExtent, gapPercentage, textDirection);
   }
 
   Path _gapBorderPath(Canvas canvas, RRect center, double start, double extent) {
@@ -143,9 +150,7 @@ class CustomInputBorder extends OutlineInputBorder {
     );
     final Rect brCorner = Rect.fromLTWH(
       scaledRRect.right - scaledRRect.brRadiusX * 2.0,
-      scaledRRect.bottom -
-          scaledRRect.brRadiusY * 2.0 +
-          30, // Todo: This is responsible for messing with the red line
+      scaledRRect.bottom - scaledRRect.brRadiusY * 2.0,
       scaledRRect.brRadiusX * 2.0,
       scaledRRect.brRadiusY * 2.0,
     );
