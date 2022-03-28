@@ -26,10 +26,6 @@ class CustomInputBorder extends OutlineInputBorder {
     final RRect outer = borderRadius.toRRect(rect);
     final RRect center = outer.deflate(borderSide.width / 2.0);
 
-    Path path = Path();
-    path.addRRect(center);
-    canvas.drawShadow(path, Colors.red, 40, true);
-
     final shadowPaint = Paint();
     shadowPaint
       ..strokeWidth = 0
@@ -51,8 +47,11 @@ class CustomInputBorder extends OutlineInputBorder {
         case TextDirection.ltr:
           final Path path =
               _gapBorderPath(canvas, center, math.max(0.0, gapStart - gapPadding), extent);
+          final Path shadowPath =
+              _gapBorderPathShadow(canvas, center, math.max(0.0, gapStart - gapPadding), extent);
 
           canvas.drawPath(path, paint);
+          canvas.drawPath(shadowPath, paint..color = Colors.red); // Todo: use correct color
           break;
       }
     }
@@ -80,6 +79,73 @@ class CustomInputBorder extends OutlineInputBorder {
     final Rect brCorner = Rect.fromLTWH(
       scaledRRect.right - scaledRRect.brRadiusX * 2.0,
       scaledRRect.bottom - scaledRRect.brRadiusY * 2.0,
+      scaledRRect.brRadiusX * 2.0,
+      scaledRRect.brRadiusY * 2.0,
+    );
+    final Rect blCorner = Rect.fromLTWH(
+      scaledRRect.left,
+      scaledRRect.bottom - scaledRRect.blRadiusY * 2.0,
+      scaledRRect.blRadiusX * 2.0,
+      scaledRRect.blRadiusX * 2.0,
+    );
+
+    // This assumes that the radius is circular (x and y radius are equal).
+    // Currently, BorderRadius only supports circular radii.
+    const double cornerArcSweep = math.pi / 2.0;
+    final double tlCornerArcSweep = math.acos(
+      (1 - start / scaledRRect.tlRadiusX).clamp(0.0, 1.0),
+    );
+
+    final Path path = Path()..addArc(tlCorner, math.pi, tlCornerArcSweep);
+
+    if (start > scaledRRect.tlRadiusX) path.lineTo(scaledRRect.left + start, scaledRRect.top);
+
+    const double trCornerArcStart = (3 * math.pi) / 2.0;
+    const double trCornerArcSweep = cornerArcSweep;
+    if (start + extent < scaledRRect.width - scaledRRect.trRadiusX) {
+      path.moveTo(scaledRRect.left + start + extent, scaledRRect.top);
+      path.lineTo(scaledRRect.right - scaledRRect.trRadiusX, scaledRRect.top);
+      path.addArc(trCorner, trCornerArcStart, trCornerArcSweep);
+    } else if (start + extent < scaledRRect.width) {
+      final double dx = scaledRRect.width - (start + extent);
+      final double sweep = math.asin(
+        (1 - dx / scaledRRect.trRadiusX).clamp(0.0, 1.0),
+      );
+      path.addArc(trCorner, trCornerArcStart + sweep, trCornerArcSweep - sweep);
+    }
+
+    return path
+      ..moveTo(scaledRRect.right, scaledRRect.top + scaledRRect.trRadiusY)
+      ..lineTo(scaledRRect.right, scaledRRect.bottom - scaledRRect.brRadiusY)
+      ..addArc(brCorner, 0.0, cornerArcSweep)
+      ..lineTo(scaledRRect.left + scaledRRect.blRadiusX, scaledRRect.bottom)
+      ..addArc(blCorner, math.pi / 2.0, cornerArcSweep)
+      ..lineTo(scaledRRect.left, scaledRRect.top + scaledRRect.tlRadiusY);
+  }
+
+  Path _gapBorderPathShadow(Canvas canvas, RRect center, double start, double extent) {
+    // When the corner radii on any side add up to be greater than the
+    // given height, each radius has to be scaled to not exceed the
+    // size of the width/height of the RRect.
+    final RRect scaledRRect = center.scaleRadii();
+
+    final Rect tlCorner = Rect.fromLTWH(
+      scaledRRect.left,
+      scaledRRect.top,
+      scaledRRect.tlRadiusX * 2.0,
+      scaledRRect.tlRadiusY * 2.0,
+    );
+    final Rect trCorner = Rect.fromLTWH(
+      scaledRRect.right - scaledRRect.trRadiusX * 2.0,
+      scaledRRect.top,
+      scaledRRect.trRadiusX * 2.0,
+      scaledRRect.trRadiusY * 2.0,
+    );
+    final Rect brCorner = Rect.fromLTWH(
+      scaledRRect.right - scaledRRect.brRadiusX * 2.0,
+      scaledRRect.bottom -
+          scaledRRect.brRadiusY * 2.0 +
+          30, // Todo: This is responsible for messing with the red line
       scaledRRect.brRadiusX * 2.0,
       scaledRRect.brRadiusY * 2.0,
     );
