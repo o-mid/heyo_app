@@ -12,11 +12,17 @@ import 'package:flutter/services.dart';
 class $AssetsPngGen {
   const $AssetsPngGen();
 
+  /// File path: assets/png/benefits.png
+  AssetGenImage get benefits => const AssetGenImage('assets/png/benefits.png');
+
   /// File path: assets/png/icon.png
   AssetGenImage get icon => const AssetGenImage('assets/png/icon.png');
 
   /// File path: assets/png/splash.png
   AssetGenImage get splash => const AssetGenImage('assets/png/splash.png');
+
+  /// File path: assets/png/welcome.png
+  AssetGenImage get welcome => const AssetGenImage('assets/png/welcome.png');
 }
 
 class $AssetsSvgGen {

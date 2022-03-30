@@ -28,44 +28,40 @@ class CustomInputBorder extends OutlineInputBorder {
     final RRect outer = borderRadius.toRRect(rect);
     final RRect center = outer.deflate(borderSide.width / 2.0);
 
-    if (gapStart == null || gapExtent <= 0.0 || gapPercentage == 0.0) {
-      canvas.drawRRect(center, paint);
-    } else {
-      final double extent =
-          lerpDouble(0.0, gapExtent + gapPadding * 2.0, gapPercentage)!;
-      switch (textDirection!) {
-        case TextDirection.rtl:
-          final Path path = _gapBorderPath(canvas, center,
-              math.max(0.0, gapStart + gapPadding - extent), extent);
-          canvas.drawPath(path, paint);
-          break;
+    final double extent =
+        lerpDouble(0.0, gapExtent + gapPadding * 2.0, gapPercentage)!;
+    switch (textDirection!) {
+      case TextDirection.rtl:
+        final Path path = _gapBorderPath(canvas, center,
+            math.max(0.0, gapStart! + gapPadding - extent), extent);
+        canvas.drawPath(path, paint);
+        break;
 
-        case TextDirection.ltr:
-          final Path path = _gapBorderPath(
-              canvas, center, math.max(0.0, gapStart - gapPadding), extent);
-          final Path shadowPath = _gapBorderPathShadow(
-              canvas, center, math.max(0.0, gapStart - gapPadding), extent);
+      case TextDirection.ltr:
+        final Path path = _gapBorderPath(
+            canvas, center, math.max(0.0, gapStart! - gapPadding), extent);
+        final Path shadowPath = _gapBorderPathShadow(
+            canvas, center, math.max(0.0, gapStart - gapPadding), extent);
 
-          // check if the second border is available and draw it
-          if (secondBorderWidth != null && secondBorderColor != null) {
-            final shadowPaint = borderSide.toPaint();
-            shadowPaint
-              // second Border Width  = First border width + given value for second border * 2
-              ..strokeWidth = secondBorderWidth! * 2 + borderSide.width
-              ..color = secondBorderColor!;
+        // check if the second border is available and draw it
+        if (secondBorderWidth != null && secondBorderColor != null) {
+          final shadowPaint = borderSide.toPaint();
+          shadowPaint
+            // second Border Width  = First border width + given value for second border * 2
+            ..strokeWidth = secondBorderWidth! * 2 + borderSide.width
+            ..color = secondBorderColor!;
 
-            canvas.drawPath(shadowPath, shadowPaint);
-          }
-          canvas.drawPath(path, paint);
-          // This will override the area where second border is painting under the first border
-          final fillPaint = Paint();
-          fillPaint
-            ..strokeWidth = 0
-            ..color = fillColor ?? Colors.white
-            ..style = PaintingStyle.fill;
-          canvas.drawRRect(center, fillPaint);
-          break;
-      }
+          canvas.drawPath(shadowPath, shadowPaint);
+        }
+        canvas.drawPath(path, paint);
+        // This will override the area where second border is painting under the first border
+        final fillPaint = Paint();
+        fillPaint
+          ..strokeWidth = 0
+          ..color = fillColor ?? Colors.white
+          ..style = PaintingStyle.fill;
+        canvas.drawRRect(center, fillPaint);
+        break;
     }
   }
 
@@ -127,6 +123,7 @@ class CustomInputBorder extends OutlineInputBorder {
       path.addArc(trCorner, trCornerArcStart + sweep, trCornerArcSweep - sweep);
     }
 
+    ///TODO:
     return path
       ..moveTo(scaledRRect.right, scaledRRect.top + scaledRRect.trRadiusY)
       ..lineTo(scaledRRect.right, scaledRRect.bottom - scaledRRect.brRadiusY)

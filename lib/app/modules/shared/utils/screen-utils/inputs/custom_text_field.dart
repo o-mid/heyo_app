@@ -91,7 +91,7 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
 
   switchBorders() {
     OutlineInputBorder focusedBorder = CustomInputBorder(
-        gapPadding: 11,
+        gapPadding: 8,
         borderSide: BorderSide(
           color: COLORS.kGreenMainColor,
           width: 2.0,
@@ -132,10 +132,11 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
     return Column(
       key: this.widget.key,
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         textFieldSection(),
         Padding(
-          padding: const EdgeInsets.only(top: 4.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 4.0, 0, 0),
           child: Visibility(
             visible: widget.hasError && widget.error.isNotEmpty,
             child: Text(widget.error,

@@ -1,79 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 
 class TEXTSTYLES {
   ///
-  static const TextStyle kHeaderDisplay = TextStyle(
+  static TextStyle kHeaderDisplay = TextStyle(
     fontFamily: FONTS.interFamily,
     fontStyle: FontStyle.normal,
     fontWeight: FONTS.ExtraBold,
-    fontSize: 24.0,
+    fontSize: 24.0.sp,
     height: 1.29,
   );
 
-  static const TextStyle kHeaderLarge = TextStyle(
+  static TextStyle kHeaderLarge = TextStyle(
     fontFamily: FONTS.interFamily,
     fontStyle: FontStyle.normal,
     fontWeight: FONTS.Bold,
-    fontSize: 26.0,
+    fontSize: 26.0.sp,
     height: 1.0,
   );
 
-  static const TextStyle kHeaderMedium = TextStyle(
+  static TextStyle kHeaderMedium = TextStyle(
       fontFamily: FONTS.interFamily,
       fontStyle: FontStyle.normal,
       fontWeight: FONTS.Bold,
-      fontSize: 15.0,
+      fontSize: 15.0.sp,
       height: 1.33);
 
   ///
 
-  static const TextStyle kBodyBasic = TextStyle(
+  static TextStyle kBodyBasic = TextStyle(
       fontFamily: FONTS.interFamily,
       fontStyle: FontStyle.normal,
       fontWeight: FONTS.Regular,
-      fontSize: 15.0,
+      fontSize: 15.0.sp,
       height: 1.46);
 
-  static const TextStyle kBodySmall = TextStyle(
+  static TextStyle kBodySmall = TextStyle(
     fontFamily: FONTS.interFamily,
     fontStyle: FontStyle.normal,
     fontWeight: FONTS.Regular,
-    fontSize: 13.0,
+    fontSize: 13.0.sp,
     height: 1.38,
   );
-  static const TextStyle kBodyTag = TextStyle(
+  static TextStyle kBodyTag = TextStyle(
     fontFamily: FONTS.interFamily,
     fontStyle: FontStyle.normal,
     fontWeight: FONTS.Medium,
-    fontSize: 11.0,
+    fontSize: 11.0.sp,
     height: 1.36,
   );
 
   ///
 
-  static const TextStyle kButtonBasic = TextStyle(
+  static TextStyle kButtonBasic = TextStyle(
       fontFamily: FONTS.interFamily,
       fontStyle: FontStyle.normal,
       fontWeight: FONTS.SemiBold,
-      fontSize: 15.0,
+      fontSize: 15.0.sp,
       height: 1.2);
 
-  static const TextStyle kButtonSmall = TextStyle(
+  static TextStyle kButtonSmall = TextStyle(
       fontFamily: FONTS.interFamily,
       fontStyle: FontStyle.normal,
       fontWeight: FONTS.Medium,
-      fontSize: 13.0,
+      fontSize: 13.0.sp,
       height: 1.38);
 
   ///
 
   ///letter spacing set to 10% of the font size
-  static const TextStyle kTag = TextStyle(
+  static TextStyle kTag = TextStyle(
     fontFamily: FONTS.interFamily,
     fontStyle: FontStyle.normal,
     fontWeight: FONTS.Medium,
-    fontSize: 8.0,
+    fontSize: 8.0.sp,
     height: 1.25,
     letterSpacing: 0.8,
   );
