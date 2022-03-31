@@ -9,12 +9,11 @@
       }
     },
     "BenefitsPage": {
-      "title": "One account for all your services",
-      "subtitle": "Keep your valuable data safely stored and quickly accesible from one place.",
-      "divider": "or",
+      "title": "One account \n for all your services",
+      "subtitle": "Keep your valuable data safely stored \n and quickly accesible from one place.",
+      "divider": "OR",
       "footer": "Your data will be safely verified by",
       "buttons": {
-        "Whatis": "What is CorePass?",
         "Create": "Create CoreID",
         "Recover": "Recover account",
         "Migrate": "Migrate account"

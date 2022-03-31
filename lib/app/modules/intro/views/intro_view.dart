@@ -4,6 +4,7 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/locales.g.dart';
 import '../../../../generated/assets.gen.dart';
 import '../controllers/intro_controller.dart';
@@ -20,7 +21,7 @@ class IntroView extends GetView<IntroController> {
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Assets.png.welcome.image(
                   alignment: Alignment.center,
@@ -33,7 +34,7 @@ class IntroView extends GetView<IntroController> {
                 CustomSizes.mediumSizedBoxHeight,
                 Text(
                   LocaleKeys.registration_WelcomePage_subtitle.tr,
-                  style: TEXTSTYLES.kBodyBasic,
+                  style: TEXTSTYLES.kBodyTag,
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -43,7 +44,9 @@ class IntroView extends GetView<IntroController> {
               children: [
                 CustomButton(
                   //TODO : Implement Continue with CoreID
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed(Routes.SING_UP);
+                  },
                   title:
                       LocaleKeys.registration_WelcomePage_buttons_Continue.tr,
                   titleStyle: TEXTSTYLES.kButtonBasic

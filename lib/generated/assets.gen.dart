@@ -28,6 +28,10 @@ class $AssetsPngGen {
 class $AssetsSvgGen {
   const $AssetsSvgGen();
 
+  /// File path: assets/svg/corePass_logo.svg
+  SvgGenImage get corePassLogo =>
+      const SvgGenImage('assets/svg/corePass_logo.svg');
+
   /// File path: assets/svg/heyo_logo.svg
   SvgGenImage get heyoLogo => const SvgGenImage('assets/svg/heyo_logo.svg');
 }
