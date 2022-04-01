@@ -45,7 +45,7 @@ class SingUpView extends GetView<SingUpController> {
                   dotColor: COLORS.kDeactivateDotColor,
                   activeDotColor: COLORS.kGreenMainColor),
             ),
-            CustomSizes.mediumSizedBoxHeight,
+            CustomSizes.largeSizedBoxHeight,
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -55,45 +55,11 @@ class SingUpView extends GetView<SingUpController> {
                   title: LocaleKeys.registration_BenefitsPage_buttons_Create.tr,
                 ),
                 CustomSizes.mediumSizedBoxHeight,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        color: COLORS.kTextSoftBlueColor,
-                      ),
-                    ),
-                    CustomSizes.smallSizedBoxWidth,
-                    Text(
-                      LocaleKeys.registration_BenefitsPage_divider.tr,
-                      textAlign: TextAlign.center,
-                      style: TEXTSTYLES.kBodyTag
-                          .copyWith(color: COLORS.kTextSoftBlueColor),
-                    ),
-                    CustomSizes.smallSizedBoxWidth,
-                    Expanded(
-                      child: Divider(
-                        color: COLORS.kTextSoftBlueColor,
-                      ),
-                    ),
-                  ],
-                ),
-                CustomSizes.mediumSizedBoxHeight,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomButton.outline(
-                        // TODO : Implement Recover account
-                        onTap: () {},
-                        title: LocaleKeys
-                            .registration_BenefitsPage_buttons_Recover.tr),
-                    CustomButton.outline(
-                        // TODO : Implement Migrate account
-                        onTap: () {},
-                        title: LocaleKeys
-                            .registration_BenefitsPage_buttons_Migrate.tr),
-                  ],
+                CustomButton.outline(
+                  // TODO : Implement I already have CoreID
+                  onTap: () {},
+                  title: LocaleKeys
+                      .registration_BenefitsPage_buttons_SkipCreate.tr,
                 ),
                 CustomSizes.mediumSizedBoxHeight,
                 _footer()
@@ -150,17 +116,78 @@ class SingUpView extends GetView<SingUpController> {
     Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Assets.png.benefits.image(
+        Assets.png.benefits001.image(
           alignment: Alignment.center,
+          height: 225.h,
         ),
         Text(
-          LocaleKeys.registration_BenefitsPage_title.tr,
+          LocaleKeys.registration_BenefitsPage_sliders_title001.tr,
           style: TEXTSTYLES.kHeaderDisplay,
           textAlign: TextAlign.center,
         ),
-        CustomSizes.mediumSizedBoxHeight,
+        CustomSizes.largeSizedBoxHeight,
         Text(
-          LocaleKeys.registration_BenefitsPage_subtitle.tr,
+          LocaleKeys.registration_BenefitsPage_sliders_subtitle001.tr,
+          style: TEXTSTYLES.kBodyBasic,
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+    Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Assets.png.benefits002.image(
+          alignment: Alignment.center,
+          height: 225.h,
+        ),
+        Text(
+          LocaleKeys.registration_BenefitsPage_sliders_title002.tr,
+          style: TEXTSTYLES.kHeaderDisplay,
+          textAlign: TextAlign.center,
+        ),
+        CustomSizes.largeSizedBoxHeight,
+        Text(
+          LocaleKeys.registration_BenefitsPage_sliders_subtitle002.tr,
+          style: TEXTSTYLES.kBodyBasic,
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+    Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Assets.png.benefits003.image(
+          alignment: Alignment.center,
+          height: 225.h,
+        ),
+        Text(
+          LocaleKeys.registration_BenefitsPage_sliders_title003.tr,
+          style: TEXTSTYLES.kHeaderDisplay,
+          textAlign: TextAlign.center,
+        ),
+        CustomSizes.largeSizedBoxHeight,
+        Text(
+          LocaleKeys.registration_BenefitsPage_sliders_subtitle003.tr,
+          style: TEXTSTYLES.kBodyBasic,
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+    Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Assets.png.benefits004.image(
+          alignment: Alignment.center,
+          height: 225.h,
+        ),
+        Text(
+          LocaleKeys.registration_BenefitsPage_sliders_title004.tr,
+          style: TEXTSTYLES.kHeaderDisplay,
+          textAlign: TextAlign.center,
+        ),
+        CustomSizes.largeSizedBoxHeight,
+        Text(
+          LocaleKeys.registration_BenefitsPage_sliders_subtitle004.tr,
           style: TEXTSTYLES.kBodyBasic,
           textAlign: TextAlign.center,
         ),

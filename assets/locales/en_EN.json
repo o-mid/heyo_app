@@ -9,14 +9,23 @@
       }
     },
     "BenefitsPage": {
-      "title": "One account \n for all your services",
-      "subtitle": "Keep your valuable data safely stored \n and quickly accesible from one place.",
+      "sliders": {
+        "title001": "One account \n for all your services",
+        "subtitle001": "Keep your valuable data safely stored \n and quickly accesible from one place.",
+        "title002": "Assurance that you've \n got the right person",
+        "subtitle002": "Know the person you are connecting with \n and how your data is being used.",
+        "title003": "Your data has value",
+        "subtitle003": "Each time your data gets requested, you \n earn an income. Your identity becomes \n your saving and spending tool.",
+        "title004": "Keep your earnings \n in a safe place",
+        "subtitle004": "CorePass comes with an integrated \n cryptocurrency wallet to keep your \n savings safe and secure."
+      },
+
       "divider": "OR",
       "footer": "Your data will be safely verified by",
       "buttons": {
         "Create": "Create CoreID",
-        "Recover": "Recover account",
-        "Migrate": "Migrate account"
+        "SkipCreate": "I already have CoreID",
+        "Whatis": "What is CoreID?"
       }
     },
     "PINcodePage": {

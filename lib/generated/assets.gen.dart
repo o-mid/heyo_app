@@ -12,8 +12,21 @@ import 'package:flutter/services.dart';
 class $AssetsPngGen {
   const $AssetsPngGen();
 
-  /// File path: assets/png/benefits.png
-  AssetGenImage get benefits => const AssetGenImage('assets/png/benefits.png');
+  /// File path: assets/png/benefits001.png
+  AssetGenImage get benefits001 =>
+      const AssetGenImage('assets/png/benefits001.png');
+
+  /// File path: assets/png/benefits002.png
+  AssetGenImage get benefits002 =>
+      const AssetGenImage('assets/png/benefits002.png');
+
+  /// File path: assets/png/benefits003.png
+  AssetGenImage get benefits003 =>
+      const AssetGenImage('assets/png/benefits003.png');
+
+  /// File path: assets/png/benefits004.png
+  AssetGenImage get benefits004 =>
+      const AssetGenImage('assets/png/benefits004.png');
 
   /// File path: assets/png/icon.png
   AssetGenImage get icon => const AssetGenImage('assets/png/icon.png');

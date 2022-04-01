@@ -18,22 +18,32 @@ class LocaleKeys {
       'registration_WelcomePage_buttons_Continue';
   static const registration_WelcomePage_buttons_Terms =
       'registration_WelcomePage_buttons_Terms';
-  static const registration_BenefitsPage_title =
-      'registration_BenefitsPage_title';
-  static const registration_BenefitsPage_subtitle =
-      'registration_BenefitsPage_subtitle';
+  static const registration_BenefitsPage_sliders_title001 =
+      'registration_BenefitsPage_sliders_title001';
+  static const registration_BenefitsPage_sliders_subtitle001 =
+      'registration_BenefitsPage_sliders_subtitle001';
+  static const registration_BenefitsPage_sliders_title002 =
+      'registration_BenefitsPage_sliders_title002';
+  static const registration_BenefitsPage_sliders_subtitle002 =
+      'registration_BenefitsPage_sliders_subtitle002';
+  static const registration_BenefitsPage_sliders_title003 =
+      'registration_BenefitsPage_sliders_title003';
+  static const registration_BenefitsPage_sliders_subtitle003 =
+      'registration_BenefitsPage_sliders_subtitle003';
+  static const registration_BenefitsPage_sliders_title004 =
+      'registration_BenefitsPage_sliders_title004';
+  static const registration_BenefitsPage_sliders_subtitle004 =
+      'registration_BenefitsPage_sliders_subtitle004';
   static const registration_BenefitsPage_divider =
       'registration_BenefitsPage_divider';
   static const registration_BenefitsPage_footer =
       'registration_BenefitsPage_footer';
-  static const registration_BenefitsPage_buttons_Whatis =
-      'registration_BenefitsPage_buttons_Whatis';
   static const registration_BenefitsPage_buttons_Create =
       'registration_BenefitsPage_buttons_Create';
-  static const registration_BenefitsPage_buttons_Recover =
-      'registration_BenefitsPage_buttons_Recover';
-  static const registration_BenefitsPage_buttons_Migrate =
-      'registration_BenefitsPage_buttons_Migrate';
+  static const registration_BenefitsPage_buttons_SkipCreate =
+      'registration_BenefitsPage_buttons_SkipCreate';
+  static const registration_BenefitsPage_buttons_Whatis =
+      'registration_BenefitsPage_buttons_Whatis';
   static const registration_PINcodePage_title =
       'registration_PINcodePage_title';
   static const registration_PINcodePage_subtitle =
@@ -81,15 +91,26 @@ class Locales {
         'A truly private messaging app built on a decentralized technology, secured by CorePass.',
     'registration_WelcomePage_buttons_Continue': 'Continue with CoreID',
     'registration_WelcomePage_buttons_Terms': 'Terms & Privacy Policy',
-    'registration_BenefitsPage_title': 'One account \n for all your services',
-    'registration_BenefitsPage_subtitle':
+    'registration_BenefitsPage_sliders_title001':
+        'One account \n for all your services',
+    'registration_BenefitsPage_sliders_subtitle001':
         'Keep your valuable data safely stored \n and quickly accesible from one place.',
+    'registration_BenefitsPage_sliders_title002':
+        'Assurance that you\'ve \n got the right person',
+    'registration_BenefitsPage_sliders_subtitle002':
+        'Know the person you are connecting with \n and how your data is being used.',
+    'registration_BenefitsPage_sliders_title003': 'Your data has value',
+    'registration_BenefitsPage_sliders_subtitle003':
+        'Each time your data gets requested, you \n earn an income. Your identity becomes \n your saving and spending tool.',
+    'registration_BenefitsPage_sliders_title004':
+        'Keep your earnings \n in a safe place',
+    'registration_BenefitsPage_sliders_subtitle004':
+        'CorePass comes with an integrated \n cryptocurrency wallet to keep your \n savings safe and secure.',
     'registration_BenefitsPage_divider': 'OR',
     'registration_BenefitsPage_footer': 'Your data will be safely verified by',
-    'registration_BenefitsPage_buttons_Whatis': 'What is CoreID?',
     'registration_BenefitsPage_buttons_Create': 'Create CoreID',
-    'registration_BenefitsPage_buttons_Recover': 'Recover account',
-    'registration_BenefitsPage_buttons_Migrate': 'Migrate account',
+    'registration_BenefitsPage_buttons_SkipCreate': 'I already have CoreID',
+    'registration_BenefitsPage_buttons_Whatis': 'What is CoreID?',
     'registration_PINcodePage_title': 'Set PIN',
     'registration_PINcodePage_subtitle':
         'Set a 6 digit PIN code to protect your Heyo application',
