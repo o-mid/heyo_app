@@ -70,4 +70,7 @@ class COLORS {
 
   ///States/Error Light
   static const Color kStatesLightErrorColor = Color(0xffFFF3F3);
+
+  ///Deactivate Dot Color
+  static const Color kDeactivateDotColor = Color(0xffE6ECF7);
 }
