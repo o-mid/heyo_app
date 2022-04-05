@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -53,6 +54,10 @@ class PinCodeView extends GetView<PinCodeController> {
                       // print(CompletedText);
                       controller.onCompleted(CompletedText);
                     },
+                    inputFormatters: [
+                      // only allow english numbers to be entered (0-9)
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                    ],
                     onChanged: (String value) {},
                     length: 6,
                     obscureText: true,
