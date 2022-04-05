@@ -73,4 +73,7 @@ class COLORS {
 
   ///Deactivate Dot Color
   static const Color kDeactivateDotColor = Color(0xffE6ECF7);
+
+  ///pin code Deactivate color
+  static const Color kPinCodeDeactivateColor = Color(0xffECEAF1);
 }

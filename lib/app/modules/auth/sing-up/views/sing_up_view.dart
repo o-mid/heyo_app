@@ -6,6 +6,7 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import '../../../../routes/app_pages.dart';
 import '../../../shared/utils/constants/textStyles.dart';
 import '../controllers/sing_up_controller.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -51,7 +52,9 @@ class SingUpView extends GetView<SingUpController> {
               children: [
                 CustomButton.primary(
                   // TODO: implement Create CoreID
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed(Routes.PIN_CODE);
+                  },
                   title: LocaleKeys.registration_BenefitsPage_buttons_Create.tr,
                 ),
                 CustomSizes.mediumSizedBoxHeight,
@@ -78,7 +81,7 @@ class SingUpView extends GetView<SingUpController> {
         automaticallyImplyLeading: false,
         actions: [
           CustomButton(
-            //TODO : What is corepass
+            //TODO : What is coreID?
             onTap: () {},
             titleWidget: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
