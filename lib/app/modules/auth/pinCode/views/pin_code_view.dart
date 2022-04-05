@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-
 import '../../../shared/utils/constants/colors.dart';
 import '../controllers/pin_code_controller.dart';
 
@@ -67,7 +66,7 @@ class PinCodeView extends GetView<PinCodeController> {
                     pinTheme: pinTheme(),
                     animationDuration: Duration(milliseconds: 250),
                     appContext: context,
-                  )
+                  ),
                 ],
               );
             },
@@ -90,3 +89,40 @@ class PinCodeView extends GetView<PinCodeController> {
         activeColor: COLORS.kGreenMainColor);
   }
 }
+
+Widget bottomSheet = Container(
+  padding: CustomSizes.mainContentPadding,
+  child: Column(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      SizedBox(
+        height: 40.h,
+      ),
+      Text(LocaleKeys.registration_PINcodePage_dialogTitle.tr,
+          style: TEXTSTYLES.kHeaderMedium),
+      CustomSizes.largeSizedBoxHeight,
+      CustomButton.primary(
+        title: LocaleKeys.registration_PINcodePage_buttons_AddBiometric.tr,
+        // TODO: implement the add biometric
+        onTap: () {},
+        canTap: true,
+        icon: Icon(
+          Icons.fingerprint,
+          color: COLORS.kWhiteColor,
+        ),
+      ),
+      CustomButton(
+        // TODO: implement the steps with the biometric
+        onTap: () {
+          Get.back();
+        },
+        title: LocaleKeys.registration_PINcodePage_buttons_SkipBiometric.tr,
+        titleStyle:
+            TEXTSTYLES.kButtonSmall.copyWith(color: COLORS.kGreenMainColor),
+        size: CustomButtonSize.regular,
+      ),
+    ],
+  ),
+);

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/auth/pinCode/views/pin_code_view.dart';
 
 import '../../../shared/utils/constants/colors.dart';
 
@@ -35,12 +36,14 @@ class PinCodeController extends GetxController {
       if (pinCodeInput.value == pinCodeConfirm.value) {
         // TODO : impliment the next steps after pin code is confirmed
         ConfirmedPinCode.value = pinCodeInput.value;
-        Get.snackbar(
-          'Success',
-          'Pin code is correct.',
-          colorText: COLORS.kStatesSuccessColor,
-          snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 2),
+        Get.bottomSheet(
+          bottomSheet,
+          backgroundColor: COLORS.kWhiteColor,
+          isDismissible: false,
+          persistent: true,
+          enableDrag: false,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
         );
 
         // pinCodeController.dispose();
