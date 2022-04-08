@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class GeneratPrivateKeysController extends GetxController {
+class GeneratePrivateKeysController extends GetxController {
   //TODO: Implement GeneratPrivateKeysController
 
   final count = 0.obs;

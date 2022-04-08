@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/auth/generatPrivateKeys/bindings/generat_private_keys_binding.dart';
-import 'package:heyo/app/modules/auth/generatPrivateKeys/views/generat_private_keys_view.dart';
+import 'package:heyo/app/modules/auth/generatePrivateKeys/bindings/generate_private_keys_binding.dart';
+import 'package:heyo/app/modules/auth/generatePrivateKeys/views/generate_private_keys_view.dart';
 
 import '../modules/auth/pinCode/bindings/pin_code_binding.dart';
 import '../modules/auth/pinCode/views/pin_code_view.dart';
@@ -41,9 +41,9 @@ class AppPages {
       binding: PinCodeBinding(),
     ),
     GetPage(
-      name: _Paths.GENERAT_PRIVATE_KEYS,
-      page: () => GeneratPrivateKeysView(),
-      binding: GeneratPrivateKeysBinding(),
+      name: _Paths.GENERATE_PRIVATE_KEYS,
+      page: () => GeneratePrivateKeysView(),
+      binding: GeneratePrivateKeysBinding(),
     ),
   ];
 }

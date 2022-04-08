@@ -7,7 +7,7 @@ abstract class Routes {
   static const INTRO = _Paths.INTRO;
   static const SING_UP = _Paths.SING_UP;
   static const PIN_CODE = _Paths.PIN_CODE;
-  static const GENERAT_PRIVATE_KEYS = _Paths.GENERAT_PRIVATE_KEYS;
+  static const GENERATE_PRIVATE_KEYS = _Paths.GENERATE_PRIVATE_KEYS;
 }
 
 abstract class _Paths {
@@ -16,5 +16,5 @@ abstract class _Paths {
   static const INTRO = '/intro';
   static const SING_UP = '/sing-up';
   static const PIN_CODE = '/pin-code';
-  static const GENERAT_PRIVATE_KEYS = '/generat-private-keys';
+  static const GENERATE_PRIVATE_KEYS = '/generate-private-keys';
 }

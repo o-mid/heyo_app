@@ -31,6 +31,9 @@ class $AssetsPngGen {
   /// File path: assets/png/icon.png
   AssetGenImage get icon => const AssetGenImage('assets/png/icon.png');
 
+  /// File path: assets/png/keys.png
+  AssetGenImage get keys => const AssetGenImage('assets/png/keys.png');
+
   /// File path: assets/png/splash.png
   AssetGenImage get splash => const AssetGenImage('assets/png/splash.png');
 

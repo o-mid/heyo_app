@@ -15,6 +15,9 @@ class CustomSizes {
   ///height: 24.h
   static SizedBox largeSizedBoxHeight = SizedBox(height: 24.h);
 
+  ///height: 48.h
+  static SizedBox extraLargeSizedBoxHeight = SizedBox(height: 48.h);
+
   /// Width: 8.w
   static SizedBox smallSizedBoxWidth = SizedBox(width: 8.w);
 
@@ -23,4 +26,7 @@ class CustomSizes {
 
   /// width: 24.w
   static SizedBox largeSizedBoxWidth = SizedBox(width: 24.w);
+
+  /// width: 48.w
+  static SizedBox extraLargeSizedBoxWidth = SizedBox(width: 48.w);
 }

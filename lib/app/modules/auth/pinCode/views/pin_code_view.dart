@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../../shared/utils/constants/colors.dart';
@@ -121,7 +122,7 @@ Widget bottomSheet = Container(
       CustomButton(
         // TODO: implement the steps with the biometric
         onTap: () {
-          Get.back();
+          Get.toNamed(Routes.GENERATE_PRIVATE_KEYS);
         },
         title: LocaleKeys.registration_PINcodePage_buttons_SkipBiometric.tr,
         titleStyle:
