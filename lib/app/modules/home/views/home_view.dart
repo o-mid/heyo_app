@@ -9,6 +9,7 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/widgets/bottom_navigation_bar.dart';
 import 'package:heyo/app/modules/wallet/views/wallet_view.dart';
+import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 import '../controllers/home_controller.dart';
@@ -37,6 +38,12 @@ class HomeView extends GetView<HomeController> {
           automaticallyImplyLeading: false,
         ),
         body: _pageNavigation[controller.tabIndex.value],
+        floatingActionButton: FloatingActionButton(
+          // Todo:
+          onPressed: () {},
+          backgroundColor: COLORS.kGreenMainColor,
+          child: Assets.svg.newChat.svg(),
+        ),
         bottomNavigationBar: BottomNavigationBarCustom(
           show: true,
           currentIndex: controller.tabIndex.value,

@@ -60,6 +60,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/heyo_logo.svg
   SvgGenImage get heyoLogo => const SvgGenImage('assets/svg/heyo_logo.svg');
 
+  /// File path: assets/svg/new_chat.svg
+  SvgGenImage get newChat => const SvgGenImage('assets/svg/new_chat.svg');
+
   /// File path: assets/svg/search_nearby.svg
   SvgGenImage get searchNearby =>
       const SvgGenImage('assets/svg/search_nearby.svg');
