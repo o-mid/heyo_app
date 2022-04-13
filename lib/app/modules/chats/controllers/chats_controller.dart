@@ -9,7 +9,6 @@ class ChatsController extends GetxController {
       icon: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
       lastMessage: "I'm still waiting for the reply. I'll let you know once they get back to me.",
       timestamp: "15:45",
-      isOnline: true,
     ),
     ChatModel(
       name: "Fancy Potato",
@@ -17,6 +16,7 @@ class ChatsController extends GetxController {
       lastMessage: "I can arrange the meeting with her tomorrow if you're ok with that.",
       timestamp: "Yesterday",
       isOnline: true,
+      isVerified: true,
       notificationCount: 4,
     ),
     ChatModel(

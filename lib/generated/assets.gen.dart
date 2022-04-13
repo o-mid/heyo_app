@@ -67,6 +67,9 @@ class $AssetsSvgGen {
   SvgGenImage get searchNearby =>
       const SvgGenImage('assets/svg/search_nearby.svg');
 
+  /// File path: assets/svg/verified.svg
+  SvgGenImage get verified => const SvgGenImage('assets/svg/verified.svg');
+
   /// File path: assets/svg/wallet.svg
   SvgGenImage get wallet => const SvgGenImage('assets/svg/wallet.svg');
 }

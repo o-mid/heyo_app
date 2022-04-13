@@ -4,6 +4,7 @@ class ChatModel {
   String lastMessage;
   String timestamp;
   bool isOnline;
+  bool isVerified;
   int notificationCount;
 
   ChatModel({
@@ -12,6 +13,7 @@ class ChatModel {
     required this.lastMessage,
     required this.timestamp,
     this.isOnline = false,
+    this.isVerified = false,
     this.notificationCount = 0,
   });
 }
