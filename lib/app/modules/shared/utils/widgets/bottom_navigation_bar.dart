@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/widgets/notification_count_badge.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -29,14 +30,8 @@ class BottomNavigationBarCustom extends StatelessWidget {
         currentIndex: currentIndex,
         backgroundColor: COLORS.kWhiteColor,
         type: BottomNavigationBarType.fixed,
-        selectedLabelStyle: TextStyle(
-          fontWeight: FONTS.Bold,
-          fontSize: 11,
-        ),
-        unselectedLabelStyle: TextStyle(
-          fontWeight: FONTS.Bold,
-          fontSize: 11,
-        ),
+        selectedLabelStyle: TEXTSTYLES.kBodyTag.copyWith(fontWeight: FONTS.Bold),
+        unselectedLabelStyle: TEXTSTYLES.kBodyTag.copyWith(fontWeight: FONTS.Bold),
         items: <BottomNavigationBarItem>[
           _buildNavItem(Assets.svg.chat, LocaleKeys.HomePage_navbarItems_chats.tr),
           _buildNavItem(Assets.svg.call, LocaleKeys.HomePage_navbarItems_calls.tr),

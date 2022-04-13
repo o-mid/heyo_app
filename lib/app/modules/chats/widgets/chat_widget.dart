@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/widgets/notification_count_badge.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
@@ -72,8 +73,9 @@ class ChatWidget extends StatelessWidget {
                       Text(
                         chat.name,
                         style: TextStyle(
+                          fontSize: 14,
                           fontFamily: FONTS.interFamily,
-                          fontWeight: FONTS.Medium,
+                          fontWeight: chat.notificationCount > 0 ? FONTS.Bold : FONTS.Medium,
                         ),
                       ),
                       SizedBox(width: 6),
@@ -99,10 +101,11 @@ class ChatWidget extends StatelessWidget {
                       chat.lastMessage,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontFamily: FONTS.interFamily,
-                        fontSize: 13,
-                        color: COLORS.kTextSoftBlueColor,
+                      style: TEXTSTYLES.kBodySmall.copyWith(
+                        color: chat.notificationCount > 0
+                            ? COLORS.kDarkBlueColor
+                            : COLORS.kTextSoftBlueColor,
+                        fontWeight: chat.notificationCount > 0 ? FONTS.SemiBold : null,
                       ),
                     ),
                   ),

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/chats/widgets/chat_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
-import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 import '../controllers/chats_controller.dart';
@@ -29,21 +29,12 @@ class ChatsView extends GetView<ChatsController> {
               children: [
                 Text(
                   LocaleKeys.HomePage_Chats_emptyState_title.tr,
-                  style: TextStyle(
-                    fontWeight: FONTS.Bold,
-                    fontFamily: FONTS.interFamily,
-                    fontSize: 19,
-                    color: COLORS.kDarkBlueColor,
-                  ),
+                  style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
                 ),
                 SizedBox(height: 9),
                 Text(
                   LocaleKeys.HomePage_Chats_emptyState_subtitle.tr,
-                  style: TextStyle(
-                    fontFamily: FONTS.interFamily,
-                    fontSize: 13,
-                    color: COLORS.kTextSoftBlueColor,
-                  ),
+                  style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
                 ),
                 SizedBox(height: 30),
                 ElevatedButton(
