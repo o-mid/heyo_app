@@ -16,56 +16,55 @@ class IntroView extends GetView<IntroController> {
       backgroundColor: COLORS.kGreenMainColor,
       body: Container(
         padding: CustomSizes.mainContentPadding,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Assets.png.welcome.image(
-                  alignment: Alignment.center,
-                ),
-                Text(
-                  LocaleKeys.registration_WelcomePage_title.tr,
-                  style: TEXTSTYLES.kHeaderDisplay,
-                  textAlign: TextAlign.center,
-                ),
-                CustomSizes.mediumSizedBoxHeight,
-                Text(
-                  LocaleKeys.registration_WelcomePage_subtitle.tr,
-                  style: TEXTSTYLES.kBodyTag,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomButton(
-                  //TODO : Implement Continue with CoreID
-                  onTap: () {
-                    Get.toNamed(Routes.SING_UP);
-                  },
-                  title:
-                      LocaleKeys.registration_WelcomePage_buttons_Continue.tr,
-                  titleStyle: TEXTSTYLES.kButtonBasic
-                      .copyWith(color: COLORS.kGreenMainColor),
-                  color: COLORS.kWhiteColor,
-                  size: CustomButtonSize.regular,
-                  type: CustomButtonType.outline,
-                ),
-                CustomButton(
-                  //TODO : Implement Terms and privacy policy
-                  onTap: () {},
-                  title: LocaleKeys.registration_WelcomePage_buttons_Terms.tr,
-                  titleStyle: TEXTSTYLES.kButtonSmall
-                      .copyWith(color: COLORS.kDarkBlueColor),
-                  size: CustomButtonSize.regular,
-                ),
-              ],
-            )
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Assets.png.welcome.image(
+                    alignment: Alignment.center,
+                  ),
+                  Text(
+                    LocaleKeys.registration_WelcomePage_title.tr,
+                    style: TEXTSTYLES.kHeaderDisplay,
+                    textAlign: TextAlign.center,
+                  ),
+                  CustomSizes.mediumSizedBoxHeight,
+                  Text(
+                    LocaleKeys.registration_WelcomePage_subtitle.tr,
+                    style: TEXTSTYLES.kBodyTag,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomButton(
+                    //TODO : Implement Continue with CoreID
+                    onTap: () {
+                      Get.toNamed(Routes.SING_UP);
+                    },
+                    title: LocaleKeys.registration_WelcomePage_buttons_Continue.tr,
+                    titleStyle: TEXTSTYLES.kButtonBasic.copyWith(color: COLORS.kGreenMainColor),
+                    color: COLORS.kWhiteColor,
+                    size: CustomButtonSize.regular,
+                    type: CustomButtonType.outline,
+                  ),
+                  CustomButton(
+                    //TODO : Implement Terms and privacy policy
+                    onTap: () {},
+                    title: LocaleKeys.registration_WelcomePage_buttons_Terms.tr,
+                    titleStyle: TEXTSTYLES.kButtonSmall.copyWith(color: COLORS.kDarkBlueColor),
+                    size: CustomButtonSize.regular,
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
