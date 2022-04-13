@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
+import 'package:heyo/app/modules/shared/utils/widgets/notification_count_badge.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:get/get.dart';
@@ -69,22 +70,9 @@ class BottomNavigationBarCustom extends StatelessWidget {
             Positioned(
               top: 0,
               right: 0,
-              child: Container(
-                alignment: Alignment.center,
-                height: 16,
-                width: 16,
-                decoration: BoxDecoration(
-                  color: COLORS.kStatesErrorColor,
-                  shape: BoxShape.circle,
-                ),
-                child: Text(
-                  count > 9 ? '9+' : count.toString(),
-                  style: TextStyle(
-                    color: COLORS.kWhiteColor,
-                    fontSize: 8,
-                    fontFamily: FONTS.interFamily,
-                  ),
-                ),
+              child: NotificationCountBadge(
+                count: count,
+                backgroundColor: COLORS.kStatesErrorColor,
               ),
             ),
         ],
