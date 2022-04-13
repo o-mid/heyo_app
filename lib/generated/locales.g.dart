@@ -82,6 +82,12 @@ class LocaleKeys {
       'registration_RecoveryMethodPage_buttons_Skip';
   static const registration_RecoveryMethodPage_buttons_Continue =
       'registration_RecoveryMethodPage_buttons_Continue';
+  static const HomePage_title = 'HomePage_title';
+  static const HomePage_navbarItems_chats = 'HomePage_navbarItems_chats';
+  static const HomePage_navbarItems_calls = 'HomePage_navbarItems_calls';
+  static const HomePage_navbarItems_wallet = 'HomePage_navbarItems_wallet';
+  static const HomePage_navbarItems_search = 'HomePage_navbarItems_search';
+  static const HomePage_navbarItems_account = 'HomePage_navbarItems_account';
 }
 
 class Locales {
@@ -139,5 +145,11 @@ class Locales {
         'Your CoreID account can be recovered with a private key which you will have to protect with a password and store.',
     'registration_RecoveryMethodPage_buttons_Skip': 'Skip for now',
     'registration_RecoveryMethodPage_buttons_Continue': 'Continue',
+    'HomePage_title': 'Heyo',
+    'HomePage_navbarItems_chats': 'Chats',
+    'HomePage_navbarItems_calls': 'Calls',
+    'HomePage_navbarItems_wallet': 'Wallet',
+    'HomePage_navbarItems_search': 'Search',
+    'HomePage_navbarItems_account': 'Account',
   };
 }

@@ -65,5 +65,15 @@
         "Continue": "Continue"
       }
     }
+  },
+  "HomePage": {
+    "title": "Heyo",
+    "navbarItems": {
+      "chats": "Chats",
+      "calls": "Calls",
+      "wallet": "Wallet",
+      "search": "Search",
+      "account": "Account"
+    }
   }
 }

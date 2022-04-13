@@ -44,12 +44,28 @@ class $AssetsPngGen {
 class $AssetsSvgGen {
   const $AssetsSvgGen();
 
+  /// File path: assets/svg/account.svg
+  SvgGenImage get account => const SvgGenImage('assets/svg/account.svg');
+
+  /// File path: assets/svg/call.svg
+  SvgGenImage get call => const SvgGenImage('assets/svg/call.svg');
+
+  /// File path: assets/svg/chat.svg
+  SvgGenImage get chat => const SvgGenImage('assets/svg/chat.svg');
+
   /// File path: assets/svg/corePass_logo.svg
   SvgGenImage get corePassLogo =>
       const SvgGenImage('assets/svg/corePass_logo.svg');
 
   /// File path: assets/svg/heyo_logo.svg
   SvgGenImage get heyoLogo => const SvgGenImage('assets/svg/heyo_logo.svg');
+
+  /// File path: assets/svg/search_nearby.svg
+  SvgGenImage get searchNearby =>
+      const SvgGenImage('assets/svg/search_nearby.svg');
+
+  /// File path: assets/svg/wallet.svg
+  SvgGenImage get wallet => const SvgGenImage('assets/svg/wallet.svg');
 }
 
 class Assets {
