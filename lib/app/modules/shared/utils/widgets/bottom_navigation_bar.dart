@@ -48,17 +48,47 @@ class BottomNavigationBarCustom extends StatelessWidget {
   }
 
   BottomNavigationBarItem _buildNavItem(SvgGenImage icon, String label) {
-    final iconPadding = const EdgeInsets.only(bottom: 6);
     return BottomNavigationBarItem(
-      activeIcon: Padding(
-        padding: iconPadding,
-        child: icon.svg(color: COLORS.kGreenMainColor),
-      ),
-      icon: Padding(
-        padding: iconPadding,
-        child: icon.svg(),
-      ),
+      activeIcon: _buildIconWithNotificationCounter(icon.svg(color: COLORS.kGreenMainColor), 0),
+      icon: _buildIconWithNotificationCounter(icon.svg(), 0),
       label: label,
+    );
+  }
+
+  Widget _buildIconWithNotificationCounter(Widget icon, int count) {
+    return Container(
+      width: 35,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6, top: 6),
+            child: icon,
+          ),
+          if (count > 0)
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Container(
+                alignment: Alignment.center,
+                height: 16,
+                width: 16,
+                decoration: BoxDecoration(
+                  color: COLORS.kStatesErrorColor,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  count > 9 ? '9+' : count.toString(),
+                  style: TextStyle(
+                    color: COLORS.kWhiteColor,
+                    fontSize: 8,
+                    fontFamily: FONTS.interFamily,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
