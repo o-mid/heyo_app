@@ -88,6 +88,12 @@ class LocaleKeys {
   static const HomePage_navbarItems_wallet = 'HomePage_navbarItems_wallet';
   static const HomePage_navbarItems_search = 'HomePage_navbarItems_search';
   static const HomePage_navbarItems_account = 'HomePage_navbarItems_account';
+  static const HomePage_Chats_emptyState_title =
+      'HomePage_Chats_emptyState_title';
+  static const HomePage_Chats_emptyState_subtitle =
+      'HomePage_Chats_emptyState_subtitle';
+  static const HomePage_Chats_emptyState_invite =
+      'HomePage_Chats_emptyState_invite';
 }
 
 class Locales {
@@ -151,5 +157,9 @@ class Locales {
     'HomePage_navbarItems_wallet': 'Wallet',
     'HomePage_navbarItems_search': 'Search',
     'HomePage_navbarItems_account': 'Account',
+    'HomePage_Chats_emptyState_title': 'It looks empty here',
+    'HomePage_Chats_emptyState_subtitle':
+        'Start with inviting your friends or start new chats',
+    'HomePage_Chats_emptyState_invite': 'Invite',
   };
 }

@@ -74,6 +74,13 @@
       "wallet": "Wallet",
       "search": "Search",
       "account": "Account"
+    },
+    "Chats": {
+      "emptyState": {
+        "title": "It looks empty here",
+        "subtitle": "Start with inviting your friends or start new chats",
+        "invite": "Invite"
+      }
     }
   }
 }
