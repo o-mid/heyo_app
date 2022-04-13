@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/locales.g.dart';
 
@@ -28,7 +29,7 @@ void main() {
         },
 
         /// we use this for any use of Controllers that need to be put in the ```Get``` state manager and live through the life cycle of the application.
-        //initialBinding: GlobalBindings(),
+        initialBinding: GlobalBindings(),
         initialRoute: AppPages.INITIAL,
         getPages: AppPages.routes,
       ),

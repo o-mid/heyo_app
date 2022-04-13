@@ -10,8 +10,6 @@ import '../modules/auth/sing-up/bindings/sing_up_binding.dart';
 import '../modules/auth/sing-up/views/sing_up_view.dart';
 import '../modules/calls/bindings/calls_binding.dart';
 import '../modules/calls/views/calls_view.dart';
-import '../modules/chats/bindings/chats_binding.dart';
-import '../modules/chats/views/chats_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/intro/bindings/intro_binding.dart';
@@ -55,11 +53,6 @@ class AppPages {
       name: _Paths.GENERATE_PRIVATE_KEYS,
       page: () => GeneratePrivateKeysView(),
       binding: GeneratePrivateKeysBinding(),
-    ),
-    GetPage(
-      name: _Paths.CHATS,
-      page: () => ChatsView(),
-      binding: ChatsBinding(),
     ),
     GetPage(
       name: _Paths.CALLS,
