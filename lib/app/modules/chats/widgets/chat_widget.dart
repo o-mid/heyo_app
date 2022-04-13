@@ -25,21 +25,36 @@ class ChatWidget extends StatelessWidget {
                 ),
               ),
             ),
-            // Todo: fix the problem with outer border
+
+            // The two following widgets are to show a green online badge on chat icon
+            // and a white border around the green badge. It could be done with only one
+            // Container with a border, but this also creates a thin outer border after the white
+            // one which is not desirable. As a solution this is used for now
             if (chat.isOnline)
               Positioned(
                 bottom: 0,
                 right: 0,
+                child: Center(
+                  child: Container(
+                    width: 14,
+                    height: 14,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: COLORS.kWhiteColor,
+                    ),
+                  ),
+                ),
+              ),
+            if (chat.isOnline)
+              Positioned(
+                bottom: 2,
+                right: 2,
                 child: Container(
-                  width: 12,
-                  height: 12,
+                  width: 10,
+                  height: 10,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: COLORS.kStatesLightSuccessColor,
-                    border: Border.all(
-                      width: 2,
-                      color: COLORS.kWhiteColor,
-                    ),
                   ),
                 ),
               ),
