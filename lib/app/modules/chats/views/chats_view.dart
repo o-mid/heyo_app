@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/chats/widgets/chat_widget.dart';
-import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
-import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/generated/locales.g.dart';
+import 'package:heyo/app/modules/chats/widgets/empty_chats_widget.dart';
 
 import '../controllers/chats_controller.dart';
 
@@ -21,42 +19,7 @@ class ChatsView extends GetView<ChatsController> {
 
   Widget _buildChats(List<ChatModel> chats) {
     return chats.length == 0
-        ? SizedBox(
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  LocaleKeys.HomePage_Chats_emptyState_title.tr,
-                  style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
-                ),
-                SizedBox(height: 9),
-                Text(
-                  LocaleKeys.HomePage_Chats_emptyState_subtitle.tr,
-                  style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
-                ),
-                SizedBox(height: 30),
-                ElevatedButton(
-                  // Todo
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    primary: COLORS.kGreenLighterColor,
-                  ),
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 80,
-                    child: Text(
-                      LocaleKeys.HomePage_Chats_emptyState_invite.tr,
-                      style: TextStyle(
-                        color: COLORS.kGreenMainColor,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
+        ? EmptyChatsWidget()
         : ListView.builder(
             itemCount: chats.length,
             itemBuilder: (context, index) {
