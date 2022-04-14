@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/account/views/account_view.dart';
 import 'package:heyo/app/modules/calls/views/calls_view.dart';
@@ -39,18 +40,7 @@ class HomeView extends GetView<HomeController> {
         ),
         body: _pageNavigation[controller.tabIndex.value],
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Get.bottomSheet(
-              _bottomSheetFAB,
-              backgroundColor: COLORS.kWhiteColor,
-              isDismissible: true,
-              persistent: true,
-              enableDrag: true,
-              shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(24))),
-            );
-          },
+          onPressed: _openBottomSheet,
           backgroundColor: COLORS.kGreenMainColor,
           child: Assets.svg.newChat.svg(),
         ),
@@ -64,6 +54,18 @@ class HomeView extends GetView<HomeController> {
       ),
     );
   }
+
+  void _openBottomSheet() {
+    Get.bottomSheet(
+      _bottomSheetFAB,
+      backgroundColor: COLORS.kWhiteColor,
+      isDismissible: true,
+      persistent: true,
+      enableDrag: true,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+    );
+  }
 }
 
 Widget _bottomSheetFAB = Container(
@@ -73,33 +75,50 @@ Widget _bottomSheetFAB = Container(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         CustomSizes.smallSizedBoxHeight,
-        TextButton(
-            //Todo: Start new chat onPressed
-            onPressed: () {},
-            child: Row(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: COLORS.kBrightBlueColor,
-                    ),
-                    child: Assets.svg.newChatIcon.svg(width: 20, height: 20),
-                  ),
-                ),
-                CustomSizes.mediumSizedBoxWidth,
-                Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      LocaleKeys.HomePage_bottomSheet_newChat.tr,
-                      style: TEXTSTYLES.kBodyBasic.copyWith(
-                        color: COLORS.kDarkBlueColor,
+        Row(
+          children: [
+            Expanded(
+              child: TextButton(
+                  //Todo: Start new chat onPressed
+                  onPressed: () {},
+                  child: Row(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: COLORS.kBrightBlueColor,
+                          ),
+                          child:
+                              Assets.svg.newChatIcon.svg(width: 20, height: 20),
+                        ),
                       ),
-                    ))
-              ],
-            )),
+                      CustomSizes.mediumSizedBoxWidth,
+                      Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            LocaleKeys.HomePage_bottomSheet_newChat.tr,
+                            style: TEXTSTYLES.kBodyBasic.copyWith(
+                              color: COLORS.kDarkBlueColor,
+                            ),
+                          ))
+                    ],
+                  )),
+            ),
+            IconButton(
+                // TODO: QR Code onPressed
+                onPressed: () {},
+                alignment: Alignment.center,
+                iconSize: 21.w,
+                icon: Icon(
+                  Icons.qr_code_rounded,
+                  color: COLORS.kDarkBlueColor,
+                )),
+            CustomSizes.smallSizedBoxWidth,
+          ],
+        ),
         TextButton(
             //Todo: Start new group onPressed
             onPressed: () {},
