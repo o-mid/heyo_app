@@ -94,6 +94,9 @@ class LocaleKeys {
       'HomePage_Chats_emptyState_subtitle';
   static const HomePage_Chats_emptyState_invite =
       'HomePage_Chats_emptyState_invite';
+  static const HomePage_bottomSheet_newChat = 'HomePage_bottomSheet_newChat';
+  static const HomePage_bottomSheet_newGroup = 'HomePage_bottomSheet_newGroup';
+  static const HomePage_bottomSheet_invite = 'HomePage_bottomSheet_invite';
 }
 
 class Locales {
@@ -161,5 +164,8 @@ class Locales {
     'HomePage_Chats_emptyState_subtitle':
         'Start with inviting your friends or start new chats',
     'HomePage_Chats_emptyState_invite': 'Invite',
+    'HomePage_bottomSheet_newChat': 'Start new chat',
+    'HomePage_bottomSheet_newGroup': 'Start new group',
+    'HomePage_bottomSheet_invite': 'Invite',
   };
 }

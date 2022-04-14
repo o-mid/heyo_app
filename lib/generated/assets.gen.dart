@@ -56,6 +56,9 @@ class $AssetsPngGen {
 class $AssetsSvgGen {
   const $AssetsSvgGen();
 
+  /// File path: assets/svg/InviteIcon.svg
+  SvgGenImage get inviteIcon => const SvgGenImage('assets/svg/InviteIcon.svg');
+
   /// File path: assets/svg/account.svg
   SvgGenImage get account => const SvgGenImage('assets/svg/account.svg');
 
@@ -71,6 +74,14 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/heyo_logo.svg
   SvgGenImage get heyoLogo => const SvgGenImage('assets/svg/heyo_logo.svg');
+
+  /// File path: assets/svg/newChatIcon.svg
+  SvgGenImage get newChatIcon =>
+      const SvgGenImage('assets/svg/newChatIcon.svg');
+
+  /// File path: assets/svg/newGroupIcon.svg
+  SvgGenImage get newGroupIcon =>
+      const SvgGenImage('assets/svg/newGroupIcon.svg');
 
   /// File path: assets/svg/new_chat.svg
   SvgGenImage get newChat => const SvgGenImage('assets/svg/new_chat.svg');

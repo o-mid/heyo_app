@@ -81,6 +81,11 @@
         "subtitle": "Start with inviting your friends or start new chats",
         "invite": "Invite"
       }
+    },
+    "bottomSheet": {
+      "newChat": "Start new chat",
+      "newGroup": "Start new group",
+      "invite": "Invite"
     }
   }
 }
