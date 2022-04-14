@@ -34,6 +34,10 @@ class $AssetsPngGen {
   /// File path: assets/png/keys.png
   AssetGenImage get keys => const AssetGenImage('assets/png/keys.png');
 
+  /// File path: assets/png/newChatEmptyState.png
+  AssetGenImage get newChatEmptyState =>
+      const AssetGenImage('assets/png/newChatEmptyState.png');
+
   /// File path: assets/png/profile1.png
   AssetGenImage get profile1 => const AssetGenImage('assets/png/profile1.png');
 
@@ -72,8 +76,14 @@ class $AssetsSvgGen {
   SvgGenImage get corePassLogo =>
       const SvgGenImage('assets/svg/corePass_logo.svg');
 
+  /// File path: assets/svg/filterIcon.svg
+  SvgGenImage get filterIcon => const SvgGenImage('assets/svg/filterIcon.svg');
+
   /// File path: assets/svg/heyo_logo.svg
   SvgGenImage get heyoLogo => const SvgGenImage('assets/svg/heyo_logo.svg');
+
+  /// File path: assets/svg/moreIcon.svg
+  SvgGenImage get moreIcon => const SvgGenImage('assets/svg/moreIcon.svg');
 
   /// File path: assets/svg/newChatIcon.svg
   SvgGenImage get newChatIcon =>

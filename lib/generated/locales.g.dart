@@ -97,6 +97,12 @@ class LocaleKeys {
   static const HomePage_bottomSheet_newChat = 'HomePage_bottomSheet_newChat';
   static const HomePage_bottomSheet_newGroup = 'HomePage_bottomSheet_newGroup';
   static const HomePage_bottomSheet_invite = 'HomePage_bottomSheet_invite';
+  static const newChat_newChatAppBar = 'newChat_newChatAppBar';
+  static const newChat_slider_contacts = 'newChat_slider_contacts';
+  static const newChat_slider_nearbyUsers = 'newChat_slider_nearbyUsers';
+  static const newChat_usernameInputFiled = 'newChat_usernameInputFiled';
+  static const newChat_emptyStateTitle = 'newChat_emptyStateTitle';
+  static const newChat_buttons_invite = 'newChat_buttons_invite';
 }
 
 class Locales {
@@ -167,5 +173,12 @@ class Locales {
     'HomePage_bottomSheet_newChat': 'Start new chat',
     'HomePage_bottomSheet_newGroup': 'Start new group',
     'HomePage_bottomSheet_invite': 'Invite',
+    'newChat_newChatAppBar': 'New Chat',
+    'newChat_slider_contacts': 'Contacts',
+    'newChat_slider_nearbyUsers': 'Nearby users',
+    'newChat_usernameInputFiled': 'Type Username or coreID',
+    'newChat_emptyStateTitle':
+        'You don’t have any contacts yet. \n You can invite them now.',
+    'newChat_buttons_invite': 'Invite',
   };
 }

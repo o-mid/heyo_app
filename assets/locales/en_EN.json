@@ -87,5 +87,17 @@
       "newGroup": "Start new group",
       "invite": "Invite"
     }
+  },
+  "newChat": {
+    "newChatAppBar": "New Chat",
+    "slider": {
+      "contacts": "Contacts",
+      "nearbyUsers": "Nearby users"
+    },
+    "usernameInputFiled": "Type Username or coreID",
+    "emptyStateTitle": "You don’t have any contacts yet. \n You can invite them now.",
+    "buttons": {
+      "invite": "Invite"
+    }
   }
 }
