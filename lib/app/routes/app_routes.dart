@@ -15,6 +15,7 @@ abstract class Routes {
   static const SEARCH_NEARBY = _Paths.SEARCH_NEARBY;
   static const ACCOUNT = _Paths.ACCOUNT;
   static const HOME = _Paths.HOME;
+  static const NEW_CHAT = _Paths.NEW_CHAT;
 }
 
 abstract class _Paths {
@@ -31,4 +32,5 @@ abstract class _Paths {
   static const SEARCH_NEARBY = '/search-nearby';
   static const ACCOUNT = '/account';
   static const HOME = '/home';
+  static const NEW_CHAT = '/new-chat';
 }

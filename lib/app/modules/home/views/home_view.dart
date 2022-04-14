@@ -11,6 +11,7 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/utils/widgets/bottom_navigation_bar.dart';
 import 'package:heyo/app/modules/wallet/views/wallet_view.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import '../controllers/home_controller.dart';
@@ -80,7 +81,9 @@ Widget _bottomSheetFAB = Container(
             Expanded(
               child: TextButton(
                   //Todo: Start new chat onPressed
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.toNamed(Routes.NEW_CHAT);
+                  },
                   child: Row(
                     children: [
                       Align(
