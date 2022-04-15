@@ -4,6 +4,8 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
@@ -18,10 +20,13 @@ class MessagesView extends GetView<MessagesController> {
         backgroundColor: COLORS.kAppBackground,
         body: Column(
           children: [
+            SizedBox(height: 54),
+            _buildMessagesHeader(),
             // Todo Messages
             Expanded(
               child: ListView.builder(
-                itemCount: 50,
+                reverse: true,
+                itemCount: 5,
                 itemBuilder: (context, index) {
                   return Container(
                     child: Text("$index"),
@@ -45,7 +50,7 @@ class MessagesView extends GetView<MessagesController> {
               child: Row(
                 children: [
                   GestureDetector(
-                    // Todo
+                    // Todo: implement add media button
                     onTap: () {},
                     child: Container(
                       width: 20,
@@ -86,6 +91,7 @@ class MessagesView extends GetView<MessagesController> {
                     ),
                   ),
                   SizedBox(width: 22),
+                  // Todo: add gesture detection and implement record voice
                   Assets.svg.recordIcon.svg(color: COLORS.kDarkBlueColor),
                 ],
               ),
@@ -105,5 +111,60 @@ class MessagesView extends GetView<MessagesController> {
         ),
       );
     });
+  }
+
+  Widget _buildMessagesHeader() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+      decoration: BoxDecoration(
+        border: Border.all(
+          width: 1,
+          color: COLORS.kPinCodeDeactivateColor,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        children: [
+          CustomCircleAvatar(url: controller.args.chat.icon, size: 64),
+          SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                controller.args.chat.name,
+                style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+              ),
+              SizedBox(width: 8),
+              Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: COLORS.kBlueColor,
+                  shape: BoxShape.circle,
+                ),
+                child: Assets.svg.verified.svg(
+                  color: COLORS.kWhiteColor,
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 4),
+          // Todo: show core id
+          Text(
+            "CB13...586A",
+            style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
+          ),
+          SizedBox(height: 16),
+          Text(
+            LocaleKeys.MessagesPage_endToEndEncryptedMessaging.trParams(
+              {"name": controller.args.chat.name},
+            ),
+            style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
+          ),
+        ],
+      ),
+    );
   }
 }

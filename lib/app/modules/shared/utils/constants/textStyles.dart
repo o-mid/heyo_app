@@ -16,8 +16,8 @@ class TEXTSTYLES {
     fontFamily: FONTS.interFamily,
     fontStyle: FontStyle.normal,
     fontWeight: FONTS.Bold,
-    fontSize: 26.0.sp,
-    height: 1.0,
+    fontSize: 19.0.sp,
+    height: 1.31,
   );
 
   static TextStyle kHeaderMedium = TextStyle(

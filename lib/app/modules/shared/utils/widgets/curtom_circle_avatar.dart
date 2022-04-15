@@ -3,8 +3,10 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 
 class CustomCircleAvatar extends StatelessWidget {
   final String url;
+  final double size;
   final bool isOnline;
-  const CustomCircleAvatar({Key? key, required this.url, this.isOnline = false}) : super(key: key);
+  const CustomCircleAvatar({Key? key, required this.url, required this.size, this.isOnline = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

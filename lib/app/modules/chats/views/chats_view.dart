@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/chats/widgets/chat_widget.dart';
 import 'package:heyo/app/modules/chats/widgets/empty_chats_widget.dart';
+import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
 import '../controllers/chats_controller.dart';
@@ -28,7 +29,10 @@ class ChatsView extends GetView<ChatsController> {
               return InkWell(
                 borderRadius: BorderRadius.circular(8),
                 onTap: () {
-                  Get.toNamed(Routes.MESSAGES);
+                  Get.toNamed(
+                    Routes.MESSAGES,
+                    arguments: MessagesViewArgumentsModel(chat: chats[index]),
+                  );
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 8, bottom: 8),

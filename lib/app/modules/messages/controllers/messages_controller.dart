@@ -1,14 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
 
 class MessagesController extends GetxController {
   final controller = TextEditingController();
   final showEmojiPicker = false.obs;
+  late MessagesViewArgumentsModel args;
 
   @override
   void onInit() {
     super.onInit();
+
+    args = Get.arguments as MessagesViewArgumentsModel;
 
     // Close emoji picker when keyboard opens
     final keyboardVisibilityController = KeyboardVisibilityController();

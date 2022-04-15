@@ -17,6 +17,7 @@ class ChatWidget extends StatelessWidget {
       children: [
         CustomCircleAvatar(
           url: chat.icon,
+          size: 48,
           isOnline: chat.isOnline,
         ),
         SizedBox(width: 16),
