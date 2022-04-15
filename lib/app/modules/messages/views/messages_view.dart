@@ -1,5 +1,6 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -77,9 +78,12 @@ class MessagesView extends GetView<MessagesController> {
                     ),
                   ),
                   SizedBox(width: 26),
-                  GestureDetector(
-                    onTap: controller.toggleEmojiPicker,
-                    child: Assets.svg.emojiIcon.svg(color: COLORS.kDarkBlueColor),
+                  KeyboardDismissOnTap(
+                    dismissOnCapturedTaps: true,
+                    child: GestureDetector(
+                      onTap: controller.toggleEmojiPicker,
+                      child: Assets.svg.emojiIcon.svg(color: COLORS.kDarkBlueColor),
+                    ),
                   ),
                   SizedBox(width: 22),
                   Assets.svg.recordIcon.svg(color: COLORS.kDarkBlueColor),

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 
 class MessagesController extends GetxController {
@@ -8,6 +9,14 @@ class MessagesController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    // Close emoji picker when keyboard opens
+    final keyboardVisibilityController = KeyboardVisibilityController();
+    keyboardVisibilityController.onChange.listen((bool visible) {
+      if (visible) {
+        showEmojiPicker.value = false;
+      }
+    });
   }
 
   @override
@@ -20,7 +29,6 @@ class MessagesController extends GetxController {
 
   void toggleEmojiPicker() {
     showEmojiPicker.value = !showEmojiPicker.value;
-    print(showEmojiPicker.value);
   }
 
   void appendAfterCursorPosition(String str) {
