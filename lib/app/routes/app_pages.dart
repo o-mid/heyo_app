@@ -14,6 +14,8 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/intro/bindings/intro_binding.dart';
 import '../modules/intro/views/intro_view.dart';
+import '../modules/messages/bindings/messages_binding.dart';
+import '../modules/messages/views/messages_view.dart';
 import '../modules/new_chat/bindings/new_chat_binding.dart';
 import '../modules/new_chat/views/new_chat_view.dart';
 import '../modules/search_nearby/bindings/search_nearby_binding.dart';
@@ -86,6 +88,11 @@ class AppPages {
       name: _Paths.NEW_CHAT,
       page: () => NewChatView(),
       binding: NewChatBinding(),
+    ),
+    GetPage(
+      name: _Paths.MESSAGES,
+      page: () => MessagesView(),
+      binding: MessagesBinding(),
     ),
   ];
 }

@@ -99,5 +99,8 @@
     "buttons": {
       "invite": "Invite"
     }
+  },
+  "MessagesPage": {
+    "textFieldHint": "Chat"
   }
 }
