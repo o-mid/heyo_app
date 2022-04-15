@@ -99,6 +99,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/new_chat.svg
   SvgGenImage get newChat => const SvgGenImage('assets/svg/new_chat.svg');
 
+  /// File path: assets/svg/readIcon.svg
+  SvgGenImage get readIcon => const SvgGenImage('assets/svg/readIcon.svg');
+
   /// File path: assets/svg/recordIcon.svg
   SvgGenImage get recordIcon => const SvgGenImage('assets/svg/recordIcon.svg');
 

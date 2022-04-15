@@ -1,8 +1,11 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/messages/widgets/message_from_me_widget.dart';
+import 'package:heyo/app/modules/messages/widgets/message_from_other_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/widgets/curtom_circle_avatar.dart';
@@ -26,10 +29,18 @@ class MessagesView extends GetView<MessagesController> {
             Expanded(
               child: ListView.builder(
                 reverse: true,
-                itemCount: 5,
+                itemCount: controller.messages.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    child: Text("$index"),
+                  final message = controller.messages[index];
+                  if (message.isFromMe) {
+                    return MessageFromMeWidget(message: message);
+                  }
+
+                  return MessageFromOtherWidget(
+                    message: message,
+                    // Todo: change to check for equality of core ID
+                    showTimeAndProfile: index == controller.messages.length - 1 ||
+                        controller.messages[index + 1].senderName != message.senderName,
                   );
                 },
               ),
