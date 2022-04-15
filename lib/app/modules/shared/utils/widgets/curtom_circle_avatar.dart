@@ -13,8 +13,8 @@ class CustomCircleAvatar extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          width: 48,
-          height: 48,
+          width: size,
+          height: size,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(100),
             child: Image.network(
