@@ -24,13 +24,12 @@ class MessagesView extends GetView<MessagesController> {
         body: Column(
           children: [
             SizedBox(height: 54),
-            _buildMessagesHeader(),
-            // Todo Messages
             Expanded(
               child: ListView.builder(
                 reverse: true,
-                itemCount: controller.messages.length,
+                itemCount: controller.messages.length + 1,
                 itemBuilder: (context, index) {
+                  if (index == controller.messages.length) return _buildMessagesHeader();
                   final message = controller.messages[index];
                   if (message.isFromMe) {
                     return MessageFromMeWidget(message: message);
@@ -126,7 +125,7 @@ class MessagesView extends GetView<MessagesController> {
 
   Widget _buildMessagesHeader() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16),
+      margin: EdgeInsets.all(16).copyWith(top: 0),
       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 24),
       decoration: BoxDecoration(
         border: Border.all(
