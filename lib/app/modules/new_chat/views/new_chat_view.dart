@@ -17,9 +17,41 @@ class NewChatView extends GetView<NewChatController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _newchatAppbar(),
-      body: Container(
-        padding: CustomSizes.mainContentPadding,
-        child: _emptyContacts(),
+      backgroundColor: COLORS.kWhiteColor,
+      body: DefaultTabController(
+        length: 2,
+        child: Column(
+          children: [
+            Container(
+              color: COLORS.kTabbarBackgroundColor,
+              child: TabBar(
+                //automaticIndicatorColorAdjustment: false,
+                labelColor: COLORS.kGreenMainColor,
+                labelStyle: TEXTSTYLES.kLinkBig,
+                automaticIndicatorColorAdjustment: true,
+                unselectedLabelColor: COLORS.kTextBlueColor,
+
+                tabs: [
+                  Tab(
+                    text: LocaleKeys.newChat_slider_contacts.tr,
+                  ),
+                  Tab(
+                    text: LocaleKeys.newChat_slider_nearbyUsers.tr,
+                  ),
+                ],
+                indicatorColor: COLORS.kGreenMainColor,
+              ),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  _contacts(),
+                  _nearbyUsers(),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -27,6 +59,7 @@ class NewChatView extends GetView<NewChatController> {
   AppBar _newchatAppbar() {
     return AppBar(
       backgroundColor: COLORS.kGreenMainColor,
+      elevation: 0,
       centerTitle: false,
       title: Text(
         LocaleKeys.newChat_newChatAppBar.tr,
@@ -52,8 +85,8 @@ class NewChatView extends GetView<NewChatController> {
   }
 }
 
-class _emptyContacts extends StatelessWidget {
-  const _emptyContacts({
+class _contacts extends StatelessWidget {
+  const _contacts({
     Key? key,
   }) : super(key: key);
 
@@ -86,5 +119,14 @@ class _emptyContacts extends StatelessWidget {
         )
       ],
     );
+  }
+}
+
+class _nearbyUsers extends StatelessWidget {
+  const _nearbyUsers({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
