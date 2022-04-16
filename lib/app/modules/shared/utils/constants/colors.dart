@@ -11,7 +11,7 @@ class COLORS {
   ///Heyo Brand/Dark Blue
   static const Color kDarkBlueColor = Color(0xff1E294C);
 
-  ///Heyo Brand/Text Blue
+  ///Heyo Brand/Text Blue #697087
   static const Color kTextBlueColor = Color(0xff697087);
 
   ///Heyo Brand/Text Soft Blue

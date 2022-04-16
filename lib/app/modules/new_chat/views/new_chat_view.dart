@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -8,9 +6,9 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-
 import '../../shared/utils/constants/fonts.dart';
 import '../controllers/new_chat_controller.dart';
+import '../widgets/user_widget.dart';
 
 class NewChatView extends GetView<NewChatController> {
   @override
@@ -24,35 +22,39 @@ class NewChatView extends GetView<NewChatController> {
           children: [
             Container(
               color: COLORS.kTabbarBackgroundColor,
-              child: TabBar(
-                //automaticIndicatorColorAdjustment: false,
-                labelColor: COLORS.kGreenMainColor,
-                labelStyle: TEXTSTYLES.kLinkBig,
-                automaticIndicatorColorAdjustment: true,
-                unselectedLabelColor: COLORS.kTextBlueColor,
-
-                tabs: [
-                  Tab(
-                    text: LocaleKeys.newChat_slider_contacts.tr,
-                  ),
-                  Tab(
-                    text: LocaleKeys.newChat_slider_nearbyUsers.tr,
-                  ),
-                ],
-                indicatorColor: COLORS.kGreenMainColor,
-              ),
+              child: _tabbarSlider(),
             ),
             Expanded(
               child: TabBarView(
                 children: [
                   _contacts(),
-                  _nearbyUsers(),
+                  _nearbyUsers(
+                    controller: controller,
+                  )
                 ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  TabBar _tabbarSlider() {
+    return TabBar(
+      labelColor: COLORS.kGreenMainColor,
+      labelStyle: TEXTSTYLES.kLinkBig,
+      automaticIndicatorColorAdjustment: true,
+      unselectedLabelColor: COLORS.kTextBlueColor,
+      tabs: [
+        Tab(
+          text: LocaleKeys.newChat_slider_contacts.tr,
+        ),
+        Tab(
+          text: LocaleKeys.newChat_slider_nearbyUsers.tr,
+        ),
+      ],
+      indicatorColor: COLORS.kGreenMainColor,
     );
   }
 
@@ -85,6 +87,38 @@ class NewChatView extends GetView<NewChatController> {
   }
 }
 
+class _nearbyUsers extends StatelessWidget {
+  const _nearbyUsers({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  final NewChatController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 36),
+      child: Obx(() {
+        return ListView.builder(
+          itemCount: controller.nearbyUsers.length,
+          itemBuilder: (BuildContext context, int index) {
+            return InkWell(
+              borderRadius: BorderRadius.circular(8),
+              // TODO: User onPressed
+              onTap: () {},
+              child: Padding(
+                padding: CustomSizes.userListPadding,
+                child: UserWidget(User: controller.nearbyUsers[index]),
+              ),
+            );
+          },
+        );
+      }),
+    );
+  }
+}
+
 class _contacts extends StatelessWidget {
   const _contacts({
     Key? key,
@@ -113,20 +147,10 @@ class _contacts extends StatelessWidget {
           // TODO : Invite button onPressed
           onTap: () {},
           color: COLORS.kGreenLighterColor,
-
           title: LocaleKeys.newChat_buttons_invite.tr,
           style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kGreenMainColor),
         )
       ],
     );
-  }
-}
-
-class _nearbyUsers extends StatelessWidget {
-  const _nearbyUsers({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }

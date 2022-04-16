@@ -112,6 +112,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/verified.svg
   SvgGenImage get verified => const SvgGenImage('assets/svg/verified.svg');
 
+  /// File path: assets/svg/verifiedWithBluePadding.svg
+  SvgGenImage get verifiedWithBluePadding =>
+      const SvgGenImage('assets/svg/verifiedWithBluePadding.svg');
+
   /// File path: assets/svg/wallet.svg
   SvgGenImage get wallet => const SvgGenImage('assets/svg/wallet.svg');
 }
