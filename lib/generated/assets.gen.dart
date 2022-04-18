@@ -50,6 +50,9 @@ class $AssetsPngGen {
   /// File path: assets/png/profile4.png
   AssetGenImage get profile4 => const AssetGenImage('assets/png/profile4.png');
 
+  /// File path: assets/png/sadEmoji.png
+  AssetGenImage get sadEmoji => const AssetGenImage('assets/png/sadEmoji.png');
+
   /// File path: assets/png/splash.png
   AssetGenImage get splash => const AssetGenImage('assets/png/splash.png');
 

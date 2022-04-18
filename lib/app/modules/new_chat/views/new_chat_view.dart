@@ -97,24 +97,51 @@ class _nearbyUsers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 36),
-      child: Obx(() {
-        return ListView.builder(
-          itemCount: controller.nearbyUsers.length,
-          itemBuilder: (BuildContext context, int index) {
-            return InkWell(
-              borderRadius: BorderRadius.circular(8),
-              // TODO: User onPressed
-              onTap: () {},
-              child: Padding(
-                padding: CustomSizes.userListPadding,
-                child: UserWidget(User: controller.nearbyUsers[index]),
+    return Obx(() {
+      return controller.nearbyUsers.length == 0
+          ? _nearbyUsersEmptyState()
+          // if nearby users is available then run this :
+          : Padding(
+              padding: const EdgeInsets.only(top: 36),
+              child: ListView.builder(
+                itemCount: controller.nearbyUsers.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    // TODO: User onPressed
+                    onTap: () {},
+                    child: Padding(
+                      padding: CustomSizes.userListPadding,
+                      child: UserWidget(User: controller.nearbyUsers[index]),
+                    ),
+                  );
+                },
               ),
             );
-          },
-        );
-      }),
+    });
+  }
+}
+
+class _nearbyUsersEmptyState extends StatelessWidget {
+  const _nearbyUsersEmptyState({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Assets.png.sadEmoji.image(),
+        CustomSizes.largeSizedBoxHeight,
+        Text(
+          LocaleKeys.newChat_emptyStateTitleNearbyUsers.tr,
+          style: TEXTSTYLES.kBodyBasic.copyWith(
+            color: COLORS.kTextBlueColor,
+          ),
+          textAlign: TextAlign.center,
+        )
+      ],
     );
   }
 }
@@ -136,7 +163,7 @@ class _contacts extends StatelessWidget {
         )),
         CustomSizes.largeSizedBoxHeight,
         Text(
-          LocaleKeys.newChat_emptyStateTitle.tr,
+          LocaleKeys.newChat_emptyStateTitleContacts.tr,
           style: TEXTSTYLES.kBodyBasic.copyWith(
             color: COLORS.kTextBlueColor,
           ),

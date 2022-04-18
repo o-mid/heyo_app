@@ -101,7 +101,10 @@ class LocaleKeys {
   static const newChat_slider_contacts = 'newChat_slider_contacts';
   static const newChat_slider_nearbyUsers = 'newChat_slider_nearbyUsers';
   static const newChat_usernameInputFiled = 'newChat_usernameInputFiled';
-  static const newChat_emptyStateTitle = 'newChat_emptyStateTitle';
+  static const newChat_emptyStateTitleContacts =
+      'newChat_emptyStateTitleContacts';
+  static const newChat_emptyStateTitleNearbyUsers =
+      'newChat_emptyStateTitleNearbyUsers';
   static const newChat_buttons_invite = 'newChat_buttons_invite';
   static const MessagesPage_textFieldHint = 'MessagesPage_textFieldHint';
   static const MessagesPage_endToEndEncryptedMessaging =
@@ -180,8 +183,9 @@ class Locales {
     'newChat_slider_contacts': 'Contacts',
     'newChat_slider_nearbyUsers': 'Nearby users',
     'newChat_usernameInputFiled': 'Type Username or coreID',
-    'newChat_emptyStateTitle':
+    'newChat_emptyStateTitleContacts':
         'You don’t have any contacts yet. \n You can invite them now.',
+    'newChat_emptyStateTitleNearbyUsers': 'No users were found nearby',
     'newChat_buttons_invite': 'Invite',
     'MessagesPage_textFieldHint': 'Chat',
     'MessagesPage_endToEndEncryptedMessaging':
