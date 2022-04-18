@@ -104,5 +104,7 @@
   "MessagesPage": {
     "textFieldHint": "Chat",
     "endToEndEncryptedMessaging": "Any messages you exchange are fully encrypted and can only be read by you and @name"
-  }
+  },
+  "yesterday": "Yesterday",
+  "today": "Today"
 }

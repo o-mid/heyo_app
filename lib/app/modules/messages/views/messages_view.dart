@@ -1,5 +1,4 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +8,7 @@ import 'package:heyo/app/modules/messages/widgets/message_from_me_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/message_from_other_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/utils/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
@@ -34,16 +34,41 @@ class MessagesView extends GetView<MessagesController> {
                 itemCount: controller.messages.length + 1,
                 itemBuilder: (context, index) {
                   if (index == controller.messages.length) return _buildMessagesHeader();
+
                   final message = controller.messages[index];
+                  final prevMessage = index == controller.messages.length - 1
+                      ? null
+                      : controller.messages[index + 1];
+
+                  final children = <Widget>[];
+
+                  // Adds date header at beginning of new messages in a certain date
+                  if (prevMessage == null || !prevMessage.timestamp.isSameDate(message.timestamp)) {
+                    children.addAll([
+                      CustomSizes.mediumSizedBoxHeight,
+                      Text(
+                        message.timestamp.differenceFromNow(),
+                        style: TEXTSTYLES.kBodyTag.copyWith(
+                          color: COLORS.kTextBlueColor,
+                          fontSize: 10.sp,
+                        ),
+                      ),
+                      CustomSizes.mediumSizedBoxHeight,
+                    ]);
+                  }
                   if (message.isFromMe) {
-                    return MessageFromMeWidget(message: message);
+                    children.add(MessageFromMeWidget(message: message));
+                  } else {
+                    children.add(MessageFromOtherWidget(
+                      message: message,
+                      // Todo: change to check for equality of core ID
+                      showTimeAndProfile: index == controller.messages.length - 1 ||
+                          controller.messages[index + 1].senderName != message.senderName,
+                    ));
                   }
 
-                  return MessageFromOtherWidget(
-                    message: message,
-                    // Todo: change to check for equality of core ID
-                    showTimeAndProfile: index == controller.messages.length - 1 ||
-                        controller.messages[index + 1].senderName != message.senderName,
+                  return Column(
+                    children: children,
                   );
                 },
               ),
