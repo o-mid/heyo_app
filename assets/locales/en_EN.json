@@ -98,7 +98,8 @@
     "emptyStateTitleContacts": "You don’t have any contacts yet. \n You can invite them now.",
     "emptyStateTitleNearbyUsers": "No users were found nearby",
     "buttons": {
-      "invite": "Invite"
+      "invite": "Invite",
+      "filter": "Filter"
     }
   },
   "MessagesPage": {
