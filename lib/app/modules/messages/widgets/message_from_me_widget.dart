@@ -40,9 +40,14 @@ class MessageFromMeWidget extends StatelessWidget {
               ),
               SizedBox(width: 4.w),
               if (message.status == MESSAGE_STATUS.READ)
-                Assets.svg.readIcon.svg(
+                Assets.svg.doubleTickIcon.svg(
                   width: 12.w,
-                  height: 6.w,
+                  height: 8.w,
+                ),
+              if (message.status == MESSAGE_STATUS.SENT)
+                Assets.svg.singleTickIcon.svg(
+                  width: 8.w,
+                  height: 8.w,
                 ),
             ],
           ),

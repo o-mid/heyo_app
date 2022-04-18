@@ -241,6 +241,15 @@ class MessagesController extends GetxController {
         isFromMe: true,
         status: MESSAGE_STATUS.READ,
       ),
+      MessageModel(
+        messageId: "${index++}",
+        payload: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(Duration(hours: 1, minutes: 52)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MESSAGE_STATUS.SENT,
+      ),
     ]);
 
     messages.value

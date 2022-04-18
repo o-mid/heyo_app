@@ -79,6 +79,10 @@ class $AssetsSvgGen {
   SvgGenImage get corePassLogo =>
       const SvgGenImage('assets/svg/corePass_logo.svg');
 
+  /// File path: assets/svg/doubleTickIcon.svg
+  SvgGenImage get doubleTickIcon =>
+      const SvgGenImage('assets/svg/doubleTickIcon.svg');
+
   /// File path: assets/svg/emojiIcon.svg
   SvgGenImage get emojiIcon => const SvgGenImage('assets/svg/emojiIcon.svg');
 
@@ -102,9 +106,6 @@ class $AssetsSvgGen {
   /// File path: assets/svg/new_chat.svg
   SvgGenImage get newChat => const SvgGenImage('assets/svg/new_chat.svg');
 
-  /// File path: assets/svg/readIcon.svg
-  SvgGenImage get readIcon => const SvgGenImage('assets/svg/readIcon.svg');
-
   /// File path: assets/svg/recordIcon.svg
   SvgGenImage get recordIcon => const SvgGenImage('assets/svg/recordIcon.svg');
 
@@ -115,6 +116,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/search_nearby.svg
   SvgGenImage get searchNearby =>
       const SvgGenImage('assets/svg/search_nearby.svg');
+
+  /// File path: assets/svg/singleTickIcon.svg
+  SvgGenImage get singleTickIcon =>
+      const SvgGenImage('assets/svg/singleTickIcon.svg');
 
   /// File path: assets/svg/verified.svg
   SvgGenImage get verified => const SvgGenImage('assets/svg/verified.svg');
