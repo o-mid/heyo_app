@@ -13,56 +13,87 @@ class SenderReplyToWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Stack(
       children: [
-        Expanded(
-          flex: 3,
+        Positioned(
+          bottom: 0,
+          right: 20.w,
           child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 8.w,
-              vertical: 8.h,
-            ),
-            margin: EdgeInsets.only(bottom: 8.h, right: 32.w, top: 12.h),
+            width: 8.w,
+            height: 40.h,
             decoration: BoxDecoration(
-              border: Border.all(
-                color: COLORS.kPinCodeDeactivateColor,
-              ),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.only(topRight: Radius.circular(4.w)),
+              border: Border.all(color: COLORS.kTextSoftBlueColor, width: 1.w),
             ),
-            child: Column(
-              children: [
-                Row(
-                  textDirection: TextDirection.ltr,
+          ),
+        ),
+
+        // This hides the left and bottom border of the top container
+        Positioned(
+          // w is used for bottom because border width is based on w and should be offset according to that
+          bottom: -1.w,
+          right: 21.w,
+          child: Container(
+            width: 8.w,
+            height: 40.h,
+            decoration: BoxDecoration(
+              color: COLORS.kAppBackground,
+              borderRadius: BorderRadius.only(topRight: Radius.circular(4.w)),
+            ),
+          ),
+        ),
+        Row(
+          children: [
+            Expanded(
+              flex: 3,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 8.w,
+                  vertical: 8.h,
+                ),
+                margin: EdgeInsets.only(bottom: 8.h, right: 32.w, top: 12.h),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: COLORS.kPinCodeDeactivateColor,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
                   children: [
-                    Assets.svg.replyFilled.svg(
-                      width: 12.w,
-                      height: 12.w,
+                    Row(
+                      textDirection: TextDirection.ltr,
+                      children: [
+                        Assets.svg.replyFilled.svg(
+                          width: 12.w,
+                          height: 12.w,
+                        ),
+                        CustomSizes.smallSizedBoxWidth,
+                        Text(
+                          replyTo.repliedToName,
+                          style: TEXTSTYLES.kBodyTag.copyWith(
+                            color: COLORS.kDarkBlueColor,
+                            fontWeight: FONTS.SemiBold,
+                          ),
+                        ),
+                      ],
                     ),
-                    CustomSizes.smallSizedBoxWidth,
+                    SizedBox(height: 2.h),
                     Text(
-                      replyTo.repliedToName,
+                      replyTo.repliedToMessage,
+                      textAlign: TextAlign.end,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TEXTSTYLES.kBodyTag.copyWith(
-                        color: COLORS.kDarkBlueColor,
-                        fontWeight: FONTS.SemiBold,
+                        color: COLORS.kTextBlueColor,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 2.h),
-                Text(
-                  replyTo.repliedToMessage,
-                  textAlign: TextAlign.end,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TEXTSTYLES.kBodyTag.copyWith(
-                    color: COLORS.kTextBlueColor,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+            Spacer(),
+          ],
         ),
-        Spacer(),
       ],
     );
   }
