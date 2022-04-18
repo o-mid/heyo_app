@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -45,15 +46,24 @@ class BottomNavigationBarCustom extends StatelessWidget {
 
   BottomNavigationBarItem _buildNavItem(SvgGenImage icon, String label) {
     return BottomNavigationBarItem(
-      activeIcon: _buildIconWithNotificationCounter(icon.svg(color: COLORS.kGreenMainColor), 0),
-      icon: _buildIconWithNotificationCounter(icon.svg(), 0),
+      activeIcon: _buildIconWithNotificationCounter(
+          icon: icon.svg(
+            width: 20.w,
+            height: 20.w,
+            color: COLORS.kGreenMainColor,
+          ),
+          notificationCount: 0),
+      icon: _buildIconWithNotificationCounter(
+        icon: icon.svg(width: 20.w, height: 20.w),
+        notificationCount: 0,
+      ),
       label: label,
     );
   }
 
-  Widget _buildIconWithNotificationCounter(Widget icon, int count) {
+  Widget _buildIconWithNotificationCounter({required Widget icon, required int notificationCount}) {
     return Container(
-      width: 35,
+      width: 35.w,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -61,12 +71,12 @@ class BottomNavigationBarCustom extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 6, top: 6),
             child: icon,
           ),
-          if (count > 0)
+          if (notificationCount > 0)
             Positioned(
               top: 0,
               right: 0,
               child: NotificationCountBadge(
-                count: count,
+                count: notificationCount,
                 backgroundColor: COLORS.kStatesErrorColor,
               ),
             ),

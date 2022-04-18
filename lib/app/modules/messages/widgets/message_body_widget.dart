@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/messages/data/models/message_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 
 class MessageBodyWidget extends StatelessWidget {
   final MessageModel message;
@@ -17,7 +18,7 @@ class MessageBodyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(width: 16),
+        CustomSizes.mediumSizedBoxWidth,
         Expanded(
           flex: 3,
           child: Column(

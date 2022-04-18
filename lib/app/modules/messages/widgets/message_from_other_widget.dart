@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/messages/data/models/message_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/utils/widgets/curtom_circle_avatar.dart';
 
 import 'message_body_widget.dart';
@@ -17,21 +19,21 @@ class MessageFromOtherWidget extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(width: 16),
+        CustomSizes.mediumSizedBoxWidth,
         if (showTimeAndProfile) CustomCircleAvatar(url: message.senderAvatar, size: 20),
-        if (!showTimeAndProfile) SizedBox(width: 20),
+        if (!showTimeAndProfile) SizedBox(width: 20.w),
         Expanded(
           child: Column(
             children: [
               Row(
                 children: [
-                  SizedBox(width: 16),
+                  CustomSizes.mediumSizedBoxWidth,
                   if (showTimeAndProfile)
                     Text(
                       "${message.timestamp.hour.toString().padLeft(2, '0')}:${message.timestamp.minute.toString().padLeft(2, '0')}",
                       style: TEXTSTYLES.kBodyTag.copyWith(
                         color: COLORS.kTextBlueColor,
-                        fontSize: 10,
+                        fontSize: 10.sp,
                       ),
                     ),
                 ],

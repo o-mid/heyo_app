@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/messages/data/models/message_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
 import 'message_body_widget.dart';
@@ -18,16 +20,20 @@ class MessageFromMeWidget extends StatelessWidget {
         children: [
           Row(
             children: [
-              SizedBox(width: 16),
+              CustomSizes.mediumSizedBoxWidth,
               Text(
                 "${message.timestamp.hour.toString().padLeft(2, '0')}:${message.timestamp.minute.toString().padLeft(2, '0')}",
                 style: TEXTSTYLES.kBodyTag.copyWith(
                   color: COLORS.kTextBlueColor,
-                  fontSize: 10,
+                  fontSize: 10.sp,
                 ),
               ),
-              SizedBox(width: 4),
-              if (message.status == MESSAGE_STATUS.READ) Assets.svg.readIcon.svg(),
+              SizedBox(width: 4.w),
+              if (message.status == MESSAGE_STATUS.READ)
+                Assets.svg.readIcon.svg(
+                  width: 12.w,
+                  height: 6.w,
+                ),
             ],
           ),
           MessageBodyWidget(

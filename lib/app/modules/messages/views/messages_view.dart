@@ -2,12 +2,14 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/widgets/message_from_me_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/message_from_other_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/utils/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -23,7 +25,7 @@ class MessagesView extends GetView<MessagesController> {
         backgroundColor: COLORS.kAppBackground,
         body: Column(
           children: [
-            SizedBox(height: 54),
+            SizedBox(height: 54.h),
             Expanded(
               child: ListView.builder(
                 reverse: true,
@@ -76,7 +78,7 @@ class MessagesView extends GetView<MessagesController> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 18),
+                  CustomSizes.mediumSizedBoxWidth,
                   Expanded(
                     child: TextFormField(
                       maxLines: 7,
@@ -92,7 +94,7 @@ class MessagesView extends GetView<MessagesController> {
                       controller: controller.controller,
                     ),
                   ),
-                  SizedBox(width: 26),
+                  CustomSizes.largeSizedBoxWidth,
                   KeyboardDismissOnTap(
                     dismissOnCapturedTaps: true,
                     child: GestureDetector(
@@ -100,7 +102,7 @@ class MessagesView extends GetView<MessagesController> {
                       child: Assets.svg.emojiIcon.svg(color: COLORS.kDarkBlueColor),
                     ),
                   ),
-                  SizedBox(width: 22),
+                  CustomSizes.largeSizedBoxWidth,
                   // Todo: add gesture detection and implement record voice
                   Assets.svg.recordIcon.svg(color: COLORS.kDarkBlueColor),
                 ],
@@ -125,8 +127,8 @@ class MessagesView extends GetView<MessagesController> {
 
   Widget _buildMessagesHeader() {
     return Container(
-      margin: EdgeInsets.all(16).copyWith(top: 0),
-      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+      margin: EdgeInsets.all(16.w).copyWith(top: 0, bottom: 16.h),
+      padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 24.h),
       decoration: BoxDecoration(
         border: Border.all(
           width: 1,
@@ -137,7 +139,7 @@ class MessagesView extends GetView<MessagesController> {
       child: Column(
         children: [
           CustomCircleAvatar(url: controller.args.chat.icon, size: 64),
-          SizedBox(height: 16),
+          CustomSizes.mediumSizedBoxHeight,
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -145,28 +147,29 @@ class MessagesView extends GetView<MessagesController> {
                 controller.args.chat.name,
                 style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
               ),
-              SizedBox(width: 8),
+              CustomSizes.smallSizedBoxWidth,
               Container(
-                width: 24,
-                height: 24,
+                width: 24.w,
+                height: 24.w,
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
                 decoration: BoxDecoration(
                   color: COLORS.kBlueColor,
                   shape: BoxShape.circle,
                 ),
                 child: Assets.svg.verified.svg(
                   color: COLORS.kWhiteColor,
-                  fit: BoxFit.scaleDown,
+                  // fit: BoxFit.scaleDown,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 4),
+          SizedBox(height: 4.h),
           // Todo: show core id
           Text(
             "CB13...586A",
             style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
           ),
-          SizedBox(height: 16),
+          CustomSizes.mediumSizedBoxHeight,
           Text(
             LocaleKeys.MessagesPage_endToEndEncryptedMessaging.trParams(
               {"name": controller.args.chat.name},

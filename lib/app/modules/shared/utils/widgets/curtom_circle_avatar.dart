@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 
 class CustomCircleAvatar extends StatelessWidget {
@@ -13,8 +14,8 @@ class CustomCircleAvatar extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          width: size,
-          height: size,
+          width: size.w,
+          height: size.w,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(100),
             child: Image.network(
@@ -33,8 +34,8 @@ class CustomCircleAvatar extends StatelessWidget {
             right: 0,
             child: Center(
               child: Container(
-                width: 14,
-                height: 14,
+                width: 14.w,
+                height: 14.w,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: COLORS.kWhiteColor,
@@ -44,14 +45,14 @@ class CustomCircleAvatar extends StatelessWidget {
           ),
         if (isOnline)
           Positioned(
-            bottom: 2,
-            right: 2,
+            bottom: 2.w,
+            right: 2.w,
             child: Container(
-              width: 10,
-              height: 10,
+              width: 10.w,
+              height: 10.w,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: COLORS.kStatesLightSuccessColor,
+                color: COLORS.kOnlineBadgeColor,
               ),
             ),
           ),
