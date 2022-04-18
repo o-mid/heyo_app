@@ -1,0 +1,86 @@
+{
+  "registration": {
+    "WelcomePage": {
+      "title": "Take control of your messages with Heyo",
+      "subtitle": "A truly private messaging app built on a decentralized technology, secured by CorePass.",
+      "buttons": {
+        "Continue": "Continue with CoreID",
+        "Terms": "Terms & Privacy Policy"
+      }
+    },
+    "BenefitsPage": {
+      "sliders": {
+        "title001": "One account \n for all your services",
+        "subtitle001": "Keep your valuable data safely stored \n and quickly accesible from one place.",
+        "title002": "Assurance that you've \n got the right person",
+        "subtitle002": "Know the person you are connecting with \n and how your data is being used.",
+        "title003": "Your data has value",
+        "subtitle003": "Each time your data gets requested, you \n earn an income. Your identity becomes \n your saving and spending tool.",
+        "title004": "Keep your earnings \n in a safe place",
+        "subtitle004": "CorePass comes with an integrated \n cryptocurrency wallet to keep your \n savings safe and secure."
+      },
+
+      "divider": "OR",
+      "footer": "Your data will be safely verified by",
+      "buttons": {
+        "Create": "Create CoreID",
+        "SkipCreate": "I already have CoreID",
+        "Whatis": "What is CoreID?"
+      }
+    },
+    "PINcodePage": {
+      "title": "Set PIN",
+      "subtitle": "Set a 6 digit PIN code to protect your Heyo application",
+      "pinType": "Type your PIN code",
+      "pinRepeat": "Repeat your PIN code",
+      "dialogTitle": "Add an extra layer to your security",
+      "buttons": {
+        "AddBiometric": "Add biometric log in",
+        "SkipBiometric": "Continue without this option"
+      }
+    },
+    "PrivateKeysPage": {
+      "Generating": "Generating private keys..."
+    },
+    "PersonalizationPage": {
+      "title": "Choose your chat name",
+      "subtitle": "All users will see only your CoreID and a readable name that can’t be changed.",
+      "buttons": {
+        "Generate": "Generate new names",
+        "Continue": "Continue"
+      }
+    },
+    "RecoveryMethodPage": {
+      "title": "How do you want to back up your account?",
+      "firstOption": {
+        "title": "Offline, using recovery phrase",
+        "subtitle": "A 24 word phrase will be generated. We highly recommend you to write these words down on paper and store them in a safe offline place."
+      },
+      "SecondOption": {
+        "title": "Digitally, using private key",
+        "subtitle": "Your CoreID account can be recovered with a private key which you will have to protect with a password and store."
+      },
+      "buttons": {
+        "Skip": "Skip for now",
+        "Continue": "Continue"
+      }
+    }
+  },
+  "HomePage": {
+    "title": "Heyo",
+    "navbarItems": {
+      "chats": "Chats",
+      "calls": "Calls",
+      "wallet": "Wallet",
+      "search": "Search",
+      "account": "Account"
+    },
+    "Chats": {
+      "emptyState": {
+        "title": "It looks empty here",
+        "subtitle": "Start with inviting your friends or start new chats",
+        "invite": "Invite"
+      }
+    }
+  }
+}
