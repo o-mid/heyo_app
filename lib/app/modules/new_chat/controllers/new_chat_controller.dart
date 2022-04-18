@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../data/models/filter_model.dart';
 import '../data/models/user_model.dart';
 
 class NewChatController extends GetxController {
@@ -40,6 +41,14 @@ class NewChatController extends GetxController {
       walletAddress: 'CB42...324E',
       icon: "https://avatars.githubusercontent.com/u/9801359?v=4",
       isOnline: true,
+    ),
+  ].obs;
+
+// Mock filters for the users
+  RxList<FilterModel> filters = [
+    FilterModel(
+      title: "Verified",
+      isActive: false.obs,
     ),
   ].obs;
 }

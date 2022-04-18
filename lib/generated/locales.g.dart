@@ -106,6 +106,7 @@ class LocaleKeys {
   static const newChat_emptyStateTitleNearbyUsers =
       'newChat_emptyStateTitleNearbyUsers';
   static const newChat_buttons_invite = 'newChat_buttons_invite';
+  static const newChat_buttons_filter = 'newChat_buttons_filter';
   static const MessagesPage_textFieldHint = 'MessagesPage_textFieldHint';
   static const MessagesPage_endToEndEncryptedMessaging =
       'MessagesPage_endToEndEncryptedMessaging';
@@ -189,6 +190,7 @@ class Locales {
         'You don’t have any contacts yet. \n You can invite them now.',
     'newChat_emptyStateTitleNearbyUsers': 'No users were found nearby',
     'newChat_buttons_invite': 'Invite',
+    'newChat_buttons_filter': 'Filter',
     'MessagesPage_textFieldHint': 'Chat',
     'MessagesPage_endToEndEncryptedMessaging':
         'Any messages you exchange are fully encrypted and can only be read by you and @name',
