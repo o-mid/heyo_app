@@ -13,6 +13,7 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/app/modules/shared/utils/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../controllers/messages_controller.dart';
 
@@ -27,7 +28,8 @@ class MessagesView extends GetView<MessagesController> {
           children: [
             SizedBox(height: 54.h),
             Expanded(
-              child: ListView.builder(
+              child: ScrollablePositionedList.builder(
+                itemScrollController: controller.scrollController,
                 reverse: true,
                 itemCount: controller.messages.length + 1,
                 itemBuilder: (context, index) {
@@ -91,7 +93,7 @@ class MessagesView extends GetView<MessagesController> {
                         focusedErrorBorder: InputBorder.none,
                         hintText: LocaleKeys.MessagesPage_textFieldHint.tr,
                       ),
-                      controller: controller.controller,
+                      controller: controller.textController,
                     ),
                   ),
                   CustomSizes.largeSizedBoxWidth,

@@ -1,4 +1,4 @@
-enum MESSAGE_TYPE {
+enum CONTENT_TYPE {
   TEXT,
 }
 
@@ -10,8 +10,9 @@ enum MESSAGE_STATUS {
 }
 
 class MessageModel {
-  final MESSAGE_TYPE type;
+  final CONTENT_TYPE type;
   final MESSAGE_STATUS status;
+  final String messageId;
   final String payload;
   final DateTime timestamp;
   final ReplyToModel? replyTo;
@@ -21,8 +22,9 @@ class MessageModel {
   final bool isSelected;
 
   MessageModel({
-    this.type = MESSAGE_TYPE.TEXT,
+    this.type = CONTENT_TYPE.TEXT,
     this.status = MESSAGE_STATUS.SENDING,
+    required this.messageId,
     required this.payload,
     required this.timestamp,
     this.replyTo,
@@ -34,8 +36,9 @@ class MessageModel {
 
   // Todo: use freezed package
   MessageModel copyWith({
-    MESSAGE_TYPE? type,
+    CONTENT_TYPE? type,
     MESSAGE_STATUS? status,
+    String? messageId,
     String? payload,
     DateTime? timestamp,
     String? senderName,
@@ -47,6 +50,7 @@ class MessageModel {
         type: type ?? this.type,
         status: status ?? this.status,
         payload: payload ?? this.payload,
+        messageId: messageId ?? this.messageId,
         timestamp: timestamp ?? this.timestamp,
         senderName: senderName ?? this.senderName,
         senderAvatar: senderAvatar ?? this.senderAvatar,
@@ -56,10 +60,12 @@ class MessageModel {
 }
 
 class ReplyToModel {
+  final String repliedToMessageId;
   final String repliedToName;
   final String repliedToMessage;
 
   ReplyToModel({
+    required this.repliedToMessageId,
     required this.repliedToName,
     required this.repliedToMessage,
   });
