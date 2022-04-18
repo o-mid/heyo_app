@@ -108,6 +108,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/recordIcon.svg
   SvgGenImage get recordIcon => const SvgGenImage('assets/svg/recordIcon.svg');
 
+  /// File path: assets/svg/replyFilled.svg
+  SvgGenImage get replyFilled =>
+      const SvgGenImage('assets/svg/replyFilled.svg');
+
   /// File path: assets/svg/search_nearby.svg
   SvgGenImage get searchNearby =>
       const SvgGenImage('assets/svg/search_nearby.svg');

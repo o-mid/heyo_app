@@ -167,7 +167,7 @@ class MessagesController extends GetxController {
         senderName: "",
         senderAvatar: "",
         isFromMe: true,
-        status: MESSAGE_STATUS.SENT,
+        status: MESSAGE_STATUS.READ,
       ),
       MessageModel(
         payload: "Lorem ipsum dolor sit.",
@@ -175,7 +175,25 @@ class MessagesController extends GetxController {
         senderName: "",
         senderAvatar: "",
         isFromMe: true,
-        status: MESSAGE_STATUS.SENT,
+        status: MESSAGE_STATUS.READ,
+      ),
+      MessageModel(
+        payload: "Sure thing. Just let me know when sth happens",
+        timestamp: DateTime.now().subtract(Duration(hours: 1, minutes: 56)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      MessageModel(
+        payload: "Very nice!",
+        timestamp: DateTime.now().subtract(Duration(hours: 1, minutes: 55)),
+        senderName: "",
+        senderAvatar: "",
+        replyTo: ReplyToModel(
+          repliedToMessage: "Sure thing. Just let me know when sth happens",
+          repliedToName: args.chat.name,
+        ),
+        isFromMe: true,
+        status: MESSAGE_STATUS.READ,
       ),
     ]);
 
