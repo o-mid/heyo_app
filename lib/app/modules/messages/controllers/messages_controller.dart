@@ -277,6 +277,41 @@ class MessagesController extends GetxController {
         isFromMe: true,
         status: MESSAGE_STATUS.SENT,
       ),
+      MessageModel(
+        messageId: "${index++}",
+        type: CONTENT_TYPE.IMAGE,
+        payload:
+            "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+        timestamp: DateTime.now().subtract(Duration(hours: 1, minutes: 50)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+        replyTo: ReplyToModel(
+          repliedToMessageId: "0",
+          repliedToMessage:
+              "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+          repliedToName: args.chat.name,
+        ),
+      ),
+      MessageModel(
+        messageId: "${index++}",
+        type: CONTENT_TYPE.IMAGE,
+        payload:
+            "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
+        timestamp: DateTime.now().subtract(Duration(hours: 1, minutes: 49)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MESSAGE_STATUS.READ,
+        reactions: {
+          "🤗": ReactionModel(
+            users: List.generate(1, (index) => ""),
+          ),
+          "😘": ReactionModel(
+            users: List.generate(2, (index) => ""),
+            isReactedByMe: true,
+          ),
+        },
+      ),
     ]);
 
     messages.value

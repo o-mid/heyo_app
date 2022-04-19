@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/messages/data/models/message_model.dart';
@@ -27,16 +28,8 @@ class MessageBodyWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
                 margin: EdgeInsets.only(bottom: 4.h),
-                decoration: BoxDecoration(
-                  color: backgroundColor,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  message.payload,
-                  style: TEXTSTYLES.kChatText.copyWith(color: textColor),
-                ),
+                child: _buildMessageContent(),
               ),
               if (message.reactions.isNotEmpty) ReactionsWidget(reactions: message.reactions),
             ],
@@ -45,5 +38,30 @@ class MessageBodyWidget extends StatelessWidget {
         Spacer(),
       ],
     );
+  }
+
+  Widget _buildMessageContent() {
+    switch (message.type) {
+      case CONTENT_TYPE.TEXT:
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          child: Text(
+            message.payload,
+            style: TEXTSTYLES.kChatText.copyWith(color: textColor),
+          ),
+        );
+      case CONTENT_TYPE.IMAGE:
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(8.r),
+          child: ExtendedImage.network(
+            message.payload,
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+        );
+    }
   }
 }

@@ -1,5 +1,6 @@
 enum CONTENT_TYPE {
   TEXT,
+  IMAGE,
 }
 
 enum MESSAGE_STATUS {
