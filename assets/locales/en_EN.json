@@ -109,7 +109,8 @@
   },
   "MessagesPage": {
     "textFieldHint": "Chat",
-    "endToEndEncryptedMessaging": "Any messages you exchange are fully encrypted and can only be read by you and @name"
+    "endToEndEncryptedMessaging": "Any messages you exchange are fully encrypted and can only be read by you and @name",
+    "onlineVia": "Online via"
   },
   "yesterday": "Yesterday",
   "today": "Today"

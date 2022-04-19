@@ -6,8 +6,12 @@ class CustomCircleAvatar extends StatelessWidget {
   final String url;
   final double size;
   final bool isOnline;
-  const CustomCircleAvatar({Key? key, required this.url, required this.size, this.isOnline = false})
-      : super(key: key);
+  const CustomCircleAvatar({
+    Key? key,
+    required this.url,
+    required this.size,
+    this.isOnline = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +20,12 @@ class CustomCircleAvatar extends StatelessWidget {
         Container(
           width: size.w,
           height: size.w,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: Image.network(
-              url,
-            ),
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+          ),
+          child: Image.network(
+            url,
           ),
         ),
 

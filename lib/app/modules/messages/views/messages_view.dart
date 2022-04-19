@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/widgets/message_from_me_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/message_from_other_widget.dart';
+import 'package:heyo/app/modules/messages/widgets/messaging_app_bar.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
@@ -23,6 +24,7 @@ class MessagesView extends GetView<MessagesController> {
     return Obx(() {
       return Scaffold(
         // Todo Appbar
+        appBar: MessagingAppBar(chat: controller.args.chat),
         backgroundColor: COLORS.kAppBackground,
         body: Column(
           children: [

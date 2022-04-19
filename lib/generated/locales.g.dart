@@ -114,6 +114,7 @@ class LocaleKeys {
   static const MessagesPage_textFieldHint = 'MessagesPage_textFieldHint';
   static const MessagesPage_endToEndEncryptedMessaging =
       'MessagesPage_endToEndEncryptedMessaging';
+  static const MessagesPage_onlineVia = 'MessagesPage_onlineVia';
   static const yesterday = 'yesterday';
   static const today = 'today';
 }
@@ -201,6 +202,7 @@ class Locales {
     'MessagesPage_textFieldHint': 'Chat',
     'MessagesPage_endToEndEncryptedMessaging':
         'Any messages you exchange are fully encrypted and can only be read by you and @name',
+    'MessagesPage_onlineVia': 'Online via',
     'yesterday': 'Yesterday',
     'today': 'Today',
   };

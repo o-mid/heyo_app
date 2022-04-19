@@ -73,6 +73,10 @@ class $AssetsSvgGen {
   SvgGenImage get addToContactsIcon =>
       const SvgGenImage('assets/svg/addToContactsIcon.svg');
 
+  /// File path: assets/svg/audioCallIcon.svg
+  SvgGenImage get audioCallIcon =>
+      const SvgGenImage('assets/svg/audioCallIcon.svg');
+
   /// File path: assets/svg/blockIcon.svg
   SvgGenImage get blockIcon => const SvgGenImage('assets/svg/blockIcon.svg');
 
@@ -98,6 +102,10 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/heyo_logo.svg
   SvgGenImage get heyoLogo => const SvgGenImage('assets/svg/heyo_logo.svg');
+
+  /// File path: assets/svg/lunaConnection.svg
+  SvgGenImage get lunaConnection =>
+      const SvgGenImage('assets/svg/lunaConnection.svg');
 
   /// File path: assets/svg/moreIcon.svg
   SvgGenImage get moreIcon => const SvgGenImage('assets/svg/moreIcon.svg');
@@ -134,6 +142,14 @@ class $AssetsSvgGen {
   /// File path: assets/svg/verifiedWithBluePadding.svg
   SvgGenImage get verifiedWithBluePadding =>
       const SvgGenImage('assets/svg/verifiedWithBluePadding.svg');
+
+  /// File path: assets/svg/verticalMenuIcon.svg
+  SvgGenImage get verticalMenuIcon =>
+      const SvgGenImage('assets/svg/verticalMenuIcon.svg');
+
+  /// File path: assets/svg/videoCallIcon.svg
+  SvgGenImage get videoCallIcon =>
+      const SvgGenImage('assets/svg/videoCallIcon.svg');
 
   /// File path: assets/svg/wallet.svg
   SvgGenImage get wallet => const SvgGenImage('assets/svg/wallet.svg');
