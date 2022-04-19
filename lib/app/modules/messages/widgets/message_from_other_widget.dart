@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
 import 'package:heyo/app/modules/messages/data/models/message_model.dart';
+import 'package:heyo/app/modules/messages/widgets/recipient_reply_to_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
@@ -38,6 +41,16 @@ class MessageFromOtherWidget extends StatelessWidget {
                     ),
                 ],
               ),
+              if (message.replyTo != null)
+                GestureDetector(
+                  onTap: () {
+                    Get.find<MessagesController>()
+                        .scrollToMessage(message.replyTo!.repliedToMessageId);
+                  },
+                  child: RecipientReplyTo(
+                    replyTo: message.replyTo!,
+                  ),
+                ),
               MessageBodyWidget(
                 backgroundColor: COLORS.kPinCodeDeactivateColor,
                 textColor: COLORS.kDarkBlueColor,
