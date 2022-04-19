@@ -211,6 +211,24 @@ class MessagesController extends GetxController {
         timestamp: DateTime.now().subtract(Duration(hours: 1, minutes: 56)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
+        reactions: {
+          "🎉": ReactionModel(
+            users: List.generate(12, (index) => ""),
+          ),
+          "🤘": ReactionModel(
+            users: List.generate(3, (index) => ""),
+            isReactedByMe: true,
+          ),
+          "🔥": ReactionModel(
+            users: List.generate(5, (index) => ""),
+          ),
+          "👍": ReactionModel(
+            users: List.generate(2, (index) => ""),
+          ),
+          "😎": ReactionModel(
+            users: List.generate(1, (index) => ""),
+          ),
+        },
       ),
       MessageModel(
         messageId: "${index++}",
@@ -225,6 +243,15 @@ class MessagesController extends GetxController {
         ),
         isFromMe: true,
         status: MESSAGE_STATUS.READ,
+        reactions: {
+          "🤗": ReactionModel(
+            users: List.generate(1, (index) => ""),
+          ),
+          "😘": ReactionModel(
+            users: List.generate(2, (index) => ""),
+            isReactedByMe: true,
+          ),
+        },
       ),
       MessageModel(
         messageId: "${index++}",

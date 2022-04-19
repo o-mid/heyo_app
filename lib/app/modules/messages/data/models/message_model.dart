@@ -16,6 +16,7 @@ class MessageModel {
   final String payload;
   final DateTime timestamp;
   final ReplyToModel? replyTo;
+  final Map<String, ReactionModel> reactions;
   final String senderName;
   final String senderAvatar;
   final bool isFromMe;
@@ -28,6 +29,7 @@ class MessageModel {
     required this.payload,
     required this.timestamp,
     this.replyTo,
+    this.reactions = const {},
     required this.senderName,
     required this.senderAvatar,
     this.isFromMe = false,
@@ -41,6 +43,7 @@ class MessageModel {
     String? messageId,
     String? payload,
     DateTime? timestamp,
+    Map<String, ReactionModel>? reactions,
     String? senderName,
     String? senderAvatar,
     bool? isFromMe,
@@ -52,6 +55,7 @@ class MessageModel {
         payload: payload ?? this.payload,
         messageId: messageId ?? this.messageId,
         timestamp: timestamp ?? this.timestamp,
+        reactions: reactions ?? this.reactions,
         senderName: senderName ?? this.senderName,
         senderAvatar: senderAvatar ?? this.senderAvatar,
         isFromMe: isFromMe ?? this.isFromMe,
@@ -69,4 +73,21 @@ class ReplyToModel {
     required this.repliedToName,
     required this.repliedToMessage,
   });
+}
+
+class ReactionModel {
+  /// List of user ids that have reacted
+  final List<String> users;
+  final bool isReactedByMe;
+
+  ReactionModel({this.users = const [], this.isReactedByMe = false});
+
+  ReactionModel copyWith({
+    List<String>? users,
+    bool? isReactedByMe,
+  }) =>
+      ReactionModel(
+        users: users ?? this.users,
+        isReactedByMe: isReactedByMe ?? this.isReactedByMe,
+      );
 }

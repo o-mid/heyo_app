@@ -117,4 +117,21 @@ class TEXTSTYLES {
     fontSize: 13.0.sp,
     height: 1.38,
   );
+
+  ///
+  static TextStyle kReactionEmoji = TextStyle(
+    fontFamily: FONTS.interFamily,
+    fontStyle: FontStyle.normal,
+    fontWeight: FONTS.Medium,
+    fontSize: 16.0.sp,
+    height: 1.18,
+  );
+
+  static TextStyle kReactionNumber = TextStyle(
+    fontFamily: FONTS.interFamily,
+    fontStyle: FontStyle.normal,
+    fontWeight: FONTS.Medium,
+    fontSize: 10.0.sp,
+    height: 1.21,
+  );
 }

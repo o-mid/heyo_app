@@ -51,6 +51,7 @@ class MessageFromMeWidget extends StatelessWidget {
                 ),
             ],
           ),
+          SizedBox(height: 4.h),
           MessageBodyWidget(
             backgroundColor: COLORS.kGreenMainColor,
             textColor: COLORS.kWhiteColor,

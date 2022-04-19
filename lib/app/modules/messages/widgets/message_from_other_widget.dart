@@ -41,6 +41,7 @@ class MessageFromOtherWidget extends StatelessWidget {
                     ),
                 ],
               ),
+              SizedBox(height: 4.h),
               if (message.replyTo != null)
                 GestureDetector(
                   onTap: () {
