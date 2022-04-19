@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -6,8 +8,11 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../shared/utils/constants/fonts.dart';
+import '../../shared/utils/widgets/curtom_circle_avatar.dart';
 import '../controllers/new_chat_controller.dart';
+import '../data/models/user_model.dart';
 import '../widgets/user_widget.dart';
 
 class NewChatView extends GetView<NewChatController> {
@@ -138,7 +143,7 @@ class NewChatView extends GetView<NewChatController> {
       isDismissible: true,
       enableDrag: true,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(24))),
+          borderRadius: BorderRadius.all(Radius.circular(20))),
     );
   }
 }
@@ -154,34 +159,182 @@ class _nearbyUsers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return controller.nearbyUsers.length == 0
-          ? _nearbyUsersEmptyState()
-          // if nearby users is available then run this :
-          : Padding(
-              padding: const EdgeInsets.only(top: 36),
-              child: ListView.builder(
-                itemCount: controller.nearbyUsers.length,
-                itemBuilder: (BuildContext context, int index) {
-                  // this will check if verified filter is applyed or not
-                  if (controller.filters.first.isActive.value &&
-                      // check if user is verified or not
-                      controller.nearbyUsers[index].isVerified == false) {
-                    return SizedBox();
-                  } else {
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(8),
-                      // TODO: User onPressed
-                      onTap: () {},
-                      child: Padding(
-                        padding: CustomSizes.userListPadding,
-                        child: UserWidget(User: controller.nearbyUsers[index]),
-                      ),
-                    );
-                  }
-                },
+      return SmartRefresher(
+        controller: controller.refreshController,
+        enablePullDown: true,
+        onRefresh: controller.onRefresh,
+        header: MaterialClassicHeader(
+          color: COLORS.kGreenMainColor,
+          distance: 32,
+          backgroundColor: COLORS.kGreenLighterColor,
+        ),
+        child: controller.nearbyUsers.length == 0
+            ? _nearbyUsersEmptyState()
+            // if nearby users is available then run this :
+            : Padding(
+                padding: const EdgeInsets.only(top: 36),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: controller.nearbyUsers.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    // this will check if verified filter is applyed or not
+                    if (controller.filters.first.isActive.value &&
+                        // check if user is verified or not
+                        controller.nearbyUsers[index].isVerified == false) {
+                      return SizedBox();
+                    } else {
+                      return InkWell(
+                        borderRadius: BorderRadius.circular(8),
+                        // TODO: User onPressed
+                        onTap: () => _openUserPreviewBottomSheet(index),
+                        child: Padding(
+                          padding: CustomSizes.userListPadding,
+                          child:
+                              UserWidget(User: controller.nearbyUsers[index]),
+                        ),
+                      );
+                    }
+                  },
+                ),
               ),
-            );
+      );
     });
+  }
+
+  void _openUserPreviewBottomSheet(int index) {
+    UserModel _currentUser = controller.nearbyUsers[index];
+    Get.bottomSheet(
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CustomSizes.largeSizedBoxHeight,
+          CustomCircleAvatar(url: _currentUser.icon, size: 64),
+          CustomSizes.mediumSizedBoxHeight,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                _currentUser.name,
+                style: TEXTSTYLES.kHeaderLarge
+                    .copyWith(color: COLORS.kDarkBlueColor),
+              ),
+              CustomSizes.smallSizedBoxWidth,
+              _currentUser.isVerified
+                  ? Assets.svg.verifiedWithBluePadding.svg(
+                      alignment: Alignment.center, height: 24.w, width: 24.w)
+                  : SizedBox(),
+            ],
+          ),
+          CustomSizes.smallSizedBoxHeight,
+          Text(
+            _currentUser.walletAddress,
+            style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
+          ),
+          CustomSizes.smallSizedBoxHeight,
+          Padding(
+            padding: CustomSizes.iconListPadding,
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  CustomSizes.smallSizedBoxHeight,
+                  TextButton(
+                      //Todo: Chat onPressed
+                      onPressed: () {},
+                      child: Row(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: COLORS.kBrightBlueColor,
+                              ),
+                              child: Assets.svg.newChatIcon
+                                  .svg(width: 20, height: 20),
+                            ),
+                          ),
+                          CustomSizes.mediumSizedBoxWidth,
+                          Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                LocaleKeys.newChat_userBottomSheet_chat.tr,
+                                style: TEXTSTYLES.kLinkBig.copyWith(
+                                  color: COLORS.kDarkBlueColor,
+                                ),
+                              ))
+                        ],
+                      )),
+                  TextButton(
+                      //Todo: Add To Contacts onPressed
+                      onPressed: () {},
+                      child: Row(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: COLORS.kBrightBlueColor,
+                              ),
+                              child: Assets.svg.addToContactsIcon
+                                  .svg(width: 20, height: 20),
+                            ),
+                          ),
+                          CustomSizes.mediumSizedBoxWidth,
+                          Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                LocaleKeys
+                                    .newChat_userBottomSheet_addToContacts.tr,
+                                style: TEXTSTYLES.kLinkBig.copyWith(
+                                  color: COLORS.kDarkBlueColor,
+                                ),
+                              ))
+                        ],
+                      )),
+                  TextButton(
+                      //Todo: Block onPressed
+                      onPressed: () {},
+                      child: Row(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: COLORS.kStatesErrorBackgroundColor,
+                              ),
+                              child: Assets.svg.blockIcon
+                                  .svg(width: 20, height: 20),
+                            ),
+                          ),
+                          CustomSizes.mediumSizedBoxWidth,
+                          Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                LocaleKeys.newChat_userBottomSheet_block.tr,
+                                style: TEXTSTYLES.kLinkBig.copyWith(
+                                  color: COLORS.kStatesErrorColor,
+                                ),
+                              ))
+                        ],
+                      )),
+                  CustomSizes.largeSizedBoxHeight,
+                ]),
+          ),
+        ],
+      ),
+      backgroundColor: COLORS.kWhiteColor,
+      isDismissible: true,
+      enableDrag: true,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20))),
+    );
   }
 }
 

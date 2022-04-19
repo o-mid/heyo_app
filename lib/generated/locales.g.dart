@@ -107,6 +107,10 @@ class LocaleKeys {
       'newChat_emptyStateTitleNearbyUsers';
   static const newChat_buttons_invite = 'newChat_buttons_invite';
   static const newChat_buttons_filter = 'newChat_buttons_filter';
+  static const newChat_userBottomSheet_chat = 'newChat_userBottomSheet_chat';
+  static const newChat_userBottomSheet_addToContacts =
+      'newChat_userBottomSheet_addToContacts';
+  static const newChat_userBottomSheet_block = 'newChat_userBottomSheet_block';
   static const MessagesPage_textFieldHint = 'MessagesPage_textFieldHint';
   static const MessagesPage_endToEndEncryptedMessaging =
       'MessagesPage_endToEndEncryptedMessaging';
@@ -191,6 +195,9 @@ class Locales {
     'newChat_emptyStateTitleNearbyUsers': 'No users were found nearby',
     'newChat_buttons_invite': 'Invite',
     'newChat_buttons_filter': 'Filter',
+    'newChat_userBottomSheet_chat': 'Chat',
+    'newChat_userBottomSheet_addToContacts': 'Add to contacts',
+    'newChat_userBottomSheet_block': 'Block',
     'MessagesPage_textFieldHint': 'Chat',
     'MessagesPage_endToEndEncryptedMessaging':
         'Any messages you exchange are fully encrypted and can only be read by you and @name',

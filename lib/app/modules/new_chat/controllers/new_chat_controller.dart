@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../data/models/filter_model.dart';
 import '../data/models/user_model.dart';
@@ -51,4 +52,11 @@ class NewChatController extends GetxController {
       isActive: false.obs,
     ),
   ].obs;
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
+  void onRefresh() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+
+    refreshController.refreshCompleted();
+  }
 }

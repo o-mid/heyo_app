@@ -68,6 +68,9 @@ class COLORS {
   ///States/Error icon/text
   static const Color kStatesErrorColor = Color(0xffE81539);
 
+  ///States/Error icon red background FFE6E7
+  static const Color kStatesErrorBackgroundColor = Color(0xffFFE6E7);
+
   ///States/Error Light
   static const Color kStatesLightErrorColor = Color(0xffFFF3F3);
 
@@ -81,5 +84,6 @@ class COLORS {
   static const Color kOnlineBadgeColor = Color(0xff37E028);
 
   /// Tab bar slider background #F8F7FF 80% opacity
-  static const Color kTabbarBackgroundColor = Color.fromARGB(204, 248, 247, 255);
+  static const Color kTabbarBackgroundColor =
+      Color.fromARGB(204, 248, 247, 255);
 }

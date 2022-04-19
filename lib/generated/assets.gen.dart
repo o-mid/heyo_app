@@ -69,6 +69,13 @@ class $AssetsSvgGen {
   /// File path: assets/svg/account.svg
   SvgGenImage get account => const SvgGenImage('assets/svg/account.svg');
 
+  /// File path: assets/svg/addToContactsIcon.svg
+  SvgGenImage get addToContactsIcon =>
+      const SvgGenImage('assets/svg/addToContactsIcon.svg');
+
+  /// File path: assets/svg/blockIcon.svg
+  SvgGenImage get blockIcon => const SvgGenImage('assets/svg/blockIcon.svg');
+
   /// File path: assets/svg/call.svg
   SvgGenImage get call => const SvgGenImage('assets/svg/call.svg');
 

@@ -10,6 +10,10 @@ class CustomSizes {
   static EdgeInsetsGeometry userListPadding =
       EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 8.h);
 
+  /// left and right : 20px , bottom : 8px , top: 8px
+  static EdgeInsetsGeometry iconListPadding =
+      EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 8.h);
+
   /// height: 8.h
   static SizedBox smallSizedBoxHeight = SizedBox(height: 8.h);
 
