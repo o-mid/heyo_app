@@ -78,13 +78,15 @@ class SenderReplyToWidget extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 2.h),
-                    Text(
-                      replyTo.repliedToMessage,
-                      textAlign: TextAlign.end,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TEXTSTYLES.kBodyTag.copyWith(
-                        color: COLORS.kTextBlueColor,
+                    Container(
+                      child: Text(
+                        replyTo.repliedToMessage,
+                        textAlign: TextAlign.end,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TEXTSTYLES.kBodyTag.copyWith(
+                          color: COLORS.kTextBlueColor,
+                        ),
                       ),
                     ),
                   ],
