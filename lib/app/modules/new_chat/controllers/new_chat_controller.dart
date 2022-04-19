@@ -1,15 +1,35 @@
+import 'package:flutter/animation.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../data/models/filter_model.dart';
 import '../data/models/user_model.dart';
 
-class NewChatController extends GetxController {
+class NewChatController extends GetxController
+    with GetSingleTickerProviderStateMixin {
+  late AnimationController animController;
+  late Animation<double> animation;
+  RxBool refreshBtnVisibility = false.obs;
+  void makeRefreshBtnVisible() {
+    Future.delayed(const Duration(seconds: 3), () {
+      refreshBtnVisibility.value = true;
+    });
+  }
+
   //TODO: Implement NewChatController
 
   final count = 0.obs;
   @override
   void onInit() {
+    animController = AnimationController(
+      duration: const Duration(seconds: 3),
+      vsync: this,
+    )..repeat(reverse: true);
+    animation = Tween<double>(
+      begin: 0.9,
+      end: 1.05,
+    ).animate(animController);
+
     super.onInit();
   }
 
@@ -19,7 +39,10 @@ class NewChatController extends GetxController {
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    animController.dispose();
+  }
+
   void increment() => count.value++;
 
 // Mock data for the users

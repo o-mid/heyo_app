@@ -107,6 +107,8 @@ class LocaleKeys {
       'newChat_emptyStateTitleNearbyUsers';
   static const newChat_buttons_invite = 'newChat_buttons_invite';
   static const newChat_buttons_filter = 'newChat_buttons_filter';
+  static const newChat_buttons_pullDownToRefresh =
+      'newChat_buttons_pullDownToRefresh';
   static const newChat_userBottomSheet_chat = 'newChat_userBottomSheet_chat';
   static const newChat_userBottomSheet_addToContacts =
       'newChat_userBottomSheet_addToContacts';
@@ -196,6 +198,7 @@ class Locales {
     'newChat_emptyStateTitleNearbyUsers': 'No users were found nearby',
     'newChat_buttons_invite': 'Invite',
     'newChat_buttons_filter': 'Filter',
+    'newChat_buttons_pullDownToRefresh': 'Pull down to refresh',
     'newChat_userBottomSheet_chat': 'Chat',
     'newChat_userBottomSheet_addToContacts': 'Add to contacts',
     'newChat_userBottomSheet_block': 'Block',

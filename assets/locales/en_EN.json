@@ -99,7 +99,8 @@
     "emptyStateTitleNearbyUsers": "No users were found nearby",
     "buttons": {
       "invite": "Invite",
-      "filter": "Filter"
+      "filter": "Filter",
+      "pullDownToRefresh": "Pull down to refresh"
     },
     "userBottomSheet": {
       "chat": "Chat",

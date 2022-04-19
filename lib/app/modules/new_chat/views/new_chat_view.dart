@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -159,6 +161,7 @@ class _nearbyUsers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      controller.makeRefreshBtnVisible();
       return SmartRefresher(
         controller: controller.refreshController,
         enablePullDown: true,
@@ -168,35 +171,76 @@ class _nearbyUsers extends StatelessWidget {
           distance: 32,
           backgroundColor: COLORS.kGreenLighterColor,
         ),
-        child: controller.nearbyUsers.length == 0
-            ? _nearbyUsersEmptyState()
-            // if nearby users is available then run this :
-            : Padding(
-                padding: const EdgeInsets.only(top: 36),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: controller.nearbyUsers.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    // this will check if verified filter is applyed or not
-                    if (controller.filters.first.isActive.value &&
-                        // check if user is verified or not
-                        controller.nearbyUsers[index].isVerified == false) {
-                      return SizedBox();
-                    } else {
-                      return InkWell(
-                        borderRadius: BorderRadius.circular(8),
-                        // TODO: User onPressed
-                        onTap: () => _openUserPreviewBottomSheet(index),
-                        child: Padding(
-                          padding: CustomSizes.userListPadding,
-                          child:
-                              UserWidget(User: controller.nearbyUsers[index]),
-                        ),
-                      );
-                    }
-                  },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            controller.nearbyUsers.length == 0
+                ? _nearbyUsersEmptyState()
+                // if nearby users is available then run this :
+                : Padding(
+                    padding: const EdgeInsets.only(top: 36),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: controller.nearbyUsers.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        // this will check if verified filter is applyed or not
+                        if (controller.filters.first.isActive.value &&
+                            // check if user is verified or not
+                            controller.nearbyUsers[index].isVerified == false) {
+                          return SizedBox();
+                        } else {
+                          return InkWell(
+                            borderRadius: BorderRadius.circular(8),
+                            // TODO: User onPressed
+                            onTap: () => _openUserPreviewBottomSheet(index),
+                            child: Padding(
+                              padding: CustomSizes.userListPadding,
+                              child: UserWidget(
+                                  User: controller.nearbyUsers[index]),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+            Column(
+              children: [
+                Visibility(
+                  // will be visible after delayed
+                  visible: controller.refreshBtnVisibility.value,
+                  child: ScaleTransition(
+                    scale: controller.animation,
+                    child: TextButton.icon(
+                      onPressed: () {
+                        controller.refreshController.requestRefresh();
+                      },
+                      icon: Icon(
+                        Icons.keyboard_double_arrow_down_rounded,
+                        color: COLORS.kGreenMainColor,
+                        size: 22,
+                      ),
+                      label: Text(
+                        LocaleKeys.newChat_buttons_pullDownToRefresh.tr,
+                        style: TEXTSTYLES.kButtonSmall.copyWith(
+                            color: COLORS.kGreenMainColor, wordSpacing: 0.5),
+                      ),
+                      style: TextButton.styleFrom(
+                          backgroundColor: COLORS.kGreenLighterColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 0, horizontal: 22)),
+                    ),
+                  ),
                 ),
-              ),
+                SizedBox(
+                  height: 35.h,
+                ),
+              ],
+            )
+          ],
+        ),
       );
     });
   }
