@@ -1,12 +1,10 @@
-import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -34,7 +32,9 @@ class NewChatView extends GetView<NewChatController> {
             Expanded(
               child: TabBarView(
                 children: [
-                  _contacts(),
+                  _contacts(
+                    controller: controller,
+                  ),
                   _nearbyUsers(
                     controller: controller,
                   )
@@ -409,14 +409,91 @@ class _nearbyUsersEmptyState extends StatelessWidget {
 class _contacts extends StatelessWidget {
   const _contacts({
     Key? key,
+    required this.controller,
+  }) : super(key: key);
+  final NewChatController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            CustomSizes.largeSizedBoxHeight,
+            Padding(
+              padding: CustomSizes.mainContentPadding,
+              child: FocusScope(
+                child: Focus(
+                  onFocusChange: (focus) =>
+                      controller.isTextInputFocused.value = focus,
+                  child: CUSTOMTEXTFIELD(
+                      labelText: LocaleKeys.newChat_usernameInput.tr,
+                      textController: controller.usernameInputController,
+                      onChanged: () {
+                        controller.searchUsers(
+                            controller.usernameInputController.text);
+                      }),
+                ),
+              ),
+            ),
+            controller.isTextInputFocused.value == false
+                ? _contactsBody()
+                : Column(
+                    children: [
+                      CustomSizes.smallSizedBoxHeight,
+                      Divider(thickness: 8, color: COLORS.kBrightBlueColor),
+                      CustomSizes.largeSizedBoxHeight,
+                      Padding(
+                        padding: CustomSizes.mainContentPadding,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              LocaleKeys.newChat_searchResults.tr,
+                              style: TEXTSTYLES.kLinkSmall,
+                            ),
+                            CustomSizes.mediumSizedBoxHeight,
+                            ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: controller.searchSuggestions.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                var suggestedUser =
+                                    controller.searchSuggestions[index];
+                                return InkWell(
+                                  borderRadius: BorderRadius.circular(8),
+                                  // TODO: User onPressed
+                                  //  onTap: () => _openUserPreviewBottomSheet(index),
+                                  child: Padding(
+                                      padding: CustomSizes.userListPadding,
+                                      child: UserWidget(
+                                        User: suggestedUser,
+                                      )),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+          ],
+        ),
+      );
+    });
+  }
+}
+
+class _contactsBody extends StatelessWidget {
+  const _contactsBody({
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        CustomSizes.largeSizedBoxHeight,
         Center(
             child: Assets.png.newChatEmptyState.image(
           alignment: Alignment.center,
@@ -436,7 +513,7 @@ class _contacts extends StatelessWidget {
           color: COLORS.kGreenLighterColor,
           title: LocaleKeys.newChat_buttons_invite.tr,
           style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kGreenMainColor),
-        )
+        ),
       ],
     );
   }

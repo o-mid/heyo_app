@@ -97,6 +97,8 @@
     "usernameInputFiled": "Type Username or coreID",
     "emptyStateTitleContacts": "You don’t have any contacts yet. \n You can invite them now.",
     "emptyStateTitleNearbyUsers": "No users were found nearby",
+    "usernameInput": "Type Username or Core ID",
+    "searchResults": "Search results",
     "buttons": {
       "invite": "Invite",
       "filter": "Filter",

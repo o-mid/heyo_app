@@ -1,4 +1,5 @@
 import 'package:flutter/animation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -41,6 +42,7 @@ class NewChatController extends GetxController
   @override
   void onClose() {
     animController.dispose();
+    usernameInputController.dispose();
   }
 
   void increment() => count.value++;
@@ -82,4 +84,19 @@ class NewChatController extends GetxController
 
     refreshController.refreshCompleted();
   }
+
+  RxList<UserModel> searchSuggestions = <UserModel>[].obs;
+  TextEditingController usernameInputController = TextEditingController();
+
+  void searchUsers(String query) {
+    searchSuggestions.value = nearbyUsers.where((user) {
+      String username = user.name.toLowerCase();
+      String inputedQuery = query.toLowerCase();
+      return username.contains(inputedQuery);
+    }).toList();
+    searchSuggestions.refresh();
+    print(searchSuggestions);
+  }
+
+  RxBool isTextInputFocused = false.obs;
 }
