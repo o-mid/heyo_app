@@ -37,7 +37,11 @@ class MessageSelectionOptions extends StatelessWidget {
   Widget _buildOption(SvgGenImage icon, String text) {
     return Column(
       children: [
-        icon.svg(),
+        icon.svg(
+          color: COLORS.kMessageSelectionOption,
+          width: 18.w,
+          height: 14.w,
+        ),
         SizedBox(height: 7.h),
         Text(
           text,
