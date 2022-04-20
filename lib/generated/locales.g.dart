@@ -105,6 +105,8 @@ class LocaleKeys {
       'newChat_emptyStateTitleContacts';
   static const newChat_emptyStateTitleNearbyUsers =
       'newChat_emptyStateTitleNearbyUsers';
+  static const newChat_usernameInput = 'newChat_usernameInput';
+  static const newChat_searchResults = 'newChat_searchResults';
   static const newChat_buttons_invite = 'newChat_buttons_invite';
   static const newChat_buttons_filter = 'newChat_buttons_filter';
   static const newChat_buttons_pullDownToRefresh =
@@ -196,6 +198,8 @@ class Locales {
     'newChat_emptyStateTitleContacts':
         'You don’t have any contacts yet. \n You can invite them now.',
     'newChat_emptyStateTitleNearbyUsers': 'No users were found nearby',
+    'newChat_usernameInput': 'Type Username or Core ID',
+    'newChat_searchResults': 'Search results',
     'newChat_buttons_invite': 'Invite',
     'newChat_buttons_filter': 'Filter',
     'newChat_buttons_pullDownToRefresh': 'Pull down to refresh',
