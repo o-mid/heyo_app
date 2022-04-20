@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -429,6 +430,13 @@ class _contacts extends StatelessWidget {
                   child: CUSTOMTEXTFIELD(
                       labelText: LocaleKeys.newChat_usernameInput.tr,
                       textController: controller.usernameInputController,
+                      rightWidget: IconButton(
+                        icon: Icon(
+                          Icons.qr_code_rounded,
+                          color: COLORS.kDarkBlueColor,
+                        ),
+                        onPressed: () => {},
+                      ),
                       onChanged: () {
                         controller.searchUsers(
                             controller.usernameInputController.text);
@@ -437,7 +445,7 @@ class _contacts extends StatelessWidget {
               ),
             ),
             controller.isTextInputFocused.value == false
-                ? _contactsBody()
+                ? _contactsBody(controller: controller)
                 : Column(
                     children: [
                       CustomSizes.smallSizedBoxHeight,
@@ -486,7 +494,10 @@ class _contacts extends StatelessWidget {
 class _contactsBody extends StatelessWidget {
   const _contactsBody({
     Key? key,
+    required this.controller,
   }) : super(key: key);
+
+  final NewChatController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -509,7 +520,87 @@ class _contactsBody extends StatelessWidget {
         CustomSizes.largeSizedBoxHeight,
         CustomButton.primarySmall(
           // TODO : Invite button onPressed
-          onTap: () {},
+          onTap: () {
+            Get.bottomSheet(
+              Container(
+                padding: CustomSizes.mainContentPadding,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomSizes.largeSizedBoxHeight,
+                    Assets.png.chain.image(
+                      alignment: Alignment.center,
+                    ),
+                    CustomSizes.largeSizedBoxHeight,
+                    Text(
+                        LocaleKeys
+                            .newChat_inviteBottomSheet_inviteYourFriend.tr,
+                        style: TEXTSTYLES.kHeaderLarge.copyWith(
+                          color: COLORS.kDarkBlueColor,
+                        )),
+                    CustomSizes.mediumSizedBoxHeight,
+                    TextButton(
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(
+                            text: controller.profile.link,
+                          )).then((result) {
+                            // show toast or snackbar after successfully save
+
+                            Get.rawSnackbar(
+                              messageText: Center(
+                                child: Text(
+                                  "Link copied to clipboard",
+                                  style: TEXTSTYLES.kBodySmall
+                                      .copyWith(color: COLORS.kDarkBlueColor),
+                                ),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 14),
+                              backgroundColor: COLORS.kWhiteColor,
+                              snackStyle: SnackStyle.FLOATING,
+                              borderRadius: 8,
+                              snackPosition: SnackPosition.TOP,
+                              maxWidth: 250,
+                            );
+                          });
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              COLORS.kBrightBlueColor),
+                          padding: MaterialStateProperty.all(
+                            EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 14.0),
+                          ),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              controller.profile.link,
+                              style: TEXTSTYLES.kLinkBig.copyWith(
+                                color: COLORS.kTextBlueColor,
+                              ),
+                            ),
+                            Assets.svg.copyIcon.svg(),
+                          ],
+                        )),
+                  ],
+                ),
+              ),
+              backgroundColor: COLORS.kWhiteColor,
+              isDismissible: true,
+              enableDrag: true,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+            );
+          },
           color: COLORS.kGreenLighterColor,
           title: LocaleKeys.newChat_buttons_invite.tr,
           style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kGreenMainColor),

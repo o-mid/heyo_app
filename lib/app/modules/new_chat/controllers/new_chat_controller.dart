@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../data/models/filter_model.dart';
+import '../data/models/profile_model.dart';
 import '../data/models/user_model.dart';
 
 class NewChatController extends GetxController
@@ -46,6 +47,12 @@ class NewChatController extends GetxController
   }
 
   void increment() => count.value++;
+
+// Mock data for user profile
+  final profile = ProfileModel(
+      name: "Sample",
+      link: "https://heyo.core/m6ljkB4KJ",
+      walletAddress: "CB75...684A");
 
 // Mock data for the users
   final nearbyUsers = <UserModel>[

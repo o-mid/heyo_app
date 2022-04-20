@@ -115,6 +115,10 @@ class LocaleKeys {
   static const newChat_userBottomSheet_addToContacts =
       'newChat_userBottomSheet_addToContacts';
   static const newChat_userBottomSheet_block = 'newChat_userBottomSheet_block';
+  static const newChat_inviteBottomSheet_inviteYourFriend =
+      'newChat_inviteBottomSheet_inviteYourFriend';
+  static const newChat_inviteBottomSheet_shareLink =
+      'newChat_inviteBottomSheet_shareLink';
   static const MessagesPage_textFieldHint = 'MessagesPage_textFieldHint';
   static const MessagesPage_endToEndEncryptedMessaging =
       'MessagesPage_endToEndEncryptedMessaging';
@@ -206,6 +210,8 @@ class Locales {
     'newChat_userBottomSheet_chat': 'Chat',
     'newChat_userBottomSheet_addToContacts': 'Add to contacts',
     'newChat_userBottomSheet_block': 'Block',
+    'newChat_inviteBottomSheet_inviteYourFriend': 'Invite your friend to Heyo!',
+    'newChat_inviteBottomSheet_shareLink': 'Share link',
     'MessagesPage_textFieldHint': 'Chat',
     'MessagesPage_endToEndEncryptedMessaging':
         'Any messages you exchange are fully encrypted and can only be read by you and @name',
