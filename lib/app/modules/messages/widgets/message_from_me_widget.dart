@@ -26,7 +26,7 @@ class MessageFromMeWidget extends StatelessWidget {
               onTap: () {
                 Get.find<MessagesController>().scrollToMessage(message.replyTo!.repliedToMessageId);
               },
-              child: SenderReplyToWidget(replyTo: message.replyTo!),
+              child: SenderReplyToWidget(message: message),
             ),
           Row(
             children: [

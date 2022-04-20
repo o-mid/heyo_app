@@ -28,9 +28,9 @@ class MessagesView extends GetView<MessagesController> {
         backgroundColor: COLORS.kAppBackground,
         body: Column(
           children: [
-            SizedBox(height: 54.h),
             Expanded(
               child: ScrollablePositionedList.builder(
+                padding: EdgeInsets.only(top: 54.h, bottom: 16.h),
                 itemScrollController: controller.scrollController,
                 reverse: true,
                 itemCount: controller.messages.length + 1,
@@ -61,22 +61,46 @@ class MessagesView extends GetView<MessagesController> {
                   if (message.isFromMe) {
                     children.add(MessageFromMeWidget(message: message));
                   } else {
-                    children.add(MessageFromOtherWidget(
-                      message: message,
-                      // Todo: change to check for equality of core ID
-                      showTimeAndProfile: index == controller.messages.length - 1 ||
-                          controller.messages[index + 1].senderName != message.senderName,
-                    ));
+                    children.add(
+                      MessageFromOtherWidget(
+                        message: message,
+                        showTimeAndProfile: true,
+                        // showTimeAndProfile: index == controller.messages.length - 1 ||
+                        //     controller.messages[index + 1].senderName != message.senderName,
+                      ),
+                    );
                   }
 
-                  return Column(
-                    children: children,
+                  return GestureDetector(
+                    onLongPress: () => controller.toggleMessageSelection(message.messageId),
+                    onTap: controller.selectedMessages.isEmpty
+                        ? null
+                        : () => controller.toggleMessageSelection(message.messageId),
+                    child: Stack(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 4.h),
+                          color:
+                              message.isSelected ? COLORS.kGreenLighterColor : Colors.transparent,
+                          child: Column(
+                            children: children,
+                          ),
+                        ),
+                        if (message.isSelected)
+                          Positioned(
+                            top: 0,
+                            bottom: 0,
+                            child: Container(
+                              color: COLORS.kGreenMainColor,
+                              width: 3,
+                            ),
+                          )
+                      ],
+                    ),
                   );
                 },
               ),
             ),
-
-            SizedBox(height: 16.h),
 
             // Chat Text Field
             Container(

@@ -10,6 +10,7 @@ class MessagesController extends GetxController {
   final scrollController = ItemScrollController();
   final showEmojiPicker = false.obs;
   final messages = <MessageModel>[].obs;
+  final selectedMessages = <MessageModel>[].obs;
   late MessagesViewArgumentsModel args;
 
   @override
@@ -97,6 +98,23 @@ class MessagesController extends GetxController {
     messages.refresh();
 
     // Todo: send updated reactions with libp2p
+  }
+
+  void toggleMessageSelection(String id) {
+    final index = messages.value.indexWhere((m) => m.messageId == id);
+
+    if (index < 0) {
+      return;
+    }
+
+    final message = messages.value[index];
+    if (message.isSelected) {
+      selectedMessages.value.removeWhere((m) => m.messageId == id);
+    } else {
+      selectedMessages.value.add(message);
+    }
+    messages.value[index] = message.copyWith(isSelected: !message.isSelected);
+    messages.refresh();
   }
 
   void _addMockData() {

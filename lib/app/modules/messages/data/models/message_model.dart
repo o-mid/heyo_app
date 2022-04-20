@@ -56,6 +56,7 @@ class MessageModel {
         payload: payload ?? this.payload,
         messageId: messageId ?? this.messageId,
         timestamp: timestamp ?? this.timestamp,
+        replyTo: this.replyTo,
         reactions: reactions ?? this.reactions,
         senderName: senderName ?? this.senderName,
         senderAvatar: senderAvatar ?? this.senderAvatar,

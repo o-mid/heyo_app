@@ -49,7 +49,7 @@ class MessageFromOtherWidget extends StatelessWidget {
                         .scrollToMessage(message.replyTo!.repliedToMessageId);
                   },
                   child: RecipientReplyTo(
-                    replyTo: message.replyTo!,
+                    message: message,
                   ),
                 ),
               MessageBodyWidget(

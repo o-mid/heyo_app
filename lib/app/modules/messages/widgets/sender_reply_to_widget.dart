@@ -8,11 +8,17 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/generated/assets.gen.dart';
 
 class SenderReplyToWidget extends StatelessWidget {
-  final ReplyToModel replyTo;
-  const SenderReplyToWidget({Key? key, required this.replyTo}) : super(key: key);
+  final MessageModel message;
+  const SenderReplyToWidget({Key? key, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final replyTo = message.replyTo;
+
+    if (replyTo == null) {
+      return SizedBox.shrink();
+    }
+
     return Stack(
       children: [
         Positioned(
@@ -37,7 +43,7 @@ class SenderReplyToWidget extends StatelessWidget {
             width: 8.w,
             height: 40.h,
             decoration: BoxDecoration(
-              color: COLORS.kAppBackground,
+              color: message.isSelected ? COLORS.kGreenLighterColor : COLORS.kAppBackground,
               borderRadius: BorderRadius.only(topRight: Radius.circular(4.w)),
             ),
           ),
