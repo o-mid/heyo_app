@@ -28,6 +28,9 @@ class $AssetsPngGen {
   AssetGenImage get benefits004 =>
       const AssetGenImage('assets/png/benefits004.png');
 
+  /// File path: assets/png/chain.png
+  AssetGenImage get chain => const AssetGenImage('assets/png/chain.png');
+
   /// File path: assets/png/icon.png
   AssetGenImage get icon => const AssetGenImage('assets/png/icon.png');
 

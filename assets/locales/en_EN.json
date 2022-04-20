@@ -108,6 +108,10 @@
       "chat": "Chat",
       "addToContacts": "Add to contacts",
       "block": "Block"
+    },
+    "inviteBottomSheet": {
+      "inviteYourFriend": "Invite your friend to Heyo!",
+      "shareLink": "Share link"
     }
   },
   "MessagesPage": {
