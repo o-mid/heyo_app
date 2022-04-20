@@ -116,5 +116,9 @@
     "onlineVia": "Online via"
   },
   "yesterday": "Yesterday",
-  "today": "Today"
+  "today": "Today",
+  "reply": "Reply",
+  "copy": "Copy",
+  "forward": "Forward",
+  "delete": "Delete"
 }

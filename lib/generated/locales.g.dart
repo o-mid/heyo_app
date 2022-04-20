@@ -121,6 +121,10 @@ class LocaleKeys {
   static const MessagesPage_onlineVia = 'MessagesPage_onlineVia';
   static const yesterday = 'yesterday';
   static const today = 'today';
+  static const reply = 'reply';
+  static const copy = 'copy';
+  static const forward = 'forward';
+  static const delete = 'delete';
 }
 
 class Locales {
@@ -212,5 +216,9 @@ class Locales {
     'MessagesPage_onlineVia': 'Online via',
     'yesterday': 'Yesterday',
     'today': 'Today',
+    'reply': 'Reply',
+    'copy': 'Copy',
+    'forward': 'Forward',
+    'delete': 'Delete',
   };
 }

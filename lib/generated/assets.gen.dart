@@ -86,9 +86,15 @@ class $AssetsSvgGen {
   /// File path: assets/svg/chat.svg
   SvgGenImage get chat => const SvgGenImage('assets/svg/chat.svg');
 
+  /// File path: assets/svg/copyIcon.svg
+  SvgGenImage get copyIcon => const SvgGenImage('assets/svg/copyIcon.svg');
+
   /// File path: assets/svg/corePass_logo.svg
   SvgGenImage get corePassLogo =>
       const SvgGenImage('assets/svg/corePass_logo.svg');
+
+  /// File path: assets/svg/deleteIcon.svg
+  SvgGenImage get deleteIcon => const SvgGenImage('assets/svg/deleteIcon.svg');
 
   /// File path: assets/svg/doubleTickIcon.svg
   SvgGenImage get doubleTickIcon =>
@@ -99,6 +105,10 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/filterIcon.svg
   SvgGenImage get filterIcon => const SvgGenImage('assets/svg/filterIcon.svg');
+
+  /// File path: assets/svg/forwardIcon.svg
+  SvgGenImage get forwardIcon =>
+      const SvgGenImage('assets/svg/forwardIcon.svg');
 
   /// File path: assets/svg/heyo_logo.svg
   SvgGenImage get heyoLogo => const SvgGenImage('assets/svg/heyo_logo.svg');
@@ -127,6 +137,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/replyFilled.svg
   SvgGenImage get replyFilled =>
       const SvgGenImage('assets/svg/replyFilled.svg');
+
+  /// File path: assets/svg/replyOutlined.svg
+  SvgGenImage get replyOutlined =>
+      const SvgGenImage('assets/svg/replyOutlined.svg');
 
   /// File path: assets/svg/search_nearby.svg
   SvgGenImage get searchNearby =>
