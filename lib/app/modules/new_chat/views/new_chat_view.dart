@@ -10,6 +10,7 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../shared/utils/constants/fonts.dart';
 import '../../shared/utils/widgets/curtom_circle_avatar.dart';
 import '../controllers/new_chat_controller.dart';
@@ -446,48 +447,61 @@ class _contacts extends StatelessWidget {
             ),
             controller.isTextInputFocused.value == false
                 ? _contactsBody(controller: controller)
-                : Column(
-                    children: [
-                      CustomSizes.smallSizedBoxHeight,
-                      Divider(thickness: 8, color: COLORS.kBrightBlueColor),
-                      CustomSizes.largeSizedBoxHeight,
-                      Padding(
-                        padding: CustomSizes.mainContentPadding,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              LocaleKeys.newChat_searchResults.tr,
-                              style: TEXTSTYLES.kLinkSmall,
-                            ),
-                            CustomSizes.mediumSizedBoxHeight,
-                            ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: controller.searchSuggestions.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                var suggestedUser =
-                                    controller.searchSuggestions[index];
-                                return InkWell(
-                                  borderRadius: BorderRadius.circular(8),
-                                  // TODO: User onPressed
-                                  //  onTap: () => _openUserPreviewBottomSheet(index),
-                                  child: Padding(
-                                      padding: CustomSizes.userListPadding,
-                                      child: UserWidget(
-                                        User: suggestedUser,
-                                      )),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                : _searchBody(controller: controller),
           ],
         ),
       );
     });
+  }
+}
+
+class _searchBody extends StatelessWidget {
+  const _searchBody({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  final NewChatController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        CustomSizes.smallSizedBoxHeight,
+        Divider(thickness: 8, color: COLORS.kBrightBlueColor),
+        CustomSizes.largeSizedBoxHeight,
+        Padding(
+          padding: CustomSizes.mainContentPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                LocaleKeys.newChat_searchResults.tr,
+                style: TEXTSTYLES.kLinkSmall,
+              ),
+              CustomSizes.mediumSizedBoxHeight,
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: controller.searchSuggestions.length,
+                itemBuilder: (BuildContext context, int index) {
+                  var suggestedUser = controller.searchSuggestions[index];
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    // TODO: User onPressed
+                    //  onTap: () => _openUserPreviewBottomSheet(index),
+                    child: Padding(
+                        padding: CustomSizes.userListPadding,
+                        child: UserWidget(
+                          User: suggestedUser,
+                        )),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -520,92 +534,106 @@ class _contactsBody extends StatelessWidget {
         CustomSizes.largeSizedBoxHeight,
         CustomButton.primarySmall(
           // TODO : Invite button onPressed
-          onTap: () {
-            Get.bottomSheet(
-              Container(
-                padding: CustomSizes.mainContentPadding,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CustomSizes.largeSizedBoxHeight,
-                    Assets.png.chain.image(
-                      alignment: Alignment.center,
-                    ),
-                    CustomSizes.largeSizedBoxHeight,
-                    Text(
-                        LocaleKeys
-                            .newChat_inviteBottomSheet_inviteYourFriend.tr,
-                        style: TEXTSTYLES.kHeaderLarge.copyWith(
-                          color: COLORS.kDarkBlueColor,
-                        )),
-                    CustomSizes.mediumSizedBoxHeight,
-                    TextButton(
-                        onPressed: () {
-                          Clipboard.setData(ClipboardData(
-                            text: controller.profile.link,
-                          )).then((result) {
-                            // show toast or snackbar after successfully save
+          onTap: _openInviteBottomSheet,
 
-                            Get.rawSnackbar(
-                              messageText: Center(
-                                child: Text(
-                                  "Link copied to clipboard",
-                                  style: TEXTSTYLES.kBodySmall
-                                      .copyWith(color: COLORS.kDarkBlueColor),
-                                ),
-                              ),
-                              padding: EdgeInsets.symmetric(vertical: 14),
-                              backgroundColor: COLORS.kWhiteColor,
-                              snackStyle: SnackStyle.FLOATING,
-                              borderRadius: 8,
-                              snackPosition: SnackPosition.TOP,
-                              maxWidth: 250,
-                            );
-                          });
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              COLORS.kBrightBlueColor),
-                          padding: MaterialStateProperty.all(
-                            EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 14.0),
-                          ),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              controller.profile.link,
-                              style: TEXTSTYLES.kLinkBig.copyWith(
-                                color: COLORS.kTextBlueColor,
-                              ),
-                            ),
-                            Assets.svg.copyIcon.svg(),
-                          ],
-                        )),
-                  ],
-                ),
-              ),
-              backgroundColor: COLORS.kWhiteColor,
-              isDismissible: true,
-              enableDrag: true,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-            );
-          },
           color: COLORS.kGreenLighterColor,
           title: LocaleKeys.newChat_buttons_invite.tr,
           style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kGreenMainColor),
         ),
       ],
+    );
+  }
+
+  void _openInviteBottomSheet() {
+    Get.bottomSheet(
+      Container(
+        padding: CustomSizes.mainContentPadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomSizes.largeSizedBoxHeight,
+            Assets.png.chain.image(
+              alignment: Alignment.center,
+            ),
+            CustomSizes.largeSizedBoxHeight,
+            Text(LocaleKeys.newChat_inviteBottomSheet_inviteYourFriend.tr,
+                style: TEXTSTYLES.kHeaderLarge.copyWith(
+                  color: COLORS.kDarkBlueColor,
+                )),
+            CustomSizes.mediumSizedBoxHeight,
+            TextButton(
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(
+                    text: controller.profile.link,
+                  )).then((result) {
+                    // show toast or snackbar after successfully save
+
+                    Get.rawSnackbar(
+                      messageText: Center(
+                        child: Text(
+                          "Link copied to clipboard",
+                          style: TEXTSTYLES.kBodySmall
+                              .copyWith(color: COLORS.kDarkBlueColor),
+                        ),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 14),
+                      backgroundColor: COLORS.kWhiteColor,
+                      snackStyle: SnackStyle.FLOATING,
+                      borderRadius: 8,
+                      snackPosition: SnackPosition.TOP,
+                      maxWidth: 250,
+                    );
+                  });
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(COLORS.kBrightBlueColor),
+                  padding: MaterialStateProperty.all(
+                    EdgeInsets.symmetric(horizontal: 20.0, vertical: 14.0),
+                  ),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      controller.profile.link,
+                      style: TEXTSTYLES.kLinkBig.copyWith(
+                        color: COLORS.kTextBlueColor,
+                      ),
+                    ),
+                    Assets.svg.copyIcon.svg(),
+                  ],
+                )),
+            CustomSizes.mediumSizedBoxHeight,
+            CustomButton.primary(
+              // share the link
+              onTap: () {
+                Share.share(controller.profile.link);
+              },
+              color: COLORS.kGreenLighterColor,
+              titleWidget: Text(
+                LocaleKeys.newChat_inviteBottomSheet_shareLink.tr,
+                style: TEXTSTYLES.kLinkBig.copyWith(
+                  color: COLORS.kGreenMainColor,
+                ),
+              ),
+            ),
+            CustomSizes.largeSizedBoxHeight,
+          ],
+        ),
+      ),
+      backgroundColor: COLORS.kWhiteColor,
+      isDismissible: true,
+      enableDrag: true,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20))),
     );
   }
 }
