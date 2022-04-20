@@ -76,6 +76,8 @@ class MessagesView extends GetView<MessagesController> {
               ),
             ),
 
+            SizedBox(height: 16.h),
+
             // Chat Text Field
             Container(
               padding: EdgeInsets.all(18),

@@ -31,7 +31,7 @@ class MessageBodyWidget extends StatelessWidget {
                 margin: EdgeInsets.only(bottom: 4.h),
                 child: _buildMessageContent(),
               ),
-              if (message.reactions.isNotEmpty) ReactionsWidget(reactions: message.reactions),
+              if (message.reactions.isNotEmpty) ReactionsWidget(message: message),
             ],
           ),
         ),

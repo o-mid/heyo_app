@@ -73,6 +73,32 @@ class MessagesController extends GetxController {
     }
   }
 
+  void toggleReaction(MessageModel msg, String emoji) {
+    final index = messages.value.indexWhere((m) => m.messageId == msg.messageId);
+    if (index < 0) {
+      return;
+    }
+
+    final message = messages.value[index];
+    var reaction = message.reactions.putIfAbsent(emoji, () => ReactionModel());
+
+    if (reaction.isReactedByMe) {
+      // Todo: remove user core id from list
+      reaction.users.removeLast();
+    } else {
+      // Todo: add user core id
+      reaction = reaction.copyWith(users: [...reaction.users, ""]);
+    }
+    reaction = reaction.copyWith(
+      isReactedByMe: !reaction.isReactedByMe,
+    );
+    message.reactions.update(emoji, (r) => reaction);
+
+    messages.refresh();
+
+    // Todo: send updated reactions with libp2p
+  }
+
   void _addMockData() {
     var index = 0;
     messages.addAll([
