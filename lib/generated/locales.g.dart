@@ -132,6 +132,12 @@ class LocaleKeys {
   static const forward = 'forward';
   static const delete = 'delete';
   static const offline = 'offline';
+  static const AddContacts_addToContacts = 'AddContacts_addToContacts';
+  static const AddContacts_addNickname = 'AddContacts_addNickname';
+  static const AddContacts_AddNicknameSubtitle =
+      'AddContacts_AddNicknameSubtitle';
+  static const AddContacts_buttons_addToContacts =
+      'AddContacts_buttons_addToContacts';
 }
 
 class Locales {
@@ -231,5 +237,10 @@ class Locales {
     'forward': 'Forward',
     'delete': 'Delete',
     'offline': 'Offline',
+    'AddContacts_addToContacts': 'Add to contacts',
+    'AddContacts_addNickname': 'Add nickname',
+    'AddContacts_AddNicknameSubtitle':
+        'Nickname help you to identify others. Only you can \nsee this nickname.',
+    'AddContacts_buttons_addToContacts': 'Add to contacts',
   };
 }

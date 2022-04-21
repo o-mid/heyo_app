@@ -17,6 +17,7 @@ abstract class Routes {
   static const HOME = _Paths.HOME;
   static const NEW_CHAT = _Paths.NEW_CHAT;
   static const MESSAGES = _Paths.MESSAGES;
+  static const ADD_CONTACTS = _Paths.ADD_CONTACTS;
 }
 
 abstract class _Paths {
@@ -35,4 +36,5 @@ abstract class _Paths {
   static const HOME = '/home';
   static const NEW_CHAT = '/new-chat';
   static const MESSAGES = '/messages';
+  static const ADD_CONTACTS = '/add-contacts';
 }

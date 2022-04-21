@@ -126,5 +126,13 @@
   "copy": "Copy",
   "forward": "Forward",
   "delete": "Delete",
-  "offline": "Offline"
+  "offline": "Offline",
+  "AddContacts": {
+    "addToContacts": "Add to contacts",
+    "addNickname": "Add nickname",
+    "AddNicknameSubtitle": "Nickname help you to identify others. Only you can \nsee this nickname.",
+    "buttons": {
+      "addToContacts": "Add to contacts"
+    }
+  }
 }
