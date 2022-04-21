@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/data/models/addContactsViewArgumentsModel.dart';
+import 'package:heyo/app/modules/new_chat/widgets/invite_BottomSheet.dart';
+import 'package:heyo/app/modules/new_chat/widgets/userPreview_BottomSheet.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
-import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:share_plus/share_plus.dart';
 import '../../shared/utils/constants/fonts.dart';
-import '../../shared/utils/widgets/curtom_circle_avatar.dart';
 import '../controllers/new_chat_controller.dart';
-import '../data/models/user_model.dart';
 import '../widgets/user_widget.dart';
 
 class NewChatView extends GetView<NewChatController> {
@@ -196,7 +193,9 @@ class _nearbyUsers extends StatelessWidget {
                           return InkWell(
                             borderRadius: BorderRadius.circular(8),
                             // TODO: User onPressed
-                            onTap: () => _openUserPreviewBottomSheet(index),
+                            onTap: () => openUserPreviewBottomSheet(
+                              controller.nearbyUsers[index],
+                            ),
                             child: Padding(
                               padding: CustomSizes.userListPadding,
                               child: UserWidget(
@@ -247,148 +246,6 @@ class _nearbyUsers extends StatelessWidget {
         ),
       );
     });
-  }
-
-  void _openUserPreviewBottomSheet(int index) {
-    UserModel _currentUser = controller.nearbyUsers[index];
-    Get.bottomSheet(
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomSizes.largeSizedBoxHeight,
-          CustomCircleAvatar(url: _currentUser.icon, size: 64),
-          CustomSizes.mediumSizedBoxHeight,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                _currentUser.name,
-                style: TEXTSTYLES.kHeaderLarge
-                    .copyWith(color: COLORS.kDarkBlueColor),
-              ),
-              CustomSizes.smallSizedBoxWidth,
-              _currentUser.isVerified
-                  ? Assets.svg.verifiedWithBluePadding.svg(
-                      alignment: Alignment.center, height: 24.w, width: 24.w)
-                  : SizedBox(),
-            ],
-          ),
-          CustomSizes.smallSizedBoxHeight,
-          Text(
-            _currentUser.walletAddress,
-            style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
-          ),
-          CustomSizes.smallSizedBoxHeight,
-          Padding(
-            padding: CustomSizes.iconListPadding,
-            child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  CustomSizes.smallSizedBoxHeight,
-                  TextButton(
-                      //Todo: Chat onPressed
-                      onPressed: () {},
-                      child: Row(
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: COLORS.kBrightBlueColor,
-                              ),
-                              child: Assets.svg.newChatIcon
-                                  .svg(width: 20, height: 20),
-                            ),
-                          ),
-                          CustomSizes.mediumSizedBoxWidth,
-                          Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                LocaleKeys.newChat_userBottomSheet_chat.tr,
-                                style: TEXTSTYLES.kLinkBig.copyWith(
-                                  color: COLORS.kDarkBlueColor,
-                                ),
-                              ))
-                        ],
-                      )),
-                  TextButton(
-                      //Todo: Add To Contacts onPressed
-                      onPressed: () {
-                        Get.toNamed(
-                          Routes.ADD_CONTACTS,
-                          arguments:
-                              AddContactsViewArgumentsModel(user: _currentUser),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: COLORS.kBrightBlueColor,
-                              ),
-                              child: Assets.svg.addToContactsIcon
-                                  .svg(width: 20, height: 20),
-                            ),
-                          ),
-                          CustomSizes.mediumSizedBoxWidth,
-                          Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                LocaleKeys
-                                    .newChat_userBottomSheet_addToContacts.tr,
-                                style: TEXTSTYLES.kLinkBig.copyWith(
-                                  color: COLORS.kDarkBlueColor,
-                                ),
-                              ))
-                        ],
-                      )),
-                  TextButton(
-                      //Todo: Block onPressed
-                      onPressed: () {},
-                      child: Row(
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: COLORS.kStatesErrorBackgroundColor,
-                              ),
-                              child: Assets.svg.blockIcon
-                                  .svg(width: 20, height: 20),
-                            ),
-                          ),
-                          CustomSizes.mediumSizedBoxWidth,
-                          Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                LocaleKeys.newChat_userBottomSheet_block.tr,
-                                style: TEXTSTYLES.kLinkBig.copyWith(
-                                  color: COLORS.kStatesErrorColor,
-                                ),
-                              ))
-                        ],
-                      )),
-                  CustomSizes.largeSizedBoxHeight,
-                ]),
-          ),
-        ],
-      ),
-      backgroundColor: COLORS.kWhiteColor,
-      isDismissible: true,
-      enableDrag: true,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20))),
-    );
   }
 }
 
@@ -495,7 +352,10 @@ class _searchBody extends StatelessWidget {
                     return InkWell(
                       borderRadius: BorderRadius.circular(8),
                       // TODO: User onPressed
-                      //  onTap: () => _openUserPreviewBottomSheet(index),
+                      onTap: () {
+                        openUserPreviewBottomSheet(
+                            controller.searchSuggestions[index]);
+                      },
                       child: Padding(
                           padding: CustomSizes.userListPadding,
                           child: UserWidget(
@@ -542,106 +402,13 @@ class _contactsBody extends StatelessWidget {
         CustomSizes.largeSizedBoxHeight,
         CustomButton.primarySmall(
           // TODO : Invite button onPressed
-          onTap: _openInviteBottomSheet,
+          onTap: () => openInviteBottomSheet(controller.profile),
 
           color: COLORS.kGreenLighterColor,
           title: LocaleKeys.newChat_buttons_invite.tr,
           style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kGreenMainColor),
         ),
       ],
-    );
-  }
-
-  void _openInviteBottomSheet() {
-    Get.bottomSheet(
-      Container(
-        padding: CustomSizes.mainContentPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomSizes.largeSizedBoxHeight,
-            Assets.png.chain.image(
-              alignment: Alignment.center,
-            ),
-            CustomSizes.largeSizedBoxHeight,
-            Text(LocaleKeys.newChat_inviteBottomSheet_inviteYourFriend.tr,
-                style: TEXTSTYLES.kHeaderLarge.copyWith(
-                  color: COLORS.kDarkBlueColor,
-                )),
-            CustomSizes.mediumSizedBoxHeight,
-            TextButton(
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(
-                    text: controller.profile.link,
-                  )).then((result) {
-                    // show toast or snackbar after successfully save
-
-                    Get.rawSnackbar(
-                      messageText: Center(
-                        child: Text(
-                          "Link copied to clipboard",
-                          style: TEXTSTYLES.kBodySmall
-                              .copyWith(color: COLORS.kDarkBlueColor),
-                        ),
-                      ),
-                      padding: EdgeInsets.symmetric(vertical: 14),
-                      backgroundColor: COLORS.kWhiteColor,
-                      snackStyle: SnackStyle.FLOATING,
-                      borderRadius: 8,
-                      snackPosition: SnackPosition.TOP,
-                      maxWidth: 250,
-                    );
-                  });
-                },
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(COLORS.kBrightBlueColor),
-                  padding: MaterialStateProperty.all(
-                    EdgeInsets.symmetric(horizontal: 20.0, vertical: 14.0),
-                  ),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      controller.profile.link,
-                      style: TEXTSTYLES.kLinkBig.copyWith(
-                        color: COLORS.kTextBlueColor,
-                      ),
-                    ),
-                    Assets.svg.copyIcon.svg(),
-                  ],
-                )),
-            CustomSizes.mediumSizedBoxHeight,
-            CustomButton.primary(
-              // share the link
-              onTap: () {
-                Share.share(controller.profile.link);
-              },
-              color: COLORS.kGreenLighterColor,
-              titleWidget: Text(
-                LocaleKeys.newChat_inviteBottomSheet_shareLink.tr,
-                style: TEXTSTYLES.kLinkBig.copyWith(
-                  color: COLORS.kGreenMainColor,
-                ),
-              ),
-            ),
-            CustomSizes.largeSizedBoxHeight,
-          ],
-        ),
-      ),
-      backgroundColor: COLORS.kWhiteColor,
-      isDismissible: true,
-      enableDrag: true,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20))),
     );
   }
 }
