@@ -1,21 +1,110 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/modules/shared/utils/widgets/curtom_circle_avatar.dart';
+import 'package:heyo/generated/assets.gen.dart';
+import 'package:heyo/generated/locales.g.dart';
 
+import '../../new_chat/data/models/user_model.dart';
 import '../controllers/add_contacts_controller.dart';
 
 class AddContactsView extends GetView<AddContactsController> {
   @override
   Widget build(BuildContext context) {
+    UserModel _User = controller.args.user;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('AddContactsView'),
-        centerTitle: true,
+        backgroundColor: COLORS.kGreenMainColor,
+        elevation: 0,
+        centerTitle: false,
+        title: Text(
+          LocaleKeys.AddContacts_addToContacts.tr,
+          style: TextStyle(
+            fontWeight: FONTS.Bold,
+            fontFamily: FONTS.interFamily,
+          ),
+        ),
+        automaticallyImplyLeading: true,
       ),
-      body: Center(
-        child: Text(
-          controller.args.user.name,
-          style: TextStyle(fontSize: 20),
+      body: Padding(
+        padding: CustomSizes.mainContentPadding,
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CustomSizes.largeSizedBoxHeight,
+                  CustomCircleAvatar(url: _User.icon, size: 64),
+                  CustomSizes.mediumSizedBoxHeight,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _User.name,
+                        style: TEXTSTYLES.kHeaderLarge
+                            .copyWith(color: COLORS.kDarkBlueColor),
+                      ),
+                      CustomSizes.smallSizedBoxWidth,
+                      _User.isVerified
+                          ? Assets.svg.verifiedWithBluePadding.svg(
+                              alignment: Alignment.center,
+                              height: 24.w,
+                              width: 24.w)
+                          : SizedBox(),
+                    ],
+                  ),
+                  CustomSizes.smallSizedBoxHeight,
+                  Text(
+                    _User.walletAddress,
+                    style: TEXTSTYLES.kBodySmall
+                        .copyWith(color: COLORS.kTextBlueColor),
+                  ),
+                  CustomSizes.smallSizedBoxHeight,
+                  SizedBox(
+                    height: 40.h,
+                  ),
+                  CUSTOMTEXTFIELD(
+                    textController: controller.nicknameController,
+                    labelText: LocaleKeys.AddContacts_addNickname.tr,
+                  ),
+                  CustomSizes.mediumSizedBoxHeight,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      LocaleKeys.AddContacts_AddNicknameSubtitle.tr,
+                      style: TEXTSTYLES.kBodySmall,
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  CustomButton.primary(
+                    // TODO : Implement ADD Contact
+                    onTap: () {},
+
+                    titleWidget: Text(
+                      LocaleKeys.AddContacts_buttons_addToContacts.tr,
+                      style: TEXTSTYLES.kLinkBig.copyWith(
+                        color: COLORS.kWhiteColor,
+                      ),
+                    ),
+                  ),
+                  CustomSizes.largeSizedBoxHeight,
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
