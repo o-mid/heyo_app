@@ -79,12 +79,16 @@ class MessagesView extends GetView<MessagesController> {
                         : () => controller.toggleMessageSelection(message.messageId),
                     child: Stack(
                       children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(vertical: 4.h),
+                        // Material is used because if container is given color, it will
+                        // hide the reaction widget borders
+                        Material(
                           color:
                               message.isSelected ? COLORS.kGreenLighterColor : Colors.transparent,
-                          child: Column(
-                            children: children,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 4.h),
+                            child: Column(
+                              children: children,
+                            ),
                           ),
                         ),
                         if (message.isSelected)

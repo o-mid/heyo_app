@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
@@ -19,16 +18,20 @@ class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MessagesController>();
-    return Ink(
-      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
+    // Material is used here so that splash can be seen
+    return Material(
       color: COLORS.kGreenMainColor,
-      child: SafeArea(
-        child: AnimatedSwitcher(
-          duration: Duration(milliseconds: 200),
-          transitionBuilder: (child, animation) => ScaleTransition(scale: animation, child: child),
-          child: controller.selectedMessages.length > 0
-              ? _SelectionModeAppBar()
-              : _DefaultAppBar(chat: chat),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
+        child: SafeArea(
+          child: AnimatedSwitcher(
+            duration: Duration(milliseconds: 200),
+            transitionBuilder: (child, animation) =>
+                ScaleTransition(scale: animation, child: child),
+            child: controller.selectedMessages.length > 0
+                ? _SelectionModeAppBar()
+                : _DefaultAppBar(chat: chat),
+          ),
         ),
       ),
     );
