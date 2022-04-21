@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/data/models/addContactsViewArgumentsModel.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -315,7 +317,13 @@ class _nearbyUsers extends StatelessWidget {
                       )),
                   TextButton(
                       //Todo: Add To Contacts onPressed
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.toNamed(
+                          Routes.ADD_CONTACTS,
+                          arguments:
+                              AddContactsViewArgumentsModel(user: _currentUser),
+                        );
+                      },
                       child: Row(
                         children: [
                           Align(
