@@ -149,6 +149,9 @@ class $AssetsSvgGen {
   SvgGenImage get searchNearby =>
       const SvgGenImage('assets/svg/search_nearby.svg');
 
+  /// File path: assets/svg/sendIcon.svg
+  SvgGenImage get sendIcon => const SvgGenImage('assets/svg/sendIcon.svg');
+
   /// File path: assets/svg/singleTickIcon.svg
   SvgGenImage get singleTickIcon =>
       const SvgGenImage('assets/svg/singleTickIcon.svg');

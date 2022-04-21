@@ -8,6 +8,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 class MessagesController extends GetxController {
   final textController = TextEditingController();
   final scrollController = ItemScrollController();
+  final newMessage = "".obs;
   final showEmojiPicker = false.obs;
   final messages = <MessageModel>[].obs;
   final selectedMessages = <MessageModel>[].obs;
@@ -120,6 +121,27 @@ class MessagesController extends GetxController {
   void clearSelected() {
     messages.value.setAll(0, messages.value.map((m) => m.copyWith(isSelected: false)));
     selectedMessages.clear();
+  }
+
+  void sendTextMessage() {
+    var message = MessageModel(
+      // Todo: Generate random id
+      messageId: messages.value.length.toString(),
+      payload: newMessage.value,
+      timestamp: DateTime.now().toUtc(),
+      // Todo: fill with user info
+      senderName: "",
+      senderAvatar: "",
+      isFromMe: true,
+    );
+
+    // Todo: change status once message was successfully sent
+    message = message.copyWith(status: MESSAGE_STATUS.SENT);
+
+    // Todo: send message with libp2p.
+
+    messages.value = [message, ...messages.value];
+    textController.clear();
   }
 
   void _addMockData() {
