@@ -1,9 +1,9 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/messages/widgets/compose_message_box.dart';
 import 'package:heyo/app/modules/messages/widgets/message_from_me_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/message_from_other_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/message_selection_options.dart';
@@ -116,60 +116,17 @@ class MessagesView extends GetView<MessagesController> {
                   ),
                 ),
               ),
-              // Todo: animate switching between options and text field
-              child: controller.selectedMessages.length > 0
-                  ? MessageSelectionOptions(
-                      showReply: controller.selectedMessages.length == 1,
-                      // Todo: add flags for copy and forward
-                    )
-                  : Row(
-                      children: [
-                        GestureDetector(
-                          // Todo: implement add media button
-                          onTap: () {},
-                          child: Container(
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(
-                              color: COLORS.kGreenMainColor,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.add,
-                              color: COLORS.kWhiteColor,
-                              size: 16,
-                            ),
-                          ),
-                        ),
-                        CustomSizes.mediumSizedBoxWidth,
-                        Expanded(
-                          child: TextFormField(
-                            maxLines: 7,
-                            minLines: 1,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              focusedErrorBorder: InputBorder.none,
-                              hintText: LocaleKeys.MessagesPage_textFieldHint.tr,
-                            ),
-                            controller: controller.textController,
-                          ),
-                        ),
-                        CustomSizes.largeSizedBoxWidth,
-                        KeyboardDismissOnTap(
-                          dismissOnCapturedTaps: true,
-                          child: GestureDetector(
-                            onTap: controller.toggleEmojiPicker,
-                            child: Assets.svg.emojiIcon.svg(color: COLORS.kDarkBlueColor),
-                          ),
-                        ),
-                        CustomSizes.largeSizedBoxWidth,
-                        // Todo: add gesture detection and implement record voice
-                        Assets.svg.recordIcon.svg(color: COLORS.kDarkBlueColor),
-                      ],
-                    ),
+              child: AnimatedSwitcher(
+                duration: Duration(milliseconds: 200),
+                transitionBuilder: (child, animation) =>
+                    ScaleTransition(scale: animation, child: child),
+                child: controller.selectedMessages.length > 0
+                    ? MessageSelectionOptions(
+                        showReply: controller.selectedMessages.length == 1,
+                        // Todo: add flags for copy and forward
+                      )
+                    : ComposeMessageBox(),
+              ),
             ),
             Offstage(
               offstage: !controller.showEmojiPicker.value,
