@@ -31,6 +31,7 @@ class NewChatController extends GetxController
       begin: 0.9,
       end: 1.05,
     ).animate(animController);
+    searchUsers("");
 
     super.onInit();
   }
@@ -43,7 +44,6 @@ class NewChatController extends GetxController
   @override
   void onClose() {
     animController.dispose();
-    usernameInputController.dispose();
   }
 
   void increment() => count.value++;
@@ -94,7 +94,6 @@ class NewChatController extends GetxController
   }
 
   RxList<UserModel> searchSuggestions = <UserModel>[].obs;
-  TextEditingController usernameInputController = TextEditingController();
 
   void searchUsers(String query) {
     searchSuggestions.value = nearbyUsers.where((user) {
@@ -103,7 +102,6 @@ class NewChatController extends GetxController
       return username.contains(inputedQuery);
     }).toList();
     searchSuggestions.refresh();
-    print(searchSuggestions);
   }
 
   RxBool isTextInputFocused = false.obs;

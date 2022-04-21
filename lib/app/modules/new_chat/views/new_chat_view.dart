@@ -438,7 +438,6 @@ class _contacts extends StatelessWidget {
                       controller.isTextInputFocused.value = focus,
                   child: CUSTOMTEXTFIELD(
                       labelText: LocaleKeys.newChat_usernameInput.tr,
-                      textController: controller.usernameInputController,
                       rightWidget: IconButton(
                         icon: Icon(
                           Icons.qr_code_rounded,
@@ -446,9 +445,8 @@ class _contacts extends StatelessWidget {
                         ),
                         onPressed: () => {},
                       ),
-                      onChanged: () {
-                        controller.searchUsers(
-                            controller.usernameInputController.text);
+                      onChanged: (String value) {
+                        controller.searchUsers(value);
                       }),
                 ),
               ),
@@ -473,43 +471,45 @@ class _searchBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CustomSizes.smallSizedBoxHeight,
-        Divider(thickness: 8, color: COLORS.kBrightBlueColor),
-        CustomSizes.largeSizedBoxHeight,
-        Padding(
-          padding: CustomSizes.mainContentPadding,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                LocaleKeys.newChat_searchResults.tr,
-                style: TEXTSTYLES.kLinkSmall,
-              ),
-              CustomSizes.mediumSizedBoxHeight,
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: controller.searchSuggestions.length,
-                itemBuilder: (BuildContext context, int index) {
-                  var suggestedUser = controller.searchSuggestions[index];
-                  return InkWell(
-                    borderRadius: BorderRadius.circular(8),
-                    // TODO: User onPressed
-                    //  onTap: () => _openUserPreviewBottomSheet(index),
-                    child: Padding(
-                        padding: CustomSizes.userListPadding,
-                        child: UserWidget(
-                          User: suggestedUser,
-                        )),
-                  );
-                },
-              ),
-            ],
+    return Obx(() {
+      return Column(
+        children: [
+          CustomSizes.smallSizedBoxHeight,
+          Divider(thickness: 8, color: COLORS.kBrightBlueColor),
+          CustomSizes.largeSizedBoxHeight,
+          Padding(
+            padding: CustomSizes.mainContentPadding,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  LocaleKeys.newChat_searchResults.tr,
+                  style: TEXTSTYLES.kLinkSmall,
+                ),
+                CustomSizes.mediumSizedBoxHeight,
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: controller.searchSuggestions.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    var suggestedUser = controller.searchSuggestions[index];
+                    return InkWell(
+                      borderRadius: BorderRadius.circular(8),
+                      // TODO: User onPressed
+                      //  onTap: () => _openUserPreviewBottomSheet(index),
+                      child: Padding(
+                          padding: CustomSizes.userListPadding,
+                          child: UserWidget(
+                            User: suggestedUser,
+                          )),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }
 
