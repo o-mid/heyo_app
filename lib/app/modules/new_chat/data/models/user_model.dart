@@ -2,6 +2,7 @@ class UserModel {
   String name;
   String icon;
   String walletAddress;
+  String Nickname;
   bool isOnline;
   bool isVerified;
 
@@ -11,5 +12,6 @@ class UserModel {
     required this.walletAddress,
     this.isOnline = false,
     this.isVerified = false,
+    this.Nickname = "",
   });
 }

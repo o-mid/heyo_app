@@ -61,6 +61,7 @@ class NewChatController extends GetxController
       walletAddress: 'CB92...969A',
       icon:
           "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+      Nickname: "Nickname",
     ),
     UserModel(
       name: "Fancy Potato",

@@ -99,6 +99,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/deleteIcon.svg
   SvgGenImage get deleteIcon => const SvgGenImage('assets/svg/deleteIcon.svg');
 
+  /// File path: assets/svg/dotIndicator.svg
+  SvgGenImage get dotIndicator =>
+      const SvgGenImage('assets/svg/dotIndicator.svg');
+
   /// File path: assets/svg/doubleTickIcon.svg
   SvgGenImage get doubleTickIcon =>
       const SvgGenImage('assets/svg/doubleTickIcon.svg');

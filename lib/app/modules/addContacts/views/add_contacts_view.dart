@@ -20,93 +20,114 @@ class AddContactsView extends GetView<AddContactsController> {
   Widget build(BuildContext context) {
     UserModel _User = controller.args.user;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: COLORS.kGreenMainColor,
-        elevation: 0,
-        centerTitle: false,
-        title: Text(
-          LocaleKeys.AddContacts_addToContacts.tr,
-          style: TextStyle(
-            fontWeight: FONTS.Bold,
-            fontFamily: FONTS.interFamily,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: COLORS.kGreenMainColor,
+          elevation: 0,
+          centerTitle: false,
+          title: Text(
+            LocaleKeys.AddContacts_addToContacts.tr,
+            style: TextStyle(
+              fontWeight: FONTS.Bold,
+              fontFamily: FONTS.interFamily,
+            ),
           ),
+          automaticallyImplyLeading: true,
         ),
-        automaticallyImplyLeading: true,
-      ),
-      body: Padding(
-        padding: CustomSizes.mainContentPadding,
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+        body: Obx(() {
+          return Padding(
+            padding: CustomSizes.mainContentPadding,
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CustomSizes.largeSizedBoxHeight,
-                  CustomCircleAvatar(url: _User.icon, size: 64),
-                  CustomSizes.mediumSizedBoxHeight,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        _User.name,
-                        style: TEXTSTYLES.kHeaderLarge
-                            .copyWith(color: COLORS.kDarkBlueColor),
+                      CustomSizes.largeSizedBoxHeight,
+                      CustomCircleAvatar(url: _User.icon, size: 64),
+                      CustomSizes.mediumSizedBoxHeight,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _User.name,
+                            style: TEXTSTYLES.kHeaderLarge
+                                .copyWith(color: COLORS.kDarkBlueColor),
+                          ),
+                          CustomSizes.smallSizedBoxWidth,
+                          _User.isVerified
+                              ? Assets.svg.verifiedWithBluePadding.svg(
+                                  alignment: Alignment.center,
+                                  height: 24.w,
+                                  width: 24.w)
+                              : SizedBox(),
+                        ],
                       ),
-                      CustomSizes.smallSizedBoxWidth,
-                      _User.isVerified
-                          ? Assets.svg.verifiedWithBluePadding.svg(
-                              alignment: Alignment.center,
-                              height: 24.w,
-                              width: 24.w)
-                          : SizedBox(),
+                      CustomSizes.smallSizedBoxHeight,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _User.walletAddress,
+                            style: TEXTSTYLES.kBodySmall
+                                .copyWith(color: COLORS.kTextBlueColor),
+                          ),
+                          controller.nickname.value.isEmpty
+                              ? SizedBox()
+                              : Row(
+                                  children: [
+                                    CustomSizes.smallSizedBoxWidth,
+                                    Assets.svg.dotIndicator.svg(),
+                                    CustomSizes.smallSizedBoxWidth,
+                                    Text(
+                                      controller.nickname.value,
+                                      style: TEXTSTYLES.kBodySmall.copyWith(
+                                          color: COLORS.kTextBlueColor),
+                                    )
+                                  ],
+                                )
+                        ],
+                      ),
+                      CustomSizes.smallSizedBoxHeight,
+                      SizedBox(
+                        height: 40.h,
+                      ),
+                      CUSTOMTEXTFIELD(
+                        labelText: LocaleKeys.AddContacts_addNickname.tr,
+                        onChanged: (String value) =>
+                            controller.setNickname(value),
+                      ),
+                      CustomSizes.mediumSizedBoxHeight,
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          LocaleKeys.AddContacts_AddNicknameSubtitle.tr,
+                          style: TEXTSTYLES.kBodySmall,
+                        ),
+                      ),
                     ],
                   ),
-                  CustomSizes.smallSizedBoxHeight,
-                  Text(
-                    _User.walletAddress,
-                    style: TEXTSTYLES.kBodySmall
-                        .copyWith(color: COLORS.kTextBlueColor),
-                  ),
-                  CustomSizes.smallSizedBoxHeight,
-                  SizedBox(
-                    height: 40.h,
-                  ),
-                  CUSTOMTEXTFIELD(
-                    textController: controller.nicknameController,
-                    labelText: LocaleKeys.AddContacts_addNickname.tr,
-                  ),
-                  CustomSizes.mediumSizedBoxHeight,
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      LocaleKeys.AddContacts_AddNicknameSubtitle.tr,
-                      style: TEXTSTYLES.kBodySmall,
-                    ),
-                  ),
+                  Column(
+                    children: [
+                      CustomButton.primary(
+                        // TODO : Implement ADD Contact
+                        onTap: () {},
+
+                        titleWidget: Text(
+                          LocaleKeys.AddContacts_buttons_addToContacts.tr,
+                          style: TEXTSTYLES.kLinkBig.copyWith(
+                            color: COLORS.kWhiteColor,
+                          ),
+                        ),
+                      ),
+                      CustomSizes.largeSizedBoxHeight,
+                    ],
+                  )
                 ],
               ),
-              Column(
-                children: [
-                  CustomButton.primary(
-                    // TODO : Implement ADD Contact
-                    onTap: () {},
-
-                    titleWidget: Text(
-                      LocaleKeys.AddContacts_buttons_addToContacts.tr,
-                      style: TEXTSTYLES.kLinkBig.copyWith(
-                        color: COLORS.kWhiteColor,
-                      ),
-                    ),
-                  ),
-                  CustomSizes.largeSizedBoxHeight,
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
+        }));
   }
 }
