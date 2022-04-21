@@ -125,6 +125,8 @@ class LocaleKeys {
   static const MessagesPage_onlineVia = 'MessagesPage_onlineVia';
   static const MessagesPage_countSelectedMessages =
       'MessagesPage_countSelectedMessages';
+  static const MessagesPage_replyingTo = 'MessagesPage_replyingTo';
+  static const MessagesPage_replyToImage = 'MessagesPage_replyToImage';
   static const yesterday = 'yesterday';
   static const today = 'today';
   static const reply = 'reply';
@@ -230,6 +232,8 @@ class Locales {
         'Any messages you exchange are fully encrypted and can only be read by you and @name',
     'MessagesPage_onlineVia': 'Online via',
     'MessagesPage_countSelectedMessages': '@count selected',
+    'MessagesPage_replyingTo': 'Replying to @name',
+    'MessagesPage_replyToImage': 'Image',
     'yesterday': 'Yesterday',
     'today': 'Today',
     'reply': 'Reply',

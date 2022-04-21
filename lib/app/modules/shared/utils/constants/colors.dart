@@ -88,4 +88,10 @@ class COLORS {
 
   /// message selection options color
   static const Color kMessageSelectionOption = Color(0xffA9AFC6);
+
+  /// compose message background color
+  static const Color kComposeMessageBackgroundColor = Color(0xffF8F7FF);
+
+  /// compose message border color
+  static const Color kComposeMessageBorderColor = Color(0xffe9e7f0);
 }

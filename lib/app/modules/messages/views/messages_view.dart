@@ -9,6 +9,7 @@ import 'package:heyo/app/modules/messages/widgets/message_from_other_widget.dart
 import 'package:heyo/app/modules/messages/widgets/message_selection_options.dart';
 import 'package:heyo/app/modules/messages/widgets/messaging_app_bar.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
@@ -20,6 +21,16 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../controllers/messages_controller.dart';
 
 class MessagesView extends GetView<MessagesController> {
+  final _messageAndReplyBoxDecoration = BoxDecoration(
+    color: COLORS.kComposeMessageBackgroundColor,
+    border: Border(
+      top: BorderSide(
+        width: 1,
+        color: COLORS.kComposeMessageBorderColor,
+      ),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -107,19 +118,53 @@ class MessagesView extends GetView<MessagesController> {
               ),
             ),
 
+            if (controller.replyingTo.value != null)
+              Container(
+                decoration: _messageAndReplyBoxDecoration,
+                padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: controller.clearReplyTo,
+                      child: Assets.svg.replyOutlined.svg(
+                        width: 19.w,
+                        height: 17.w,
+                        color: COLORS.kDarkBlueColor,
+                      ),
+                    ),
+                    CustomSizes.mediumSizedBoxWidth,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            LocaleKeys.MessagesPage_replyingTo.trParams({
+                              "name": controller.replyingTo.value!.repliedToName,
+                            }),
+                            style: TEXTSTYLES.kChatText.copyWith(
+                              color: COLORS.kDarkBlueColor,
+                              fontWeight: FONTS.SemiBold,
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            controller.replyingTo.value!.repliedToMessage,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TEXTSTYLES.kChatText.copyWith(color: COLORS.kTextBlueColor),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
             // Chat Text Field
             Container(
               constraints: BoxConstraints(minHeight: 90.h),
               padding: EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: Color(0xffF8F7FF),
-                border: Border(
-                  top: BorderSide(
-                    width: 1,
-                    color: Color(0xffe9e7f0),
-                  ),
-                ),
-              ),
+              decoration: _messageAndReplyBoxDecoration,
               child: AnimatedSwitcher(
                 duration: Duration(milliseconds: 200),
                 transitionBuilder: (child, animation) =>

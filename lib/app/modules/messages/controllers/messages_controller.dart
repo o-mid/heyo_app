@@ -3,6 +3,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/message_model.dart';
 import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
+import 'package:heyo/generated/locales.g.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class MessagesController extends GetxController {
@@ -12,6 +13,7 @@ class MessagesController extends GetxController {
   final showEmojiPicker = false.obs;
   final messages = <MessageModel>[].obs;
   final selectedMessages = <MessageModel>[].obs;
+  final replyingTo = Rxn<ReplyToModel>();
   late MessagesViewArgumentsModel args;
 
   @override
@@ -129,6 +131,7 @@ class MessagesController extends GetxController {
       messageId: messages.value.length.toString(),
       payload: newMessage.value,
       timestamp: DateTime.now().toUtc(),
+      replyTo: replyingTo.value,
       // Todo: fill with user info
       senderName: "",
       senderAvatar: "",
@@ -142,6 +145,35 @@ class MessagesController extends GetxController {
 
     messages.value = [message, ...messages.value];
     textController.clear();
+
+    clearReplyTo();
+  }
+
+  void replyTo() {
+    if (selectedMessages.length != 1) return;
+    final msg = selectedMessages.first;
+
+    late String replyMsg;
+    switch (msg.type) {
+      case CONTENT_TYPE.TEXT:
+        replyMsg = msg.payload;
+        break;
+      case CONTENT_TYPE.IMAGE:
+        replyMsg = LocaleKeys.MessagesPage_replyToImage.tr;
+        break;
+    }
+
+    replyingTo.value = ReplyToModel(
+      repliedToMessageId: msg.messageId,
+      repliedToName: msg.senderName,
+      repliedToMessage: replyMsg,
+    );
+
+    clearSelected();
+  }
+
+  void clearReplyTo() {
+    replyingTo.value = null;
   }
 
   void _addMockData() {
