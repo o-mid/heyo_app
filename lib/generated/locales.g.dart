@@ -123,12 +123,15 @@ class LocaleKeys {
   static const MessagesPage_endToEndEncryptedMessaging =
       'MessagesPage_endToEndEncryptedMessaging';
   static const MessagesPage_onlineVia = 'MessagesPage_onlineVia';
+  static const MessagesPage_countSelectedMessages =
+      'MessagesPage_countSelectedMessages';
   static const yesterday = 'yesterday';
   static const today = 'today';
   static const reply = 'reply';
   static const copy = 'copy';
   static const forward = 'forward';
   static const delete = 'delete';
+  static const offline = 'offline';
 }
 
 class Locales {
@@ -220,11 +223,13 @@ class Locales {
     'MessagesPage_endToEndEncryptedMessaging':
         'Any messages you exchange are fully encrypted and can only be read by you and @name',
     'MessagesPage_onlineVia': 'Online via',
+    'MessagesPage_countSelectedMessages': '@count selected',
     'yesterday': 'Yesterday',
     'today': 'Today',
     'reply': 'Reply',
     'copy': 'Copy',
     'forward': 'Forward',
     'delete': 'Delete',
+    'offline': 'Offline',
   };
 }

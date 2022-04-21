@@ -117,12 +117,14 @@
   "MessagesPage": {
     "textFieldHint": "Chat",
     "endToEndEncryptedMessaging": "Any messages you exchange are fully encrypted and can only be read by you and @name",
-    "onlineVia": "Online via"
+    "onlineVia": "Online via",
+    "countSelectedMessages": "@count selected"
   },
   "yesterday": "Yesterday",
   "today": "Today",
   "reply": "Reply",
   "copy": "Copy",
   "forward": "Forward",
-  "delete": "Delete"
+  "delete": "Delete",
+  "offline": "Offline"
 }

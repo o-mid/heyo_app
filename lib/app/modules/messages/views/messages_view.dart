@@ -105,6 +105,7 @@ class MessagesView extends GetView<MessagesController> {
 
             // Chat Text Field
             Container(
+              constraints: BoxConstraints(minHeight: 90.h),
               padding: EdgeInsets.all(18),
               decoration: BoxDecoration(
                 color: Color(0xffF8F7FF),

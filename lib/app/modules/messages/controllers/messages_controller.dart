@@ -117,6 +117,11 @@ class MessagesController extends GetxController {
     messages.refresh();
   }
 
+  void clearSelected() {
+    messages.value.setAll(0, messages.value.map((m) => m.copyWith(isSelected: false)));
+    selectedMessages.clear();
+  }
+
   void _addMockData() {
     var index = 0;
     messages.addAll([
