@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/delete_message_dialog.dart';
 import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -207,6 +209,26 @@ class MessagesController extends GetxController {
     for (var toDelete in selectedMessages) {
       messages.removeWhere((msg) => msg.messageId == toDelete.messageId);
     }
+    clearSelected();
+  }
+
+  void copySelectedToClipboard() {
+    var text = "";
+
+    if (selectedMessages.length == 1) {
+      text = selectedMessages.first.payload;
+    } else {
+      for (var message in selectedMessages) {
+        text += "[${message.senderName} - ${message.timestamp.dateInAmPmFormat()}]\n";
+        text += message.payload;
+        text += "\n\n";
+      }
+    }
+
+    Clipboard.setData(
+      ClipboardData(text: text),
+    );
+
     clearSelected();
   }
 

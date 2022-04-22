@@ -14,4 +14,8 @@ extension DateTimeExtension on DateTime {
     if (diff == 0) return LocaleKeys.today.tr;
     return DateFormat('yyyy-MM-dd').format(this);
   }
+
+  String dateInAmPmFormat() {
+    return DateFormat('yyyy-MM-dd, hh:mm a').format(this);
+  }
 }

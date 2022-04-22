@@ -23,6 +23,7 @@ class MessageSelectionOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<MessagesController>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -31,12 +32,13 @@ class MessageSelectionOptions extends StatelessWidget {
           _buildOption(
             Assets.svg.replyOutlined,
             LocaleKeys.reply.tr,
-            onTap: Get.find<MessagesController>().replyTo,
+            onTap: controller.replyTo,
           ),
         if (showCopy)
           _buildOption(
             Assets.svg.copyIcon,
             LocaleKeys.copy.tr,
+            onTap: controller.copySelectedToClipboard,
           ),
         if (showForward)
           _buildOption(
@@ -47,7 +49,7 @@ class MessageSelectionOptions extends StatelessWidget {
           _buildOption(
             Assets.svg.deleteIcon,
             LocaleKeys.delete.tr,
-            onTap: Get.find<MessagesController>().showDeleteSelectedDialog,
+            onTap: controller.showDeleteSelectedDialog,
           ),
       ],
     );
