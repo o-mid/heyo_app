@@ -38,7 +38,7 @@ class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => AppBar().preferredSize;
+  Size get preferredSize => Size(AppBar().preferredSize.width.w, AppBar().preferredSize.height.w);
 }
 
 class _SelectionModeAppBar extends StatelessWidget {
@@ -120,7 +120,7 @@ class _DefaultAppBar extends StatelessWidget {
                   // Todo: show connection method correctly
                   Icon(
                     Icons.wifi,
-                    size: 12,
+                    size: 12.w,
                     color: COLORS.kWhiteColor,
                   ),
                   SizedBox(width: 4.w),

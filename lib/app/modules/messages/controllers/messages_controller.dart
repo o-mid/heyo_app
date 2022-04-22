@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/message_model.dart';
+import 'package:heyo/app/modules/messages/widgets/delete_message_dialog.dart';
 import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -174,6 +176,38 @@ class MessagesController extends GetxController {
 
   void clearReplyTo() {
     replyingTo.value = null;
+  }
+
+  void showDeleteSelectedDialog() {
+    Get.dialog(
+      DeleteMessageDialog(
+        canDeleteForEveryone: canDeleteForEveryone(),
+        deleteForEveryone: deleteSelectedForEveryone,
+        deleteForMe: deleteSelectedForMe,
+        toDeleteCount: selectedMessages.length,
+      ),
+    );
+  }
+
+  bool canDeleteForEveryone() {
+    // If any selected messages belong to another user, it's not possible to delete for everyone
+    return !selectedMessages.any((msg) => !msg.isFromMe);
+  }
+
+  void deleteSelectedForEveryone() {
+    // Todo: update status of messages instead of removing from list
+    for (var toDelete in selectedMessages) {
+      messages.removeWhere((msg) => msg.messageId == toDelete.messageId);
+      // Todo: libp2p - delete for others
+    }
+    clearSelected();
+  }
+
+  void deleteSelectedForMe() {
+    for (var toDelete in selectedMessages) {
+      messages.removeWhere((msg) => msg.messageId == toDelete.messageId);
+    }
+    clearSelected();
   }
 
   void _addMockData() {

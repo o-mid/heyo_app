@@ -39,12 +39,13 @@ class MessagesView extends GetView<MessagesController> {
         appBar: MessagingAppBar(chat: controller.args.chat),
         backgroundColor: COLORS.kAppBackground,
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
               child: ScrollablePositionedList.builder(
                 padding: EdgeInsets.only(top: 54.h, bottom: 16.h),
                 itemScrollController: controller.scrollController,
-                reverse: true,
+                reverse: controller.messages.length > 0,
                 itemCount: controller.messages.length + 1,
                 itemBuilder: (context, index) {
                   if (index == controller.messages.length) return _buildMessagesHeader();

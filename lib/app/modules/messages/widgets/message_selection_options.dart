@@ -47,6 +47,7 @@ class MessageSelectionOptions extends StatelessWidget {
           _buildOption(
             Assets.svg.deleteIcon,
             LocaleKeys.delete.tr,
+            onTap: Get.find<MessagesController>().showDeleteSelectedDialog,
           ),
       ],
     );

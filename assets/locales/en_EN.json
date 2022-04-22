@@ -120,7 +120,17 @@
     "onlineVia": "Online via",
     "countSelectedMessages": "@count selected",
     "replyingTo": "Replying to @name",
-    "replyToImage": "Image"
+    "replyToImage": "Image",
+    "deleteMessagesDialog": {
+      "title": "Delete message?",
+      "titlePlural": "Delete @count messages?",
+      "subtitle": "Delete this message?",
+      "subtitlePlural": "Delete these messages?",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "deleteForEveryone": "Delete for everyone",
+      "deleteForMe": "Delete only for me"
+    }
   },
   "yesterday": "Yesterday",
   "today": "Today",

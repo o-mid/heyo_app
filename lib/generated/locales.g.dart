@@ -127,6 +127,22 @@ class LocaleKeys {
       'MessagesPage_countSelectedMessages';
   static const MessagesPage_replyingTo = 'MessagesPage_replyingTo';
   static const MessagesPage_replyToImage = 'MessagesPage_replyToImage';
+  static const MessagesPage_deleteMessagesDialog_title =
+      'MessagesPage_deleteMessagesDialog_title';
+  static const MessagesPage_deleteMessagesDialog_titlePlural =
+      'MessagesPage_deleteMessagesDialog_titlePlural';
+  static const MessagesPage_deleteMessagesDialog_subtitle =
+      'MessagesPage_deleteMessagesDialog_subtitle';
+  static const MessagesPage_deleteMessagesDialog_subtitlePlural =
+      'MessagesPage_deleteMessagesDialog_subtitlePlural';
+  static const MessagesPage_deleteMessagesDialog_cancel =
+      'MessagesPage_deleteMessagesDialog_cancel';
+  static const MessagesPage_deleteMessagesDialog_delete =
+      'MessagesPage_deleteMessagesDialog_delete';
+  static const MessagesPage_deleteMessagesDialog_deleteForEveryone =
+      'MessagesPage_deleteMessagesDialog_deleteForEveryone';
+  static const MessagesPage_deleteMessagesDialog_deleteForMe =
+      'MessagesPage_deleteMessagesDialog_deleteForMe';
   static const yesterday = 'yesterday';
   static const today = 'today';
   static const reply = 'reply';
@@ -234,6 +250,16 @@ class Locales {
     'MessagesPage_countSelectedMessages': '@count selected',
     'MessagesPage_replyingTo': 'Replying to @name',
     'MessagesPage_replyToImage': 'Image',
+    'MessagesPage_deleteMessagesDialog_title': 'Delete message?',
+    'MessagesPage_deleteMessagesDialog_titlePlural': 'Delete @count messages?',
+    'MessagesPage_deleteMessagesDialog_subtitle': 'Delete this message?',
+    'MessagesPage_deleteMessagesDialog_subtitlePlural':
+        'Delete these messages?',
+    'MessagesPage_deleteMessagesDialog_cancel': 'Cancel',
+    'MessagesPage_deleteMessagesDialog_delete': 'Delete',
+    'MessagesPage_deleteMessagesDialog_deleteForEveryone':
+        'Delete for everyone',
+    'MessagesPage_deleteMessagesDialog_deleteForMe': 'Delete only for me',
     'yesterday': 'Yesterday',
     'today': 'Today',
     'reply': 'Reply',
