@@ -1,3 +1,4 @@
+import 'package:better_player/better_player.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -61,6 +62,10 @@ class MessageBodyWidget extends StatelessWidget {
             message.payload,
             borderRadius: BorderRadius.circular(8.r),
           ),
+        );
+      case CONTENT_TYPE.VIDEO:
+        return BetterPlayer.network(
+          message.payload,
         );
     }
   }

@@ -36,7 +36,6 @@ class MessagesView extends GetView<MessagesController> {
   Widget build(BuildContext context) {
     return Obx(() {
       return Scaffold(
-        // Todo Appbar
         appBar: MessagingAppBar(chat: controller.args.chat),
         backgroundColor: COLORS.kAppBackground,
         body: Column(
