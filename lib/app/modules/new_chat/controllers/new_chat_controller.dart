@@ -12,6 +12,7 @@ class NewChatController extends GetxController
     with GetSingleTickerProviderStateMixin {
   late AnimationController animController;
   late Animation<double> animation;
+  late TextEditingController inputController;
   RxBool refreshBtnVisibility = false.obs;
   void makeRefreshBtnVisible() {
     Future.delayed(const Duration(seconds: 3), () {
@@ -33,7 +34,10 @@ class NewChatController extends GetxController
       end: 1.05,
     ).animate(animController);
     searchUsers("");
-
+    inputController = TextEditingController();
+    inputController.addListener(() {
+      searchUsers(inputController.text);
+    });
     super.onInit();
   }
 
@@ -45,6 +49,7 @@ class NewChatController extends GetxController
   @override
   void onClose() {
     animController.dispose();
+    inputController.dispose();
   }
 
   void increment() => count.value++;
@@ -106,9 +111,12 @@ class NewChatController extends GetxController
   }
 
   RxBool isTextInputFocused = false.obs;
-  handleScannedVal(QRViewController qrControllerDt) {
-    qrControllerDt.scannedDataStream.forEach((element) {
-      print(element.code);
+  handleScannedValue(QRViewController qrControllerDt) {
+    qrControllerDt.scannedDataStream.listen((element) {
+      qrControllerDt.stopCamera();
+      Get.back();
+      isTextInputFocused.value = true;
+      inputController.text = element.code.toString();
     });
   }
 }

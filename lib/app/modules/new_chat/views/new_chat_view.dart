@@ -295,29 +295,28 @@ class _contacts extends StatelessWidget {
                   onFocusChange: (focus) =>
                       controller.isTextInputFocused.value = focus,
                   child: CUSTOMTEXTFIELD(
-                      labelText: LocaleKeys.newChat_usernameInput.tr,
-                      rightWidget: IconButton(
-                        icon: Icon(
-                          Icons.qr_code_rounded,
-                          color: COLORS.kDarkBlueColor,
-                        ),
-                        onPressed: () => {
-                          Get.bottomSheet(
-                              FractionallySizedBox(
-                                heightFactor: 1,
-                                child: QrScanView(
-                                  title: LocaleKeys.newChat_newChatAppBar.tr,
-                                  hasBackButton: true,
-                                  onQRViewCreated: controller.handleScannedVal,
-                                  subtitle: '',
-                                ),
-                              ),
-                              isScrollControlled: true)
-                        },
+                    textController: controller.inputController,
+                    labelText: LocaleKeys.newChat_usernameInput.tr,
+                    rightWidget: IconButton(
+                      icon: Icon(
+                        Icons.qr_code_rounded,
+                        color: COLORS.kDarkBlueColor,
                       ),
-                      onChanged: (String value) {
-                        controller.searchUsers(value);
-                      }),
+                      onPressed: () => {
+                        Get.bottomSheet(
+                            FractionallySizedBox(
+                              heightFactor: 1,
+                              child: QrScanView(
+                                title: LocaleKeys.newChat_newChatAppBar.tr,
+                                hasBackButton: true,
+                                onQRViewCreated: controller.handleScannedValue,
+                                subtitle: '',
+                              ),
+                            ),
+                            isScrollControlled: true)
+                      },
+                    ),
+                  ),
                 ),
               ),
             ),
