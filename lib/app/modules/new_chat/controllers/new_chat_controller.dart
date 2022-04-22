@@ -2,6 +2,7 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import '../data/models/filter_model.dart';
 import '../data/models/profile_model.dart';
@@ -105,4 +106,9 @@ class NewChatController extends GetxController
   }
 
   RxBool isTextInputFocused = false.obs;
+  handleScannedVal(QRViewController qrControllerDt) {
+    qrControllerDt.scannedDataStream.forEach((element) {
+      print(element.code);
+    });
+  }
 }
