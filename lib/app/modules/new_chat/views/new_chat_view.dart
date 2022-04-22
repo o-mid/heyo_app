@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_BottomSheet.dart';
+import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scaner.dart';
 import 'package:heyo/app/modules/new_chat/widgets/qr_scan_view.dart';
 import 'package:heyo/app/modules/new_chat/widgets/userPreview_BottomSheet.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -303,17 +304,7 @@ class _contacts extends StatelessWidget {
                         color: COLORS.kDarkBlueColor,
                       ),
                       onPressed: () => {
-                        Get.bottomSheet(
-                            FractionallySizedBox(
-                              heightFactor: 1,
-                              child: QrScanView(
-                                title: LocaleKeys.newChat_newChatAppBar.tr,
-                                hasBackButton: true,
-                                onQRViewCreated: controller.handleScannedValue,
-                                subtitle: '',
-                              ),
-                            ),
-                            isScrollControlled: true)
+                        openQrScanerBottomSheet(controller.handleScannedValue)
                       },
                     ),
                   ),

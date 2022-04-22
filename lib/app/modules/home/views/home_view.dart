@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/account/views/account_view.dart';
 import 'package:heyo/app/modules/calls/views/calls_view.dart';
 import 'package:heyo/app/modules/chats/views/chats_view.dart';
+import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguements_model.dart';
 import 'package:heyo/app/modules/search_nearby/views/search_nearby_view.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
@@ -112,7 +113,12 @@ Widget _bottomSheetFAB = Container(
             ),
             IconButton(
                 // TODO: QR Code onPressed
-                onPressed: () {},
+                onPressed: () {
+                  Get.toNamed(Routes.NEW_CHAT,
+                      arguments: NewchatArgumentsModel(
+                        openQrScaner: true,
+                      ));
+                },
                 alignment: Alignment.center,
                 iconSize: 21.w,
                 icon: Icon(
