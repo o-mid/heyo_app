@@ -4,20 +4,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/message_model.dart';
+import 'package:heyo/app/modules/messages/widgets/beginning_of_messages_header.dart';
 import 'package:heyo/app/modules/messages/widgets/compose_message_box.dart';
-import 'package:heyo/app/modules/messages/widgets/message_from_me_widget.dart';
-import 'package:heyo/app/modules/messages/widgets/message_from_other_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/message_selection_options.dart';
+import 'package:heyo/app/modules/messages/widgets/message_selection_wrapper.dart';
 import 'package:heyo/app/modules/messages/widgets/messaging_app_bar.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
-import 'package:heyo/app/modules/shared/utils/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../controllers/messages_controller.dart';
 
@@ -42,80 +40,53 @@ class MessagesView extends GetView<MessagesController> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
-              child: ScrollablePositionedList.builder(
+              child: ListView.custom(
                 padding: EdgeInsets.only(top: 54.h, bottom: 16.h),
-                itemScrollController: controller.scrollController,
                 reverse: controller.messages.length > 0,
-                itemCount: controller.messages.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == controller.messages.length) return _buildMessagesHeader();
+                childrenDelegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    if (index == controller.messages.length)
+                      return BeginningOfMessagesHeader(
+                        chat: controller.args.chat,
+                      );
 
-                  final message = controller.messages[index];
-                  final prevMessage = index == controller.messages.length - 1
-                      ? null
-                      : controller.messages[index + 1];
-
-                  final children = <Widget>[];
-
-                  // Adds date header at beginning of new messages in a certain date
-                  if (prevMessage == null || !prevMessage.timestamp.isSameDate(message.timestamp)) {
-                    children.addAll([
-                      CustomSizes.mediumSizedBoxHeight,
-                      Text(
-                        message.timestamp.differenceFromNow(),
-                        style: TEXTSTYLES.kBodyTag.copyWith(
-                          color: COLORS.kTextBlueColor,
-                          fontSize: 10.sp,
-                        ),
-                      ),
-                      CustomSizes.mediumSizedBoxHeight,
-                    ]);
-                  }
-                  if (message.isFromMe) {
-                    children.add(MessageFromMeWidget(message: message));
-                  } else {
-                    children.add(
-                      MessageFromOtherWidget(
-                        message: message,
-                        showTimeAndProfile: true,
-                        // showTimeAndProfile: index == controller.messages.length - 1 ||
-                        //     controller.messages[index + 1].senderName != message.senderName,
-                      ),
-                    );
-                  }
-
-                  return GestureDetector(
-                    onLongPress: () => controller.toggleMessageSelection(message.messageId),
-                    onTap: controller.selectedMessages.isEmpty
+                    final message = controller.messages[index];
+                    final prevMessage = index == controller.messages.length - 1
                         ? null
-                        : () => controller.toggleMessageSelection(message.messageId),
-                    child: Stack(
-                      children: [
-                        // Material is used because if container is given color, it will
-                        // hide the reaction widget borders
-                        Material(
-                          color:
-                              message.isSelected ? COLORS.kGreenLighterColor : Colors.transparent,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 4.h),
-                            child: Column(
-                              children: children,
-                            ),
+                        : controller.messages[index + 1];
+
+                    // Adds date header at beginning of new messages in a certain date
+                    var dateHeaderWidgets = <Widget>[];
+                    if (prevMessage == null ||
+                        !prevMessage.timestamp.isSameDate(message.timestamp)) {
+                      dateHeaderWidgets = [
+                        CustomSizes.mediumSizedBoxHeight,
+                        Text(
+                          message.timestamp.differenceFromNow(),
+                          style: TEXTSTYLES.kBodyTag.copyWith(
+                            color: COLORS.kTextBlueColor,
+                            fontSize: 10.sp,
                           ),
                         ),
-                        if (message.isSelected)
-                          Positioned(
-                            top: 0,
-                            bottom: 0,
-                            child: Container(
-                              color: COLORS.kGreenMainColor,
-                              width: 3,
-                            ),
-                          )
+                        CustomSizes.mediumSizedBoxHeight,
+                      ];
+                    }
+
+                    return Column(
+                      children: [
+                        ...dateHeaderWidgets,
+                        MessageSelectionWrapper(
+                          key: Key(message.messageId),
+                          message: message,
+                        ),
                       ],
-                    ),
-                  );
-                },
+                    );
+                  },
+                  childCount: controller.messages.length + 1,
+                  findChildIndexCallback: (key) {
+                    return controller.messages.indexWhere((m) => Key(m.messageId) == key);
+                  },
+                ),
               ),
             ),
 
@@ -195,61 +166,5 @@ class MessagesView extends GetView<MessagesController> {
         ),
       );
     });
-  }
-
-  Widget _buildMessagesHeader() {
-    return Container(
-      margin: EdgeInsets.all(16.w).copyWith(top: 0, bottom: 16.h),
-      padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 24.h),
-      decoration: BoxDecoration(
-        border: Border.all(
-          width: 1,
-          color: COLORS.kPinCodeDeactivateColor,
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        children: [
-          CustomCircleAvatar(url: controller.args.chat.icon, size: 64),
-          CustomSizes.mediumSizedBoxHeight,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                controller.args.chat.name,
-                style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
-              ),
-              CustomSizes.smallSizedBoxWidth,
-              Container(
-                width: 24.w,
-                height: 24.w,
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
-                decoration: BoxDecoration(
-                  color: COLORS.kBlueColor,
-                  shape: BoxShape.circle,
-                ),
-                child: Assets.svg.verified.svg(
-                  color: COLORS.kWhiteColor,
-                  // fit: BoxFit.scaleDown,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 4.h),
-          // Todo: show core id
-          Text(
-            "CB13...586A",
-            style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
-          ),
-          CustomSizes.mediumSizedBoxHeight,
-          Text(
-            LocaleKeys.MessagesPage_endToEndEncryptedMessaging.trParams(
-              {"name": controller.args.chat.name},
-            ),
-            style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
-          ),
-        ],
-      ),
-    );
   }
 }

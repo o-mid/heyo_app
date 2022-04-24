@@ -30,7 +30,11 @@ class MessageBodyWidget extends StatelessWidget {
             children: [
               Container(
                 margin: EdgeInsets.only(bottom: 4.h),
-                child: _buildMessageContent(),
+                child: _MessageContent(
+                  message: message,
+                  backgroundColor: backgroundColor,
+                  textColor: textColor,
+                ),
               ),
               if (message.reactions.isNotEmpty) ReactionsWidget(message: message),
             ],
@@ -40,8 +44,21 @@ class MessageBodyWidget extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _buildMessageContent() {
+class _MessageContent extends StatelessWidget {
+  final MessageModel message;
+  final Color backgroundColor;
+  final Color textColor;
+  const _MessageContent({
+    Key? key,
+    required this.message,
+    required this.backgroundColor,
+    required this.textColor,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     switch (message.type) {
       case CONTENT_TYPE.TEXT:
         return Container(
