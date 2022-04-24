@@ -40,53 +40,47 @@ class MessagesView extends GetView<MessagesController> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
-              child: ListView.custom(
+              child: ListView.builder(
                 padding: EdgeInsets.only(top: 54.h, bottom: 16.h),
                 reverse: controller.messages.length > 0,
-                childrenDelegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    if (index == controller.messages.length)
-                      return BeginningOfMessagesHeader(
-                        chat: controller.args.chat,
-                      );
-
-                    final message = controller.messages[index];
-                    final prevMessage = index == controller.messages.length - 1
-                        ? null
-                        : controller.messages[index + 1];
-
-                    // Adds date header at beginning of new messages in a certain date
-                    var dateHeaderWidgets = <Widget>[];
-                    if (prevMessage == null ||
-                        !prevMessage.timestamp.isSameDate(message.timestamp)) {
-                      dateHeaderWidgets = [
-                        CustomSizes.mediumSizedBoxHeight,
-                        Text(
-                          message.timestamp.differenceFromNow(),
-                          style: TEXTSTYLES.kBodyTag.copyWith(
-                            color: COLORS.kTextBlueColor,
-                            fontSize: 10.sp,
-                          ),
-                        ),
-                        CustomSizes.mediumSizedBoxHeight,
-                      ];
-                    }
-
-                    return Column(
-                      children: [
-                        ...dateHeaderWidgets,
-                        MessageSelectionWrapper(
-                          key: Key(message.messageId),
-                          message: message,
-                        ),
-                      ],
+                itemCount: controller.messages.length + 1,
+                itemBuilder: (context, index) {
+                  if (index == controller.messages.length)
+                    return BeginningOfMessagesHeader(
+                      chat: controller.args.chat,
                     );
-                  },
-                  childCount: controller.messages.length + 1,
-                  findChildIndexCallback: (key) {
-                    return controller.messages.indexWhere((m) => Key(m.messageId) == key);
-                  },
-                ),
+
+                  final message = controller.messages[index];
+                  final prevMessage = index == controller.messages.length - 1
+                      ? null
+                      : controller.messages[index + 1];
+
+                  // Adds date header at beginning of new messages in a certain date
+                  var dateHeaderWidgets = <Widget>[];
+                  if (prevMessage == null || !prevMessage.timestamp.isSameDate(message.timestamp)) {
+                    dateHeaderWidgets = [
+                      CustomSizes.mediumSizedBoxHeight,
+                      Text(
+                        message.timestamp.differenceFromNow(),
+                        style: TEXTSTYLES.kBodyTag.copyWith(
+                          color: COLORS.kTextBlueColor,
+                          fontSize: 10.sp,
+                        ),
+                      ),
+                      CustomSizes.mediumSizedBoxHeight,
+                    ];
+                  }
+
+                  return Column(
+                    children: [
+                      ...dateHeaderWidgets,
+                      MessageSelectionWrapper(
+                        key: Key(message.messageId),
+                        message: message,
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
 
