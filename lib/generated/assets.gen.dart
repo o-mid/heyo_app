@@ -123,6 +123,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/heyo_logo.svg
   SvgGenImage get heyoLogo => const SvgGenImage('assets/svg/heyo_logo.svg');
 
+  /// File path: assets/svg/info_icon.svg
+  SvgGenImage get infoIcon => const SvgGenImage('assets/svg/info_icon.svg');
+
   /// File path: assets/svg/invite_icon.svg
   SvgGenImage get inviteIcon => const SvgGenImage('assets/svg/invite_icon.svg');
 

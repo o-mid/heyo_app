@@ -107,7 +107,8 @@
     "userBottomSheet": {
       "chat": "Chat",
       "addToContacts": "Add to contacts",
-      "block": "Block"
+      "block": "Block",
+      "userInfo": "User info"
     },
     "inviteBottomSheet": {
       "inviteYourFriend": "Invite your friend to Heyo!",

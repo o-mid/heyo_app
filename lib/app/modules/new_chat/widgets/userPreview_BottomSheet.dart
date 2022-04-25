@@ -51,6 +51,34 @@ void openUserPreviewBottomSheet(UserModel user) {
               children: [
                 CustomSizes.smallSizedBoxHeight,
                 TextButton(
+                    //Todo: Add User Info onPressed
+                    onPressed: () {},
+                    child: Row(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: COLORS.kBrightBlueColor,
+                            ),
+                            child:
+                                Assets.svg.infoIcon.svg(width: 20, height: 20),
+                          ),
+                        ),
+                        CustomSizes.mediumSizedBoxWidth,
+                        Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              LocaleKeys.newChat_userBottomSheet_userInfo.tr,
+                              style: TEXTSTYLES.kLinkBig.copyWith(
+                                color: COLORS.kDarkBlueColor,
+                              ),
+                            ))
+                      ],
+                    )),
+                TextButton(
                     //Todo: Chat onPressed
                     onPressed: () {},
                     child: Row(

@@ -115,6 +115,8 @@ class LocaleKeys {
   static const newChat_userBottomSheet_addToContacts =
       'newChat_userBottomSheet_addToContacts';
   static const newChat_userBottomSheet_block = 'newChat_userBottomSheet_block';
+  static const newChat_userBottomSheet_userInfo =
+      'newChat_userBottomSheet_userInfo';
   static const newChat_inviteBottomSheet_inviteYourFriend =
       'newChat_inviteBottomSheet_inviteYourFriend';
   static const newChat_inviteBottomSheet_shareLink =
@@ -242,6 +244,7 @@ class Locales {
     'newChat_userBottomSheet_chat': 'Chat',
     'newChat_userBottomSheet_addToContacts': 'Add to contacts',
     'newChat_userBottomSheet_block': 'Block',
+    'newChat_userBottomSheet_userInfo': 'User info',
     'newChat_inviteBottomSheet_inviteYourFriend': 'Invite your friend to Heyo!',
     'newChat_inviteBottomSheet_shareLink': 'Share link',
     'MessagesPage_textFieldHint': 'Chat',
