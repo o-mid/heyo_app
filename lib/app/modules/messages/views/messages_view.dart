@@ -40,25 +40,22 @@ class MessagesView extends GetView<MessagesController> {
         appBar: MessagingAppBar(chat: controller.args.chat),
         backgroundColor: COLORS.kAppBackground,
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Expanded(
               child: ListView.builder(
                 controller: controller.scrollController,
                 padding: EdgeInsets.only(top: 54.h, bottom: 16.h),
-                reverse: controller.messages.isNotEmpty,
                 itemCount: controller.messages.length + 1,
                 itemBuilder: (context, index) {
-                  if (index == controller.messages.length) {
+                  if (index == 0) {
                     return BeginningOfMessagesHeader(
                       chat: controller.args.chat,
                     );
                   }
 
-                  final message = controller.messages[index];
-                  final prevMessage = index == controller.messages.length - 1
-                      ? null
-                      : controller.messages[index + 1];
+                  final message = controller.messages[index - 1];
+                  final prevMessage = index == 1 ? null : controller.messages[index - 2];
 
                   // Adds date header at beginning of new messages in a certain date
                   var dateHeaderWidgets = <Widget>[];
@@ -84,7 +81,6 @@ class MessagesView extends GetView<MessagesController> {
                       children: [
                         ...dateHeaderWidgets,
                         MessageSelectionWrapper(
-                          key: Key(message.messageId),
                           message: message,
                         ),
                       ],

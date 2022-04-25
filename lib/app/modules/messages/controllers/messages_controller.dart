@@ -40,10 +40,14 @@ class MessagesController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+    jumpToBottom();
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    textController.dispose();
+    scrollController.dispose();
+  }
 
   void toggleEmojiPicker() {
     showEmojiPicker.value = !showEmojiPicker.value;
@@ -82,6 +86,12 @@ class MessagesController extends GetxController {
     } else {
       // Todo: implement loading replied message and scrolling to it
     }
+  }
+
+  void jumpToBottom() {
+    scrollController.jumpTo(
+      scrollController.position.maxScrollExtent,
+    );
   }
 
   void toggleReaction(MessageModel msg, String emoji) {
@@ -150,10 +160,12 @@ class MessagesController extends GetxController {
 
     // Todo: send message with libp2p.
 
-    messages.value = [message, ...messages];
+    messages.add(message);
     textController.clear();
 
     clearReplyTo();
+
+    jumpToBottom();
   }
 
   void replyTo() {
@@ -477,10 +489,30 @@ class MessagesController extends GetxController {
             isReactedByMe: true,
           ),
         },
-      )
+      ),
+      MessageModel(
+        messageId: "${index++}",
+        type: CONTENT_TYPE.VIDEO,
+        payload:
+            "https://assets.mixkit.co/videos/preview/mixkit-daytime-city-traffic-aerial-view-56-large.mp4",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MESSAGE_STATUS.READ,
+        reactions: {
+          "🤗": ReactionModel(
+            users: List.generate(1, (index) => ""),
+          ),
+          "😘": ReactionModel(
+            users: List.generate(2, (index) => ""),
+            isReactedByMe: true,
+          ),
+        },
+      ),
     ]);
 
     messages
-        .sort((a, b) => b.timestamp.millisecondsSinceEpoch - a.timestamp.millisecondsSinceEpoch);
+        .sort((a, b) => a.timestamp.millisecondsSinceEpoch - b.timestamp.millisecondsSinceEpoch);
   }
 }
