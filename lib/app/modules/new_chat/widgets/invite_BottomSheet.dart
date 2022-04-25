@@ -43,7 +43,7 @@ void openInviteBottomSheet(ProfileModel profile) {
                             .copyWith(color: COLORS.kDarkBlueColor),
                       ),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 14),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                     backgroundColor: COLORS.kWhiteColor,
                     snackStyle: SnackStyle.FLOATING,
                     borderRadius: 8,
@@ -56,7 +56,7 @@ void openInviteBottomSheet(ProfileModel profile) {
                 backgroundColor:
                     MaterialStateProperty.all<Color>(COLORS.kBrightBlueColor),
                 padding: MaterialStateProperty.all(
-                  EdgeInsets.symmetric(horizontal: 20.0, vertical: 14.0),
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 14.0),
                 ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
@@ -98,8 +98,8 @@ void openInviteBottomSheet(ProfileModel profile) {
     backgroundColor: COLORS.kWhiteColor,
     isDismissible: true,
     enableDrag: true,
-    shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
+    shape: const RoundedRectangleBorder(
+        borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20), topRight: Radius.circular(20))),
   );
 }

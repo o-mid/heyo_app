@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -79,8 +80,11 @@ void openUserPreviewBottomSheet(UserModel user) {
                       ],
                     )),
                 TextButton(
-                    //Todo: Chat onPressed
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.toNamed(Routes.MESSAGES,
+                          arguments:
+                              MessagesViewArgumentsModel(chat: user.chatModel));
+                    },
                     child: Row(
                       children: [
                         Align(
@@ -177,7 +181,7 @@ void openUserPreviewBottomSheet(UserModel user) {
     isDismissible: true,
     enableDrag: true,
     shape: const RoundedRectangleBorder(
-        borderRadius: const BorderRadius.only(
+        borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20), topRight: Radius.circular(20))),
   );
 }

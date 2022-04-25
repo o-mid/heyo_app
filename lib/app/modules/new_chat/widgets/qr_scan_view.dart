@@ -36,45 +36,41 @@ class QrScanView extends StatelessWidget {
         ),
         Align(
           alignment: Alignment.center,
-          child: Container(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 50,
-                ),
-                Stack(
-                  alignment: AlignmentDirectional.center,
-                  children: [
-                    hasBackButton
-                        ? Align(
-                            alignment: Alignment.centerLeft,
-                            child: IconButton(
-                              icon: Icon(Icons.arrow_back_ios_new_rounded,
-                                  color: Colors.white),
-                              onPressed: closeButtonOnClick != null
-                                  ? closeButtonOnClick
-                                  : () => Get.back(),
-                            ),
-                          )
-                        : SizedBox(),
-                    Text(
-                      title,
-                      style: TEXTSTYLES.kHeaderLarge
-                          .copyWith(color: COLORS.kWhiteColor),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  width: 300.0,
-                  child: Text(
-                    subtitle,
-                    style: TEXTSTYLES.kBodyBasic,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 50,
+              ),
+              Stack(
+                alignment: AlignmentDirectional.center,
+                children: [
+                  hasBackButton
+                      ? Align(
+                          alignment: Alignment.centerLeft,
+                          child: IconButton(
+                            icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                                color: Colors.white),
+                            onPressed: closeButtonOnClick ?? () => Get.back(),
+                          ),
+                        )
+                      : const SizedBox(),
+                  Text(
+                    title,
+                    style: TEXTSTYLES.kHeaderLarge
+                        .copyWith(color: COLORS.kWhiteColor),
                     textAlign: TextAlign.center,
                   ),
+                ],
+              ),
+              SizedBox(
+                width: 300.0,
+                child: Text(
+                  subtitle,
+                  style: TEXTSTYLES.kBodyBasic,
+                  textAlign: TextAlign.center,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         )
       ],

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_BottomSheet.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scaner.dart';
-import 'package:heyo/app/modules/new_chat/widgets/qr_scan_view.dart';
 import 'package:heyo/app/modules/new_chat/widgets/userPreview_BottomSheet.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -183,7 +181,7 @@ class _nearbyUsers extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            controller.nearbyUsers.length == 0
+            controller.nearbyUsers.isEmpty
                 ? const _nearbyUsersEmptyState()
                 // if nearby users is available then run this :
                 : Padding(
@@ -200,7 +198,6 @@ class _nearbyUsers extends StatelessWidget {
                         } else {
                           return InkWell(
                             borderRadius: BorderRadius.circular(8),
-                            // TODO: User onPressed
                             onTap: () => openUserPreviewBottomSheet(
                               controller.nearbyUsers[index],
                             ),
@@ -360,7 +357,6 @@ class _searchBody extends StatelessWidget {
                     var suggestedUser = controller.searchSuggestions[index];
                     return InkWell(
                       borderRadius: BorderRadius.circular(8),
-                      // TODO: User onPressed
                       onTap: () {
                         openUserPreviewBottomSheet(
                             controller.searchSuggestions[index]);
@@ -410,9 +406,7 @@ class _contactsBody extends StatelessWidget {
         ),
         CustomSizes.largeSizedBoxHeight,
         CustomButton.primarySmall(
-          // TODO : Invite button onPressed
           onTap: () => openInviteBottomSheet(controller.profile),
-
           color: COLORS.kGreenLighterColor,
           title: LocaleKeys.newChat_buttons_invite.tr,
           style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kGreenMainColor),
