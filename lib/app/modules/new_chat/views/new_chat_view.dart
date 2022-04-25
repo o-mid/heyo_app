@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_BottomSheet.dart';
+import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scaner.dart';
 import 'package:heyo/app/modules/new_chat/widgets/qr_scan_view.dart';
 import 'package:heyo/app/modules/new_chat/widgets/userPreview_BottomSheet.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -295,29 +296,18 @@ class _contacts extends StatelessWidget {
                   onFocusChange: (focus) =>
                       controller.isTextInputFocused.value = focus,
                   child: CUSTOMTEXTFIELD(
-                      labelText: LocaleKeys.newChat_usernameInput.tr,
-                      rightWidget: IconButton(
-                        icon: Icon(
-                          Icons.qr_code_rounded,
-                          color: COLORS.kDarkBlueColor,
-                        ),
-                        onPressed: () => {
-                          Get.bottomSheet(
-                              FractionallySizedBox(
-                                heightFactor: 1,
-                                child: QrScanView(
-                                  title: LocaleKeys.newChat_newChatAppBar.tr,
-                                  hasBackButton: true,
-                                  onQRViewCreated: controller.handleScannedVal,
-                                  subtitle: '',
-                                ),
-                              ),
-                              isScrollControlled: true)
-                        },
+                    textController: controller.inputController,
+                    labelText: LocaleKeys.newChat_usernameInput.tr,
+                    rightWidget: IconButton(
+                      icon: Icon(
+                        Icons.qr_code_rounded,
+                        color: COLORS.kDarkBlueColor,
                       ),
-                      onChanged: (String value) {
-                        controller.searchUsers(value);
-                      }),
+                      onPressed: () => {
+                        openQrScanerBottomSheet(controller.handleScannedValue)
+                      },
+                    ),
+                  ),
                 ),
               ),
             ),

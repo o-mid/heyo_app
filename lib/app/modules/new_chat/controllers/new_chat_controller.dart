@@ -1,6 +1,8 @@
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguements_model.dart';
+import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scaner.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -12,6 +14,8 @@ class NewChatController extends GetxController
     with GetSingleTickerProviderStateMixin {
   late AnimationController animController;
   late Animation<double> animation;
+  late TextEditingController inputController;
+// in nearby users Tab after 3 seconds the refresh button will be visible
   RxBool refreshBtnVisibility = false.obs;
   void makeRefreshBtnVisible() {
     Future.delayed(const Duration(seconds: 3), () {
@@ -19,11 +23,9 @@ class NewChatController extends GetxController
     });
   }
 
-  //TODO: Implement NewChatController
-
-  final count = 0.obs;
   @override
   void onInit() {
+    // animation for refresh button
     animController = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
@@ -32,22 +34,34 @@ class NewChatController extends GetxController
       begin: 0.9,
       end: 1.05,
     ).animate(animController);
-    searchUsers("");
+
+    inputController = TextEditingController();
+    inputController.addListener(() {
+      searchUsers(inputController.text);
+    });
 
     super.onInit();
   }
 
   @override
   void onReady() {
+    // if openQrScaner is set to true then this will open the qr scaner
+    // and search for users using qr code right after initializing
+
+    if (Get.arguments != null) {
+      final args = Get.arguments as NewchatArgumentsModel;
+      if (args.openQrScaner) {
+        openQrScanerBottomSheet(handleScannedValue);
+      }
+    }
     super.onReady();
   }
 
   @override
   void onClose() {
     animController.dispose();
+    inputController.dispose();
   }
-
-  void increment() => count.value++;
 
 // Mock data for user profile
   final profile = ProfileModel(
@@ -86,6 +100,7 @@ class NewChatController extends GetxController
       isActive: false.obs,
     ),
   ].obs;
+
   RefreshController refreshController =
       RefreshController(initialRefresh: false);
   void onRefresh() async {
@@ -106,9 +121,15 @@ class NewChatController extends GetxController
   }
 
   RxBool isTextInputFocused = false.obs;
-  handleScannedVal(QRViewController qrControllerDt) {
-    qrControllerDt.scannedDataStream.forEach((element) {
-      print(element.code);
+
+  handleScannedValue(QRViewController qrControllerDt) {
+    // TODO: Implement the right filter logic for QRCode
+    qrControllerDt.scannedDataStream.listen((element) {
+      qrControllerDt.pauseCamera();
+      Get.back();
+      isTextInputFocused.value = true;
+      // this will set the input field to the scanned value and serach for users
+      inputController.text = element.code.toString();
     });
   }
 }
