@@ -1,4 +1,3 @@
-import 'package:better_player/better_player.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +5,7 @@ import 'package:heyo/app/modules/messages/data/models/message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/reactions_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/modules/shared/utils/widgets/video_player_network.dart';
 
 class MessageBodyWidget extends StatelessWidget {
   final MessageModel message;
@@ -81,8 +81,8 @@ class _MessageContent extends StatelessWidget {
           ),
         );
       case CONTENT_TYPE.VIDEO:
-        return BetterPlayer.network(
-          message.payload,
+        return VideoPlayerNetwork(
+          url: message.payload,
         );
     }
   }
