@@ -34,7 +34,7 @@ void openUserPreviewBottomSheet(UserModel user) {
             user.isVerified
                 ? Assets.svg.verifiedWithBluePadding
                     .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
         CustomSizes.smallSizedBoxHeight,
@@ -58,7 +58,7 @@ void openUserPreviewBottomSheet(UserModel user) {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
                               color: COLORS.kBrightBlueColor,
@@ -91,7 +91,7 @@ void openUserPreviewBottomSheet(UserModel user) {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
                               color: COLORS.kBrightBlueColor,
@@ -120,7 +120,7 @@ void openUserPreviewBottomSheet(UserModel user) {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
                               color: COLORS.kStatesErrorBackgroundColor,
@@ -148,8 +148,8 @@ void openUserPreviewBottomSheet(UserModel user) {
     backgroundColor: COLORS.kWhiteColor,
     isDismissible: true,
     enableDrag: true,
-    shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
+    shape: const RoundedRectangleBorder(
+        borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20), topRight: Radius.circular(20))),
   );
 }
