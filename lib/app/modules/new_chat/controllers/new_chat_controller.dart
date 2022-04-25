@@ -40,7 +40,8 @@ class NewChatController extends GetxController
     inputController.addListener(() {
       searchUsers(inputController.text);
     });
-
+    nearbyUsers
+        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     super.onInit();
   }
 
@@ -105,7 +106,7 @@ class NewChatController extends GetxController
       ),
     ),
     UserModel(
-      name: "Manly Cupholder",
+      name: "manly Cupholder",
       walletAddress: 'CB42...324E',
       icon: "https://avatars.githubusercontent.com/u/9801359?v=4",
       isOnline: true,
@@ -144,6 +145,8 @@ class NewChatController extends GetxController
       String inputedQuery = query.toLowerCase();
       return username.contains(inputedQuery);
     }).toList();
+    searchSuggestions
+        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     searchSuggestions.refresh();
   }
 

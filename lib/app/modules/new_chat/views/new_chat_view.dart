@@ -9,6 +9,7 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/modules/shared/widgets/list_header_widget.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -178,76 +179,108 @@ class _nearbyUsers extends StatelessWidget {
           distance: 32,
           backgroundColor: COLORS.kGreenLighterColor,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            controller.nearbyUsers.isEmpty
-                ? const _nearbyUsersEmptyState()
-                // if nearby users is available then run this :
-                : Padding(
-                    padding: const EdgeInsets.only(top: 36),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: controller.nearbyUsers.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        // this will check if verified filter is applyed or not
-                        if (controller.filters.first.isActive.value &&
-                            // check if user is verified or not
-                            controller.nearbyUsers[index].isVerified == false) {
-                          return const SizedBox();
-                        } else {
-                          return InkWell(
-                            borderRadius: BorderRadius.circular(8),
-                            onTap: () => openUserPreviewBottomSheet(
-                              controller.nearbyUsers[index],
-                            ),
-                            child: Padding(
+        child: SingleChildScrollView(
+          physics: const ScrollPhysics(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              controller.nearbyUsers.isEmpty
+                  ? const _nearbyUsersEmptyState()
+                  // if nearby users is available then run this :
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 36),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: controller.nearbyUsers.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          //this will grab the current user and
+                          // extract the first character from its name
+                          String _currentUsernamefirstchar = controller
+                              .nearbyUsers[index].name.characters.first;
+                          //this will grab the next user in the list if its not null and
+                          // extract the first character from its name
+                          String _nextUsernamefirstchar = controller.nearbyUsers
+                                      .indexOf(controller.nearbyUsers.last) >
+                                  index + 1
+                              ? controller
+                                  .nearbyUsers[index + 1].name.characters.first
+                              : "";
+
+                          // this will check if verified filter is applyed or not
+
+                          if (controller.filters.first.isActive.value &&
+                              // check if user is verified or not
+                              controller.nearbyUsers[index].isVerified ==
+                                  false) {
+                            return const SizedBox();
+                          } else {
+                            return Padding(
                               padding: CustomSizes.userListPadding,
-                              child: UserWidget(
-                                  User: controller.nearbyUsers[index]),
+                              child: Column(
+                                children: [
+                                  // if first character of current user name Is(not) equal to
+                                  // first character of next user name then add a header
+                                  _currentUsernamefirstchar !=
+                                          _nextUsernamefirstchar
+                                      ? ListHeaderWidget(
+                                          title: controller.nearbyUsers[index]
+                                              .name.characters.first
+                                              .toUpperCase())
+                                      : const SizedBox(),
+                                  InkWell(
+                                    borderRadius: BorderRadius.circular(8),
+                                    onTap: () => openUserPreviewBottomSheet(
+                                      controller.nearbyUsers[index],
+                                    ),
+                                    child: UserWidget(
+                                        User: controller.nearbyUsers[index]),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+              Column(
+                children: [
+                  Visibility(
+                    // will be visible after delayed
+                    visible: controller.refreshBtnVisibility.value,
+                    child: ScaleTransition(
+                      scale: controller.animation,
+                      child: TextButton.icon(
+                        onPressed: () {
+                          controller.refreshController.requestRefresh();
+                        },
+                        icon: const Icon(
+                          Icons.keyboard_double_arrow_down_rounded,
+                          color: COLORS.kGreenMainColor,
+                          size: 22,
+                        ),
+                        label: Text(
+                          LocaleKeys.newChat_buttons_pullDownToRefresh.tr,
+                          style: TEXTSTYLES.kButtonSmall.copyWith(
+                              color: COLORS.kGreenMainColor, wordSpacing: 0.5),
+                        ),
+                        style: TextButton.styleFrom(
+                            backgroundColor: COLORS.kGreenLighterColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.0),
                             ),
-                          );
-                        }
-                      },
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 22)),
+                      ),
                     ),
                   ),
-            Column(
-              children: [
-                Visibility(
-                  // will be visible after delayed
-                  visible: controller.refreshBtnVisibility.value,
-                  child: ScaleTransition(
-                    scale: controller.animation,
-                    child: TextButton.icon(
-                      onPressed: () {
-                        controller.refreshController.requestRefresh();
-                      },
-                      icon: const Icon(
-                        Icons.keyboard_double_arrow_down_rounded,
-                        color: COLORS.kGreenMainColor,
-                        size: 22,
-                      ),
-                      label: Text(
-                        LocaleKeys.newChat_buttons_pullDownToRefresh.tr,
-                        style: TEXTSTYLES.kButtonSmall.copyWith(
-                            color: COLORS.kGreenMainColor, wordSpacing: 0.5),
-                      ),
-                      style: TextButton.styleFrom(
-                          backgroundColor: COLORS.kGreenLighterColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 0, horizontal: 22)),
-                    ),
+                  SizedBox(
+                    height: 35.h,
                   ),
-                ),
-                SizedBox(
-                  height: 35.h,
-                ),
-              ],
-            )
-          ],
+                ],
+              )
+            ],
+          ),
         ),
       );
     });
@@ -354,18 +387,38 @@ class _searchBody extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: controller.searchSuggestions.length,
                   itemBuilder: (BuildContext context, int index) {
+                    //this will grab the current user and
+                    // extract the first character from its name
+                    String _currentUsernamefirstchar = controller
+                        .searchSuggestions[index].name.characters.first;
+                    //this will grab the next user in the list if its not null and
+                    // extract the first character from its name
+                    String _nextUsernamefirstchar = controller.searchSuggestions
+                                .indexOf(controller.searchSuggestions.last) >
+                            index + 1
+                        ? controller
+                            .nearbyUsers[index + 1].name.characters.first
+                        : "";
                     var suggestedUser = controller.searchSuggestions[index];
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(8),
-                      onTap: () {
-                        openUserPreviewBottomSheet(
-                            controller.searchSuggestions[index]);
-                      },
-                      child: Padding(
-                          padding: CustomSizes.userListPadding,
+                    return Column(
+                      children: [
+                        _currentUsernamefirstchar != _nextUsernamefirstchar
+                            ? ListHeaderWidget(
+                                title: controller
+                                    .nearbyUsers[index].name.characters.first
+                                    .toUpperCase())
+                            : const SizedBox(),
+                        InkWell(
+                          borderRadius: BorderRadius.circular(8),
+                          onTap: () {
+                            openUserPreviewBottomSheet(
+                                controller.searchSuggestions[index]);
+                          },
                           child: UserWidget(
                             User: suggestedUser,
-                          )),
+                          ),
+                        ),
+                      ],
                     );
                   },
                 ),

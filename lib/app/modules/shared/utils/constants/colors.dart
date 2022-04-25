@@ -84,7 +84,8 @@ class COLORS {
   static const Color kOnlineBadgeColor = Color(0xff37E028);
 
   /// Tab bar slider background #F8F7FF 80% opacity
-  static const Color kTabbarBackgroundColor = Color.fromARGB(204, 248, 247, 255);
+  static const Color kTabbarBackgroundColor =
+      Color.fromARGB(204, 248, 247, 255);
 
   /// message selection options color
   static const Color kMessageSelectionOption = Color(0xffA9AFC6);
@@ -94,4 +95,7 @@ class COLORS {
 
   /// compose message border color
   static const Color kComposeMessageBorderColor = Color(0xffe9e7f0);
+
+  ///divider color
+  static const Color kDividerColor = Color(0xffECEAF1);
 }
