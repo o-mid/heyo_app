@@ -16,11 +16,12 @@ import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../controllers/messages_controller.dart';
 
 class MessagesView extends GetView<MessagesController> {
-  final _messageAndReplyBoxDecoration = BoxDecoration(
+  final _messageAndReplyBoxDecoration = const BoxDecoration(
     color: COLORS.kComposeMessageBackgroundColor,
     border: Border(
       top: BorderSide(
@@ -29,6 +30,8 @@ class MessagesView extends GetView<MessagesController> {
       ),
     ),
   );
+
+  const MessagesView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,14 +44,16 @@ class MessagesView extends GetView<MessagesController> {
           children: [
             Expanded(
               child: ListView.builder(
+                controller: controller.scrollController,
                 padding: EdgeInsets.only(top: 54.h, bottom: 16.h),
-                reverse: controller.messages.length > 0,
+                reverse: controller.messages.isNotEmpty,
                 itemCount: controller.messages.length + 1,
                 itemBuilder: (context, index) {
-                  if (index == controller.messages.length)
+                  if (index == controller.messages.length) {
                     return BeginningOfMessagesHeader(
                       chat: controller.args.chat,
                     );
+                  }
 
                   final message = controller.messages[index];
                   final prevMessage = index == controller.messages.length - 1
@@ -71,14 +76,19 @@ class MessagesView extends GetView<MessagesController> {
                     ];
                   }
 
-                  return Column(
-                    children: [
-                      ...dateHeaderWidgets,
-                      MessageSelectionWrapper(
-                        key: Key(message.messageId),
-                        message: message,
-                      ),
-                    ],
+                  return AutoScrollTag(
+                    key: Key(index.toString()),
+                    index: index,
+                    controller: controller.scrollController,
+                    child: Column(
+                      children: [
+                        ...dateHeaderWidgets,
+                        MessageSelectionWrapper(
+                          key: Key(message.messageId),
+                          message: message,
+                        ),
+                      ],
+                    ),
                   );
                 },
               ),
@@ -132,17 +142,17 @@ class MessagesView extends GetView<MessagesController> {
               padding: EdgeInsets.all(18),
               decoration: _messageAndReplyBoxDecoration,
               child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 200),
+                duration: const Duration(milliseconds: 200),
                 transitionBuilder: (child, animation) =>
                     ScaleTransition(scale: animation, child: child),
-                child: controller.selectedMessages.length > 0
+                child: controller.selectedMessages.isNotEmpty
                     ? MessageSelectionOptions(
                         showReply: controller.selectedMessages.length == 1,
                         showCopy:
                             !controller.selectedMessages.any((m) => m.type != CONTENT_TYPE.TEXT),
-                        // Todo: add flags for copy and forward
+                        // Todo: add flag and forward
                       )
-                    : ComposeMessageBox(),
+                    : const ComposeMessageBox(),
               ),
             ),
             Offstage(

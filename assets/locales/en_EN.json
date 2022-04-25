@@ -121,6 +121,7 @@
     "countSelectedMessages": "@count selected",
     "replyingTo": "Replying to @name",
     "replyToImage": "Image",
+    "replyToVideo": "Video",
     "deleteMessagesDialog": {
       "title": "Delete message?",
       "titlePlural": "Delete @count messages?",
