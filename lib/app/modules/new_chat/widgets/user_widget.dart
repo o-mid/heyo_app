@@ -33,7 +33,7 @@ class UserWidget extends StatelessWidget {
                 CustomSizes.smallSizedBoxWidth,
                 if (User.isVerified) Assets.svg.verifiedWithBluePadding.svg(),
               ]),
-              SizedBox(
+              const SizedBox(
                 height: 4,
               ),
               Text(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -34,7 +35,7 @@ void openUserPreviewBottomSheet(UserModel user) {
             user.isVerified
                 ? Assets.svg.verifiedWithBluePadding
                     .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
         CustomSizes.smallSizedBoxHeight,
@@ -51,14 +52,45 @@ void openUserPreviewBottomSheet(UserModel user) {
               children: [
                 CustomSizes.smallSizedBoxHeight,
                 TextButton(
-                    //Todo: Chat onPressed
+                    //Todo: Add User Info onPressed
                     onPressed: () {},
                     child: Row(
                       children: [
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: COLORS.kBrightBlueColor,
+                            ),
+                            child:
+                                Assets.svg.infoIcon.svg(width: 20, height: 20),
+                          ),
+                        ),
+                        CustomSizes.mediumSizedBoxWidth,
+                        Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              LocaleKeys.newChat_userBottomSheet_userInfo.tr,
+                              style: TEXTSTYLES.kLinkBig.copyWith(
+                                color: COLORS.kDarkBlueColor,
+                              ),
+                            ))
+                      ],
+                    )),
+                TextButton(
+                    onPressed: () {
+                      Get.toNamed(Routes.MESSAGES,
+                          arguments:
+                              MessagesViewArgumentsModel(chat: user.chatModel));
+                    },
+                    child: Row(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
                               color: COLORS.kBrightBlueColor,
@@ -91,7 +123,7 @@ void openUserPreviewBottomSheet(UserModel user) {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
                               color: COLORS.kBrightBlueColor,
@@ -120,7 +152,7 @@ void openUserPreviewBottomSheet(UserModel user) {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
                               color: COLORS.kStatesErrorBackgroundColor,
@@ -148,7 +180,7 @@ void openUserPreviewBottomSheet(UserModel user) {
     backgroundColor: COLORS.kWhiteColor,
     isDismissible: true,
     enableDrag: true,
-    shape: RoundedRectangleBorder(
+    shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20), topRight: Radius.circular(20))),
   );

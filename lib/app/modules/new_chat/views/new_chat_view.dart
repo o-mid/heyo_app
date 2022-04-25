@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_BottomSheet.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scaner.dart';
-import 'package:heyo/app/modules/new_chat/widgets/qr_scan_view.dart';
 import 'package:heyo/app/modules/new_chat/widgets/userPreview_BottomSheet.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -16,6 +14,7 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../shared/utils/constants/fonts.dart';
 import '../controllers/new_chat_controller.dart';
+import '../widgets/app_bar_action_BottomSheet.dart';
 import '../widgets/user_widget.dart';
 
 class NewChatView extends GetView<NewChatController> {
@@ -75,7 +74,7 @@ class NewChatView extends GetView<NewChatController> {
       centerTitle: false,
       title: Text(
         LocaleKeys.newChat_newChatAppBar.tr,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FONTS.Bold,
           fontFamily: FONTS.interFamily,
         ),
@@ -85,6 +84,11 @@ class NewChatView extends GetView<NewChatController> {
           onPressed: () => _openFiltersBottomSheet(),
           icon: Assets.svg.filterIcon.svg(),
         ),
+        IconButton(
+            onPressed: () => openAppBarActionBottomSheet(controller.profile),
+            icon: Assets.svg.dotColumn.svg(
+              width: 5,
+            )),
       ],
       automaticallyImplyLeading: true,
     );
@@ -103,7 +107,7 @@ class NewChatView extends GetView<NewChatController> {
                   child: TextButton.icon(
                       // Close the bottom sheet
                       onPressed: () => Get.back(),
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_back,
                         color: COLORS.kDarkBlueColor,
                       ),
@@ -147,7 +151,7 @@ class NewChatView extends GetView<NewChatController> {
       backgroundColor: COLORS.kWhiteColor,
       isDismissible: true,
       enableDrag: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20))),
     );
   }
@@ -169,7 +173,7 @@ class _nearbyUsers extends StatelessWidget {
         controller: controller.refreshController,
         enablePullDown: true,
         onRefresh: controller.onRefresh,
-        header: MaterialClassicHeader(
+        header: const MaterialClassicHeader(
           color: COLORS.kGreenMainColor,
           distance: 32,
           backgroundColor: COLORS.kGreenLighterColor,
@@ -177,8 +181,8 @@ class _nearbyUsers extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            controller.nearbyUsers.length == 0
-                ? _nearbyUsersEmptyState()
+            controller.nearbyUsers.isEmpty
+                ? const _nearbyUsersEmptyState()
                 // if nearby users is available then run this :
                 : Padding(
                     padding: const EdgeInsets.only(top: 36),
@@ -190,11 +194,10 @@ class _nearbyUsers extends StatelessWidget {
                         if (controller.filters.first.isActive.value &&
                             // check if user is verified or not
                             controller.nearbyUsers[index].isVerified == false) {
-                          return SizedBox();
+                          return const SizedBox();
                         } else {
                           return InkWell(
                             borderRadius: BorderRadius.circular(8),
-                            // TODO: User onPressed
                             onTap: () => openUserPreviewBottomSheet(
                               controller.nearbyUsers[index],
                             ),
@@ -219,7 +222,7 @@ class _nearbyUsers extends StatelessWidget {
                       onPressed: () {
                         controller.refreshController.requestRefresh();
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.keyboard_double_arrow_down_rounded,
                         color: COLORS.kGreenMainColor,
                         size: 22,
@@ -234,7 +237,7 @@ class _nearbyUsers extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.0),
                           ),
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 0, horizontal: 22)),
                     ),
                   ),
@@ -299,7 +302,7 @@ class _contacts extends StatelessWidget {
                     textController: controller.inputController,
                     labelText: LocaleKeys.newChat_usernameInput.tr,
                     rightWidget: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.qr_code_rounded,
                         color: COLORS.kDarkBlueColor,
                       ),
@@ -335,7 +338,7 @@ class _searchBody extends StatelessWidget {
       return Column(
         children: [
           CustomSizes.smallSizedBoxHeight,
-          Divider(thickness: 8, color: COLORS.kBrightBlueColor),
+          const Divider(thickness: 8, color: COLORS.kBrightBlueColor),
           CustomSizes.largeSizedBoxHeight,
           Padding(
             padding: CustomSizes.mainContentPadding,
@@ -354,7 +357,6 @@ class _searchBody extends StatelessWidget {
                     var suggestedUser = controller.searchSuggestions[index];
                     return InkWell(
                       borderRadius: BorderRadius.circular(8),
-                      // TODO: User onPressed
                       onTap: () {
                         openUserPreviewBottomSheet(
                             controller.searchSuggestions[index]);
@@ -404,9 +406,7 @@ class _contactsBody extends StatelessWidget {
         ),
         CustomSizes.largeSizedBoxHeight,
         CustomButton.primarySmall(
-          // TODO : Invite button onPressed
           onTap: () => openInviteBottomSheet(controller.profile),
-
           color: COLORS.kGreenLighterColor,
           title: LocaleKeys.newChat_buttons_invite.tr,
           style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kGreenMainColor),

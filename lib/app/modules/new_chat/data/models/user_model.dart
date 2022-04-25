@@ -1,3 +1,5 @@
+import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
+
 class UserModel {
   String name;
   String icon;
@@ -5,6 +7,7 @@ class UserModel {
   String Nickname;
   bool isOnline;
   bool isVerified;
+  ChatModel chatModel;
 
   UserModel({
     required this.name,
@@ -13,5 +16,6 @@ class UserModel {
     this.isOnline = false,
     this.isVerified = false,
     this.Nickname = "",
+    required this.chatModel,
   });
 }

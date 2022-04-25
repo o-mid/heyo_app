@@ -99,6 +99,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/delete_icon.svg
   SvgGenImage get deleteIcon => const SvgGenImage('assets/svg/delete_icon.svg');
 
+  /// File path: assets/svg/dot_column.svg
+  SvgGenImage get dotColumn => const SvgGenImage('assets/svg/dot_column.svg');
+
   /// File path: assets/svg/dot_indicator.svg
   SvgGenImage get dotIndicator =>
       const SvgGenImage('assets/svg/dot_indicator.svg');
@@ -119,6 +122,9 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/heyo_logo.svg
   SvgGenImage get heyoLogo => const SvgGenImage('assets/svg/heyo_logo.svg');
+
+  /// File path: assets/svg/info_icon.svg
+  SvgGenImage get infoIcon => const SvgGenImage('assets/svg/info_icon.svg');
 
   /// File path: assets/svg/invite_icon.svg
   SvgGenImage get inviteIcon => const SvgGenImage('assets/svg/invite_icon.svg');
