@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/new_chat/widgets/invite_BottomSheet.dart';
+import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scaner.dart';
-import 'package:heyo/app/modules/new_chat/widgets/userPreview_BottomSheet.dart';
+import 'package:heyo/app/modules/new_chat/widgets/user_preview_bottom_sheet.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button.dart';
@@ -15,7 +15,7 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../shared/utils/constants/fonts.dart';
 import '../controllers/new_chat_controller.dart';
-import '../widgets/app_bar_action_BottomSheet.dart';
+import '../widgets/app_bar_action_bottom_sheet.dart';
 import '../widgets/user_widget.dart';
 
 class NewChatView extends GetView<NewChatController> {
@@ -213,6 +213,10 @@ class _nearbyUsers extends StatelessWidget {
                               // check if user is verified or not
                               controller.nearbyUsers[index].isVerified ==
                                   false) {
+                            return const SizedBox();
+                          } else if (controller.filters.last.isActive.value &&
+                              // check if user is online or not
+                              controller.nearbyUsers[index].isOnline == false) {
                             return const SizedBox();
                           } else {
                             return Padding(

@@ -10,6 +10,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../data/models/filter_model.dart';
 import '../data/models/profile_model.dart';
 import '../data/models/user_model.dart';
+import '../widgets/invite_bttom_sheet.dart';
 
 class NewChatController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -47,13 +48,19 @@ class NewChatController extends GetxController
 
   @override
   void onReady() {
-    // if openQrScaner is set to true then this will open the qr scaner
-    // and search for users using qr code right after initializing
-
     if (Get.arguments != null) {
+      // if openQrScaner is set to true then this will open the qr scaner
+      // and search for users using qr code right after initializing
+
       final args = Get.arguments as NewchatArgumentsModel;
       if (args.openQrScaner) {
         openQrScanerBottomSheet(handleScannedValue);
+      }
+      // if openInviteBottomSheet is set to true then this will
+      //open the invite bottom sheet right after initializing
+
+      if (args.openInviteBottomSheet) {
+        openInviteBottomSheet(profile);
       }
     }
     super.onReady();
@@ -125,6 +132,10 @@ class NewChatController extends GetxController
   RxList<FilterModel> filters = [
     FilterModel(
       title: "Verified",
+      isActive: false.obs,
+    ),
+    FilterModel(
+      title: "Online",
       isActive: false.obs,
     ),
   ].obs;

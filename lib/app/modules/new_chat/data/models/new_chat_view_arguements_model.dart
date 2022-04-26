@@ -3,6 +3,10 @@ class NewchatArgumentsModel {
   //serach for users using QRCode,
 
   final bool openQrScaner;
+  final bool openInviteBottomSheet;
 
-  NewchatArgumentsModel({this.openQrScaner = false});
+  NewchatArgumentsModel({
+    this.openQrScaner = false,
+    this.openInviteBottomSheet = false,
+  });
 }

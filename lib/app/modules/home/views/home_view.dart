@@ -33,7 +33,7 @@ class HomeView extends GetView<HomeController> {
           backgroundColor: COLORS.kGreenMainColor,
           title: Text(
             LocaleKeys.HomePage_title.tr,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FONTS.Bold,
               fontFamily: FONTS.interFamily,
             ),
@@ -64,7 +64,7 @@ class HomeView extends GetView<HomeController> {
       isDismissible: true,
       persistent: true,
       enableDrag: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
     );
   }
@@ -90,7 +90,7 @@ Widget _bottomSheetFAB = Container(
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Container(
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
                             color: COLORS.kBrightBlueColor,
@@ -121,7 +121,7 @@ Widget _bottomSheetFAB = Container(
                 },
                 alignment: Alignment.center,
                 iconSize: 21.w,
-                icon: Icon(
+                icon: const Icon(
                   Icons.qr_code_rounded,
                   color: COLORS.kDarkBlueColor,
                 )),
@@ -136,7 +136,7 @@ Widget _bottomSheetFAB = Container(
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Container(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
                       color: COLORS.kBrightBlueColor,
@@ -163,7 +163,7 @@ Widget _bottomSheetFAB = Container(
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Container(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
                       color: COLORS.kBrightBlueColor,

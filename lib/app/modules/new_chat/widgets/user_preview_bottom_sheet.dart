@@ -179,6 +179,7 @@ void openUserPreviewBottomSheet(UserModel user) {
     ),
     backgroundColor: COLORS.kWhiteColor,
     isDismissible: true,
+    isScrollControlled: true,
     enableDrag: true,
     shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
