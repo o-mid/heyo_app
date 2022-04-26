@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/app/modules/shared/utils/widgets/notification_count_badge.dart';
+import 'package:heyo/app/modules/shared/widgets/notification_count_badge.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:get/get.dart';
@@ -14,7 +14,7 @@ class BottomNavigationBarCustom extends StatelessWidget {
   final bool show;
   final int duration;
 
-  BottomNavigationBarCustom(
+  const BottomNavigationBarCustom(
       {required this.currentIndex, required this.onTap, this.show = true, this.duration = 250});
   @override
   Widget build(BuildContext context) {

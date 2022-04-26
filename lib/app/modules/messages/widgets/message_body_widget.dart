@@ -6,8 +6,8 @@ import 'package:heyo/app/modules/messages/widgets/reactions_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
-import 'package:heyo/app/modules/shared/utils/widgets/audio_player.dart';
-import 'package:heyo/app/modules/shared/utils/widgets/video_player_network.dart';
+import 'package:heyo/app/modules/shared/widgets/audio_player.dart';
+import 'package:heyo/app/modules/shared/widgets/video_player_network.dart';
 
 class MessageBodyWidget extends StatelessWidget {
   final MessageModel message;

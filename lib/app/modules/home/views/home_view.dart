@@ -7,7 +7,7 @@ import 'package:heyo/app/modules/home/widgets/new_chat_bottom_sheet.dart';
 import 'package:heyo/app/modules/search_nearby/views/search_nearby_view.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
-import 'package:heyo/app/modules/shared/utils/widgets/bottom_navigation_bar.dart';
+import 'package:heyo/app/modules/shared/widgets/bottom_navigation_bar.dart';
 import 'package:heyo/app/modules/wallet/views/wallet_view.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';

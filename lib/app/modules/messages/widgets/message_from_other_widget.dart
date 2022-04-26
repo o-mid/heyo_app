@@ -7,7 +7,7 @@ import 'package:heyo/app/modules/messages/widgets/recipient_reply_to_widget.dart
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
-import 'package:heyo/app/modules/shared/utils/widgets/curtom_circle_avatar.dart';
+import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 
 import 'message_body_widget.dart';
 

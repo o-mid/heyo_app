@@ -4,8 +4,8 @@ import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/app/modules/shared/utils/widgets/curtom_circle_avatar.dart';
-import 'package:heyo/app/modules/shared/utils/widgets/notification_count_badge.dart';
+import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
+import 'package:heyo/app/modules/shared/widgets/notification_count_badge.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
 class ChatWidget extends StatelessWidget {
@@ -21,7 +21,7 @@ class ChatWidget extends StatelessWidget {
           size: 48,
           isOnline: chat.isOnline,
         ),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         Expanded(
           child: Column(
             children: [

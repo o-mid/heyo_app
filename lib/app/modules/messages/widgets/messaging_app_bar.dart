@@ -6,7 +6,8 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
-import 'package:heyo/app/modules/shared/utils/widgets/curtom_circle_avatar.dart';
+import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
+import 'package:heyo/app/modules/shared/widgets/scale_animated_switcher.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:get/get.dart';
@@ -24,12 +25,9 @@ class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
         child: SafeArea(
-          child: AnimatedSwitcher(
-            duration: Duration(milliseconds: 200),
-            transitionBuilder: (child, animation) =>
-                ScaleTransition(scale: animation, child: child),
-            child: controller.selectedMessages.length > 0
-                ? _SelectionModeAppBar()
+          child: ScaleAnimatedSwitcher(
+            child: controller.selectedMessages.isNotEmpty
+                ? const _SelectionModeAppBar()
                 : _DefaultAppBar(chat: chat),
           ),
         ),

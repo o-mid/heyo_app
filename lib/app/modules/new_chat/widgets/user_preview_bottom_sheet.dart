@@ -12,7 +12,7 @@ import '../../../routes/app_pages.dart';
 import '../../shared/data/models/addContactsViewArgumentsModel.dart';
 import '../../shared/utils/constants/textStyles.dart';
 import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
-import '../../shared/utils/widgets/curtom_circle_avatar.dart';
+import '../../shared/widgets/curtom_circle_avatar.dart';
 
 void openUserPreviewBottomSheet(UserModel user) {
   Get.bottomSheet(

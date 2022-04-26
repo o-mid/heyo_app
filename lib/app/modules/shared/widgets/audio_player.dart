@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/app/modules/shared/utils/widgets/scale_animated_switcher.dart';
+import 'package:heyo/app/modules/shared/widgets/scale_animated_switcher.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:just_audio/just_audio.dart';
 

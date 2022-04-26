@@ -7,7 +7,7 @@ import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
-import 'package:heyo/app/modules/shared/utils/widgets/curtom_circle_avatar.dart';
+import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
@@ -47,7 +47,7 @@ class BeginningOfMessagesHeader extends StatelessWidget {
                 width: 24.w,
                 height: 24.w,
                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: COLORS.kBlueColor,
                   shape: BoxShape.circle,
                 ),
