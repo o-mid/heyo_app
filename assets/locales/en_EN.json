@@ -135,6 +135,12 @@
       "deleteForMe": "Delete only for me"
     }
   },
+  "forwardMassagesPage": {
+    "appbar": "Forward to",
+    "textInput": "Search in contacts",
+    "recentContacts": "Recent contacts",
+    "OtherContacts": "Other contacts"
+  },
   "yesterday": "Yesterday",
   "today": "Today",
   "reply": "Reply",

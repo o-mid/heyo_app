@@ -147,6 +147,12 @@ class LocaleKeys {
       'MessagesPage_deleteMessagesDialog_deleteForEveryone';
   static const MessagesPage_deleteMessagesDialog_deleteForMe =
       'MessagesPage_deleteMessagesDialog_deleteForMe';
+  static const forwardMassagesPage_appbar = 'forwardMassagesPage_appbar';
+  static const forwardMassagesPage_textInput = 'forwardMassagesPage_textInput';
+  static const forwardMassagesPage_recentContacts =
+      'forwardMassagesPage_recentContacts';
+  static const forwardMassagesPage_OtherContacts =
+      'forwardMassagesPage_OtherContacts';
   static const yesterday = 'yesterday';
   static const today = 'today';
   static const reply = 'reply';
@@ -267,6 +273,10 @@ class Locales {
     'MessagesPage_deleteMessagesDialog_deleteForEveryone':
         'Delete for everyone',
     'MessagesPage_deleteMessagesDialog_deleteForMe': 'Delete only for me',
+    'forwardMassagesPage_appbar': 'Forward to',
+    'forwardMassagesPage_textInput': 'Search in contacts',
+    'forwardMassagesPage_recentContacts': 'Recent contacts',
+    'forwardMassagesPage_OtherContacts': 'Other contacts',
     'yesterday': 'Yesterday',
     'today': 'Today',
     'reply': 'Reply',

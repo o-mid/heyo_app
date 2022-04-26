@@ -12,6 +12,8 @@ import '../modules/auth/sing-up/bindings/sing_up_binding.dart';
 import '../modules/auth/sing-up/views/sing_up_view.dart';
 import '../modules/calls/bindings/calls_binding.dart';
 import '../modules/calls/views/calls_view.dart';
+import '../modules/forward_massages/bindings/forward_massages_binding.dart';
+import '../modules/forward_massages/views/forward_massages_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/intro/bindings/intro_binding.dart';
@@ -100,6 +102,11 @@ class AppPages {
       name: _Paths.ADD_CONTACTS,
       page: () => AddContactsView(),
       binding: AddContactsBinding(),
+    ),
+    GetPage(
+      name: _Paths.FORWARD_MASSAGES,
+      page: () => ForwardMassagesView(),
+      binding: ForwardMassagesBinding(),
     ),
   ];
 }

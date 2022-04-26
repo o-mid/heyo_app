@@ -8,6 +8,8 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
+import '../../../routes/app_pages.dart';
+
 class MessageSelectionOptions extends StatelessWidget {
   final bool showReply;
   final bool showCopy;
@@ -44,6 +46,7 @@ class MessageSelectionOptions extends StatelessWidget {
           _buildOption(
             Assets.svg.forwardIcon,
             LocaleKeys.forward.tr,
+            onTap: (() => Get.toNamed(Routes.FORWARD_MASSAGES)),
           ),
         if (showDelete)
           _buildOption(
