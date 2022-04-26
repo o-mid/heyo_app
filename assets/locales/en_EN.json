@@ -123,6 +123,7 @@
     "replyingTo": "Replying to @name",
     "replyToImage": "Image",
     "replyToVideo": "Video",
+    "replyToAudio": "Audio",
     "deleteMessagesDialog": {
       "title": "Delete message?",
       "titlePlural": "Delete @count messages?",

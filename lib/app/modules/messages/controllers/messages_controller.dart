@@ -184,6 +184,9 @@ class MessagesController extends GetxController {
         // Todo: use video metadata to show video duration
         replyMsg = LocaleKeys.MessagesPage_replyToVideo.tr;
         break;
+      case CONTENT_TYPE.AUDIO:
+        // Todo: use video metadata to show audio duration
+        replyMsg = LocaleKeys.MessagesPage_replyToAudio.tr;
     }
 
     replyingTo.value = ReplyToModel(
@@ -509,6 +512,24 @@ class MessagesController extends GetxController {
             isReactedByMe: true,
           ),
         },
+      ),
+      MessageModel(
+        messageId: "${index++}",
+        type: CONTENT_TYPE.AUDIO,
+        payload: "https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 46)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MESSAGE_STATUS.READ,
+      ),
+      MessageModel(
+        messageId: "${index++}",
+        payload: "https://download.samplelib.com/mp3/sample-15s.mp3",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+        type: CONTENT_TYPE.AUDIO,
       ),
     ]);
 

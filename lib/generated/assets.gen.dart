@@ -147,6 +147,9 @@ class $AssetsSvgGen {
   SvgGenImage get newGroupIcon =>
       const SvgGenImage('assets/svg/new_group_icon.svg');
 
+  /// File path: assets/svg/play_icon.svg
+  SvgGenImage get playIcon => const SvgGenImage('assets/svg/play_icon.svg');
+
   /// File path: assets/svg/record_icon.svg
   SvgGenImage get recordIcon => const SvgGenImage('assets/svg/record_icon.svg');
 

@@ -3,19 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/messages/data/models/message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/reactions_widget.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/modules/shared/utils/widgets/audio_player.dart';
 import 'package:heyo/app/modules/shared/utils/widgets/video_player_network.dart';
 
 class MessageBodyWidget extends StatelessWidget {
   final MessageModel message;
-  final Color backgroundColor;
-  final Color textColor;
   const MessageBodyWidget({
     Key? key,
     required this.message,
-    required this.backgroundColor,
-    required this.textColor,
   }) : super(key: key);
 
   @override
@@ -32,15 +30,13 @@ class MessageBodyWidget extends StatelessWidget {
                 margin: EdgeInsets.only(bottom: 4.h),
                 child: _MessageContent(
                   message: message,
-                  backgroundColor: backgroundColor,
-                  textColor: textColor,
                 ),
               ),
               if (message.reactions.isNotEmpty) ReactionsWidget(message: message),
             ],
           ),
         ),
-        Spacer(),
+        const Spacer(),
       ],
     );
   }
@@ -48,17 +44,17 @@ class MessageBodyWidget extends StatelessWidget {
 
 class _MessageContent extends StatelessWidget {
   final MessageModel message;
-  final Color backgroundColor;
-  final Color textColor;
   const _MessageContent({
     Key? key,
     required this.message,
-    required this.backgroundColor,
-    required this.textColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final backgroundColor =
+        message.isFromMe ? COLORS.kGreenMainColor : COLORS.kPinCodeDeactivateColor;
+    final textColor = message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor;
+
     switch (message.type) {
       case CONTENT_TYPE.TEXT:
         return Container(
@@ -83,6 +79,17 @@ class _MessageContent extends StatelessWidget {
       case CONTENT_TYPE.VIDEO:
         return VideoPlayerNetwork(
           url: message.payload,
+        );
+      case CONTENT_TYPE.AUDIO:
+        return AudioPlayerWidget(
+          url: message.payload,
+          backgroundColor: backgroundColor,
+          textColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor,
+          iconColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
+          activeSliderColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
+          inactiveSliderColor: message.isFromMe
+              ? COLORS.kWhiteColor.withOpacity(0.2)
+              : COLORS.kDarkBlueColor.withOpacity(0.2),
         );
     }
   }

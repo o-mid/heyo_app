@@ -67,5 +67,6 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
   }
 
   @override
-  bool get wantKeepAlive => widget.message.type == CONTENT_TYPE.VIDEO;
+  bool get wantKeepAlive =>
+      widget.message.type == CONTENT_TYPE.VIDEO || widget.message.type == CONTENT_TYPE.AUDIO;
 }

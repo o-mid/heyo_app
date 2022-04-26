@@ -130,6 +130,7 @@ class LocaleKeys {
   static const MessagesPage_replyingTo = 'MessagesPage_replyingTo';
   static const MessagesPage_replyToImage = 'MessagesPage_replyToImage';
   static const MessagesPage_replyToVideo = 'MessagesPage_replyToVideo';
+  static const MessagesPage_replyToAudio = 'MessagesPage_replyToAudio';
   static const MessagesPage_deleteMessagesDialog_title =
       'MessagesPage_deleteMessagesDialog_title';
   static const MessagesPage_deleteMessagesDialog_titlePlural =
@@ -255,6 +256,7 @@ class Locales {
     'MessagesPage_replyingTo': 'Replying to @name',
     'MessagesPage_replyToImage': 'Image',
     'MessagesPage_replyToVideo': 'Video',
+    'MessagesPage_replyToAudio': 'Audio',
     'MessagesPage_deleteMessagesDialog_title': 'Delete message?',
     'MessagesPage_deleteMessagesDialog_titlePlural': 'Delete @count messages?',
     'MessagesPage_deleteMessagesDialog_subtitle': 'Delete this message?',

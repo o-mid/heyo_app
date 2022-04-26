@@ -53,8 +53,6 @@ class MessageFromOtherWidget extends StatelessWidget {
                   ),
                 ),
               MessageBodyWidget(
-                backgroundColor: COLORS.kPinCodeDeactivateColor,
-                textColor: COLORS.kDarkBlueColor,
                 message: message,
               ),
             ],

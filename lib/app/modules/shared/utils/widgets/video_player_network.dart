@@ -1,5 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerNetwork extends StatefulWidget {
@@ -46,8 +47,11 @@ class _VideoPlayerNetworkState extends State<VideoPlayerNetwork> {
     return _chewieController != null && _chewieController!.videoPlayerController.value.isInitialized
         ? AspectRatio(
             aspectRatio: _videoPlayerController.value.aspectRatio,
-            child: Chewie(
-              controller: _chewieController!,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.r),
+              child: Chewie(
+                controller: _chewieController!,
+              ),
             ),
           )
         : const CircularProgressIndicator();
