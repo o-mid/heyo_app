@@ -55,11 +55,13 @@ class MessagesView extends GetView<MessagesController> {
                   }
 
                   final message = controller.messages[index - 1];
-                  final prevMessage = index == 1 ? null : controller.messages[index - 2];
+                  final prevMessage =
+                      index == 1 ? null : controller.messages[index - 2];
 
                   // Adds date header at beginning of new messages in a certain date
                   var dateHeaderWidgets = <Widget>[];
-                  if (prevMessage == null || !prevMessage.timestamp.isSameDate(message.timestamp)) {
+                  if (prevMessage == null ||
+                      !prevMessage.timestamp.isSameDate(message.timestamp)) {
                     dateHeaderWidgets = [
                       CustomSizes.mediumSizedBoxHeight,
                       Text(
@@ -111,7 +113,8 @@ class MessagesView extends GetView<MessagesController> {
                         children: [
                           Text(
                             LocaleKeys.MessagesPage_replyingTo.trParams({
-                              "name": controller.replyingTo.value!.repliedToName,
+                              "name":
+                                  controller.replyingTo.value!.repliedToName,
                             }),
                             style: TEXTSTYLES.kChatText.copyWith(
                               color: COLORS.kDarkBlueColor,
@@ -123,7 +126,8 @@ class MessagesView extends GetView<MessagesController> {
                             controller.replyingTo.value!.repliedToMessage,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: TEXTSTYLES.kChatText.copyWith(color: COLORS.kTextBlueColor),
+                            style: TEXTSTYLES.kChatText
+                                .copyWith(color: COLORS.kTextBlueColor),
                           ),
                         ],
                       ),
@@ -144,8 +148,9 @@ class MessagesView extends GetView<MessagesController> {
                 child: controller.selectedMessages.isNotEmpty
                     ? MessageSelectionOptions(
                         showReply: controller.selectedMessages.length == 1,
-                        showCopy:
-                            !controller.selectedMessages.any((m) => m.type != CONTENT_TYPE.TEXT),
+                        showCopy: !controller.selectedMessages
+                            .any((m) => m.type != CONTENT_TYPE.TEXT),
+                        selectedMessages: controller.selectedMessages,
                         // Todo: add flag and forward
                       )
                     : const ComposeMessageBox(),
@@ -158,7 +163,8 @@ class MessagesView extends GetView<MessagesController> {
                 child: EmojiPicker(
                   onEmojiSelected: (_, Emoji emoji) =>
                       controller.appendAfterCursorPosition(emoji.emoji),
-                  onBackspacePressed: controller.removeCharacterBeforeCursorPosition,
+                  onBackspacePressed:
+                      controller.removeCharacterBeforeCursorPosition,
                 ),
               ),
             ),
