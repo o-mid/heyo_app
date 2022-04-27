@@ -139,7 +139,8 @@
     "appbar": "Forward to",
     "textInput": "Search in contacts",
     "recentContacts": "Recent contacts",
-    "OtherContacts": "Other contacts"
+    "OtherContacts": "Other contacts",
+    "contacts": "Contacts"
   },
   "yesterday": "Yesterday",
   "today": "Today",

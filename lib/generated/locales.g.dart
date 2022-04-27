@@ -153,6 +153,7 @@ class LocaleKeys {
       'forwardMassagesPage_recentContacts';
   static const forwardMassagesPage_OtherContacts =
       'forwardMassagesPage_OtherContacts';
+  static const forwardMassagesPage_contacts = 'forwardMassagesPage_contacts';
   static const yesterday = 'yesterday';
   static const today = 'today';
   static const reply = 'reply';
@@ -277,6 +278,7 @@ class Locales {
     'forwardMassagesPage_textInput': 'Search in contacts',
     'forwardMassagesPage_recentContacts': 'Recent contacts',
     'forwardMassagesPage_OtherContacts': 'Other contacts',
+    'forwardMassagesPage_contacts': 'Contacts',
     'yesterday': 'Yesterday',
     'today': 'Today',
     'reply': 'Reply',
