@@ -22,8 +22,8 @@ class ReactionsWidget extends StatelessWidget {
   }
 
   Widget _buildReaction(String emoji, ReactionModel reaction) {
-    if (reaction.users.length == 0) {
-      return SizedBox.shrink();
+    if (reaction.users.isEmpty) {
+      return const SizedBox.shrink();
     }
 
     return Ink(
@@ -48,13 +48,14 @@ class ReactionsWidget extends StatelessWidget {
                 emoji,
                 style: TEXTSTYLES.kReactionEmoji,
               ),
-              SizedBox(width: 4.w),
-              Text(
-                reaction.users.length.toString(),
-                style: TEXTSTYLES.kReactionNumber.copyWith(
-                  color: reaction.isReactedByMe ? COLORS.kGreenMainColor : COLORS.kTextBlueColor,
+              if (reaction.users.length > 1) SizedBox(width: 4.w),
+              if (reaction.users.length > 1)
+                Text(
+                  reaction.users.length.toString(),
+                  style: TEXTSTYLES.kReactionNumber.copyWith(
+                    color: reaction.isReactedByMe ? COLORS.kGreenMainColor : COLORS.kTextBlueColor,
+                  ),
                 ),
-              ),
             ],
           ),
         ),
