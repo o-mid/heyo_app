@@ -401,15 +401,15 @@ class _searchBody extends StatelessWidget {
                                 .indexOf(controller.searchSuggestions.last) >
                             index + 1
                         ? controller
-                            .nearbyUsers[index + 1].name.characters.first
+                            .searchSuggestions[index + 1].name.characters.first
                         : "";
                     var suggestedUser = controller.searchSuggestions[index];
                     return Column(
                       children: [
                         _currentUsernamefirstchar != _nextUsernamefirstchar
                             ? ListHeaderWidget(
-                                title: controller
-                                    .nearbyUsers[index].name.characters.first
+                                title: controller.searchSuggestions[index].name
+                                    .characters.first
                                     .toUpperCase())
                             : const SizedBox(),
                         InkWell(
