@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/forward_massages/data/models/forward_massages_view_arguements_model..dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
+import 'package:heyo/app/modules/messages/data/models/message_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -15,13 +17,15 @@ class MessageSelectionOptions extends StatelessWidget {
   final bool showCopy;
   final bool showForward;
   final bool showDelete;
-  const MessageSelectionOptions({
-    Key? key,
-    this.showReply = true,
-    this.showCopy = true,
-    this.showForward = true,
-    this.showDelete = true,
-  }) : super(key: key);
+  final RxList<MessageModel> selectedMessages;
+  const MessageSelectionOptions(
+      {Key? key,
+      this.showReply = true,
+      this.showCopy = true,
+      this.showForward = true,
+      this.showDelete = true,
+      required this.selectedMessages})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +50,10 @@ class MessageSelectionOptions extends StatelessWidget {
           _buildOption(
             Assets.svg.forwardIcon,
             LocaleKeys.forward.tr,
-            onTap: (() => Get.toNamed(Routes.FORWARD_MASSAGES)),
+            onTap: (() => Get.toNamed(Routes.FORWARD_MASSAGES,
+                arguments: ForwardMassagesArgumentsModel(
+                  selectedMessages: selectedMessages,
+                ))),
           ),
         if (showDelete)
           _buildOption(
