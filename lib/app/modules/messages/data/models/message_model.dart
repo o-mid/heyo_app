@@ -1,3 +1,8 @@
+import 'package:heyo/app/modules/messages/data/models/message_metadata.dart';
+
+import 'reaction_model.dart';
+import 'reply_to_model.dart';
+
 enum CONTENT_TYPE {
   TEXT,
   IMAGE,
@@ -18,6 +23,7 @@ class MessageModel {
   final String messageId;
   final String payload;
   final DateTime timestamp;
+  final Metadata? metadata;
   final ReplyToModel? replyTo;
   final Map<String, ReactionModel> reactions;
   final String senderName;
@@ -31,6 +37,7 @@ class MessageModel {
     required this.messageId,
     required this.payload,
     required this.timestamp,
+    this.metadata,
     this.replyTo,
     this.reactions = const {},
     required this.senderName,
@@ -46,6 +53,8 @@ class MessageModel {
     String? messageId,
     String? payload,
     DateTime? timestamp,
+    Metadata? metadata,
+    ReplyToModel? replyTo,
     Map<String, ReactionModel>? reactions,
     String? senderName,
     String? senderAvatar,
@@ -58,40 +67,12 @@ class MessageModel {
         payload: payload ?? this.payload,
         messageId: messageId ?? this.messageId,
         timestamp: timestamp ?? this.timestamp,
-        replyTo: this.replyTo,
+        metadata: metadata ?? this.metadata,
+        replyTo: replyTo ?? this.replyTo,
         reactions: reactions ?? this.reactions,
         senderName: senderName ?? this.senderName,
         senderAvatar: senderAvatar ?? this.senderAvatar,
         isFromMe: isFromMe ?? this.isFromMe,
         isSelected: isSelected ?? this.isSelected,
-      );
-}
-
-class ReplyToModel {
-  final String repliedToMessageId;
-  final String repliedToName;
-  final String repliedToMessage;
-
-  ReplyToModel({
-    required this.repliedToMessageId,
-    required this.repliedToName,
-    required this.repliedToMessage,
-  });
-}
-
-class ReactionModel {
-  /// List of user ids that have reacted
-  final List<String> users;
-  final bool isReactedByMe;
-
-  ReactionModel({this.users = const [], this.isReactedByMe = false});
-
-  ReactionModel copyWith({
-    List<String>? users,
-    bool? isReactedByMe,
-  }) =>
-      ReactionModel(
-        users: users ?? this.users,
-        isReactedByMe: isReactedByMe ?? this.isReactedByMe,
       );
 }

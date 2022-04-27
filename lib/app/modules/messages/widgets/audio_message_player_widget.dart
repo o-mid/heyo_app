@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:heyo/app/modules/messages/data/models/message_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/message_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/widgets/audio_message_controller.dart';
@@ -57,7 +59,13 @@ class _AudioMessagePlayerState extends State<AudioMessagePlayer> {
   }
 
   Future<void> _init() async {
+    final metadata = widget.message.metadata;
+
     final controller = AudioMessageController();
+
+    if (metadata != null && metadata is AudioMetadata) {
+      _durationInSeconds = metadata.durationInSeconds;
+    }
 
     _playingIdListener = controller.playingIdStream.listen((event) {
       setState(() {
@@ -71,8 +79,12 @@ class _AudioMessagePlayerState extends State<AudioMessagePlayer> {
       }
     });
 
-    if (_playingId == widget.message.messageId) {
+    if (_isActive()) {
       _startPlayerListeners();
+      _durationInSeconds =
+          controller.playingId == widget.message.messageId && controller.player.duration != null
+              ? controller.player.duration!.inSeconds
+              : _durationInSeconds;
     }
   }
 
@@ -80,21 +92,13 @@ class _AudioMessagePlayerState extends State<AudioMessagePlayer> {
     _cancelPlayerListeners();
 
     final player = AudioMessageController().player;
-    _durationListener = player.durationStream.listen((event) {
-      if (event == null) {
-        return;
-      }
-
-      setState(() {
-        _durationInSeconds = event.inSeconds;
-      });
-    });
 
     _positionListener = player.positionStream.listen((event) {
       if (_durationInSeconds == 0) {
         _sliderValue = 0;
       } else {
         _sliderValue = event.inSeconds / _durationInSeconds;
+        _sliderValue = min(1, _sliderValue);
       }
       setState(() {});
     });
@@ -134,7 +138,7 @@ class _AudioMessagePlayerState extends State<AudioMessagePlayer> {
                       ? Icon(
                           Icons.pause,
                           color: widget.iconColor,
-                          size: 28,
+                          size: 28.r,
                         )
                       : Assets.svg.playIcon.svg(
                           color: widget.iconColor,
@@ -189,14 +193,23 @@ class _AudioMessagePlayerState extends State<AudioMessagePlayer> {
     player.seek(Duration(seconds: newPosition.toInt()));
   }
 
+  bool _isActive() => _playingId == widget.message.messageId;
+
   bool _isPlaying() {
-    return _playingId == widget.message.messageId && AudioMessageController().player.playing;
+    return _isActive() && AudioMessageController().player.playing;
   }
 
   void _playOrPause() async {
     final controller = AudioMessageController();
     if (_playingId != widget.message.messageId) {
-      controller.startNewAudio(widget.message.payload, widget.message.messageId);
+      final duration =
+          await controller.startNewAudio(widget.message.payload, widget.message.messageId);
+
+      if (duration != null) {
+        setState(() {
+          _durationInSeconds = duration.inSeconds;
+        });
+      }
       return;
     }
 

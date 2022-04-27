@@ -24,7 +24,7 @@ class AudioMessageController {
 
   Future<Duration?> startNewAudio(String url, String id) async {
     await _player.stop();
-    await player.seek(Duration.zero);
+    await _player.seek(Duration.zero);
 
     _updatePlayingId(id);
 
