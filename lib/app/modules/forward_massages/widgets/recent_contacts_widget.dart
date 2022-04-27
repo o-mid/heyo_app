@@ -7,13 +7,13 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../../../generated/locales.g.dart';
 import '../../new_chat/widgets/user_widget.dart';
+import '../controllers/forward_massages_controller.dart';
 
 class recentContactsWidget extends StatelessWidget {
-  const recentContactsWidget({
-    Key? key,
-    required this.users,
-  }) : super(key: key);
-
+  const recentContactsWidget(
+      {Key? key, required this.users, required this.userSelect})
+      : super(key: key);
+  final Function(UserModel user) userSelect;
   final RxList<UserModel> users;
 
   @override
@@ -45,7 +45,9 @@ class recentContactsWidget extends StatelessWidget {
                     ),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(8),
-                      onTap: () {},
+                      onTap: () {
+                        userSelect(users[index]);
+                      },
                       child: UserWidget(User: users[index]),
                     ),
                   );
@@ -55,7 +57,7 @@ class recentContactsWidget extends StatelessWidget {
           ),
         ),
         CustomSizes.mediumSizedBoxHeight,
-        Divider(
+        const Divider(
           color: COLORS.kBrightBlueColor,
           thickness: 8,
         ),
