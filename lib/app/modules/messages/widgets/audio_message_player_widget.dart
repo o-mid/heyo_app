@@ -1,20 +1,24 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:heyo/app/modules/messages/data/models/message_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/widgets/audio_message_controller.dart';
 import 'package:heyo/app/modules/shared/widgets/scale_animated_switcher.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:just_audio/just_audio.dart';
 
-class AudioPlayerWidget extends StatefulWidget {
-  final String url;
+class AudioMessagePlayer extends StatefulWidget {
+  final MessageModel message;
   final Color backgroundColor;
   final Color iconColor;
   final Color textColor;
   final Color activeSliderColor;
   final Color inactiveSliderColor;
-  const AudioPlayerWidget({
+  const AudioMessagePlayer({
     Key? key,
-    required this.url,
+    required this.message,
     required this.backgroundColor,
     required this.iconColor,
     required this.textColor,
@@ -23,14 +27,18 @@ class AudioPlayerWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<AudioPlayerWidget> createState() => _AudioPlayerWidgetState();
+  State<AudioMessagePlayer> createState() => _AudioMessagePlayerState();
 }
 
-class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
-  final _player = AudioPlayer();
-
+class _AudioMessagePlayerState extends State<AudioMessagePlayer> {
   double _sliderValue = 0;
   int _durationInSeconds = 0;
+  String? _playingId = AudioMessageController().playingId;
+
+  StreamSubscription? _durationListener;
+  StreamSubscription? _positionListener;
+  StreamSubscription? _playerStateListener;
+  StreamSubscription? _playingIdListener;
 
   @override
   void initState() {
@@ -38,8 +46,41 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     _init();
   }
 
+  @override
+  void dispose() {
+    _cancelPlayerListeners();
+    _playingIdListener?.cancel();
+
+    // Todo: should be removed if a global player is implemented
+    AudioMessageController().player.pause();
+    super.dispose();
+  }
+
   Future<void> _init() async {
-    _player.durationStream.listen((event) {
+    final controller = AudioMessageController();
+
+    _playingIdListener = controller.playingIdStream.listen((event) {
+      setState(() {
+        _playingId = event;
+      });
+
+      if (event == widget.message.messageId) {
+        _startPlayerListeners();
+      } else {
+        _cancelPlayerListeners();
+      }
+    });
+
+    if (_playingId == widget.message.messageId) {
+      _startPlayerListeners();
+    }
+  }
+
+  void _startPlayerListeners() {
+    _cancelPlayerListeners();
+
+    final player = AudioMessageController().player;
+    _durationListener = player.durationStream.listen((event) {
       if (event == null) {
         return;
       }
@@ -49,7 +90,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
       });
     });
 
-    _player.positionStream.listen((event) {
+    _positionListener = player.positionStream.listen((event) {
       if (_durationInSeconds == 0) {
         _sliderValue = 0;
       } else {
@@ -58,28 +99,18 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
       setState(() {});
     });
 
-    _player.playerStateStream.listen((event) {
+    _playerStateListener = player.playerStateStream.listen((event) {
       if (event.processingState == ProcessingState.completed) {
-        _player.pause();
-        _player.seek(Duration.zero);
+        player.pause();
+        player.seek(Duration.zero);
       }
     });
-
-    try {
-      await _player.setAudioSource(
-        AudioSource.uri(
-          Uri.parse(widget.url),
-        ),
-      );
-    } catch (e) {
-      print("Error loading audio source: $e");
-    }
   }
 
-  @override
-  void dispose() {
-    _player.dispose();
-    super.dispose();
+  void _cancelPlayerListeners() {
+    _durationListener?.cancel();
+    _positionListener?.cancel();
+    _playerStateListener?.cancel();
   }
 
   @override
@@ -99,7 +130,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
               child: SizedBox(
                 width: 20.w,
                 child: ScaleAnimatedSwitcher(
-                  child: _player.playing
+                  child: _isPlaying()
                       ? Icon(
                           Icons.pause,
                           color: widget.iconColor,
@@ -144,20 +175,35 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   }
 
   void _seek(double value) {
-    final duration = _player.duration;
+    if (_playingId != widget.message.messageId) {
+      return;
+    }
+
+    final player = AudioMessageController().player;
+    final duration = player.duration;
     if (duration == null) {
       return;
     }
     final newPosition = duration.inSeconds * value;
 
-    _player.seek(Duration(seconds: newPosition.toInt()));
+    player.seek(Duration(seconds: newPosition.toInt()));
   }
 
-  void _playOrPause() {
-    if (_player.playing) {
-      _player.pause();
+  bool _isPlaying() {
+    return _playingId == widget.message.messageId && AudioMessageController().player.playing;
+  }
+
+  void _playOrPause() async {
+    final controller = AudioMessageController();
+    if (_playingId != widget.message.messageId) {
+      controller.startNewAudio(widget.message.payload, widget.message.messageId);
+      return;
+    }
+
+    if (controller.player.playing) {
+      controller.player.pause();
     } else {
-      _player.play();
+      controller.player.play();
     }
   }
 }
