@@ -120,6 +120,9 @@ class $AssetsSvgGen {
   SvgGenImage get forwardIcon =>
       const SvgGenImage('assets/svg/forward_icon.svg');
 
+  /// File path: assets/svg/forward_to.svg
+  SvgGenImage get forwardTo => const SvgGenImage('assets/svg/forward_to.svg');
+
   /// File path: assets/svg/heyo_logo.svg
   SvgGenImage get heyoLogo => const SvgGenImage('assets/svg/heyo_logo.svg');
 

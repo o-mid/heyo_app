@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/forward_massages/widgets/contacts_widget.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
-
+import '../../../../generated/assets.gen.dart';
 import '../../../../generated/locales.g.dart';
-import '../../new_chat/widgets/user_widget.dart';
-import '../../shared/widgets/list_header_widget.dart';
 import '../controllers/forward_massages_controller.dart';
 import '../widgets/recent_contacts_widget.dart';
 
@@ -60,7 +56,7 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                     ),
                   ),
                   CustomSizes.largeSizedBoxHeight,
-                  Divider(
+                  const Divider(
                     color: COLORS.kBrightBlueColor,
                     thickness: 8,
                   ),
@@ -73,8 +69,10 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                     children: [
                       //dont show recent Contacts when the input is focused and its searching for users
                       controller.isTextInputFocused.value
-                          ? SizedBox()
-                          : recentContactsWidget(users: controller.users),
+                          ? const SizedBox()
+                          : recentContactsWidget(
+                              users: controller.users,
+                              userSelect: controller.setSelectedUser),
                       contactsWidget(
                         isTextInputFocused: controller.isTextInputFocused,
                         searchSuggestions: controller.searchSuggestions,
@@ -83,7 +81,41 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                     ],
                   ),
                 ),
-              )
+              ),
+              controller.selectedUserName.isNotEmpty
+                  ? Container(
+                      decoration: const BoxDecoration(
+                        color: COLORS.kComposeMessageBackgroundColor,
+                        border: const Border(
+                          top: BorderSide(
+                            width: 1,
+                            color: COLORS.kComposeMessageBorderColor,
+                          ),
+                        ),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 12.h, horizontal: 20.w),
+                      child: Row(
+                        children: [
+                          Assets.svg.forwardTo.svg(
+                            width: 19.w,
+                            height: 17.w,
+                            color: COLORS.kDarkBlueColor,
+                          ),
+                          CustomSizes.mediumSizedBoxWidth,
+                          Expanded(
+                              child: Column(
+                            children: [
+                              Text(
+                                "Forward to " +
+                                    controller.selectedUserName.value,
+                              )
+                            ],
+                          ))
+                        ],
+                      ),
+                    )
+                  : const SizedBox(),
             ],
           );
         }));

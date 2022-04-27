@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
+import 'package:heyo/app/modules/messages/data/models/message_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 
 import '../data/models/forward_massages_view_arguements_model..dart';
@@ -10,11 +11,16 @@ class ForwardMassagesController extends GetxController {
   late ForwardMassagesArgumentsModel args;
   late TextEditingController inputController;
   RxBool isTextInputFocused = false.obs;
+  late List<MessageModel> selectedMessages;
+  UserModel? selectedUser;
+  RxString selectedUserName = "".obs;
+
   final count = 0.obs;
   @override
   void onInit() {
     inputController = TextEditingController();
     args = Get.arguments as ForwardMassagesArgumentsModel;
+    selectedMessages = args.selectedMessages;
     inputController.addListener(() {
       searchUsers(inputController.text);
     });
@@ -92,6 +98,11 @@ class ForwardMassagesController extends GetxController {
     searchSuggestions
         .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     searchSuggestions.refresh();
+  }
+
+  void setSelectedUser(UserModel user) {
+    selectedUser = user;
+    selectedUserName.value = user.name;
   }
 
   void increment() => count.value++;
