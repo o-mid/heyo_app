@@ -15,7 +15,11 @@ class ForwardMassagesController extends GetxController {
   void onInit() {
     inputController = TextEditingController();
     args = Get.arguments as ForwardMassagesArgumentsModel;
-
+    inputController.addListener(() {
+      searchUsers(inputController.text);
+    });
+    users.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    searchUsers("");
     super.onInit();
   }
 
@@ -78,6 +82,17 @@ class ForwardMassagesController extends GetxController {
       ),
     ),
   ].obs;
+  RxList<UserModel> searchSuggestions = <UserModel>[].obs;
+  void searchUsers(String query) {
+    searchSuggestions.value = users.where((user) {
+      String username = user.name.toLowerCase();
+      String inputedQuery = query.toLowerCase();
+      return username.contains(inputedQuery);
+    }).toList();
+    searchSuggestions
+        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    searchSuggestions.refresh();
+  }
 
   void increment() => count.value++;
 }
