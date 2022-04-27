@@ -171,10 +171,6 @@ class _AudioMessagePlayerState extends State<AudioMessagePlayer> {
   }
 
   String _getAudioDuration() {
-    if (_durationInSeconds == 0) {
-      return "0:00";
-    }
-
     return "${_durationInSeconds ~/ 60}:${(_durationInSeconds % 60).toString().padLeft(2, '0')}";
   }
 
