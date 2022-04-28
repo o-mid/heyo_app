@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguements_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/routes/app_pages.dart';

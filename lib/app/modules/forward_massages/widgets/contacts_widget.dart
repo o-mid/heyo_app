@@ -14,9 +14,11 @@ class contactsWidget extends StatelessWidget {
     Key? key,
     required this.searchSuggestions,
     required this.isTextInputFocused,
+    required this.userSelect,
   }) : super(key: key);
   final RxList<UserModel> searchSuggestions;
   final RxBool isTextInputFocused;
+  final Function(UserModel user) userSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +71,9 @@ class contactsWidget extends StatelessWidget {
                             : const SizedBox(),
                         InkWell(
                           borderRadius: BorderRadius.circular(8),
-                          onTap: () {},
+                          onTap: () {
+                            userSelect(searchSuggestions[index]);
+                          },
                           child: UserWidget(User: searchSuggestions[index]),
                         ),
                       ],

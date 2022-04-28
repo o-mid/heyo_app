@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/forward_massages/widgets/contacts_widget.dart';
+import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import '../../../../generated/assets.gen.dart';
 import '../../../../generated/locales.g.dart';
+import '../../shared/utils/constants/fonts.dart';
 import '../controllers/forward_massages_controller.dart';
 import '../widgets/recent_contacts_widget.dart';
 
@@ -76,6 +79,7 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                       contactsWidget(
                         isTextInputFocused: controller.isTextInputFocused,
                         searchSuggestions: controller.searchSuggestions,
+                        userSelect: controller.setSelectedUser,
                       ),
                       CustomSizes.largeSizedBoxHeight,
                     ],
@@ -86,7 +90,7 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                   ? Container(
                       decoration: const BoxDecoration(
                         color: COLORS.kComposeMessageBackgroundColor,
-                        border: const Border(
+                        border: Border(
                           top: BorderSide(
                             width: 1,
                             color: COLORS.kComposeMessageBorderColor,
@@ -95,23 +99,62 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                       ),
                       padding: EdgeInsets.symmetric(
                           vertical: 12.h, horizontal: 20.w),
-                      child: Row(
+                      child: Column(
                         children: [
-                          Assets.svg.forwardTo.svg(
-                            width: 19.w,
-                            height: 17.w,
-                            color: COLORS.kDarkBlueColor,
-                          ),
-                          CustomSizes.mediumSizedBoxWidth,
-                          Expanded(
-                              child: Column(
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text(
-                                "Forward to " +
-                                    controller.selectedUserName.value,
+                              Assets.svg.forwardTo.svg(
+                                width: 19.w,
+                                height: 17.w,
+                                color: COLORS.kDarkBlueColor,
+                              ),
+                              CustomSizes.mediumSizedBoxWidth,
+                              Expanded(
+                                  child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    LocaleKeys
+                                            .forwardMassagesPage_bottomBar_forwardTO
+                                            .tr +
+                                        controller.selectedUserName.value,
+                                    style: TEXTSTYLES.kChatText.copyWith(
+                                      color: COLORS.kDarkBlueColor,
+                                      fontWeight: FONTS.SemiBold,
+                                    ),
+                                  ),
+                                  Text(
+                                      controller.selectedMessages.length
+                                              .toString() +
+                                          LocaleKeys
+                                              .forwardMassagesPage_bottomBar_messages
+                                              .tr,
+                                      style: TEXTSTYLES.kChatText.copyWith(
+                                        color: COLORS.kTextBlueColor,
+                                      )),
+                                ],
+                              )),
+                              GestureDetector(
+                                onTap: () {
+                                  if (controller.selectedUser != null) {
+                                    Get.offNamedUntil(Routes.MESSAGES,
+                                        ModalRoute.withName(Routes.HOME),
+                                        arguments: MessagesViewArgumentsModel(
+                                            chat: controller
+                                                .selectedUser!.chatModel,
+                                            forwardedMessages:
+                                                controller.selectedMessages));
+                                  }
+                                },
+                                child: Assets.svg.sendIcon.svg(
+                                  width: 19.w,
+                                  height: 17.w,
+                                ),
                               )
                             ],
-                          ))
+                          ),
+                          CustomSizes.largeSizedBoxHeight,
                         ],
                       ),
                     )

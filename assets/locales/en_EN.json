@@ -140,7 +140,11 @@
     "textInput": "Search in contacts",
     "recentContacts": "Recent contacts",
     "OtherContacts": "Other contacts",
-    "contacts": "Contacts"
+    "contacts": "Contacts",
+    "bottomBar": {
+      "forwardTO": "Forward to ",
+      "messages": " messages"
+    }
   },
   "yesterday": "Yesterday",
   "today": "Today",

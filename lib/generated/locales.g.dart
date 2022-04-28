@@ -154,6 +154,10 @@ class LocaleKeys {
   static const forwardMassagesPage_OtherContacts =
       'forwardMassagesPage_OtherContacts';
   static const forwardMassagesPage_contacts = 'forwardMassagesPage_contacts';
+  static const forwardMassagesPage_bottomBar_forwardTO =
+      'forwardMassagesPage_bottomBar_forwardTO';
+  static const forwardMassagesPage_bottomBar_messages =
+      'forwardMassagesPage_bottomBar_messages';
   static const yesterday = 'yesterday';
   static const today = 'today';
   static const reply = 'reply';
@@ -279,6 +283,8 @@ class Locales {
     'forwardMassagesPage_recentContacts': 'Recent contacts',
     'forwardMassagesPage_OtherContacts': 'Other contacts',
     'forwardMassagesPage_contacts': 'Contacts',
+    'forwardMassagesPage_bottomBar_forwardTO': 'Forward to ',
+    'forwardMassagesPage_bottomBar_messages': ' messages',
     'yesterday': 'Yesterday',
     'today': 'Today',
     'reply': 'Reply',
