@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/account/bindings/account_binding.dart';
 import '../modules/account/views/account_view.dart';
-import '../modules/addContacts/bindings/add_contacts_binding.dart';
-import '../modules/addContacts/views/add_contacts_view.dart';
+import '../modules/add_contacts/bindings/add_contacts_binding.dart';
+import '../modules/add_contacts/views/add_contacts_view.dart';
 import '../modules/auth/generatePrivateKeys/bindings/generate_private_keys_binding.dart';
 import '../modules/auth/generatePrivateKeys/views/generate_private_keys_view.dart';
 import '../modules/auth/pinCode/bindings/pin_code_binding.dart';
