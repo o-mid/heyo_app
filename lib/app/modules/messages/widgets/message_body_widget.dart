@@ -7,7 +7,7 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/messages/widgets/audio_message_player_widget.dart';
-import 'package:heyo/app/modules/shared/widgets/video_player_network.dart';
+import 'package:heyo/app/modules/shared/widgets/video_message_player.dart';
 
 class MessageBodyWidget extends StatelessWidget {
   final MessageModel message;
@@ -73,12 +73,11 @@ class _MessageContent extends StatelessWidget {
           borderRadius: BorderRadius.circular(8.r),
           child: ExtendedImage.network(
             message.payload,
-            borderRadius: BorderRadius.circular(8.r),
           ),
         );
       case CONTENT_TYPE.VIDEO:
-        return VideoPlayerNetwork(
-          url: message.payload,
+        return VideoMessagePlayer(
+          message: message,
         );
       case CONTENT_TYPE.AUDIO:
         return AudioMessagePlayer(

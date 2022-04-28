@@ -8,6 +8,8 @@ import 'package:heyo/app/modules/messages/data/models/message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
 import 'package:heyo/app/modules/messages/widgets/delete_message_dialog.dart';
+import 'package:heyo/app/modules/shared/data/controllers/audio_message_controller.dart';
+import 'package:heyo/app/modules/shared/data/controllers/video_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -50,6 +52,11 @@ class MessagesController extends GetxController {
   void onClose() {
     textController.dispose();
     scrollController.dispose();
+
+    // Todo: remove this when a global player is implemented
+    Get.find<AudioMessageController>().player.stop();
+
+    Get.find<VideoMessageController>().stopAndClearPreviousVideo();
   }
 
   void toggleEmojiPicker() {
@@ -515,6 +522,17 @@ class MessagesController extends GetxController {
             isReactedByMe: true,
           ),
         },
+      ),
+      MessageModel(
+        messageId: "${index++}",
+        type: CONTENT_TYPE.VIDEO,
+        payload:
+            "https://assets.mixkit.co/videos/download/mixkit-microchip-technology-close-up-1140.mp4",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MESSAGE_STATUS.READ,
       ),
       MessageModel(
         messageId: "${index++}",
