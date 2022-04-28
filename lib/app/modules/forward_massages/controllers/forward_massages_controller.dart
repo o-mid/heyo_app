@@ -4,7 +4,7 @@ import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/messages/data/models/message_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 
-import '../data/models/forward_massages_view_arguements_model..dart';
+import '../data/models/forward_massages_view_arguments_model..dart';
 
 class ForwardMassagesController extends GetxController {
   //TODO: Implement ForwardMassagesController

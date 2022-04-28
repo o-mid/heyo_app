@@ -2,7 +2,7 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
-import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguements_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguments_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scaner.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';

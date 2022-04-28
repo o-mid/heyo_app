@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/forward_massages/widgets/contacts_widget.dart';
+import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import '../../../../generated/assets.gen.dart';
 import '../../../../generated/locales.g.dart';
 import '../../shared/utils/constants/fonts.dart';
@@ -134,7 +136,16 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                                 ],
                               )),
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  if (controller.selectedUser != null) {
+                                    Get.toNamed(Routes.MESSAGES,
+                                        arguments: MessagesViewArgumentsModel(
+                                            chat: controller
+                                                .selectedUser!.chatModel,
+                                            forwardedMessages:
+                                                controller.selectedMessages));
+                                  }
+                                },
                                 child: Assets.svg.sendIcon.svg(
                                   width: 19.w,
                                   height: 17.w,
