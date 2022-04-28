@@ -3,13 +3,13 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/messages/data/models/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/shared/data/controllers/video_message_controller.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
 class VideoMessagePlayer extends GetView<VideoMessageController> {
-  final MessageModel message;
+  final VideoMessageModel message;
   const VideoMessagePlayer({Key? key, required this.message}) : super(key: key);
 
   @override
@@ -23,7 +23,8 @@ class VideoMessagePlayer extends GetView<VideoMessageController> {
                 chewieController != null &&
                 chewieController.videoPlayerController.value.isInitialized
             ? AspectRatio(
-                aspectRatio: chewieController.videoPlayerController.value.aspectRatio,
+                aspectRatio:
+                    chewieController.videoPlayerController.value.aspectRatio,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.r),
                   child: Chewie(
@@ -32,6 +33,7 @@ class VideoMessagePlayer extends GetView<VideoMessageController> {
                 ),
               )
             : _VideoThumbnail(
+                thumbnailUrl: message.metadata.thumbnailUrl,
                 onTap: () => controller.initializePlayer(message),
                 isLoading: isActive,
               ),
@@ -41,10 +43,12 @@ class VideoMessagePlayer extends GetView<VideoMessageController> {
 }
 
 class _VideoThumbnail extends StatelessWidget {
+  final String thumbnailUrl;
   final VoidCallback? onTap;
   final bool isLoading;
   const _VideoThumbnail({
     Key? key,
+    required this.thumbnailUrl,
     this.onTap,
     this.isLoading = false,
   }) : super(key: key);
@@ -59,8 +63,7 @@ class _VideoThumbnail extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             ExtendedImage.network(
-              // Todo: use video metadata
-              "https://mixkit.imgix.net/static/home/video-thumb3.png",
+              thumbnailUrl,
             ),
             Container(
               width: 40.h,

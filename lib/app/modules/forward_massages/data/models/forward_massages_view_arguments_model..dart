@@ -1,4 +1,4 @@
-import '../../../messages/data/models/message_model.dart';
+import '../../../messages/data/models/messages/message_model.dart';
 
 class ForwardMassagesArgumentsModel {
   final List<MessageModel> selectedMessages;

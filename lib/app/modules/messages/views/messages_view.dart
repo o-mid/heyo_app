@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/messages/data/models/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/beginning_of_messages_header.dart';
 import 'package:heyo/app/modules/messages/widgets/compose_message_box.dart';
 import 'package:heyo/app/modules/messages/widgets/message_selection_options.dart';
@@ -149,7 +149,7 @@ class MessagesView extends GetView<MessagesController> {
                     ? MessageSelectionOptions(
                         showReply: controller.selectedMessages.length == 1,
                         showCopy: !controller.selectedMessages
-                            .any((m) => m.type != CONTENT_TYPE.TEXT),
+                            .any((m) => m is! TextMessageModel),
                         selectedMessages: controller.selectedMessages,
                         // Todo: add flag and forward
                       )

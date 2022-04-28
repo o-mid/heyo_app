@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:heyo/app/modules/messages/data/models/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -9,7 +9,8 @@ import 'package:heyo/generated/assets.gen.dart';
 
 class SenderReplyToWidget extends StatelessWidget {
   final MessageModel message;
-  const SenderReplyToWidget({Key? key, required this.message}) : super(key: key);
+  const SenderReplyToWidget({Key? key, required this.message})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,9 @@ class SenderReplyToWidget extends StatelessWidget {
             width: 8.w,
             height: 40.h,
             decoration: BoxDecoration(
-              color: message.isSelected ? COLORS.kGreenLighterColor : COLORS.kAppBackground,
+              color: message.isSelected
+                  ? COLORS.kGreenLighterColor
+                  : COLORS.kAppBackground,
               borderRadius: BorderRadius.only(topRight: Radius.circular(4.w)),
             ),
           ),

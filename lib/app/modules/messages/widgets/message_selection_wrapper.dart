@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
-import 'package:heyo/app/modules/messages/data/models/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 
 import 'message_from_me_widget.dart';
@@ -16,7 +18,8 @@ class MessageSelectionWrapper extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<MessageSelectionWrapper> createState() => _MessageSelectionWrapperState();
+  State<MessageSelectionWrapper> createState() =>
+      _MessageSelectionWrapperState();
 }
 
 class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
@@ -39,7 +42,9 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
           // Material is used because if container is given color, it will
           // hide the reaction widget borders
           Material(
-            color: message.isSelected ? COLORS.kGreenLighterColor : Colors.transparent,
+            color: message.isSelected
+                ? COLORS.kGreenLighterColor
+                : Colors.transparent,
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 4.h),
               child: message.isFromMe
@@ -68,5 +73,6 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
 
   @override
   bool get wantKeepAlive =>
-      widget.message.type == CONTENT_TYPE.VIDEO || widget.message.type == CONTENT_TYPE.AUDIO;
+      widget.message is VideoMessageModel ||
+      widget.message is AudioMessageModel;
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
-import 'package:heyo/app/modules/messages/data/models/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/recipient_reply_to_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -14,7 +14,8 @@ import 'message_body_widget.dart';
 class MessageFromOtherWidget extends StatelessWidget {
   final MessageModel message;
   final bool showTimeAndProfile;
-  const MessageFromOtherWidget({Key? key, required this.message, this.showTimeAndProfile = false})
+  const MessageFromOtherWidget(
+      {Key? key, required this.message, this.showTimeAndProfile = false})
       : super(key: key);
 
   @override
@@ -23,7 +24,8 @@ class MessageFromOtherWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomSizes.mediumSizedBoxWidth,
-        if (showTimeAndProfile) CustomCircleAvatar(url: message.senderAvatar, size: 20),
+        if (showTimeAndProfile)
+          CustomCircleAvatar(url: message.senderAvatar, size: 20),
         if (!showTimeAndProfile) SizedBox(width: 20.w),
         Expanded(
           child: Column(

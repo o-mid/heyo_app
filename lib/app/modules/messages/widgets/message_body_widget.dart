@@ -1,13 +1,17 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:heyo/app/modules/messages/data/models/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/reactions_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/messages/widgets/audio_message_player_widget.dart';
-import 'package:heyo/app/modules/shared/widgets/video_message_player.dart';
+import 'package:heyo/app/modules/messages/widgets/video_message_player.dart';
 
 class MessageBodyWidget extends StatelessWidget {
   final MessageModel message;
@@ -32,7 +36,8 @@ class MessageBodyWidget extends StatelessWidget {
                   message: message,
                 ),
               ),
-              if (message.reactions.isNotEmpty) ReactionsWidget(message: message),
+              if (message.reactions.isNotEmpty)
+                ReactionsWidget(message: message),
             ],
           ),
         ),
@@ -51,12 +56,14 @@ class _MessageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor =
-        message.isFromMe ? COLORS.kGreenMainColor : COLORS.kPinCodeDeactivateColor;
-    final textColor = message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor;
+    final backgroundColor = message.isFromMe
+        ? COLORS.kGreenMainColor
+        : COLORS.kPinCodeDeactivateColor;
+    final textColor =
+        message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor;
 
-    switch (message.type) {
-      case CONTENT_TYPE.TEXT:
+    switch (message.runtimeType) {
+      case TextMessageModel:
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
           decoration: BoxDecoration(
@@ -64,32 +71,37 @@ class _MessageContent extends StatelessWidget {
             borderRadius: BorderRadius.circular(8.r),
           ),
           child: Text(
-            message.payload,
+            (message as TextMessageModel).text,
             style: TEXTSTYLES.kChatText.copyWith(color: textColor),
           ),
         );
-      case CONTENT_TYPE.IMAGE:
+      case ImageMessageModel:
         return ClipRRect(
           borderRadius: BorderRadius.circular(8.r),
           child: ExtendedImage.network(
-            message.payload,
+            (message as ImageMessageModel).url,
           ),
         );
-      case CONTENT_TYPE.VIDEO:
+      case VideoMessageModel:
         return VideoMessagePlayer(
-          message: message,
+          message: message as VideoMessageModel,
         );
-      case CONTENT_TYPE.AUDIO:
+      case AudioMessageModel:
         return AudioMessagePlayer(
-          message: message,
+          message: message as AudioMessageModel,
           backgroundColor: backgroundColor,
-          textColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor,
-          iconColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
-          activeSliderColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
+          textColor:
+              message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor,
+          iconColor:
+              message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
+          activeSliderColor:
+              message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
           inactiveSliderColor: message.isFromMe
               ? COLORS.kWhiteColor.withOpacity(0.2)
               : COLORS.kDarkBlueColor.withOpacity(0.2),
         );
+      default:
+        return SizedBox.shrink();
     }
   }
 }

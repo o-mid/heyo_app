@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:heyo/app/modules/messages/data/models/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -42,7 +42,9 @@ class RecipientReplyTo extends StatelessWidget {
             width: 8.w,
             height: 40.h,
             decoration: BoxDecoration(
-              color: message.isSelected ? COLORS.kGreenLighterColor : COLORS.kAppBackground,
+              color: message.isSelected
+                  ? COLORS.kGreenLighterColor
+                  : COLORS.kAppBackground,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(4.w)),
             ),
           ),

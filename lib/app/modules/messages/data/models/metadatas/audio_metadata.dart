@@ -1,6 +1,4 @@
-abstract class Metadata {}
-
-class AudioMetadata extends Metadata {
+class AudioMetadata {
   final int durationInSeconds;
   AudioMetadata({required this.durationInSeconds});
 }

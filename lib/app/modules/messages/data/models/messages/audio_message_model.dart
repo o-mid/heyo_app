@@ -1,0 +1,54 @@
+import 'package:heyo/app/modules/messages/data/models/metadatas/audio_metadata.dart';
+
+import 'message_model.dart';
+import '../reaction_model.dart';
+
+class AudioMessageModel extends MessageModel {
+  final String url;
+  final AudioMetadata metadata;
+  AudioMessageModel({
+    required this.url,
+    required this.metadata,
+    required String messageId,
+    required DateTime timestamp,
+    required String senderName,
+    required String senderAvatar,
+    status = MESSAGE_STATUS.SENDING,
+    isFromMe = false,
+    isSelected = false,
+    replyTo,
+    reactions = const <String, ReactionModel>{},
+  }) : super(
+          messageId: messageId,
+          timestamp: timestamp,
+          senderName: senderName,
+          senderAvatar: senderAvatar,
+          status: status,
+          isFromMe: isFromMe,
+          isSelected: isSelected,
+          reactions: reactions,
+          replyTo: replyTo,
+        );
+
+  @override
+  AudioMessageModel copyWith({
+    MESSAGE_STATUS? status,
+    DateTime? timestamp,
+    Map<String, ReactionModel>? reactions,
+    bool? isSelected,
+  }) {
+    return AudioMessageModel(
+      url: url,
+      metadata: metadata,
+      messageId: messageId,
+      timestamp: timestamp ?? this.timestamp,
+      senderName: senderName,
+      senderAvatar: senderAvatar,
+      status: status ?? this.status,
+      isFromMe: isFromMe,
+      isSelected: isSelected ?? this.isSelected,
+      reactions: reactions ?? this.reactions,
+      replyTo: replyTo,
+    );
+  }
+}

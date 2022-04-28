@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/messages/data/models/message_metadata.dart';
-import 'package:heyo/app/modules/messages/data/models/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
 import 'package:just_audio/just_audio.dart';
 
 class AudioMessageController extends GetxController {
@@ -69,21 +68,17 @@ class AudioMessageController extends GetxController {
     }
   }
 
-  void startNewAudio(MessageModel message) async {
+  void startNewAudio(AudioMessageModel message) async {
     await _player.stop();
     await _player.seek(Duration.zero);
 
     playingId.value = message.messageId;
     final metadata = message.metadata;
-    if (metadata != null && metadata is AudioMetadata) {
-      duration.value = Duration(seconds: metadata.durationInSeconds);
-    } else {
-      duration.value = Duration.zero;
-    }
+    duration.value = Duration(seconds: metadata.durationInSeconds);
 
     _player.setAudioSource(
       AudioSource.uri(
-        Uri.parse(message.payload),
+        Uri.parse(message.url),
       ),
     );
 

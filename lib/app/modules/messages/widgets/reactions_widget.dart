@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
-import 'package:heyo/app/modules/messages/data/models/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -16,8 +16,9 @@ class ReactionsWidget extends StatelessWidget {
     return Wrap(
       spacing: 4.w,
       runSpacing: 4.h,
-      children:
-          message.reactions.keys.map((k) => _buildReaction(k, message.reactions[k]!)).toList(),
+      children: message.reactions.keys
+          .map((k) => _buildReaction(k, message.reactions[k]!))
+          .toList(),
     );
   }
 
@@ -30,7 +31,9 @@ class ReactionsWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: reaction.isReactedByMe ? COLORS.kGreenLighterColor : null,
         border: Border.all(
-          color: reaction.isReactedByMe ? COLORS.kGreenMainColor : COLORS.kPinCodeDeactivateColor,
+          color: reaction.isReactedByMe
+              ? COLORS.kGreenMainColor
+              : COLORS.kPinCodeDeactivateColor,
           width: 1.w,
         ),
         borderRadius: BorderRadius.circular(4.w),
@@ -53,7 +56,9 @@ class ReactionsWidget extends StatelessWidget {
                 Text(
                   reaction.users.length.toString(),
                   style: TEXTSTYLES.kReactionNumber.copyWith(
-                    color: reaction.isReactedByMe ? COLORS.kGreenMainColor : COLORS.kTextBlueColor,
+                    color: reaction.isReactedByMe
+                        ? COLORS.kGreenMainColor
+                        : COLORS.kTextBlueColor,
                   ),
                 ),
             ],

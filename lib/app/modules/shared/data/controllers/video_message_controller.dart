@@ -1,6 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/messages/data/models/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoMessageController extends GetxController {
@@ -26,12 +26,12 @@ class VideoMessageController extends GetxController {
     _chewieController.value?.dispose();
   }
 
-  Future<void> initializePlayer(MessageModel message) async {
+  Future<void> initializePlayer(VideoMessageModel message) async {
     stopAndClearPreviousVideo();
 
     playingId.value = message.messageId;
 
-    _videoPlayerController.value = VideoPlayerController.network(message.payload);
+    _videoPlayerController.value = VideoPlayerController.network(message.url);
     await _videoPlayerController.value!.initialize();
 
     _chewieController.value = ChewieController(
