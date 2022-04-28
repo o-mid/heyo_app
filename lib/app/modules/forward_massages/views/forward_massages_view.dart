@@ -138,7 +138,8 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                               GestureDetector(
                                 onTap: () {
                                   if (controller.selectedUser != null) {
-                                    Get.toNamed(Routes.MESSAGES,
+                                    Get.offNamedUntil(Routes.MESSAGES,
+                                        ModalRoute.withName(Routes.HOME),
                                         arguments: MessagesViewArgumentsModel(
                                             chat: controller
                                                 .selectedUser!.chatModel,
