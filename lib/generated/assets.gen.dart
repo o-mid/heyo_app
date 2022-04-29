@@ -28,11 +28,18 @@ class $AssetsPngGen {
   AssetGenImage get benefits004 =>
       const AssetGenImage('assets/png/benefits004.png');
 
+  /// File path: assets/png/chain.png
+  AssetGenImage get chain => const AssetGenImage('assets/png/chain.png');
+
   /// File path: assets/png/icon.png
   AssetGenImage get icon => const AssetGenImage('assets/png/icon.png');
 
   /// File path: assets/png/keys.png
   AssetGenImage get keys => const AssetGenImage('assets/png/keys.png');
+
+  /// File path: assets/png/newChatEmptyState.png
+  AssetGenImage get newChatEmptyState =>
+      const AssetGenImage('assets/png/newChatEmptyState.png');
 
   /// File path: assets/png/profile1.png
   AssetGenImage get profile1 => const AssetGenImage('assets/png/profile1.png');
@@ -45,6 +52,9 @@ class $AssetsPngGen {
 
   /// File path: assets/png/profile4.png
   AssetGenImage get profile4 => const AssetGenImage('assets/png/profile4.png');
+
+  /// File path: assets/png/sadEmoji.png
+  AssetGenImage get sadEmoji => const AssetGenImage('assets/png/sadEmoji.png');
 
   /// File path: assets/png/splash.png
   AssetGenImage get splash => const AssetGenImage('assets/png/splash.png');
@@ -59,28 +69,126 @@ class $AssetsSvgGen {
   /// File path: assets/svg/account.svg
   SvgGenImage get account => const SvgGenImage('assets/svg/account.svg');
 
+  /// File path: assets/svg/add_to_contacts_icon.svg
+  SvgGenImage get addToContactsIcon =>
+      const SvgGenImage('assets/svg/add_to_contacts_icon.svg');
+
+  /// File path: assets/svg/audio_call_icon.svg
+  SvgGenImage get audioCallIcon =>
+      const SvgGenImage('assets/svg/audio_call_icon.svg');
+
+  /// File path: assets/svg/block_icon.svg
+  SvgGenImage get blockIcon => const SvgGenImage('assets/svg/block_icon.svg');
+
   /// File path: assets/svg/call.svg
   SvgGenImage get call => const SvgGenImage('assets/svg/call.svg');
 
   /// File path: assets/svg/chat.svg
   SvgGenImage get chat => const SvgGenImage('assets/svg/chat.svg');
 
-  /// File path: assets/svg/corePass_logo.svg
+  /// File path: assets/svg/close_sign.svg
+  SvgGenImage get closeSign => const SvgGenImage('assets/svg/close_sign.svg');
+
+  /// File path: assets/svg/copy_icon.svg
+  SvgGenImage get copyIcon => const SvgGenImage('assets/svg/copy_icon.svg');
+
+  /// File path: assets/svg/core_pass_logo.svg
   SvgGenImage get corePassLogo =>
-      const SvgGenImage('assets/svg/corePass_logo.svg');
+      const SvgGenImage('assets/svg/core_pass_logo.svg');
+
+  /// File path: assets/svg/delete_icon.svg
+  SvgGenImage get deleteIcon => const SvgGenImage('assets/svg/delete_icon.svg');
+
+  /// File path: assets/svg/dot_column.svg
+  SvgGenImage get dotColumn => const SvgGenImage('assets/svg/dot_column.svg');
+
+  /// File path: assets/svg/dot_indicator.svg
+  SvgGenImage get dotIndicator =>
+      const SvgGenImage('assets/svg/dot_indicator.svg');
+
+  /// File path: assets/svg/double_tick_icon.svg
+  SvgGenImage get doubleTickIcon =>
+      const SvgGenImage('assets/svg/double_tick_icon.svg');
+
+  /// File path: assets/svg/emoji_icon.svg
+  SvgGenImage get emojiIcon => const SvgGenImage('assets/svg/emoji_icon.svg');
+
+  /// File path: assets/svg/filter_icon.svg
+  SvgGenImage get filterIcon => const SvgGenImage('assets/svg/filter_icon.svg');
+
+  /// File path: assets/svg/forward_icon.svg
+  SvgGenImage get forwardIcon =>
+      const SvgGenImage('assets/svg/forward_icon.svg');
+
+  /// File path: assets/svg/forward_to.svg
+  SvgGenImage get forwardTo => const SvgGenImage('assets/svg/forward_to.svg');
 
   /// File path: assets/svg/heyo_logo.svg
   SvgGenImage get heyoLogo => const SvgGenImage('assets/svg/heyo_logo.svg');
 
+  /// File path: assets/svg/info_icon.svg
+  SvgGenImage get infoIcon => const SvgGenImage('assets/svg/info_icon.svg');
+
+  /// File path: assets/svg/invite_icon.svg
+  SvgGenImage get inviteIcon => const SvgGenImage('assets/svg/invite_icon.svg');
+
+  /// File path: assets/svg/luna_connection.svg
+  SvgGenImage get lunaConnection =>
+      const SvgGenImage('assets/svg/luna_connection.svg');
+
+  /// File path: assets/svg/more_icon.svg
+  SvgGenImage get moreIcon => const SvgGenImage('assets/svg/more_icon.svg');
+
   /// File path: assets/svg/new_chat.svg
   SvgGenImage get newChat => const SvgGenImage('assets/svg/new_chat.svg');
+
+  /// File path: assets/svg/new_chat_icon.svg
+  SvgGenImage get newChatIcon =>
+      const SvgGenImage('assets/svg/new_chat_icon.svg');
+
+  /// File path: assets/svg/new_group_icon.svg
+  SvgGenImage get newGroupIcon =>
+      const SvgGenImage('assets/svg/new_group_icon.svg');
+
+  /// File path: assets/svg/play_icon.svg
+  SvgGenImage get playIcon => const SvgGenImage('assets/svg/play_icon.svg');
+
+  /// File path: assets/svg/record_icon.svg
+  SvgGenImage get recordIcon => const SvgGenImage('assets/svg/record_icon.svg');
+
+  /// File path: assets/svg/reply_filled.svg
+  SvgGenImage get replyFilled =>
+      const SvgGenImage('assets/svg/reply_filled.svg');
+
+  /// File path: assets/svg/reply_outlined.svg
+  SvgGenImage get replyOutlined =>
+      const SvgGenImage('assets/svg/reply_outlined.svg');
 
   /// File path: assets/svg/search_nearby.svg
   SvgGenImage get searchNearby =>
       const SvgGenImage('assets/svg/search_nearby.svg');
 
+  /// File path: assets/svg/send_icon.svg
+  SvgGenImage get sendIcon => const SvgGenImage('assets/svg/send_icon.svg');
+
+  /// File path: assets/svg/single_tick_icon.svg
+  SvgGenImage get singleTickIcon =>
+      const SvgGenImage('assets/svg/single_tick_icon.svg');
+
   /// File path: assets/svg/verified.svg
   SvgGenImage get verified => const SvgGenImage('assets/svg/verified.svg');
+
+  /// File path: assets/svg/verified_with_blue_padding.svg
+  SvgGenImage get verifiedWithBluePadding =>
+      const SvgGenImage('assets/svg/verified_with_blue_padding.svg');
+
+  /// File path: assets/svg/vertical_menu_icon.svg
+  SvgGenImage get verticalMenuIcon =>
+      const SvgGenImage('assets/svg/vertical_menu_icon.svg');
+
+  /// File path: assets/svg/video_call_icon.svg
+  SvgGenImage get videoCallIcon =>
+      const SvgGenImage('assets/svg/video_call_icon.svg');
 
   /// File path: assets/svg/wallet.svg
   SvgGenImage get wallet => const SvgGenImage('assets/svg/wallet.svg');

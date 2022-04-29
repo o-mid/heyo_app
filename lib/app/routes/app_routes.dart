@@ -15,6 +15,10 @@ abstract class Routes {
   static const SEARCH_NEARBY = _Paths.SEARCH_NEARBY;
   static const ACCOUNT = _Paths.ACCOUNT;
   static const HOME = _Paths.HOME;
+  static const NEW_CHAT = _Paths.NEW_CHAT;
+  static const MESSAGES = _Paths.MESSAGES;
+  static const ADD_CONTACTS = _Paths.ADD_CONTACTS;
+  static const FORWARD_MASSAGES = _Paths.FORWARD_MASSAGES;
 }
 
 abstract class _Paths {
@@ -31,4 +35,8 @@ abstract class _Paths {
   static const SEARCH_NEARBY = '/search-nearby';
   static const ACCOUNT = '/account';
   static const HOME = '/home';
+  static const NEW_CHAT = '/new-chat';
+  static const MESSAGES = '/messages';
+  static const ADD_CONTACTS = '/add-contacts';
+  static const FORWARD_MASSAGES = '/forward-massages';
 }

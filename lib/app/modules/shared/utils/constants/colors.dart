@@ -11,7 +11,7 @@ class COLORS {
   ///Heyo Brand/Dark Blue
   static const Color kDarkBlueColor = Color(0xff1E294C);
 
-  ///Heyo Brand/Text Blue
+  ///Heyo Brand/Text Blue #697087
   static const Color kTextBlueColor = Color(0xff697087);
 
   ///Heyo Brand/Text Soft Blue
@@ -68,6 +68,9 @@ class COLORS {
   ///States/Error icon/text
   static const Color kStatesErrorColor = Color(0xffE81539);
 
+  ///States/Error icon red background FFE6E7
+  static const Color kStatesErrorBackgroundColor = Color(0xffFFE6E7);
+
   ///States/Error Light
   static const Color kStatesLightErrorColor = Color(0xffFFF3F3);
 
@@ -76,4 +79,23 @@ class COLORS {
 
   ///pin code Deactivate color
   static const Color kPinCodeDeactivateColor = Color(0xffECEAF1);
+
+  ///pin code Deactivate color
+  static const Color kOnlineBadgeColor = Color(0xff37E028);
+
+  /// Tab bar slider background #F8F7FF 80% opacity
+  static const Color kTabbarBackgroundColor =
+      Color.fromARGB(204, 248, 247, 255);
+
+  /// message selection options color
+  static const Color kMessageSelectionOption = Color(0xffA9AFC6);
+
+  /// compose message background color
+  static const Color kComposeMessageBackgroundColor = Color(0xffF8F7FF);
+
+  /// compose message border color
+  static const Color kComposeMessageBorderColor = Color(0xffe9e7f0);
+
+  ///divider color
+  static const Color kDividerColor = Color(0xffECEAF1);
 }

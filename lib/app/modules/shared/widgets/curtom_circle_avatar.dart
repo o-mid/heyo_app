@@ -1,23 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 
 class CustomCircleAvatar extends StatelessWidget {
   final String url;
+  final double size;
   final bool isOnline;
-  const CustomCircleAvatar({Key? key, required this.url, this.isOnline = false}) : super(key: key);
+  const CustomCircleAvatar({
+    Key? key,
+    required this.url,
+    required this.size,
+    this.isOnline = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Container(
-          width: 48,
-          height: 48,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: Image.network(
-              url,
-            ),
+          width: size.w,
+          height: size.w,
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+          ),
+          child: Image.network(
+            url,
           ),
         ),
 
@@ -31,8 +39,8 @@ class CustomCircleAvatar extends StatelessWidget {
             right: 0,
             child: Center(
               child: Container(
-                width: 14,
-                height: 14,
+                width: 14.w,
+                height: 14.w,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: COLORS.kWhiteColor,
@@ -42,14 +50,14 @@ class CustomCircleAvatar extends StatelessWidget {
           ),
         if (isOnline)
           Positioned(
-            bottom: 2,
-            right: 2,
+            bottom: 2.w,
+            right: 2.w,
             child: Container(
-              width: 10,
-              height: 10,
+              width: 10.w,
+              height: 10.w,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: COLORS.kStatesLightSuccessColor,
+                color: COLORS.kOnlineBadgeColor,
               ),
             ),
           ),

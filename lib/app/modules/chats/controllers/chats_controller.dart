@@ -6,14 +6,17 @@ class ChatsController extends GetxController {
   final chats = <ChatModel>[
     ChatModel(
       name: "Crapps Wallbanger",
-      icon: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
-      lastMessage: "I'm still waiting for the reply. I'll let you know once they get back to me.",
+      icon:
+          "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+      lastMessage:
+          "I'm still waiting for the reply. I'll let you know once they get back to me.",
       timestamp: "15:45",
     ),
     ChatModel(
       name: "Fancy Potato",
       icon: "https://avatars.githubusercontent.com/u/6634136?v=4",
-      lastMessage: "I can arrange the meeting with her tomorrow if you're ok with that.",
+      lastMessage:
+          "I can arrange the meeting with her tomorrow if you're ok with that.",
       timestamp: "Yesterday",
       isOnline: true,
       isVerified: true,

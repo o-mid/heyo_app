@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/account/views/account_view.dart';
 import 'package:heyo/app/modules/calls/views/calls_view.dart';
 import 'package:heyo/app/modules/chats/views/chats_view.dart';
+import 'package:heyo/app/modules/home/widgets/new_chat_bottom_sheet.dart';
 import 'package:heyo/app/modules/search_nearby/views/search_nearby_view.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
-import 'package:heyo/app/modules/shared/utils/widgets/bottom_navigation_bar.dart';
+import 'package:heyo/app/modules/shared/widgets/bottom_navigation_bar.dart';
 import 'package:heyo/app/modules/wallet/views/wallet_view.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -30,7 +29,7 @@ class HomeView extends GetView<HomeController> {
           backgroundColor: COLORS.kGreenMainColor,
           title: Text(
             LocaleKeys.HomePage_title.tr,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FONTS.Bold,
               fontFamily: FONTS.interFamily,
             ),
@@ -39,8 +38,7 @@ class HomeView extends GetView<HomeController> {
         ),
         body: _pageNavigation[controller.tabIndex.value],
         floatingActionButton: FloatingActionButton(
-          // Todo:
-          onPressed: () {},
+          onPressed: (() => openNewChatBottomSheet()),
           backgroundColor: COLORS.kGreenMainColor,
           child: Assets.svg.newChat.svg(),
         ),

@@ -81,6 +81,84 @@
         "subtitle": "Start with inviting your friends or start new chats",
         "invite": "Invite"
       }
+    },
+    "bottomSheet": {
+      "newChat": "Start new chat",
+      "newGroup": "Start new group",
+      "invite": "Invite"
+    }
+  },
+  "newChat": {
+    "newChatAppBar": "New Chat",
+    "slider": {
+      "contacts": "Contacts",
+      "nearbyUsers": "Nearby users"
+    },
+    "usernameInputFiled": "Type Username or coreID",
+    "emptyStateTitleContacts": "You don’t have any contacts yet. \n You can invite them now.",
+    "emptyStateTitleNearbyUsers": "No users were found nearby",
+    "usernameInput": "Type Username or Core ID",
+    "searchResults": "Search results",
+    "buttons": {
+      "invite": "Invite",
+      "filter": "Filter",
+      "pullDownToRefresh": "Pull down to refresh"
+    },
+    "userBottomSheet": {
+      "chat": "Chat",
+      "addToContacts": "Add to contacts",
+      "block": "Block",
+      "userInfo": "User info"
+    },
+    "inviteBottomSheet": {
+      "inviteYourFriend": "Invite your friend to Heyo!",
+      "shareLink": "Share link"
+    }
+  },
+  "MessagesPage": {
+    "textFieldHint": "Chat",
+    "endToEndEncryptedMessaging": "Any messages you exchange are fully encrypted and can only be read by you and @name",
+    "onlineVia": "Online via",
+    "countSelectedMessages": "@count selected",
+    "replyingTo": "Replying to @name",
+    "replyToImage": "Image",
+    "replyToVideo": "Video",
+    "replyToAudio": "Audio",
+    "deleteMessagesDialog": {
+      "title": "Delete message?",
+      "titlePlural": "Delete @count messages?",
+      "subtitle": "Delete this message?",
+      "subtitlePlural": "Delete these messages?",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "deleteForEveryone": "Delete for everyone",
+      "deleteForMe": "Delete only for me"
+    }
+  },
+  "forwardMassagesPage": {
+    "appbar": "Forward to",
+    "textInput": "Search in contacts",
+    "recentContacts": "Recent contacts",
+    "OtherContacts": "Other contacts",
+    "contacts": "Contacts",
+    "bottomBar": {
+      "forwardTO": "Forward to ",
+      "messages": " messages"
+    }
+  },
+  "yesterday": "Yesterday",
+  "today": "Today",
+  "reply": "Reply",
+  "copy": "Copy",
+  "forward": "Forward",
+  "delete": "Delete",
+  "offline": "Offline",
+  "AddContacts": {
+    "addToContacts": "Add to contacts",
+    "addNickname": "Add nickname",
+    "AddNicknameSubtitle": "Nickname help you to identify others. Only you can \nsee this nickname.",
+    "buttons": {
+      "addToContacts": "Add to contacts"
     }
   }
 }

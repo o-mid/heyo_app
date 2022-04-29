@@ -9,14 +9,15 @@ void main() {
   runApp(
     ScreenUtilInit(
       //  Width and height from figma design
-      designSize: Size(375, 712),
-      builder: () => GetMaterialApp(
+      designSize: const Size(375, 712),
+
+      builder: (_) => GetMaterialApp(
         /// about ```translationsKeys``` see the Getx package on internationalization https://pub.dev/packages/get#internationalization
         // translationsKeys: AppTranslation.translations,
         title: 'Flutter app structure',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(),
-        locale: Locale("en", "EN"),
+        locale: const Locale("en", "EN"),
         fallbackLocale: const Locale(
           'en',
           'EN',

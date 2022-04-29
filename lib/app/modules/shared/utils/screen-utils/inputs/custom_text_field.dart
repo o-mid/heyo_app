@@ -86,7 +86,11 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
   void dispose() {
     super.dispose();
     focusNode.dispose();
-    controller.dispose();
+    // only dispose the text editing controller if it is not provided,
+    // this will fix the error of the text controller was used after being disposed on TabBar changed
+    if (widget.textController == null) {
+      controller.dispose();
+    }
   }
 
   switchBorders() {
