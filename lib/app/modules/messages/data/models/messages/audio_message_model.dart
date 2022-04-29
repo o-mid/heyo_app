@@ -5,9 +5,11 @@ import '../reaction_model.dart';
 
 class AudioMessageModel extends MessageModel {
   final String url;
+  final String? localUrl;
   final AudioMetadata metadata;
   AudioMessageModel({
     required this.url,
+    this.localUrl,
     required this.metadata,
     required String messageId,
     required DateTime timestamp,
@@ -32,6 +34,7 @@ class AudioMessageModel extends MessageModel {
 
   @override
   AudioMessageModel copyWith({
+    String? localUrl,
     MESSAGE_STATUS? status,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
@@ -39,6 +42,7 @@ class AudioMessageModel extends MessageModel {
   }) {
     return AudioMessageModel(
       url: url,
+      localUrl: localUrl ?? this.localUrl,
       metadata: metadata,
       messageId: messageId,
       timestamp: timestamp ?? this.timestamp,

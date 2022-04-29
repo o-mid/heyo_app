@@ -37,8 +37,7 @@ class _VoiceRecorderWidgetState extends State<VoiceRecorderWidget> {
             ? ActiveRecorderWidget(
                 onSend: (String path, int durationSeconds) {
                   controller.isInRecordMode.value = false;
-                  // Todo: send audio message
-                  print(path);
+                  controller.sendAudioMessage(path, durationSeconds);
                 },
                 onCancel: () => controller.isInRecordMode.value = false,
               )
