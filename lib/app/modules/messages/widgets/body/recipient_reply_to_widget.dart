@@ -15,7 +15,7 @@ class RecipientReplyTo extends StatelessWidget {
   Widget build(BuildContext context) {
     final replyTo = message.replyTo;
     if (replyTo == null) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
 
     return Stack(
@@ -42,9 +42,7 @@ class RecipientReplyTo extends StatelessWidget {
             width: 8.w,
             height: 40.h,
             decoration: BoxDecoration(
-              color: message.isSelected
-                  ? COLORS.kGreenLighterColor
-                  : COLORS.kAppBackground,
+              color: message.isSelected ? COLORS.kGreenLighterColor : COLORS.kAppBackground,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(4.w)),
             ),
           ),

@@ -53,7 +53,7 @@ class _SelectionModeAppBar extends StatelessWidget {
           onPressed: () {
             controller.clearSelected();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: COLORS.kWhiteColor,
           ),
@@ -138,7 +138,7 @@ class _DefaultAppBar extends StatelessWidget {
               ),
           ],
         ),
-        Spacer(),
+        const Spacer(),
         Row(
           children: [
             Assets.svg.videoCallIcon.svg(),
