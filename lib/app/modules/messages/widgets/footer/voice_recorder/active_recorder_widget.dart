@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/generated/assets.gen.dart';
@@ -25,7 +27,6 @@ class _ActiveRecorderWidgetState extends State<ActiveRecorderWidget> {
   Timer? _timer;
   Timer? _ampTimer;
   final _audioRecorder = Record();
-  // Todo: use amplitude for pulsing
   Amplitude? _amplitude;
 
   @override
@@ -59,21 +60,49 @@ class _ActiveRecorderWidgetState extends State<ActiveRecorderWidget> {
             children: [
               GestureDetector(
                 onTap: _cancel,
-                child: Assets.svg.closeSignOutline.svg(),
+                child: Assets.svg.closeSignOutline.svg(
+                  width: 20.h,
+                  height: 20.h,
+                ),
               ),
               if (_isPaused)
                 GestureDetector(
                   onTap: _resume,
-                  child: Assets.svg.pauseRecordOutlinedIcon.svg(),
+                  child: Assets.svg.pauseRecordOutlinedIcon.svg(
+                    width: 32.h,
+                    height: 32.h,
+                  ),
                 ),
               if (!_isPaused)
-                GestureDetector(
-                  onTap: _pause,
-                  child: Assets.svg.pauseRecordIcon.svg(),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 500),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xffFFE5E5),
+
+                        /// Linear interpolation of x1 = -40, y1 = 0 and x2 = 0, y2 = 16
+                        /// y1 is the min and y2 the max spread radius
+                        spreadRadius: max(0, 0.4 * (_amplitude?.current ?? -40) + 16).h,
+                        blurStyle: BlurStyle.solid,
+                      ),
+                    ],
+                  ),
+                  child: GestureDetector(
+                    onTap: _pause,
+                    child: Assets.svg.pauseRecordIcon.svg(
+                      width: 32.h,
+                      height: 32.h,
+                    ),
+                  ),
                 ),
               GestureDetector(
                 onTap: _send,
-                child: Assets.svg.sendIcon.svg(),
+                child: Assets.svg.sendIcon.svg(
+                  width: 17.h,
+                  height: 17.h,
+                ),
               ),
             ],
           ),
