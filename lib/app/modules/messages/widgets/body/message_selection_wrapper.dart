@@ -9,6 +9,7 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 
 import 'message_from_me_widget.dart';
 import 'message_from_other_widget.dart';
+import 'reaction_box.dart';
 
 class MessageSelectionWrapper extends StatefulWidget {
   final MessageModel message;
@@ -18,8 +19,7 @@ class MessageSelectionWrapper extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<MessageSelectionWrapper> createState() =>
-      _MessageSelectionWrapperState();
+  State<MessageSelectionWrapper> createState() => _MessageSelectionWrapperState();
 }
 
 class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
@@ -38,13 +38,13 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
           ? null
           : () => controller.toggleMessageSelection(message.messageId),
       child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
         children: [
           // Material is used because if container is given color, it will
           // hide the reaction widget borders
           Material(
-            color: message.isSelected
-                ? COLORS.kGreenLighterColor
-                : Colors.transparent,
+            color: message.isSelected ? COLORS.kGreenLighterColor : Colors.transparent,
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 4.h),
               child: message.isFromMe
@@ -57,10 +57,22 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
                     ),
             ),
           ),
+          // Todo: optimize if necessary
+          Positioned(
+            top: -4.h,
+            child: AnimatedScale(
+              scale: message.isSelected && controller.selectedMessages.length == 1 ? 1 : 0,
+              duration: const Duration(milliseconds: 200),
+              child: ReactionBox(
+                message: message,
+              ),
+            ),
+          ),
           if (message.isSelected)
             Positioned(
               top: 0,
               bottom: 0,
+              left: 0,
               child: Container(
                 color: COLORS.kGreenMainColor,
                 width: 3,
@@ -73,6 +85,5 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
 
   @override
   bool get wantKeepAlive =>
-      widget.message is VideoMessageModel ||
-      widget.message is AudioMessageModel;
+      widget.message is VideoMessageModel || widget.message is AudioMessageModel;
 }
