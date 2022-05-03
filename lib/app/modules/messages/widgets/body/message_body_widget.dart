@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -73,12 +75,22 @@ class _MessageContent extends StatelessWidget {
           ),
         );
       case ImageMessageModel:
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(8.r),
-          child: ExtendedImage.network(
-            (message as ImageMessageModel).url,
-          ),
-        );
+        return LayoutBuilder(builder: (context, constraints) {
+          final mWidth = (message as ImageMessageModel).metadata.width;
+          final mHeight = (message as ImageMessageModel).metadata.height;
+          final width = min(mWidth, constraints.maxWidth);
+          final height = width * (mHeight / mWidth);
+          return SizedBox(
+            width: width,
+            height: height,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.r),
+              child: ExtendedImage.network(
+                (message as ImageMessageModel).url,
+              ),
+            ),
+          );
+        });
       case VideoMessageModel:
         return VideoMessagePlayer(
           message: message as VideoMessageModel,

@@ -9,6 +9,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/text_message_mode
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/audio_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/metadatas/image_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/video_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
@@ -512,6 +513,7 @@ class MessagesController extends GetxController {
         messageId: "${index++}",
         url:
             "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+        metadata: ImageMetadata(width: 687, height: 1030),
         timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 50)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
@@ -526,6 +528,7 @@ class MessagesController extends GetxController {
         messageId: "${index++}",
         url:
             "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
+        metadata: ImageMetadata(width: 2142, height: 806),
         timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
         senderName: "",
         senderAvatar: "",
@@ -547,8 +550,9 @@ class MessagesController extends GetxController {
             "https://assets.mixkit.co/videos/preview/mixkit-daytime-city-traffic-aerial-view-56-large.mp4",
         metadata: VideoMetadata(
           durationInSeconds: 120,
-          thumbnailUrl:
-              "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+          thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb2.png",
+          width: 656,
+          height: 368,
         ),
         timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
         senderName: "",
@@ -572,6 +576,8 @@ class MessagesController extends GetxController {
         metadata: VideoMetadata(
           durationInSeconds: 120,
           thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+          width: 656,
+          height: 368,
         ),
         timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
         senderName: "",

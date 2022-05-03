@@ -1,11 +1,14 @@
+import 'package:heyo/app/modules/messages/data/models/metadatas/image_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 
 import 'message_model.dart';
 
 class ImageMessageModel extends MessageModel {
   final String url;
+  final ImageMetadata metadata;
   ImageMessageModel({
     required this.url,
+    required this.metadata,
     required String messageId,
     required DateTime timestamp,
     required String senderName,
@@ -37,6 +40,7 @@ class ImageMessageModel extends MessageModel {
   }) {
     return ImageMessageModel(
       url: url ?? this.url,
+      metadata: metadata,
       messageId: messageId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
