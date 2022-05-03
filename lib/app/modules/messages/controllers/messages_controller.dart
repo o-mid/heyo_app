@@ -129,7 +129,7 @@ class MessagesController extends GetxController {
     }
 
     final message = messages[index];
-    var reaction = message.reactions.putIfAbsent(emoji, () => ReactionModel());
+    var reaction = message.reactions[emoji] ?? ReactionModel();
 
     if (reaction.isReactedByMe) {
       // Todo: remove user core id from list
@@ -141,7 +141,7 @@ class MessagesController extends GetxController {
     reaction = reaction.copyWith(
       isReactedByMe: !reaction.isReactedByMe,
     );
-    message.reactions.update(emoji, (r) => reaction);
+    messages[index] = message.copyWith(reactions: {...message.reactions, emoji: reaction});
 
     messages.refresh();
 

@@ -6,10 +6,10 @@ import 'package:heyo/app/modules/messages/data/models/messages/audio_message_mod
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
-import 'package:heyo/app/modules/shared/widgets/glassmorphic_container.dart';
 
 import 'message_from_me_widget.dart';
 import 'message_from_other_widget.dart';
+import 'reaction_box.dart';
 
 class MessageSelectionWrapper extends StatefulWidget {
   final MessageModel message;
@@ -63,23 +63,8 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
             child: AnimatedScale(
               scale: message.isSelected && controller.selectedMessages.length == 1 ? 1 : 0,
               duration: const Duration(milliseconds: 200),
-              child: GlassmorphicContainer(
-                width: 315.w,
-                height: 64.h,
-                borderRadius: 8.r,
-                blur: 10,
-                border: 0,
-                linearGradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    const Color(0xFF466087).withOpacity(0.1),
-                    const Color(0xFF466087).withOpacity(0.05),
-                  ],
-                ),
-                child: Container(
-                  color: Colors.white.withOpacity(0.62),
-                ),
+              child: ReactionBox(
+                message: message,
               ),
             ),
           ),
