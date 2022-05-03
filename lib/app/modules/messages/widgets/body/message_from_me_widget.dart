@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
-import 'package:heyo/app/modules/messages/widgets/sender_reply_to_widget.dart';
+import 'package:heyo/app/modules/messages/widgets/body/sender_reply_to_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
@@ -13,8 +13,7 @@ import 'message_body_widget.dart';
 
 class MessageFromMeWidget extends StatelessWidget {
   final MessageModel message;
-  const MessageFromMeWidget({Key? key, required this.message})
-      : super(key: key);
+  const MessageFromMeWidget({Key? key, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +24,7 @@ class MessageFromMeWidget extends StatelessWidget {
           if (message.replyTo != null)
             GestureDetector(
               onTap: () {
-                Get.find<MessagesController>()
-                    .scrollToMessage(message.replyTo!.repliedToMessageId);
+                Get.find<MessagesController>().scrollToMessage(message.replyTo!.repliedToMessageId);
               },
               child: SenderReplyToWidget(message: message),
             ),

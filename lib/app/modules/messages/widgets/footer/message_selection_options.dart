@@ -10,7 +10,7 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-import '../../../routes/app_pages.dart';
+import '../../../../routes/app_pages.dart';
 
 class MessageSelectionOptions extends StatelessWidget {
   final bool showReply;

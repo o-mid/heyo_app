@@ -76,9 +76,10 @@ class AudioMessageController extends GetxController {
     final metadata = message.metadata;
     duration.value = Duration(seconds: metadata.durationInSeconds);
 
+    // Todo: check whether local url exists or not
     _player.setAudioSource(
       AudioSource.uri(
-        Uri.parse(message.url),
+        Uri.parse(message.localUrl ?? message.url),
       ),
     );
 

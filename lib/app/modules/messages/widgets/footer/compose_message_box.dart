@@ -62,8 +62,10 @@ class ComposeMessageBox extends StatelessWidget {
           ),
           CustomSizes.largeSizedBoxWidth,
           if (controller.newMessage.isEmpty)
-            // Todo: add gesture detection and implement record voice
-            Assets.svg.recordIcon.svg(color: COLORS.kDarkBlueColor),
+            GestureDetector(
+              onTap: () => controller.isInRecordMode.value = true,
+              child: Assets.svg.recordIcon.svg(color: COLORS.kDarkBlueColor),
+            ),
           if (controller.newMessage.isNotEmpty)
             GestureDetector(
               onTap: () {

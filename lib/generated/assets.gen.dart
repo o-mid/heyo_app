@@ -89,6 +89,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/close_sign.svg
   SvgGenImage get closeSign => const SvgGenImage('assets/svg/close_sign.svg');
 
+  /// File path: assets/svg/close_sign_outline.svg
+  SvgGenImage get closeSignOutline =>
+      const SvgGenImage('assets/svg/close_sign_outline.svg');
+
   /// File path: assets/svg/copy_icon.svg
   SvgGenImage get copyIcon => const SvgGenImage('assets/svg/copy_icon.svg');
 
@@ -150,11 +154,23 @@ class $AssetsSvgGen {
   SvgGenImage get newGroupIcon =>
       const SvgGenImage('assets/svg/new_group_icon.svg');
 
+  /// File path: assets/svg/pause_record_icon.svg
+  SvgGenImage get pauseRecordIcon =>
+      const SvgGenImage('assets/svg/pause_record_icon.svg');
+
+  /// File path: assets/svg/pause_record_outlined_icon.svg
+  SvgGenImage get pauseRecordOutlinedIcon =>
+      const SvgGenImage('assets/svg/pause_record_outlined_icon.svg');
+
   /// File path: assets/svg/play_icon.svg
   SvgGenImage get playIcon => const SvgGenImage('assets/svg/play_icon.svg');
 
   /// File path: assets/svg/record_icon.svg
   SvgGenImage get recordIcon => const SvgGenImage('assets/svg/record_icon.svg');
+
+  /// File path: assets/svg/record_voice_circle_icon.svg
+  SvgGenImage get recordVoiceCircleIcon =>
+      const SvgGenImage('assets/svg/record_voice_circle_icon.svg');
 
   /// File path: assets/svg/reply_filled.svg
   SvgGenImage get replyFilled =>
