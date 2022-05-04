@@ -13,6 +13,7 @@ class GlobalMessageController extends GetxController {
   void onClose() {
     textController.dispose();
     scrollController.dispose();
+    streamSubscriptions.map((e) => e.cancel());
     super.onClose();
   }
 
