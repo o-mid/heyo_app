@@ -8,8 +8,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/video_message_mod
 import 'package:heyo/app/modules/messages/widgets/body/sender_reply_to_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 
-import 'message_from_me_widget.dart';
-import 'message_from_other_widget.dart';
+import 'message_widget.dart';
 import 'reaction_box.dart';
 import 'recipient_reply_to_widget.dart';
 
@@ -71,13 +70,11 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
                 color: message.isSelected ? COLORS.kGreenLighterColor : Colors.transparent,
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 4.h),
-                  child: message.isFromMe
-                      ? MessageFromMeWidget(message: message)
-                      : MessageFromOtherWidget(
-                          message: message,
-                          // showTimeAndProfile: index == controller.messages.length - 1 ||
-                          //     controller.messages[index + 1].senderName != message.senderName,
-                        ),
+                  child: MessageWidget(
+                    message: message,
+                    // showTimeAndProfile: index == controller.messages.length - 1 ||
+                    //     controller.messages[index + 1].senderName != message.senderName,
+                  ),
                 ),
               ),
               // Todo: optimize if necessary
