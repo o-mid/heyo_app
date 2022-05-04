@@ -86,6 +86,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/chat.svg
   SvgGenImage get chat => const SvgGenImage('assets/svg/chat.svg');
 
+  /// File path: assets/svg/clock.svg
+  SvgGenImage get clock => const SvgGenImage('assets/svg/clock.svg');
+
   /// File path: assets/svg/close_sign.svg
   SvgGenImage get closeSign => const SvgGenImage('assets/svg/close_sign.svg');
 
@@ -175,6 +178,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/reply_filled.svg
   SvgGenImage get replyFilled =>
       const SvgGenImage('assets/svg/reply_filled.svg');
+
+  /// File path: assets/svg/reply_filled_mirror.svg
+  SvgGenImage get replyFilledMirror =>
+      const SvgGenImage('assets/svg/reply_filled_mirror.svg');
 
   /// File path: assets/svg/reply_outlined.svg
   SvgGenImage get replyOutlined =>

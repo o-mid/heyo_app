@@ -124,6 +124,7 @@
     "replyToImage": "Image",
     "replyToVideo": "Video",
     "replyToAudio": "Audio",
+    "forwarded": "Forwarded",
     "deleteMessagesDialog": {
       "title": "Delete message?",
       "titlePlural": "Delete @count messages?",

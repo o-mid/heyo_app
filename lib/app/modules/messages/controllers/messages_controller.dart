@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +16,7 @@ import 'package:heyo/app/modules/messages/data/models/metadatas/video_metadata.d
 import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
 import 'package:heyo/app/modules/messages/widgets/delete_message_dialog.dart';
+import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/controllers/audio_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/controllers/video_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
@@ -22,43 +25,75 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 class MessagesController extends GetxController {
-  final textController = TextEditingController();
-  final scrollController = AutoScrollController();
+  final _globalMessageController = Get.find<GlobalMessageController>();
+  double _keyboardHeight = 0;
+
+  late TextEditingController textController;
+  late AutoScrollController scrollController;
   final newMessage = "".obs;
   final showEmojiPicker = false.obs;
   final isInRecordMode = false.obs;
   final messages = <MessageModel>[].obs;
   final selectedMessages = <MessageModel>[].obs;
   final replyingTo = Rxn<ReplyToModel>();
+  StreamSubscription? keyboardListener;
   late MessagesViewArgumentsModel args;
 
   @override
   void onInit() {
     super.onInit();
+    _globalMessageController.reset();
+    textController = _globalMessageController.textController;
+    scrollController = _globalMessageController.scrollController;
 
     args = Get.arguments as MessagesViewArgumentsModel;
 
     _addMockData();
-    // int lastMessageIndex = messages.indexOf(messages.last);
-    // if (args.forwardedMessages != null) {
-    //   args.forwardedMessages?.forEach((message) {
-    //     messages.add(MessageModel(text: text, messageId: messageId, timestamp: timestamp, senderName: senderName, senderAvatar: senderAvatar)(
-    //       messageId: "${lastMessageIndex++}",
-    //       payload: message.payload,
-    //       timestamp: message.timestamp,
-    //       senderName: message.senderName,
-    //       senderAvatar: message.senderAvatar,
-    //     ));
-    //   });
-    // }
+    if (args.forwardedMessages != null) {
+      // Todo (libp2p): Send forwarded messages
+      messages.addAll(
+        args.forwardedMessages!.map(
+          (m) => m.copyWith(
+            // messageId: , // Todo: Generate new id for forwarded message
+            isForwarded: true,
+            status: MESSAGE_STATUS.SENDING,
+            clearReply: true,
+            reactions: <String, ReactionModel>{},
+          ),
+        ),
+      );
+    }
 
     // Close emoji picker when keyboard opens
     final keyboardVisibilityController = KeyboardVisibilityController();
-    keyboardVisibilityController.onChange.listen((bool visible) {
+
+    _globalMessageController.streamSubscriptions
+        .add(keyboardVisibilityController.onChange.listen((bool visible) {
       if (visible) {
         showEmojiPicker.value = false;
+
+        WidgetsBinding.instance?.addPostFrameCallback((_) {
+          _keyboardHeight = Get.mediaQuery.viewInsets.bottom;
+          if (scrollController.hasClients) {
+            scrollController.animateTo(
+              scrollController.offset + _keyboardHeight,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.ease,
+            );
+          }
+        });
+      } else {
+        WidgetsBinding.instance?.addPostFrameCallback((_) {
+          if (scrollController.hasClients) {
+            scrollController.animateTo(
+              scrollController.offset - _keyboardHeight,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.ease,
+            );
+          }
+        });
       }
-    });
+    }));
   }
 
   @override
@@ -69,13 +104,11 @@ class MessagesController extends GetxController {
 
   @override
   void onClose() {
-    textController.dispose();
-    scrollController.dispose();
-
     // Todo: remove this when a global player is implemented
     Get.find<AudioMessageController>().player.stop();
 
     Get.find<VideoMessageController>().stopAndClearPreviousVideo();
+    super.onClose();
   }
 
   void toggleEmojiPicker() {
@@ -195,7 +228,9 @@ class MessagesController extends GetxController {
 
     clearReplyTo();
 
-    jumpToBottom();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      jumpToBottom();
+    });
   }
 
   void sendAudioMessage(String path, int duration) {
@@ -216,6 +251,10 @@ class MessagesController extends GetxController {
     messages.add(message);
 
     messages.refresh();
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      jumpToBottom();
+    });
   }
 
   void replyTo() {

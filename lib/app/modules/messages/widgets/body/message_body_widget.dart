@@ -24,26 +24,29 @@ class MessageBodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        CustomSizes.mediumSizedBoxWidth,
-        Expanded(
-          flex: 3,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 4.h),
-                child: _MessageContent(
-                  message: message,
+    return Directionality(
+      textDirection: message.isFromMe ? TextDirection.rtl : TextDirection.ltr,
+      child: Row(
+        children: [
+          CustomSizes.mediumSizedBoxWidth,
+          Expanded(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(bottom: 4.h),
+                  child: _MessageContent(
+                    message: message,
+                  ),
                 ),
-              ),
-              if (message.reactions.isNotEmpty) ReactionsWidget(message: message),
-            ],
+                if (message.reactions.isNotEmpty) ReactionsWidget(message: message),
+              ],
+            ),
           ),
-        ),
-        const Spacer(),
-      ],
+          const Spacer(),
+        ],
+      ),
     );
   }
 }

@@ -17,6 +17,7 @@ class AudioMessageModel extends MessageModel {
     required String senderAvatar,
     status = MESSAGE_STATUS.SENDING,
     isFromMe = false,
+    isForwarded = false,
     isSelected = false,
     replyTo,
     reactions = const <String, ReactionModel>{},
@@ -27,6 +28,7 @@ class AudioMessageModel extends MessageModel {
           senderAvatar: senderAvatar,
           status: status,
           isFromMe: isFromMe,
+          isForwarded: isForwarded,
           isSelected: isSelected,
           reactions: reactions,
           replyTo: replyTo,
@@ -35,24 +37,28 @@ class AudioMessageModel extends MessageModel {
   @override
   AudioMessageModel copyWith({
     String? localUrl,
+    String? messageId,
     MESSAGE_STATUS? status,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
+    bool? isForwarded,
     bool? isSelected,
+    bool clearReply = false,
   }) {
     return AudioMessageModel(
       url: url,
       localUrl: localUrl ?? this.localUrl,
       metadata: metadata,
-      messageId: messageId,
+      messageId: messageId ?? this.messageId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
       senderAvatar: senderAvatar,
       status: status ?? this.status,
       isFromMe: isFromMe,
+      isForwarded: isForwarded ?? this.isForwarded,
       isSelected: isSelected ?? this.isSelected,
       reactions: reactions ?? this.reactions,
-      replyTo: replyTo,
+      replyTo: clearReply ? null : replyTo,
     );
   }
 }

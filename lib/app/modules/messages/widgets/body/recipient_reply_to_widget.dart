@@ -42,14 +42,14 @@ class RecipientReplyTo extends StatelessWidget {
             width: 8.w,
             height: 40.h,
             decoration: BoxDecoration(
-              color: message.isSelected ? COLORS.kGreenLighterColor : COLORS.kAppBackground,
+              color: COLORS.kAppBackground,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(4.w)),
             ),
           ),
         ),
         Row(
           children: [
-            Expanded(
+            Flexible(
               flex: 3,
               child: Container(
                 padding: EdgeInsets.symmetric(
@@ -64,8 +64,10 @@ class RecipientReplyTo extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Assets.svg.replyFilled.svg(
                           width: 12.w,
