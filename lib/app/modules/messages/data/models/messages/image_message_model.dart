@@ -35,16 +35,18 @@ class ImageMessageModel extends MessageModel {
   @override
   ImageMessageModel copyWith({
     String? url,
+    String? messageId,
     MESSAGE_STATUS? status,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
     bool? isSelected,
     bool? isForwarded,
+    bool clearReply = false,
   }) {
     return ImageMessageModel(
       url: url ?? this.url,
       metadata: metadata,
-      messageId: messageId,
+      messageId: messageId ?? this.messageId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
       senderAvatar: senderAvatar,
@@ -53,7 +55,7 @@ class ImageMessageModel extends MessageModel {
       isForwarded: isForwarded ?? this.isForwarded,
       isSelected: isSelected ?? this.isSelected,
       reactions: reactions ?? this.reactions,
-      replyTo: replyTo,
+      replyTo: clearReply ? null : replyTo,
     );
   }
 }

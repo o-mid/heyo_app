@@ -34,16 +34,18 @@ class VideoMessageModel extends MessageModel {
 
   @override
   VideoMessageModel copyWith({
+    String? messageId,
     MESSAGE_STATUS? status,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
     bool? isSelected,
     bool? isForwarded,
+    bool clearReply = false,
   }) {
     return VideoMessageModel(
       url: url,
       metadata: metadata,
-      messageId: messageId,
+      messageId: messageId ?? this.messageId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
       senderAvatar: senderAvatar,
@@ -52,7 +54,8 @@ class VideoMessageModel extends MessageModel {
       isSelected: isSelected ?? this.isSelected,
       isForwarded: isForwarded ?? this.isForwarded,
       reactions: reactions ?? this.reactions,
-      replyTo: replyTo,
+
+      replyTo: clearReply ? null : replyTo,
     );
   }
 }

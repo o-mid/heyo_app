@@ -41,10 +41,12 @@ abstract class MessageModel {
   });
 
   MessageModel copyWith({
+    String? messageId,
     MESSAGE_STATUS? status,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
     bool? isForwarded,
     bool? isSelected,
+    bool clearReply,
   });
 }

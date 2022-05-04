@@ -23,7 +23,7 @@ class TextMessageModel extends MessageModel {
           senderAvatar: senderAvatar,
           status: status,
           isFromMe: isFromMe,
-    isForwarded: isForwarded,
+          isForwarded: isForwarded,
           isSelected: isSelected,
           reactions: reactions,
           replyTo: replyTo,
@@ -32,15 +32,17 @@ class TextMessageModel extends MessageModel {
   @override
   TextMessageModel copyWith({
     String? text,
+    String? messageId,
     MESSAGE_STATUS? status,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
     bool? isForwarded,
     bool? isSelected,
+    bool clearReply = false,
   }) {
     return TextMessageModel(
       text: text ?? this.text,
-      messageId: messageId,
+      messageId: messageId ?? this.messageId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
       senderAvatar: senderAvatar,
@@ -49,7 +51,7 @@ class TextMessageModel extends MessageModel {
       isForwarded: isForwarded ?? this.isForwarded,
       isSelected: isSelected ?? this.isSelected,
       reactions: reactions ?? this.reactions,
-      replyTo: replyTo,
+      replyTo: clearReply ? null : replyTo,
     );
   }
 }

@@ -39,18 +39,20 @@ class MessagesController extends GetxController {
     args = Get.arguments as MessagesViewArgumentsModel;
 
     _addMockData();
-    // int lastMessageIndex = messages.indexOf(messages.last);
-    // if (args.forwardedMessages != null) {
-    //   args.forwardedMessages?.forEach((message) {
-    //     messages.add(MessageModel(text: text, messageId: messageId, timestamp: timestamp, senderName: senderName, senderAvatar: senderAvatar)(
-    //       messageId: "${lastMessageIndex++}",
-    //       payload: message.payload,
-    //       timestamp: message.timestamp,
-    //       senderName: message.senderName,
-    //       senderAvatar: message.senderAvatar,
-    //     ));
-    //   });
-    // }
+    if (args.forwardedMessages != null) {
+      // Todo (libp2p): Send forwarded messages
+      messages.addAll(
+        args.forwardedMessages!.map(
+          (m) => m.copyWith(
+            // messageId: , // Todo: Generate new id for forwarded message
+            isForwarded: true,
+            status: MESSAGE_STATUS.SENDING,
+            clearReply: true,
+            reactions: <String, ReactionModel>{},
+          ),
+        ),
+      );
+    }
 
     // Close emoji picker when keyboard opens
     final keyboardVisibilityController = KeyboardVisibilityController();
