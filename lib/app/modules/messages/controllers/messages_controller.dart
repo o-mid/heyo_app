@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +25,9 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 class MessagesController extends GetxController {
+  final _globalMessageController = Get.find<GlobalMessageController>();
+  double _keyboardHeight = 0;
+
   late TextEditingController textController;
   late AutoScrollController scrollController;
   final newMessage = "".obs;
@@ -31,14 +36,15 @@ class MessagesController extends GetxController {
   final messages = <MessageModel>[].obs;
   final selectedMessages = <MessageModel>[].obs;
   final replyingTo = Rxn<ReplyToModel>();
+  StreamSubscription? keyboardListener;
   late MessagesViewArgumentsModel args;
 
   @override
   void onInit() {
     super.onInit();
-    Get.find<GlobalMessageController>().updateControllers();
-    textController = Get.find<GlobalMessageController>().textController;
-    scrollController = Get.find<GlobalMessageController>().scrollController;
+    _globalMessageController.reset();
+    textController = _globalMessageController.textController;
+    scrollController = _globalMessageController.scrollController;
 
     args = Get.arguments as MessagesViewArgumentsModel;
 
@@ -60,11 +66,34 @@ class MessagesController extends GetxController {
 
     // Close emoji picker when keyboard opens
     final keyboardVisibilityController = KeyboardVisibilityController();
-    keyboardVisibilityController.onChange.listen((bool visible) {
+
+    _globalMessageController.streamSubscriptions
+        .add(keyboardVisibilityController.onChange.listen((bool visible) {
       if (visible) {
         showEmojiPicker.value = false;
+
+        WidgetsBinding.instance?.addPostFrameCallback((_) {
+          _keyboardHeight = Get.mediaQuery.viewInsets.bottom;
+          if (scrollController.hasClients) {
+            scrollController.animateTo(
+              scrollController.offset + _keyboardHeight,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.ease,
+            );
+          }
+        });
+      } else {
+        WidgetsBinding.instance?.addPostFrameCallback((_) {
+          if (scrollController.hasClients) {
+            scrollController.animateTo(
+              scrollController.offset - _keyboardHeight,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.ease,
+            );
+          }
+        });
       }
-    });
+    }));
   }
 
   @override
