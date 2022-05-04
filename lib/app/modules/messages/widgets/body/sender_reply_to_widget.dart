@@ -9,15 +9,14 @@ import 'package:heyo/generated/assets.gen.dart';
 
 class SenderReplyToWidget extends StatelessWidget {
   final MessageModel message;
-  const SenderReplyToWidget({Key? key, required this.message})
-      : super(key: key);
+  const SenderReplyToWidget({Key? key, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final replyTo = message.replyTo;
 
     if (replyTo == null) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
 
     return Stack(
@@ -44,14 +43,13 @@ class SenderReplyToWidget extends StatelessWidget {
             width: 8.w,
             height: 40.h,
             decoration: BoxDecoration(
-              color: message.isSelected
-                  ? COLORS.kGreenLighterColor
-                  : COLORS.kAppBackground,
+              color: COLORS.kAppBackground,
               borderRadius: BorderRadius.only(topRight: Radius.circular(4.w)),
             ),
           ),
         ),
         Row(
+          textDirection: TextDirection.rtl,
           children: [
             Expanded(
               flex: 3,
@@ -87,15 +85,12 @@ class SenderReplyToWidget extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 2.h),
-                    Container(
-                      child: Text(
-                        replyTo.repliedToMessage,
-                        textAlign: TextAlign.end,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TEXTSTYLES.kBodyTag.copyWith(
-                          color: COLORS.kTextBlueColor,
-                        ),
+                    Text(
+                      replyTo.repliedToMessage,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TEXTSTYLES.kBodyTag.copyWith(
+                        color: COLORS.kTextBlueColor,
                       ),
                     ),
                   ],

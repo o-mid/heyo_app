@@ -42,7 +42,7 @@ class RecipientReplyTo extends StatelessWidget {
             width: 8.w,
             height: 40.h,
             decoration: BoxDecoration(
-              color: message.isSelected ? COLORS.kGreenLighterColor : COLORS.kAppBackground,
+              color: COLORS.kAppBackground,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(4.w)),
             ),
           ),

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
-import 'package:heyo/app/modules/messages/widgets/body/sender_reply_to_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
@@ -21,13 +18,6 @@ class MessageFromMeWidget extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Column(
         children: [
-          if (message.replyTo != null)
-            GestureDetector(
-              onTap: () {
-                Get.find<MessagesController>().scrollToMessage(message.replyTo!.repliedToMessageId);
-              },
-              child: SenderReplyToWidget(message: message),
-            ),
           Row(
             children: [
               CustomSizes.mediumSizedBoxWidth,
