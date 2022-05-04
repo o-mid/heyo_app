@@ -49,7 +49,7 @@ class RecipientReplyTo extends StatelessWidget {
         ),
         Row(
           children: [
-            Expanded(
+            Flexible(
               flex: 3,
               child: Container(
                 padding: EdgeInsets.symmetric(
@@ -64,8 +64,10 @@ class RecipientReplyTo extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Assets.svg.replyFilled.svg(
                           width: 12.w,

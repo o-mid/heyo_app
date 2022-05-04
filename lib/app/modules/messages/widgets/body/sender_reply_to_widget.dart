@@ -51,7 +51,7 @@ class SenderReplyToWidget extends StatelessWidget {
         Row(
           textDirection: TextDirection.rtl,
           children: [
-            Expanded(
+            Flexible(
               flex: 3,
               child: Container(
                 padding: EdgeInsets.symmetric(
@@ -66,8 +66,10 @@ class SenderReplyToWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       textDirection: TextDirection.ltr,
                       children: [
                         Assets.svg.replyFilled.svg(
