@@ -24,6 +24,7 @@ abstract class MessageModel {
   final String senderName;
   final String senderAvatar;
   final bool isFromMe;
+  final bool isForwarded;
   final bool isSelected;
 
   MessageModel({
@@ -34,6 +35,7 @@ abstract class MessageModel {
     this.status = MESSAGE_STATUS.SENDING,
     this.isFromMe = false,
     this.isSelected = false,
+    this.isForwarded = false,
     this.replyTo,
     this.reactions = const {},
   });
@@ -42,6 +44,7 @@ abstract class MessageModel {
     MESSAGE_STATUS? status,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
+    bool? isForwarded,
     bool? isSelected,
   });
 }

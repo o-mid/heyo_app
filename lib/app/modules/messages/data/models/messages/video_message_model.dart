@@ -15,6 +15,7 @@ class VideoMessageModel extends MessageModel {
     required String senderAvatar,
     status = MESSAGE_STATUS.SENDING,
     isFromMe = false,
+    isForwarded = false,
     isSelected = false,
     replyTo,
     reactions = const <String, ReactionModel>{},
@@ -25,6 +26,7 @@ class VideoMessageModel extends MessageModel {
           senderAvatar: senderAvatar,
           status: status,
           isFromMe: isFromMe,
+    isForwarded: isForwarded,
           isSelected: isSelected,
           reactions: reactions,
           replyTo: replyTo,
@@ -36,6 +38,7 @@ class VideoMessageModel extends MessageModel {
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
     bool? isSelected,
+    bool? isForwarded,
   }) {
     return VideoMessageModel(
       url: url,
@@ -47,6 +50,7 @@ class VideoMessageModel extends MessageModel {
       status: status ?? this.status,
       isFromMe: isFromMe,
       isSelected: isSelected ?? this.isSelected,
+      isForwarded: isForwarded ?? this.isForwarded,
       reactions: reactions ?? this.reactions,
       replyTo: replyTo,
     );

@@ -179,6 +179,10 @@ class $AssetsSvgGen {
   SvgGenImage get replyFilled =>
       const SvgGenImage('assets/svg/reply_filled.svg');
 
+  /// File path: assets/svg/reply_filled_mirror.svg
+  SvgGenImage get replyFilledMirror =>
+      const SvgGenImage('assets/svg/reply_filled_mirror.svg');
+
   /// File path: assets/svg/reply_outlined.svg
   SvgGenImage get replyOutlined =>
       const SvgGenImage('assets/svg/reply_outlined.svg');
