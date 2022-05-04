@@ -14,6 +14,7 @@ import 'package:heyo/app/modules/messages/data/models/metadatas/video_metadata.d
 import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
 import 'package:heyo/app/modules/messages/widgets/delete_message_dialog.dart';
+import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/controllers/audio_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/controllers/video_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
@@ -22,8 +23,8 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 class MessagesController extends GetxController {
-  final textController = TextEditingController();
-  final scrollController = AutoScrollController();
+  late TextEditingController textController;
+  late AutoScrollController scrollController;
   final newMessage = "".obs;
   final showEmojiPicker = false.obs;
   final isInRecordMode = false.obs;
@@ -35,6 +36,9 @@ class MessagesController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    Get.find<GlobalMessageController>().updateControllers();
+    textController = Get.find<GlobalMessageController>().textController;
+    scrollController = Get.find<GlobalMessageController>().scrollController;
 
     args = Get.arguments as MessagesViewArgumentsModel;
 
@@ -71,13 +75,11 @@ class MessagesController extends GetxController {
 
   @override
   void onClose() {
-    textController.dispose();
-    scrollController.dispose();
-
     // Todo: remove this when a global player is implemented
     Get.find<AudioMessageController>().player.stop();
 
     Get.find<VideoMessageController>().stopAndClearPreviousVideo();
+    super.onClose();
   }
 
   void toggleEmojiPicker() {
@@ -197,7 +199,9 @@ class MessagesController extends GetxController {
 
     clearReplyTo();
 
-    jumpToBottom();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      jumpToBottom();
+    });
   }
 
   void sendAudioMessage(String path, int duration) {
@@ -218,6 +222,10 @@ class MessagesController extends GetxController {
     messages.add(message);
 
     messages.refresh();
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      jumpToBottom();
+    });
   }
 
   void replyTo() {
