@@ -298,7 +298,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_bip39:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       path: "."
       ref: HEAD

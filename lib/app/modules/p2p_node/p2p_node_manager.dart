@@ -13,13 +13,13 @@ class P2PNodeManager extends GetxController {
   void onReady() async {
     Connectivity().onConnectivityChanged.listen((connectivityResult) async {
       if (connectivityResult == ConnectivityResult.none) {
-        debugPrint("Device not connected to any network");
+        print("Device not connected to any network");
       } else {
         if (_latestConnectivityStatus != null) {
           _stopP2PNode();
         }
         _setUpP2PNode();
-        debugPrint("New networkStatus: ${connectivityResult}");
+        print("New networkStatus: ${connectivityResult}");
         _latestConnectivityStatus = connectivityResult;
       }
     });
@@ -27,9 +27,11 @@ class P2PNodeManager extends GetxController {
   }
 
   _stopP2PNode(){
+    print("p2p stopNode");
     p2pNode.stop();
   }
   _setUpP2PNode(){
+    print("p2p startNode");
     p2pNode.restart();
   }
 

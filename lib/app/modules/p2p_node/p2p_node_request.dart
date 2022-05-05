@@ -26,6 +26,8 @@ class P2PNodeRequestStream {
   }
 
   _onNewRequestEvent(P2PReqResNodeModel event) async {
+    debugPrint("_onNewRequestEvent: eventName is: ${event.name}");
+
     if (event.name == P2PReqResNodeNames.login &&
         event.error == null &&
         event.body != null) {
@@ -35,5 +37,6 @@ class P2PNodeRequestStream {
           info: P2PReqResNodeModel(
               name: P2PReqResNodeNames.login, body: {}, id: event.id));
     }
+
   }
 }

@@ -25,6 +25,7 @@ class P2PNodeResponseStream {
   }
 
   _onNewResponseEvent(P2PReqResNodeModel event) async {
+    print("_onNewResponseEvent : eventName is: ${event.name.toString()}");
     if (event.name == P2PReqResNodeNames.login && event.error == null) {
       // this means the login was successfully sent
       //loginState.value = P2P_STATE.SUCCESS;
