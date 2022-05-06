@@ -147,6 +147,12 @@
       "messages": " messages"
     }
   },
+  "permissionDialog": {
+    "continue": "Continue",
+    "notNow": "Not now",
+    "allowAccess": "Allow access",
+    "locationSubtitle": "To share location, you need to allow Heyo access to your device's location."
+  },
   "yesterday": "Yesterday",
   "today": "Today",
   "reply": "Reply",

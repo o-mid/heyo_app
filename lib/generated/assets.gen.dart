@@ -139,6 +139,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/invite_icon.svg
   SvgGenImage get inviteIcon => const SvgGenImage('assets/svg/invite_icon.svg');
 
+  /// File path: assets/svg/location_outlined.svg
+  SvgGenImage get locationOutlined =>
+      const SvgGenImage('assets/svg/location_outlined.svg');
+
   /// File path: assets/svg/luna_connection.svg
   SvgGenImage get lunaConnection =>
       const SvgGenImage('assets/svg/luna_connection.svg');

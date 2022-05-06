@@ -159,6 +159,11 @@ class LocaleKeys {
       'forwardMassagesPage_bottomBar_forwardTO';
   static const forwardMassagesPage_bottomBar_messages =
       'forwardMassagesPage_bottomBar_messages';
+  static const permissionDialog_continue = 'permissionDialog_continue';
+  static const permissionDialog_notNow = 'permissionDialog_notNow';
+  static const permissionDialog_allowAccess = 'permissionDialog_allowAccess';
+  static const permissionDialog_locationSubtitle =
+      'permissionDialog_locationSubtitle';
   static const yesterday = 'yesterday';
   static const today = 'today';
   static const reply = 'reply';
@@ -287,6 +292,11 @@ class Locales {
     'forwardMassagesPage_contacts': 'Contacts',
     'forwardMassagesPage_bottomBar_forwardTO': 'Forward to ',
     'forwardMassagesPage_bottomBar_messages': ' messages',
+    'permissionDialog_continue': 'Continue',
+    'permissionDialog_notNow': 'Not now',
+    'permissionDialog_allowAccess': 'Allow access',
+    'permissionDialog_locationSubtitle':
+        'To share location, you need to allow Heyo access to your device\'s location.',
     'yesterday': 'Yesterday',
     'today': 'Today',
     'reply': 'Reply',
