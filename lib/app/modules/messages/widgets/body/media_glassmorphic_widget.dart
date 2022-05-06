@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/widgets/glassmorphic_container.dart';
+import 'package:heyo/generated/assets.gen.dart';
 
 import '../../../shared/utils/screen-utils/sizing/custom_sizes.dart';
+import '../../../shared/widgets/circular_media_icon_button.dart';
 import '../../controllers/messages_controller.dart';
 
 class MediaGlassmorphic extends StatelessWidget {
@@ -33,41 +36,81 @@ class MediaGlassmorphic extends StatelessWidget {
                         const Color(0xFF466087).withOpacity(0.05),
                       ],
                     ),
-                    child: Container(
-                      padding: EdgeInsets.all(12.w),
-                      child: Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Row(
-                              children: [
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.mic_sharp)),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.mic_sharp)),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.mic_sharp)),
-                              ],
+                            circular_media_icon_button(
+                              backgroundColor: Color(0xffFFB500),
+                              child: Assets.svg.cameraIcon.svg(
+                                height: 20.w,
+                                width: 20.w,
+                              ),
+                              // camera onPressed:
+                              onPressed: () {},
+                              padding: 18,
                             ),
-                            Row(
-                              children: [
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.mic_sharp)),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.mic_sharp)),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.mic_sharp)),
-                              ],
-                            )
+                            circular_media_icon_button(
+                              backgroundColor: Color(0xff16B4F2),
+                              child: Assets.svg.galleryIcon.svg(
+                                height: 20.w,
+                                width: 20.w,
+                              ),
+                              // gallery onPressed:
+                              onPressed: () {},
+                              padding: 18,
+                            ),
+                            circular_media_icon_button(
+                              backgroundColor: Color(0xff7E3CF9),
+                              child: Assets.svg.locationIcon.svg(
+                                height: 20.w,
+                                width: 20.w,
+                              ),
+                              // location onPressed:
+                              onPressed: () {},
+                              padding: 18,
+                            ),
                           ],
                         ),
-                      ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            circular_media_icon_button(
+                              backgroundColor: Color(0xffF93C53),
+                              child: Assets.svg.fileIcon.svg(
+                                height: 20.w,
+                                width: 20.w,
+                              ),
+                              // file onPressed:
+                              onPressed: () {},
+                              padding: 18,
+                            ),
+                            circular_media_icon_button(
+                              backgroundColor: Color(0xff00B4B5),
+                              child: Assets.svg.moneyIcon.svg(
+                                height: 20.w,
+                                width: 20.w,
+                              ),
+                              // money onPressed:
+                              onPressed: () {},
+                              padding: 18,
+                            ),
+                            circular_media_icon_button(
+                              backgroundColor: Color(0xff003EB5),
+                              child: Assets.svg.personIcon.svg(
+                                height: 20.w,
+                                width: 20.w,
+                              ),
+                              // person onPressed:
+                              onPressed: () {},
+                              padding: 18,
+                            ),
+                          ],
+                        )
+                      ],
                     ),
                   ),
                   CustomSizes.mediumSizedBoxHeight,

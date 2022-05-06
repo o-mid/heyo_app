@@ -83,6 +83,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/call.svg
   SvgGenImage get call => const SvgGenImage('assets/svg/call.svg');
 
+  /// File path: assets/svg/cameraIcon.svg
+  SvgGenImage get cameraIcon => const SvgGenImage('assets/svg/cameraIcon.svg');
+
   /// File path: assets/svg/chat.svg
   SvgGenImage get chat => const SvgGenImage('assets/svg/chat.svg');
 
@@ -120,6 +123,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/emoji_icon.svg
   SvgGenImage get emojiIcon => const SvgGenImage('assets/svg/emoji_icon.svg');
 
+  /// File path: assets/svg/fileIcon.svg
+  SvgGenImage get fileIcon => const SvgGenImage('assets/svg/fileIcon.svg');
+
   /// File path: assets/svg/filter_icon.svg
   SvgGenImage get filterIcon => const SvgGenImage('assets/svg/filter_icon.svg');
 
@@ -130,6 +136,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/forward_to.svg
   SvgGenImage get forwardTo => const SvgGenImage('assets/svg/forward_to.svg');
 
+  /// File path: assets/svg/galleryIcon.svg
+  SvgGenImage get galleryIcon =>
+      const SvgGenImage('assets/svg/galleryIcon.svg');
+
   /// File path: assets/svg/heyo_logo.svg
   SvgGenImage get heyoLogo => const SvgGenImage('assets/svg/heyo_logo.svg');
 
@@ -139,9 +149,16 @@ class $AssetsSvgGen {
   /// File path: assets/svg/invite_icon.svg
   SvgGenImage get inviteIcon => const SvgGenImage('assets/svg/invite_icon.svg');
 
+  /// File path: assets/svg/locationIcon.svg
+  SvgGenImage get locationIcon =>
+      const SvgGenImage('assets/svg/locationIcon.svg');
+
   /// File path: assets/svg/luna_connection.svg
   SvgGenImage get lunaConnection =>
       const SvgGenImage('assets/svg/luna_connection.svg');
+
+  /// File path: assets/svg/moneyIcon.svg
+  SvgGenImage get moneyIcon => const SvgGenImage('assets/svg/moneyIcon.svg');
 
   /// File path: assets/svg/more_icon.svg
   SvgGenImage get moreIcon => const SvgGenImage('assets/svg/more_icon.svg');
@@ -164,6 +181,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/pause_record_outlined_icon.svg
   SvgGenImage get pauseRecordOutlinedIcon =>
       const SvgGenImage('assets/svg/pause_record_outlined_icon.svg');
+
+  /// File path: assets/svg/personIcon.svg
+  SvgGenImage get personIcon => const SvgGenImage('assets/svg/personIcon.svg');
 
   /// File path: assets/svg/play_icon.svg
   SvgGenImage get playIcon => const SvgGenImage('assets/svg/play_icon.svg');
