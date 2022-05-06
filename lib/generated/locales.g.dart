@@ -164,6 +164,11 @@ class LocaleKeys {
   static const permissionDialog_allowAccess = 'permissionDialog_allowAccess';
   static const permissionDialog_locationSubtitle =
       'permissionDialog_locationSubtitle';
+  static const shareLocationPage_appBar = 'shareLocationPage_appBar';
+  static const shareLocationPage_bottomSheet_shareLiveLocation =
+      'shareLocationPage_bottomSheet_shareLiveLocation';
+  static const shareLocationPage_bottomSheet_sendCurrentLocation =
+      'shareLocationPage_bottomSheet_sendCurrentLocation';
   static const yesterday = 'yesterday';
   static const today = 'today';
   static const reply = 'reply';
@@ -297,6 +302,10 @@ class Locales {
     'permissionDialog_allowAccess': 'Allow access',
     'permissionDialog_locationSubtitle':
         'To share location, you need to allow Heyo access to your device\'s location.',
+    'shareLocationPage_appBar': 'Share Location',
+    'shareLocationPage_bottomSheet_shareLiveLocation': 'Share My Live Location',
+    'shareLocationPage_bottomSheet_sendCurrentLocation':
+        'Send My Current Location',
     'yesterday': 'Yesterday',
     'today': 'Today',
     'reply': 'Reply',

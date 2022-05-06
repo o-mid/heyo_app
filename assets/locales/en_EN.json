@@ -153,6 +153,13 @@
     "allowAccess": "Allow access",
     "locationSubtitle": "To share location, you need to allow Heyo access to your device's location."
   },
+  "shareLocationPage": {
+    "appBar": "Share Location",
+    "bottomSheet": {
+      "shareLiveLocation": "Share My Live Location",
+      "sendCurrentLocation": "Send My Current Location"
+    }
+  },
   "yesterday": "Yesterday",
   "today": "Today",
   "reply": "Reply",
