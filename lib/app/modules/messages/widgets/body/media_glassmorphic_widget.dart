@@ -23,8 +23,8 @@ class MediaGlassmorphic extends StatelessWidget {
             ? Column(
                 children: [
                   GlassmorphicContainer(
-                    width: 296.w,
-                    height: 176.h,
+                    width: 290.w,
+                    height: 156.h,
                     borderRadius: 8.r,
                     blur: 36,
                     border: 0,
@@ -38,13 +38,13 @@ class MediaGlassmorphic extends StatelessWidget {
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            circular_media_icon_button(
-                              backgroundColor: Color(0xffFFB500),
+                            CircularMediaIconButton(
+                              backgroundColor: const Color(0xffFFB500),
                               child: Assets.svg.cameraIcon.svg(
                                 height: 20.w,
                                 width: 20.w,
@@ -53,8 +53,8 @@ class MediaGlassmorphic extends StatelessWidget {
                               onPressed: () {},
                               padding: 18,
                             ),
-                            circular_media_icon_button(
-                              backgroundColor: Color(0xff16B4F2),
+                            CircularMediaIconButton(
+                              backgroundColor: const Color(0xff16B4F2),
                               child: Assets.svg.galleryIcon.svg(
                                 height: 20.w,
                                 width: 20.w,
@@ -63,8 +63,8 @@ class MediaGlassmorphic extends StatelessWidget {
                               onPressed: () {},
                               padding: 18,
                             ),
-                            circular_media_icon_button(
-                              backgroundColor: Color(0xff7E3CF9),
+                            CircularMediaIconButton(
+                              backgroundColor: const Color(0xff7E3CF9),
                               child: Assets.svg.locationIcon.svg(
                                 height: 20.w,
                                 width: 20.w,
@@ -78,8 +78,8 @@ class MediaGlassmorphic extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            circular_media_icon_button(
-                              backgroundColor: Color(0xffF93C53),
+                            CircularMediaIconButton(
+                              backgroundColor: const Color(0xffF93C53),
                               child: Assets.svg.fileIcon.svg(
                                 height: 20.w,
                                 width: 20.w,
@@ -88,8 +88,8 @@ class MediaGlassmorphic extends StatelessWidget {
                               onPressed: () {},
                               padding: 18,
                             ),
-                            circular_media_icon_button(
-                              backgroundColor: Color(0xff00B4B5),
+                            CircularMediaIconButton(
+                              backgroundColor: const Color(0xff00B4B5),
                               child: Assets.svg.moneyIcon.svg(
                                 height: 20.w,
                                 width: 20.w,
@@ -98,8 +98,8 @@ class MediaGlassmorphic extends StatelessWidget {
                               onPressed: () {},
                               padding: 18,
                             ),
-                            circular_media_icon_button(
-                              backgroundColor: Color(0xff003EB5),
+                            CircularMediaIconButton(
+                              backgroundColor: const Color(0xff003EB5),
                               child: Assets.svg.personIcon.svg(
                                 height: 20.w,
                                 width: 20.w,
@@ -116,7 +116,7 @@ class MediaGlassmorphic extends StatelessWidget {
                   CustomSizes.mediumSizedBoxHeight,
                 ],
               )
-            : SizedBox(),
+            : const SizedBox(),
       );
     });
   }
