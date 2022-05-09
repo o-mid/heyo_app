@@ -121,17 +121,20 @@ class ExpandableBottomSheetController extends ChangeNotifier {
 class DefaultBottomBarController extends StatefulWidget {
   /// The child of the [DefaultBottomBarController] widget
   final Widget child;
+  final bool isInitiallyOpen;
 
   /// Creates a default [ExpandableBottomSheetController] for the given [child] widget
-  DefaultBottomBarController({
+  const DefaultBottomBarController({
     Key? key,
     required this.child,
+    this.isInitiallyOpen = false,
   }) : super(key: key);
 
   /// Returns the nearest [ExpandableBottomSheetController] of the
   /// given [BuildContext]
   static ExpandableBottomSheetController of(BuildContext context) {
-    final _BottomBarControllerScope? scope = context.findAncestorWidgetOfExactType<_BottomBarControllerScope>();
+    final _BottomBarControllerScope? scope =
+        context.findAncestorWidgetOfExactType<_BottomBarControllerScope>();
     if (scope != null) {
       return scope.controller;
     } else {
@@ -145,12 +148,16 @@ class DefaultBottomBarController extends StatefulWidget {
   _DefaultBottomBarControllerState createState() => _DefaultBottomBarControllerState();
 }
 
-class _DefaultBottomBarControllerState extends State<DefaultBottomBarController> with SingleTickerProviderStateMixin {
+class _DefaultBottomBarControllerState extends State<DefaultBottomBarController>
+    with SingleTickerProviderStateMixin {
   late ExpandableBottomSheetController _controller;
 
   @override
   void initState() {
     _controller = ExpandableBottomSheetController(vsync: this);
+    if (widget.isInitiallyOpen) {
+      _controller.open();
+    }
     super.initState();
   }
 

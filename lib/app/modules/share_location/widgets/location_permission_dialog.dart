@@ -29,15 +29,13 @@ class LocationPermissionDialog extends StatelessWidget {
             title: LocaleKeys.permissionDialog_continue.tr,
             backgroundColor: COLORS.kGreenLighterColor,
             textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kGreenMainColor),
-            onTap: () {},
+            onTap: () => Get.back(result: true),
           ),
           CustomSizes.smallSizedBoxHeight,
           CustomButton(
             title: LocaleKeys.permissionDialog_notNow.tr,
             textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
-            onTap: () {
-              Get.back(result: false);
-            },
+            onTap: () => Get.back(result: false),
           ),
         ],
       ),
