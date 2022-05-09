@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_camera/flutter_camera.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
@@ -15,6 +16,8 @@ import 'package:heyo/app/modules/messages/data/models/metadatas/image_metadata.d
 import 'package:heyo/app/modules/messages/data/models/metadatas/video_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
+import 'package:heyo/app/modules/messages/widgets/body/camera_picker/image_editing_widget.dart';
+import 'package:heyo/app/modules/messages/widgets/body/camera_picker/receiver_name_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/delete_message_dialog.dart';
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/controllers/audio_message_controller.dart';
@@ -23,6 +26,8 @@ import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.d
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+
+import '../widgets/body/camera_picker/preview_button_widget.dart';
 
 class MessagesController extends GetxController {
   final _globalMessageController = Get.find<GlobalMessageController>();
@@ -687,5 +692,31 @@ class MessagesController extends GetxController {
   openMediaGlassmorphic() {
     isMediaGlassmorphicOpen.value = !isMediaGlassmorphicOpen.value;
     ;
+  }
+
+  // camera
+  Future<void> pick(BuildContext context) async {
+    final Size size = MediaQuery.of(context).size;
+    final double scale = MediaQuery.of(context).devicePixelRatio;
+    try {
+      final AssetEntity? _entity = await CameraPicker.pickFromCamera(context,
+          pickerConfig: CameraPickerConfig(
+            textDelegate: EnglishCameraPickerTextDelegate(),
+            sendIcon: const Icon(Icons.send),
+            receiverNameWidget: ReceiverNameWidget(name: args.chat.name),
+            additionalPreviewButtonWidget: const PreviewButtonWidget(),
+            previewTextInputDecoration: const InputDecoration(
+              hintText: 'Type something',
+              hintStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 17.0,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            imageEditingWidget: const ImageEditingWidget(),
+          ));
+    } catch (e) {
+      print(e);
+    }
   }
 }

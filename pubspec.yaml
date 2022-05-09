@@ -30,7 +30,7 @@ dependencies:
   flutter_camera:
     git:
       url: git@git.energy:heyo/flutter_camera
-
+      ref: development
 dev_dependencies:
   build_runner:
   flutter_gen_runner:
