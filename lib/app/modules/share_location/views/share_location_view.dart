@@ -48,6 +48,11 @@ class ShareLocationView extends GetView<ShareLocationController> {
                       controller: controller.controller!,
                       initZoom: 16,
                       trackMyPosition: true,
+                      onMapIsReady: (isReady) {
+                        if (isReady) {
+                          controller.updateCurrentAddress();
+                        }
+                      },
                       userLocationMarker: UserLocationMaker(
                         personMarker: const MarkerIcon(
                           icon: Icon(
@@ -80,7 +85,9 @@ class ShareLocationView extends GetView<ShareLocationController> {
                   top: 16.h,
                   right: 20.w,
                   child: GestureDetector(
-                    onTap: () => controller.controller?.enableTracking(),
+                    onTap: () {
+                      controller.controller?.enableTracking();
+                    },
                     child: Container(
                       padding: EdgeInsets.all(9.w),
                       width: 40.w,
@@ -121,6 +128,7 @@ class LocationBottomSheetWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ShareLocationController>();
     return GestureDetector(
       onVerticalDragUpdate: DefaultBottomBarController.of(context).onDrag,
       onVerticalDragEnd: DefaultBottomBarController.of(context).onDragEnd,
@@ -141,7 +149,6 @@ class LocationBottomSheetWidget extends StatelessWidget {
           expandedBody: Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              // color: Colors.red,
               borderRadius: BorderRadius.circular(20.r).copyWith(
                 bottomLeft: Radius.zero,
                 bottomRight: Radius.zero,
@@ -193,18 +200,23 @@ class LocationBottomSheetWidget extends StatelessWidget {
                         ),
                       ),
                       CustomSizes.mediumSizedBoxWidth,
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            LocaleKeys.shareLocationPage_bottomSheet_sendCurrentLocation.tr,
-                            style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
-                          ),
-                          Text(
-                            "Kocelova 11-11, 821 08, Bratislava", // Todo: show current user address
-                            style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
-                          ),
-                        ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              LocaleKeys.shareLocationPage_bottomSheet_sendCurrentLocation.tr,
+                              style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
+                            ),
+                            Obx(() {
+                              return Text(
+                                controller.currentAddress.value,
+                                maxLines: 2,
+                                style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
+                              );
+                            }),
+                          ],
+                        ),
                       ),
                     ],
                   ),

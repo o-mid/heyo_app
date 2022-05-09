@@ -29,6 +29,7 @@ dependencies:
   emojis: ^0.9.9
   flutter_osm_plugin: ^0.33.0+2
   permission_handler: ^9.2.0
+  osm_nominatim: ^2.0.1
 
 dependency_overrides:
   permission_handler: ^9.2.0
