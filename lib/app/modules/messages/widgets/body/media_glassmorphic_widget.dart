@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_camera/flutter_camera.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -11,6 +14,90 @@ import '../../controllers/messages_controller.dart';
 
 class MediaGlassmorphic extends StatelessWidget {
   const MediaGlassmorphic({Key? key}) : super(key: key);
+
+  Future<void> pick(BuildContext context) async {
+    final Size size = MediaQuery.of(context).size;
+    final double scale = MediaQuery.of(context).devicePixelRatio;
+    try {
+      final AssetEntity? _entity = await CameraPicker.pickFromCamera(context,
+          pickerConfig: CameraPickerConfig(
+            textDelegate: EnglishCameraPickerTextDelegate(),
+            sendIcon: const Icon(Icons.access_alarm_outlined),
+            receiverNameWidget: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8,
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.black, borderRadius: BorderRadius.circular(8)),
+              child: Text(
+                "dsd",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+            additionalPreviewButtonWidget: IconButton(
+                icon: const Icon(Icons.info_outlined, color: Colors.white),
+                onPressed: () {
+                  print('additionalPreviewButtonWidget');
+                }),
+            previewTextInputDecoration: const InputDecoration(
+              hintText: 'Type something',
+              hintStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 17.0,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            imageEditingWidget: Column(
+              children: [
+                const SizedBox(
+                  height: 24,
+                ),
+                Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4.0),
+                      color: Colors.black.withOpacity(0.7),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.ad_units_sharp,
+                            color: Colors.white,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.ad_units_sharp,
+                            color: Colors.white,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.ad_units_sharp,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ));
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +137,9 @@ class MediaGlassmorphic extends StatelessWidget {
                                 width: 20.w,
                               ),
                               // camera onPressed:
-                              onPressed: () {},
+                              onPressed: () {
+                                pick(context);
+                              },
                               padding: 18,
                             ),
                             CircularMediaIconButton(

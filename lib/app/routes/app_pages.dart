@@ -12,6 +12,8 @@ import '../modules/auth/sing-up/bindings/sing_up_binding.dart';
 import '../modules/auth/sing-up/views/sing_up_view.dart';
 import '../modules/calls/bindings/calls_binding.dart';
 import '../modules/calls/views/calls_view.dart';
+import '../modules/camera_capture/bindings/camera_capture_binding.dart';
+import '../modules/camera_capture/views/camera_capture_view.dart';
 import '../modules/forward_massages/bindings/forward_massages_binding.dart';
 import '../modules/forward_massages/views/forward_massages_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -107,6 +109,11 @@ class AppPages {
       name: _Paths.FORWARD_MASSAGES,
       page: () => ForwardMassagesView(),
       binding: ForwardMassagesBinding(),
+    ),
+    GetPage(
+      name: _Paths.CAMERA_CAPTURE,
+      page: () => CameraCaptureView(),
+      binding: CameraCaptureBinding(),
     ),
   ];
 }
