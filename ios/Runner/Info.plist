@@ -47,5 +47,13 @@
 		<false/>
 		<key>NSMicrophoneUsageDescription</key>
         <string>We need to access to the microphone to record audio file</string>
+       	<key>NSLocationAlwaysUsageDescription</key>
+       	<string>Location permission is required.</string>
+
+       	<key>NSLocationWhenInUseUsageDescription</key>
+       	<string>Location permission is required.</string>
+
+       	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+       	<string>Location permission is required.</string>
 	</dict>
 </plist>
