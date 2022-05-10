@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
 class ModifiedAlertDialog extends StatelessWidget {
@@ -26,7 +30,7 @@ class ModifiedAlertDialog extends StatelessWidget {
           return Future.value(!hideCloseSign);
         },
         child: AlertDialog(
-          insetPadding: EdgeInsets.all(20),
+          insetPadding: const EdgeInsets.all(20),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -75,11 +79,66 @@ Widget removeSign({required Function onPressed, bool hasError = false}) {
       onPressed();
     },
     child: Padding(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Assets.svg.closeSign.svg(
         width: 20.w,
         height: 20.w,
       ),
     ),
   );
+}
+
+class DefaultAlertDialogContent extends StatelessWidget {
+  /// Icon shown on top of dialog
+  final Widget indicatorIcon;
+  final Color indicatorBackgroundColor;
+  final String title;
+  final String subtitle;
+  final List<Widget> buttons;
+  const DefaultAlertDialogContent({
+    Key? key,
+    required this.indicatorIcon,
+    this.indicatorBackgroundColor = Colors.transparent,
+    required this.title,
+    required this.subtitle,
+    required this.buttons,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        children: [
+          Container(
+            width: 64.w,
+            height: 64.w,
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: indicatorBackgroundColor,
+              shape: BoxShape.circle,
+            ),
+            child: indicatorIcon,
+          ),
+          SizedBox(height: 24.w),
+          Text(
+            title,
+            style:
+                TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+          ),
+          CustomSizes.smallSizedBoxHeight,
+          Text(
+            subtitle,
+            textAlign: TextAlign.center,
+            style: TEXTSTYLES.kLinkSmall.copyWith(
+              fontWeight: FONTS.Regular,
+              color: COLORS.kTextBlueColor,
+            ),
+          ),
+          SizedBox(height: 24.w),
+          ...buttons,
+        ],
+      ),
+    );
+  }
 }

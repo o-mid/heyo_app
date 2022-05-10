@@ -56,11 +56,7 @@ class MediaGlassmorphic extends StatelessWidget {
                               ),
                               // camera onPressed:
                               onPressed: () async {
-                                // get thevar status = await Permission.camera.status;
-                                // if (status.isDenied) {
-                                //
                                 controller.pick(context);
-                                //  }
                               },
                               padding: 18,
                             ),

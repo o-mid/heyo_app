@@ -26,6 +26,7 @@ import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.d
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
+import 'package:heyo/app/modules/shared/widgets/permission_dialog.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -703,22 +704,29 @@ class MessagesController extends GetxController {
   Future<void> pick(BuildContext context) async {
     final Size size = MediaQuery.of(context).size;
     final double scale = MediaQuery.of(context).devicePixelRatio;
-    try {
-      final AssetEntity? _entity = await CameraPicker.pickFromCamera(context,
-          pickerConfig: CameraPickerConfig(
-            textDelegate: EnglishCameraPickerTextDelegate(),
-            sendIcon: Assets.svg.sendIcon.svg(),
-            receiverNameWidget: ReceiverNameWidget(name: args.chat.name),
-            additionalPreviewButtonWidget: const PreviewButtonWidget(),
-            previewTextInputDecoration: InputDecoration(
-              hintText: 'Type something',
-              hintStyle: TEXTSTYLES.kBodySmall
-                  .copyWith(color: COLORS.kTextSoftBlueColor),
-            ),
-            imageEditingWidget: const ImageEditingWidget(),
-          ));
-    } catch (e) {
-      print(e);
-    }
+    Get.dialog(
+      PermissionDialog(
+        indicatorIcon: Assets.svg.camerapermissionIcon.svg(),
+        title: LocaleKeys.Permissions_AllowAccess.tr,
+        subtitle: LocaleKeys.Permissions_camera.tr,
+      ),
+    );
+    // try {
+    //   final AssetEntity? _entity = await CameraPicker.pickFromCamera(context,
+    //       pickerConfig: CameraPickerConfig(
+    //         textDelegate: EnglishCameraPickerTextDelegate(),
+    //         sendIcon: Assets.svg.sendIcon.svg(),
+    //         receiverNameWidget: ReceiverNameWidget(name: args.chat.name),
+    //         additionalPreviewButtonWidget: const PreviewButtonWidget(),
+    //         previewTextInputDecoration: InputDecoration(
+    //           hintText: 'Type something',
+    //           hintStyle: TEXTSTYLES.kBodySmall
+    //               .copyWith(color: COLORS.kTextSoftBlueColor),
+    //         ),
+    //         imageEditingWidget: const ImageEditingWidget(),
+    //       ));
+    // } catch (e) {
+    //   print(e);
+    // }
   }
 }

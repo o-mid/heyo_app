@@ -161,5 +161,14 @@
     "buttons": {
       "addToContacts": "Add to contacts"
     }
+  },
+  "Permissions": {
+    "AllowAccess": "Allow access",
+    "capturePhotos": "To capture photos and videos, you need to allow Heyo access to \n your device’s photos, \n media and files.",
+    "camera": "To capture photos and videos, you need to \n allow Heyo access to your camera.",
+    "buttons": {
+      "Continue": "Continue",
+      "Notnow": "Not now"
+    }
   }
 }
