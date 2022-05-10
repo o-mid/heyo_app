@@ -23,10 +23,15 @@ import 'package:heyo/app/modules/shared/controllers/global_message_controller.da
 import 'package:heyo/app/modules/shared/data/controllers/audio_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/controllers/video_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
+import 'package:heyo/generated/assets.gen.dart';
+import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
+import '../../../../generated/assets.gen.dart';
 import '../widgets/body/camera_picker/preview_button_widget.dart';
 
 class MessagesController extends GetxController {
@@ -702,16 +707,13 @@ class MessagesController extends GetxController {
       final AssetEntity? _entity = await CameraPicker.pickFromCamera(context,
           pickerConfig: CameraPickerConfig(
             textDelegate: EnglishCameraPickerTextDelegate(),
-            sendIcon: const Icon(Icons.send),
+            sendIcon: Assets.svg.sendIcon.svg(),
             receiverNameWidget: ReceiverNameWidget(name: args.chat.name),
             additionalPreviewButtonWidget: const PreviewButtonWidget(),
-            previewTextInputDecoration: const InputDecoration(
+            previewTextInputDecoration: InputDecoration(
               hintText: 'Type something',
-              hintStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 17.0,
-                fontWeight: FontWeight.normal,
-              ),
+              hintStyle: TEXTSTYLES.kBodySmall
+                  .copyWith(color: COLORS.kTextSoftBlueColor),
             ),
             imageEditingWidget: const ImageEditingWidget(),
           ));

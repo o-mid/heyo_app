@@ -73,6 +73,9 @@ class $AssetsSvgGen {
   SvgGenImage get addToContactsIcon =>
       const SvgGenImage('assets/svg/add_to_contacts_icon.svg');
 
+  /// File path: assets/svg/arrowIcon.svg
+  SvgGenImage get arrowIcon => const SvgGenImage('assets/svg/arrowIcon.svg');
+
   /// File path: assets/svg/audio_call_icon.svg
   SvgGenImage get audioCallIcon =>
       const SvgGenImage('assets/svg/audio_call_icon.svg');
@@ -162,6 +165,10 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/more_icon.svg
   SvgGenImage get moreIcon => const SvgGenImage('assets/svg/more_icon.svg');
+
+  /// File path: assets/svg/multipleSelectIcon.svg
+  SvgGenImage get multipleSelectIcon =>
+      const SvgGenImage('assets/svg/multipleSelectIcon.svg');
 
   /// File path: assets/svg/new_chat.svg
   SvgGenImage get newChat => const SvgGenImage('assets/svg/new_chat.svg');

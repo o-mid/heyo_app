@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heyo/generated/assets.gen.dart';
 
 class PreviewButtonWidget extends StatelessWidget {
   const PreviewButtonWidget({
@@ -8,11 +9,8 @@ class PreviewButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-        child: const Icon(
-          Icons.info_outlined,
-          color: Colors.white,
-        ),
-        padding: EdgeInsets.all(0),
+        child: Assets.svg.multipleSelectIcon.svg(),
+        padding: const EdgeInsets.all(0),
         minWidth: 0,
         shape: const CircleBorder(),
         onPressed: () {

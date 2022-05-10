@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/widgets/glassmorphic_container.dart';
 import 'package:heyo/generated/assets.gen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../routes/app_pages.dart';
 import '../../../shared/utils/screen-utils/sizing/custom_sizes.dart';
@@ -54,8 +55,12 @@ class MediaGlassmorphic extends StatelessWidget {
                                 width: 20.w,
                               ),
                               // camera onPressed:
-                              onPressed: () {
+                              onPressed: () async {
+                                // get thevar status = await Permission.camera.status;
+                                // if (status.isDenied) {
+                                //
                                 controller.pick(context);
+                                //  }
                               },
                               padding: 18,
                             ),
