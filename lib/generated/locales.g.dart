@@ -132,6 +132,7 @@ class LocaleKeys {
   static const MessagesPage_replyToVideo = 'MessagesPage_replyToVideo';
   static const MessagesPage_replyToAudio = 'MessagesPage_replyToAudio';
   static const MessagesPage_forwarded = 'MessagesPage_forwarded';
+  static const MessagesPage_sharedLocation = 'MessagesPage_sharedLocation';
   static const MessagesPage_deleteMessagesDialog_title =
       'MessagesPage_deleteMessagesDialog_title';
   static const MessagesPage_deleteMessagesDialog_titlePlural =
@@ -280,6 +281,7 @@ class Locales {
     'MessagesPage_replyToVideo': 'Video',
     'MessagesPage_replyToAudio': 'Audio',
     'MessagesPage_forwarded': 'Forwarded',
+    'MessagesPage_sharedLocation': 'Shared location',
     'MessagesPage_deleteMessagesDialog_title': 'Delete message?',
     'MessagesPage_deleteMessagesDialog_titlePlural': 'Delete @count messages?',
     'MessagesPage_deleteMessagesDialog_subtitle': 'Delete this message?',

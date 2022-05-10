@@ -7,6 +7,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/location_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/audio_metadata.dart';
@@ -55,6 +56,7 @@ class MessagesController extends GetxController {
         args.forwardedMessages!.map(
           (m) => m.copyWith(
             // messageId: , // Todo: Generate new id for forwarded message
+            isFromMe: true,
             isForwarded: true,
             status: MESSAGE_STATUS.SENDING,
             clearReply: true,
@@ -638,6 +640,15 @@ class MessagesController extends GetxController {
         messageId: "${index++}",
         metadata: AudioMetadata(durationInSeconds: 19),
         url: "https://download.samplelib.com/mp3/sample-15s.mp3",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      LocationMessageModel(
+        messageId: "${index++}",
+        latitude: 48.153445,
+        longitude: 17.129925,
+        address: "Kocelova 11-11, 821 08, Bratislava",
         timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,

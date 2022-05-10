@@ -39,8 +39,9 @@ class ImageMessageModel extends MessageModel {
     MESSAGE_STATUS? status,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
-    bool? isSelected,
+    bool? isFromMe,
     bool? isForwarded,
+    bool? isSelected,
     bool clearReply = false,
   }) {
     return ImageMessageModel(
@@ -51,7 +52,7 @@ class ImageMessageModel extends MessageModel {
       senderName: senderName,
       senderAvatar: senderAvatar,
       status: status ?? this.status,
-      isFromMe: isFromMe,
+      isFromMe: isFromMe ?? this.isFromMe,
       isForwarded: isForwarded ?? this.isForwarded,
       isSelected: isSelected ?? this.isSelected,
       reactions: reactions ?? this.reactions,

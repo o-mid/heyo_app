@@ -1,14 +1,14 @@
-import 'package:heyo/app/modules/messages/data/models/metadatas/video_metadata.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 
-import 'message_model.dart';
-import '../reaction_model.dart';
-
-class VideoMessageModel extends MessageModel {
-  final String url;
-  final VideoMetadata metadata;
-  VideoMessageModel({
-    required this.url,
-    required this.metadata,
+class LocationMessageModel extends MessageModel {
+  final double latitude;
+  final double longitude;
+  final String address;
+  LocationMessageModel({
+    required this.latitude,
+    required this.longitude,
+    required this.address,
     required String messageId,
     required DateTime timestamp,
     required String senderName,
@@ -33,7 +33,7 @@ class VideoMessageModel extends MessageModel {
         );
 
   @override
-  VideoMessageModel copyWith({
+  MessageModel copyWith({
     String? messageId,
     MESSAGE_STATUS? status,
     DateTime? timestamp,
@@ -43,9 +43,10 @@ class VideoMessageModel extends MessageModel {
     bool? isSelected,
     bool clearReply = false,
   }) {
-    return VideoMessageModel(
-      url: url,
-      metadata: metadata,
+    return LocationMessageModel(
+      address: address,
+      latitude: latitude,
+      longitude: longitude,
       messageId: messageId ?? this.messageId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,

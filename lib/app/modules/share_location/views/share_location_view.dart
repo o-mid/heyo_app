@@ -25,7 +25,7 @@ class ShareLocationView extends GetView<ShareLocationController> {
           style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kWhiteColor),
         ),
         leading: IconButton(
-          onPressed: (() => Get.back()),
+          onPressed: Get.back,
           icon: const Icon(
             Icons.arrow_back,
             color: COLORS.kWhiteColor,
