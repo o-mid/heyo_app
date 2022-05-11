@@ -1,5 +1,6 @@
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
 import 'package:heyo/app/modules/share_location/data/models/nominatim_address.dart';
 import 'package:heyo/app/modules/share_location/widgets/location_permission_dialog.dart';
 import 'package:osm_nominatim/osm_nominatim.dart';
@@ -52,5 +53,19 @@ class ShareLocationController extends GetxController {
     );
 
     currentAddress.value = NominatimAddress.fromJson(place.address ?? {}).requestStr;
+  }
+
+  void sendCurrentLocation() async {
+    final currentLocation = await controller?.myLocation();
+    if (currentLocation == null) {
+      return;
+    }
+    Get.find<MessagesController>().prepareLocationMessageForSending(
+      latitude: currentLocation.latitude,
+      longitude: currentLocation.longitude,
+      address: currentAddress.value,
+    );
+
+    Get.back();
   }
 }

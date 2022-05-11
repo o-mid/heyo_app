@@ -3,11 +3,10 @@ import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/share_location/widgets/location_bottom_sheet_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/expandable_bottom_sheet/expandable_bottom_sheet_controller.dart';
-import 'package:heyo/app/modules/shared/widgets/expandable_bottom_sheet/expandable_bottom_sheet_widget.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
@@ -119,118 +118,6 @@ class ShareLocationView extends GetView<ShareLocationController> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class LocationBottomSheetWidget extends StatelessWidget {
-  const LocationBottomSheetWidget({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = Get.find<ShareLocationController>();
-    return GestureDetector(
-      onVerticalDragUpdate: DefaultBottomBarController.of(context).onDrag,
-      onVerticalDragEnd: DefaultBottomBarController.of(context).onDragEnd,
-      child: LayoutBuilder(builder: (context, constraints) {
-        return ExpandableBottomSheet(
-          expandedHeight: constraints.maxHeight * 0.55,
-          horizontalMargin: 0,
-          expandedBackColor: COLORS.kWhiteColor,
-          bottomSheetBody: Container(
-            padding: EdgeInsets.only(top: 3.h),
-            width: 40.w,
-            height: 0,
-            color: const Color(0xffd2d2d2),
-            child: Container(
-              color: COLORS.kWhiteColor,
-            ),
-          ),
-          expandedBody: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.r).copyWith(
-                bottomLeft: Radius.zero,
-                bottomRight: Radius.zero,
-              ),
-            ),
-            child: Column(
-              // Todo: fix overflow error when expanding/collapsing
-              children: [
-                SizedBox(height: 24.h),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 40.w,
-                        height: 40.w,
-                        padding: EdgeInsets.all(10.w),
-                        decoration: const BoxDecoration(
-                          color: COLORS.kGreenMainColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Assets.svg.liveLocation.svg(
-                          color: COLORS.kWhiteColor,
-                        ),
-                      ),
-                      CustomSizes.mediumSizedBoxWidth,
-                      Text(
-                        LocaleKeys.shareLocationPage_bottomSheet_shareLiveLocation.tr,
-                        style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
-                      ),
-                    ],
-                  ),
-                ),
-                CustomSizes.mediumSizedBoxHeight,
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 40.w,
-                        height: 40.w,
-                        padding: EdgeInsets.all(10.w),
-                        decoration: const BoxDecoration(
-                          color: COLORS.kBlueLightColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Assets.svg.target.svg(
-                          color: COLORS.kDarkBlueColor,
-                        ),
-                      ),
-                      CustomSizes.mediumSizedBoxWidth,
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              LocaleKeys.shareLocationPage_bottomSheet_sendCurrentLocation.tr,
-                              style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
-                            ),
-                            Obx(() {
-                              return Text(
-                                controller.currentAddress.value,
-                                maxLines: 2,
-                                style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
-                              );
-                            }),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 24.h),
-                const Divider(
-                  color: COLORS.kPinCodeDeactivateColor,
-                  thickness: 1,
-                ),
-              ],
-            ),
-          ),
-        );
-      }),
     );
   }
 }

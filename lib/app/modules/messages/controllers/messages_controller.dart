@@ -37,6 +37,7 @@ class MessagesController extends GetxController {
   final messages = <MessageModel>[].obs;
   final selectedMessages = <MessageModel>[].obs;
   final replyingTo = Rxn<ReplyToModel>();
+  final locationMessage = Rxn<LocationMessageModel>();
   StreamSubscription? keyboardListener;
   late MessagesViewArgumentsModel args;
 
@@ -257,6 +258,43 @@ class MessagesController extends GetxController {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       jumpToBottom();
     });
+  }
+
+  void sendLocationMessage() {
+    final message = locationMessage.value;
+    if (message == null) {
+      return;
+    }
+
+    messages.add(message);
+
+    messages.refresh();
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      jumpToBottom();
+    });
+
+    // Todo (libp2p): send message
+
+    locationMessage.value = null;
+  }
+
+  void prepareLocationMessageForSending({
+    required double latitude,
+    required double longitude,
+    required String address,
+  }) {
+    //
+    locationMessage.value = LocationMessageModel(
+      latitude: latitude,
+      longitude: longitude,
+      address: address,
+      messageId: (messages.length + 1).toString(),
+      timestamp: DateTime.now(),
+      senderName: "",
+      senderAvatar: "",
+      isFromMe: true,
+    );
   }
 
   void replyTo() {
