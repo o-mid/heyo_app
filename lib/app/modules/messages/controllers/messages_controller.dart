@@ -30,6 +30,7 @@ import 'package:heyo/app/modules/shared/widgets/permission_dialog.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../../../generated/assets.gen.dart';
@@ -704,29 +705,63 @@ class MessagesController extends GetxController {
   Future<void> pick(BuildContext context) async {
     final Size size = MediaQuery.of(context).size;
     final double scale = MediaQuery.of(context).devicePixelRatio;
-    Get.dialog(
-      PermissionDialog(
+    bool _isCameraDenied = await Permission.camera.isDenied;
+    bool _isMediaDenied = await Permission.mediaLibrary.isDenied;
+    if (GetPlatform.isAndroid) {
+      _isMediaDenied = false;
+    }
+    if (_isMediaDenied) {
+      bool _result = await Get.dialog(PermissionDialog(
+        indicatorIcon: Assets.svg.camerapermissionIcon.svg(),
+        title: LocaleKeys.Permissions_AllowAccess.tr,
+        subtitle: LocaleKeys.Permissions_capturePhotos.tr,
+      ));
+      if (_result) {
+        await Permission.mediaLibrary.request().then((value) {
+          if (value.isGranted) {
+            _isMediaDenied = false;
+          }
+        });
+      }
+    }
+
+    if (_isCameraDenied) {
+      bool _result = await Get.dialog(PermissionDialog(
         indicatorIcon: Assets.svg.camerapermissionIcon.svg(),
         title: LocaleKeys.Permissions_AllowAccess.tr,
         subtitle: LocaleKeys.Permissions_camera.tr,
-      ),
-    );
-    // try {
-    //   final AssetEntity? _entity = await CameraPicker.pickFromCamera(context,
-    //       pickerConfig: CameraPickerConfig(
-    //         textDelegate: EnglishCameraPickerTextDelegate(),
-    //         sendIcon: Assets.svg.sendIcon.svg(),
-    //         receiverNameWidget: ReceiverNameWidget(name: args.chat.name),
-    //         additionalPreviewButtonWidget: const PreviewButtonWidget(),
-    //         previewTextInputDecoration: InputDecoration(
-    //           hintText: 'Type something',
-    //           hintStyle: TEXTSTYLES.kBodySmall
-    //               .copyWith(color: COLORS.kTextSoftBlueColor),
-    //         ),
-    //         imageEditingWidget: const ImageEditingWidget(),
-    //       ));
-    // } catch (e) {
-    //   print(e);
-    // }
+      ));
+      if (_result) {
+        await Permission.camera.request().then((value) {
+          if (value.isGranted) {
+            _isCameraDenied = false;
+          }
+        });
+      }
+    }
+
+    if (!_isCameraDenied && !_isMediaDenied) {
+      openCameraPicker(context);
+    }
+  }
+
+  Future<void> openCameraPicker(BuildContext context) async {
+    try {
+      final AssetEntity? _entity = await CameraPicker.pickFromCamera(context,
+          pickerConfig: CameraPickerConfig(
+            textDelegate: EnglishCameraPickerTextDelegate(),
+            sendIcon: Assets.svg.sendIcon.svg(),
+            receiverNameWidget: ReceiverNameWidget(name: args.chat.name),
+            additionalPreviewButtonWidget: const PreviewButtonWidget(),
+            previewTextInputDecoration: InputDecoration(
+              hintText: 'Type something',
+              hintStyle: TEXTSTYLES.kBodySmall
+                  .copyWith(color: COLORS.kTextSoftBlueColor),
+            ),
+            imageEditingWidget: const ImageEditingWidget(),
+          ));
+    } catch (e) {
+      print(e);
+    }
   }
 }
