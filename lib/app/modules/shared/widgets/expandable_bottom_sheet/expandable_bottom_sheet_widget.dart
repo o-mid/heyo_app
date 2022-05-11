@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -30,14 +29,9 @@ class ExpandableBottomSheet extends StatefulWidget {
   /// Height of the bottom sheet
   final double height;
 
-  final double notchMargin;
-
   /// [BoxConstraints] which determines the final height
   /// of the panel
   final BoxConstraints? constraints;
-
-  /// [NotchedShape] shape for a [FloatingActionButton]
-  final NotchedShape? shape;
 
   /// Background [Color] for the panel
   final Color? expandedBackColor;
@@ -65,7 +59,6 @@ class ExpandableBottomSheet extends StatefulWidget {
     this.expandedHeight,
     this.horizontalMargin = 16,
     this.bottomOffset = 10,
-    this.shape,
     this.height = kToolbarHeight,
     this.attachSide = Side.Bottom,
     this.constraints,
@@ -75,7 +68,6 @@ class ExpandableBottomSheet extends StatefulWidget {
     this.expandedBackColor,
     this.expandedDecoration,
     this.controller,
-    this.notchMargin = 5,
   })  : assert(!(expandedBackColor != null && expandedDecoration != null)),
         super(key: key);
 
@@ -190,64 +182,16 @@ class _ExpandableBottomSheetState extends State<ExpandableBottomSheet> {
                 ],
               ),
             ),
-            ClipPath(
+            Positioned(
+              bottom: widget.height,
               child: Transform.scale(
                 scale: 1 - panelState,
-                child: Container(
-                  color: widget.bottomSheetColor ?? Theme.of(context).bottomAppBarColor,
-                  height: widget.height + viewPadding.vertical,
-                  child: Padding(
-                    padding: viewPadding,
-                    child: widget.bottomSheetBody,
-                  ),
-                ),
+                child: widget.bottomSheetBody,
               ),
-              clipper: widget.shape != null
-                  ? _BottomSheetClipper(
-                      geometry: Scaffold.geometryOf(context),
-                      shape: widget.shape!,
-                      notchMargin: widget.notchMargin,
-                      buttonOffset: widget.bottomOffset,
-                    )
-                  : null,
             ),
           ],
         );
       },
     );
-  }
-}
-
-// Copied from Flutter SDK
-class _BottomSheetClipper extends CustomClipper<Path> {
-  const _BottomSheetClipper({
-    required this.geometry,
-    required this.shape,
-    required this.notchMargin,
-    required this.buttonOffset,
-  }) : super(reclip: geometry);
-
-  final ValueListenable<ScaffoldGeometry> geometry;
-  final NotchedShape shape;
-  final double notchMargin;
-  final double buttonOffset;
-
-  @override
-  Path getClip(Size size) {
-    // button is the floating action button's bounding rectangle in the
-    // coordinate system whose origin is at the appBar's top left corner,
-    // or null if there is no floating action button.
-    final Rect? button = geometry.value.floatingActionButtonArea?.translate(
-      0.0,
-      (geometry.value.bottomNavigationBarTop ?? 0) * -1.0 - buttonOffset,
-    );
-    return shape.getOuterPath(Offset(0, 0) & size, button?.inflate(notchMargin));
-  }
-
-  @override
-  bool shouldReclip(_BottomSheetClipper oldClipper) {
-    return oldClipper.geometry != geometry ||
-        oldClipper.shape != shape ||
-        oldClipper.notchMargin != notchMargin;
   }
 }

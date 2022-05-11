@@ -27,13 +27,9 @@ class LocationBottomSheetWidget extends StatelessWidget {
           horizontalMargin: 0,
           expandedBackColor: COLORS.kWhiteColor,
           bottomSheetBody: Container(
-            padding: EdgeInsets.only(top: 3.h),
             width: 40.w,
-            height: 0,
+            height: 3.h,
             color: const Color(0xffd2d2d2),
-            child: Container(
-              color: COLORS.kWhiteColor,
-            ),
           ),
           expandedBody: Container(
             width: double.infinity,
