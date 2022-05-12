@@ -25,10 +25,7 @@ class PermissionDialog extends StatelessWidget {
     return ModifiedAlertDialog(
       hideCloseSign: true,
       alertContent: DefaultAlertDialogContent(
-        indicatorIcon: Assets.svg.arrowIcon.svg(
-          width: 28.w,
-          height: 28.w,
-        ),
+        indicatorIcon: indicatorIcon,
         indicatorBackgroundColor: COLORS.kGreenLighterColor,
         title: title,
         subtitle: subtitle,

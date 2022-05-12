@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_camera/flutter_camera.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
@@ -698,7 +699,6 @@ class MessagesController extends GetxController {
   RxBool isMediaGlassmorphicOpen = false.obs;
   openMediaGlassmorphic() {
     isMediaGlassmorphicOpen.value = !isMediaGlassmorphicOpen.value;
-    ;
   }
 
   // camera
@@ -712,7 +712,10 @@ class MessagesController extends GetxController {
     }
     if (_isMediaDenied) {
       bool _result = await Get.dialog(PermissionDialog(
-        indicatorIcon: Assets.svg.camerapermissionIcon.svg(),
+        indicatorIcon: Assets.svg.camerapermissionIcon.svg(
+          width: 28.w,
+          height: 28.w,
+        ),
         title: LocaleKeys.Permissions_AllowAccess.tr,
         subtitle: LocaleKeys.Permissions_capturePhotos.tr,
       ));
@@ -727,7 +730,10 @@ class MessagesController extends GetxController {
 
     if (_isCameraDenied) {
       bool _result = await Get.dialog(PermissionDialog(
-        indicatorIcon: Assets.svg.camerapermissionIcon.svg(),
+        indicatorIcon: Assets.svg.camerapermissionIcon.svg(
+          width: 28.w,
+          height: 28.w,
+        ),
         title: LocaleKeys.Permissions_AllowAccess.tr,
         subtitle: LocaleKeys.Permissions_camera.tr,
       ));
