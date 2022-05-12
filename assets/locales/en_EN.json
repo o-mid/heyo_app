@@ -158,7 +158,12 @@
     "appBar": "Share Location",
     "bottomSheet": {
       "shareLiveLocation": "Share My Live Location",
-      "sendCurrentLocation": "Send My Current Location"
+      "sendCurrentLocation": "Send My Current Location",
+      "locationAccessDisclaimer": "We will access your location only for the duration you chosen and you can stop sharing it any time. We won’t use your location for any purpose other than sharing it in this chat.",
+      "shareLiveLocationWith": "Share my live location with @name for:",
+      "shareDurationMinutes": "@count mins",
+      "shareDurationHour": "@count hour",
+      "shareDurationHours": "@count hours"
     }
   },
   "yesterday": "Yesterday",

@@ -9,12 +9,14 @@ import 'package:permission_handler/permission_handler.dart';
 class ShareLocationController extends GetxController {
   final _controller = Rxn<MapController>();
   final currentAddress = "".obs;
+  late String chatName;
 
   MapController? get controller => _controller.value;
 
   @override
   void onInit() {
     super.onInit();
+    chatName = Get.find<MessagesController>().args.chat.name;
   }
 
   @override

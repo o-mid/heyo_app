@@ -170,6 +170,16 @@ class LocaleKeys {
       'shareLocationPage_bottomSheet_shareLiveLocation';
   static const shareLocationPage_bottomSheet_sendCurrentLocation =
       'shareLocationPage_bottomSheet_sendCurrentLocation';
+  static const shareLocationPage_bottomSheet_locationAccessDisclaimer =
+      'shareLocationPage_bottomSheet_locationAccessDisclaimer';
+  static const shareLocationPage_bottomSheet_shareLiveLocationWith =
+      'shareLocationPage_bottomSheet_shareLiveLocationWith';
+  static const shareLocationPage_bottomSheet_shareDurationMinutes =
+      'shareLocationPage_bottomSheet_shareDurationMinutes';
+  static const shareLocationPage_bottomSheet_shareDurationHour =
+      'shareLocationPage_bottomSheet_shareDurationHour';
+  static const shareLocationPage_bottomSheet_shareDurationHours =
+      'shareLocationPage_bottomSheet_shareDurationHours';
   static const yesterday = 'yesterday';
   static const today = 'today';
   static const reply = 'reply';
@@ -308,6 +318,13 @@ class Locales {
     'shareLocationPage_bottomSheet_shareLiveLocation': 'Share My Live Location',
     'shareLocationPage_bottomSheet_sendCurrentLocation':
         'Send My Current Location',
+    'shareLocationPage_bottomSheet_locationAccessDisclaimer':
+        'We will access your location only for the duration you chosen and you can stop sharing it any time. We won’t use your location for any purpose other than sharing it in this chat.',
+    'shareLocationPage_bottomSheet_shareLiveLocationWith':
+        'Share my live location with @name for:',
+    'shareLocationPage_bottomSheet_shareDurationMinutes': '@count mins',
+    'shareLocationPage_bottomSheet_shareDurationHour': '@count hour',
+    'shareLocationPage_bottomSheet_shareDurationHours': '@count hours',
     'yesterday': 'Yesterday',
     'today': 'Today',
     'reply': 'Reply',
