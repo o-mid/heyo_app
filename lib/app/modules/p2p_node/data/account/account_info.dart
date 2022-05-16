@@ -10,5 +10,5 @@ abstract class AccountInfo {
 
   Future<String?> getCoreId();
 
-  Future<String?> getPrivateKey(String coreId);
+  Future<String?> getPrivateKey();
 }

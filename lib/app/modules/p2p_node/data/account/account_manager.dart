@@ -80,7 +80,7 @@ class AccountManager extends AccountInfo {
   }
 
   @override
-  Future<String?> getPrivateKey(String coreId) async {
+  Future<String?> getPrivateKey() async {
     final _prevs = await localProvider.readFromStorage(CRED_KEY_IN_STORE);
     if (_prevs == null) {
       return null;

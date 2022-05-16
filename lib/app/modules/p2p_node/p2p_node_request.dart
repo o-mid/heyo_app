@@ -31,7 +31,7 @@ class P2PNodeRequestStream {
     if (event.name == P2PReqResNodeNames.login &&
         event.error == null &&
         event.body != null) {
-      debugPrint("_onNewRequestEvent: New login received");
+      debugPrint("_onNewRequestEvent: New login request received");
       // MARK: here we are telling the sending party that everything is ok and the req was received
       await FlutterP2pCommunicator.sendResponse(
           info: P2PReqResNodeModel(
