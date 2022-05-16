@@ -19,6 +19,7 @@ import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
 import 'package:heyo/app/modules/messages/widgets/delete_message_dialog.dart';
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
+import 'package:heyo/app/modules/shared/controllers/live_location_controller.dart';
 import 'package:heyo/app/modules/shared/data/controllers/audio_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/controllers/video_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
@@ -299,7 +300,18 @@ class MessagesController extends GetxController {
   }
 
   stopSharingLiveLocation(LiveLocationMessageModel message) {
-    // Todo: update message and remove message id from live location controller
+    Get.find<LiveLocationController>().removeIdFromSharingList(message.messageId);
+
+    final index = messages.indexWhere((m) => m.messageId == message.messageId);
+
+    if (index < 0) {
+      return;
+    }
+
+    messages[index] = message.copyWith(endTime: DateTime.now());
+    messages.refresh();
+
+    // Todo (libp2p): update message
   }
 
   void sendLiveLocation({
@@ -325,7 +337,7 @@ class MessagesController extends GetxController {
     });
 
     // Todo (libp2p): send message
-    // Todo: add message id to live location controller
+    Get.find<LiveLocationController>().startSharing(message.messageId, duration);
   }
 
   void replyTo() {
