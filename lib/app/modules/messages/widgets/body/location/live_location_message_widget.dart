@@ -23,12 +23,18 @@ class _LiveLocationMessageWidgetState extends State<LiveLocationMessageWidget> {
   Widget build(BuildContext context) {
     return widget.message.endTime.isBefore(DateTime.now())
         ? BaseLocationMessageWidget(
-            title: LocaleKeys.MessagesPage_finishedLiveShareTitle.tr,
-            subtitle: LocaleKeys.MessagesPage_finishedLiveShareSubtitle.trParams({
-              "day": DateFormat('E').format(widget.message.endTime),
-              "clock":
-                  "${widget.message.endTime.hour}:${widget.message.endTime.minute.toString().padLeft(2, '0')}"
-            }),
+            title: widget.message.isFromMe
+                ? LocaleKeys.MessagesPage_finishedLiveShareTitle.tr
+                : LocaleKeys.MessagesPage_finishedLiveShareOtherTitle.trParams(
+                    {'user': widget.message.senderName},
+                  ),
+            subtitle: LocaleKeys.MessagesPage_finishedLiveShareSubtitle.trParams(
+              {
+                "day": DateFormat('E').format(widget.message.endTime),
+                "clock":
+                    "${widget.message.endTime.hour}:${widget.message.endTime.minute.toString().padLeft(2, '0')}",
+              },
+            ),
             latitude: widget.message.latitude,
             longitude: widget.message.longitude,
           )

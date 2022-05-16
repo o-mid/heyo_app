@@ -134,6 +134,7 @@
     "liveShareLessThanMinute": "Less than a minute",
     "liveShareRemainingTime": "@time remaining",
     "finishedLiveShareTitle": "You shared your location",
+    "finishedLiveShareOtherTitle": "@user shared their location",
     "finishedLiveShareSubtitle": "Ended on @day at @clock",
     "stopSharing": "Stop sharing",
     "deleteMessagesDialog": {

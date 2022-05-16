@@ -149,6 +149,8 @@ class LocaleKeys {
       'MessagesPage_liveShareRemainingTime';
   static const MessagesPage_finishedLiveShareTitle =
       'MessagesPage_finishedLiveShareTitle';
+  static const MessagesPage_finishedLiveShareOtherTitle =
+      'MessagesPage_finishedLiveShareOtherTitle';
   static const MessagesPage_finishedLiveShareSubtitle =
       'MessagesPage_finishedLiveShareSubtitle';
   static const MessagesPage_stopSharing = 'MessagesPage_stopSharing';
@@ -319,6 +321,7 @@ class Locales {
     'MessagesPage_liveShareLessThanMinute': 'Less than a minute',
     'MessagesPage_liveShareRemainingTime': '@time remaining',
     'MessagesPage_finishedLiveShareTitle': 'You shared your location',
+    'MessagesPage_finishedLiveShareOtherTitle': '@user shared their location',
     'MessagesPage_finishedLiveShareSubtitle': 'Ended on @day at @clock',
     'MessagesPage_stopSharing': 'Stop sharing',
     'MessagesPage_deleteMessagesDialog_title': 'Delete message?',
