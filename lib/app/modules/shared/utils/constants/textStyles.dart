@@ -16,8 +16,8 @@ class TEXTSTYLES {
     fontFamily: FONTS.interFamily,
     fontStyle: FontStyle.normal,
     fontWeight: FONTS.Bold,
-    fontSize: 26.0.sp,
-    height: 1.0,
+    fontSize: 19.0.sp,
+    height: 1.31,
   );
 
   static TextStyle kHeaderMedium = TextStyle(
@@ -77,5 +77,61 @@ class TEXTSTYLES {
     fontSize: 8.0.sp,
     height: 1.25,
     letterSpacing: 0.8,
+  );
+
+  ///
+  static TextStyle kChatName = TextStyle(
+      fontFamily: FONTS.interFamily,
+      fontStyle: FontStyle.normal,
+      fontWeight: FONTS.Medium,
+      fontSize: 14.0.sp,
+      height: 1.22);
+
+  static TextStyle kChatText = TextStyle(
+    fontFamily: FONTS.interFamily,
+    fontStyle: FontStyle.normal,
+    fontWeight: FONTS.Regular,
+    fontSize: 13.0.sp,
+    height: 1.22,
+  );
+  static TextStyle kChatLink = TextStyle(
+    fontFamily: FONTS.interFamily,
+    fontStyle: FontStyle.normal,
+    fontWeight: FONTS.Regular,
+    fontSize: 13.0.sp,
+    height: 1.22,
+  );
+
+  ///
+  static TextStyle kLinkBig = TextStyle(
+    fontFamily: FONTS.interFamily,
+    fontStyle: FontStyle.normal,
+    fontWeight: FONTS.Medium,
+    fontSize: 15.0.sp,
+    height: 1.46,
+  );
+  static TextStyle kLinkSmall = TextStyle(
+    fontFamily: FONTS.interFamily,
+    fontStyle: FontStyle.normal,
+    fontWeight: FONTS.Medium,
+    fontSize: 13.0.sp,
+    height: 1.38,
+  );
+
+  ///
+  static TextStyle kReactionEmoji = TextStyle(
+    fontFamily: FONTS.interFamily,
+    fontStyle: FontStyle.normal,
+    fontWeight: FONTS.Medium,
+    fontSize: 16.0.sp,
+    height: 1.18,
+  );
+
+  static TextStyle kReactionNumber = TextStyle(
+    fontFamily: FONTS.interFamily,
+    fontStyle: FontStyle.normal,
+    fontWeight: FONTS.Medium,
+    fontSize: 10.0.sp,
+    height: 1.21,
   );
 }

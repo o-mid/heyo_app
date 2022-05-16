@@ -94,6 +94,84 @@ class LocaleKeys {
       'HomePage_Chats_emptyState_subtitle';
   static const HomePage_Chats_emptyState_invite =
       'HomePage_Chats_emptyState_invite';
+  static const HomePage_bottomSheet_newChat = 'HomePage_bottomSheet_newChat';
+  static const HomePage_bottomSheet_newGroup = 'HomePage_bottomSheet_newGroup';
+  static const HomePage_bottomSheet_invite = 'HomePage_bottomSheet_invite';
+  static const newChat_newChatAppBar = 'newChat_newChatAppBar';
+  static const newChat_slider_contacts = 'newChat_slider_contacts';
+  static const newChat_slider_nearbyUsers = 'newChat_slider_nearbyUsers';
+  static const newChat_usernameInputFiled = 'newChat_usernameInputFiled';
+  static const newChat_emptyStateTitleContacts =
+      'newChat_emptyStateTitleContacts';
+  static const newChat_emptyStateTitleNearbyUsers =
+      'newChat_emptyStateTitleNearbyUsers';
+  static const newChat_usernameInput = 'newChat_usernameInput';
+  static const newChat_searchResults = 'newChat_searchResults';
+  static const newChat_buttons_invite = 'newChat_buttons_invite';
+  static const newChat_buttons_filter = 'newChat_buttons_filter';
+  static const newChat_buttons_pullDownToRefresh =
+      'newChat_buttons_pullDownToRefresh';
+  static const newChat_userBottomSheet_chat = 'newChat_userBottomSheet_chat';
+  static const newChat_userBottomSheet_addToContacts =
+      'newChat_userBottomSheet_addToContacts';
+  static const newChat_userBottomSheet_block = 'newChat_userBottomSheet_block';
+  static const newChat_userBottomSheet_userInfo =
+      'newChat_userBottomSheet_userInfo';
+  static const newChat_inviteBottomSheet_inviteYourFriend =
+      'newChat_inviteBottomSheet_inviteYourFriend';
+  static const newChat_inviteBottomSheet_shareLink =
+      'newChat_inviteBottomSheet_shareLink';
+  static const MessagesPage_textFieldHint = 'MessagesPage_textFieldHint';
+  static const MessagesPage_endToEndEncryptedMessaging =
+      'MessagesPage_endToEndEncryptedMessaging';
+  static const MessagesPage_onlineVia = 'MessagesPage_onlineVia';
+  static const MessagesPage_countSelectedMessages =
+      'MessagesPage_countSelectedMessages';
+  static const MessagesPage_replyingTo = 'MessagesPage_replyingTo';
+  static const MessagesPage_replyToImage = 'MessagesPage_replyToImage';
+  static const MessagesPage_replyToVideo = 'MessagesPage_replyToVideo';
+  static const MessagesPage_replyToAudio = 'MessagesPage_replyToAudio';
+  static const MessagesPage_forwarded = 'MessagesPage_forwarded';
+  static const MessagesPage_deleteMessagesDialog_title =
+      'MessagesPage_deleteMessagesDialog_title';
+  static const MessagesPage_deleteMessagesDialog_titlePlural =
+      'MessagesPage_deleteMessagesDialog_titlePlural';
+  static const MessagesPage_deleteMessagesDialog_subtitle =
+      'MessagesPage_deleteMessagesDialog_subtitle';
+  static const MessagesPage_deleteMessagesDialog_subtitlePlural =
+      'MessagesPage_deleteMessagesDialog_subtitlePlural';
+  static const MessagesPage_deleteMessagesDialog_cancel =
+      'MessagesPage_deleteMessagesDialog_cancel';
+  static const MessagesPage_deleteMessagesDialog_delete =
+      'MessagesPage_deleteMessagesDialog_delete';
+  static const MessagesPage_deleteMessagesDialog_deleteForEveryone =
+      'MessagesPage_deleteMessagesDialog_deleteForEveryone';
+  static const MessagesPage_deleteMessagesDialog_deleteForMe =
+      'MessagesPage_deleteMessagesDialog_deleteForMe';
+  static const forwardMassagesPage_appbar = 'forwardMassagesPage_appbar';
+  static const forwardMassagesPage_textInput = 'forwardMassagesPage_textInput';
+  static const forwardMassagesPage_recentContacts =
+      'forwardMassagesPage_recentContacts';
+  static const forwardMassagesPage_OtherContacts =
+      'forwardMassagesPage_OtherContacts';
+  static const forwardMassagesPage_contacts = 'forwardMassagesPage_contacts';
+  static const forwardMassagesPage_bottomBar_forwardTO =
+      'forwardMassagesPage_bottomBar_forwardTO';
+  static const forwardMassagesPage_bottomBar_messages =
+      'forwardMassagesPage_bottomBar_messages';
+  static const yesterday = 'yesterday';
+  static const today = 'today';
+  static const reply = 'reply';
+  static const copy = 'copy';
+  static const forward = 'forward';
+  static const delete = 'delete';
+  static const offline = 'offline';
+  static const AddContacts_addToContacts = 'AddContacts_addToContacts';
+  static const AddContacts_addNickname = 'AddContacts_addNickname';
+  static const AddContacts_AddNicknameSubtitle =
+      'AddContacts_AddNicknameSubtitle';
+  static const AddContacts_buttons_addToContacts =
+      'AddContacts_buttons_addToContacts';
 }
 
 class Locales {
@@ -161,5 +239,65 @@ class Locales {
     'HomePage_Chats_emptyState_subtitle':
         'Start with inviting your friends or start new chats',
     'HomePage_Chats_emptyState_invite': 'Invite',
+    'HomePage_bottomSheet_newChat': 'Start new chat',
+    'HomePage_bottomSheet_newGroup': 'Start new group',
+    'HomePage_bottomSheet_invite': 'Invite',
+    'newChat_newChatAppBar': 'New Chat',
+    'newChat_slider_contacts': 'Contacts',
+    'newChat_slider_nearbyUsers': 'Nearby users',
+    'newChat_usernameInputFiled': 'Type Username or coreID',
+    'newChat_emptyStateTitleContacts':
+        'You don’t have any contacts yet. \n You can invite them now.',
+    'newChat_emptyStateTitleNearbyUsers': 'No users were found nearby',
+    'newChat_usernameInput': 'Type Username or Core ID',
+    'newChat_searchResults': 'Search results',
+    'newChat_buttons_invite': 'Invite',
+    'newChat_buttons_filter': 'Filter',
+    'newChat_buttons_pullDownToRefresh': 'Pull down to refresh',
+    'newChat_userBottomSheet_chat': 'Chat',
+    'newChat_userBottomSheet_addToContacts': 'Add to contacts',
+    'newChat_userBottomSheet_block': 'Block',
+    'newChat_userBottomSheet_userInfo': 'User info',
+    'newChat_inviteBottomSheet_inviteYourFriend': 'Invite your friend to Heyo!',
+    'newChat_inviteBottomSheet_shareLink': 'Share link',
+    'MessagesPage_textFieldHint': 'Chat',
+    'MessagesPage_endToEndEncryptedMessaging':
+        'Any messages you exchange are fully encrypted and can only be read by you and @name',
+    'MessagesPage_onlineVia': 'Online via',
+    'MessagesPage_countSelectedMessages': '@count selected',
+    'MessagesPage_replyingTo': 'Replying to @name',
+    'MessagesPage_replyToImage': 'Image',
+    'MessagesPage_replyToVideo': 'Video',
+    'MessagesPage_replyToAudio': 'Audio',
+    'MessagesPage_forwarded': 'Forwarded',
+    'MessagesPage_deleteMessagesDialog_title': 'Delete message?',
+    'MessagesPage_deleteMessagesDialog_titlePlural': 'Delete @count messages?',
+    'MessagesPage_deleteMessagesDialog_subtitle': 'Delete this message?',
+    'MessagesPage_deleteMessagesDialog_subtitlePlural':
+        'Delete these messages?',
+    'MessagesPage_deleteMessagesDialog_cancel': 'Cancel',
+    'MessagesPage_deleteMessagesDialog_delete': 'Delete',
+    'MessagesPage_deleteMessagesDialog_deleteForEveryone':
+        'Delete for everyone',
+    'MessagesPage_deleteMessagesDialog_deleteForMe': 'Delete only for me',
+    'forwardMassagesPage_appbar': 'Forward to',
+    'forwardMassagesPage_textInput': 'Search in contacts',
+    'forwardMassagesPage_recentContacts': 'Recent contacts',
+    'forwardMassagesPage_OtherContacts': 'Other contacts',
+    'forwardMassagesPage_contacts': 'Contacts',
+    'forwardMassagesPage_bottomBar_forwardTO': 'Forward to ',
+    'forwardMassagesPage_bottomBar_messages': ' messages',
+    'yesterday': 'Yesterday',
+    'today': 'Today',
+    'reply': 'Reply',
+    'copy': 'Copy',
+    'forward': 'Forward',
+    'delete': 'Delete',
+    'offline': 'Offline',
+    'AddContacts_addToContacts': 'Add to contacts',
+    'AddContacts_addNickname': 'Add nickname',
+    'AddContacts_AddNicknameSubtitle':
+        'Nickname help you to identify others. Only you can \nsee this nickname.',
+    'AddContacts_buttons_addToContacts': 'Add to contacts',
   };
 }

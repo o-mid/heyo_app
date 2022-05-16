@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/app/modules/shared/utils/widgets/curtom_circle_avatar.dart';
-import 'package:heyo/app/modules/shared/utils/widgets/notification_count_badge.dart';
+import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
+import 'package:heyo/app/modules/shared/widgets/notification_count_badge.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
 class ChatWidget extends StatelessWidget {
@@ -17,9 +18,10 @@ class ChatWidget extends StatelessWidget {
       children: [
         CustomCircleAvatar(
           url: chat.icon,
+          size: 48,
           isOnline: chat.isOnline,
         ),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         Expanded(
           child: Column(
             children: [
@@ -31,13 +33,17 @@ class ChatWidget extends StatelessWidget {
                       Text(
                         chat.name,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontFamily: FONTS.interFamily,
                           fontWeight: chat.notificationCount > 0 ? FONTS.Bold : FONTS.Medium,
                         ),
                       ),
                       SizedBox(width: 6),
-                      if (chat.isVerified) Assets.svg.verified.svg(),
+                      if (chat.isVerified)
+                        Assets.svg.verified.svg(
+                          width: 12.w,
+                          height: 12.w,
+                        ),
                     ],
                   ),
                   Text(
@@ -45,7 +51,7 @@ class ChatWidget extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: FONTS.interFamily,
                       fontWeight: FONTS.Medium,
-                      fontSize: 10,
+                      fontSize: 10.sp,
                       color: COLORS.kTextSoftBlueColor,
                     ),
                   ),
@@ -69,7 +75,7 @@ class ChatWidget extends StatelessWidget {
                   ),
                   if (chat.notificationCount > 0)
                     Container(
-                      margin: EdgeInsets.only(left: 8),
+                      margin: EdgeInsets.only(left: 8.w),
                       child: NotificationCountBadge(
                         backgroundColor: COLORS.kGreenMainColor,
                         count: chat.notificationCount,

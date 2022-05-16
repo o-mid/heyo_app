@@ -1,5 +1,8 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
+import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
+import 'package:heyo/app/modules/shared/data/controllers/audio_message_controller.dart';
+import 'package:heyo/app/modules/shared/data/controllers/video_message_controller.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_manager.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/cryptography_key_generator.dart';
@@ -20,6 +23,9 @@ class GlobalBindings extends Bindings {
   @override
   void dependencies() {
     Get.put(ChatsController());
+    Get.put(GlobalMessageController());
+    Get.put(AudioMessageController());
+    Get.put(VideoMessageController());
     Get.put<Login>(Login(
         p2pNodeResponseStream: p2pNodeResponseStream, p2pState: p2pState));
     Get.put<P2PNodeManager>(

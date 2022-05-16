@@ -1,5 +1,6 @@
-# Uncomment this line to define a global platform for your project
-# platform :ios, '9.0'
+# package Better Player needs to be atleast 11.0
+# see https://jhomlala.github.io/betterplayer/#/install for more info
+ platform :ios, '11.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'

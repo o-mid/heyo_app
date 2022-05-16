@@ -6,6 +6,18 @@ class CustomSizes {
   static EdgeInsetsGeometry mainContentPadding =
       EdgeInsets.fromLTRB(20.w, 0, 20.w, 16.h);
 
+  /// left and right : 20px , bottom : 8px , top: 8px
+  static EdgeInsetsGeometry userListPadding =
+      EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 8.h);
+
+  /// left and right : 20px , bottom : 8px , top: 8px
+  static EdgeInsetsGeometry iconListPadding =
+      EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 8.h);
+
+  /// left and right : 20px
+  static EdgeInsetsGeometry contentPaddingWidth =
+      EdgeInsets.fromLTRB(20.w, 0, 20.w, 0);
+
   /// height: 8.h
   static SizedBox smallSizedBoxHeight = SizedBox(height: 8.h);
 
@@ -14,6 +26,9 @@ class CustomSizes {
 
   ///height: 24.h
   static SizedBox largeSizedBoxHeight = SizedBox(height: 24.h);
+
+  ///height: 32.h
+  static SizedBox semiExtraLargeSizedBoxHeight = SizedBox(height: 32.h);
 
   ///height: 48.h
   static SizedBox extraLargeSizedBoxHeight = SizedBox(height: 48.h);
