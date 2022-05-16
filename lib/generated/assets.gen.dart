@@ -146,6 +146,14 @@ class $AssetsSvgGen {
   SvgGenImage get liveLocation =>
       const SvgGenImage('assets/svg/live_location.svg');
 
+  /// File path: assets/svg/live_location_active.svg
+  SvgGenImage get liveLocationActive =>
+      const SvgGenImage('assets/svg/live_location_active.svg');
+
+  /// File path: assets/svg/location_filled.svg
+  SvgGenImage get locationFilled =>
+      const SvgGenImage('assets/svg/location_filled.svg');
+
   /// File path: assets/svg/location_outlined.svg
   SvgGenImage get locationOutlined =>
       const SvgGenImage('assets/svg/location_outlined.svg');

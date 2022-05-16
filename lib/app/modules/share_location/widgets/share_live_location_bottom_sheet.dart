@@ -93,6 +93,8 @@ class _ShareLiveLocationBottomSheetState extends State<ShareLiveLocationBottomSh
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: CustomButton.primary(
                     title: LocaleKeys.shareLocationPage_bottomSheet_shareLiveLocation.tr,
+                    onTap: () => Get.find<ShareLocationController>()
+                        .startSharingLiveLocation(shareDurations[selected]),
                   ),
                 ),
                 SizedBox(height: 14.h),

@@ -70,4 +70,18 @@ class ShareLocationController extends GetxController {
 
     Get.back();
   }
+
+  void startSharingLiveLocation(Duration duration) async {
+    final currentLocation = await controller?.myLocation();
+    if (currentLocation == null) {
+      return;
+    }
+    Get.find<MessagesController>().sendLiveLocation(
+      duration: duration,
+      startLat: currentLocation.latitude,
+      startLong: currentLocation.longitude,
+    );
+
+    Get.back();
+  }
 }

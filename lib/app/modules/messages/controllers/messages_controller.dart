@@ -7,6 +7,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/live_location_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/location_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
@@ -295,6 +296,36 @@ class MessagesController extends GetxController {
       senderAvatar: "",
       isFromMe: true,
     );
+  }
+
+  stopSharingLiveLocation(LiveLocationMessageModel message) {
+    // Todo: update message and remove message id from live location controller
+  }
+
+  void sendLiveLocation({
+    required Duration duration,
+    required double startLat,
+    required double startLong,
+  }) {
+    final message = LiveLocationMessageModel(
+      latitude: startLat,
+      longitude: startLong,
+      endTime: DateTime.now().add(duration),
+      messageId: (messages.length + 1).toString(),
+      timestamp: DateTime.now(),
+      senderName: "",
+      senderAvatar: "",
+      isFromMe: true,
+    );
+
+    messages.add(message);
+    messages.refresh();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      jumpToBottom();
+    });
+
+    // Todo (libp2p): send message
+    // Todo: add message id to live location controller
   }
 
   void replyTo() {
@@ -690,6 +721,34 @@ class MessagesController extends GetxController {
         timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
+      ),
+      LiveLocationMessageModel(
+        messageId: "${index++}",
+        latitude: 35.65031,
+        longitude: 51.2925217,
+        endTime: DateTime.now().add(const Duration(minutes: 3)),
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      LiveLocationMessageModel(
+        messageId: "${index++}",
+        latitude: 35.65031,
+        longitude: 51.2925217,
+        endTime: DateTime.now().subtract(const Duration(minutes: 40)),
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      LiveLocationMessageModel(
+        messageId: "${index++}",
+        latitude: 35.65031,
+        longitude: 51.2925217,
+        endTime: DateTime.now().add(const Duration(minutes: 5)),
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
       ),
     ]);
 

@@ -133,6 +133,25 @@ class LocaleKeys {
   static const MessagesPage_replyToAudio = 'MessagesPage_replyToAudio';
   static const MessagesPage_forwarded = 'MessagesPage_forwarded';
   static const MessagesPage_sharedLocation = 'MessagesPage_sharedLocation';
+  static const MessagesPage_sharingLiveLocation =
+      'MessagesPage_sharingLiveLocation';
+  static const MessagesPage_liveShareRemainingMinute =
+      'MessagesPage_liveShareRemainingMinute';
+  static const MessagesPage_liveShareRemainingMinutes =
+      'MessagesPage_liveShareRemainingMinutes';
+  static const MessagesPage_liveShareRemainingHour =
+      'MessagesPage_liveShareRemainingHour';
+  static const MessagesPage_liveShareRemainingHours =
+      'MessagesPage_liveShareRemainingHours';
+  static const MessagesPage_liveShareLessThanMinute =
+      'MessagesPage_liveShareLessThanMinute';
+  static const MessagesPage_liveShareRemainingTime =
+      'MessagesPage_liveShareRemainingTime';
+  static const MessagesPage_finishedLiveShareTitle =
+      'MessagesPage_finishedLiveShareTitle';
+  static const MessagesPage_finishedLiveShareSubtitle =
+      'MessagesPage_finishedLiveShareSubtitle';
+  static const MessagesPage_stopSharing = 'MessagesPage_stopSharing';
   static const MessagesPage_deleteMessagesDialog_title =
       'MessagesPage_deleteMessagesDialog_title';
   static const MessagesPage_deleteMessagesDialog_titlePlural =
@@ -292,6 +311,16 @@ class Locales {
     'MessagesPage_replyToAudio': 'Audio',
     'MessagesPage_forwarded': 'Forwarded',
     'MessagesPage_sharedLocation': 'Shared location',
+    'MessagesPage_sharingLiveLocation': 'Sharing live location',
+    'MessagesPage_liveShareRemainingMinute': '@count minute',
+    'MessagesPage_liveShareRemainingMinutes': '@count minutes',
+    'MessagesPage_liveShareRemainingHour': '@count hour',
+    'MessagesPage_liveShareRemainingHours': '@count hours',
+    'MessagesPage_liveShareLessThanMinute': 'Less than a minute',
+    'MessagesPage_liveShareRemainingTime': '@time remaining',
+    'MessagesPage_finishedLiveShareTitle': 'You shared your location',
+    'MessagesPage_finishedLiveShareSubtitle': 'Ended on @day at @clock',
+    'MessagesPage_stopSharing': 'Stop sharing',
     'MessagesPage_deleteMessagesDialog_title': 'Delete message?',
     'MessagesPage_deleteMessagesDialog_titlePlural': 'Delete @count messages?',
     'MessagesPage_deleteMessagesDialog_subtitle': 'Delete this message?',
