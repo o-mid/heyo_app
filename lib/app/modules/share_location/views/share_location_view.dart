@@ -47,6 +47,16 @@ class ShareLocationView extends GetView<ShareLocationController> {
                       controller: controller.controller!,
                       initZoom: 16,
                       trackMyPosition: true,
+                      isPicker: true,
+                      markerOption: MarkerOption(
+                        advancedPickerMarker: MarkerIcon(
+                          iconWidget: Assets.svg.locationFilled.svg(
+                            color: COLORS.kDarkBlueColor,
+                            width: 100.w,
+                            height: 100.w,
+                          ),
+                        ),
+                      ),
                       onMapIsReady: (isReady) {
                         if (isReady) {
                           controller.updateCurrentAddress();
@@ -86,6 +96,7 @@ class ShareLocationView extends GetView<ShareLocationController> {
                   child: GestureDetector(
                     onTap: () {
                       controller.controller?.enableTracking();
+                      controller.controller?.currentLocation();
                     },
                     child: Container(
                       padding: EdgeInsets.all(9.w),
