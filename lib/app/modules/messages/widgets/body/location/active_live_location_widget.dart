@@ -34,6 +34,8 @@ class _ActiveLiveLocationState extends State<ActiveLiveLocationWidget> {
 
   late MessagesController controller;
 
+  bool isMapReady = false;
+
   @override
   void initState() {
     super.initState();
@@ -44,6 +46,9 @@ class _ActiveLiveLocationState extends State<ActiveLiveLocationWidget> {
     longitude = widget.message.longitude;
 
     positionStream = Geolocator.getPositionStream().listen((position) {
+      if (!isMapReady) {
+        return;
+      }
       setState(() {
         latitude = position.latitude;
         longitude = position.longitude;
@@ -85,6 +90,7 @@ class _ActiveLiveLocationState extends State<ActiveLiveLocationWidget> {
               ),
             )
           : null,
+      onMapIsReady: () => isMapReady = true,
     );
   }
 

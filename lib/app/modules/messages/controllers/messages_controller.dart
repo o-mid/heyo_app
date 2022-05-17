@@ -77,7 +77,7 @@ class MessagesController extends GetxController {
       if (visible) {
         showEmojiPicker.value = false;
 
-        WidgetsBinding.instance?.addPostFrameCallback((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           _keyboardHeight = Get.mediaQuery.viewInsets.bottom;
           if (scrollController.hasClients) {
             scrollController.animateTo(
@@ -88,7 +88,7 @@ class MessagesController extends GetxController {
           }
         });
       } else {
-        WidgetsBinding.instance?.addPostFrameCallback((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           if (scrollController.hasClients) {
             scrollController.animateTo(
               scrollController.offset - _keyboardHeight,
@@ -129,6 +129,8 @@ class MessagesController extends GetxController {
 
     textController.selection = textController.selection
         .copyWith(baseOffset: currentPos + str.length, extentOffset: currentPos + str.length);
+
+    newMessage.value = textController.text;
   }
 
   void removeCharacterBeforeCursorPosition() {
@@ -233,7 +235,7 @@ class MessagesController extends GetxController {
 
     clearReplyTo();
 
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       jumpToBottom();
     });
   }
@@ -257,7 +259,7 @@ class MessagesController extends GetxController {
 
     messages.refresh();
 
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       jumpToBottom();
     });
   }
@@ -272,7 +274,7 @@ class MessagesController extends GetxController {
 
     messages.refresh();
 
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       jumpToBottom();
     });
 
@@ -332,7 +334,7 @@ class MessagesController extends GetxController {
 
     messages.add(message);
     messages.refresh();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       jumpToBottom();
     });
 
@@ -730,7 +732,7 @@ class MessagesController extends GetxController {
         latitude: 48.153445,
         longitude: 17.129925,
         address: "Kocelova 11-11, 821 08, Bratislava",
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 44)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
@@ -739,7 +741,7 @@ class MessagesController extends GetxController {
         latitude: 35.65031,
         longitude: 51.2925217,
         endTime: DateTime.now().add(const Duration(minutes: 3)),
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 43)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
@@ -748,7 +750,7 @@ class MessagesController extends GetxController {
         latitude: 35.65031,
         longitude: 51.2925217,
         endTime: DateTime.now().subtract(const Duration(minutes: 40)),
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 42)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
@@ -757,7 +759,7 @@ class MessagesController extends GetxController {
         latitude: 35.65031,
         longitude: 51.2925217,
         endTime: DateTime.now().add(const Duration(minutes: 5)),
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
         senderName: "",
         senderAvatar: "",
         isFromMe: true,

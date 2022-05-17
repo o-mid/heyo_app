@@ -15,6 +15,7 @@ class BaseLocationMessageWidget extends StatefulWidget {
   final MarkerIcon? markerIcon;
   final bool includeLeading;
   final Widget? actionButton;
+  final VoidCallback? onMapIsReady;
 
   const BaseLocationMessageWidget({
     Key? key,
@@ -25,6 +26,7 @@ class BaseLocationMessageWidget extends StatefulWidget {
     this.markerIcon,
     this.includeLeading = false,
     this.actionButton,
+    this.onMapIsReady,
   }) : super(key: key);
 
   @override
@@ -34,6 +36,10 @@ class BaseLocationMessageWidget extends StatefulWidget {
 class _BaseLocationMessageWidgetState extends State<BaseLocationMessageWidget> {
   final _zoomLevel = 16.0;
   late MapController controller;
+
+  bool isMapReady = false;
+  bool isMarkerLocked = false;
+  final markerLockDuration = const Duration(milliseconds: 600);
   @override
   void initState() {
     super.initState();
@@ -47,8 +53,13 @@ class _BaseLocationMessageWidgetState extends State<BaseLocationMessageWidget> {
   @override
   void didUpdateWidget(covariant BaseLocationMessageWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (!isMapReady || isMarkerLocked) {
+      return;
+    }
 
     if (oldWidget.latitude != widget.latitude || oldWidget.longitude != widget.longitude) {
+      isMarkerLocked = true;
+
       // Todo: animate this once following issue is resolved: https://github.com/liodali/osm_flutter/issues/258
       final oldPoint = GeoPoint(latitude: oldWidget.latitude, longitude: oldWidget.longitude);
       controller.removeMarker(oldPoint);
@@ -58,6 +69,8 @@ class _BaseLocationMessageWidgetState extends State<BaseLocationMessageWidget> {
 
       controller.goToLocation(newPoint);
       controller.setZoom(zoomLevel: _zoomLevel);
+
+      Future.delayed(markerLockDuration, () => isMarkerLocked = false);
     }
   }
 
@@ -85,8 +98,12 @@ class _BaseLocationMessageWidgetState extends State<BaseLocationMessageWidget> {
               controller: controller,
               initZoom: _zoomLevel,
               onMapIsReady: (isReady) {
+                isMapReady = isReady;
                 if (!isReady) {
                   return;
+                }
+                if (widget.onMapIsReady != null) {
+                  widget.onMapIsReady!();
                 }
 
                 final geoPoint = GeoPoint(
