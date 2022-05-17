@@ -10,6 +10,7 @@ class AppTranslation {
 
 class LocaleKeys {
   LocaleKeys._();
+
   static const registration_WelcomePage_title =
       'registration_WelcomePage_title';
   static const registration_WelcomePage_subtitle =
@@ -172,6 +173,7 @@ class LocaleKeys {
       'AddContacts_AddNicknameSubtitle';
   static const AddContacts_buttons_addToContacts =
       'AddContacts_buttons_addToContacts';
+  static const Scan_Qr_title = 'scan_qr_title';
 }
 
 class Locales {
@@ -299,5 +301,6 @@ class Locales {
     'AddContacts_AddNicknameSubtitle':
         'Nickname help you to identify others. Only you can \nsee this nickname.',
     'AddContacts_buttons_addToContacts': 'Add to contacts',
+    'scan_qr_title': 'Scan Qr',
   };
 }

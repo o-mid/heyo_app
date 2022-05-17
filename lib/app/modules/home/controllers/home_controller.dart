@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/home/controllers/data_request_dialog.dart';
 
 class HomeController extends GetxController {
   final tabIndex = 0.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -14,5 +16,13 @@ class HomeController extends GetxController {
 
   @override
   void onClose() {}
-  void changeTabIndex(int index) => tabIndex.value = index;
+
+  void changeTabIndex(int index) {
+    if (index == dataRequestTabIndex) {
+      dataRequestDialog(Get.context!);
+    } else {
+      tabIndex.value = index;
+    }
+  }
 }
+const int dataRequestTabIndex = 2;

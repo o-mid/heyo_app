@@ -6,3 +6,5 @@ String AES_KEY_IN_STORE = "AES";
 String MNEOMONIC_IN_STORE = "mneomonic";
 String PUBLIC_KEY = "public_key";
 String ADDRESS = "address";
+String SHARED_ADDR_SEPARATOR = "%%";
+String WEB_LOGIN_NAME = "login";

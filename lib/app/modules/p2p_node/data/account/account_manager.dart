@@ -88,6 +88,5 @@ class AccountManager extends AccountInfo {
       final _previousCreds = ((jsonDecode(_prevs) as Map<String, dynamic>));
       return _previousCreds[PRIV_KEY_IN_STORE];
     }
-
   }
 }

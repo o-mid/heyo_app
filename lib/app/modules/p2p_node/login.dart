@@ -1,17 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/addr_model.dart';
 import 'package:flutter_p2p_communicator/model/login_mode.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:flutter_p2p_communicator/model/transfer_model.dart';
+import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
 import 'package:collection/src/iterable_extensions.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
+import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
 
 class Login {
   final P2PNodeResponseStream p2pNodeResponseStream;
   final P2PState p2pState;
+  final AccountInfo accountInfo;
 
-  Login({required this.p2pNodeResponseStream, required this.p2pState});
+  Login({required this.p2pNodeResponseStream, required this.p2pState, required this.accountInfo});
 
   Future<String> _sendingConnectRequest(P2PAddrModel info) async {
     final id = await FlutterP2pCommunicator.sendRequest(
@@ -27,8 +32,18 @@ class Login {
     return id;
   }
 
-  void execute(String remotePeerId, String remoteCoreId,
-      List<String>? addresses, String localCoreId) async {
+  void execute(String uri) async {
+    ;
+    final localCoreId= await accountInfo.getCoreId();
+    if(localCoreId==null)
+      throw 'Core id is null!!';
+
+    final remoteCoreId = uri.split(SHARED_ADDR_SEPARATOR)[0];
+    final remotePeerId = uri.split(SHARED_ADDR_SEPARATOR)[1];
+    final addresses = uri.split(SHARED_ADDR_SEPARATOR)[2] != null
+        ? (jsonDecode(uri.split(SHARED_ADDR_SEPARATOR)[2]) as List<dynamic>).cast<String>()
+        : <String>[];
+
     //TODO ask moji about name and connect usecase in general
     final connected =
         await _connect(P2PAddrModel(id: remotePeerId, addrs: addresses));
@@ -41,7 +56,7 @@ class Login {
                 remoteCoreID: remoteCoreId)
             : P2PTransferModel(
                 localCoreID: localCoreId, remoteCoreID: remoteCoreId),
-        payload: P2PLoginPayloadModel(session: "#ada"));
+        payload: P2PLoginPayloadModel(session: "0x73"));
     _sendingLoginRequest(_loginModel);
   }
 

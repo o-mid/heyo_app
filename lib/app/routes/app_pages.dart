@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/information/shareable_qr_view.dart';
+import 'package:heyo/app/modules/website-interact/website_interact_view.dart';
 
 import '../modules/account/bindings/account_binding.dart';
 import '../modules/account/views/account_view.dart';
@@ -108,5 +110,13 @@ class AppPages {
       page: () => ForwardMassagesView(),
       binding: ForwardMassagesBinding(),
     ),
+    GetPage(
+      name: _Paths.SHREABLE_QR,
+      page: () => ShareableQrView(),
+    ),
+    GetPage(
+      name: _Paths.SCAN_QR,
+      page: ()=>WebsiteInteractView(),
+    )
   ];
 }
