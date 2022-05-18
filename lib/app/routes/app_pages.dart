@@ -123,7 +123,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SCAN_QR,
-      page: ()=>WebsiteInteractView(),
+      page: () => WebsiteInteractView(),
     )
   ];
 }
