@@ -41,7 +41,7 @@ class SendLocationBox extends StatelessWidget {
               ),
               SizedBox(height: 4.h),
               Text(
-                controller.locationMessage.value?.address ?? "",
+                "${controller.locationMessage.value?.latitude} ${controller.locationMessage.value?.longitude}",
                 style: TEXTSTYLES.kChatText.copyWith(
                   color: COLORS.kTextBlueColor,
                 ),

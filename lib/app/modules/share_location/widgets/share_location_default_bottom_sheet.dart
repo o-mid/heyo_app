@@ -102,22 +102,9 @@ class ShareLocationDefaultBottomSheet extends StatelessWidget {
                           ),
                           CustomSizes.mediumSizedBoxWidth,
                           Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  LocaleKeys.shareLocationPage_bottomSheet_sendCurrentLocation.tr,
-                                  style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
-                                ),
-                                Obx(() {
-                                  return Text(
-                                    controller.currentAddress.value,
-                                    maxLines: 2,
-                                    style: TEXTSTYLES.kBodySmall
-                                        .copyWith(color: COLORS.kTextBlueColor),
-                                  );
-                                }),
-                              ],
+                            child: Text(
+                              LocaleKeys.shareLocationPage_bottomSheet_sendPickerLocation.tr,
+                              style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
                             ),
                           ),
                         ],

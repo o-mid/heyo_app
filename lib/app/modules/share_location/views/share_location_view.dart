@@ -62,30 +62,6 @@ class ShareLocationView extends GetView<ShareLocationController> {
                           controller.updateCurrentAddress();
                         }
                       },
-                      userLocationMarker: UserLocationMaker(
-                        personMarker: const MarkerIcon(
-                          icon: Icon(
-                            Icons.location_history_rounded,
-                            color: Colors.red,
-                            size: 48,
-                          ),
-                        ),
-                        directionArrowMarker: MarkerIcon(
-                          iconWidget: Container(
-                            width: 64,
-                            height: 64,
-                            decoration: const BoxDecoration(
-                              color: COLORS.kMapBlue,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.double_arrow,
-                              size: 48,
-                              color: COLORS.kWhiteColor,
-                            ),
-                          ),
-                        ),
-                      ),
                     );
                   }
                   return const SizedBox.shrink();
@@ -94,9 +70,12 @@ class ShareLocationView extends GetView<ShareLocationController> {
                   top: 16.h,
                   right: 20.w,
                   child: GestureDetector(
-                    onTap: () {
-                      controller.controller?.enableTracking();
-                      controller.controller?.currentLocation();
+                    onTap: () async {
+                      final currentLocation = await controller.controller?.myLocation();
+                      if (currentLocation == null) {
+                        return;
+                      }
+                      controller.controller?.goToLocation(currentLocation);
                     },
                     child: Container(
                       padding: EdgeInsets.all(9.w),
