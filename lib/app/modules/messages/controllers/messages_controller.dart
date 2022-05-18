@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_camera/flutter_camera.dart';
@@ -17,7 +18,6 @@ import 'package:heyo/app/modules/messages/data/models/metadatas/image_metadata.d
 import 'package:heyo/app/modules/messages/data/models/metadatas/video_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
-import 'package:heyo/app/modules/messages/widgets/body/camera_picker/image_editing_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/body/camera_picker/receiver_name_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/delete_message_dialog.dart';
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
@@ -28,7 +28,6 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/permission_dialog.dart';
-import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -764,10 +763,11 @@ class MessagesController extends GetxController {
               hintStyle: TEXTSTYLES.kBodySmall
                   .copyWith(color: COLORS.kTextSoftBlueColor),
             ),
-            imageEditingWidget: const ImageEditingWidget(),
           ));
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }
