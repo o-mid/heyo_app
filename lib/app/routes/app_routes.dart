@@ -20,6 +20,8 @@ abstract class Routes {
   static const ADD_CONTACTS = _Paths.ADD_CONTACTS;
   static const FORWARD_MASSAGES = _Paths.FORWARD_MASSAGES;
   static const SHARE_LOCATION = _Paths.SHARE_LOCATION;
+  static const SHREABLE_QR = _Paths.SHREABLE_QR;
+  static const SCAN_QR = _Paths.SCAN_QR;
 }
 
 abstract class _Paths {
@@ -41,4 +43,6 @@ abstract class _Paths {
   static const ADD_CONTACTS = '/add-contacts';
   static const FORWARD_MASSAGES = '/forward-massages';
   static const SHARE_LOCATION = '/share-location';
+  static const SHREABLE_QR = '/shareable-qr';
+  static const SCAN_QR = '/scan-qr';
 }

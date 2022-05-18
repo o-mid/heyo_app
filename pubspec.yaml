@@ -8,6 +8,7 @@ environment:
 dependencies:
   cupertino_icons: ^1.0.2
   get: ^4.6.3
+  qr_flutter: ^4.0.0
   flutter:
     sdk: flutter
   flutter_svg: ^1.0.3
@@ -30,6 +31,21 @@ dependencies:
   just_audio: ^0.9.20
   record: ^3.0.4
   emojis: ^0.9.9
+  connectivity_plus: ^2.3.0
+  flutter_secure_storage: ^5.0.2
+  convert: ^3.0.1
+  pointycastle: ^3.2.0
+  web3dart:
+    git:
+      url: git@git.energy:corepass/web3-dart-ethereum.git
+  flutter_p2p_communicator:
+    git:
+      url: git@git.energy:corepass/flutter_p2p_communicator.git
+  flutter_bip39:
+    git:
+      url: git@git.energy:corepass/flutter_bip39.git
+
+
   flutter_osm_plugin: ^0.34.0+1
   permission_handler: ^9.2.0
   osm_nominatim: ^2.0.1
@@ -48,9 +64,6 @@ dev_dependencies:
   core_web3dart:
     git:
       url: git@git.energy:mojtabaparvar/core-web3dart.git
-  flutter_bip39:
-    git:
-      url: git@git.energy:corepass/flutter_bip39.git
 
   flutter_launcher_icons: "^0.9.2"
   flutter_native_splash: ^2.1.1

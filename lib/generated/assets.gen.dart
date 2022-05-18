@@ -237,6 +237,8 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/wallet.svg
   SvgGenImage get wallet => const SvgGenImage('assets/svg/wallet.svg');
+
+  SvgGenImage get bottomSheetHandle => const SvgGenImage('assets/svg/bottomsheet_handle.svg');
 }
 
 class Assets {
