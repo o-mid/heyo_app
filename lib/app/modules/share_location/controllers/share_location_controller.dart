@@ -43,7 +43,7 @@ class ShareLocationController extends GetxController {
 
   void updateCurrentAddress() async {
     // Todo: either remove address field from location messages or find a way to update address as the user changes picker location
-    // final position = await controller?.myLocation();
+    // final position = await controller?.getCurrentPositionAdvancedPositionPicker();
     // if (position == null) {
     //   return;
     // }
@@ -57,7 +57,7 @@ class ShareLocationController extends GetxController {
   }
 
   void sendCurrentLocation() async {
-    final currentLocation = await controller?.myLocation();
+    final currentLocation = await controller?.getCurrentPositionAdvancedPositionPicker();
     if (currentLocation == null) {
       return;
     }
@@ -71,7 +71,7 @@ class ShareLocationController extends GetxController {
   }
 
   void startSharingLiveLocation(Duration duration) async {
-    final currentLocation = await controller?.myLocation();
+    final currentLocation = await controller?.getCurrentPositionAdvancedPositionPicker();
     if (currentLocation == null) {
       return;
     }
