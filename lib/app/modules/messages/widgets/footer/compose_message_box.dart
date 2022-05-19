@@ -22,11 +22,11 @@ class ComposeMessageBox extends StatelessWidget {
             child: Container(
               width: 20,
               height: 20,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: COLORS.kGreenMainColor,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.add,
                 color: COLORS.kWhiteColor,
                 size: 16,

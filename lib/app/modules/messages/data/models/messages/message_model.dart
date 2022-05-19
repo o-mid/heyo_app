@@ -45,6 +45,7 @@ abstract class MessageModel {
     MESSAGE_STATUS? status,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
+    bool? isFromMe,
     bool? isForwarded,
     bool? isSelected,
     bool clearReply,

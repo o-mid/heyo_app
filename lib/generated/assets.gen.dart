@@ -130,6 +130,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/forward_to.svg
   SvgGenImage get forwardTo => const SvgGenImage('assets/svg/forward_to.svg');
 
+  /// File path: assets/svg/gps_fixed.svg
+  SvgGenImage get gpsFixed => const SvgGenImage('assets/svg/gps_fixed.svg');
+
   /// File path: assets/svg/heyo_logo.svg
   SvgGenImage get heyoLogo => const SvgGenImage('assets/svg/heyo_logo.svg');
 
@@ -138,6 +141,22 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/invite_icon.svg
   SvgGenImage get inviteIcon => const SvgGenImage('assets/svg/invite_icon.svg');
+
+  /// File path: assets/svg/live_location.svg
+  SvgGenImage get liveLocation =>
+      const SvgGenImage('assets/svg/live_location.svg');
+
+  /// File path: assets/svg/live_location_active.svg
+  SvgGenImage get liveLocationActive =>
+      const SvgGenImage('assets/svg/live_location_active.svg');
+
+  /// File path: assets/svg/location_filled.svg
+  SvgGenImage get locationFilled =>
+      const SvgGenImage('assets/svg/location_filled.svg');
+
+  /// File path: assets/svg/location_outlined.svg
+  SvgGenImage get locationOutlined =>
+      const SvgGenImage('assets/svg/location_outlined.svg');
 
   /// File path: assets/svg/luna_connection.svg
   SvgGenImage get lunaConnection =>
@@ -197,6 +216,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/single_tick_icon.svg
   SvgGenImage get singleTickIcon =>
       const SvgGenImage('assets/svg/single_tick_icon.svg');
+
+  /// File path: assets/svg/target.svg
+  SvgGenImage get target => const SvgGenImage('assets/svg/target.svg');
 
   /// File path: assets/svg/verified.svg
   SvgGenImage get verified => const SvgGenImage('assets/svg/verified.svg');

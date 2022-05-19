@@ -9,28 +9,17 @@ class VideoMessageModel extends MessageModel {
   VideoMessageModel({
     required this.url,
     required this.metadata,
-    required String messageId,
-    required DateTime timestamp,
-    required String senderName,
-    required String senderAvatar,
-    status = MESSAGE_STATUS.SENDING,
-    isFromMe = false,
-    isForwarded = false,
-    isSelected = false,
-    replyTo,
-    reactions = const <String, ReactionModel>{},
-  }) : super(
-          messageId: messageId,
-          timestamp: timestamp,
-          senderName: senderName,
-          senderAvatar: senderAvatar,
-          status: status,
-          isFromMe: isFromMe,
-    isForwarded: isForwarded,
-          isSelected: isSelected,
-          reactions: reactions,
-          replyTo: replyTo,
-        );
+    required super.messageId,
+    required super.timestamp,
+    required super.senderName,
+    required super.senderAvatar,
+    super.status = MESSAGE_STATUS.SENDING,
+    super.isFromMe = false,
+    super.isForwarded = false,
+    super.isSelected = false,
+    super.replyTo,
+    super.reactions = const <String, ReactionModel>{},
+  });
 
   @override
   VideoMessageModel copyWith({
@@ -38,8 +27,9 @@ class VideoMessageModel extends MessageModel {
     MESSAGE_STATUS? status,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
-    bool? isSelected,
+    bool? isFromMe,
     bool? isForwarded,
+    bool? isSelected,
     bool clearReply = false,
   }) {
     return VideoMessageModel(
@@ -50,11 +40,10 @@ class VideoMessageModel extends MessageModel {
       senderName: senderName,
       senderAvatar: senderAvatar,
       status: status ?? this.status,
-      isFromMe: isFromMe,
-      isSelected: isSelected ?? this.isSelected,
+      isFromMe: isFromMe ?? this.isFromMe,
       isForwarded: isForwarded ?? this.isForwarded,
+      isSelected: isSelected ?? this.isSelected,
       reactions: reactions ?? this.reactions,
-
       replyTo: clearReply ? null : replyTo,
     );
   }

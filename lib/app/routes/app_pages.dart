@@ -26,6 +26,8 @@ import '../modules/new_chat/bindings/new_chat_binding.dart';
 import '../modules/new_chat/views/new_chat_view.dart';
 import '../modules/search_nearby/bindings/search_nearby_binding.dart';
 import '../modules/search_nearby/views/search_nearby_view.dart';
+import '../modules/share_location/bindings/share_location_binding.dart';
+import '../modules/share_location/views/share_location_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 import '../modules/wallet/bindings/wallet_binding.dart';
@@ -111,12 +113,17 @@ class AppPages {
       binding: ForwardMassagesBinding(),
     ),
     GetPage(
+      name: _Paths.SHARE_LOCATION,
+      page: () => ShareLocationView(),
+      binding: ShareLocationBinding(),
+    ),
+    GetPage(
       name: _Paths.SHREABLE_QR,
       page: () => ShareableQrView(),
     ),
     GetPage(
       name: _Paths.SCAN_QR,
-      page: ()=>WebsiteInteractView(),
+      page: () => WebsiteInteractView(),
     )
   ];
 }

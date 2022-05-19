@@ -125,6 +125,18 @@
     "replyToVideo": "Video",
     "replyToAudio": "Audio",
     "forwarded": "Forwarded",
+    "sharedLocation": "Shared location",
+    "sharingLiveLocation": "Sharing live location",
+    "liveShareRemainingMinute": "@count minute",
+    "liveShareRemainingMinutes": "@count minutes",
+    "liveShareRemainingHour": "@count hour",
+    "liveShareRemainingHours": "@count hours",
+    "liveShareLessThanMinute": "Less than a minute",
+    "liveShareRemainingTime": "@time remaining",
+    "finishedLiveShareTitle": "You shared your location",
+    "finishedLiveShareOtherTitle": "@user shared their location",
+    "finishedLiveShareSubtitle": "Ended on @day at @clock",
+    "stopSharing": "Stop sharing",
     "deleteMessagesDialog": {
       "title": "Delete message?",
       "titlePlural": "Delete @count messages?",
@@ -145,6 +157,24 @@
     "bottomBar": {
       "forwardTO": "Forward to ",
       "messages": " messages"
+    }
+  },
+  "permissionDialog": {
+    "continue": "Continue",
+    "notNow": "Not now",
+    "allowAccess": "Allow access",
+    "locationSubtitle": "To share location, you need to allow Heyo access to your device's location."
+  },
+  "shareLocationPage": {
+    "appBar": "Share Location",
+    "bottomSheet": {
+      "shareLiveLocation": "Share My Live Location",
+      "sendPickerLocation": "Send Picker Location",
+      "locationAccessDisclaimer": "We will access your location only for the duration you chosen and you can stop sharing it any time. We won’t use your location for any purpose other than sharing it in this chat.",
+      "shareLiveLocationWith": "Share my live location with @name for:",
+      "shareDurationMinutes": "@count mins",
+      "shareDurationHour": "@count hour",
+      "shareDurationHours": "@count hours"
     }
   },
   "yesterday": "Yesterday",

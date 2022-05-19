@@ -3,7 +3,6 @@ part of 'app_pages.dart';
 
 abstract class Routes {
   Routes._();
-
   static const SPLASH = _Paths.SPLASH;
   static const INTRO = _Paths.INTRO;
   static const SING_UP = _Paths.SING_UP;
@@ -20,13 +19,13 @@ abstract class Routes {
   static const MESSAGES = _Paths.MESSAGES;
   static const ADD_CONTACTS = _Paths.ADD_CONTACTS;
   static const FORWARD_MASSAGES = _Paths.FORWARD_MASSAGES;
+  static const SHARE_LOCATION = _Paths.SHARE_LOCATION;
   static const SHREABLE_QR = _Paths.SHREABLE_QR;
   static const SCAN_QR = _Paths.SCAN_QR;
 }
 
 abstract class _Paths {
   _Paths._();
-
   static const SPLASH = '/splash';
   static const INTRO = '/intro';
   static const SING_UP = '/sing-up';
@@ -43,6 +42,7 @@ abstract class _Paths {
   static const MESSAGES = '/messages';
   static const ADD_CONTACTS = '/add-contacts';
   static const FORWARD_MASSAGES = '/forward-massages';
+  static const SHARE_LOCATION = '/share-location';
   static const SHREABLE_QR = '/shareable-qr';
   static const SCAN_QR = '/scan-qr';
 }
