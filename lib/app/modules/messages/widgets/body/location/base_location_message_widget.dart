@@ -9,7 +9,7 @@ import 'package:heyo/generated/assets.gen.dart';
 
 class BaseLocationMessageWidget extends StatefulWidget {
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final double latitude;
   final double longitude;
   final MarkerIcon? markerIcon;
@@ -20,7 +20,7 @@ class BaseLocationMessageWidget extends StatefulWidget {
   const BaseLocationMessageWidget({
     Key? key,
     required this.title,
-    required this.subtitle,
+    this.subtitle,
     required this.latitude,
     required this.longitude,
     this.markerIcon,
@@ -146,12 +146,13 @@ class _BaseLocationMessageWidgetState extends State<BaseLocationMessageWidget> {
                           ),
                         ),
                         SizedBox(height: 4.h),
-                        Text(
-                          widget.subtitle,
-                          style: TEXTSTYLES.kChatText.copyWith(
-                            color: COLORS.kTextBlueColor,
+                        if (widget.subtitle != null)
+                          Text(
+                            widget.subtitle!,
+                            style: TEXTSTYLES.kChatText.copyWith(
+                              color: COLORS.kTextBlueColor,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),

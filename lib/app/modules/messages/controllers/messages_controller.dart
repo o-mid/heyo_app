@@ -20,8 +20,8 @@ import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
 import 'package:heyo/app/modules/messages/widgets/delete_message_dialog.dart';
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/live_location_controller.dart';
-import 'package:heyo/app/modules/shared/data/controllers/audio_message_controller.dart';
-import 'package:heyo/app/modules/shared/data/controllers/video_message_controller.dart';
+import 'package:heyo/app/modules/shared/controllers/audio_message_controller.dart';
+import 'package:heyo/app/modules/shared/controllers/video_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -740,29 +740,10 @@ class MessagesController extends GetxController {
         messageId: "${index++}",
         latitude: 35.65031,
         longitude: 51.2925217,
-        endTime: DateTime.now().add(const Duration(minutes: 3)),
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 43)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-      ),
-      LiveLocationMessageModel(
-        messageId: "${index++}",
-        latitude: 35.65031,
-        longitude: 51.2925217,
         endTime: DateTime.now().subtract(const Duration(minutes: 40)),
         timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 42)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
-      ),
-      LiveLocationMessageModel(
-        messageId: "${index++}",
-        latitude: 35.65031,
-        longitude: 51.2925217,
-        endTime: DateTime.now().add(const Duration(minutes: 5)),
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
-        senderName: "",
-        senderAvatar: "",
-        isFromMe: true,
       ),
     ]);
 

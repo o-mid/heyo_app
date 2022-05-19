@@ -100,4 +100,7 @@ class COLORS {
 
   /// map blue color
   static const Color kMapBlue = Color(0xff4585FA);
+
+  /// OpenStreetMap copyright color
+  static const Color kOSMCopyrightText = Color(0xff363636);
 }

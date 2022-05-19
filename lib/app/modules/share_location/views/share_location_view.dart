@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/share_location/widgets/location_bottom_sheet_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/widgets/custom_copyright_osm_widget.dart';
 import 'package:heyo/app/modules/shared/widgets/expandable_bottom_sheet/expandable_bottom_sheet_controller.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -95,6 +96,11 @@ class ShareLocationView extends GetView<ShareLocationController> {
                       child: Assets.svg.gpsFixed.svg(color: COLORS.kMapBlue),
                     ),
                   ),
+                ),
+                Positioned(
+                  top: 16.h,
+                  left: 16.w,
+                  child: const CustomCopyrightOSMWidget(),
                 ),
               ],
             ),

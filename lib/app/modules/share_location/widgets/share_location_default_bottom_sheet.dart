@@ -23,7 +23,7 @@ class ShareLocationDefaultBottomSheet extends StatelessWidget {
     final controller = Get.find<ShareLocationController>();
     return LayoutBuilder(builder: (context, constraints) {
       return ExpandableBottomSheet(
-        expandedHeight: constraints.maxHeight * 0.55,
+        expandedHeight: constraints.maxHeight * 0.15,
         horizontalMargin: 0,
         expandedBackColor: COLORS.kWhiteColor,
         bottomSheetBody: Container(
@@ -113,10 +113,6 @@ class ShareLocationDefaultBottomSheet extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 24.h),
-                const Divider(
-                  color: COLORS.kPinCodeDeactivateColor,
-                  thickness: 1,
-                ),
               ],
             ),
           ),

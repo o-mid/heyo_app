@@ -16,7 +16,6 @@ class LocationMessageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseLocationMessageWidget(
       title: LocaleKeys.MessagesPage_sharedLocation.tr,
-      subtitle: "${message.latitude} ${message.longitude}",
       latitude: message.latitude,
       longitude: message.longitude,
     );
