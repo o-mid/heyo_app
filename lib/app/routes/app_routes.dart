@@ -19,6 +19,7 @@ abstract class Routes {
   static const MESSAGES = _Paths.MESSAGES;
   static const ADD_CONTACTS = _Paths.ADD_CONTACTS;
   static const FORWARD_MASSAGES = _Paths.FORWARD_MASSAGES;
+  static const GALLERY_PICKER = _Paths.GALLERY_PICKER;
 }
 
 abstract class _Paths {
@@ -39,4 +40,5 @@ abstract class _Paths {
   static const MESSAGES = '/messages';
   static const ADD_CONTACTS = '/add-contacts';
   static const FORWARD_MASSAGES = '/forward-massages';
+  static const GALLERY_PICKER = '/gallery-picker';
 }

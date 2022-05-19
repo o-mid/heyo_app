@@ -50,35 +50,35 @@ class MediaGlassmorphic extends StatelessWidget {
                           children: [
                             CircularMediaIconButton(
                               backgroundColor: const Color(0xffFFB500),
-                              child: Assets.svg.cameraIcon.svg(
-                                height: 20.w,
-                                width: 20.w,
-                              ),
                               // camera onPressed:
                               onPressed: () async {
                                 controller.pick(context);
                               },
                               padding: 18,
+                              child: Assets.svg.cameraIcon.svg(
+                                height: 20.w,
+                                width: 20.w,
+                              ),
                             ),
                             CircularMediaIconButton(
                               backgroundColor: const Color(0xff16B4F2),
+                              onPressed: () =>
+                                  Get.toNamed(Routes.GALLERY_PICKER),
+                              padding: 18,
                               child: Assets.svg.galleryIcon.svg(
                                 height: 20.w,
                                 width: 20.w,
                               ),
-                              // gallery onPressed:
-                              onPressed: () {},
-                              padding: 18,
                             ),
                             CircularMediaIconButton(
                               backgroundColor: const Color(0xff7E3CF9),
+                              // location onPressed:
+                              onPressed: () {},
+                              padding: 18,
                               child: Assets.svg.locationIcon.svg(
                                 height: 20.w,
                                 width: 20.w,
                               ),
-                              // location onPressed:
-                              onPressed: () {},
-                              padding: 18,
                             ),
                           ],
                         ),
@@ -87,33 +87,33 @@ class MediaGlassmorphic extends StatelessWidget {
                           children: [
                             CircularMediaIconButton(
                               backgroundColor: const Color(0xffF93C53),
+                              // file onPressed:
+                              onPressed: () {},
+                              padding: 18,
                               child: Assets.svg.fileIcon.svg(
                                 height: 20.w,
                                 width: 20.w,
                               ),
-                              // file onPressed:
-                              onPressed: () {},
-                              padding: 18,
                             ),
                             CircularMediaIconButton(
                               backgroundColor: const Color(0xff00B4B5),
+                              // money onPressed:
+                              onPressed: () {},
+                              padding: 18,
                               child: Assets.svg.moneyIcon.svg(
                                 height: 20.w,
                                 width: 20.w,
                               ),
-                              // money onPressed:
-                              onPressed: () {},
-                              padding: 18,
                             ),
                             CircularMediaIconButton(
                               backgroundColor: const Color(0xff003EB5),
+                              // person onPressed:
+                              onPressed: () {},
+                              padding: 18,
                               child: Assets.svg.personIcon.svg(
                                 height: 20.w,
                                 width: 20.w,
                               ),
-                              // person onPressed:
-                              onPressed: () {},
-                              padding: 18,
                             ),
                           ],
                         )
