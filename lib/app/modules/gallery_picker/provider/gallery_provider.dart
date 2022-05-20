@@ -53,25 +53,14 @@ mixin PhotoDataProvider on ChangeNotifier {
 
 class PickerDataProvider extends ChangeNotifier with PhotoDataProvider {
   /// Notification when max is modified.
-  final maxNotifier = ValueNotifier(0);
+  final maxNotifier = ValueNotifier(14);
 
   static var obs;
   int get max => maxNotifier.value;
   set max(int value) => maxNotifier.value = value;
   final onPickMax = ChangeNotifier();
 
-  /// In single-select mode, when you click an unselected item, the old one is automatically cleared and the new one is selected.
-  bool get singlePickMode => _singlePickMode;
-  bool _singlePickMode = false;
-  set singlePickMode(bool singlePickMode) {
-    _singlePickMode = singlePickMode;
-    if (singlePickMode) {
-      maxNotifier.value = 1;
-      notifyListeners();
-    }
-    maxNotifier.value = max;
-    notifyListeners();
-  }
+  bool singlePickMode = false;
 
   /// pick asset entity
   /// notify changes

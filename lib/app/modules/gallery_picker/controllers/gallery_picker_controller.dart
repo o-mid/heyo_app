@@ -4,12 +4,13 @@ import 'package:photo_manager/photo_manager.dart';
 
 class GalleryPickerController extends GetxController {
   PickerDataProvider provider = PickerDataProvider();
-  Function(List<Map<String, dynamic>> path)? pathList;
+  late List<Map<String, dynamic>> pickedFile;
   RxBool singlePick = false.obs;
   RxList mediaPath = [].obs;
   final count = 0.obs;
   @override
   void onInit() {
+    pickedFile = [];
     provider.onPickMax.addListener(onPickMax);
     _getPermission();
     super.onInit();
@@ -62,6 +63,10 @@ class GalleryPickerController extends GetxController {
   Future getFile(AssetEntity asset) async {
     var file = await asset.file;
     return file!.path;
+  }
+
+  void setPickedfile(List<Map<String, dynamic>> path) {
+    pickedFile = path;
   }
 
   void increment() => count.value++;
