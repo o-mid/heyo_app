@@ -111,17 +111,17 @@ class GalleryPickerView extends GetView<GalleryPickerController> {
 
                             /// share
                             GestureDetector(
-                              onTap: () async {
-                                media.pickedFile.map((p) {
-                                  setState(() {
-                                    _mediaPath.add(p['path']);
-                                  });
-                                }).toString();
-                                if (_mediaPath.isNotEmpty) {
-                                  await Share.shareFiles(_mediaPath);
-                                }
-                                _mediaPath.clear();
-                              },
+                              // onTap: () async {
+                              //   media.pickedFile.map((p) {
+                              //     setState(() {
+                              //       _mediaPath.add(p['path']);
+                              //     });
+                              //   }).toString();
+                              //   if (_mediaPath.isNotEmpty) {
+                              //     await Share.shareFiles(_mediaPath);
+                              //   }
+                              //   _mediaPath.clear();
+                              // },
                               child: Container(
                                 height: 30,
                                 width: 30,
@@ -174,7 +174,7 @@ class GalleryPickerView extends GetView<GalleryPickerController> {
                         //     widget.selectedCheckBackgroundColor,
                         onAssetItemClick: (ctx, asset, index) async {
                           controller.provider.pickEntity(asset);
-                          _getFile(asset).then((value) {
+                          controller.getFile(asset).then((value) {
                             /// add metadata to map list
                             controller.provider.pickPath({
                               'id': asset.id,
@@ -195,7 +195,8 @@ class GalleryPickerView extends GetView<GalleryPickerController> {
                               'title': asset.title,
                               'size': asset.size,
                             });
-                            widget.pathList!(controller.provider.pickedFile);
+                            controller
+                                .pathList!(controller.provider.pickedFile);
                           });
                         },
                       ),
