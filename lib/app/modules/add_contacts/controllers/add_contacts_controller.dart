@@ -11,7 +11,7 @@ class AddContactsController extends GetxController {
   void onInit() {
     args = Get.arguments as AddContactsViewArgumentsModel;
 
-    nickname = args.user.Nickname.obs;
+    nickname = args.user.nickname.obs;
 
     super.onInit();
   }
@@ -25,7 +25,7 @@ class AddContactsController extends GetxController {
   void onClose() {}
   void increment() => count.value++;
   void setNickname(String name) {
-    args.user.Nickname = name;
+    args.user.nickname = name;
     nickname.value = name;
   }
 }

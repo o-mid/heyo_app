@@ -82,6 +82,17 @@
         "invite": "Invite"
       }
     },
+    "Calls": {
+      "emptyState": {
+        "title": "You have no calls",
+        "subtitle": "Call someone from your contact list by hitting that + button"
+      },
+      "hour": "@count hour",
+      "hours": "@count hours",
+      "minute": "@count minute",
+      "minutes": "@count minutes",
+      "durationAgo": "@duration ago"
+    },
     "bottomSheet": {
       "newChat": "Start new chat",
       "newGroup": "Start new group",
@@ -184,6 +195,7 @@
   "forward": "Forward",
   "delete": "Delete",
   "offline": "Offline",
+  "scanQrTitle": "Scan Qr Code",
   "AddContacts": {
     "addToContacts": "Add to contacts",
     "addNickname": "Add nickname",

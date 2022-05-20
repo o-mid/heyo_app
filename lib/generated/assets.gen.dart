@@ -28,6 +28,10 @@ class $AssetsPngGen {
   AssetGenImage get benefits004 =>
       const AssetGenImage('assets/png/benefits004.png');
 
+  /// File path: assets/png/calls_empty_state.png
+  AssetGenImage get callsEmptyState =>
+      const AssetGenImage('assets/png/calls_empty_state.png');
+
   /// File path: assets/png/chain.png
   AssetGenImage get chain => const AssetGenImage('assets/png/chain.png');
 
@@ -37,9 +41,9 @@ class $AssetsPngGen {
   /// File path: assets/png/keys.png
   AssetGenImage get keys => const AssetGenImage('assets/png/keys.png');
 
-  /// File path: assets/png/newChatEmptyState.png
+  /// File path: assets/png/new_chat_empty_state.png
   AssetGenImage get newChatEmptyState =>
-      const AssetGenImage('assets/png/newChatEmptyState.png');
+      const AssetGenImage('assets/png/new_chat_empty_state.png');
 
   /// File path: assets/png/profile1.png
   AssetGenImage get profile1 => const AssetGenImage('assets/png/profile1.png');
@@ -80,8 +84,20 @@ class $AssetsSvgGen {
   /// File path: assets/svg/block_icon.svg
   SvgGenImage get blockIcon => const SvgGenImage('assets/svg/block_icon.svg');
 
+  /// File path: assets/svg/bottomsheet_handle.svg
+  SvgGenImage get bottomsheetHandle =>
+      const SvgGenImage('assets/svg/bottomsheet_handle.svg');
+
   /// File path: assets/svg/call.svg
   SvgGenImage get call => const SvgGenImage('assets/svg/call.svg');
+
+  /// File path: assets/svg/call_incoming.svg
+  SvgGenImage get callIncoming =>
+      const SvgGenImage('assets/svg/call_incoming.svg');
+
+  /// File path: assets/svg/call_outgoing.svg
+  SvgGenImage get callOutgoing =>
+      const SvgGenImage('assets/svg/call_outgoing.svg');
 
   /// File path: assets/svg/chat.svg
   SvgGenImage get chat => const SvgGenImage('assets/svg/chat.svg');
@@ -162,9 +178,6 @@ class $AssetsSvgGen {
   SvgGenImage get lunaConnection =>
       const SvgGenImage('assets/svg/luna_connection.svg');
 
-  /// File path: assets/svg/more_icon.svg
-  SvgGenImage get moreIcon => const SvgGenImage('assets/svg/more_icon.svg');
-
   /// File path: assets/svg/new_chat.svg
   SvgGenImage get newChat => const SvgGenImage('assets/svg/new_chat.svg');
 
@@ -237,8 +250,6 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/wallet.svg
   SvgGenImage get wallet => const SvgGenImage('assets/svg/wallet.svg');
-
-  SvgGenImage get bottomSheetHandle => const SvgGenImage('assets/svg/bottomsheet_handle.svg');
 }
 
 class Assets {

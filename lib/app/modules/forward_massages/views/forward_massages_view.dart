@@ -48,12 +48,10 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                     padding: CustomSizes.contentPaddingWidth,
                     child: FocusScope(
                       child: Focus(
-                        onFocusChange: (focus) =>
-                            controller.isTextInputFocused.value = focus,
+                        onFocusChange: (focus) => controller.isTextInputFocused.value = focus,
                         child: CUSTOMTEXTFIELD(
                           textController: controller.inputController,
-                          labelText:
-                              LocaleKeys.forwardMassagesPage_textInput.tr,
+                          labelText: LocaleKeys.forwardMassagesPage_textInput.tr,
                         ),
                       ),
                     ),
@@ -74,8 +72,7 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                       controller.isTextInputFocused.value
                           ? const SizedBox()
                           : recentContactsWidget(
-                              users: controller.users,
-                              userSelect: controller.setSelectedUser),
+                              users: controller.users, userSelect: controller.setSelectedUser),
                       contactsWidget(
                         isTextInputFocused: controller.isTextInputFocused,
                         searchSuggestions: controller.searchSuggestions,
@@ -97,8 +94,7 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                           ),
                         ),
                       ),
-                      padding: EdgeInsets.symmetric(
-                          vertical: 12.h, horizontal: 20.w),
+                      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
                       child: Column(
                         children: [
                           Row(
@@ -115,9 +111,7 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    LocaleKeys
-                                            .forwardMassagesPage_bottomBar_forwardTO
-                                            .tr +
+                                    LocaleKeys.forwardMassagesPage_bottomBar_forwardTO.tr +
                                         controller.selectedUserName.value,
                                     style: TEXTSTYLES.kChatText.copyWith(
                                       color: COLORS.kDarkBlueColor,
@@ -125,11 +119,8 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                                     ),
                                   ),
                                   Text(
-                                      controller.selectedMessages.length
-                                              .toString() +
-                                          LocaleKeys
-                                              .forwardMassagesPage_bottomBar_messages
-                                              .tr,
+                                      controller.selectedMessages.length.toString() +
+                                          LocaleKeys.forwardMassagesPage_bottomBar_messages.tr,
                                       style: TEXTSTYLES.kChatText.copyWith(
                                         color: COLORS.kTextBlueColor,
                                       )),
@@ -137,14 +128,14 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                               )),
                               GestureDetector(
                                 onTap: () {
-                                  if (controller.selectedUser != null) {
-                                    Get.offNamedUntil(Routes.MESSAGES,
-                                        ModalRoute.withName(Routes.HOME),
-                                        arguments: MessagesViewArgumentsModel(
-                                            chat: controller
-                                                .selectedUser!.chatModel,
-                                            forwardedMessages:
-                                                controller.selectedMessages));
+                                  if (controller.selectedUser?.chatModel != null) {
+                                    Get.offNamedUntil(
+                                      Routes.MESSAGES,
+                                      ModalRoute.withName(Routes.HOME),
+                                      arguments: MessagesViewArgumentsModel(
+                                          chat: controller.selectedUser!.chatModel!,
+                                          forwardedMessages: controller.selectedMessages),
+                                    );
                                   }
                                 },
                                 child: Assets.svg.sendIcon.svg(
