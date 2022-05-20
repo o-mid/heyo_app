@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/gallery_picker/provider/gallery_provider.dart';
 import 'package:heyo/app/modules/gallery_picker/widgets/decode_image.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 class ThumbnailWidget extends StatelessWidget {
@@ -50,7 +51,9 @@ class ThumbnailWidget extends StatelessWidget {
       children: [
         /// background gradient from image
         Container(
-          decoration: BoxDecoration(color: imageBackgroundColor),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+          ),
         ),
 
         /// thumbnail image
@@ -61,19 +64,22 @@ class ThumbnailWidget extends StatelessWidget {
               return SizedBox(
                 width: double.infinity,
                 height: double.infinity,
-                child: Image(
-                  image: DecodeImage(
-                      provider.pathList[
-                          provider.pathList.indexOf(provider.currentPath!)],
-                      thumbSize: thumbnailQuality,
-                      index: index),
-                  gaplessPlayback: true,
-                  fit: thumbnailBoxFix,
-                  filterQuality: FilterQuality.high,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(4)),
+                  child: Image(
+                    image: DecodeImage(
+                        provider.pathList[
+                            provider.pathList.indexOf(provider.currentPath!)],
+                        thumbSize: thumbnailQuality,
+                        index: index),
+                    gaplessPlayback: true,
+                    fit: thumbnailBoxFix,
+                    filterQuality: FilterQuality.high,
+                  ),
                 ),
               );
             } else {
-              return Container();
+              return const SizedBox();
             }
           },
         ),
@@ -96,33 +102,30 @@ class ThumbnailWidget extends StatelessWidget {
 
         /// selected image check
         Align(
-          alignment: Alignment.topRight,
+          alignment: Alignment.bottomRight,
           child: Padding(
-            padding: const EdgeInsets.only(right: 5, top: 5),
+            padding: const EdgeInsets.only(right: 10, bottom: 10),
             child: AnimatedBuilder(
                 animation: provider,
                 builder: (_, __) {
                   final pickIndex = provider.pickIndex(asset);
                   final picked = pickIndex >= 0;
-                  return AnimatedOpacity(
-                    duration: const Duration(milliseconds: 200),
-                    opacity: picked ? 1 : 0,
-                    child: Container(
-                      height: 20,
-                      width: 20,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: picked
-                            ? selectedCheckBackgroundColor.withOpacity(0.6)
-                            : Colors.transparent,
-                        border:
-                            Border.all(width: 1.5, color: selectedCheckColor),
-                      ),
-                      child: Icon(
-                        Icons.check,
-                        color: selectedCheckColor,
-                        size: 14,
-                      ),
+                  return Container(
+                    height: 20,
+                    width: 20,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color:
+                          picked ? COLORS.kGreenMainColor : Colors.transparent,
+                      border: Border.all(
+                          width: 1.5,
+                          color:
+                              picked ? COLORS.kGreenMainColor : Colors.white),
+                    ),
+                    child: Icon(
+                      Icons.check_rounded,
+                      color: picked ? selectedCheckColor : Colors.transparent,
+                      size: 14,
                     ),
                   );
                 }),
@@ -132,37 +135,22 @@ class ThumbnailWidget extends StatelessWidget {
         /// video duration widget
         if (asset.type == AssetType.video)
           Align(
-            alignment: Alignment.bottomRight,
+            alignment: Alignment.bottomLeft,
             child: Padding(
-              padding: const EdgeInsets.only(right: 5, bottom: 5),
+              padding: const EdgeInsets.only(left: 10, bottom: 10),
               child: Container(
                   decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.white, width: 1)),
+                    color: Colors.black.withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.play_circle_fill,
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                  child: Text(
+                    _parseDuration(asset.videoDuration.inSeconds),
+                    style: const TextStyle(
                         color: Colors.white,
-                        size: 10,
-                      ),
-                      const SizedBox(
-                        width: 3,
-                      ),
-                      Text(
-                        _parseDuration(asset.videoDuration.inSeconds),
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 8),
-                      ),
-                    ],
+                        fontWeight: FontWeight.w600,
+                        fontSize: 8),
                   )),
             ),
           )

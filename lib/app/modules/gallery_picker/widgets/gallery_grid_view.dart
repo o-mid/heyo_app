@@ -101,14 +101,14 @@ class _GalleryGridViewState extends State<GalleryGridView> {
               child: GridView.builder(
                 key: ValueKey(widget.path),
                 shrinkWrap: true,
-                padding: widget.padding ?? const EdgeInsets.all(0),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 physics: widget.gridViewPhysics ?? const ScrollPhysics(),
                 controller: widget.gridViewController ?? ScrollController(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   childAspectRatio: widget.childAspectRatio,
                   crossAxisCount: widget.crossAxisCount,
-                  mainAxisSpacing: 2.5,
-                  crossAxisSpacing: 2.5,
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 8,
                 ),
 
                 /// render thumbnail
@@ -132,6 +132,7 @@ class _GalleryGridViewState extends State<GalleryGridView> {
               .getAssetListRange(start: index, end: index + 1))[0];
           cacheMap[index] = asset;
         }
+        ;
         widget.onAssetItemClick?.call(context, asset, index);
       },
 

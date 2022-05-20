@@ -7,8 +7,6 @@ class SelectedPathDropdownButton extends StatelessWidget {
   /// picker provider
   final PhotoDataProvider provider;
 
-  /// global key
-  final GlobalKey? dropdownRelativeKey;
   final Color appBarColor;
 
   /// appBar TextColor
@@ -32,7 +30,6 @@ class SelectedPathDropdownButton extends StatelessWidget {
   const SelectedPathDropdownButton(
       {Key? key,
       required this.provider,
-      required this.dropdownRelativeKey,
       required this.appBarTextColor,
       required this.appBarIconColor,
       required this.appBarColor,
@@ -50,7 +47,6 @@ class SelectedPathDropdownButton extends StatelessWidget {
       builder: (_, __) => Row(
         children: [
           DropDown<AssetPathEntity>(
-            relativeKey: dropdownRelativeKey!,
             child:
                 ((context) => buildButton(context, arrowDownNotifier))(context),
             dropdownWidgetBuilder: (BuildContext context, close) {
@@ -71,9 +67,8 @@ class SelectedPathDropdownButton extends StatelessWidget {
               arrowDownNotifier.value = value;
             },
           ),
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width / 1.7,
-            alignment: Alignment.bottomLeft,
             child: appBarLeadingWidget ?? Container(),
           )
         ],

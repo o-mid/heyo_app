@@ -6,7 +6,7 @@ class GalleryPickerController extends GetxController {
   PickerDataProvider provider = PickerDataProvider();
   late List<Map<String, dynamic>> pickedFile;
   RxBool singlePick = false.obs;
-  RxList mediaPath = [].obs;
+  List<String> mediaPath = [];
   final count = 0.obs;
   @override
   void onInit() {
