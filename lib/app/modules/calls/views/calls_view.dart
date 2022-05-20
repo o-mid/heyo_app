@@ -18,6 +18,7 @@ class CallsView extends GetView<CallsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: COLORS.kAppBackground,
       appBar: AppBar(
         backgroundColor: COLORS.kGreenMainColor,
         title: Text(
@@ -36,14 +37,16 @@ class CallsView extends GetView<CallsController> {
             ),
         ],
       ),
-      body: controller.calls.isEmpty
-          ? const EmptyCallsWidget()
-          : ListView.separated(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
-              itemCount: controller.calls.length,
-              itemBuilder: (context, index) => CallLogWidget(call: controller.calls[index]),
-              separatorBuilder: (context, index) => CustomSizes.mediumSizedBoxHeight,
-            ),
+      body: Obx(() {
+        return controller.calls.isEmpty
+            ? const EmptyCallsWidget()
+            : ListView.separated(
+                padding: EdgeInsets.symmetric(vertical: 18.h),
+                itemCount: controller.calls.length,
+                itemBuilder: (context, index) => CallLogWidget(call: controller.calls[index]),
+                separatorBuilder: (context, index) => CustomSizes.mediumSizedBoxHeight,
+              );
+      }),
     );
   }
 }

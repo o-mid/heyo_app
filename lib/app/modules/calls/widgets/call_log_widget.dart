@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/calls/controllers/calls_controller.dart';
 import 'package:heyo/app/modules/calls/data/models/call_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -10,6 +11,7 @@ import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:intl/intl.dart';
+import 'package:swipeable_tile/swipeable_tile.dart';
 
 class CallLogWidget extends StatelessWidget {
   final CallModel call;
@@ -20,42 +22,69 @@ class CallLogWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        CustomCircleAvatar(url: call.user.icon, size: 40),
-        CustomSizes.mediumSizedBoxWidth,
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    final controller = Get.find<CallsController>();
+    return SwipeableTile.swipeToTrigger(
+      key: Key(call.id),
+      isElevated: false,
+      swipeThreshold: 0.21,
+      borderRadius: 0,
+      onSwiped: (SwipeDirection direction) {
+        controller.showDeleteCallDialog(call);
+      },
+      color: COLORS.kAppBackground,
+      backgroundBuilder:
+          (BuildContext context, SwipeDirection direction, AnimationController progress) {
+        return Container(
+          alignment: Alignment.centerRight,
+          color: COLORS.kStatesErrorColor,
+          padding: EdgeInsets.symmetric(horizontal: 30.w),
+          child: Assets.svg.deleteIcon.svg(
+            color: COLORS.kWhiteColor,
+            width: 18.w,
+            height: 18.w,
+          ),
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        child: Row(
           children: [
-            Row(
+            CustomCircleAvatar(url: call.user.icon, size: 40),
+            CustomSizes.mediumSizedBoxWidth,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  call.user.name,
-                  style: TEXTSTYLES.kChatName.copyWith(
-                    color: COLORS.kDarkBlueColor,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      call.user.name,
+                      style: TEXTSTYLES.kChatName.copyWith(
+                        color: COLORS.kDarkBlueColor,
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    if (call.user.isVerified)
+                      Assets.svg.verifiedWithBluePadding.svg(
+                        width: 16.w,
+                        height: 16.w,
+                      ),
+                  ],
                 ),
-                SizedBox(width: 8.w),
-                if (call.user.isVerified)
-                  Assets.svg.verifiedWithBluePadding.svg(
-                    width: 16.w,
-                    height: 16.w,
-                  ),
+                SizedBox(height: 4.h),
+                Row(
+                  children: [
+                    _buildCallStatus(),
+                    SizedBox(width: 10.w),
+                    _buildCallDate(),
+                  ],
+                ),
               ],
             ),
-            SizedBox(height: 4.h),
-            Row(
-              children: [
-                _buildCallStatus(),
-                SizedBox(width: 10.w),
-                _buildCallDate(),
-              ],
-            ),
+            const Spacer(),
+            _buildCallTypeIcon(),
           ],
         ),
-        const Spacer(),
-        _buildCallTypeIcon(),
-      ],
+      ),
     );
   }
 
@@ -110,24 +139,26 @@ class CallLogWidget extends StatelessWidget {
     final difference = DateTime.now().difference(call.date);
 
     String duration = "";
+    final hours = difference.inMinutes ~/ 60;
+    final minutes = difference.inMinutes % 60;
 
     /// if hour and minute are both greater than zero separate them with a space
-    final joiner = difference.inHours > 0 && difference.inMinutes > 0 ? " " : "";
+    final joiner = hours > 0 && difference.inMinutes > 0 ? " " : "";
 
-    if (difference.inHours > 0) {
+    if (hours > 0) {
       duration += LocaleKeys.HomePage_Calls_hour.trPluralParams(
         LocaleKeys.HomePage_Calls_hours,
-        difference.inHours,
-        {"count": difference.inHours.toString()},
+        hours,
+        {"count": hours.toString()},
       );
       duration += joiner;
     }
 
-    if (difference.inMinutes > 0) {
+    if (minutes > 0) {
       duration += LocaleKeys.HomePage_Calls_minute.trPluralParams(
         LocaleKeys.HomePage_Calls_minutes,
-        difference.inMinutes,
-        {"count": difference.inMinutes.toString()},
+        minutes,
+        {"count": minutes.toString()},
       );
     }
 

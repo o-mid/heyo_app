@@ -91,7 +91,12 @@
       "hours": "@count hours",
       "minute": "@count minute",
       "minutes": "@count minutes",
-      "durationAgo": "@duration ago"
+      "durationAgo": "@duration ago",
+      "deleteCallDialog": {
+        "title": "Delete this call from history?",
+        "delete": "Delete",
+        "cancel": "Cancel"
+      }
     },
     "bottomSheet": {
       "newChat": "Start new chat",

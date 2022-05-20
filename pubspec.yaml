@@ -50,6 +50,7 @@ dependencies:
   permission_handler: ^9.2.0
   osm_nominatim: ^2.0.1
   geolocator: ^8.2.1
+  swipeable_tile: ^2.0.0
 
 dependency_overrides:
   permission_handler: ^9.2.0

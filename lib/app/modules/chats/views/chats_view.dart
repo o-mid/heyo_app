@@ -18,6 +18,7 @@ class ChatsView extends GetView<ChatsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: COLORS.kAppBackground,
       appBar: AppBar(
         backgroundColor: COLORS.kGreenMainColor,
         title: Text(
