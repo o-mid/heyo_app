@@ -1,10 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/data/models/call_model.dart';
+import 'package:heyo/app/modules/calls/widgets/call_log_widget.dart';
 import 'package:heyo/app/modules/calls/widgets/delete_call_dialog.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 
 class CallsController extends GetxController {
   final calls = <CallModel>[].obs;
+  final animatedListKey = GlobalKey<AnimatedListState>();
+
   @override
   void onInit() {
     super.onInit();
@@ -23,7 +27,17 @@ class CallsController extends GetxController {
   void showDeleteCallDialog(CallModel call) {
     Get.dialog(
       DeleteCallDialog(
-        deleteCall: () => calls.removeWhere((c) => c.id == call.id),
+        deleteCall: () {
+          final index = calls.indexWhere((c) => c.id == call.id);
+          animatedListKey.currentState?.removeItem(
+            index,
+            (context, animation) => SizeTransition(
+              sizeFactor: animation,
+              child: CallLogWidget(call: call),
+            ),
+          );
+          calls.removeAt(index);
+        },
       ),
     );
   }

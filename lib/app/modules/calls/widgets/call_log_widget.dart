@@ -46,7 +46,7 @@ class CallLogWidget extends StatelessWidget {
         );
       },
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
         child: Row(
           children: [
             CustomCircleAvatar(url: call.user.icon, size: 40),

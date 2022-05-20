@@ -6,7 +6,6 @@ import 'package:heyo/app/modules/calls/widgets/call_log_widget.dart';
 import 'package:heyo/app/modules/calls/widgets/empty_calls_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
@@ -27,24 +26,29 @@ class CallsView extends GetView<CallsController> {
         ),
         automaticallyImplyLeading: false,
         actions: [
-          if (controller.calls.isNotEmpty)
-            Padding(
-              padding: EdgeInsets.only(right: 26.w),
-              child: GestureDetector(
-                onTap: () {},
-                child: Assets.svg.verticalMenuIcon.svg(),
-              ),
-            ),
+          Obx(() {
+            if (controller.calls.isNotEmpty) {
+              return Padding(
+                padding: EdgeInsets.only(right: 26.w),
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Assets.svg.verticalMenuIcon.svg(),
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          }),
         ],
       ),
       body: Obx(() {
         return controller.calls.isEmpty
             ? const EmptyCallsWidget()
-            : ListView.separated(
-                padding: EdgeInsets.symmetric(vertical: 18.h),
-                itemCount: controller.calls.length,
-                itemBuilder: (context, index) => CallLogWidget(call: controller.calls[index]),
-                separatorBuilder: (context, index) => CustomSizes.mediumSizedBoxHeight,
+            : AnimatedList(
+                key: controller.animatedListKey,
+                padding: EdgeInsets.symmetric(vertical: 10.h),
+                initialItemCount: controller.calls.length,
+                itemBuilder: (context, index, animation) =>
+                    CallLogWidget(call: controller.calls[index]),
               );
       }),
     );
