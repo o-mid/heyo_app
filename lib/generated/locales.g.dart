@@ -109,6 +109,14 @@ class LocaleKeys {
       'HomePage_Calls_deleteCallDialog_delete';
   static const HomePage_Calls_deleteCallDialog_cancel =
       'HomePage_Calls_deleteCallDialog_cancel';
+  static const HomePage_Calls_deleteAllCallsDialog_title =
+      'HomePage_Calls_deleteAllCallsDialog_title';
+  static const HomePage_Calls_deleteAllCallsDialog_delete =
+      'HomePage_Calls_deleteAllCallsDialog_delete';
+  static const HomePage_Calls_deleteAllCallsDialog_cancel =
+      'HomePage_Calls_deleteAllCallsDialog_cancel';
+  static const HomePage_Calls_bottomSheet_deleteAllCalls =
+      'HomePage_Calls_bottomSheet_deleteAllCalls';
   static const HomePage_bottomSheet_newChat = 'HomePage_bottomSheet_newChat';
   static const HomePage_bottomSheet_newGroup = 'HomePage_bottomSheet_newGroup';
   static const HomePage_bottomSheet_invite = 'HomePage_bottomSheet_invite';
@@ -308,6 +316,11 @@ class Locales {
     'HomePage_Calls_deleteCallDialog_title': 'Delete this call from history?',
     'HomePage_Calls_deleteCallDialog_delete': 'Delete',
     'HomePage_Calls_deleteCallDialog_cancel': 'Cancel',
+    'HomePage_Calls_deleteAllCallsDialog_title':
+        'Delete all calls from history?',
+    'HomePage_Calls_deleteAllCallsDialog_delete': 'Delete',
+    'HomePage_Calls_deleteAllCallsDialog_cancel': 'Cancel',
+    'HomePage_Calls_bottomSheet_deleteAllCalls': 'Delete all calls',
     'HomePage_bottomSheet_newChat': 'Start new chat',
     'HomePage_bottomSheet_newGroup': 'Start new group',
     'HomePage_bottomSheet_invite': 'Invite',

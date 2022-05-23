@@ -31,7 +31,7 @@ class CallsView extends GetView<CallsController> {
               return Padding(
                 padding: EdgeInsets.only(right: 26.w),
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: controller.showDeleteAllCallsBottomSheet,
                   child: Assets.svg.verticalMenuIcon.svg(),
                 ),
               );

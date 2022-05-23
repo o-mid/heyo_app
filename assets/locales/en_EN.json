@@ -96,6 +96,14 @@
         "title": "Delete this call from history?",
         "delete": "Delete",
         "cancel": "Cancel"
+      },
+      "deleteAllCallsDialog": {
+        "title": "Delete all calls from history?",
+        "delete": "Delete",
+        "cancel": "Cancel"
+      },
+      "bottomSheet": {
+        "deleteAllCalls": "Delete all calls"
       }
     },
     "bottomSheet": {
