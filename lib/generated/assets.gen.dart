@@ -73,6 +73,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/account.svg
   SvgGenImage get account => const SvgGenImage('assets/svg/account.svg');
 
+  /// File path: assets/svg/add_participant.svg
+  SvgGenImage get addParticipant =>
+      const SvgGenImage('assets/svg/add_participant.svg');
+
   /// File path: assets/svg/add_to_contacts_icon.svg
   SvgGenImage get addToContactsIcon =>
       const SvgGenImage('assets/svg/add_to_contacts_icon.svg');
@@ -91,6 +95,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/call.svg
   SvgGenImage get call => const SvgGenImage('assets/svg/call.svg');
 
+  /// File path: assets/svg/call_end.svg
+  SvgGenImage get callEnd => const SvgGenImage('assets/svg/call_end.svg');
+
   /// File path: assets/svg/call_incoming.svg
   SvgGenImage get callIncoming =>
       const SvgGenImage('assets/svg/call_incoming.svg');
@@ -105,6 +112,10 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/chat.svg
   SvgGenImage get chat => const SvgGenImage('assets/svg/chat.svg');
+
+  /// File path: assets/svg/chat_outlined.svg
+  SvgGenImage get chatOutlined =>
+      const SvgGenImage('assets/svg/chat_outlined.svg');
 
   /// File path: assets/svg/clock.svg
   SvgGenImage get clock => const SvgGenImage('assets/svg/clock.svg');
@@ -182,6 +193,9 @@ class $AssetsSvgGen {
   SvgGenImage get lunaConnection =>
       const SvgGenImage('assets/svg/luna_connection.svg');
 
+  /// File path: assets/svg/mute_icon.svg
+  SvgGenImage get muteIcon => const SvgGenImage('assets/svg/mute_icon.svg');
+
   /// File path: assets/svg/new_chat.svg
   SvgGenImage get newChat => const SvgGenImage('assets/svg/new_chat.svg');
 
@@ -229,6 +243,10 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/send_icon.svg
   SvgGenImage get sendIcon => const SvgGenImage('assets/svg/send_icon.svg');
+
+  /// File path: assets/svg/share_screen.svg
+  SvgGenImage get shareScreen =>
+      const SvgGenImage('assets/svg/share_screen.svg');
 
   /// File path: assets/svg/single_tick_icon.svg
   SvgGenImage get singleTickIcon =>

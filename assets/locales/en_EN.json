@@ -115,6 +115,10 @@
   "CallHistory": {
     "appbar": "Call history"
   },
+  "CallPage": {
+    "participants": "Participants",
+    "ringing": "Ringing..."
+  },
   "newChat": {
     "newChatAppBar": "New Chat",
     "slider": {

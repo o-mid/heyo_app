@@ -121,6 +121,8 @@ class LocaleKeys {
   static const HomePage_bottomSheet_newGroup = 'HomePage_bottomSheet_newGroup';
   static const HomePage_bottomSheet_invite = 'HomePage_bottomSheet_invite';
   static const CallHistory_appbar = 'CallHistory_appbar';
+  static const CallPage_participants = 'CallPage_participants';
+  static const CallPage_ringing = 'CallPage_ringing';
   static const newChat_newChatAppBar = 'newChat_newChatAppBar';
   static const newChat_slider_contacts = 'newChat_slider_contacts';
   static const newChat_slider_nearbyUsers = 'newChat_slider_nearbyUsers';
@@ -326,6 +328,8 @@ class Locales {
     'HomePage_bottomSheet_newGroup': 'Start new group',
     'HomePage_bottomSheet_invite': 'Invite',
     'CallHistory_appbar': 'Call history',
+    'CallPage_participants': 'Participants',
+    'CallPage_ringing': 'Ringing...',
     'newChat_newChatAppBar': 'New Chat',
     'newChat_slider_contacts': 'Contacts',
     'newChat_slider_nearbyUsers': 'Nearby users',
