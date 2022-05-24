@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_camera/flutter_camera.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ import 'package:heyo/app/modules/gallery_picker/widgets/media_preview_widget.dar
 import 'package:heyo/app/modules/gallery_picker/widgets/thumbnail_widget.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/assets.gen.dart';
+import 'package:mime/mime.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../controllers/gallery_picker_controller.dart';

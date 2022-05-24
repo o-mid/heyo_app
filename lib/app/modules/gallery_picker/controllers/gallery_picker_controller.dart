@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/gallery_picker/provider/gallery_provider.dart';
+import 'package:mime/mime.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 class GalleryPickerController extends GetxController {
@@ -71,6 +72,11 @@ class GalleryPickerController extends GetxController {
     pickedFile = path;
     previewFiles.value = pickedFile;
     previewFiles.refresh();
+  }
+
+  bool isAssetImage(String path) {
+    final mimeType = lookupMimeType(path);
+    return mimeType!.startsWith('image/');
   }
 
   void increment() => count.value++;

@@ -119,7 +119,7 @@ packages:
       name: camera
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.6"
+    version: "0.9.7"
   camera_platform_interface:
     dependency: transitive
     description:
@@ -339,7 +339,7 @@ packages:
     description:
       path: "."
       ref: development
-      resolved-ref: cdada02e03ce710668de2477ad4d6fd507050256
+      resolved-ref: "031105c2f347f1e53be2ff3bc54e4f1dc59dc676"
       url: "git@git.energy:heyo/flutter_camera"
     source: git
     version: "0.0.1"
@@ -622,7 +622,7 @@ packages:
     source: hosted
     version: "1.7.0"
   mime:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: mime
       url: "https://pub.dartlang.org"

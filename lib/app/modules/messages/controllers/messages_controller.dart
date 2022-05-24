@@ -704,13 +704,13 @@ class MessagesController extends GetxController {
   Future<void> pick(BuildContext context) async {
     final Size size = MediaQuery.of(context).size;
     final double scale = MediaQuery.of(context).devicePixelRatio;
-    bool _isCameraDenied = await Permission.camera.isDenied;
-    bool _isMediaDenied = await Permission.mediaLibrary.isDenied;
+    bool isCameraDenied = await Permission.camera.isDenied;
+    bool isMediaDenied = await Permission.mediaLibrary.isDenied;
     if (GetPlatform.isAndroid) {
-      _isMediaDenied = false;
+      isMediaDenied = false;
     }
-    if (_isMediaDenied) {
-      bool _result = await Get.dialog(PermissionDialog(
+    if (isMediaDenied) {
+      bool result = await Get.dialog(PermissionDialog(
         indicatorIcon: Assets.svg.camerapermissionIcon.svg(
           width: 28.w,
           height: 28.w,
@@ -718,17 +718,17 @@ class MessagesController extends GetxController {
         title: LocaleKeys.Permissions_AllowAccess.tr,
         subtitle: LocaleKeys.Permissions_capturePhotos.tr,
       ));
-      if (_result) {
+      if (result) {
         await Permission.mediaLibrary.request().then((value) {
           if (value.isGranted) {
-            _isMediaDenied = false;
+            isMediaDenied = false;
           }
         });
       }
     }
 
-    if (_isCameraDenied) {
-      bool _result = await Get.dialog(PermissionDialog(
+    if (isCameraDenied) {
+      bool result = await Get.dialog(PermissionDialog(
         indicatorIcon: Assets.svg.camerapermissionIcon.svg(
           width: 28.w,
           height: 28.w,
@@ -736,23 +736,23 @@ class MessagesController extends GetxController {
         title: LocaleKeys.Permissions_AllowAccess.tr,
         subtitle: LocaleKeys.Permissions_camera.tr,
       ));
-      if (_result) {
+      if (result) {
         await Permission.camera.request().then((value) {
           if (value.isGranted) {
-            _isCameraDenied = false;
+            isCameraDenied = false;
           }
         });
       }
     }
 
-    if (!_isCameraDenied && !_isMediaDenied) {
+    if (!isCameraDenied && !isMediaDenied) {
       openCameraPicker(context);
     }
   }
 
   Future<void> openCameraPicker(BuildContext context) async {
     try {
-      final AssetEntity? _entity = await CameraPicker.pickFromCamera(context,
+      final AssetEntity? entity = await CameraPicker.pickFromCamera(context,
           pickerConfig: CameraPickerConfig(
             textDelegate: EnglishCameraPickerTextDelegate(),
             sendIcon: Assets.svg.sendIcon.svg(),

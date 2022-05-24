@@ -37,6 +37,7 @@ dependencies:
       ref: development
   permission_handler: ^9.2.0
   photo_manager: ^2.1.1
+  mime: ^1.0.2
 dev_dependencies:
   build_runner:
   flutter_gen_runner:
