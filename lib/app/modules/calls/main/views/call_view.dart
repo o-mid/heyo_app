@@ -32,7 +32,7 @@ class CallView extends GetView<CallController> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: controller.toggleMuteCall,
             splashRadius: 18,
             icon: Assets.svg.volumeUp.svg(),
           ),
@@ -86,7 +86,22 @@ class CallView extends GetView<CallController> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildCircleIconButton(
-                      icon: Assets.svg.videoCallIcon.svg(),
+                      onPressed: controller.recordCall,
+                      icon: Container(
+                        padding: EdgeInsets.all(4.w),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            width: 1.w,
+                            color: COLORS.kWhiteColor,
+                          ),
+                        ),
+                        child: Assets.svg.recordVoiceCircleIcon.svg(
+                          width: 48.w,
+                          height: 48.w,
+                          color: COLORS.kStatesErrorColor,
+                        ),
+                      ),
                     ),
                     _buildCircleIconButton(
                       icon: Assets.svg.shareScreen.svg(color: COLORS.kWhiteColor),
@@ -121,7 +136,7 @@ class CallView extends GetView<CallController> {
                     _buildCircleIconButton(
                       icon: Assets.svg.addParticipant.svg(),
                       backgroundColor: Colors.transparent,
-                      onPressed: () {},
+                      onPressed: controller.addParticipant,
                     ),
                   ],
                 ),
@@ -187,7 +202,7 @@ class CallView extends GetView<CallController> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildCircleIconButton(
-                      onPressed: () {}, // Todo
+                      onPressed: controller.toggleVideo,
                       backgroundColor: COLORS.kWhiteColor,
                       icon: Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
                     ),
@@ -196,11 +211,11 @@ class CallView extends GetView<CallController> {
                       icon: Assets.svg.chatOutlined.svg(color: COLORS.kWhiteColor),
                     ),
                     _buildCircleIconButton(
-                      onPressed: () {}, // Todo
+                      onPressed: controller.toggleMuteMic,
                       icon: Assets.svg.muteIcon.svg(color: COLORS.kWhiteColor),
                     ),
                     _buildCircleIconButton(
-                      onPressed: () {}, // Todo
+                      onPressed: controller.endCall,
                       backgroundColor: COLORS.kStatesErrorColor,
                       icon: Assets.svg.callEnd.svg(color: COLORS.kWhiteColor),
                     ),

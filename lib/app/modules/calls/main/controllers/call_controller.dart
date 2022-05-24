@@ -1,9 +1,6 @@
 import 'package:get/get.dart';
 
 class CallController extends GetxController {
-  //TODO: Implement CallController
-
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -14,7 +11,24 @@ class CallController extends GetxController {
     super.onReady();
   }
 
+  // Todo
+  void toggleMuteMic() {}
+
+  // Todo
+  void toggleMuteCall() {}
+
+  // Todo
+  void endCall() {}
+
+  // Todo
+  void addParticipant() {}
+
+  // Todo
+  void recordCall() {}
+
+  // Todo
+  void toggleVideo() {}
+
   @override
   void onClose() {}
-  void increment() => count.value++;
 }
