@@ -1,6 +1,4 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/information/shareable_qr_view.dart';
-import 'package:heyo/app/modules/website-interact/website_interact_view.dart';
 
 import '../modules/account/bindings/account_binding.dart';
 import '../modules/account/views/account_view.dart';
@@ -12,12 +10,17 @@ import '../modules/auth/pinCode/bindings/pin_code_binding.dart';
 import '../modules/auth/pinCode/views/pin_code_view.dart';
 import '../modules/auth/sing-up/bindings/sing_up_binding.dart';
 import '../modules/auth/sing-up/views/sing_up_view.dart';
-import '../modules/calls/bindings/calls_binding.dart';
-import '../modules/calls/views/calls_view.dart';
+import '../modules/calls/main/bindings/call_binding.dart';
+import '../modules/calls/main/views/call_view.dart';
+import '../modules/calls/home/bindings/calls_binding.dart';
+import '../modules/calls/home/views/calls_view.dart';
+import '../modules/calls/user_call_history/bindings/user_call_history_binding.dart';
+import '../modules/calls/user_call_history/views/user_call_history_view.dart';
 import '../modules/forward_massages/bindings/forward_massages_binding.dart';
 import '../modules/forward_massages/views/forward_massages_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/information/shareable_qr_view.dart';
 import '../modules/intro/bindings/intro_binding.dart';
 import '../modules/intro/views/intro_view.dart';
 import '../modules/messages/bindings/messages_binding.dart';
@@ -32,6 +35,7 @@ import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 import '../modules/wallet/bindings/wallet_binding.dart';
 import '../modules/wallet/views/wallet_view.dart';
+import '../modules/website-interact/website_interact_view.dart';
 
 part 'app_routes.dart';
 
@@ -124,6 +128,16 @@ class AppPages {
     GetPage(
       name: _Paths.SCAN_QR,
       page: () => WebsiteInteractView(),
-    )
+    ),
+    GetPage(
+      name: _Paths.USER_CALL_HISTORY,
+      page: () => UserCallHistoryView(),
+      binding: UserCallHistoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.CALL,
+      page: () => CallView(),
+      binding: CallBinding(),
+    ),
   ];
 }

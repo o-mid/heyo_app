@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/widgets/call_log_widget.dart';
-import 'package:heyo/app/modules/calls/widgets/empty_calls_widget.dart';
+import 'package:heyo/app/modules/calls/home/widgets/call_log_widget.dart';
+import 'package:heyo/app/modules/calls/home/widgets/empty_calls_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/generated/assets.gen.dart';
@@ -28,12 +28,10 @@ class CallsView extends GetView<CallsController> {
         actions: [
           Obx(() {
             if (controller.calls.isNotEmpty) {
-              return Padding(
-                padding: EdgeInsets.only(right: 26.w),
-                child: GestureDetector(
-                  onTap: controller.showDeleteAllCallsBottomSheet,
-                  child: Assets.svg.verticalMenuIcon.svg(),
-                ),
+              return IconButton(
+                splashRadius: 18,
+                onPressed: controller.showDeleteAllCallsBottomSheet,
+                icon: Assets.svg.verticalMenuIcon.svg(),
               );
             }
             return const SizedBox.shrink();

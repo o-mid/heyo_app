@@ -99,6 +99,10 @@ class $AssetsSvgGen {
   SvgGenImage get callOutgoing =>
       const SvgGenImage('assets/svg/call_outgoing.svg');
 
+  /// File path: assets/svg/camera_switch.svg
+  SvgGenImage get cameraSwitch =>
+      const SvgGenImage('assets/svg/camera_switch.svg');
+
   /// File path: assets/svg/chat.svg
   SvgGenImage get chat => const SvgGenImage('assets/svg/chat.svg');
 
@@ -247,6 +251,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/video_call_icon.svg
   SvgGenImage get videoCallIcon =>
       const SvgGenImage('assets/svg/video_call_icon.svg');
+
+  /// File path: assets/svg/volume_up.svg
+  SvgGenImage get volumeUp => const SvgGenImage('assets/svg/volume_up.svg');
 
   /// File path: assets/svg/wallet.svg
   SvgGenImage get wallet => const SvgGenImage('assets/svg/wallet.svg');

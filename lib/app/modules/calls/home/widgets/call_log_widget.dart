@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/controllers/calls_controller.dart';
-import 'package:heyo/app/modules/calls/data/models/call_model.dart';
+import 'package:heyo/app/modules/calls/home/controllers/calls_controller.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:intl/intl.dart';
@@ -23,66 +24,71 @@ class CallLogWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<CallsController>();
-    return SwipeableTile.swipeToTrigger(
-      key: Key(call.id),
-      isElevated: false,
-      swipeThreshold: 0.21,
-      borderRadius: 0,
-      onSwiped: (SwipeDirection direction) {
-        controller.showDeleteCallDialog(call);
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(Routes.USER_CALL_HISTORY);
       },
-      color: COLORS.kAppBackground,
-      backgroundBuilder:
-          (BuildContext context, SwipeDirection direction, AnimationController progress) {
-        return Container(
-          alignment: Alignment.centerRight,
-          color: COLORS.kStatesErrorColor,
-          padding: EdgeInsets.symmetric(horizontal: 30.w),
-          child: Assets.svg.deleteIcon.svg(
-            color: COLORS.kWhiteColor,
-            width: 18.w,
-            height: 18.w,
-          ),
-        );
-      },
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-        child: Row(
-          children: [
-            CustomCircleAvatar(url: call.user.icon, size: 40),
-            CustomSizes.mediumSizedBoxWidth,
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      call.user.name,
-                      style: TEXTSTYLES.kChatName.copyWith(
-                        color: COLORS.kDarkBlueColor,
-                      ),
-                    ),
-                    SizedBox(width: 8.w),
-                    if (call.user.isVerified)
-                      Assets.svg.verifiedWithBluePadding.svg(
-                        width: 16.w,
-                        height: 16.w,
-                      ),
-                  ],
-                ),
-                SizedBox(height: 4.h),
-                Row(
-                  children: [
-                    _buildCallStatus(),
-                    SizedBox(width: 10.w),
-                    _buildCallDate(),
-                  ],
-                ),
-              ],
+      child: SwipeableTile.swipeToTrigger(
+        key: Key(call.id),
+        isElevated: false,
+        swipeThreshold: 0.21,
+        borderRadius: 0,
+        onSwiped: (SwipeDirection direction) {
+          controller.showDeleteCallDialog(call);
+        },
+        color: COLORS.kAppBackground,
+        backgroundBuilder:
+            (BuildContext context, SwipeDirection direction, AnimationController progress) {
+          return Container(
+            alignment: Alignment.centerRight,
+            color: COLORS.kStatesErrorColor,
+            padding: EdgeInsets.symmetric(horizontal: 30.w),
+            child: Assets.svg.deleteIcon.svg(
+              color: COLORS.kWhiteColor,
+              width: 18.w,
+              height: 18.w,
             ),
-            const Spacer(),
-            _buildCallTypeIcon(),
-          ],
+          );
+        },
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+          child: Row(
+            children: [
+              CustomCircleAvatar(url: call.user.icon, size: 40),
+              CustomSizes.mediumSizedBoxWidth,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        call.user.name,
+                        style: TEXTSTYLES.kChatName.copyWith(
+                          color: COLORS.kDarkBlueColor,
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      if (call.user.isVerified)
+                        Assets.svg.verifiedWithBluePadding.svg(
+                          width: 16.w,
+                          height: 16.w,
+                        ),
+                    ],
+                  ),
+                  SizedBox(height: 4.h),
+                  Row(
+                    children: [
+                      _buildCallStatus(),
+                      SizedBox(width: 10.w),
+                      _buildCallDate(),
+                    ],
+                  ),
+                ],
+              ),
+              const Spacer(),
+              _buildCallTypeIcon(),
+            ],
+          ),
         ),
       ),
     );

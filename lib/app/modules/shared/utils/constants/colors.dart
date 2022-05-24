@@ -103,4 +103,10 @@ class COLORS {
 
   /// OpenStreetMap copyright color
   static const Color kOSMCopyrightText = Color(0xff363636);
+
+  /// Call Page Dark Blue Color
+  static const Color kCallPageDarkBlue = Color(0xff0B132B);
+
+  /// Call Page Dark Blue Color
+  static const Color kCallPageDarkGrey = Color(0xff4E5469);
 }

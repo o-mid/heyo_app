@@ -112,6 +112,9 @@
       "invite": "Invite"
     }
   },
+  "CallHistory": {
+    "appbar": "Call history"
+  },
   "newChat": {
     "newChatAppBar": "New Chat",
     "slider": {

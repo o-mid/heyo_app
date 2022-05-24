@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/account/views/account_view.dart';
-import 'package:heyo/app/modules/calls/views/calls_view.dart';
+import 'package:heyo/app/modules/calls/home/views/calls_view.dart';
 import 'package:heyo/app/modules/chats/views/chats_view.dart';
 import 'package:heyo/app/modules/home/widgets/new_chat_bottom_sheet.dart';
 import 'package:heyo/app/modules/search_nearby/views/search_nearby_view.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/widgets/bottom_navigation_bar.dart';
 import 'package:heyo/app/modules/wallet/views/wallet_view.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import '../controllers/home_controller.dart';
 
@@ -26,8 +27,11 @@ class HomeView extends GetView<HomeController> {
       backgroundColor: COLORS.kGreenMainColor,
       child: Assets.svg.newChat.svg(),
     ),
-    const FloatingActionButton(
-      onPressed: null,
+    FloatingActionButton(
+      onPressed: () {
+        Get.toNamed(Routes.CALL);
+      },
+      // onPressed: null,
       backgroundColor: COLORS.kGreenMainColor,
       child: Icon(Icons.add_circle_outline),
     ),

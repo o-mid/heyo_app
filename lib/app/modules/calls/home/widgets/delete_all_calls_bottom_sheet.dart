@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/widgets/delete_all_calls_dialog.dart';
+import 'package:heyo/app/modules/calls/home/widgets/delete_all_calls_dialog.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/widgets/bottom_sheet.dart';
@@ -34,7 +34,7 @@ class DeleteAllCallsBottomSheet extends StatelessWidget {
           TextButton(
             onPressed: () async {
               final result = await Get.dialog(const DeleteAllCallsDialog());
-              if (result) {
+              if (result is bool && result) {
                 onDelete();
               }
               Get.back();

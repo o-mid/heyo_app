@@ -22,6 +22,8 @@ abstract class Routes {
   static const SHARE_LOCATION = _Paths.SHARE_LOCATION;
   static const SHREABLE_QR = _Paths.SHREABLE_QR;
   static const SCAN_QR = _Paths.SCAN_QR;
+  static const USER_CALL_HISTORY = _Paths.USER_CALL_HISTORY;
+  static const CALL = _Paths.CALL;
 }
 
 abstract class _Paths {
@@ -45,4 +47,6 @@ abstract class _Paths {
   static const SHARE_LOCATION = '/share-location';
   static const SHREABLE_QR = '/shareable-qr';
   static const SCAN_QR = '/scan-qr';
+  static const USER_CALL_HISTORY = '/user-call-history';
+  static const CALL = '/call';
 }

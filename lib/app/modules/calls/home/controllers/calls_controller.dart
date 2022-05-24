@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/data/models/call_model.dart';
-import 'package:heyo/app/modules/calls/widgets/call_log_widget.dart';
-import 'package:heyo/app/modules/calls/widgets/delete_all_calls_bottom_sheet.dart';
-import 'package:heyo/app/modules/calls/widgets/delete_call_dialog.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
+import 'package:heyo/app/modules/calls/home/widgets/call_log_widget.dart';
+import 'package:heyo/app/modules/calls/home/widgets/delete_all_calls_bottom_sheet.dart';
+import 'package:heyo/app/modules/calls/home/widgets/delete_call_dialog.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 
 class CallsController extends GetxController {
