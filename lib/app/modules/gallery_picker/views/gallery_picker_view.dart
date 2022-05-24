@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/gallery_picker/widgets/current_path_selector.dart';
 import 'package:heyo/app/modules/gallery_picker/widgets/gallery_grid_view.dart';
-import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/gallery_picker/widgets/media_preview_widget.dart';
+import 'package:heyo/app/modules/gallery_picker/widgets/thumbnail_widget.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/generated/assets.gen.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../controllers/gallery_picker_controller.dart';
@@ -71,7 +76,30 @@ class GalleryPickerView extends GetView<GalleryPickerController> {
                       },
                     ),
                   )),
-            )
+            ),
+
+            Container(
+              width: double.infinity,
+              color: Colors.black87,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 24),
+                child: SizedBox(
+                  height: 40.w,
+                  child: Row(
+                    children: [
+                      MediaPreview(
+                        controller: controller,
+                      ),
+                      IconButton(
+                        // Todo: send Btn
+                        onPressed: () {},
+                        icon: Assets.svg.sendImageIcon.svg(),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
         ));
   }

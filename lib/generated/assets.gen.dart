@@ -222,6 +222,10 @@ class $AssetsSvgGen {
   SvgGenImage get searchNearby =>
       const SvgGenImage('assets/svg/search_nearby.svg');
 
+  /// File path: assets/svg/sendImageIcon.svg
+  SvgGenImage get sendImageIcon =>
+      const SvgGenImage('assets/svg/sendImageIcon.svg');
+
   /// File path: assets/svg/send_icon.svg
   SvgGenImage get sendIcon => const SvgGenImage('assets/svg/send_icon.svg');
 

@@ -118,10 +118,6 @@ class SelectedPathDropdownButton extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 5),
                 child: AnimatedBuilder(
-                  child: Icon(
-                    Icons.keyboard_arrow_down,
-                    color: appBarIconColor,
-                  ),
                   animation: arrowDownNotifier,
                   builder: (BuildContext context, child) {
                     return AnimatedContainer(
@@ -129,6 +125,10 @@ class SelectedPathDropdownButton extends StatelessWidget {
                       child: child,
                     );
                   },
+                  child: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: appBarIconColor,
+                  ),
                 ),
               ),
             ],
@@ -195,7 +195,7 @@ class _ChangePathWidgetState extends State<ChangePathWidget> {
 
   Widget _buildItem(BuildContext context, int index) {
     final item = provider.pathList[index];
-    Widget w = SizedBox(
+    Widget album = SizedBox(
       height: 65.0,
       child: Align(
         alignment: Alignment.centerLeft,
@@ -209,10 +209,10 @@ class _ChangePathWidgetState extends State<ChangePathWidget> {
         ),
       ),
     );
-    w = Stack(
+    album = Stack(
       children: <Widget>[
         /// list of album
-        w,
+        album,
 
         /// divider
         Positioned(
@@ -229,11 +229,11 @@ class _ChangePathWidgetState extends State<ChangePathWidget> {
       ],
     );
     return GestureDetector(
-      child: w,
       behavior: HitTestBehavior.translucent,
       onTap: () {
         widget.close.call(item);
       },
+      child: album,
     );
   }
 }

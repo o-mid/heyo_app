@@ -5,6 +5,8 @@ import 'package:photo_manager/photo_manager.dart';
 class GalleryPickerController extends GetxController {
   PickerDataProvider provider = PickerDataProvider();
   late List<Map<String, dynamic>> pickedFile;
+  RxList previewFiles = [].obs;
+
   RxBool singlePick = false.obs;
   List<String> mediaPath = [];
   final count = 0.obs;
@@ -67,6 +69,8 @@ class GalleryPickerController extends GetxController {
 
   void setPickedfile(List<Map<String, dynamic>> path) {
     pickedFile = path;
+    previewFiles.value = pickedFile;
+    previewFiles.refresh();
   }
 
   void increment() => count.value++;
