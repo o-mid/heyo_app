@@ -76,6 +76,52 @@ class CallView extends GetView<CallController> {
             ],
           ),
         ),
+        persistentHeader: Container(
+          width: double.infinity,
+          padding: EdgeInsets.only(bottom: 24.h),
+          decoration: BoxDecoration(
+            color: COLORS.kCallPageDarkBlue,
+            borderRadius: BorderRadius.circular(20.r).copyWith(
+              bottomLeft: Radius.zero,
+              bottomRight: Radius.zero,
+            ),
+          ),
+          child: Column(
+            children: [
+              CustomSizes.smallSizedBoxHeight,
+              Assets.svg.bottomsheetHandle.svg(
+                color: COLORS.kCallPageDarkGrey,
+              ),
+              CustomSizes.mediumSizedBoxHeight,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 32.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildCircleIconButton(
+                      onPressed: controller.toggleVideo,
+                      backgroundColor: COLORS.kWhiteColor,
+                      icon: Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
+                    ),
+                    _buildCircleIconButton(
+                      onPressed: () {}, // Todo
+                      icon: Assets.svg.chatOutlined.svg(color: COLORS.kWhiteColor),
+                    ),
+                    _buildCircleIconButton(
+                      onPressed: controller.toggleMuteMic,
+                      icon: Assets.svg.muteIcon.svg(color: COLORS.kWhiteColor),
+                    ),
+                    _buildCircleIconButton(
+                      onPressed: controller.endCall,
+                      backgroundColor: COLORS.kStatesErrorColor,
+                      icon: Assets.svg.callEnd.svg(color: COLORS.kWhiteColor),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
         expandableContent: Container(
           color: COLORS.kCallPageDarkBlue,
           child: Column(
@@ -141,84 +187,36 @@ class CallView extends GetView<CallController> {
                   ],
                 ),
               ),
-              // Todo: fix
-              SingleChildScrollView(
-                child: Padding(
+              SizedBox(
+                height: 100.h,
+                child: ListView(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          const CustomCircleAvatar(
-                            url: "https://avatars.githubusercontent.com/u/6645136?v=4", // Todo
-                            size: 40,
-                          ),
-                          CustomSizes.mediumSizedBoxWidth,
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Boiled Dancer",
-                                style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kWhiteColor),
-                              ),
-                              Text(
-                                "CB11...28BE", // Todo
-                                style: TEXTSTYLES.kBodySmall.copyWith(
-                                  color: COLORS.kWhiteColor.withOpacity(0.6),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 16.h),
-            ],
-          ),
-        ),
-        persistentHeader: Container(
-          width: double.infinity,
-          padding: EdgeInsets.only(bottom: 24.h),
-          decoration: BoxDecoration(
-            color: COLORS.kCallPageDarkBlue,
-            borderRadius: BorderRadius.circular(20.r).copyWith(
-              bottomLeft: Radius.zero,
-              bottomRight: Radius.zero,
-            ),
-          ),
-          child: Column(
-            children: [
-              CustomSizes.smallSizedBoxHeight,
-              Assets.svg.bottomsheetHandle.svg(
-                color: COLORS.kCallPageDarkGrey,
-              ),
-              CustomSizes.mediumSizedBoxHeight,
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 32.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildCircleIconButton(
-                      onPressed: controller.toggleVideo,
-                      backgroundColor: COLORS.kWhiteColor,
-                      icon: Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
+                    Row(
+                      children: [
+                        const CustomCircleAvatar(
+                          url: "https://avatars.githubusercontent.com/u/6645136?v=4", // Todo
+                          size: 40,
+                        ),
+                        CustomSizes.mediumSizedBoxWidth,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Boiled Dancer",
+                              style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kWhiteColor),
+                            ),
+                            Text(
+                              "CB11...28BE", // Todo
+                              style: TEXTSTYLES.kBodySmall.copyWith(
+                                color: COLORS.kWhiteColor.withOpacity(0.6),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    _buildCircleIconButton(
-                      onPressed: () {}, // Todo
-                      icon: Assets.svg.chatOutlined.svg(color: COLORS.kWhiteColor),
-                    ),
-                    _buildCircleIconButton(
-                      onPressed: controller.toggleMuteMic,
-                      icon: Assets.svg.muteIcon.svg(color: COLORS.kWhiteColor),
-                    ),
-                    _buildCircleIconButton(
-                      onPressed: controller.endCall,
-                      backgroundColor: COLORS.kStatesErrorColor,
-                      icon: Assets.svg.callEnd.svg(color: COLORS.kWhiteColor),
-                    ),
+                    SizedBox(height: 16.h),
                   ],
                 ),
               ),
