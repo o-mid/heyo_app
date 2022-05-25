@@ -26,18 +26,7 @@ class MediaPreview extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: (GestureDetector(
-                onTap: () {
-                  String path = controller.previewFiles[index]['path'];
-                  CameraPickerViewer.pushToViewer(
-                    context,
-                    pickerState: CameraPickerState(),
-                    pickerType: controller.isAssetImage(path)
-                        ? CameraPickerViewType.image
-                        : CameraPickerViewType.video,
-                    previewXFile: XFile(path),
-                    theme: ThemeData(),
-                  );
-                },
+                onTap: () {},
                 child: SizedBox(
                   width: 40.w,
                   height: 40.w,

@@ -9,7 +9,10 @@ import 'package:heyo/app/modules/gallery_picker/widgets/current_path_selector.da
 import 'package:heyo/app/modules/gallery_picker/widgets/gallery_grid_view.dart';
 import 'package:heyo/app/modules/gallery_picker/widgets/media_preview_widget.dart';
 import 'package:heyo/app/modules/gallery_picker/widgets/thumbnail_widget.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/modules/shared/widgets/gallery_preview_button_widget.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:mime/mime.dart';
 import 'package:share_plus/share_plus.dart';
@@ -94,7 +97,28 @@ class GalleryPickerView extends GetView<GalleryPickerController> {
                       ),
                       IconButton(
                         // Todo: send Btn
-                        onPressed: () {},
+                        onPressed: () {
+                          String path = controller.previewFiles[0]['path'];
+                          CameraPickerViewer.pushToViewer(
+                            context,
+                            pickerState: CameraPickerState(),
+                            pickerType: controller.isAssetImage(path)
+                                ? CameraPickerViewType.image
+                                : CameraPickerViewType.video,
+                            previewXFile: XFile(path),
+                            theme: ThemeData(),
+                            sendIcon: Assets.svg.sendIcon.svg(),
+                            additionalPreviewButtonWidget:
+                                const GalleryPreviewButtonWidget(),
+                            previewTextInputDecoration: InputDecoration(
+                              hintText: 'Type something',
+                              hintStyle: TEXTSTYLES.kBodySmall
+                                  .copyWith(color: COLORS.kTextSoftBlueColor),
+                            ),
+                            previewFiles: controller.pickedFile,
+                            shouldShowItemCount: true,
+                          );
+                        },
                         icon: Assets.svg.sendImageIcon.svg(),
                       )
                     ],

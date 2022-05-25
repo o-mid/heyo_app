@@ -221,7 +221,7 @@ packages:
       name: cross_file
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.3"
+    version: "0.3.3+1"
   crypto:
     dependency: transitive
     description:
@@ -338,8 +338,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: development
-      resolved-ref: "031105c2f347f1e53be2ff3bc54e4f1dc59dc676"
+      ref: feat-gallery
+      resolved-ref: f9a5f82b7587dde2e6d9be577f012967f0f7e530
       url: "git@git.energy:heyo/flutter_camera"
     source: git
     version: "0.0.1"

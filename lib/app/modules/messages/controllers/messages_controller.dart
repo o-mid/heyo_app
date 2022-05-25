@@ -34,7 +34,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../../../generated/assets.gen.dart';
-import '../widgets/body/camera_picker/preview_button_widget.dart';
+import '../../shared/widgets/gallery_preview_button_widget.dart';
 
 class MessagesController extends GetxController {
   final _globalMessageController = Get.find<GlobalMessageController>();
@@ -757,7 +757,7 @@ class MessagesController extends GetxController {
             textDelegate: EnglishCameraPickerTextDelegate(),
             sendIcon: Assets.svg.sendIcon.svg(),
             receiverNameWidget: ReceiverNameWidget(name: args.chat.name),
-            additionalPreviewButtonWidget: const PreviewButtonWidget(),
+            additionalPreviewButtonWidget: const GalleryPreviewButtonWidget(),
             previewTextInputDecoration: InputDecoration(
               hintText: 'Type something',
               hintStyle: TEXTSTYLES.kBodySmall

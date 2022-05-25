@@ -34,7 +34,7 @@ dependencies:
   flutter_camera:
     git:
       url: git@git.energy:heyo/flutter_camera
-      ref: development
+      ref: feat-gallery
   permission_handler: ^9.2.0
   photo_manager: ^2.1.1
   mime: ^1.0.2
