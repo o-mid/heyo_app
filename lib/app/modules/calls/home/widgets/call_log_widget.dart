@@ -3,15 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/home/controllers/calls_controller.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
+import 'package:heyo/app/modules/calls/shared/widgets/call_status_icon_and_date.dart';
+import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
-import 'package:heyo/generated/locales.g.dart';
-import 'package:intl/intl.dart';
+
 import 'package:swipeable_tile/swipeable_tile.dart';
 
 class CallLogWidget extends StatelessWidget {
@@ -26,7 +26,10 @@ class CallLogWidget extends StatelessWidget {
     final controller = Get.find<CallsController>();
     return GestureDetector(
       onTap: () {
-        Get.toNamed(Routes.USER_CALL_HISTORY);
+        Get.toNamed(
+          Routes.USER_CALL_HISTORY,
+          arguments: UserCallHistoryViewArgumentsModel(user: call.user),
+        );
       },
       child: SwipeableTile.swipeToTrigger(
         key: Key(call.id),
@@ -76,13 +79,7 @@ class CallLogWidget extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 4.h),
-                  Row(
-                    children: [
-                      _buildCallStatus(),
-                      SizedBox(width: 10.w),
-                      _buildCallDate(),
-                    ],
-                  ),
+                  CallStatusIconAndDate(call: call),
                 ],
               ),
               const Spacer(),
@@ -91,38 +88,6 @@ class CallLogWidget extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildCallStatus() {
-    switch (call.status) {
-      case CallStatus.outgoingAnswered:
-      case CallStatus.outgoingCanceled:
-      case CallStatus.outgoingDeclined:
-      case CallStatus.outgoingNotAnswered:
-        return Assets.svg.callOutgoing.svg();
-
-      case CallStatus.incomingAnswered:
-        return Assets.svg.callIncoming.svg(color: COLORS.kStatesSuccessColor);
-      case CallStatus.incomingMissed:
-        return Assets.svg.callIncoming.svg(color: COLORS.kStatesErrorColor);
-    }
-  }
-
-  Widget _buildCallDate() {
-    var textColor = COLORS.kTextBlueColor;
-    if (call.status == CallStatus.incomingMissed) {
-      textColor = COLORS.kStatesErrorColor;
-    }
-
-    String callTime = DateFormat('d MMMM, hh:mm').format(call.date);
-    if (DateTime.now().isSameDate(call.date)) {
-      callTime = _formatDuration();
-    }
-
-    return Text(
-      callTime,
-      style: TEXTSTYLES.kBodySmall.copyWith(color: textColor),
     );
   }
 
@@ -139,37 +104,5 @@ class CallLogWidget extends StatelessWidget {
           ? Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor)
           : Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
     );
-  }
-
-  String _formatDuration() {
-    final difference = DateTime.now().difference(call.date);
-
-    String duration = "";
-    final hours = difference.inMinutes ~/ 60;
-    final minutes = difference.inMinutes % 60;
-
-    /// if hour and minute are both greater than zero separate them with a space
-    final joiner = hours > 0 && difference.inMinutes > 0 ? " " : "";
-
-    if (hours > 0) {
-      duration += LocaleKeys.HomePage_Calls_hour.trPluralParams(
-        LocaleKeys.HomePage_Calls_hours,
-        hours,
-        {"count": hours.toString()},
-      );
-      duration += joiner;
-    }
-
-    if (minutes > 0) {
-      duration += LocaleKeys.HomePage_Calls_minute.trPluralParams(
-        LocaleKeys.HomePage_Calls_minutes,
-        minutes,
-        {"count": minutes.toString()},
-      );
-    }
-
-    return LocaleKeys.HomePage_Calls_durationAgo.trParams({
-      "duration": duration,
-    });
   }
 }

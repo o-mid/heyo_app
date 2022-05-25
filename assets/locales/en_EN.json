@@ -113,7 +113,13 @@
     }
   },
   "CallHistory": {
-    "appbar": "Call history"
+    "appbar": "Call history",
+    "missedCall": "Missed call",
+    "outgoing": "Outgoing",
+    "incoming": "Incoming",
+    "callDeclined": "Call declined",
+    "callCanceled": "Call canceled",
+    "notAnswered": "Not answered"
   },
   "CallPage": {
     "participants": "Participants",

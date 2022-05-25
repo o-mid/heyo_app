@@ -121,6 +121,12 @@ class LocaleKeys {
   static const HomePage_bottomSheet_newGroup = 'HomePage_bottomSheet_newGroup';
   static const HomePage_bottomSheet_invite = 'HomePage_bottomSheet_invite';
   static const CallHistory_appbar = 'CallHistory_appbar';
+  static const CallHistory_missedCall = 'CallHistory_missedCall';
+  static const CallHistory_outgoing = 'CallHistory_outgoing';
+  static const CallHistory_incoming = 'CallHistory_incoming';
+  static const CallHistory_callDeclined = 'CallHistory_callDeclined';
+  static const CallHistory_callCanceled = 'CallHistory_callCanceled';
+  static const CallHistory_notAnswered = 'CallHistory_notAnswered';
   static const CallPage_participants = 'CallPage_participants';
   static const CallPage_ringing = 'CallPage_ringing';
   static const newChat_newChatAppBar = 'newChat_newChatAppBar';
@@ -328,6 +334,12 @@ class Locales {
     'HomePage_bottomSheet_newGroup': 'Start new group',
     'HomePage_bottomSheet_invite': 'Invite',
     'CallHistory_appbar': 'Call history',
+    'CallHistory_missedCall': 'Missed call',
+    'CallHistory_outgoing': 'Outgoing',
+    'CallHistory_incoming': 'Incoming',
+    'CallHistory_callDeclined': 'Call declined',
+    'CallHistory_callCanceled': 'Call canceled',
+    'CallHistory_notAnswered': 'Not answered',
     'CallPage_participants': 'Participants',
     'CallPage_ringing': 'Ringing...',
     'newChat_newChatAppBar': 'New Chat',
