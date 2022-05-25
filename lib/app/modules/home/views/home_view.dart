@@ -4,7 +4,9 @@ import 'package:heyo/app/modules/account/views/account_view.dart';
 import 'package:heyo/app/modules/calls/home/views/calls_view.dart';
 import 'package:heyo/app/modules/chats/views/chats_view.dart';
 import 'package:heyo/app/modules/home/widgets/new_chat_bottom_sheet.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/search_nearby/views/search_nearby_view.dart';
+import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/widgets/bottom_navigation_bar.dart';
 import 'package:heyo/app/modules/wallet/views/wallet_view.dart';
@@ -29,11 +31,21 @@ class HomeView extends GetView<HomeController> {
     ),
     FloatingActionButton(
       onPressed: () {
-        Get.toNamed(Routes.CALL);
+        Get.toNamed(
+          Routes.CALL,
+          arguments: CallViewArgumentsModel(
+            user: UserModel(
+              name: "Boiled Dancer",
+              icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
+              isVerified: true,
+              walletAddress: "CB11${List.generate(10, (index) => index)}28BE",
+            ),
+          ),
+        );
       },
       // onPressed: null,
       backgroundColor: COLORS.kGreenMainColor,
-      child: Icon(Icons.add_circle_outline),
+      child: const Icon(Icons.add_circle_outline),
     ),
     null,
     null,

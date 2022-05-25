@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/data/models/addContactsViewArgumentsModel.dart';
+import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 
 class AddContactsController extends GetxController {
   //TODO: Implement AddContactsController

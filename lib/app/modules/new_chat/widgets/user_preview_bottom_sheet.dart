@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
-import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
+import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 import '../../../routes/app_pages.dart';
-import '../../shared/data/models/addContactsViewArgumentsModel.dart';
+import '../../shared/data/models/add_contacts_view_arguments_model.dart';
 import '../../shared/utils/constants/textStyles.dart';
 import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../shared/widgets/curtom_circle_avatar.dart';

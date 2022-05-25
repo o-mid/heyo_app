@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
@@ -23,7 +24,7 @@ class CallView extends GetView<CallController> {
       appBar: AppBar(
         backgroundColor: COLORS.kCallPageDarkBlue,
         title: Text(
-          'Boiled Dancer', // Todo
+          controller.args.user.name,
           style: TEXTSTYLES.kHeaderMedium.copyWith(
             height: 1.21,
             fontWeight: FONTS.SemiBold,
@@ -48,20 +49,20 @@ class CallView extends GetView<CallController> {
           child: Column(
             children: [
               SizedBox(height: 105.h),
-              const CustomCircleAvatar(
-                url: "https://avatars.githubusercontent.com/u/6645136?v=4", // Todo
+              CustomCircleAvatar(
+                url: controller.args.user.icon,
                 size: 64,
               ),
               SizedBox(height: 24.h),
               Text(
-                'Boiled Dancer', // Todo
+                controller.args.user.name,
                 style: TEXTSTYLES.kHeaderLarge.copyWith(
                   color: COLORS.kWhiteColor,
                 ),
               ),
               SizedBox(height: 4.h),
               Text(
-                "CB11...28BE", // Todo
+                controller.args.user.walletAddress.shortenCoreId,
                 style: TEXTSTYLES.kBodySmall.copyWith(
                   color: COLORS.kWhiteColor.withOpacity(0.6),
                 ),
@@ -189,36 +190,39 @@ class CallView extends GetView<CallController> {
               ),
               SizedBox(
                 height: 100.h,
-                child: ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  children: [
-                    Row(
-                      children: [
-                        const CustomCircleAvatar(
-                          url: "https://avatars.githubusercontent.com/u/6645136?v=4", // Todo
-                          size: 40,
-                        ),
-                        CustomSizes.mediumSizedBoxWidth,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Boiled Dancer",
-                              style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kWhiteColor),
-                            ),
-                            Text(
-                              "CB11...28BE", // Todo
-                              style: TEXTSTYLES.kBodySmall.copyWith(
-                                color: COLORS.kWhiteColor.withOpacity(0.6),
+                child: Obx(() {
+                  return ListView.separated(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    itemCount: controller.participants.length,
+                    itemBuilder: (context, index) {
+                      return Row(
+                        children: [
+                          CustomCircleAvatar(
+                            url: controller.participants[index].icon,
+                            size: 40,
+                          ),
+                          CustomSizes.mediumSizedBoxWidth,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                controller.participants[index].name,
+                                style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kWhiteColor),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.h),
-                  ],
-                ),
+                              Text(
+                                controller.participants[index].walletAddress.shortenCoreId,
+                                style: TEXTSTYLES.kBodySmall.copyWith(
+                                  color: COLORS.kWhiteColor.withOpacity(0.6),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                    separatorBuilder: (_, __) => SizedBox(height: 16.h),
+                  );
+                }),
               ),
             ],
           ),

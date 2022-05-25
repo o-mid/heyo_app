@@ -22,7 +22,7 @@ import 'package:heyo/app/modules/shared/controllers/global_message_controller.da
 import 'package:heyo/app/modules/shared/controllers/live_location_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/audio_message_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/video_message_controller.dart';
-import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
+import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
