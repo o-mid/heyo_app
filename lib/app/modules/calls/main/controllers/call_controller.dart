@@ -36,6 +36,9 @@ class CallController extends GetxController {
   // Todo
   void toggleVideo() {}
 
+  // Todo
+  void switchCamera() {}
+
   @override
   void onClose() {}
 }

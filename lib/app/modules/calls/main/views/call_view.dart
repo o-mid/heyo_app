@@ -38,7 +38,7 @@ class CallView extends GetView<CallController> {
             icon: Assets.svg.volumeUp.svg(),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: controller.switchCamera,
             splashRadius: 18,
             icon: Assets.svg.cameraSwitch.svg(),
           ),

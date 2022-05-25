@@ -270,6 +270,10 @@ class $AssetsSvgGen {
   SvgGenImage get videoCallIcon =>
       const SvgGenImage('assets/svg/video_call_icon.svg');
 
+  /// File path: assets/svg/video_disabled.svg
+  SvgGenImage get videoDisabled =>
+      const SvgGenImage('assets/svg/video_disabled.svg');
+
   /// File path: assets/svg/volume_up.svg
   SvgGenImage get volumeUp => const SvgGenImage('assets/svg/volume_up.svg');
 
