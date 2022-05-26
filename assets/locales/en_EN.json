@@ -123,7 +123,10 @@
   },
   "CallPage": {
     "participants": "Participants",
-    "ringing": "Ringing..."
+    "ringing": "Ringing...",
+    "currentlyOffline": "Currently offline",
+    "sendAMessageButton": "Send a message instead",
+    "close": "Close"
   },
   "newChat": {
     "newChatAppBar": "New Chat",

@@ -129,6 +129,9 @@ class LocaleKeys {
   static const CallHistory_notAnswered = 'CallHistory_notAnswered';
   static const CallPage_participants = 'CallPage_participants';
   static const CallPage_ringing = 'CallPage_ringing';
+  static const CallPage_currentlyOffline = 'CallPage_currentlyOffline';
+  static const CallPage_sendAMessageButton = 'CallPage_sendAMessageButton';
+  static const CallPage_close = 'CallPage_close';
   static const newChat_newChatAppBar = 'newChat_newChatAppBar';
   static const newChat_slider_contacts = 'newChat_slider_contacts';
   static const newChat_slider_nearbyUsers = 'newChat_slider_nearbyUsers';
@@ -342,6 +345,9 @@ class Locales {
     'CallHistory_notAnswered': 'Not answered',
     'CallPage_participants': 'Participants',
     'CallPage_ringing': 'Ringing...',
+    'CallPage_currentlyOffline': 'Currently offline',
+    'CallPage_sendAMessageButton': 'Send a message instead',
+    'CallPage_close': 'Close',
     'newChat_newChatAppBar': 'New Chat',
     'newChat_slider_contacts': 'Contacts',
     'newChat_slider_nearbyUsers': 'Nearby users',
