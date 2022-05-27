@@ -9,8 +9,10 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
 
 import '../../new_chat/data/models/user_model.dart';
 import '../controllers/add_contacts_controller.dart';
@@ -111,8 +113,14 @@ class AddContactsView extends GetView<AddContactsController> {
                   Column(
                     children: [
                       CustomButton.primary(
-                        // TODO : Implement ADD Contact
-                        onTap: () {},
+                        // TODO : chatModel should be filled with correct data
+                        //TODO check navigation
+                        onTap: () {
+                          controller.addContact();
+                          Get.offNamed(Routes.MESSAGES,
+                              arguments:
+                              MessagesViewArgumentsModel(chat: _User.chatModel));
+                        },
 
                         titleWidget: Text(
                           LocaleKeys.AddContacts_buttons_addToContacts.tr,

@@ -235,8 +235,7 @@ class _nearbyUsers extends StatelessWidget {
                                   InkWell(
                                     borderRadius: BorderRadius.circular(8),
                                     onTap: () => openUserPreviewBottomSheet(
-                                      controller.nearbyUsers[index],
-                                    ),
+                                      controller.nearbyUsers[index]),
                                     child: UserWidget(
                                         User: controller.nearbyUsers[index]),
                                   ),
@@ -351,9 +350,9 @@ class _contacts extends StatelessWidget {
                 ),
               ),
             ),
-            controller.isTextInputFocused.value == false
-                ? _contactsBody(controller: controller)
-                : _searchBody(controller: controller),
+            controller.searchSuggestions.value.isEmpty
+                ? _emptyContactsBody(controller: controller)
+                : _searchInContactsBody(controller: controller),
           ],
         ),
       );
@@ -361,8 +360,8 @@ class _contacts extends StatelessWidget {
   }
 }
 
-class _searchBody extends StatelessWidget {
-  const _searchBody({
+class _searchInContactsBody extends StatelessWidget {
+  const _searchInContactsBody({
     Key? key,
     required this.controller,
   }) : super(key: key);
@@ -435,8 +434,8 @@ class _searchBody extends StatelessWidget {
   }
 }
 
-class _contactsBody extends StatelessWidget {
-  const _contactsBody({
+class _emptyContactsBody extends StatelessWidget {
+  const _emptyContactsBody({
     Key? key,
     required this.controller,
   }) : super(key: key);

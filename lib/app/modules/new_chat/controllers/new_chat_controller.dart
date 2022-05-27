@@ -1,9 +1,13 @@
+
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguments_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scaner.dart';
+import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
+import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/helper.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -17,8 +21,12 @@ class NewChatController extends GetxController
   late AnimationController animController;
   late Animation<double> animation;
   late TextEditingController inputController;
+  ContactRepository contactRepository = Get.find<ContactRepository>();
+  AccountInfo accountInfo = Get.find<AccountInfo>();
+
 // in nearby users Tab after 3 seconds the refresh button will be visible
   RxBool refreshBtnVisibility = false.obs;
+
   void makeRefreshBtnVisible() {
     Future.delayed(const Duration(seconds: 3), () {
       refreshBtnVisibility.value = true;
@@ -31,13 +39,16 @@ class NewChatController extends GetxController
     animController = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
-    )..repeat(reverse: true);
+    )
+      ..repeat(reverse: true);
     animation = Tween<double>(
       begin: 0.9,
       end: 1.05,
     ).animate(animController);
 
     inputController = TextEditingController();
+
+    searchUsers('');
     inputController.addListener(() {
       searchUsers(inputController.text);
     });
@@ -84,14 +95,14 @@ class NewChatController extends GetxController
       name: "Crapps Wallbanger",
       walletAddress: 'CB92...969A',
       icon:
-          "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+      "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
       Nickname: "Nickname",
       chatModel: ChatModel(
         name: "Crapps Wallbanger",
         icon:
-            "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+        "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
         lastMessage:
-            "I'm still waiting for the reply. I'll let you know once they get back to me.",
+        "I'm still waiting for the reply. I'll let you know once they get back to me.",
         timestamp: "15:45",
       ),
     ),
@@ -105,7 +116,7 @@ class NewChatController extends GetxController
         name: "Fancy Potato",
         icon: "https://avatars.githubusercontent.com/u/6634136?v=4",
         lastMessage:
-            "I can arrange the meeting with her tomorrow if you're ok with that.",
+        "I can arrange the meeting with her tomorrow if you're ok with that.",
         timestamp: "Yesterday",
         isOnline: true,
         isVerified: true,
@@ -141,7 +152,8 @@ class NewChatController extends GetxController
   ].obs;
 
   RefreshController refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController(initialRefresh: false);
+
   void onRefresh() async {
     await Future.delayed(Duration(milliseconds: 1000));
 
@@ -150,14 +162,37 @@ class NewChatController extends GetxController
 
   RxList<UserModel> searchSuggestions = <UserModel>[].obs;
 
-  void searchUsers(String query) {
-    searchSuggestions.value = nearbyUsers.where((user) {
-      String username = user.name.toLowerCase();
-      String inputedQuery = query.toLowerCase();
-      return username.contains(inputedQuery);
-    }).toList();
-    searchSuggestions
-        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+  void searchUsers(String query) async {
+    //TODO icon and chatmodel should be filled with correct data
+    List<UserModel> searchedItems =
+    (await contactRepository.search(query))
+        .map((userContact) =>
+        UserModel(
+            name: userContact.nickName,
+            icon: userContact.icon,
+            walletAddress: userContact.coreId,
+            chatModel: (nearbyUsers..shuffle()).first.chatModel))
+        .toList();
+
+    if (searchedItems.isEmpty) {
+      String? currentUserCoreId = await accountInfo.getCoreId();
+      if (query.isValid() && currentUserCoreId != query) {
+        //its a new user
+        //TODO update fields based on correct data
+        searchSuggestions.value = [
+          UserModel(
+              name: 'unknown',
+              icon: (nearbyUsers..shuffle()).first.icon,
+              walletAddress: query,
+              chatModel: (nearbyUsers..shuffle()).first.chatModel)
+        ];
+      } else {
+        searchSuggestions.value = [];
+      }
+    } else {
+      searchSuggestions.value = searchedItems;
+    }
+
     searchSuggestions.refresh();
   }
 
@@ -166,11 +201,22 @@ class NewChatController extends GetxController
   handleScannedValue(QRViewController qrControllerDt) {
     // TODO: Implement the right filter logic for QRCode
     qrControllerDt.scannedDataStream.listen((element) {
-      qrControllerDt.pauseCamera();
-      Get.back();
-      isTextInputFocused.value = true;
-      // this will set the input field to the scanned value and serach for users
-      inputController.text = element.code.toString();
+      if (element.code == null)
+        return;
+      try {
+        final coreId = element.getCoreId();
+
+
+        qrControllerDt.pauseCamera();
+        Get.back();
+        isTextInputFocused.value = true;
+        // this will set the input field to the scanned value and serach for users
+        inputController.text = coreId;
+
+      }
+      catch (e){
+        return;
+      }
     });
   }
 }
