@@ -13,7 +13,17 @@ import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 
 void openNewChatBottomSheet() {
   Get.bottomSheet(
-    Container(
+    backgroundColor: COLORS.kWhiteColor,
+    isDismissible: true,
+    persistent: true,
+    enableDrag: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(20),
+        topRight: Radius.circular(20),
+      ),
+    ),
+    Padding(
       padding: CustomSizes.mainContentPadding,
       child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -38,8 +48,7 @@ void openNewChatBottomSheet() {
                                 borderRadius: BorderRadius.circular(100),
                                 color: COLORS.kBrightBlueColor,
                               ),
-                              child: Assets.svg.newChatIcon
-                                  .svg(width: 20, height: 20),
+                              child: Assets.svg.newChatIcon.svg(width: 20, height: 20),
                             ),
                           ),
                           CustomSizes.mediumSizedBoxWidth,
@@ -81,8 +90,7 @@ void openNewChatBottomSheet() {
                           borderRadius: BorderRadius.circular(100),
                           color: COLORS.kBrightBlueColor,
                         ),
-                        child:
-                            Assets.svg.newGroupIcon.svg(width: 20, height: 20),
+                        child: Assets.svg.newGroupIcon.svg(width: 20, height: 20),
                       ),
                     ),
                     CustomSizes.mediumSizedBoxWidth,
@@ -127,12 +135,5 @@ void openNewChatBottomSheet() {
                 )),
           ]),
     ),
-    backgroundColor: COLORS.kWhiteColor,
-    isDismissible: true,
-    persistent: true,
-    enableDrag: true,
-    shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20), topRight: Radius.circular(20))),
   );
 }

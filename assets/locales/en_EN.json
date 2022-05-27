@@ -82,11 +82,51 @@
         "invite": "Invite"
       }
     },
+    "Calls": {
+      "emptyState": {
+        "title": "You have no calls",
+        "subtitle": "Call someone from your contact list by hitting that + button"
+      },
+      "hour": "@count hour",
+      "hours": "@count hours",
+      "minute": "@count minute",
+      "minutes": "@count minutes",
+      "durationAgo": "@duration ago",
+      "deleteCallDialog": {
+        "title": "Delete this call from history?",
+        "delete": "Delete",
+        "cancel": "Cancel"
+      },
+      "deleteAllCallsDialog": {
+        "title": "Delete all calls from history?",
+        "delete": "Delete",
+        "cancel": "Cancel"
+      },
+      "bottomSheet": {
+        "deleteAllCalls": "Delete all calls"
+      }
+    },
     "bottomSheet": {
       "newChat": "Start new chat",
       "newGroup": "Start new group",
       "invite": "Invite"
     }
+  },
+  "CallHistory": {
+    "appbar": "Call history",
+    "missedCall": "Missed call",
+    "outgoing": "Outgoing",
+    "incoming": "Incoming",
+    "callDeclined": "Call declined",
+    "callCanceled": "Call canceled",
+    "notAnswered": "Not answered"
+  },
+  "CallPage": {
+    "participants": "Participants",
+    "ringing": "Ringing...",
+    "currentlyOffline": "Currently offline",
+    "sendAMessageButton": "Send a message instead",
+    "close": "Close"
   },
   "newChat": {
     "newChatAppBar": "New Chat",
@@ -184,6 +224,7 @@
   "forward": "Forward",
   "delete": "Delete",
   "offline": "Offline",
+  "scanQrTitle": "Scan Qr Code",
   "AddContacts": {
     "addToContacts": "Add to contacts",
     "addNickname": "Add nickname",
