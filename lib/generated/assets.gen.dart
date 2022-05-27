@@ -30,6 +30,12 @@ class $AssetsPngGen {
   AssetGenImage get benefits004 =>
       const AssetGenImage('assets/png/benefits004.png');
 
+  /// File path: assets/png/callee.png
+  AssetGenImage get callee => const AssetGenImage('assets/png/callee.png');
+
+  /// File path: assets/png/caller.png
+  AssetGenImage get caller => const AssetGenImage('assets/png/caller.png');
+
   /// File path: assets/png/calls_empty_state.png
   AssetGenImage get callsEmptyState =>
       const AssetGenImage('assets/png/calls_empty_state.png');
