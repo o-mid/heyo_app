@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
-import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
+import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 import '../../../routes/app_pages.dart';
-import '../../shared/data/models/addContactsViewArgumentsModel.dart';
+import '../../shared/data/models/add_contacts_view_arguments_model.dart';
 import '../../shared/utils/constants/textStyles.dart';
 import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../shared/widgets/curtom_circle_avatar.dart';
@@ -28,8 +28,7 @@ void openUserPreviewBottomSheet(UserModel user) {
           children: [
             Text(
               user.name,
-              style: TEXTSTYLES.kHeaderLarge
-                  .copyWith(color: COLORS.kDarkBlueColor),
+              style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
             ),
             CustomSizes.smallSizedBoxWidth,
             user.isVerified
@@ -64,8 +63,7 @@ void openUserPreviewBottomSheet(UserModel user) {
                               borderRadius: BorderRadius.circular(100),
                               color: COLORS.kBrightBlueColor,
                             ),
-                            child:
-                            Assets.svg.infoIcon.svg(width: 20, height: 20),
+                            child: Assets.svg.infoIcon.svg(width: 20, height: 20),
                           ),
                         ),
                         CustomSizes.mediumSizedBoxWidth,
@@ -81,9 +79,11 @@ void openUserPreviewBottomSheet(UserModel user) {
                     )),
                 TextButton(
                     onPressed: () {
+                      if (user.chatModel == null) {
+                        return;
+                      }
                       Get.toNamed(Routes.MESSAGES,
-                          arguments:
-                          MessagesViewArgumentsModel(chat: user.chatModel));
+                          arguments: MessagesViewArgumentsModel(chat: user.chatModel!));
                     },
                     child: Row(
                       children: [
@@ -95,8 +95,7 @@ void openUserPreviewBottomSheet(UserModel user) {
                               borderRadius: BorderRadius.circular(100),
                               color: COLORS.kBrightBlueColor,
                             ),
-                            child: Assets.svg.newChatIcon
-                                .svg(width: 20, height: 20),
+                            child: Assets.svg.newChatIcon.svg(width: 20, height: 20),
                           ),
                         ),
                         CustomSizes.mediumSizedBoxWidth,
@@ -127,16 +126,14 @@ void openUserPreviewBottomSheet(UserModel user) {
                               borderRadius: BorderRadius.circular(100),
                               color: COLORS.kBrightBlueColor,
                             ),
-                            child: Assets.svg.addToContactsIcon
-                                .svg(width: 20, height: 20),
+                            child: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
                           ),
                         ),
                         CustomSizes.mediumSizedBoxWidth,
                         Align(
                             alignment: Alignment.center,
                             child: Text(
-                              LocaleKeys
-                                  .newChat_userBottomSheet_addToContacts.tr,
+                              LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
                               style: TEXTSTYLES.kLinkBig.copyWith(
                                 color: COLORS.kDarkBlueColor,
                               ),
@@ -156,8 +153,7 @@ void openUserPreviewBottomSheet(UserModel user) {
                               borderRadius: BorderRadius.circular(100),
                               color: COLORS.kStatesErrorBackgroundColor,
                             ),
-                            child:
-                            Assets.svg.blockIcon.svg(width: 20, height: 20),
+                            child: Assets.svg.blockIcon.svg(width: 20, height: 20),
                           ),
                         ),
                         CustomSizes.mediumSizedBoxWidth,
@@ -181,7 +177,7 @@ void openUserPreviewBottomSheet(UserModel user) {
     isScrollControlled: true,
     enableDrag: true,
     shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        borderRadius:
+            BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
   );
 }

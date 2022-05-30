@@ -3,6 +3,8 @@
 ///  FlutterGen
 /// *****************************************************
 
+// coverage:ignore-file
+// ignore_for_file: type=lint
 // ignore_for_file: directives_ordering,unnecessary_import
 
 import 'package:flutter/widgets.dart';
@@ -28,6 +30,16 @@ class $AssetsPngGen {
   AssetGenImage get benefits004 =>
       const AssetGenImage('assets/png/benefits004.png');
 
+  /// File path: assets/png/callee.png
+  AssetGenImage get callee => const AssetGenImage('assets/png/callee.png');
+
+  /// File path: assets/png/caller.png
+  AssetGenImage get caller => const AssetGenImage('assets/png/caller.png');
+
+  /// File path: assets/png/calls_empty_state.png
+  AssetGenImage get callsEmptyState =>
+      const AssetGenImage('assets/png/calls_empty_state.png');
+
   /// File path: assets/png/chain.png
   AssetGenImage get chain => const AssetGenImage('assets/png/chain.png');
 
@@ -37,9 +49,9 @@ class $AssetsPngGen {
   /// File path: assets/png/keys.png
   AssetGenImage get keys => const AssetGenImage('assets/png/keys.png');
 
-  /// File path: assets/png/newChatEmptyState.png
+  /// File path: assets/png/new_chat_empty_state.png
   AssetGenImage get newChatEmptyState =>
-      const AssetGenImage('assets/png/newChatEmptyState.png');
+      const AssetGenImage('assets/png/new_chat_empty_state.png');
 
   /// File path: assets/png/profile1.png
   AssetGenImage get profile1 => const AssetGenImage('assets/png/profile1.png');
@@ -69,6 +81,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/account.svg
   SvgGenImage get account => const SvgGenImage('assets/svg/account.svg');
 
+  /// File path: assets/svg/add_participant.svg
+  SvgGenImage get addParticipant =>
+      const SvgGenImage('assets/svg/add_participant.svg');
+
   /// File path: assets/svg/add_to_contacts_icon.svg
   SvgGenImage get addToContactsIcon =>
       const SvgGenImage('assets/svg/add_to_contacts_icon.svg');
@@ -80,11 +96,34 @@ class $AssetsSvgGen {
   /// File path: assets/svg/block_icon.svg
   SvgGenImage get blockIcon => const SvgGenImage('assets/svg/block_icon.svg');
 
+  /// File path: assets/svg/bottomsheet_handle.svg
+  SvgGenImage get bottomsheetHandle =>
+      const SvgGenImage('assets/svg/bottomsheet_handle.svg');
+
   /// File path: assets/svg/call.svg
   SvgGenImage get call => const SvgGenImage('assets/svg/call.svg');
 
+  /// File path: assets/svg/call_end.svg
+  SvgGenImage get callEnd => const SvgGenImage('assets/svg/call_end.svg');
+
+  /// File path: assets/svg/call_incoming.svg
+  SvgGenImage get callIncoming =>
+      const SvgGenImage('assets/svg/call_incoming.svg');
+
+  /// File path: assets/svg/call_outgoing.svg
+  SvgGenImage get callOutgoing =>
+      const SvgGenImage('assets/svg/call_outgoing.svg');
+
+  /// File path: assets/svg/camera_switch.svg
+  SvgGenImage get cameraSwitch =>
+      const SvgGenImage('assets/svg/camera_switch.svg');
+
   /// File path: assets/svg/chat.svg
   SvgGenImage get chat => const SvgGenImage('assets/svg/chat.svg');
+
+  /// File path: assets/svg/chat_outlined.svg
+  SvgGenImage get chatOutlined =>
+      const SvgGenImage('assets/svg/chat_outlined.svg');
 
   /// File path: assets/svg/clock.svg
   SvgGenImage get clock => const SvgGenImage('assets/svg/clock.svg');
@@ -162,8 +201,8 @@ class $AssetsSvgGen {
   SvgGenImage get lunaConnection =>
       const SvgGenImage('assets/svg/luna_connection.svg');
 
-  /// File path: assets/svg/more_icon.svg
-  SvgGenImage get moreIcon => const SvgGenImage('assets/svg/more_icon.svg');
+  /// File path: assets/svg/mute_icon.svg
+  SvgGenImage get muteIcon => const SvgGenImage('assets/svg/mute_icon.svg');
 
   /// File path: assets/svg/new_chat.svg
   SvgGenImage get newChat => const SvgGenImage('assets/svg/new_chat.svg');
@@ -175,6 +214,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/new_group_icon.svg
   SvgGenImage get newGroupIcon =>
       const SvgGenImage('assets/svg/new_group_icon.svg');
+
+  /// File path: assets/svg/no_connection_wifi.svg
+  SvgGenImage get noConnectionWifi =>
+      const SvgGenImage('assets/svg/no_connection_wifi.svg');
 
   /// File path: assets/svg/pause_record_icon.svg
   SvgGenImage get pauseRecordIcon =>
@@ -213,6 +256,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/send_icon.svg
   SvgGenImage get sendIcon => const SvgGenImage('assets/svg/send_icon.svg');
 
+  /// File path: assets/svg/share_screen.svg
+  SvgGenImage get shareScreen =>
+      const SvgGenImage('assets/svg/share_screen.svg');
+
   /// File path: assets/svg/single_tick_icon.svg
   SvgGenImage get singleTickIcon =>
       const SvgGenImage('assets/svg/single_tick_icon.svg');
@@ -235,10 +282,15 @@ class $AssetsSvgGen {
   SvgGenImage get videoCallIcon =>
       const SvgGenImage('assets/svg/video_call_icon.svg');
 
+  /// File path: assets/svg/video_disabled.svg
+  SvgGenImage get videoDisabled =>
+      const SvgGenImage('assets/svg/video_disabled.svg');
+
+  /// File path: assets/svg/volume_up.svg
+  SvgGenImage get volumeUp => const SvgGenImage('assets/svg/volume_up.svg');
+
   /// File path: assets/svg/wallet.svg
   SvgGenImage get wallet => const SvgGenImage('assets/svg/wallet.svg');
-
-  SvgGenImage get bottomSheetHandle => const SvgGenImage('assets/svg/bottomsheet_handle.svg');
 }
 
 class Assets {
@@ -248,19 +300,23 @@ class Assets {
   static const $AssetsSvgGen svg = $AssetsSvgGen();
 }
 
-class AssetGenImage extends AssetImage {
-  const AssetGenImage(String assetName) : super(assetName);
+class AssetGenImage {
+  const AssetGenImage(this._assetName);
+
+  final String _assetName;
 
   Image image({
     Key? key,
+    AssetBundle? bundle,
     ImageFrameBuilder? frameBuilder,
-    ImageLoadingBuilder? loadingBuilder,
     ImageErrorWidgetBuilder? errorBuilder,
     String? semanticLabel,
     bool excludeFromSemantics = false,
+    double? scale = 1.0,
     double? width,
     double? height,
     Color? color,
+    Animation<double>? opacity,
     BlendMode? colorBlendMode,
     BoxFit? fit,
     AlignmentGeometry alignment = Alignment.center,
@@ -269,19 +325,24 @@ class AssetGenImage extends AssetImage {
     bool matchTextDirection = false,
     bool gaplessPlayback = false,
     bool isAntiAlias = false,
+    String? package,
     FilterQuality filterQuality = FilterQuality.low,
+    int? cacheWidth,
+    int? cacheHeight,
   }) {
-    return Image(
+    return Image.asset(
+      _assetName,
       key: key,
-      image: this,
+      bundle: bundle,
       frameBuilder: frameBuilder,
-      loadingBuilder: loadingBuilder,
       errorBuilder: errorBuilder,
       semanticLabel: semanticLabel,
       excludeFromSemantics: excludeFromSemantics,
+      scale: scale,
       width: width,
       height: height,
       color: color,
+      opacity: opacity,
       colorBlendMode: colorBlendMode,
       fit: fit,
       alignment: alignment,
@@ -290,11 +351,14 @@ class AssetGenImage extends AssetImage {
       matchTextDirection: matchTextDirection,
       gaplessPlayback: gaplessPlayback,
       isAntiAlias: isAntiAlias,
+      package: package,
       filterQuality: filterQuality,
+      cacheWidth: cacheWidth,
+      cacheHeight: cacheHeight,
     );
   }
 
-  String get path => assetName;
+  String get path => _assetName;
 }
 
 class SvgGenImage {

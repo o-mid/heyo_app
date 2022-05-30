@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -21,11 +22,12 @@ class CustomCircleAvatar extends StatelessWidget {
           width: size.w,
           height: size.w,
           clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
           ),
-          child: Image.network(
+          child: ExtendedImage.network(
             url,
+            enableLoadState: false,
           ),
         ),
 
@@ -41,7 +43,7 @@ class CustomCircleAvatar extends StatelessWidget {
               child: Container(
                 width: 14.w,
                 height: 14.w,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: COLORS.kWhiteColor,
                 ),
@@ -55,7 +57,7 @@ class CustomCircleAvatar extends StatelessWidget {
             child: Container(
               width: 10.w,
               height: 10.w,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 color: COLORS.kOnlineBadgeColor,
               ),

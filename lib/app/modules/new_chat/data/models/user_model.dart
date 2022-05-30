@@ -4,10 +4,10 @@ class UserModel {
   String name;
   String icon;
   String walletAddress;
-  String Nickname;
+  String nickname;
   bool isOnline;
   bool isVerified;
-  ChatModel chatModel;
+  ChatModel? chatModel;
   bool isContact;
 
   UserModel({
@@ -17,7 +17,7 @@ class UserModel {
     this.isContact = false,
     this.isOnline = false,
     this.isVerified = false,
-    this.Nickname = "",
-    required this.chatModel,
+    this.nickname = "",
+    this.chatModel,
   });
 }
