@@ -17,7 +17,6 @@ import 'package:heyo/app/modules/p2p_node/p2p_node_request.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
-import 'package:heyo/app/modules/website-interact/website_interact_controller.dart';
 
 class GlobalBindings extends Bindings {
   static P2PState p2pState = P2PState();
