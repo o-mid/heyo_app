@@ -16,24 +16,20 @@ import 'package:heyo/app/modules/p2p_node/p2p_node_manager.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_request.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
-import 'package:heyo/app/modules/shared/data/repository/db/cache_contractor.dart';
-import 'package:heyo/app/modules/shared/providers/database/dao/user_contact_dao.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
 import 'package:heyo/app/modules/website-interact/website_interact_controller.dart';
-import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart';
 
 class GlobalBindings extends Bindings {
   static P2PState p2pState = P2PState();
-  final P2PNodeResponseStream p2pNodeResponseStream = P2PNodeResponseStream(p2pState: p2pState);
-  final AccountInfo accountInfo =
-      AccountManager(localProvider: SecureStorageProvider(), cryptographyKeyGenerator: Web3Keys());
-  static UserContactDao userContactDao=UserContactDao();
-  final CacheContractor cacheContractor=CacheRepository(userContactDao: userContactDao);
+  final P2PNodeResponseStream p2pNodeResponseStream =
+      P2PNodeResponseStream(p2pState: p2pState);
+  final AccountInfo accountInfo = AccountManager(
+      localProvider: SecureStorageProvider(),
+      cryptographyKeyGenerator: Web3Keys());
+
+
   @override
   void dependencies() {
-    Get.put(accountInfo);
-    Get.put(ContactRepository(cacheContractor: cacheContractor));
     Get.put(ChatsController());
     Get.put(CallsController());
     Get.put(GlobalMessageController());
@@ -48,10 +44,8 @@ class GlobalBindings extends Bindings {
       ),
     );
 
-    Get.put(WebsiteInteractController());
-
-    Get.put<P2PNodeManager>(
-      P2PNodeManager(
+    Get.put<P2PNodeController>(
+      P2PNodeController(
         p2pNode: P2PNode(
             accountInfo: accountInfo,
             p2pNodeRequestStream: P2PNodeRequestStream(),

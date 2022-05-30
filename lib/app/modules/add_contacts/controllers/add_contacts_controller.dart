@@ -4,11 +4,11 @@ import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 
 class AddContactsController extends GetxController {
-  //TODO: Implement AddContactsController
   late AddContactsViewArgumentsModel args;
   late RxString nickname;
-  final count = 0.obs;
-  ContactRepository contactRepository = Get.find<ContactRepository>();
+  final ContactRepository contactRepository;
+
+  AddContactsController({required this.contactRepository});
 
   @override
   void onInit() {
@@ -19,15 +19,6 @@ class AddContactsController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {}
-
-  void increment() => count.value++;
 
   void setNickname(String name) {
     args.user.nickname = name;

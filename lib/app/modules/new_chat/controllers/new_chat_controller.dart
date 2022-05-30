@@ -19,9 +19,9 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
   late AnimationController animController;
   late Animation<double> animation;
   late TextEditingController inputController;
-  ContactRepository contactRepository = Get.find<ContactRepository>();
-  AccountInfo accountInfo = Get.find<AccountInfo>();
-
+  final ContactRepository contactRepository;
+  final AccountInfo accountInfo;
+  NewChatController({required this.contactRepository, required this.accountInfo});
 // in nearby users Tab after 3 seconds the refresh button will be visible
   RxBool refreshBtnVisibility = false.obs;
 
