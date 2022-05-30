@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -12,10 +13,13 @@ import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
+
+
 
 import '../../new_chat/data/models/user_model.dart';
 import '../controllers/add_contacts_controller.dart';
+
+
 
 class AddContactsView extends GetView<AddContactsController> {
   @override
@@ -119,7 +123,7 @@ class AddContactsView extends GetView<AddContactsController> {
                           Get.offNamedUntil(Routes.MESSAGES,
                               ModalRoute.withName(Routes.HOME),
                               arguments:
-                              MessagesViewArgumentsModel(chat: _User.chatModel));
+                              MessagesViewArgumentsModel(chat: _User.chatModel!));
                         },
 
                         titleWidget: Text(
