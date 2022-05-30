@@ -128,6 +128,9 @@
     "sendAMessageButton": "Send a message instead",
     "close": "Close"
   },
+  "IncomingCallPage": {
+    "incomingVideoCall": "Incoming video call on Heyo..."
+  },
   "newChat": {
     "newChatAppBar": "New Chat",
     "slider": {

@@ -24,6 +24,7 @@ abstract class Routes {
   static const SCAN_QR = _Paths.SCAN_QR;
   static const USER_CALL_HISTORY = _Paths.USER_CALL_HISTORY;
   static const CALL = _Paths.CALL;
+  static const INCOMING_CALL = _Paths.INCOMING_CALL;
 }
 
 abstract class _Paths {
@@ -49,4 +50,5 @@ abstract class _Paths {
   static const SCAN_QR = '/scan-qr';
   static const USER_CALL_HISTORY = '/user-call-history';
   static const CALL = '/call';
+  static const INCOMING_CALL = '/incoming-call';
 }

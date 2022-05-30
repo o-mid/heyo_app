@@ -53,7 +53,7 @@ class CallBottomSheetHeader extends StatelessWidget {
                   return _buildEnabledOrDisabledButton(
                     isEnabled: controller.micEnabled.value,
                     enabled: Assets.svg.recordIcon.svg(color: COLORS.kWhiteColor),
-                    disabled: Assets.svg.muteIcon.svg(color: COLORS.kWhiteColor),
+                    disabled: Assets.svg.muteMicIcon.svg(color: COLORS.kWhiteColor),
                     onPressed: controller.toggleMuteMic,
                   );
                 }),

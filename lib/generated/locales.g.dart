@@ -132,6 +132,8 @@ class LocaleKeys {
   static const CallPage_currentlyOffline = 'CallPage_currentlyOffline';
   static const CallPage_sendAMessageButton = 'CallPage_sendAMessageButton';
   static const CallPage_close = 'CallPage_close';
+  static const IncomingCallPage_incomingVideoCall =
+      'IncomingCallPage_incomingVideoCall';
   static const newChat_newChatAppBar = 'newChat_newChatAppBar';
   static const newChat_slider_contacts = 'newChat_slider_contacts';
   static const newChat_slider_nearbyUsers = 'newChat_slider_nearbyUsers';
@@ -348,6 +350,7 @@ class Locales {
     'CallPage_currentlyOffline': 'Currently offline',
     'CallPage_sendAMessageButton': 'Send a message instead',
     'CallPage_close': 'Close',
+    'IncomingCallPage_incomingVideoCall': 'Incoming video call on Heyo...',
     'newChat_newChatAppBar': 'New Chat',
     'newChat_slider_contacts': 'Contacts',
     'newChat_slider_nearbyUsers': 'Nearby users',

@@ -204,8 +204,13 @@ class $AssetsSvgGen {
   SvgGenImage get lunaConnection =>
       const SvgGenImage('assets/svg/luna_connection.svg');
 
-  /// File path: assets/svg/mute_icon.svg
-  SvgGenImage get muteIcon => const SvgGenImage('assets/svg/mute_icon.svg');
+  /// File path: assets/svg/mute_mic_icon.svg
+  SvgGenImage get muteMicIcon =>
+      const SvgGenImage('assets/svg/mute_mic_icon.svg');
+
+  /// File path: assets/svg/mute_speaker.svg
+  SvgGenImage get muteSpeaker =>
+      const SvgGenImage('assets/svg/mute_speaker.svg');
 
   /// File path: assets/svg/new_chat.svg
   SvgGenImage get newChat => const SvgGenImage('assets/svg/new_chat.svg');

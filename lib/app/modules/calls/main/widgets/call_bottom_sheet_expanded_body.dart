@@ -55,7 +55,7 @@ class CallBottomSheetExpandedBody extends StatelessWidget {
                 Opacity(
                   opacity: 0,
                   child: CircleIconButton.p16(
-                    icon: Assets.svg.muteIcon.svg(),
+                    icon: Assets.svg.muteMicIcon.svg(),
                     backgroundColor: Colors.transparent,
                   ),
                 ),
