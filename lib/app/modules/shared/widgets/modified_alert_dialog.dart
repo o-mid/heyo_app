@@ -13,7 +13,7 @@ class ModifiedAlertDialog extends StatelessWidget {
   final double? padding;
   final Function? onClose;
   final bool hideCloseSign;
-  ModifiedAlertDialog(
+  const ModifiedAlertDialog(
       {Key? key,
       this.onClose,
       required this.alertContent,
@@ -93,14 +93,14 @@ class DefaultAlertDialogContent extends StatelessWidget {
   final Widget indicatorIcon;
   final Color indicatorBackgroundColor;
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final List<Widget> buttons;
   const DefaultAlertDialogContent({
     Key? key,
     required this.indicatorIcon,
     this.indicatorBackgroundColor = Colors.transparent,
     required this.title,
-    required this.subtitle,
+    this.subtitle,
     required this.buttons,
   }) : super(key: key);
 
@@ -127,14 +127,15 @@ class DefaultAlertDialogContent extends StatelessWidget {
                 TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
           ),
           CustomSizes.smallSizedBoxHeight,
-          Text(
-            subtitle,
-            textAlign: TextAlign.center,
-            style: TEXTSTYLES.kLinkSmall.copyWith(
-              fontWeight: FONTS.Regular,
-              color: COLORS.kTextBlueColor,
+          if (subtitle != null)
+            Text(
+              subtitle!,
+              textAlign: TextAlign.center,
+              style: TEXTSTYLES.kLinkSmall.copyWith(
+                fontWeight: FONTS.Regular,
+                color: COLORS.kTextBlueColor,
+              ),
             ),
-          ),
           SizedBox(height: 24.w),
           ...buttons,
         ],

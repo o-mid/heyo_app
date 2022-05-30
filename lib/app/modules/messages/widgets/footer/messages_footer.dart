@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
+import 'package:heyo/app/modules/messages/widgets/footer/send_location_box.dart';
 
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
@@ -47,16 +48,7 @@ class MessagesFooter extends StatelessWidget {
                       ),
                     ),
                     child: ScaleAnimatedSwitcher(
-                      child: controller.selectedMessages.isNotEmpty
-                          ? MessageSelectionOptions(
-                              showReply:
-                                  controller.selectedMessages.length == 1,
-                              showCopy: !controller.selectedMessages
-                                  .any((m) => m is! TextMessageModel),
-                              selectedMessages: controller.selectedMessages,
-                              // Todo: add flag and forward
-                            )
-                          : const ComposeMessageBox(),
+                      child: _buildActiveBox(controller),
                     ),
                   ),
           ),
@@ -77,5 +69,22 @@ class MessagesFooter extends StatelessWidget {
         ],
       );
     });
+  }
+
+  Widget _buildActiveBox(MessagesController controller) {
+    if (controller.selectedMessages.isNotEmpty) {
+      return MessageSelectionOptions(
+        showReply: controller.selectedMessages.length == 1,
+        showCopy:
+            !controller.selectedMessages.any((m) => m is! TextMessageModel),
+        selectedMessages: controller.selectedMessages,
+      );
+    }
+
+    if (controller.locationMessage.value != null) {
+      return const SendLocationBox();
+    }
+
+    return const ComposeMessageBox();
   }
 }
