@@ -94,9 +94,44 @@ class LocaleKeys {
       'HomePage_Chats_emptyState_subtitle';
   static const HomePage_Chats_emptyState_invite =
       'HomePage_Chats_emptyState_invite';
+  static const HomePage_Calls_emptyState_title =
+      'HomePage_Calls_emptyState_title';
+  static const HomePage_Calls_emptyState_subtitle =
+      'HomePage_Calls_emptyState_subtitle';
+  static const HomePage_Calls_hour = 'HomePage_Calls_hour';
+  static const HomePage_Calls_hours = 'HomePage_Calls_hours';
+  static const HomePage_Calls_minute = 'HomePage_Calls_minute';
+  static const HomePage_Calls_minutes = 'HomePage_Calls_minutes';
+  static const HomePage_Calls_durationAgo = 'HomePage_Calls_durationAgo';
+  static const HomePage_Calls_deleteCallDialog_title =
+      'HomePage_Calls_deleteCallDialog_title';
+  static const HomePage_Calls_deleteCallDialog_delete =
+      'HomePage_Calls_deleteCallDialog_delete';
+  static const HomePage_Calls_deleteCallDialog_cancel =
+      'HomePage_Calls_deleteCallDialog_cancel';
+  static const HomePage_Calls_deleteAllCallsDialog_title =
+      'HomePage_Calls_deleteAllCallsDialog_title';
+  static const HomePage_Calls_deleteAllCallsDialog_delete =
+      'HomePage_Calls_deleteAllCallsDialog_delete';
+  static const HomePage_Calls_deleteAllCallsDialog_cancel =
+      'HomePage_Calls_deleteAllCallsDialog_cancel';
+  static const HomePage_Calls_bottomSheet_deleteAllCalls =
+      'HomePage_Calls_bottomSheet_deleteAllCalls';
   static const HomePage_bottomSheet_newChat = 'HomePage_bottomSheet_newChat';
   static const HomePage_bottomSheet_newGroup = 'HomePage_bottomSheet_newGroup';
   static const HomePage_bottomSheet_invite = 'HomePage_bottomSheet_invite';
+  static const CallHistory_appbar = 'CallHistory_appbar';
+  static const CallHistory_missedCall = 'CallHistory_missedCall';
+  static const CallHistory_outgoing = 'CallHistory_outgoing';
+  static const CallHistory_incoming = 'CallHistory_incoming';
+  static const CallHistory_callDeclined = 'CallHistory_callDeclined';
+  static const CallHistory_callCanceled = 'CallHistory_callCanceled';
+  static const CallHistory_notAnswered = 'CallHistory_notAnswered';
+  static const CallPage_participants = 'CallPage_participants';
+  static const CallPage_ringing = 'CallPage_ringing';
+  static const CallPage_currentlyOffline = 'CallPage_currentlyOffline';
+  static const CallPage_sendAMessageButton = 'CallPage_sendAMessageButton';
+  static const CallPage_close = 'CallPage_close';
   static const newChat_newChatAppBar = 'newChat_newChatAppBar';
   static const newChat_slider_contacts = 'newChat_slider_contacts';
   static const newChat_slider_nearbyUsers = 'newChat_slider_nearbyUsers';
@@ -132,6 +167,28 @@ class LocaleKeys {
   static const MessagesPage_replyToVideo = 'MessagesPage_replyToVideo';
   static const MessagesPage_replyToAudio = 'MessagesPage_replyToAudio';
   static const MessagesPage_forwarded = 'MessagesPage_forwarded';
+  static const MessagesPage_sharedLocation = 'MessagesPage_sharedLocation';
+  static const MessagesPage_sharingLiveLocation =
+      'MessagesPage_sharingLiveLocation';
+  static const MessagesPage_liveShareRemainingMinute =
+      'MessagesPage_liveShareRemainingMinute';
+  static const MessagesPage_liveShareRemainingMinutes =
+      'MessagesPage_liveShareRemainingMinutes';
+  static const MessagesPage_liveShareRemainingHour =
+      'MessagesPage_liveShareRemainingHour';
+  static const MessagesPage_liveShareRemainingHours =
+      'MessagesPage_liveShareRemainingHours';
+  static const MessagesPage_liveShareLessThanMinute =
+      'MessagesPage_liveShareLessThanMinute';
+  static const MessagesPage_liveShareRemainingTime =
+      'MessagesPage_liveShareRemainingTime';
+  static const MessagesPage_finishedLiveShareTitle =
+      'MessagesPage_finishedLiveShareTitle';
+  static const MessagesPage_finishedLiveShareOtherTitle =
+      'MessagesPage_finishedLiveShareOtherTitle';
+  static const MessagesPage_finishedLiveShareSubtitle =
+      'MessagesPage_finishedLiveShareSubtitle';
+  static const MessagesPage_stopSharing = 'MessagesPage_stopSharing';
   static const MessagesPage_deleteMessagesDialog_title =
       'MessagesPage_deleteMessagesDialog_title';
   static const MessagesPage_deleteMessagesDialog_titlePlural =
@@ -159,6 +216,26 @@ class LocaleKeys {
       'forwardMassagesPage_bottomBar_forwardTO';
   static const forwardMassagesPage_bottomBar_messages =
       'forwardMassagesPage_bottomBar_messages';
+  static const permissionDialog_continue = 'permissionDialog_continue';
+  static const permissionDialog_notNow = 'permissionDialog_notNow';
+  static const permissionDialog_allowAccess = 'permissionDialog_allowAccess';
+  static const permissionDialog_locationSubtitle =
+      'permissionDialog_locationSubtitle';
+  static const shareLocationPage_appBar = 'shareLocationPage_appBar';
+  static const shareLocationPage_bottomSheet_shareLiveLocation =
+      'shareLocationPage_bottomSheet_shareLiveLocation';
+  static const shareLocationPage_bottomSheet_sendPickerLocation =
+      'shareLocationPage_bottomSheet_sendPickerLocation';
+  static const shareLocationPage_bottomSheet_locationAccessDisclaimer =
+      'shareLocationPage_bottomSheet_locationAccessDisclaimer';
+  static const shareLocationPage_bottomSheet_shareLiveLocationWith =
+      'shareLocationPage_bottomSheet_shareLiveLocationWith';
+  static const shareLocationPage_bottomSheet_shareDurationMinutes =
+      'shareLocationPage_bottomSheet_shareDurationMinutes';
+  static const shareLocationPage_bottomSheet_shareDurationHour =
+      'shareLocationPage_bottomSheet_shareDurationHour';
+  static const shareLocationPage_bottomSheet_shareDurationHours =
+      'shareLocationPage_bottomSheet_shareDurationHours';
   static const yesterday = 'yesterday';
   static const today = 'today';
   static const reply = 'reply';
@@ -166,6 +243,7 @@ class LocaleKeys {
   static const forward = 'forward';
   static const delete = 'delete';
   static const offline = 'offline';
+  static const scanQrTitle = 'scanQrTitle';
   static const AddContacts_addToContacts = 'AddContacts_addToContacts';
   static const AddContacts_addNickname = 'AddContacts_addNickname';
   static const AddContacts_AddNicknameSubtitle =
@@ -244,9 +322,37 @@ class Locales {
     'HomePage_Chats_emptyState_subtitle':
         'Start with inviting your friends or start new chats',
     'HomePage_Chats_emptyState_invite': 'Invite',
+    'HomePage_Calls_emptyState_title': 'You have no calls',
+    'HomePage_Calls_emptyState_subtitle':
+        'Call someone from your contact list by hitting that + button',
+    'HomePage_Calls_hour': '@count hour',
+    'HomePage_Calls_hours': '@count hours',
+    'HomePage_Calls_minute': '@count minute',
+    'HomePage_Calls_minutes': '@count minutes',
+    'HomePage_Calls_durationAgo': '@duration ago',
+    'HomePage_Calls_deleteCallDialog_title': 'Delete this call from history?',
+    'HomePage_Calls_deleteCallDialog_delete': 'Delete',
+    'HomePage_Calls_deleteCallDialog_cancel': 'Cancel',
+    'HomePage_Calls_deleteAllCallsDialog_title':
+        'Delete all calls from history?',
+    'HomePage_Calls_deleteAllCallsDialog_delete': 'Delete',
+    'HomePage_Calls_deleteAllCallsDialog_cancel': 'Cancel',
+    'HomePage_Calls_bottomSheet_deleteAllCalls': 'Delete all calls',
     'HomePage_bottomSheet_newChat': 'Start new chat',
     'HomePage_bottomSheet_newGroup': 'Start new group',
     'HomePage_bottomSheet_invite': 'Invite',
+    'CallHistory_appbar': 'Call history',
+    'CallHistory_missedCall': 'Missed call',
+    'CallHistory_outgoing': 'Outgoing',
+    'CallHistory_incoming': 'Incoming',
+    'CallHistory_callDeclined': 'Call declined',
+    'CallHistory_callCanceled': 'Call canceled',
+    'CallHistory_notAnswered': 'Not answered',
+    'CallPage_participants': 'Participants',
+    'CallPage_ringing': 'Ringing...',
+    'CallPage_currentlyOffline': 'Currently offline',
+    'CallPage_sendAMessageButton': 'Send a message instead',
+    'CallPage_close': 'Close',
     'newChat_newChatAppBar': 'New Chat',
     'newChat_slider_contacts': 'Contacts',
     'newChat_slider_nearbyUsers': 'Nearby users',
@@ -275,6 +381,18 @@ class Locales {
     'MessagesPage_replyToVideo': 'Video',
     'MessagesPage_replyToAudio': 'Audio',
     'MessagesPage_forwarded': 'Forwarded',
+    'MessagesPage_sharedLocation': 'Shared location',
+    'MessagesPage_sharingLiveLocation': 'Sharing live location',
+    'MessagesPage_liveShareRemainingMinute': '@count minute',
+    'MessagesPage_liveShareRemainingMinutes': '@count minutes',
+    'MessagesPage_liveShareRemainingHour': '@count hour',
+    'MessagesPage_liveShareRemainingHours': '@count hours',
+    'MessagesPage_liveShareLessThanMinute': 'Less than a minute',
+    'MessagesPage_liveShareRemainingTime': '@time remaining',
+    'MessagesPage_finishedLiveShareTitle': 'You shared your location',
+    'MessagesPage_finishedLiveShareOtherTitle': '@user shared their location',
+    'MessagesPage_finishedLiveShareSubtitle': 'Ended on @day at @clock',
+    'MessagesPage_stopSharing': 'Stop sharing',
     'MessagesPage_deleteMessagesDialog_title': 'Delete message?',
     'MessagesPage_deleteMessagesDialog_titlePlural': 'Delete @count messages?',
     'MessagesPage_deleteMessagesDialog_subtitle': 'Delete this message?',
@@ -292,6 +410,21 @@ class Locales {
     'forwardMassagesPage_contacts': 'Contacts',
     'forwardMassagesPage_bottomBar_forwardTO': 'Forward to ',
     'forwardMassagesPage_bottomBar_messages': ' messages',
+    'permissionDialog_continue': 'Continue',
+    'permissionDialog_notNow': 'Not now',
+    'permissionDialog_allowAccess': 'Allow access',
+    'permissionDialog_locationSubtitle':
+        'To share location, you need to allow Heyo access to your device\'s location.',
+    'shareLocationPage_appBar': 'Share Location',
+    'shareLocationPage_bottomSheet_shareLiveLocation': 'Share My Live Location',
+    'shareLocationPage_bottomSheet_sendPickerLocation': 'Send Picker Location',
+    'shareLocationPage_bottomSheet_locationAccessDisclaimer':
+        'We will access your location only for the duration you chosen and you can stop sharing it any time. We won’t use your location for any purpose other than sharing it in this chat.',
+    'shareLocationPage_bottomSheet_shareLiveLocationWith':
+        'Share my live location with @name for:',
+    'shareLocationPage_bottomSheet_shareDurationMinutes': '@count mins',
+    'shareLocationPage_bottomSheet_shareDurationHour': '@count hour',
+    'shareLocationPage_bottomSheet_shareDurationHours': '@count hours',
     'yesterday': 'Yesterday',
     'today': 'Today',
     'reply': 'Reply',
@@ -299,6 +432,7 @@ class Locales {
     'forward': 'Forward',
     'delete': 'Delete',
     'offline': 'Offline',
+    'scanQrTitle': 'Scan Qr Code',
     'AddContacts_addToContacts': 'Add to contacts',
     'AddContacts_addNickname': 'Add nickname',
     'AddContacts_AddNicknameSubtitle':

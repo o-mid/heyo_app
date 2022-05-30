@@ -10,6 +10,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/live_location_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/location_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/audio_metadata.dart';
@@ -21,11 +23,12 @@ import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
 import 'package:heyo/app/modules/messages/widgets/body/camera_picker/receiver_name_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/delete_message_dialog.dart';
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
-import 'package:heyo/app/modules/shared/data/controllers/audio_message_controller.dart';
-import 'package:heyo/app/modules/shared/data/controllers/video_message_controller.dart';
-import 'package:heyo/app/modules/shared/data/models/MessagesViewArgumentsModel.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/controllers/live_location_controller.dart';
+import 'package:heyo/app/modules/shared/controllers/audio_message_controller.dart';
+import 'package:heyo/app/modules/shared/controllers/video_message_controller.dart';
+import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/permission_dialog.dart';
 import 'package:heyo/generated/assets.gen.dart';
@@ -48,6 +51,7 @@ class MessagesController extends GetxController {
   final messages = <MessageModel>[].obs;
   final selectedMessages = <MessageModel>[].obs;
   final replyingTo = Rxn<ReplyToModel>();
+  final locationMessage = Rxn<LocationMessageModel>();
   StreamSubscription? keyboardListener;
   late MessagesViewArgumentsModel args;
 
@@ -67,6 +71,7 @@ class MessagesController extends GetxController {
         args.forwardedMessages!.map(
           (m) => m.copyWith(
             // messageId: , // Todo: Generate new id for forwarded message
+            isFromMe: true,
             isForwarded: true,
             status: MESSAGE_STATUS.SENDING,
             clearReply: true,
@@ -84,7 +89,7 @@ class MessagesController extends GetxController {
       if (visible) {
         showEmojiPicker.value = false;
 
-        WidgetsBinding.instance?.addPostFrameCallback((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           _keyboardHeight = Get.mediaQuery.viewInsets.bottom;
           if (scrollController.hasClients) {
             scrollController.animateTo(
@@ -95,7 +100,7 @@ class MessagesController extends GetxController {
           }
         });
       } else {
-        WidgetsBinding.instance?.addPostFrameCallback((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           if (scrollController.hasClients) {
             scrollController.animateTo(
               scrollController.offset - _keyboardHeight,
@@ -137,6 +142,8 @@ class MessagesController extends GetxController {
     textController.selection = textController.selection.copyWith(
         baseOffset: currentPos + str.length,
         extentOffset: currentPos + str.length);
+
+    newMessage.value = textController.text;
   }
 
   void removeCharacterBeforeCursorPosition() {
@@ -246,7 +253,7 @@ class MessagesController extends GetxController {
 
     clearReplyTo();
 
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       jumpToBottom();
     });
   }
@@ -270,9 +277,89 @@ class MessagesController extends GetxController {
 
     messages.refresh();
 
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       jumpToBottom();
     });
+  }
+
+  void sendLocationMessage() {
+    final message = locationMessage.value;
+    if (message == null) {
+      return;
+    }
+
+    messages.add(message);
+
+    messages.refresh();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      jumpToBottom();
+    });
+
+    // Todo (libp2p): send message
+
+    locationMessage.value = null;
+  }
+
+  void prepareLocationMessageForSending({
+    required double latitude,
+    required double longitude,
+    required String address,
+  }) {
+    //
+    locationMessage.value = LocationMessageModel(
+      latitude: latitude,
+      longitude: longitude,
+      address: address,
+      messageId: (messages.length + 1).toString(),
+      timestamp: DateTime.now(),
+      senderName: "",
+      senderAvatar: "",
+      isFromMe: true,
+    );
+  }
+
+  stopSharingLiveLocation(LiveLocationMessageModel message) {
+    Get.find<LiveLocationController>()
+        .removeIdFromSharingList(message.messageId);
+
+    final index = messages.indexWhere((m) => m.messageId == message.messageId);
+
+    if (index < 0) {
+      return;
+    }
+
+    messages[index] = message.copyWith(endTime: DateTime.now());
+    messages.refresh();
+
+    // Todo (libp2p): update message
+  }
+
+  void sendLiveLocation({
+    required Duration duration,
+    required double startLat,
+    required double startLong,
+  }) {
+    final message = LiveLocationMessageModel(
+      latitude: startLat,
+      longitude: startLong,
+      endTime: DateTime.now().add(duration),
+      messageId: (messages.length + 1).toString(),
+      timestamp: DateTime.now(),
+      senderName: "",
+      senderAvatar: "",
+      isFromMe: true,
+    );
+
+    messages.add(message);
+    messages.refresh();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      jumpToBottom();
+    });
+
+    // Todo (libp2p): send message
+    Get.find<LiveLocationController>()
+        .startSharing(message.messageId, duration);
   }
 
   void replyTo() {
@@ -685,6 +772,26 @@ class MessagesController extends GetxController {
         url: "https://download.samplelib.com/mp3/sample-15s.mp3",
         timestamp:
             DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      LocationMessageModel(
+        messageId: "${index++}",
+        latitude: 48.153445,
+        longitude: 17.129925,
+        address: "Kocelova 11-11, 821 08, Bratislava",
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 44)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      LiveLocationMessageModel(
+        messageId: "${index++}",
+        latitude: 35.65031,
+        longitude: 51.2925217,
+        endTime: DateTime.now().subtract(const Duration(minutes: 40)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 42)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),

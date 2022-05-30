@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/live_location_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/location_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/body/sender_reply_to_widget.dart';
@@ -107,5 +109,8 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
 
   @override
   bool get wantKeepAlive =>
-      widget.message is VideoMessageModel || widget.message is AudioMessageModel;
+      widget.message is VideoMessageModel ||
+      widget.message is AudioMessageModel ||
+      widget.message is LiveLocationMessageModel ||
+      widget.message is LocationMessageModel;
 }

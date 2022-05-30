@@ -10,14 +10,19 @@ import '../modules/auth/pinCode/bindings/pin_code_binding.dart';
 import '../modules/auth/pinCode/views/pin_code_view.dart';
 import '../modules/auth/sing-up/bindings/sing_up_binding.dart';
 import '../modules/auth/sing-up/views/sing_up_view.dart';
-import '../modules/calls/bindings/calls_binding.dart';
-import '../modules/calls/views/calls_view.dart';
+import '../modules/calls/main/bindings/call_binding.dart';
+import '../modules/calls/main/views/call_view.dart';
+import '../modules/calls/home/bindings/calls_binding.dart';
+import '../modules/calls/home/views/calls_view.dart';
+import '../modules/calls/user_call_history/bindings/user_call_history_binding.dart';
+import '../modules/calls/user_call_history/views/user_call_history_view.dart';
 import '../modules/forward_massages/bindings/forward_massages_binding.dart';
 import '../modules/forward_massages/views/forward_massages_view.dart';
 import '../modules/gallery_picker/bindings/gallery_picker_binding.dart';
 import '../modules/gallery_picker/views/gallery_picker_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/information/shareable_qr_view.dart';
 import '../modules/intro/bindings/intro_binding.dart';
 import '../modules/intro/views/intro_view.dart';
 import '../modules/messages/bindings/messages_binding.dart';
@@ -26,10 +31,13 @@ import '../modules/new_chat/bindings/new_chat_binding.dart';
 import '../modules/new_chat/views/new_chat_view.dart';
 import '../modules/search_nearby/bindings/search_nearby_binding.dart';
 import '../modules/search_nearby/views/search_nearby_view.dart';
+import '../modules/share_location/bindings/share_location_binding.dart';
+import '../modules/share_location/views/share_location_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 import '../modules/wallet/bindings/wallet_binding.dart';
 import '../modules/wallet/views/wallet_view.dart';
+import '../modules/website-interact/website_interact_view.dart';
 
 part 'app_routes.dart';
 
@@ -114,6 +122,29 @@ class AppPages {
       name: _Paths.GALLERY_PICKER,
       page: () => GalleryPickerView(),
       binding: GalleryPickerBinding(),
+    ),
+    GetPage(
+      name: _Paths.SHARE_LOCATION,
+      page: () => ShareLocationView(),
+      binding: ShareLocationBinding(),
+    ),
+    GetPage(
+      name: _Paths.SHREABLE_QR,
+      page: () => ShareableQrView(),
+    ),
+    GetPage(
+      name: _Paths.SCAN_QR,
+      page: () => WebsiteInteractView(),
+    ),
+    GetPage(
+      name: _Paths.USER_CALL_HISTORY,
+      page: () => UserCallHistoryView(),
+      binding: UserCallHistoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.CALL,
+      page: () => CallView(),
+      binding: CallBinding(),
     ),
   ];
 }

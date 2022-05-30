@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
-import 'package:heyo/app/modules/shared/data/controllers/audio_message_controller.dart';
+import 'package:heyo/app/modules/shared/controllers/audio_message_controller.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/widgets/scale_animated_switcher.dart';
 import 'package:heyo/generated/assets.gen.dart';
@@ -42,9 +42,7 @@ class AudioMessagePlayer extends GetView<AudioMessageController> {
           return Row(
             children: [
               GestureDetector(
-                onTap: isActive
-                    ? controller.playOrPause
-                    : () => controller.startNewAudio(message),
+                onTap: isActive ? controller.playOrPause : () => controller.startNewAudio(message),
                 child: SizedBox(
                   width: 20.w,
                   child: ScaleAnimatedSwitcher(
@@ -70,11 +68,9 @@ class AudioMessagePlayer extends GetView<AudioMessageController> {
                     inactiveColor: inactiveSliderColor,
                     activeColor: activeSliderColor,
                     value: isActive
-                        ? getSliderValue(controller.position.value,
-                            controller.duration.value)
+                        ? getSliderValue(controller.position.value, controller.duration.value)
                         : 0,
-                    onChanged: (value) =>
-                        controller.seek(message.messageId, value),
+                    onChanged: (value) => controller.seek(message.messageId, value),
                   ),
                 ),
               ),

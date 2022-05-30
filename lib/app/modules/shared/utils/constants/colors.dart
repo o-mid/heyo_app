@@ -84,8 +84,7 @@ class COLORS {
   static const Color kOnlineBadgeColor = Color(0xff37E028);
 
   /// Tab bar slider background #F8F7FF 80% opacity
-  static const Color kTabbarBackgroundColor =
-      Color.fromARGB(204, 248, 247, 255);
+  static const Color kTabbarBackgroundColor = Color.fromARGB(204, 248, 247, 255);
 
   /// message selection options color
   static const Color kMessageSelectionOption = Color(0xffA9AFC6);
@@ -98,4 +97,16 @@ class COLORS {
 
   ///divider color
   static const Color kDividerColor = Color(0xffECEAF1);
+
+  /// map blue color
+  static const Color kMapBlue = Color(0xff4585FA);
+
+  /// OpenStreetMap copyright color
+  static const Color kOSMCopyrightText = Color(0xff363636);
+
+  /// Call Page Dark Blue Color
+  static const Color kCallPageDarkBlue = Color(0xff0B132B);
+
+  /// Call Page Dark Blue Color
+  static const Color kCallPageDarkGrey = Color(0xff4E5469);
 }
