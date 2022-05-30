@@ -114,10 +114,10 @@ class AddContactsView extends GetView<AddContactsController> {
                     children: [
                       CustomButton.primary(
                         // TODO : chatModel should be filled with correct data
-                        //TODO check navigation
                         onTap: () {
                           controller.addContact();
-                          Get.offNamed(Routes.MESSAGES,
+                          Get.offNamedUntil(Routes.MESSAGES,
+                              ModalRoute.withName(Routes.HOME),
                               arguments:
                               MessagesViewArgumentsModel(chat: _User.chatModel));
                         },

@@ -1,4 +1,3 @@
-
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -39,8 +38,7 @@ class NewChatController extends GetxController
     animController = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
-    )
-      ..repeat(reverse: true);
+    )..repeat(reverse: true);
     animation = Tween<double>(
       begin: 0.9,
       end: 1.05,
@@ -95,14 +93,14 @@ class NewChatController extends GetxController
       name: "Crapps Wallbanger",
       walletAddress: 'CB92...969A',
       icon:
-      "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+          "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
       Nickname: "Nickname",
       chatModel: ChatModel(
         name: "Crapps Wallbanger",
         icon:
-        "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+            "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
         lastMessage:
-        "I'm still waiting for the reply. I'll let you know once they get back to me.",
+            "I'm still waiting for the reply. I'll let you know once they get back to me.",
         timestamp: "15:45",
       ),
     ),
@@ -116,7 +114,7 @@ class NewChatController extends GetxController
         name: "Fancy Potato",
         icon: "https://avatars.githubusercontent.com/u/6634136?v=4",
         lastMessage:
-        "I can arrange the meeting with her tomorrow if you're ok with that.",
+            "I can arrange the meeting with her tomorrow if you're ok with that.",
         timestamp: "Yesterday",
         isOnline: true,
         isVerified: true,
@@ -152,7 +150,7 @@ class NewChatController extends GetxController
   ].obs;
 
   RefreshController refreshController =
-  RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: false);
 
   void onRefresh() async {
     await Future.delayed(Duration(milliseconds: 1000));
@@ -164,13 +162,12 @@ class NewChatController extends GetxController
 
   void searchUsers(String query) async {
     //TODO icon and chatmodel should be filled with correct data
-    List<UserModel> searchedItems =
-    (await contactRepository.search(query))
-        .map((userContact) =>
-        UserModel(
+    List<UserModel> searchedItems = (await contactRepository.search(query))
+        .map((userContact) => UserModel(
             name: userContact.nickName,
             icon: userContact.icon,
             walletAddress: userContact.coreId,
+            isContact: true,
             chatModel: (nearbyUsers..shuffle()).first.chatModel))
         .toList();
 
@@ -201,20 +198,16 @@ class NewChatController extends GetxController
   handleScannedValue(QRViewController qrControllerDt) {
     // TODO: Implement the right filter logic for QRCode
     qrControllerDt.scannedDataStream.listen((element) {
-      if (element.code == null)
-        return;
+      if (element.code == null) return;
       try {
         final coreId = element.getCoreId();
-
 
         qrControllerDt.pauseCamera();
         Get.back();
         isTextInputFocused.value = true;
         // this will set the input field to the scanned value and serach for users
         inputController.text = coreId;
-
-      }
-      catch (e){
+      } catch (e) {
         return;
       }
     });
