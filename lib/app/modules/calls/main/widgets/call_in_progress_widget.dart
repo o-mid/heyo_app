@@ -13,15 +13,12 @@ class CallInProgressWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<CallController>();
     return Obx(() {
-      return Stack(
-        children: [
-          Positioned.fill(
-            child: controller.calleeVideoEnabled.value
-                ? const CalleeVideoWidget()
-                : const CalleeNoVideoWidget(),
-          ),
-          if (controller.callerVideoEnabled.value)
-            Positioned(
+      final calleeWidget = controller.calleeVideoEnabled.value
+          ? const CalleeVideoWidget()
+          : const CalleeNoVideoWidget();
+
+      final callerWidget = controller.callerVideoEnabled.value
+          ? Positioned(
               top: 16.h,
               right: 16.h,
               child: SizedBox(
@@ -29,9 +26,48 @@ class CallInProgressWidget extends StatelessWidget {
                 height: 144.h,
                 child: const CallerVideoWidget(),
               ),
+            )
+          : const SizedBox.shrink();
+      switch (controller.callViewType.value) {
+        case CallViewType.column:
+          return Center(
+            child: Column(
+              children: [
+                const Spacer(),
+                Expanded(child: calleeWidget),
+                Expanded(child: callerWidget),
+                const Spacer(),
+              ],
             ),
-        ],
-      );
+          );
+        case CallViewType.row:
+          return Row(
+            children: [
+              Expanded(child: calleeWidget),
+              Expanded(child: callerWidget),
+            ],
+          );
+        case CallViewType.stack:
+          return Stack(
+            children: [
+              Positioned.fill(
+                child: controller.calleeVideoEnabled.value
+                    ? const CalleeVideoWidget()
+                    : const CalleeNoVideoWidget(),
+              ),
+              if (controller.callerVideoEnabled.value)
+                Positioned(
+                  top: 16.h,
+                  right: 16.h,
+                  child: SizedBox(
+                    width: 96.w,
+                    height: 144.h,
+                    child: const CallerVideoWidget(),
+                  ),
+                ),
+            ],
+          );
+      }
     });
   }
 }

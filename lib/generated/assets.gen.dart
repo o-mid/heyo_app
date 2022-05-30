@@ -169,6 +169,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/forward_to.svg
   SvgGenImage get forwardTo => const SvgGenImage('assets/svg/forward_to.svg');
 
+  /// File path: assets/svg/full_screen.svg
+  SvgGenImage get fullScreen => const SvgGenImage('assets/svg/full_screen.svg');
+
   /// File path: assets/svg/gps_fixed.svg
   SvgGenImage get gpsFixed => const SvgGenImage('assets/svg/gps_fixed.svg');
 
@@ -263,6 +266,14 @@ class $AssetsSvgGen {
   /// File path: assets/svg/single_tick_icon.svg
   SvgGenImage get singleTickIcon =>
       const SvgGenImage('assets/svg/single_tick_icon.svg');
+
+  /// File path: assets/svg/stack_horizontal.svg
+  SvgGenImage get stackHorizontal =>
+      const SvgGenImage('assets/svg/stack_horizontal.svg');
+
+  /// File path: assets/svg/stack_vertical.svg
+  SvgGenImage get stackVertical =>
+      const SvgGenImage('assets/svg/stack_vertical.svg');
 
   /// File path: assets/svg/target.svg
   SvgGenImage get target => const SvgGenImage('assets/svg/target.svg');

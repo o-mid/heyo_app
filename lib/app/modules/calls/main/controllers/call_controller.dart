@@ -4,6 +4,12 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 
+enum CallViewType {
+  stack,
+  column,
+  row,
+}
+
 class CallController extends GetxController {
   late CallViewArgumentsModel args;
   final participants = <UserModel>[].obs;
@@ -19,6 +25,8 @@ class CallController extends GetxController {
 
   Timer? callTimer;
   final callDurationSeconds = 0.obs;
+
+  final callViewType = CallViewType.stack.obs;
   @override
   void onInit() {
     super.onInit();
@@ -67,6 +75,8 @@ class CallController extends GetxController {
   void toggleImmersiveMode() {
     isImmersiveMode.value = !isImmersiveMode.value;
   }
+
+  void updateCallViewType(CallViewType type) => callViewType.value = type;
 
   @override
   void onClose() {
