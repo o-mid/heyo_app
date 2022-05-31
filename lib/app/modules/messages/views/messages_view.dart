@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -14,6 +15,11 @@ class MessagesView extends GetView<MessagesController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      // Should be in a delete
+      // need to not getting Not used any observable in this file error
+      if (kDebugMode) {
+        print(controller.isInRecordMode);
+      }
       return Scaffold(
         appBar: MessagingAppBar(chat: controller.args.chat),
         backgroundColor: COLORS.kAppBackground,

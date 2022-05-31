@@ -13,6 +13,7 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/gallery_preview_button_widget.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:mime/mime.dart';
 import 'package:share_plus/share_plus.dart';
@@ -97,28 +98,35 @@ class GalleryPickerView extends GetView<GalleryPickerController> {
                       ),
                       IconButton(
                         // Todo: send Btn
-                        onPressed: () {
+                        onPressed: () async {
                           String path = controller.previewFiles[0]['path'];
-                          CameraPickerViewer.pushToViewer(
-                            context,
-                            pickerState: CameraPickerState(),
-                            pickerType: controller.isAssetImage(path)
-                                ? CameraPickerViewType.image
-                                : CameraPickerViewType.video,
-                            previewXFile: XFile(path),
-                            theme: ThemeData(),
-                            sendIcon: Assets.svg.sendIcon.svg(),
-                            additionalPreviewButtonWidget:
-                                const GalleryPreviewButtonWidget(),
-                            previewTextInputDecoration: InputDecoration(
-                              hintText: 'Type something',
-                              hintStyle: TEXTSTYLES.kBodySmall
-                                  .copyWith(color: COLORS.kTextSoftBlueColor),
-                            ),
-                            previewFiles: controller.pickedFile,
-                            shouldShowItemCount: true,
-                          );
+                          await CameraPickerViewer.pushToViewer(context,
+                              pickerState: CameraPickerState(),
+                              pickerType: controller.isAssetImage(path)
+                                  ? CameraPickerViewType.image
+                                  : CameraPickerViewType.video,
+                              previewXFile: XFile(path),
+                              theme: ThemeData(),
+                              sendIcon: Assets.svg.sendIcon.svg(),
+                              additionalPreviewButtonWidget:
+                                  const GalleryPreviewButtonWidget(),
+                              previewTextInputDecoration: InputDecoration(
+                                hintText: 'Type something',
+                                hintStyle: TEXTSTYLES.kBodySmall
+                                    .copyWith(color: COLORS.kTextSoftBlueColor),
+                              ),
+                              previewFiles: controller.pickedFile,
+                              shouldShowItemCount: true, onEntitySaving: (
+                            BuildContext context,
+                            CameraPickerViewType viewType,
+                            File file,
+                            List<Map<String, dynamic>>? confirmedFiles,
+                          ) {
+                            Navigator.of(context).pop();
+                            controller.setConfirmedFilesAndPop(confirmedFiles);
+                          });
                         },
+
                         icon: Assets.svg.sendImageIcon.svg(),
                       )
                     ],

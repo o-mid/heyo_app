@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/gallery_picker/provider/gallery_provider.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:mime/mime.dart';
 import 'package:photo_manager/photo_manager.dart';
 
@@ -7,6 +8,7 @@ class GalleryPickerController extends GetxController {
   PickerDataProvider provider = PickerDataProvider();
   late List<Map<String, dynamic>> pickedFile;
   RxList previewFiles = [].obs;
+  RxList confirmedFiles = [].obs;
 
   RxBool singlePick = false.obs;
   List<String> mediaPath = [];
@@ -60,6 +62,7 @@ class GalleryPickerController extends GetxController {
     provider.pickedFile.clear();
     provider.picked.clear();
     provider.pathList.clear();
+    confirmedFiles.clear();
     PhotoManager.stopChangeNotify();
   }
 
@@ -80,4 +83,10 @@ class GalleryPickerController extends GetxController {
   }
 
   void increment() => count.value++;
+  void setConfirmedFilesAndPop(List<Map<String, dynamic>>? files) {
+    if (files != null) {
+      confirmedFiles.value = files;
+      Get.back();
+    }
+  }
 }

@@ -196,14 +196,14 @@ packages:
       name: connectivity_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.1"
   connectivity_plus_linux:
     dependency: transitive
     description:
       name: connectivity_plus_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.0"
+    version: "1.3.1"
   connectivity_plus_macos:
     dependency: transitive
     description:
@@ -217,14 +217,14 @@ packages:
       name: connectivity_plus_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   connectivity_plus_web:
     dependency: transitive
     description:
       name: connectivity_plus_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   connectivity_plus_windows:
     dependency: transitive
     description:
@@ -238,7 +238,7 @@ packages:
       name: convert
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.2"
   core_flutter_lint:
     dependency: "direct dev"
     description:
@@ -402,7 +402,7 @@ packages:
     description:
       path: "."
       ref: feat-gallery
-      resolved-ref: e6d74febe7d92d02513e4862611688275bc20062
+      resolved-ref: cf9db01df1ff30b38d985c3139f95251f97d1b0b
       url: "git@git.energy:heyo/flutter_camera"
     source: git
     version: "0.0.1"
@@ -951,7 +951,7 @@ packages:
       name: photo_manager
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   pin_code_fields:
     dependency: "direct main"
     description:
@@ -1121,7 +1121,7 @@ packages:
       name: share_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.4"
+    version: "4.0.5"
   share_plus_linux:
     dependency: transitive
     description:
@@ -1135,28 +1135,28 @@ packages:
       name: share_plus_macos
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   share_plus_platform_interface:
     dependency: transitive
     description:
       name: share_plus_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.2"
+    version: "3.0.3"
   share_plus_web:
     dependency: transitive
     description:
       name: share_plus_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   share_plus_windows:
     dependency: transitive
     description:
       name: share_plus_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   shared_preferences:
     dependency: transitive
     description:
