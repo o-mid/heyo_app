@@ -13,7 +13,7 @@ class NewChatBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<NewChatController>(
       () => NewChatController(
-          accountInfo: AccountManager(
+          accountInfo: AccountController(
               localProvider: SecureStorageProvider(),
               cryptographyKeyGenerator: Web3Keys()),
           contactRepository: ContactRepository(

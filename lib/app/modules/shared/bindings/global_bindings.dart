@@ -22,10 +22,9 @@ class GlobalBindings extends Bindings {
   static P2PState p2pState = P2PState();
   final P2PNodeResponseStream p2pNodeResponseStream =
       P2PNodeResponseStream(p2pState: p2pState);
-  final AccountInfo accountInfo = AccountManager(
+  final AccountInfo accountInfo = AccountController(
       localProvider: SecureStorageProvider(),
       cryptographyKeyGenerator: Web3Keys());
-
 
   @override
   void dependencies() {
