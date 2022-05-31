@@ -17,25 +17,19 @@ class CallInProgressWidget extends StatelessWidget {
           ? const CalleeVideoWidget()
           : const CalleeNoVideoWidget();
 
-      final callerWidget = controller.callerVideoEnabled.value
-          ? Positioned(
-              top: 16.h,
-              right: 16.h,
-              child: SizedBox(
-                width: 96.w,
-                height: 144.h,
-                child: const CallerVideoWidget(),
-              ),
-            )
-          : const SizedBox.shrink();
+      final callerWidget =
+          controller.callerVideoEnabled.value ? const CallerVideoWidget() : const SizedBox.shrink();
+      final firstWidget = controller.isVideoPositionsFlipped.isFalse ? calleeWidget : callerWidget;
+      final secondWidget = controller.isVideoPositionsFlipped.isFalse ? callerWidget : calleeWidget;
+
       switch (controller.callViewType.value) {
         case CallViewType.column:
           return Center(
             child: Column(
               children: [
                 const Spacer(),
-                Expanded(child: calleeWidget),
-                Expanded(child: callerWidget),
+                Expanded(child: firstWidget),
+                Expanded(child: secondWidget),
                 const Spacer(),
               ],
             ),
@@ -43,28 +37,26 @@ class CallInProgressWidget extends StatelessWidget {
         case CallViewType.row:
           return Row(
             children: [
-              Expanded(child: calleeWidget),
-              Expanded(child: callerWidget),
+              Expanded(child: firstWidget),
+              Expanded(child: secondWidget),
             ],
           );
         case CallViewType.stack:
           return Stack(
             children: [
-              Positioned.fill(
-                child: controller.calleeVideoEnabled.value
-                    ? const CalleeVideoWidget()
-                    : const CalleeNoVideoWidget(),
+              Align(
+                alignment: Alignment.center,
+                child: firstWidget,
               ),
-              if (controller.callerVideoEnabled.value)
-                Positioned(
-                  top: 16.h,
-                  right: 16.h,
-                  child: SizedBox(
-                    width: 96.w,
-                    height: 144.h,
-                    child: const CallerVideoWidget(),
-                  ),
+              Positioned(
+                top: 16.h,
+                right: 16.h,
+                child: SizedBox(
+                  width: 96.w,
+                  height: 144.h,
+                  child: secondWidget,
                 ),
+              ),
             ],
           );
       }

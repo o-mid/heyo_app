@@ -26,7 +26,11 @@ class CallController extends GetxController {
   Timer? callTimer;
   final callDurationSeconds = 0.obs;
 
+  // Todo: reset [callViewType] and [isVideoPositionsFlipped] when other user disables video
   final callViewType = CallViewType.stack.obs;
+
+  final isVideoPositionsFlipped = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -77,6 +81,8 @@ class CallController extends GetxController {
   }
 
   void updateCallViewType(CallViewType type) => callViewType.value = type;
+
+  void flipVideoPositions() => isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   @override
   void onClose() {

@@ -46,14 +46,17 @@ class CallView extends GetView<CallController> {
                   ),
                 ],
               ),
-        body: ExpandableBottomSheet(
-          background: controller.isCallInProgress.value
-              ? const CallInProgressWidget()
-              : const CallRingingWidget(),
-          persistentHeader: controller.isImmersiveMode.value ? null : const CallBottomSheetHeader(),
-          expandableContent: controller.isImmersiveMode.value
-              ? const SizedBox.shrink()
-              : const CallBottomSheetExpandedBody(),
+        body: SafeArea(
+          child: ExpandableBottomSheet(
+            background: controller.isCallInProgress.value
+                ? const CallInProgressWidget()
+                : const CallRingingWidget(),
+            persistentHeader:
+                controller.isImmersiveMode.value ? null : const CallBottomSheetHeader(),
+            expandableContent: controller.isImmersiveMode.value
+                ? const SizedBox.shrink()
+                : const CallBottomSheetExpandedBody(),
+          ),
         ),
       );
     });

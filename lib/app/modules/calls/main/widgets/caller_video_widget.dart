@@ -31,8 +31,9 @@ class _CallerVideoWidgetState extends State<CallerVideoWidget> {
           showOptions = !showOptions;
         });
       },
+      onDoubleTap: controller.flipVideoPositions,
       child: Stack(
-        fit: StackFit.expand,
+        alignment: Alignment.center,
         children: [
           Assets.png.caller.image(),
           if (showOptions)
