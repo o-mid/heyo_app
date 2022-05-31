@@ -6,20 +6,24 @@ class UserContact {
   UserContact(
       {required this.coreId, required this.nickName, required this.icon});
 
-  static const NICK_NAME = "nickName";
-  static const CORE_ID = "coreId";
-  static const ICON = "icon";
+  static const _NICK_NAME = "nickName";
+  static const _CORE_ID = "coreId";
+  static const _ICON = "icon";
 
   Map<String, dynamic> toMap() {
     return {
-      NICK_NAME: nickName,
-      CORE_ID: coreId,
-      ICON: icon,
+      _NICK_NAME: nickName,
+      _CORE_ID: coreId,
+      _ICON: icon,
     };
   }
 
   static UserContact fromMap(Map<String, dynamic> map) {
     return UserContact(
-        nickName: map[NICK_NAME], coreId: map[CORE_ID], icon: map[ICON]);
+        nickName: map[_NICK_NAME], coreId: map[_CORE_ID], icon: map[_ICON]);
+  }
+
+  static String nickNameGetSerializeName() {
+    return _NICK_NAME;
   }
 }

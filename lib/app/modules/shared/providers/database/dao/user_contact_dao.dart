@@ -40,7 +40,7 @@ class UserContactProvider {
   Future<List<UserContact>> getAllSortedByName() async {
     // Finder object can also sort data.
     final finder = Finder(sortOrders: [
-      SortOrder(UserContact.NICK_NAME),
+      SortOrder(UserContact.nickNameGetSerializeName()),
     ]);
 
     final recordSnapshots = await _userStore.find(
