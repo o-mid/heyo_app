@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_manager.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/web3_keys.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
@@ -19,7 +18,7 @@ class NewChatBinding extends Bindings {
               cryptographyKeyGenerator: Web3Keys()),
           contactRepository: ContactRepository(
               cacheContractor:
-                  CacheRepository(userContactDao: UserContactDao()))),
+                  CacheRepository(userContact: UserContactProvider()))),
     );
   }
 }

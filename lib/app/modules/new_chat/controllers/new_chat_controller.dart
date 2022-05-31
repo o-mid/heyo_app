@@ -6,7 +6,8 @@ import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguments_mo
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scaner.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/helper.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 

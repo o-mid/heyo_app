@@ -4,18 +4,18 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
-class AppDatabase {
+class AppDatabaseProvider {
   //singleton instance
-  static final AppDatabase _instance = AppDatabase._();
+  static final AppDatabaseProvider _instance = AppDatabaseProvider._();
 
   //public accessor
-  static AppDatabase get instance => _instance;
+  static AppDatabaseProvider get instance => _instance;
 
   //for opening database we use completer which uses for transforming sync code into async code and stores a future in itself
   Completer<Database>? _dbOpenCompleter;
 
   // private constructor allows us to create instance only from the class
-  AppDatabase._();
+  AppDatabaseProvider._();
 
   // Database object accessor
   Future<Database> get database async {

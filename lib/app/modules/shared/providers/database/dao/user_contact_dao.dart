@@ -2,17 +2,17 @@ import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
 import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
 
-class UserContactDao {
+class UserContactProvider {
 
-  static const String USER_CONTACTS_STORE_NAME = 'user_contacts';
+  static const String _USER_CONTACTS_STORE_NAME = 'user_contacts';
 
   // A Store with int keys and Map<String, dynamic> values.
   // This Store acts like a persistent map, values of which are User objects converted to Map
-  final _userStore = intMapStoreFactory.store(USER_CONTACTS_STORE_NAME);
+  final _userStore = intMapStoreFactory.store(_USER_CONTACTS_STORE_NAME);
 
   // Private getter to shorten the amount of code needed to get the
   // singleton instance of an opened database.
-  Future<Database> get _db async => await AppDatabase.instance.database;
+  Future<Database> get _db async => await AppDatabaseProvider.instance.database;
 
   Future insert(UserContact user) async {
     await _userStore.add(await _db, user.toMap());

@@ -8,7 +8,7 @@ import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
 import 'package:collection/src/iterable_extensions.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/helper.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class Login {
