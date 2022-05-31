@@ -191,6 +191,13 @@ class LocaleKeys {
   static const MessagesPage_finishedLiveShareSubtitle =
       'MessagesPage_finishedLiveShareSubtitle';
   static const MessagesPage_stopSharing = 'MessagesPage_stopSharing';
+  static const MessagesPage_callMessageTitle = 'MessagesPage_callMessageTitle';
+  static const MessagesPage_callMessageSubtitleMissed =
+      'MessagesPage_callMessageSubtitleMissed';
+  static const MessagesPage_callMessageSubtitleDeclined =
+      'MessagesPage_callMessageSubtitleDeclined';
+  static const MessagesPage_callMessageActionButton =
+      'MessagesPage_callMessageActionButton';
   static const MessagesPage_deleteMessagesDialog_title =
       'MessagesPage_deleteMessagesDialog_title';
   static const MessagesPage_deleteMessagesDialog_titlePlural =
@@ -391,6 +398,10 @@ class Locales {
     'MessagesPage_finishedLiveShareOtherTitle': '@user shared their location',
     'MessagesPage_finishedLiveShareSubtitle': 'Ended on @day at @clock',
     'MessagesPage_stopSharing': 'Stop sharing',
+    'MessagesPage_callMessageTitle': '@user called you',
+    'MessagesPage_callMessageSubtitleMissed': 'Call missed',
+    'MessagesPage_callMessageSubtitleDeclined': 'Call declined',
+    'MessagesPage_callMessageActionButton': 'Call back',
     'MessagesPage_deleteMessagesDialog_title': 'Delete message?',
     'MessagesPage_deleteMessagesDialog_titlePlural': 'Delete @count messages?',
     'MessagesPage_deleteMessagesDialog_subtitle': 'Delete this message?',

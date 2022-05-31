@@ -180,6 +180,10 @@
     "finishedLiveShareOtherTitle": "@user shared their location",
     "finishedLiveShareSubtitle": "Ended on @day at @clock",
     "stopSharing": "Stop sharing",
+    "callMessageTitle": "@user called you",
+    "callMessageSubtitleMissed": "Call missed",
+    "callMessageSubtitleDeclined": "Call declined",
+    "callMessageActionButton": "Call back",
     "deleteMessagesDialog": {
       "title": "Delete message?",
       "titlePlural": "Delete @count messages?",
