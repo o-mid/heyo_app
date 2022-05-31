@@ -8,11 +8,13 @@ class UserModel {
   bool isOnline;
   bool isVerified;
   ChatModel? chatModel;
+  bool isContact;
 
   UserModel({
     required this.name,
     required this.icon,
     required this.walletAddress,
+    this.isContact = false,
     this.isOnline = false,
     this.isVerified = false,
     this.nickname = "",

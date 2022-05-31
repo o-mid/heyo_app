@@ -33,7 +33,7 @@ void openUserPreviewBottomSheet(UserModel user) {
             CustomSizes.smallSizedBoxWidth,
             user.isVerified
                 ? Assets.svg.verifiedWithBluePadding
-                    .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
+                .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
                 : const SizedBox(),
           ],
         ),
@@ -51,7 +51,7 @@ void openUserPreviewBottomSheet(UserModel user) {
               children: [
                 CustomSizes.smallSizedBoxHeight,
                 TextButton(
-                    //Todo: Add User Info onPressed
+                  //Todo: Add User Info onPressed
                     onPressed: () {},
                     child: Row(
                       children: [
@@ -109,8 +109,7 @@ void openUserPreviewBottomSheet(UserModel user) {
                             ))
                       ],
                     )),
-                TextButton(
-                    //Todo: Add To Contacts onPressed
+                if(!user.isContact) TextButton(
                     onPressed: () {
                       Get.toNamed(
                         Routes.ADD_CONTACTS,
@@ -142,7 +141,7 @@ void openUserPreviewBottomSheet(UserModel user) {
                       ],
                     )),
                 TextButton(
-                    //Todo: Block onPressed
+                  //Todo: Block onPressed
                     onPressed: () {},
                     child: Row(
                       children: [

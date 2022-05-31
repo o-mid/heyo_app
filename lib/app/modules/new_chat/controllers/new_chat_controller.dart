@@ -4,6 +4,10 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguments_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scaner.dart';
+import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
+import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -16,8 +20,12 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
   late AnimationController animController;
   late Animation<double> animation;
   late TextEditingController inputController;
+  final ContactRepository contactRepository;
+  final AccountInfo accountInfo;
+  NewChatController({required this.contactRepository, required this.accountInfo});
 // in nearby users Tab after 3 seconds the refresh button will be visible
   RxBool refreshBtnVisibility = false.obs;
+
   void makeRefreshBtnVisible() {
     Future.delayed(const Duration(seconds: 3), () {
       refreshBtnVisibility.value = true;
@@ -37,6 +45,8 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
     ).animate(animController);
 
     inputController = TextEditingController();
+
+    searchUsers('');
     inputController.addListener(() {
       searchUsers(inputController.text);
     });
@@ -141,13 +151,36 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
 
   RxList<UserModel> searchSuggestions = <UserModel>[].obs;
 
-  void searchUsers(String query) {
-    searchSuggestions.value = nearbyUsers.where((user) {
-      String username = user.name.toLowerCase();
-      String inputedQuery = query.toLowerCase();
-      return username.contains(inputedQuery);
-    }).toList();
-    searchSuggestions.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+  void searchUsers(String query) async {
+    //TODO icon and chatmodel should be filled with correct data
+    List<UserModel> searchedItems = (await contactRepository.search(query))
+        .map((userContact) => UserModel(
+            name: userContact.nickName,
+            icon: userContact.icon,
+            walletAddress: userContact.coreId,
+            isContact: true,
+            chatModel: (nearbyUsers..shuffle()).first.chatModel))
+        .toList();
+
+    if (searchedItems.isEmpty) {
+      String? currentUserCoreId = await accountInfo.getCoreId();
+      if (query.isValid() && currentUserCoreId != query) {
+        //its a new user
+        //TODO update fields based on correct data
+        searchSuggestions.value = [
+          UserModel(
+              name: 'unknown',
+              icon: (nearbyUsers..shuffle()).first.icon,
+              walletAddress: query,
+              chatModel: (nearbyUsers..shuffle()).first.chatModel)
+        ];
+      } else {
+        searchSuggestions.value = [];
+      }
+    } else {
+      searchSuggestions.value = searchedItems;
+    }
+
     searchSuggestions.refresh();
   }
 
@@ -156,11 +189,18 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
   handleScannedValue(QRViewController qrControllerDt) {
     // TODO: Implement the right filter logic for QRCode
     qrControllerDt.scannedDataStream.listen((element) {
-      qrControllerDt.pauseCamera();
-      Get.back();
-      isTextInputFocused.value = true;
-      // this will set the input field to the scanned value and serach for users
-      inputController.text = element.code.toString();
+      if (element.code == null) return;
+      try {
+        final coreId = element.getCoreId();
+
+        qrControllerDt.pauseCamera();
+        Get.back();
+        isTextInputFocused.value = true;
+        // this will set the input field to the scanned value and serach for users
+        inputController.text = coreId;
+      } catch (e) {
+        return;
+      }
     });
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -9,11 +10,16 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
+
+
 import '../../new_chat/data/models/user_model.dart';
 import '../controllers/add_contacts_controller.dart';
+
+
 
 class AddContactsView extends GetView<AddContactsController> {
   @override
@@ -111,8 +117,14 @@ class AddContactsView extends GetView<AddContactsController> {
                   Column(
                     children: [
                       CustomButton.primary(
-                        // TODO : Implement ADD Contact
-                        onTap: () {},
+                        // TODO : chatModel should be filled with correct data
+                        onTap: () {
+                          controller.addContact();
+                          Get.offNamedUntil(Routes.MESSAGES,
+                              ModalRoute.withName(Routes.HOME),
+                              arguments:
+                              MessagesViewArgumentsModel(chat: _User.chatModel!));
+                        },
 
                         titleWidget: Text(
                           LocaleKeys.AddContacts_buttons_addToContacts.tr,
