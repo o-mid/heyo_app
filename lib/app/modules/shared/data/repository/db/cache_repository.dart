@@ -1,6 +1,6 @@
 import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
 import 'package:heyo/app/modules/shared/data/repository/db/cache_contractor.dart';
-import 'package:heyo/app/modules/shared/providers/database/dao/user_contact_dao.dart';
+import 'package:heyo/app/modules/shared/providers/database/dao/user_contact_provider.dart';
 
 class CacheRepository extends CacheContractor {
   final UserContactProvider userContact;
