@@ -49,7 +49,7 @@ packages:
       name: audio_session
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.6+1"
+    version: "0.1.7"
   boolean_selector:
     dependency: transitive
     description:
@@ -217,7 +217,7 @@ packages:
       name: convert
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.2"
   core_flutter_lint:
     dependency: "direct dev"
     description:
@@ -433,7 +433,7 @@ packages:
       name: flutter_native_splash
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.1"
+    version: "2.2.2"
   flutter_osm_interface:
     dependency: transitive
     description:
@@ -697,7 +697,7 @@ packages:
       name: just_audio
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.21"
+    version: "0.9.24"
   just_audio_platform_interface:
     dependency: transitive
     description:
