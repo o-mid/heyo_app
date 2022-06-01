@@ -6,8 +6,10 @@ import 'message_model.dart';
 class ImageMessageModel extends MessageModel {
   final String url;
   final ImageMetadata metadata;
+  final bool isLocal;
   ImageMessageModel({
     required this.url,
+    required this.isLocal,
     required this.metadata,
     required super.messageId,
     required super.timestamp,
@@ -24,6 +26,7 @@ class ImageMessageModel extends MessageModel {
   @override
   ImageMessageModel copyWith({
     String? url,
+    bool? isLocal,
     String? messageId,
     MESSAGE_STATUS? status,
     DateTime? timestamp,
@@ -35,6 +38,7 @@ class ImageMessageModel extends MessageModel {
   }) {
     return ImageMessageModel(
       url: url ?? this.url,
+      isLocal: isLocal ?? this.isLocal,
       metadata: metadata,
       messageId: messageId ?? this.messageId,
       timestamp: timestamp ?? this.timestamp,

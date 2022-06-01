@@ -402,7 +402,7 @@ packages:
     description:
       path: "."
       ref: feat-gallery
-      resolved-ref: cf9db01df1ff30b38d985c3139f95251f97d1b0b
+      resolved-ref: "3737bcf351e44094f39c94d0078aa889229e5193"
       url: "git@git.energy:heyo/flutter_camera"
     source: git
     version: "0.0.1"

@@ -62,8 +62,7 @@ class MediaGlassmorphic extends StatelessWidget {
                             ),
                             CircularMediaIconButton(
                               backgroundColor: const Color(0xff16B4F2),
-                              onPressed: () =>
-                                  Get.toNamed(Routes.GALLERY_PICKER),
+                              onPressed: () => controller.openGallery(),
                               padding: 18,
                               child: Assets.svg.galleryIcon.svg(
                                 height: 20.w,

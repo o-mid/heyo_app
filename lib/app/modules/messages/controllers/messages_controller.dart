@@ -31,6 +31,7 @@ import 'package:heyo/app/modules/shared/controllers/video_message_controller.dar
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/permission_dialog.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -676,6 +677,7 @@ class MessagesController extends GetxController {
       ),
       ImageMessageModel(
         messageId: "${index++}",
+        isLocal: false,
         url:
             "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
         metadata: ImageMetadata(width: 687, height: 1030),
@@ -692,6 +694,7 @@ class MessagesController extends GetxController {
       ),
       ImageMessageModel(
         messageId: "${index++}",
+        isLocal: false,
         url:
             "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
         metadata: ImageMetadata(width: 2142, height: 806),
@@ -803,7 +806,7 @@ class MessagesController extends GetxController {
   }
 
   RxBool isMediaGlassmorphicOpen = false.obs;
-  openMediaGlassmorphic() {
+  mediaGlassmorphicChangeState() {
     isMediaGlassmorphicOpen.value = !isMediaGlassmorphicOpen.value;
   }
 
@@ -875,6 +878,57 @@ class MessagesController extends GetxController {
       if (kDebugMode) {
         print(e);
       }
+    }
+  }
+
+  Future<void> openGallery() async {
+    final result = await Get.toNamed(
+      Routes.GALLERY_PICKER,
+    );
+    if (result != null) {
+      mediaGlassmorphicChangeState();
+
+      result.forEach((asset) {
+        switch (asset["type"]) {
+          case "image":
+            {
+              messages.add(
+                ImageMessageModel(
+                    messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                    isLocal: true,
+                    metadata: ImageMetadata(
+                      height: double.parse(asset["height"].toString()),
+                      width: double.parse(asset["width"].toString()),
+                    ),
+                    senderAvatar: '',
+                    senderName: '',
+                    isFromMe: true,
+                    timestamp: DateTime.now()
+                        .subtract(const Duration(hours: 1, minutes: 49)),
+                    url: asset["path"]),
+              );
+            }
+            break;
+          case "text":
+            {
+              messages.add(
+                TextMessageModel(
+                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                  text: asset["value"],
+                  timestamp: DateTime.now()
+                      .subtract(const Duration(hours: 1, minutes: 49)),
+                  senderName: '',
+                  senderAvatar: '',
+                  isFromMe: true,
+                ),
+              );
+            }
+            break;
+
+          default:
+            break;
+        }
+      });
     }
   }
 }

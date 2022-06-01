@@ -23,7 +23,7 @@ class ComposeMessageBox extends StatelessWidget {
               GestureDetector(
                 // Todo: implement add media button
                 onTap: () {
-                  controller.openMediaGlassmorphic();
+                  controller.mediaGlassmorphicChangeState();
                 },
                 child: Container(
                   width: 20,

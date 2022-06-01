@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/gallery_picker/provider/gallery_provider.dart';
-import 'package:heyo/app/routes/app_pages.dart';
+
 import 'package:mime/mime.dart';
 import 'package:photo_manager/photo_manager.dart';
 
@@ -83,10 +83,13 @@ class GalleryPickerController extends GetxController {
   }
 
   void increment() => count.value++;
-  void setConfirmedFilesAndPop(List<Map<String, dynamic>>? files) {
+  Future<void> setConfirmedFilesAndPop(
+      List<Map<String, dynamic>>? files) async {
     if (files != null) {
       confirmedFiles.value = files;
-      Get.back();
+      print(confirmedFiles);
+      await PhotoManager.requestPermissionExtend();
+      Get.back(result: confirmedFiles);
     }
   }
 }
