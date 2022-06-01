@@ -1,38 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
-class QrScanView extends StatelessWidget {
+class QrScanView extends StatefulWidget {
   final String title;
   final bool hasBackButton;
   final String subtitle;
-  final Function(QRViewController) onQRViewCreated;
+  final Function(String?) onDetect;
   final Function()? closeButtonOnClick;
 
-  QrScanView(
-      {required this.title,
-      required this.subtitle,
-      required this.onQRViewCreated,
-      this.hasBackButton = false,
-      this.closeButtonOnClick = null});
+  const QrScanView({
+    super.key,
+    required this.onDetect,
+    required this.title,
+    required this.subtitle,
+    this.hasBackButton = false,
+    this.closeButtonOnClick,
+  });
 
+  @override
+  State<QrScanView> createState() => _QrScanViewState();
+}
+
+class _QrScanViewState extends State<QrScanView> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QRKey');
+
+  final scannerController = MobileScannerController();
+
   @override
   Widget build(BuildContext context) {
-    var scanArea = Get.width < 400 || Get.height < 400 ? 220.0 : 300.0;
     return Stack(
       children: [
-        QRView(
+        MobileScanner(
           key: qrKey,
-          onQRViewCreated: onQRViewCreated,
-          overlay: QrScannerOverlayShape(
-              borderWidth: 2,
-              borderColor: COLORS.kWhiteColor,
-              borderRadius: 20,
-              borderLength: 40,
-              cutOutSize: scanArea),
+          onDetect: (barcode, args) {
+            widget.onDetect(barcode.rawValue);
+            HapticFeedback.mediumImpact();
+          },
+          controller: scannerController,
         ),
         Align(
           alignment: Alignment.center,
@@ -44,20 +52,18 @@ class QrScanView extends StatelessWidget {
               Stack(
                 alignment: AlignmentDirectional.center,
                 children: [
-                  hasBackButton
+                  widget.hasBackButton
                       ? Align(
                           alignment: Alignment.centerLeft,
                           child: IconButton(
-                            icon: const Icon(Icons.arrow_back_ios_new_rounded,
-                                color: Colors.white),
-                            onPressed: closeButtonOnClick ?? () => Get.back(),
+                            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+                            onPressed: widget.closeButtonOnClick ?? () => Get.back(),
                           ),
                         )
                       : const SizedBox(),
                   Text(
-                    title,
-                    style: TEXTSTYLES.kHeaderLarge
-                        .copyWith(color: COLORS.kWhiteColor),
+                    widget.title,
+                    style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kWhiteColor),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -65,7 +71,7 @@ class QrScanView extends StatelessWidget {
               SizedBox(
                 width: 300.0,
                 child: Text(
-                  subtitle,
+                  widget.subtitle,
                   style: TEXTSTYLES.kBodyBasic,
                   textAlign: TextAlign.center,
                 ),

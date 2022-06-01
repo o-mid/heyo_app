@@ -14,7 +14,7 @@ void main() {
       builder: (_, __) => GetMaterialApp(
         /// about ```translationsKeys``` see the Getx package on internationalization https://pub.dev/packages/get#internationalization
         // translationsKeys: AppTranslation.translations,
-        title: 'Flutter app structure',
+        title: 'Heyo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(),
         locale: const Locale("en", "EN"),
