@@ -5,6 +5,7 @@ import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/calls/main/widgets/callee_no_video_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/callee_video_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/caller_video_widget.dart';
+import 'package:heyo/app/modules/calls/main/widgets/draggable_video.dart';
 
 class CallInProgressWidget extends StatelessWidget {
   const CallInProgressWidget({Key? key}) : super(key: key);
@@ -48,9 +49,7 @@ class CallInProgressWidget extends StatelessWidget {
                 alignment: Alignment.center,
                 child: firstWidget,
               ),
-              Positioned(
-                top: 16.h,
-                right: 16.h,
+              DraggableVideo(
                 child: SizedBox(
                   width: 96.w,
                   height: 144.h,

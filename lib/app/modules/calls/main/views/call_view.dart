@@ -62,3 +62,72 @@ class CallView extends GetView<CallController> {
     });
   }
 }
+
+class PScreen extends StatefulWidget {
+  @override
+  _PScreenState createState() => _PScreenState();
+}
+
+class _PScreenState extends State<PScreen> {
+  double width = 70.0, height = 70.0;
+  double _x = 0;
+  double _y = 0;
+
+  Widget circle() {
+    return Container(
+      width: width,
+      height: height,
+      child: Center(
+        child: Text(
+          "Drag",
+        ),
+      ),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.blue,
+      ),
+    );
+  }
+
+  Widget draggable() {
+    return Positioned(
+      left: _x,
+      top: _y,
+      child: Draggable(
+        child: circle(),
+        feedback: circle(),
+        childWhenDragging: Container(),
+        onDragEnd: (dragDetails) {
+          setState(
+            () {
+              _x = dragDetails.offset.dx;
+              _x = _x.clamp(0, context.width - 50);
+              // We need to remove offsets like app/status bar from Y
+              _y = dragDetails.offset.dy - 56 - MediaQuery.of(context).padding.top;
+              _y = _y.clamp(0, context.height - 150);
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final appBar = AppBar(
+      title: Text('Drag'),
+      leading: BackButton(onPressed: () {
+        Navigator.pop(context, false);
+      }),
+    );
+    return Scaffold(
+      appBar: appBar,
+      body: Stack(
+        children: <Widget>[
+          draggable(),
+          Positioned(left: 0.0, bottom: 0.0, child: circle()),
+        ],
+      ),
+    );
+  }
+}
