@@ -55,5 +55,7 @@
 
        	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
        	<string>Location permission is required to share your location with others.</string>
-	</dict>
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+</dict>
 </plist>
