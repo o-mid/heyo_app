@@ -716,6 +716,7 @@ class MessagesController extends GetxController {
       ),
       VideoMessageModel(
         messageId: "${index++}",
+        isLocal: false,
         url:
             "https://assets.mixkit.co/videos/preview/mixkit-daytime-city-traffic-aerial-view-56-large.mp4",
         metadata: VideoMetadata(
@@ -742,6 +743,7 @@ class MessagesController extends GetxController {
       ),
       VideoMessageModel(
         messageId: "${index++}",
+        isLocal: false,
         url:
             "https://assets.mixkit.co/videos/download/mixkit-microchip-technology-close-up-1140.mp4",
         metadata: VideoMetadata(
@@ -925,9 +927,37 @@ class MessagesController extends GetxController {
             }
             break;
 
+          case "video":
+            {
+              messages.add(
+                VideoMessageModel(
+                  isLocal: true,
+                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                  metadata: VideoMetadata(
+                    durationInSeconds: asset["videoDuration"].inSeconds,
+                    height: double.parse(asset["height"].toString()),
+                    width: double.parse(asset["width"].toString()),
+                    thumbnailUrl:
+                        "https://mixkit.imgix.net/static/home/video-thumb2.png",
+                  ),
+                  url: asset["path"],
+                  timestamp: DateTime.now()
+                      .subtract(const Duration(hours: 1, minutes: 49)),
+                  senderName: '',
+                  senderAvatar: '',
+                  isFromMe: true,
+                ),
+              );
+            }
+            break;
+
           default:
             break;
         }
+      });
+      messages.refresh();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        jumpToBottom();
       });
     }
   }

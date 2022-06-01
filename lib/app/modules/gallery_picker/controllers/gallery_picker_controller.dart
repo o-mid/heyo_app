@@ -87,8 +87,6 @@ class GalleryPickerController extends GetxController {
       List<Map<String, dynamic>>? files) async {
     if (files != null) {
       confirmedFiles.value = files;
-      print(confirmedFiles);
-      await PhotoManager.requestPermissionExtend();
       Get.back(result: confirmedFiles);
     }
   }
