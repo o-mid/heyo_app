@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/addr_model.dart';
@@ -9,14 +8,18 @@ import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
 import 'package:collection/src/iterable_extensions.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
-import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class Login {
   final P2PNodeResponseStream p2pNodeResponseStream;
   final P2PState p2pState;
   final AccountInfo accountInfo;
 
-  Login({required this.p2pNodeResponseStream, required this.p2pState, required this.accountInfo});
+  Login(
+      {required this.p2pNodeResponseStream,
+      required this.p2pState,
+      required this.accountInfo});
 
   Future<String> _sendingConnectRequest(P2PAddrModel info) async {
     final id = await FlutterP2pCommunicator.sendRequest(
@@ -32,17 +35,13 @@ class Login {
     return id;
   }
 
-  void execute(String uri) async {
-    ;
-    final localCoreId= await accountInfo.getCoreId();
-    if(localCoreId==null)
-      throw 'Core id is null!!';
+  void execute(Barcode barcode) async {
+    final localCoreId = await accountInfo.getCoreId();
+    if (localCoreId == null) throw 'Core id is null!!';
 
-    final remoteCoreId = uri.split(SHARED_ADDR_SEPARATOR)[0];
-    final remotePeerId = uri.split(SHARED_ADDR_SEPARATOR)[1];
-    final addresses = uri.split(SHARED_ADDR_SEPARATOR)[2] != null
-        ? (jsonDecode(uri.split(SHARED_ADDR_SEPARATOR)[2]) as List<dynamic>).cast<String>()
-        : <String>[];
+    final remoteCoreId = barcode.getCoreId();
+    final remotePeerId = barcode.getPeerId();
+    final addresses = barcode.getAddresses();
 
     //TODO ask moji about name and connect usecase in general
     final connected =

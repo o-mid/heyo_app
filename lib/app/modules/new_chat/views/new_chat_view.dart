@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scaner.dart';
@@ -12,7 +11,6 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/app/modules/shared/widgets/list_header_widget.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../shared/utils/constants/fonts.dart';
 import '../controllers/new_chat_controller.dart';
 import '../widgets/app_bar_action_bottom_sheet.dart';
@@ -26,9 +24,12 @@ class NewChatView extends GetView<NewChatController> {
       backgroundColor: COLORS.kWhiteColor,
       body: DefaultTabController(
         length: 2,
-        child: Column(
-          children: [
-            Container(
+        child: Container(
+          child:
+            _contacts(
+              controller: controller,
+            )
+            /*Container(
               color: COLORS.kTabbarBackgroundColor,
               child: _tabbarSlider(),
             ),
@@ -43,13 +44,14 @@ class NewChatView extends GetView<NewChatController> {
                   )
                 ],
               ),
-            ),
-          ],
+            ),*/
+          ,
         ),
       ),
     );
   }
 
+/*
   TabBar _tabbarSlider() {
     return TabBar(
       labelColor: COLORS.kGreenMainColor,
@@ -67,6 +69,7 @@ class NewChatView extends GetView<NewChatController> {
       indicatorColor: COLORS.kGreenMainColor,
     );
   }
+*/
 
   AppBar _newchatAppbar() {
     return AppBar(
@@ -158,6 +161,7 @@ class NewChatView extends GetView<NewChatController> {
   }
 }
 
+/*
 class _nearbyUsers extends StatelessWidget {
   const _nearbyUsers({
     Key? key,
@@ -235,8 +239,7 @@ class _nearbyUsers extends StatelessWidget {
                                   InkWell(
                                     borderRadius: BorderRadius.circular(8),
                                     onTap: () => openUserPreviewBottomSheet(
-                                      controller.nearbyUsers[index],
-                                    ),
+                                        controller.nearbyUsers[index]),
                                     child: UserWidget(
                                         User: controller.nearbyUsers[index]),
                                   ),
@@ -290,7 +293,9 @@ class _nearbyUsers extends StatelessWidget {
     });
   }
 }
+*/
 
+/*
 class _nearbyUsersEmptyState extends StatelessWidget {
   const _nearbyUsersEmptyState({
     Key? key,
@@ -314,6 +319,7 @@ class _nearbyUsersEmptyState extends StatelessWidget {
     );
   }
 }
+*/
 
 class _contacts extends StatelessWidget {
   const _contacts({
@@ -351,9 +357,9 @@ class _contacts extends StatelessWidget {
                 ),
               ),
             ),
-            controller.isTextInputFocused.value == false
-                ? _contactsBody(controller: controller)
-                : _searchBody(controller: controller),
+            controller.searchSuggestions.value.isEmpty
+                ? _emptyContactsBody(controller: controller)
+                : _searchInContactsBody(controller: controller),
           ],
         ),
       );
@@ -361,8 +367,8 @@ class _contacts extends StatelessWidget {
   }
 }
 
-class _searchBody extends StatelessWidget {
-  const _searchBody({
+class _searchInContactsBody extends StatelessWidget {
+  const _searchInContactsBody({
     Key? key,
     required this.controller,
   }) : super(key: key);
@@ -435,8 +441,8 @@ class _searchBody extends StatelessWidget {
   }
 }
 
-class _contactsBody extends StatelessWidget {
-  const _contactsBody({
+class _emptyContactsBody extends StatelessWidget {
+  const _emptyContactsBody({
     Key? key,
     required this.controller,
   }) : super(key: key);

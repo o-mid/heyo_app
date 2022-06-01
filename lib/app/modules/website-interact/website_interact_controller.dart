@@ -40,7 +40,7 @@ class WebsiteInteractController extends GetxController {
           isBusy = true;
 
 
-          login.execute(scanData.code!);
+          login.execute(scanData);
 
           /*Get.find<DeepLinkController>().doLogin(scanData.code!,
               Get.find<ProfileController>().chosenProfile.value.coreId,
