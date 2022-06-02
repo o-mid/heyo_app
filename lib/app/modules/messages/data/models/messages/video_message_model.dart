@@ -6,11 +6,9 @@ import '../reaction_model.dart';
 class VideoMessageModel extends MessageModel {
   final String url;
   final VideoMetadata metadata;
-  final bool isLocal;
 
   VideoMessageModel({
     required this.url,
-    required this.isLocal,
     required this.metadata,
     required super.messageId,
     required super.timestamp,
@@ -39,7 +37,6 @@ class VideoMessageModel extends MessageModel {
     return VideoMessageModel(
       url: url,
       metadata: metadata,
-      isLocal: isLocal ?? this.isLocal,
       messageId: messageId ?? this.messageId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,

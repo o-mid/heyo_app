@@ -110,6 +110,8 @@ class GalleryPickerView extends GetView<GalleryPickerController> {
                               sendIcon: Assets.svg.sendIcon.svg(),
                               additionalPreviewButtonWidget:
                                   const GalleryPreviewButtonWidget(),
+                              inputTextStyle: TEXTSTYLES.kBodySmall
+                                  .copyWith(color: COLORS.kTextSoftBlueColor),
                               previewTextInputDecoration: InputDecoration(
                                 hintText: 'Type something',
                                 hintStyle: TEXTSTYLES.kBodySmall

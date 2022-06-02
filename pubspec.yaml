@@ -30,7 +30,7 @@ dependencies:
   flutter_camera:
     git:
       url: git@git.energy:heyo/flutter_camera
-      ref: feat-gallery
+      ref: development
   photo_manager: ^2.1.2
   mime: ^1.0.2
   chewie: ^1.3.3

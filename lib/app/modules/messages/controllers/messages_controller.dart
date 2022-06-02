@@ -716,11 +716,11 @@ class MessagesController extends GetxController {
       ),
       VideoMessageModel(
         messageId: "${index++}",
-        isLocal: false,
         url:
             "https://assets.mixkit.co/videos/preview/mixkit-daytime-city-traffic-aerial-view-56-large.mp4",
         metadata: VideoMetadata(
           durationInSeconds: 120,
+          isLocal: false,
           thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb2.png",
           width: 656,
           height: 368,
@@ -743,10 +743,10 @@ class MessagesController extends GetxController {
       ),
       VideoMessageModel(
         messageId: "${index++}",
-        isLocal: false,
         url:
             "https://assets.mixkit.co/videos/download/mixkit-microchip-technology-close-up-1140.mp4",
         metadata: VideoMetadata(
+          isLocal: false,
           durationInSeconds: 120,
           thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
           width: 656,
@@ -890,7 +890,7 @@ class MessagesController extends GetxController {
     if (result != null) {
       mediaGlassmorphicChangeState();
 
-      result.forEach((asset) {
+      result.forEach((asset) async {
         switch (asset["type"]) {
           case "image":
             {
@@ -905,9 +905,35 @@ class MessagesController extends GetxController {
                     senderAvatar: '',
                     senderName: '',
                     isFromMe: true,
+                    status: MESSAGE_STATUS.SENT,
                     timestamp: DateTime.now()
                         .subtract(const Duration(hours: 1, minutes: 49)),
                     url: asset["path"]),
+              );
+            }
+            break;
+
+          case "video":
+            {
+              messages.add(
+                VideoMessageModel(
+                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                  metadata: VideoMetadata(
+                    durationInSeconds: asset["videoDuration"].inSeconds,
+                    height: double.parse(asset["height"].toString()),
+                    width: double.parse(asset["width"].toString()),
+                    isLocal: true,
+                    thumbnailBytes: await asset["thumbnail"],
+                    thumbnailUrl: '',
+                  ),
+                  url: asset["path"],
+                  timestamp: DateTime.now()
+                      .subtract(const Duration(hours: 1, minutes: 49)),
+                  senderName: '',
+                  senderAvatar: '',
+                  isFromMe: true,
+                  status: MESSAGE_STATUS.SENT,
+                ),
               );
             }
             break;
@@ -922,30 +948,7 @@ class MessagesController extends GetxController {
                   senderName: '',
                   senderAvatar: '',
                   isFromMe: true,
-                ),
-              );
-            }
-            break;
-
-          case "video":
-            {
-              messages.add(
-                VideoMessageModel(
-                  isLocal: true,
-                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                  metadata: VideoMetadata(
-                    durationInSeconds: asset["videoDuration"].inSeconds,
-                    height: double.parse(asset["height"].toString()),
-                    width: double.parse(asset["width"].toString()),
-                    thumbnailUrl:
-                        "https://mixkit.imgix.net/static/home/video-thumb2.png",
-                  ),
-                  url: asset["path"],
-                  timestamp: DateTime.now()
-                      .subtract(const Duration(hours: 1, minutes: 49)),
-                  senderName: '',
-                  senderAvatar: '',
-                  isFromMe: true,
+                  status: MESSAGE_STATUS.SENT,
                 ),
               );
             }
