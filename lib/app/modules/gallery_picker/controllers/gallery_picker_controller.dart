@@ -8,7 +8,6 @@ class GalleryPickerController extends GetxController {
   PickerDataProvider provider = PickerDataProvider();
   late List<Map<String, dynamic>> pickedFile;
   RxList previewFiles = [].obs;
-  RxList confirmedFiles = [].obs;
 
   RxBool singlePick = false.obs;
   List<String> mediaPath = [];
@@ -62,7 +61,7 @@ class GalleryPickerController extends GetxController {
     provider.pickedFile.clear();
     provider.picked.clear();
     provider.pathList.clear();
-    confirmedFiles.clear();
+
     PhotoManager.stopChangeNotify();
   }
 
@@ -86,8 +85,7 @@ class GalleryPickerController extends GetxController {
   Future<void> setConfirmedFilesAndPop(
       List<Map<String, dynamic>>? files) async {
     if (files != null) {
-      confirmedFiles.value = files;
-      Get.back(result: confirmedFiles);
+      Get.back(result: files);
     }
   }
 }

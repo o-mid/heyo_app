@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'dart:io';
+import 'package:path/path.dart' as path;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -870,6 +871,90 @@ class MessagesController extends GetxController {
             sendIcon: Assets.svg.sendIcon.svg(),
             receiverNameWidget: ReceiverNameWidget(name: args.chat.name),
             additionalPreviewButtonWidget: const GalleryPreviewButtonWidget(),
+            onEntitySaving: (
+              BuildContext context,
+              CameraPickerViewType viewType,
+              File file,
+              List<Map<String, dynamic>>? confirmedFiles,
+            ) async {
+              AssetEntity? entity;
+
+              switch (viewType) {
+                case CameraPickerViewType.image:
+                  final String filePath = file.path;
+                  entity = await PhotoManager.editor.saveImageWithPath(
+                    filePath,
+                    title: path.basename(filePath),
+                  );
+
+                  break;
+                case CameraPickerViewType.video:
+                  entity = await PhotoManager.editor.saveVideo(
+                    File(file.path),
+                    title: path.basename(file.path),
+                  );
+                  break;
+              }
+              if (entity != null) {
+                switch (viewType) {
+                  case CameraPickerViewType.image:
+                    {
+                      messages.add(
+                        ImageMessageModel(
+                            messageId:
+                                "${messages.lastIndexOf(messages.last) + 1}",
+                            isLocal: true,
+                            metadata: ImageMetadata(
+                              height: entity.height.toDouble(),
+                              width: entity.width.toDouble(),
+                            ),
+                            senderAvatar: '',
+                            senderName: '',
+                            isFromMe: true,
+                            status: MESSAGE_STATUS.SENT,
+                            timestamp: DateTime.now().subtract(
+                                const Duration(hours: 1, minutes: 49)),
+                            url: file.path),
+                      );
+                    }
+                    break;
+                  case CameraPickerViewType.video:
+                    {
+                      messages.add(VideoMessageModel(
+                        messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                        metadata: VideoMetadata(
+                          durationInSeconds: entity.videoDuration.inSeconds,
+                          height: entity.height.toDouble(),
+                          width: entity.width.toDouble(),
+                          isLocal: true,
+                          thumbnailBytes: await entity.thumbnailData,
+                          thumbnailUrl:
+                              "https://mixkit.imgix.net/static/home/video-thumb3.png",
+                        ),
+                        url: file.path,
+                        timestamp: DateTime.now()
+                            .subtract(const Duration(hours: 1, minutes: 49)),
+                        senderName: '',
+                        senderAvatar: '',
+                        isFromMe: true,
+                        status: MESSAGE_STATUS.SENT,
+                      ));
+                    }
+                    break;
+                }
+              }
+
+              Navigator.of(context).pop();
+              Get.back();
+
+              mediaGlassmorphicChangeState();
+              messages.refresh();
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                jumpToBottom();
+              });
+            },
+            inputTextStyle: TEXTSTYLES.kBodySmall
+                .copyWith(color: COLORS.kTextSoftBlueColor),
             previewTextInputDecoration: InputDecoration(
               hintText: 'Type something',
               hintStyle: TEXTSTYLES.kBodySmall
@@ -888,80 +973,85 @@ class MessagesController extends GetxController {
       Routes.GALLERY_PICKER,
     );
     if (result != null) {
-      mediaGlassmorphicChangeState();
+      addSelectedMedia(result: result, closeMediaGlassmorphic: true);
+    }
+  }
 
-      result.forEach((asset) async {
-        switch (asset["type"]) {
-          case "image":
-            {
-              messages.add(
-                ImageMessageModel(
-                    messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                    isLocal: true,
-                    metadata: ImageMetadata(
-                      height: double.parse(asset["height"].toString()),
-                      width: double.parse(asset["width"].toString()),
-                    ),
-                    senderAvatar: '',
-                    senderName: '',
-                    isFromMe: true,
-                    status: MESSAGE_STATUS.SENT,
-                    timestamp: DateTime.now()
-                        .subtract(const Duration(hours: 1, minutes: 49)),
-                    url: asset["path"]),
-              );
-            }
-            break;
+  void addSelectedMedia(
+      {@required dynamic result, bool closeMediaGlassmorphic = false}) {
+    if (closeMediaGlassmorphic) mediaGlassmorphicChangeState();
 
-          case "video":
-            {
-              messages.add(
-                VideoMessageModel(
+    result.forEach((asset) async {
+      switch (asset["type"]) {
+        case "image":
+          {
+            messages.add(
+              ImageMessageModel(
                   messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                  metadata: VideoMetadata(
-                    durationInSeconds: asset["videoDuration"].inSeconds,
+                  isLocal: true,
+                  metadata: ImageMetadata(
                     height: double.parse(asset["height"].toString()),
                     width: double.parse(asset["width"].toString()),
-                    isLocal: true,
-                    thumbnailBytes: await asset["thumbnail"],
-                    thumbnailUrl: '',
                   ),
-                  url: asset["path"],
-                  timestamp: DateTime.now()
-                      .subtract(const Duration(hours: 1, minutes: 49)),
-                  senderName: '',
                   senderAvatar: '',
+                  senderName: '',
                   isFromMe: true,
                   status: MESSAGE_STATUS.SENT,
-                ),
-              );
-            }
-            break;
-          case "text":
-            {
-              messages.add(
-                TextMessageModel(
-                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                  text: asset["value"],
                   timestamp: DateTime.now()
                       .subtract(const Duration(hours: 1, minutes: 49)),
-                  senderName: '',
-                  senderAvatar: '',
-                  isFromMe: true,
-                  status: MESSAGE_STATUS.SENT,
-                ),
-              );
-            }
-            break;
+                  url: asset["path"]),
+            );
+          }
+          break;
 
-          default:
-            break;
-        }
-      });
-      messages.refresh();
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        jumpToBottom();
-      });
-    }
+        case "video":
+          {
+            messages.add(
+              VideoMessageModel(
+                messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                metadata: VideoMetadata(
+                  durationInSeconds: asset["videoDuration"].inSeconds,
+                  height: double.parse(asset["height"].toString()),
+                  width: double.parse(asset["width"].toString()),
+                  isLocal: true,
+                  thumbnailBytes: await asset["thumbnail"],
+                  thumbnailUrl: '',
+                ),
+                url: asset["path"],
+                timestamp: DateTime.now()
+                    .subtract(const Duration(hours: 1, minutes: 49)),
+                senderName: '',
+                senderAvatar: '',
+                isFromMe: true,
+                status: MESSAGE_STATUS.SENT,
+              ),
+            );
+          }
+          break;
+        case "text":
+          {
+            messages.add(
+              TextMessageModel(
+                messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                text: asset["value"],
+                timestamp: DateTime.now()
+                    .subtract(const Duration(hours: 1, minutes: 49)),
+                senderName: '',
+                senderAvatar: '',
+                isFromMe: true,
+                status: MESSAGE_STATUS.SENT,
+              ),
+            );
+          }
+          break;
+
+        default:
+          break;
+      }
+    });
+    messages.refresh();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      jumpToBottom();
+    });
   }
 }
