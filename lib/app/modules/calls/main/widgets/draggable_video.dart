@@ -29,7 +29,10 @@ class _DraggableVideoState extends State<DraggableVideo> {
               _x = dragDetails.offset.dx;
               _x = _x!.clamp(0, context.width - 96);
               // We need to remove offsets like app/status bar from Y
-              _y = dragDetails.offset.dy - 100 - MediaQuery.of(context).padding.top;
+              _y = dragDetails.offset.dy;
+              if (Scaffold.of(context).hasAppBar) {
+                _y = _y! - (Scaffold.of(context).appBarMaxHeight ?? 0);
+              }
               _y = _y!.clamp(0, context.height / 2);
             },
           );

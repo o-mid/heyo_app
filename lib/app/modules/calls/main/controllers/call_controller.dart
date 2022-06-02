@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 
 enum CallViewType {
@@ -12,7 +12,7 @@ enum CallViewType {
 
 class CallController extends GetxController {
   late CallViewArgumentsModel args;
-  final participants = <UserModel>[].obs;
+  final participants = <CallParticipantModel>[].obs;
   // Todo: check whether they are actually enabled or not
   final micEnabled = true.obs;
   final callerVideoEnabled = true.obs;
@@ -31,19 +31,26 @@ class CallController extends GetxController {
 
   final isVideoPositionsFlipped = false.obs;
 
+  bool get isGroupCall =>
+      participants.where((p) => p.status == CallParticipantStatus.inCall).length > 1;
+
   @override
   void onInit() {
     super.onInit();
     args = Get.arguments as CallViewArgumentsModel;
 
+    participants.add(
+      CallParticipantModel(user: args.user),
+    );
+
+    // Todo (remove): this is only for testing purposes
     Future.delayed(const Duration(seconds: 1), () {
+      participants[0] = participants[0].copyWith(status: CallParticipantStatus.inCall);
       isCallInProgress.value = true;
       callTimer = Timer.periodic(const Duration(seconds: 1), (_) {
         callDurationSeconds.value++;
       });
     });
-
-    participants.add(args.user);
   }
 
   @override
@@ -63,7 +70,14 @@ class CallController extends GetxController {
   void endCall() {}
 
   // Todo
-  void addParticipant() {}
+  void addParticipant() {
+    participants.add(
+      CallParticipantModel(
+        user: args.user,
+        status: CallParticipantStatus.inCall,
+      ),
+    );
+  }
 
   // Todo
   void recordCall() {}
@@ -87,5 +101,10 @@ class CallController extends GetxController {
   @override
   void onClose() {
     callTimer?.cancel();
+  }
+
+  void reorderParticipants(int oldIndex, int newIndex) {
+    final p = participants.removeAt(oldIndex);
+    participants.insert(newIndex, p);
   }
 }

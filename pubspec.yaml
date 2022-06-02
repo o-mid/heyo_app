@@ -26,13 +26,13 @@ dependencies:
       url: https://github.com/xeinebiu/qr_code_scanner.git
       ref: fix_break_changes_platform
   pull_to_refresh: ^2.0.0
-  share_plus: ^4.0.4
+  share_plus: ^4.0.5
   chewie: ^1.3.3
   scroll_to_index: ^3.0.1
   just_audio: ^0.9.24
   record: ^4.1.1
   emojis: ^0.9.9
-  connectivity_plus: ^2.3.0
+  connectivity_plus: ^2.3.2
   flutter_secure_storage: ^5.0.2
   convert: ^3.0.2
   pointycastle: ^3.6.0

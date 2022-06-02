@@ -43,6 +43,10 @@ class $AssetsPngGen {
   /// File path: assets/png/chain.png
   AssetGenImage get chain => const AssetGenImage('assets/png/chain.png');
 
+  /// File path: assets/png/group_call.png
+  AssetGenImage get groupCall =>
+      const AssetGenImage('assets/png/group_call.png');
+
   /// File path: assets/png/icon.png
   AssetGenImage get icon => const AssetGenImage('assets/png/icon.png');
 

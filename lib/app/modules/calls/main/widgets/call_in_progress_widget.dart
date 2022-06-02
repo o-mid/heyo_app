@@ -6,6 +6,7 @@ import 'package:heyo/app/modules/calls/main/widgets/callee_no_video_widget.dart'
 import 'package:heyo/app/modules/calls/main/widgets/callee_video_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/caller_video_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/draggable_video.dart';
+import 'package:heyo/app/modules/calls/main/widgets/group_call_widget.dart';
 
 class CallInProgressWidget extends StatelessWidget {
   const CallInProgressWidget({Key? key}) : super(key: key);
@@ -14,6 +15,10 @@ class CallInProgressWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<CallController>();
     return Obx(() {
+      if (controller.isGroupCall) {
+        return const GroupCallWidget();
+      }
+
       final calleeWidget = controller.calleeVideoEnabled.value
           ? const CalleeVideoWidget()
           : const CalleeNoVideoWidget();
@@ -43,20 +48,22 @@ class CallInProgressWidget extends StatelessWidget {
             ],
           );
         case CallViewType.stack:
-          return Stack(
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: firstWidget,
-              ),
-              DraggableVideo(
-                child: SizedBox(
-                  width: 96.w,
-                  height: 144.h,
-                  child: secondWidget,
+          return SafeArea(
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: firstWidget,
                 ),
-              ),
-            ],
+                DraggableVideo(
+                  child: SizedBox(
+                    width: 96.w,
+                    height: 144.h,
+                    child: secondWidget,
+                  ),
+                ),
+              ],
+            ),
           );
       }
     });

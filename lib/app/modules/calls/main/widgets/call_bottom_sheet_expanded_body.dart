@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
+import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
@@ -101,24 +102,39 @@ class CallBottomSheetExpandedBody extends StatelessWidget {
                   return Row(
                     children: [
                       CustomCircleAvatar(
-                        url: controller.participants[index].icon,
+                        url: controller.participants[index].user.icon,
                         size: 40,
                       ),
                       CustomSizes.mediumSizedBoxWidth,
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            controller.participants[index].name,
-                            style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kWhiteColor),
-                          ),
-                          Text(
-                            controller.participants[index].walletAddress.shortenCoreId,
-                            style: TEXTSTYLES.kBodySmall.copyWith(
-                              color: COLORS.kWhiteColor.withOpacity(0.6),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              controller.participants[index].user.name,
+                              style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kWhiteColor),
                             ),
-                          ),
-                        ],
+                            Row(
+                              children: [
+                                Text(
+                                  controller.participants[index].user.walletAddress.shortenCoreId,
+                                  style: TEXTSTYLES.kBodySmall.copyWith(
+                                    color: COLORS.kWhiteColor.withOpacity(0.6),
+                                  ),
+                                ),
+                                const Spacer(),
+                                if (controller.participants[index].status ==
+                                    CallParticipantStatus.calling)
+                                  Text(
+                                    LocaleKeys.CallPage_calling.tr,
+                                    style: TEXTSTYLES.kBodySmall.copyWith(
+                                      color: COLORS.kWhiteColor.withOpacity(0.6),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   );

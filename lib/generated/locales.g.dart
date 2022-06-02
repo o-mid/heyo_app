@@ -129,6 +129,7 @@ class LocaleKeys {
   static const CallHistory_notAnswered = 'CallHistory_notAnswered';
   static const CallPage_participants = 'CallPage_participants';
   static const CallPage_ringing = 'CallPage_ringing';
+  static const CallPage_calling = 'CallPage_calling';
   static const CallPage_currentlyOffline = 'CallPage_currentlyOffline';
   static const CallPage_sendAMessageButton = 'CallPage_sendAMessageButton';
   static const CallPage_close = 'CallPage_close';
@@ -354,6 +355,7 @@ class Locales {
     'CallHistory_notAnswered': 'Not answered',
     'CallPage_participants': 'Participants',
     'CallPage_ringing': 'Ringing...',
+    'CallPage_calling': 'Calling...',
     'CallPage_currentlyOffline': 'Currently offline',
     'CallPage_sendAMessageButton': 'Send a message instead',
     'CallPage_close': 'Close',

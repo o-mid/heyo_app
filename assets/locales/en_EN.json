@@ -124,6 +124,7 @@
   "CallPage": {
     "participants": "Participants",
     "ringing": "Ringing...",
+    "calling": "Calling...",
     "currentlyOffline": "Currently offline",
     "sendAMessageButton": "Send a message instead",
     "close": "Close"
