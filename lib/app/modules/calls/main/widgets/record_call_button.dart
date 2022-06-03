@@ -19,7 +19,7 @@ class RecordCallButton extends StatelessWidget {
           return CircleIconButton.p16(
             onPressed: controller.recordCall,
             backgroundColor: COLORS.kCallPageDarkGrey,
-            icon: Assets.svg.recordWordIcon.svg(
+            icon: Assets.svg.recordWordWithDot.svg(
               width: 48.w,
               height: 48.w,
               color: COLORS.kWhiteColor,
@@ -36,7 +36,7 @@ class RecordCallButton extends StatelessWidget {
               ),
               CircleIconButton.p16(
                 backgroundColor: Colors.transparent,
-                icon: Assets.svg.recordWordIcon.svg(
+                icon: Assets.svg.recordWordWithDot.svg(
                   width: 48.w,
                   height: 48.w,
                   color: COLORS.kWhiteColor,
@@ -48,7 +48,7 @@ class RecordCallButton extends StatelessWidget {
           return CircleIconButton.p16(
             onPressed: controller.stopRecording,
             backgroundColor: COLORS.kWhiteColor,
-            icon: Assets.svg.recordWordIcon.svg(
+            icon: Assets.svg.recordWordWithDot.svg(
               width: 48.w,
               height: 48.w,
               color: COLORS.kStatesErrorColor,

@@ -19,7 +19,7 @@ class RecordCallDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return ModifiedAlertDialog(
       alertContent: DefaultAlertDialogContent(
-        indicatorIcon: Assets.svg.recordWordIcon.svg(
+        indicatorIcon: Assets.svg.recordWordWithDot.svg(
           color: COLORS.kStatesErrorColor,
         ),
         indicatorBackgroundColor: COLORS.kStatesLightErrorColor,

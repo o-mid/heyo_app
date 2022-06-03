@@ -253,6 +253,10 @@ class $AssetsSvgGen {
   SvgGenImage get recordWordIcon =>
       const SvgGenImage('assets/svg/record_word_icon.svg');
 
+  /// File path: assets/svg/record_word_with_dot.svg
+  SvgGenImage get recordWordWithDot =>
+      const SvgGenImage('assets/svg/record_word_with_dot.svg');
+
   /// File path: assets/svg/reply_filled.svg
   SvgGenImage get replyFilled =>
       const SvgGenImage('assets/svg/reply_filled.svg');
