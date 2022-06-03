@@ -17,9 +17,8 @@ class GroupCallWidget extends StatelessWidget {
       return SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
         child: Padding(
-          padding: EdgeInsets.only(
-              bottom:
-                  height), // This is for being able to scroll down to view the last two people in call
+          // This is for being able to scroll down to view the last two people in call
+          padding: EdgeInsets.only(bottom: height),
           child: ReorderableWrap(
             spacing: 8.w,
             runSpacing: 8.h,

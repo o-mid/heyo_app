@@ -129,6 +129,12 @@
     "sendAMessageButton": "Send a message instead",
     "close": "Close"
   },
+  "recordCallDialog": {
+    "title": "This call will be recorded",
+    "subtitle": "Other participants on this call will receive a notification about you recording this call. It is up to them whether they allow or deny it.",
+    "acceptButton": "Record call",
+    "cancelButton": "Cancel"
+  },
   "IncomingCallPage": {
     "incomingVideoCall": "Incoming video call on Heyo..."
   },

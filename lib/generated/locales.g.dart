@@ -133,6 +133,10 @@ class LocaleKeys {
   static const CallPage_currentlyOffline = 'CallPage_currentlyOffline';
   static const CallPage_sendAMessageButton = 'CallPage_sendAMessageButton';
   static const CallPage_close = 'CallPage_close';
+  static const recordCallDialog_title = 'recordCallDialog_title';
+  static const recordCallDialog_subtitle = 'recordCallDialog_subtitle';
+  static const recordCallDialog_acceptButton = 'recordCallDialog_acceptButton';
+  static const recordCallDialog_cancelButton = 'recordCallDialog_cancelButton';
   static const IncomingCallPage_incomingVideoCall =
       'IncomingCallPage_incomingVideoCall';
   static const newChat_newChatAppBar = 'newChat_newChatAppBar';
@@ -359,6 +363,11 @@ class Locales {
     'CallPage_currentlyOffline': 'Currently offline',
     'CallPage_sendAMessageButton': 'Send a message instead',
     'CallPage_close': 'Close',
+    'recordCallDialog_title': 'This call will be recorded',
+    'recordCallDialog_subtitle':
+        'Other participants on this call will receive a notification about you recording this call. It is up to them whether they allow or deny it.',
+    'recordCallDialog_acceptButton': 'Record call',
+    'recordCallDialog_cancelButton': 'Cancel',
     'IncomingCallPage_incomingVideoCall': 'Incoming video call on Heyo...',
     'newChat_newChatAppBar': 'New Chat',
     'newChat_slider_contacts': 'Contacts',

@@ -2,12 +2,19 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
+import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 
 enum CallViewType {
   stack,
   column,
   row,
+}
+
+enum RecordState {
+  notRecording,
+  loading,
+  recording,
 }
 
 class CallController extends GetxController {
@@ -33,6 +40,8 @@ class CallController extends GetxController {
 
   bool get isGroupCall =>
       participants.where((p) => p.status == CallParticipantStatus.inCall).length > 1;
+
+  final recordState = RecordState.notRecording.obs;
 
   @override
   void onInit() {
@@ -80,7 +89,17 @@ class CallController extends GetxController {
   }
 
   // Todo
-  void recordCall() {}
+  void recordCall() {
+    Get.dialog(RecordCallDialog(onRecord: () {
+      recordState.value = RecordState.loading;
+      Future.delayed(const Duration(seconds: 2), () => recordState.value = RecordState.recording);
+    }));
+  }
+
+  // Todo
+  void stopRecording() {
+    recordState.value = RecordState.notRecording;
+  }
 
   // Todo
   void toggleVideo() {
