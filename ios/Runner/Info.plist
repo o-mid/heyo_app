@@ -55,5 +55,11 @@
 
        	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
        	<string>Location permission is required to share your location with others.</string>
-	</dict>
+		
+		<key>NSCameraUsageDescription</key>
+        <string>We use the camera to scan barcodes</string>
+
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+</dict>
 </plist>
