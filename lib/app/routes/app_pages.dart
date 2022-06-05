@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/website-interact/website_interact_binding.dart';
 
 import '../modules/account/bindings/account_binding.dart';
 import '../modules/account/views/account_view.dart';
@@ -135,6 +136,7 @@ class AppPages {
     GetPage(
       name: _Paths.SCAN_QR,
       page: () => WebsiteInteractView(),
+      binding: WebsiteInteractBinding(),
     ),
     GetPage(
       name: _Paths.USER_CALL_HISTORY,

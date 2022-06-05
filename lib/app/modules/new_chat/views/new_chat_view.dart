@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
-import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scaner.dart';
+import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
 import 'package:heyo/app/modules/new_chat/widgets/user_preview_bottom_sheet.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -12,7 +11,6 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/app/modules/shared/widgets/list_header_widget.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../shared/utils/constants/fonts.dart';
 import '../controllers/new_chat_controller.dart';
 import '../widgets/app_bar_action_bottom_sheet.dart';
@@ -26,9 +24,11 @@ class NewChatView extends GetView<NewChatController> {
       backgroundColor: COLORS.kWhiteColor,
       body: DefaultTabController(
         length: 2,
-        child: Column(
-          children: [
-            Container(
+        child: Container(
+          child: _contacts(
+            controller: controller,
+          )
+          /*Container(
               color: COLORS.kTabbarBackgroundColor,
               child: _tabbarSlider(),
             ),
@@ -43,13 +43,14 @@ class NewChatView extends GetView<NewChatController> {
                   )
                 ],
               ),
-            ),
-          ],
+            ),*/
+          ,
         ),
       ),
     );
   }
 
+/*
   TabBar _tabbarSlider() {
     return TabBar(
       labelColor: COLORS.kGreenMainColor,
@@ -67,6 +68,7 @@ class NewChatView extends GetView<NewChatController> {
       indicatorColor: COLORS.kGreenMainColor,
     );
   }
+*/
 
   AppBar _newchatAppbar() {
     return AppBar(
@@ -114,8 +116,7 @@ class NewChatView extends GetView<NewChatController> {
                       ),
                       label: Text(
                         LocaleKeys.newChat_buttons_filter.tr,
-                        style: TEXTSTYLES.kHeaderLarge
-                            .copyWith(color: COLORS.kDarkBlueColor),
+                        style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
                       ))),
               Obx(() {
                 return ListView.builder(
@@ -125,8 +126,7 @@ class NewChatView extends GetView<NewChatController> {
                     return CheckboxListTile(
                         title: Text(
                           controller.filters[index].title,
-                          style: TEXTSTYLES.kLinkBig
-                              .copyWith(color: COLORS.kDarkBlueColor),
+                          style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
                         ),
                         value: controller.filters[index].isActive.value,
                         onChanged: (Value) {
@@ -152,12 +152,12 @@ class NewChatView extends GetView<NewChatController> {
       backgroundColor: COLORS.kWhiteColor,
       isDismissible: true,
       enableDrag: true,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
     );
   }
 }
 
+/*
 class _nearbyUsers extends StatelessWidget {
   const _nearbyUsers({
     Key? key,
@@ -235,8 +235,7 @@ class _nearbyUsers extends StatelessWidget {
                                   InkWell(
                                     borderRadius: BorderRadius.circular(8),
                                     onTap: () => openUserPreviewBottomSheet(
-                                      controller.nearbyUsers[index],
-                                    ),
+                                        controller.nearbyUsers[index]),
                                     child: UserWidget(
                                         User: controller.nearbyUsers[index]),
                                   ),
@@ -290,7 +289,9 @@ class _nearbyUsers extends StatelessWidget {
     });
   }
 }
+*/
 
+/*
 class _nearbyUsersEmptyState extends StatelessWidget {
   const _nearbyUsersEmptyState({
     Key? key,
@@ -314,6 +315,7 @@ class _nearbyUsersEmptyState extends StatelessWidget {
     );
   }
 }
+*/
 
 class _contacts extends StatelessWidget {
   const _contacts({
@@ -333,8 +335,7 @@ class _contacts extends StatelessWidget {
               padding: CustomSizes.mainContentPadding,
               child: FocusScope(
                 child: Focus(
-                  onFocusChange: (focus) =>
-                      controller.isTextInputFocused.value = focus,
+                  onFocusChange: (focus) => controller.isTextInputFocused.value = focus,
                   child: CUSTOMTEXTFIELD(
                     textController: controller.inputController,
                     labelText: LocaleKeys.newChat_usernameInput.tr,
@@ -343,17 +344,15 @@ class _contacts extends StatelessWidget {
                         Icons.qr_code_rounded,
                         color: COLORS.kDarkBlueColor,
                       ),
-                      onPressed: () => {
-                        openQrScanerBottomSheet(controller.handleScannedValue)
-                      },
+                      onPressed: () => {openQrScannerBottomSheet(controller.handleScannedValue)},
                     ),
                   ),
                 ),
               ),
             ),
-            controller.isTextInputFocused.value == false
-                ? _contactsBody(controller: controller)
-                : _searchBody(controller: controller),
+            controller.searchSuggestions.value.isEmpty
+                ? _emptyContactsBody(controller: controller)
+                : _searchInContactsBody(controller: controller),
           ],
         ),
       );
@@ -361,8 +360,8 @@ class _contacts extends StatelessWidget {
   }
 }
 
-class _searchBody extends StatelessWidget {
-  const _searchBody({
+class _searchInContactsBody extends StatelessWidget {
+  const _searchInContactsBody({
     Key? key,
     required this.controller,
   }) : super(key: key);
@@ -393,30 +392,27 @@ class _searchBody extends StatelessWidget {
                   itemBuilder: (BuildContext context, int index) {
                     //this will grab the current user and
                     // extract the first character from its name
-                    String _currentUsernamefirstchar = controller
-                        .searchSuggestions[index].name.characters.first;
+                    String _currentUsernamefirstchar =
+                        controller.searchSuggestions[index].name.characters.first;
                     //this will grab the next user in the list if its not null and
                     // extract the first character from its name
-                    String _nextUsernamefirstchar = controller.searchSuggestions
-                                .indexOf(controller.searchSuggestions.last) >
-                            index + 1
-                        ? controller
-                            .searchSuggestions[index + 1].name.characters.first
-                        : "";
+                    String _nextUsernamefirstchar =
+                        controller.searchSuggestions.indexOf(controller.searchSuggestions.last) >
+                                index + 1
+                            ? controller.searchSuggestions[index + 1].name.characters.first
+                            : "";
                     var suggestedUser = controller.searchSuggestions[index];
                     return Column(
                       children: [
                         _currentUsernamefirstchar != _nextUsernamefirstchar
                             ? ListHeaderWidget(
-                                title: controller.searchSuggestions[index].name
-                                    .characters.first
+                                title: controller.searchSuggestions[index].name.characters.first
                                     .toUpperCase())
                             : const SizedBox(),
                         InkWell(
                           borderRadius: BorderRadius.circular(8),
                           onTap: () {
-                            openUserPreviewBottomSheet(
-                                controller.searchSuggestions[index]);
+                            openUserPreviewBottomSheet(controller.searchSuggestions[index]);
                           },
                           child: UserWidget(
                             User: suggestedUser,
@@ -435,8 +431,8 @@ class _searchBody extends StatelessWidget {
   }
 }
 
-class _contactsBody extends StatelessWidget {
-  const _contactsBody({
+class _emptyContactsBody extends StatelessWidget {
+  const _emptyContactsBody({
     Key? key,
     required this.controller,
   }) : super(key: key);

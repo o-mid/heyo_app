@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/addr_model.dart';
 import 'package:flutter_p2p_communicator/model/login_mode.dart';
@@ -9,7 +7,7 @@ import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
 import 'package:collection/src/iterable_extensions.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
-import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 
 class Login {
   final P2PNodeResponseStream p2pNodeResponseStream;
@@ -20,8 +18,7 @@ class Login {
 
   Future<String> _sendingConnectRequest(P2PAddrModel info) async {
     final id = await FlutterP2pCommunicator.sendRequest(
-        info: P2PReqResNodeModel(
-            name: P2PReqResNodeNames.connect, body: info.toJson()));
+        info: P2PReqResNodeModel(name: P2PReqResNodeNames.connect, body: info.toJson()));
 
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: RETRY_DELAY));
@@ -32,30 +29,25 @@ class Login {
     return id;
   }
 
-  void execute(String uri) async {
-    ;
-    final localCoreId= await accountInfo.getCoreId();
-    if(localCoreId==null)
-      throw 'Core id is null!!';
+  void execute(String? barcodeValue) async {
+    if (barcodeValue == null) {
+      return; // Todo(qr)
+    }
+    final localCoreId = await accountInfo.getCoreId();
+    if (localCoreId == null) throw 'Core id is null!!';
 
-    final remoteCoreId = uri.split(SHARED_ADDR_SEPARATOR)[0];
-    final remotePeerId = uri.split(SHARED_ADDR_SEPARATOR)[1];
-    final addresses = uri.split(SHARED_ADDR_SEPARATOR)[2] != null
-        ? (jsonDecode(uri.split(SHARED_ADDR_SEPARATOR)[2]) as List<dynamic>).cast<String>()
-        : <String>[];
+    final remoteCoreId = barcodeValue.getCoreId();
+    final remotePeerId = barcodeValue.getPeerId();
+    final addresses = barcodeValue.getAddresses();
 
     //TODO ask moji about name and connect usecase in general
-    final connected =
-        await _connect(P2PAddrModel(id: remotePeerId, addrs: addresses));
+    final connected = await _connect(P2PAddrModel(id: remotePeerId, addrs: addresses));
     //TODO session
     final _loginModel = P2PLoginBodyModel(
         info: connected
             ? P2PTransferModel(
-                localCoreID: localCoreId,
-                remotePeerID: remotePeerId,
-                remoteCoreID: remoteCoreId)
-            : P2PTransferModel(
-                localCoreID: localCoreId, remoteCoreID: remoteCoreId),
+                localCoreID: localCoreId, remotePeerID: remotePeerId, remoteCoreID: remoteCoreId)
+            : P2PTransferModel(localCoreID: localCoreId, remoteCoreID: remoteCoreId),
         payload: P2PLoginPayloadModel(session: "0x73"));
     _sendingLoginRequest(_loginModel);
   }
@@ -66,8 +58,7 @@ class Login {
       p2pState.loginState.value = P2P_STATUS.IN_PROGRESS;
       retryCount++;
       await FlutterP2pCommunicator.sendRequest(
-          info: P2PReqResNodeModel(
-              name: P2PReqResNodeNames.login, body: model.toJson()));
+          info: P2PReqResNodeModel(name: P2PReqResNodeNames.login, body: model.toJson()));
       print("login request counter is:$retryCount");
       await Future.delayed(const Duration(seconds: 5));
       if (p2pState.loginState.value == P2P_STATUS.SUCCESS) {
@@ -86,8 +77,8 @@ class Login {
   P2PReqResNodeModel? _gettingConnectResponse(String id) {
     P2PReqResNodeModel? _res;
     try {
-      _res = p2pState.responses.singleWhereOrNull((element) =>
-          element.id == id && element.name == P2PReqResNodeNames.connect);
+      _res = p2pState.responses.singleWhereOrNull(
+          (element) => element.id == id && element.name == P2PReqResNodeNames.connect);
     } catch (e) {
       print("error in tryConnect ${e.toString()}");
     }

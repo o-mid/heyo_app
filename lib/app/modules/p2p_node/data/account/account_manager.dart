@@ -1,17 +1,15 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:heyo/app/modules/p2p_node/auth_keys_model.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/cryptography_key_generator.dart';
-import 'package:heyo/app/modules/p2p_node/data/key/web3_keys.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/local_storages_abstract.dart';
 import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
 
-class AccountManager extends AccountInfo {
+class AccountController extends AccountInfo {
   final LocalStorageAbstractProvider localProvider;
   final CryptographyKeyGenerator cryptographyKeyGenerator;
 
-  AccountManager(
+  AccountController(
       {required this.localProvider, required this.cryptographyKeyGenerator});
 
   @override

@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/p2p_node/login.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 class WebsiteInteractController extends GetxController {
-  QRViewController? qrController;
-  final Login login= Get.find<Login>();
+  MobileScannerController? qrController;
+  final Login login = Get.find<Login>();
   bool isBusy = false;
   @override
   void onInit() {
@@ -21,28 +21,11 @@ class WebsiteInteractController extends GetxController {
     qrController?.dispose();
   }
 
-  handleScannedVal(QRViewController qrControllerDt) {
-    print("qr invoked");
-    if (qrController == null) {
-      qrController = qrControllerDt;
-      qrController?.scannedDataStream.listen((scanData) async {
-        print('scannedData: $scanData');
-        print('scannedData.code: ${scanData.code}');
+  handleScannedVal(String? barcodeValue) {
+    print("qr invoked: $barcodeValue");
+    login.execute(barcodeValue);
 
-        if (scanData.code == null) {
-          return;
-        }
-        if (isBusy) {
-          return;
-        } else  {
-          qrController?.pauseCamera();
-
-          isBusy = true;
-
-
-          login.execute(scanData.code!);
-
-          /*Get.find<DeepLinkController>().doLogin(scanData.code!,
+    /*Get.find<DeepLinkController>().doLogin(scanData.code!,
               Get.find<ProfileController>().chosenProfile.value.coreId,
               loginCanceled: () {
                 Get.until((route) => route.isFirst);
@@ -59,8 +42,5 @@ class WebsiteInteractController extends GetxController {
                 qrController?.resumeCamera();
                 isBusy = false;
               });*/
-        }
-      });
-    }
   }
 }
