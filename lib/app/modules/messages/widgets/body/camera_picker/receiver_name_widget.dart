@@ -4,11 +4,9 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
-import '../../../../shared/utils/constants/colors.dart';
-
 class ReceiverNameWidget extends StatelessWidget {
   final String name;
-  ReceiverNameWidget({
+  const ReceiverNameWidget({
     Key? key,
     required this.name,
   }) : super(key: key);

@@ -59,7 +59,6 @@ FeatureController<T> _showDropDown<T>({
               close(null);
             },
             child: AnimatedBuilder(
-              child: builder(ctx, close),
               animation: animationController,
               builder: (BuildContext context, child) {
                 return Stack(
@@ -77,6 +76,7 @@ FeatureController<T> _showDropDown<T>({
                   ],
                 );
               },
+              child: builder(ctx, close),
             ),
           ),
         ),

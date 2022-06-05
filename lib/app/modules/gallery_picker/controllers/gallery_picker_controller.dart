@@ -22,7 +22,7 @@ class GalleryPickerController extends GetxController {
 
   _getPermission() async {
     var result = await PhotoManager.requestPermissionExtend(
-        requestOption: const PermisstionRequestOption(
+        requestOption: const PermissionRequestOption(
             iosAccessLevel: IosAccessLevel.readWrite));
     if (result.isAuth) {
       PhotoManager.startChangeNotify();
@@ -48,11 +48,6 @@ class GalleryPickerController extends GetxController {
 
   void onPickMax() {
     Get.rawSnackbar(message: "Already pick ${provider.max} items.");
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
   }
 
   @override

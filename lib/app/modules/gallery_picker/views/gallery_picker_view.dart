@@ -8,15 +8,11 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/gallery_picker/widgets/current_path_selector.dart';
 import 'package:heyo/app/modules/gallery_picker/widgets/gallery_grid_view.dart';
 import 'package:heyo/app/modules/gallery_picker/widgets/media_preview_widget.dart';
-import 'package:heyo/app/modules/gallery_picker/widgets/thumbnail_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/gallery_preview_button_widget.dart';
-import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
-import 'package:mime/mime.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../controllers/gallery_picker_controller.dart';
 
@@ -163,50 +159,6 @@ class _DropdownWidget extends StatelessWidget {
         albumTextColor: Colors.white,
         albumDividerColor: const Color(0xFF484848),
         albumBackGroundColor: const Color(0xFF333333),
-        appBarLeadingWidget: Align(
-          alignment: Alignment.bottomRight,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 15, bottom: 12),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(
-                  width: 40,
-                ),
-
-                /// share
-                GestureDetector(
-                  onTap: () async {
-                    controller.pickedFile.map((p) {
-                      controller.mediaPath.add(p['path']);
-                    }).toString();
-                    if (controller.mediaPath.isNotEmpty) {
-                      await Share.shareFiles(controller.mediaPath);
-                    }
-                    controller.mediaPath.clear();
-                  },
-                  child: Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.blue, width: 1.5),
-                    ),
-                    child: Transform.scale(
-                      scale: 2,
-                      child: const Icon(
-                        Icons.share_outlined,
-                        color: Colors.blue,
-                        size: 10,
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }
