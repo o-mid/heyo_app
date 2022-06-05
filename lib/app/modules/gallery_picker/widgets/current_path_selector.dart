@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/gallery_picker/provider/gallery_provider.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'dropdown.dart';
+import 'dropdown_widget.dart';
 
 class SelectedPathDropdownButton extends StatelessWidget {
   /// picker provider
