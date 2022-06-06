@@ -10,12 +10,11 @@ class WebsiteInteractView extends GetView<WebsiteInteractController> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Container(
-        child: QrScanView(
-            hasBackButton: true,
-            subtitle: "",
-            title: LocaleKeys.scanQrTitle.tr,
-            onQRViewCreated: controller.handleScannedVal),
+      child: QrScanView(
+        onDetect: controller.handleScannedVal,
+        hasBackButton: true,
+        subtitle: "",
+        title: LocaleKeys.scanQrTitle.tr,
       ),
     );
   }
