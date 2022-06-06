@@ -264,6 +264,11 @@ class LocaleKeys {
       'AddContacts_AddNicknameSubtitle';
   static const AddContacts_buttons_addToContacts =
       'AddContacts_buttons_addToContacts';
+  static const Permissions_AllowAccess = 'Permissions_AllowAccess';
+  static const Permissions_capturePhotos = 'Permissions_capturePhotos';
+  static const Permissions_camera = 'Permissions_camera';
+  static const Permissions_buttons_Continue = 'Permissions_buttons_Continue';
+  static const Permissions_buttons_Notnow = 'Permissions_buttons_Notnow';
 }
 
 class Locales {
@@ -458,5 +463,12 @@ class Locales {
     'AddContacts_AddNicknameSubtitle':
         'Nickname help you to identify others. Only you can \nsee this nickname.',
     'AddContacts_buttons_addToContacts': 'Add to contacts',
+    'Permissions_AllowAccess': 'Allow access',
+    'Permissions_capturePhotos':
+        'To capture photos and videos, you need to allow Heyo access to \n your device’s photos, \n media and files.',
+    'Permissions_camera':
+        'To capture photos and videos, you need to \n allow Heyo access to your camera.',
+    'Permissions_buttons_Continue': 'Continue',
+    'Permissions_buttons_Notnow': 'Not now',
   };
 }

@@ -42,7 +42,9 @@ class AudioMessagePlayer extends GetView<AudioMessageController> {
           return Row(
             children: [
               GestureDetector(
-                onTap: isActive ? controller.playOrPause : () => controller.startNewAudio(message),
+                onTap: isActive
+                    ? controller.playOrPause
+                    : () => controller.startNewAudio(message),
                 child: SizedBox(
                   width: 20.w,
                   child: ScaleAnimatedSwitcher(
@@ -68,9 +70,11 @@ class AudioMessagePlayer extends GetView<AudioMessageController> {
                     inactiveColor: inactiveSliderColor,
                     activeColor: activeSliderColor,
                     value: isActive
-                        ? getSliderValue(controller.position.value, controller.duration.value)
+                        ? getSliderValue(controller.position.value,
+                            controller.duration.value)
                         : 0,
-                    onChanged: (value) => controller.seek(message.messageId, value),
+                    onChanged: (value) =>
+                        controller.seek(message.messageId, value),
                   ),
                 ),
               ),

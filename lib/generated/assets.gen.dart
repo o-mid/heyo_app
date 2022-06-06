@@ -3,8 +3,6 @@
 ///  FlutterGen
 /// *****************************************************
 
-// coverage:ignore-file
-// ignore_for_file: type=lint
 // ignore_for_file: directives_ordering,unnecessary_import
 
 import 'package:flutter/widgets.dart';
@@ -42,10 +40,6 @@ class $AssetsPngGen {
 
   /// File path: assets/png/chain.png
   AssetGenImage get chain => const AssetGenImage('assets/png/chain.png');
-
-  /// File path: assets/png/group_call.png
-  AssetGenImage get groupCall =>
-      const AssetGenImage('assets/png/group_call.png');
 
   /// File path: assets/png/icon.png
   AssetGenImage get icon => const AssetGenImage('assets/png/icon.png');
@@ -93,6 +87,9 @@ class $AssetsSvgGen {
   SvgGenImage get addToContactsIcon =>
       const SvgGenImage('assets/svg/add_to_contacts_icon.svg');
 
+  /// File path: assets/svg/arrowIcon.svg
+  SvgGenImage get arrowIcon => const SvgGenImage('assets/svg/arrowIcon.svg');
+
   /// File path: assets/svg/audio_call_icon.svg
   SvgGenImage get audioCallIcon =>
       const SvgGenImage('assets/svg/audio_call_icon.svg');
@@ -118,9 +115,16 @@ class $AssetsSvgGen {
   SvgGenImage get callOutgoing =>
       const SvgGenImage('assets/svg/call_outgoing.svg');
 
+  /// File path: assets/svg/cameraIcon.svg
+  SvgGenImage get cameraIcon => const SvgGenImage('assets/svg/cameraIcon.svg');
+
   /// File path: assets/svg/camera_switch.svg
   SvgGenImage get cameraSwitch =>
       const SvgGenImage('assets/svg/camera_switch.svg');
+
+  /// File path: assets/svg/camerapermissionIcon.svg
+  SvgGenImage get camerapermissionIcon =>
+      const SvgGenImage('assets/svg/camerapermissionIcon.svg');
 
   /// File path: assets/svg/chat.svg
   SvgGenImage get chat => const SvgGenImage('assets/svg/chat.svg');
@@ -163,6 +167,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/emoji_icon.svg
   SvgGenImage get emojiIcon => const SvgGenImage('assets/svg/emoji_icon.svg');
 
+  /// File path: assets/svg/fileIcon.svg
+  SvgGenImage get fileIcon => const SvgGenImage('assets/svg/fileIcon.svg');
+
   /// File path: assets/svg/filter_icon.svg
   SvgGenImage get filterIcon => const SvgGenImage('assets/svg/filter_icon.svg');
 
@@ -173,8 +180,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/forward_to.svg
   SvgGenImage get forwardTo => const SvgGenImage('assets/svg/forward_to.svg');
 
-  /// File path: assets/svg/full_screen.svg
-  SvgGenImage get fullScreen => const SvgGenImage('assets/svg/full_screen.svg');
+  /// File path: assets/svg/galleryIcon.svg
+  SvgGenImage get galleryIcon =>
+      const SvgGenImage('assets/svg/galleryIcon.svg');
 
   /// File path: assets/svg/gps_fixed.svg
   SvgGenImage get gpsFixed => const SvgGenImage('assets/svg/gps_fixed.svg');
@@ -196,6 +204,10 @@ class $AssetsSvgGen {
   SvgGenImage get liveLocationActive =>
       const SvgGenImage('assets/svg/live_location_active.svg');
 
+  /// File path: assets/svg/locationIcon.svg
+  SvgGenImage get locationIcon =>
+      const SvgGenImage('assets/svg/locationIcon.svg');
+
   /// File path: assets/svg/location_filled.svg
   SvgGenImage get locationFilled =>
       const SvgGenImage('assets/svg/location_filled.svg');
@@ -208,13 +220,15 @@ class $AssetsSvgGen {
   SvgGenImage get lunaConnection =>
       const SvgGenImage('assets/svg/luna_connection.svg');
 
-  /// File path: assets/svg/mute_mic_icon.svg
-  SvgGenImage get muteMicIcon =>
-      const SvgGenImage('assets/svg/mute_mic_icon.svg');
+  /// File path: assets/svg/moneyIcon.svg
+  SvgGenImage get moneyIcon => const SvgGenImage('assets/svg/moneyIcon.svg');
 
-  /// File path: assets/svg/mute_speaker.svg
-  SvgGenImage get muteSpeaker =>
-      const SvgGenImage('assets/svg/mute_speaker.svg');
+  /// File path: assets/svg/multipleSelectIcon.svg
+  SvgGenImage get multipleSelectIcon =>
+      const SvgGenImage('assets/svg/multipleSelectIcon.svg');
+
+  /// File path: assets/svg/mute_icon.svg
+  SvgGenImage get muteIcon => const SvgGenImage('assets/svg/mute_icon.svg');
 
   /// File path: assets/svg/new_chat.svg
   SvgGenImage get newChat => const SvgGenImage('assets/svg/new_chat.svg');
@@ -239,6 +253,9 @@ class $AssetsSvgGen {
   SvgGenImage get pauseRecordOutlinedIcon =>
       const SvgGenImage('assets/svg/pause_record_outlined_icon.svg');
 
+  /// File path: assets/svg/personIcon.svg
+  SvgGenImage get personIcon => const SvgGenImage('assets/svg/personIcon.svg');
+
   /// File path: assets/svg/play_icon.svg
   SvgGenImage get playIcon => const SvgGenImage('assets/svg/play_icon.svg');
 
@@ -248,14 +265,6 @@ class $AssetsSvgGen {
   /// File path: assets/svg/record_voice_circle_icon.svg
   SvgGenImage get recordVoiceCircleIcon =>
       const SvgGenImage('assets/svg/record_voice_circle_icon.svg');
-
-  /// File path: assets/svg/record_word_icon.svg
-  SvgGenImage get recordWordIcon =>
-      const SvgGenImage('assets/svg/record_word_icon.svg');
-
-  /// File path: assets/svg/record_word_with_dot.svg
-  SvgGenImage get recordWordWithDot =>
-      const SvgGenImage('assets/svg/record_word_with_dot.svg');
 
   /// File path: assets/svg/reply_filled.svg
   SvgGenImage get replyFilled =>
@@ -273,6 +282,10 @@ class $AssetsSvgGen {
   SvgGenImage get searchNearby =>
       const SvgGenImage('assets/svg/search_nearby.svg');
 
+  /// File path: assets/svg/sendImageIcon.svg
+  SvgGenImage get sendImageIcon =>
+      const SvgGenImage('assets/svg/sendImageIcon.svg');
+
   /// File path: assets/svg/send_icon.svg
   SvgGenImage get sendIcon => const SvgGenImage('assets/svg/send_icon.svg');
 
@@ -283,14 +296,6 @@ class $AssetsSvgGen {
   /// File path: assets/svg/single_tick_icon.svg
   SvgGenImage get singleTickIcon =>
       const SvgGenImage('assets/svg/single_tick_icon.svg');
-
-  /// File path: assets/svg/stack_horizontal.svg
-  SvgGenImage get stackHorizontal =>
-      const SvgGenImage('assets/svg/stack_horizontal.svg');
-
-  /// File path: assets/svg/stack_vertical.svg
-  SvgGenImage get stackVertical =>
-      const SvgGenImage('assets/svg/stack_vertical.svg');
 
   /// File path: assets/svg/target.svg
   SvgGenImage get target => const SvgGenImage('assets/svg/target.svg');
@@ -328,23 +333,19 @@ class Assets {
   static const $AssetsSvgGen svg = $AssetsSvgGen();
 }
 
-class AssetGenImage {
-  const AssetGenImage(this._assetName);
-
-  final String _assetName;
+class AssetGenImage extends AssetImage {
+  const AssetGenImage(String assetName) : super(assetName);
 
   Image image({
     Key? key,
-    AssetBundle? bundle,
     ImageFrameBuilder? frameBuilder,
+    ImageLoadingBuilder? loadingBuilder,
     ImageErrorWidgetBuilder? errorBuilder,
     String? semanticLabel,
     bool excludeFromSemantics = false,
-    double? scale = 1.0,
     double? width,
     double? height,
     Color? color,
-    Animation<double>? opacity,
     BlendMode? colorBlendMode,
     BoxFit? fit,
     AlignmentGeometry alignment = Alignment.center,
@@ -353,24 +354,19 @@ class AssetGenImage {
     bool matchTextDirection = false,
     bool gaplessPlayback = false,
     bool isAntiAlias = false,
-    String? package,
     FilterQuality filterQuality = FilterQuality.low,
-    int? cacheWidth,
-    int? cacheHeight,
   }) {
-    return Image.asset(
-      _assetName,
+    return Image(
       key: key,
-      bundle: bundle,
+      image: this,
       frameBuilder: frameBuilder,
+      loadingBuilder: loadingBuilder,
       errorBuilder: errorBuilder,
       semanticLabel: semanticLabel,
       excludeFromSemantics: excludeFromSemantics,
-      scale: scale,
       width: width,
       height: height,
       color: color,
-      opacity: opacity,
       colorBlendMode: colorBlendMode,
       fit: fit,
       alignment: alignment,
@@ -379,14 +375,11 @@ class AssetGenImage {
       matchTextDirection: matchTextDirection,
       gaplessPlayback: gaplessPlayback,
       isAntiAlias: isAntiAlias,
-      package: package,
       filterQuality: filterQuality,
-      cacheWidth: cacheWidth,
-      cacheHeight: cacheHeight,
     );
   }
 
-  String get path => _assetName;
+  String get path => assetName;
 }
 
 class SvgGenImage {

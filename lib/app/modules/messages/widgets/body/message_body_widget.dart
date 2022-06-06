@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:extended_image/extended_image.dart';
@@ -67,9 +68,11 @@ class _MessageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor =
-        message.isFromMe ? COLORS.kGreenMainColor : COLORS.kPinCodeDeactivateColor;
-    final textColor = message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor;
+    final backgroundColor = message.isFromMe
+        ? COLORS.kGreenMainColor
+        : COLORS.kPinCodeDeactivateColor;
+    final textColor =
+        message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor;
 
     switch (message.runtimeType) {
       case TextMessageModel:
@@ -95,9 +98,9 @@ class _MessageContent extends StatelessWidget {
             height: height,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.r),
-              child: ExtendedImage.network(
-                (message as ImageMessageModel).url,
-              ),
+              child: (message as ImageMessageModel).isLocal
+                  ? ExtendedImage.file(File((message as ImageMessageModel).url))
+                  : ExtendedImage.network((message as ImageMessageModel).url),
             ),
           );
         });
