@@ -30,7 +30,7 @@ class ModifiedAlertDialog extends StatelessWidget {
           return Future.value(!hideCloseSign);
         },
         child: AlertDialog(
-          insetPadding: EdgeInsets.all(20),
+          insetPadding: const EdgeInsets.all(20),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -79,7 +79,7 @@ Widget removeSign({required Function onPressed, bool hasError = false}) {
       onPressed();
     },
     child: Padding(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Assets.svg.closeSign.svg(
         width: 20.w,
         height: 20.w,
@@ -123,7 +123,8 @@ class DefaultAlertDialogContent extends StatelessWidget {
           SizedBox(height: 24.w),
           Text(
             title,
-            style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+            style:
+                TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
           ),
           CustomSizes.smallSizedBoxHeight,
           if (subtitle != null)

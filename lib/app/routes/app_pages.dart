@@ -19,6 +19,8 @@ import '../modules/calls/user_call_history/bindings/user_call_history_binding.da
 import '../modules/calls/user_call_history/views/user_call_history_view.dart';
 import '../modules/forward_massages/bindings/forward_massages_binding.dart';
 import '../modules/forward_massages/views/forward_massages_view.dart';
+import '../modules/gallery_picker/bindings/gallery_picker_binding.dart';
+import '../modules/gallery_picker/views/gallery_picker_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/information/shareable_qr_view.dart';
@@ -116,6 +118,11 @@ class AppPages {
       name: _Paths.FORWARD_MASSAGES,
       page: () => ForwardMassagesView(),
       binding: ForwardMassagesBinding(),
+    ),
+    GetPage(
+      name: _Paths.GALLERY_PICKER,
+      page: () => GalleryPickerView(),
+      binding: GalleryPickerBinding(),
     ),
     GetPage(
       name: _Paths.SHARE_LOCATION,

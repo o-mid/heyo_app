@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:extended_image/extended_image.dart';
@@ -45,7 +46,8 @@ class MessageBodyWidget extends StatelessWidget {
                     message: message,
                   ),
                 ),
-                if (message.reactions.isNotEmpty) ReactionsWidget(message: message),
+                if (message.reactions.isNotEmpty)
+                  ReactionsWidget(message: message),
               ],
             ),
           ),
@@ -65,9 +67,11 @@ class _MessageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor =
-        message.isFromMe ? COLORS.kGreenMainColor : COLORS.kPinCodeDeactivateColor;
-    final textColor = message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor;
+    final backgroundColor = message.isFromMe
+        ? COLORS.kGreenMainColor
+        : COLORS.kPinCodeDeactivateColor;
+    final textColor =
+        message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor;
 
     switch (message.runtimeType) {
       case TextMessageModel:
@@ -93,9 +97,9 @@ class _MessageContent extends StatelessWidget {
             height: height,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.r),
-              child: ExtendedImage.network(
-                (message as ImageMessageModel).url,
-              ),
+              child: (message as ImageMessageModel).isLocal
+                  ? ExtendedImage.file(File((message as ImageMessageModel).url))
+                  : ExtendedImage.network((message as ImageMessageModel).url),
             ),
           );
         });
@@ -107,9 +111,12 @@ class _MessageContent extends StatelessWidget {
         return AudioMessagePlayer(
           message: message as AudioMessageModel,
           backgroundColor: backgroundColor,
-          textColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor,
-          iconColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
-          activeSliderColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
+          textColor:
+              message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor,
+          iconColor:
+              message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
+          activeSliderColor:
+              message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
           inactiveSliderColor: message.isFromMe
               ? COLORS.kWhiteColor.withOpacity(0.2)
               : COLORS.kDarkBlueColor.withOpacity(0.2),
@@ -119,7 +126,8 @@ class _MessageContent extends StatelessWidget {
           message: message as LocationMessageModel,
         );
       case LiveLocationMessageModel:
-        return LiveLocationMessageWidget(message: message as LiveLocationMessageModel);
+        return LiveLocationMessageWidget(
+            message: message as LiveLocationMessageModel);
       default:
         return const SizedBox.shrink();
     }

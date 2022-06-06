@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:chewie/chewie.dart';
 import 'package:extended_image/extended_image.dart';
@@ -25,7 +26,8 @@ class VideoMessagePlayer extends GetView<VideoMessageController> {
                 chewieController != null &&
                 chewieController.videoPlayerController.value.isInitialized
             ? AspectRatio(
-                aspectRatio: chewieController.videoPlayerController.value.aspectRatio,
+                aspectRatio:
+                    chewieController.videoPlayerController.value.aspectRatio,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.r),
                   child: Chewie(
@@ -39,6 +41,8 @@ class VideoMessagePlayer extends GetView<VideoMessageController> {
                 isLoading: isActive,
                 mWidth: message.metadata.width,
                 mHeight: message.metadata.height,
+                isLocal: message.metadata.isLocal,
+                imageBytes: message.metadata.thumbnailBytes,
               ),
       );
     });
@@ -51,11 +55,15 @@ class _VideoThumbnail extends StatelessWidget {
   final double mHeight;
   final VoidCallback? onTap;
   final bool isLoading;
-  const _VideoThumbnail({
+  final bool isLocal;
+  Uint8List? imageBytes;
+  _VideoThumbnail({
     Key? key,
     required this.thumbnailUrl,
     required this.mWidth,
     required this.mHeight,
+    required this.isLocal,
+    this.imageBytes,
     this.onTap,
     this.isLoading = false,
   }) : super(key: key);
@@ -75,9 +83,13 @@ class _VideoThumbnail extends StatelessWidget {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                ExtendedImage.network(
-                  thumbnailUrl,
-                ),
+                isLocal && imageBytes != null
+                    ? ExtendedImage.memory(
+                        imageBytes!,
+                      )
+                    : ExtendedImage.network(
+                        thumbnailUrl,
+                      ),
                 Container(
                   width: 40.h,
                   height: 40.h,
@@ -87,7 +99,8 @@ class _VideoThumbnail extends StatelessWidget {
                     color: COLORS.kBlackColor.withOpacity(0.5),
                   ),
                   child: isLoading
-                      ? const CircularProgressIndicator(color: COLORS.kWhiteColor)
+                      ? const CircularProgressIndicator(
+                          color: COLORS.kWhiteColor)
                       : Assets.svg.playIcon.svg(
                           color: COLORS.kWhiteColor,
                         ),
