@@ -6,6 +6,7 @@ import 'package:heyo/app/modules/calls/main/widgets/call_bottom_sheet_expanded_b
 import 'package:heyo/app/modules/calls/main/widgets/call_bottom_sheet_header.dart';
 import 'package:heyo/app/modules/calls/main/widgets/call_in_progress_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/call_ringing_widget.dart';
+import 'package:heyo/app/modules/calls/main/widgets/record_indicator_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -45,6 +46,7 @@ class CallView extends GetView<CallController> {
                     icon: Assets.svg.cameraSwitch.svg(),
                   ),
                 ],
+                bottom: const RecordIndicatorWidget(),
               ),
         body: ExpandableBottomSheet(
           background: controller.isCallInProgress.value

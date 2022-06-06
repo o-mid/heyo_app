@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
+import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
+import 'package:heyo/app/modules/calls/main/widgets/record_call_button.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
@@ -27,25 +29,7 @@ class CallBottomSheetExpandedBody extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                CircleIconButton.p16(
-                  onPressed: controller.recordCall,
-                  backgroundColor: COLORS.kCallPageDarkGrey,
-                  icon: Container(
-                    padding: EdgeInsets.all(4.w),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        width: 1.w,
-                        color: COLORS.kWhiteColor,
-                      ),
-                    ),
-                    child: Assets.svg.recordVoiceCircleIcon.svg(
-                      width: 48.w,
-                      height: 48.w,
-                      color: COLORS.kStatesErrorColor,
-                    ),
-                  ),
-                ),
+                const RecordCallButton(),
                 CircleIconButton.p16(
                   icon: Assets.svg.shareScreen.svg(color: COLORS.kWhiteColor),
                   backgroundColor: COLORS.kCallPageDarkGrey,
@@ -55,7 +39,7 @@ class CallBottomSheetExpandedBody extends StatelessWidget {
                 Opacity(
                   opacity: 0,
                   child: CircleIconButton.p16(
-                    icon: Assets.svg.muteIcon.svg(),
+                    icon: Assets.svg.muteMicIcon.svg(),
                     backgroundColor: Colors.transparent,
                   ),
                 ),
@@ -101,24 +85,39 @@ class CallBottomSheetExpandedBody extends StatelessWidget {
                   return Row(
                     children: [
                       CustomCircleAvatar(
-                        url: controller.participants[index].icon,
+                        url: controller.participants[index].user.icon,
                         size: 40,
                       ),
                       CustomSizes.mediumSizedBoxWidth,
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            controller.participants[index].name,
-                            style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kWhiteColor),
-                          ),
-                          Text(
-                            controller.participants[index].walletAddress.shortenCoreId,
-                            style: TEXTSTYLES.kBodySmall.copyWith(
-                              color: COLORS.kWhiteColor.withOpacity(0.6),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              controller.participants[index].user.name,
+                              style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kWhiteColor),
                             ),
-                          ),
-                        ],
+                            Row(
+                              children: [
+                                Text(
+                                  controller.participants[index].user.walletAddress.shortenCoreId,
+                                  style: TEXTSTYLES.kBodySmall.copyWith(
+                                    color: COLORS.kWhiteColor.withOpacity(0.6),
+                                  ),
+                                ),
+                                const Spacer(),
+                                if (controller.participants[index].status ==
+                                    CallParticipantStatus.calling)
+                                  Text(
+                                    LocaleKeys.CallPage_calling.tr,
+                                    style: TEXTSTYLES.kBodySmall.copyWith(
+                                      color: COLORS.kWhiteColor.withOpacity(0.6),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   );

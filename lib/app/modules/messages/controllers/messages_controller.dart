@@ -10,6 +10,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/call_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/live_location_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/location_message_model.dart';
@@ -798,6 +799,22 @@ class MessagesController extends GetxController {
         endTime: DateTime.now().subtract(const Duration(minutes: 40)),
         timestamp:
             DateTime.now().subtract(const Duration(hours: 1, minutes: 42)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      CallMessageModel(
+        messageId: "${index++}",
+        callStatus: CallMessageStatus.declined,
+        callType: CallMessageType.video,
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      CallMessageModel(
+        messageId: "${index++}",
+        callStatus: CallMessageStatus.missed,
+        callType: CallMessageType.audio,
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),

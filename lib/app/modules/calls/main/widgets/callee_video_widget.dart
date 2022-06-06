@@ -12,6 +12,7 @@ class CalleeVideoWidget extends StatelessWidget {
     final controller = Get.find<CallController>();
     return GestureDetector(
       onTap: controller.toggleImmersiveMode,
+      onDoubleTap: controller.flipVideoPositions,
       child: Assets.png.callee.image(),
     );
   }

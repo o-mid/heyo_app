@@ -124,9 +124,19 @@
   "CallPage": {
     "participants": "Participants",
     "ringing": "Ringing...",
+    "calling": "Calling...",
     "currentlyOffline": "Currently offline",
     "sendAMessageButton": "Send a message instead",
     "close": "Close"
+  },
+  "recordCallDialog": {
+    "title": "This call will be recorded",
+    "subtitle": "Other participants on this call will receive a notification about you recording this call. It is up to them whether they allow or deny it.",
+    "acceptButton": "Record call",
+    "cancelButton": "Cancel"
+  },
+  "IncomingCallPage": {
+    "incomingVideoCall": "Incoming video call on Heyo..."
   },
   "newChat": {
     "newChatAppBar": "New Chat",
@@ -177,6 +187,10 @@
     "finishedLiveShareOtherTitle": "@user shared their location",
     "finishedLiveShareSubtitle": "Ended on @day at @clock",
     "stopSharing": "Stop sharing",
+    "callMessageTitle": "@user called you",
+    "callMessageSubtitleMissed": "Call missed",
+    "callMessageSubtitleDeclined": "Call declined",
+    "callMessageActionButton": "Call back",
     "deleteMessagesDialog": {
       "title": "Delete message?",
       "titlePlural": "Delete @count messages?",

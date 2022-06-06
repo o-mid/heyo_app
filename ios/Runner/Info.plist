@@ -55,7 +55,7 @@
 
        	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
        	<string>Location permission is required to share your location with others.</string>
-		
+
 		<key>NSCameraUsageDescription</key>
         <string>We use the camera to scan barcodes</string>
 

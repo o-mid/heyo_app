@@ -11,10 +11,12 @@ import '../modules/auth/pinCode/bindings/pin_code_binding.dart';
 import '../modules/auth/pinCode/views/pin_code_view.dart';
 import '../modules/auth/sing-up/bindings/sing_up_binding.dart';
 import '../modules/auth/sing-up/views/sing_up_view.dart';
-import '../modules/calls/main/bindings/call_binding.dart';
-import '../modules/calls/main/views/call_view.dart';
 import '../modules/calls/home/bindings/calls_binding.dart';
 import '../modules/calls/home/views/calls_view.dart';
+import '../modules/calls/incoming_call/bindings/incoming_call_binding.dart';
+import '../modules/calls/incoming_call/views/incoming_call_view.dart';
+import '../modules/calls/main/bindings/call_binding.dart';
+import '../modules/calls/main/views/call_view.dart';
 import '../modules/calls/user_call_history/bindings/user_call_history_binding.dart';
 import '../modules/calls/user_call_history/views/user_call_history_view.dart';
 import '../modules/forward_massages/bindings/forward_massages_binding.dart';
@@ -147,6 +149,11 @@ class AppPages {
       name: _Paths.CALL,
       page: () => CallView(),
       binding: CallBinding(),
+    ),
+    GetPage(
+      name: _Paths.INCOMING_CALL,
+      page: () => IncomingCallView(),
+      binding: IncomingCallBinding(),
     ),
   ];
 }
