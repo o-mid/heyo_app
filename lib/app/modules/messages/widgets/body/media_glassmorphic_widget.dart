@@ -1,13 +1,8 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_camera/flutter_camera.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/widgets/glassmorphic_container.dart';
 import 'package:heyo/generated/assets.gen.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../routes/app_pages.dart';
 import '../../../shared/utils/screen-utils/sizing/custom_sizes.dart';
@@ -72,7 +67,9 @@ class MediaGlassmorphic extends StatelessWidget {
                             CircularMediaIconButton(
                               backgroundColor: const Color(0xff7E3CF9),
                               // location onPressed:
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.toNamed(Routes.SHARE_LOCATION);
+                              },
                               padding: 18,
                               child: Assets.svg.locationIcon.svg(
                                 height: 20.w,
