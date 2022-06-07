@@ -137,6 +137,9 @@ class $AssetsSvgGen {
   SvgGenImage get chatOutlined =>
       const SvgGenImage('assets/svg/chat_outlined.svg');
 
+  /// File path: assets/svg/clearIcon.svg
+  SvgGenImage get clearIcon => const SvgGenImage('assets/svg/clearIcon.svg');
+
   /// File path: assets/svg/clock.svg
   SvgGenImage get clock => const SvgGenImage('assets/svg/clock.svg');
 

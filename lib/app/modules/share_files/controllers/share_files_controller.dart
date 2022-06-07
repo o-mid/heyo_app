@@ -1,11 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ShareFilesController extends GetxController {
-  //TODO: Implement ShareFilesController
+  late TextEditingController inputController;
 
   final count = 0.obs;
   @override
   void onInit() {
+    inputController = TextEditingController();
     super.onInit();
   }
 
@@ -16,6 +18,7 @@ class ShareFilesController extends GetxController {
 
   @override
   void onClose() {
+    inputController.dispose();
     super.onClose();
   }
 
