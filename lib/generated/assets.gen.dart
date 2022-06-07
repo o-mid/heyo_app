@@ -3,8 +3,6 @@
 ///  FlutterGen
 /// *****************************************************
 
-// coverage:ignore-file
-// ignore_for_file: type=lint
 // ignore_for_file: directives_ordering,unnecessary_import
 
 import 'package:flutter/widgets.dart';
@@ -179,6 +177,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/filter_icon.svg
   SvgGenImage get filterIcon => const SvgGenImage('assets/svg/filter_icon.svg');
 
+  /// File path: assets/svg/folderIcon.svg
+  SvgGenImage get folderIcon => const SvgGenImage('assets/svg/folderIcon.svg');
+
   /// File path: assets/svg/forward_icon.svg
   SvgGenImage get forwardIcon =>
       const SvgGenImage('assets/svg/forward_icon.svg');
@@ -300,6 +301,9 @@ class $AssetsSvgGen {
   SvgGenImage get replyOutlined =>
       const SvgGenImage('assets/svg/reply_outlined.svg');
 
+  /// File path: assets/svg/searchIcon.svg
+  SvgGenImage get searchIcon => const SvgGenImage('assets/svg/searchIcon.svg');
+
   /// File path: assets/svg/search_nearby.svg
   SvgGenImage get searchNearby =>
       const SvgGenImage('assets/svg/search_nearby.svg');
@@ -363,23 +367,19 @@ class Assets {
   static const $AssetsSvgGen svg = $AssetsSvgGen();
 }
 
-class AssetGenImage {
-  const AssetGenImage(this._assetName);
-
-  final String _assetName;
+class AssetGenImage extends AssetImage {
+  const AssetGenImage(String assetName) : super(assetName);
 
   Image image({
     Key? key,
-    AssetBundle? bundle,
     ImageFrameBuilder? frameBuilder,
+    ImageLoadingBuilder? loadingBuilder,
     ImageErrorWidgetBuilder? errorBuilder,
     String? semanticLabel,
     bool excludeFromSemantics = false,
-    double? scale = 1.0,
     double? width,
     double? height,
     Color? color,
-    Animation<double>? opacity,
     BlendMode? colorBlendMode,
     BoxFit? fit,
     AlignmentGeometry alignment = Alignment.center,
@@ -388,24 +388,19 @@ class AssetGenImage {
     bool matchTextDirection = false,
     bool gaplessPlayback = false,
     bool isAntiAlias = false,
-    String? package,
     FilterQuality filterQuality = FilterQuality.low,
-    int? cacheWidth,
-    int? cacheHeight,
   }) {
-    return Image.asset(
-      _assetName,
+    return Image(
       key: key,
-      bundle: bundle,
+      image: this,
       frameBuilder: frameBuilder,
+      loadingBuilder: loadingBuilder,
       errorBuilder: errorBuilder,
       semanticLabel: semanticLabel,
       excludeFromSemantics: excludeFromSemantics,
-      scale: scale,
       width: width,
       height: height,
       color: color,
-      opacity: opacity,
       colorBlendMode: colorBlendMode,
       fit: fit,
       alignment: alignment,
@@ -414,14 +409,11 @@ class AssetGenImage {
       matchTextDirection: matchTextDirection,
       gaplessPlayback: gaplessPlayback,
       isAntiAlias: isAntiAlias,
-      package: package,
       filterQuality: filterQuality,
-      cacheWidth: cacheWidth,
-      cacheHeight: cacheHeight,
     );
   }
 
-  String get path => _assetName;
+  String get path => assetName;
 }
 
 class SvgGenImage {

@@ -84,7 +84,9 @@ class MediaGlassmorphic extends StatelessWidget {
                             CircularMediaIconButton(
                               backgroundColor: const Color(0xffF93C53),
                               // file onPressed:
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.toNamed(Routes.SHARE_FILES);
+                              },
                               padding: 18,
                               child: Assets.svg.fileIcon.svg(
                                 height: 20.w,
