@@ -26,6 +26,7 @@ abstract class Routes {
   static const USER_CALL_HISTORY = _Paths.USER_CALL_HISTORY;
   static const CALL = _Paths.CALL;
   static const INCOMING_CALL = _Paths.INCOMING_CALL;
+  static const SHARE_FILES = _Paths.SHARE_FILES;
 }
 
 abstract class _Paths {
@@ -53,4 +54,5 @@ abstract class _Paths {
   static const USER_CALL_HISTORY = '/user-call-history';
   static const CALL = '/call';
   static const INCOMING_CALL = '/incoming-call';
+  static const SHARE_FILES = '/share-files';
 }
