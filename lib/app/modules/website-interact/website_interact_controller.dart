@@ -4,8 +4,12 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class WebsiteInteractController extends GetxController {
   QRViewController? qrController;
-  final Login login= Get.find<Login>();
+  final Login login;
+
+  WebsiteInteractController({required this.login});
+
   bool isBusy = false;
+
   @override
   void onInit() {
     super.onInit();
@@ -34,11 +38,10 @@ class WebsiteInteractController extends GetxController {
         }
         if (isBusy) {
           return;
-        } else  {
+        } else {
           qrController?.pauseCamera();
 
           isBusy = true;
-
 
           login.execute(scanData);
 

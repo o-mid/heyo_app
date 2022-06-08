@@ -1,6 +1,7 @@
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/call_controller/call_controller.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguments_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scaner.dart';
@@ -22,9 +23,12 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
   late TextEditingController inputController;
   final ContactRepository contactRepository;
   final AccountInfo accountInfo;
-  NewChatController({required this.contactRepository, required this.accountInfo});
+  NewChatController({required this.contactRepository, required this.accountInfo,required this.callConnectionController});
 // in nearby users Tab after 3 seconds the refresh button will be visible
   RxBool refreshBtnVisibility = false.obs;
+
+//TODO remove
+  final CallConnectionController callConnectionController;
 
   void makeRefreshBtnVisible() {
     Future.delayed(const Duration(seconds: 3), () {
@@ -202,5 +206,10 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
         return;
       }
     });
+  }
+
+  //TODO remove its for testing
+  void startCall(String walletAddress) {
+    callConnectionController.startCall(walletAddress);
   }
 }

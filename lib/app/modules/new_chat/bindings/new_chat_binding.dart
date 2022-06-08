@@ -7,6 +7,7 @@ import 'package:heyo/app/modules/shared/providers/database/dao/user_contact_prov
 import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
 
 import '../controllers/new_chat_controller.dart';
+import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 
 class NewChatBinding extends Bindings {
   @override
@@ -18,7 +19,8 @@ class NewChatBinding extends Bindings {
               cryptographyKeyGenerator: Web3Keys()),
           contactRepository: ContactRepository(
               cacheContractor:
-                  CacheRepository(userContact: UserContactProvider()))),
+                  CacheRepository(userContact: UserContactProvider())),
+      callConnectionController: GlobalBindings.callConnectionController),
     );
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scaner.dart';
-import 'package:heyo/app/modules/new_chat/widgets/user_preview_bottom_sheet.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button.dart';
@@ -374,7 +373,6 @@ class _searchInContactsBody extends StatelessWidget {
   }) : super(key: key);
 
   final NewChatController controller;
-
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -421,8 +419,10 @@ class _searchInContactsBody extends StatelessWidget {
                         InkWell(
                           borderRadius: BorderRadius.circular(8),
                           onTap: () {
-                            openUserPreviewBottomSheet(
-                                controller.searchSuggestions[index]);
+                            //TODO should be changed
+                            controller.startCall(controller.searchSuggestions[index].walletAddress);
+                           /* openUserPreviewBottomSheet(
+                                controller.searchSuggestions[index]);*/
                           },
                           child: UserWidget(
                             User: suggestedUser,

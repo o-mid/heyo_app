@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:web3dart/credentials.dart';
+import 'package:web3dart/crypto.dart';
 
 
 extension ValidateCoreId on String {
@@ -9,5 +12,11 @@ extension ValidateCoreId on String {
     } catch (err) {
       return false;
     }
+  }
+}
+extension Hex on String {
+  String getHex(){
+    List<int> bytes=utf8.encode(this);
+    return "0x${bytesToHex(bytes)}";
   }
 }

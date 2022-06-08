@@ -1,24 +1,21 @@
-
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/addr_model.dart';
 import 'package:flutter_p2p_communicator/model/login_mode.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:flutter_p2p_communicator/model/transfer_model.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
-import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
 import 'package:collection/src/iterable_extensions.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class Login {
-  final P2PNodeResponseStream p2pNodeResponseStream;
   final P2PState p2pState;
   final AccountInfo accountInfo;
 
   Login(
-      {required this.p2pNodeResponseStream,
-      required this.p2pState,
+      {required this.p2pState,
       required this.accountInfo});
 
   Future<String> _sendingConnectRequest(P2PAddrModel info) async {
@@ -56,6 +53,19 @@ class Login {
             : P2PTransferModel(
                 localCoreID: localCoreId, remoteCoreID: remoteCoreId),
         payload: P2PLoginPayloadModel(session: "0x73"));
+    _sendingLoginRequest(_loginModel);
+  }
+
+  void sendOffer(String offer, String remoteCoreId) async {
+    final localCoreId = await accountInfo.getCoreId();
+    if (localCoreId == null) throw 'Core id is null!!';
+
+    String hex=offer.getHex();
+
+    final _loginModel = P2PLoginBodyModel(
+        info: P2PTransferModel(
+            localCoreID: localCoreId, remoteCoreID: remoteCoreId),
+        payload: P2PLoginPayloadModel(session: hex));
     _sendingLoginRequest(_loginModel);
   }
 
