@@ -39,6 +39,7 @@ class P2PNode {
     }
     await FlutterP2pCommunicator.startNode(
       peerSeed: _peerSeed,
+      networkId: '',
     );
 
     final _privateKey = await accountInfo.getPrivateKey();

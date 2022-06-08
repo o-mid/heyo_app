@@ -57,6 +57,8 @@ dependencies:
   swipeable_tile: ^2.0.0
   expandable_bottom_sheet: ^1.1.1+1
   reorderables: ^0.5.0
+  file_picker: ^4.6.1
+  path_provider: ^2.0.11
 
 dependency_overrides:
   permission_handler: ^9.2.0

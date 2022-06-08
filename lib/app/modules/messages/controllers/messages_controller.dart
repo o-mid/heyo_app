@@ -806,7 +806,8 @@ class MessagesController extends GetxController {
         messageId: "${index++}",
         callStatus: CallMessageStatus.declined,
         callType: CallMessageType.video,
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
@@ -814,7 +815,8 @@ class MessagesController extends GetxController {
         messageId: "${index++}",
         callStatus: CallMessageStatus.missed,
         callType: CallMessageType.audio,
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
@@ -1070,5 +1072,12 @@ class MessagesController extends GetxController {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       jumpToBottom();
     });
+  }
+
+  Future<void> openFiles() async {
+    final result = await Get.toNamed(
+      Routes.SHARE_FILES,
+    );
+    if (result != null) {}
   }
 }

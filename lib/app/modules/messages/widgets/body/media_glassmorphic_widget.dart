@@ -85,7 +85,7 @@ class MediaGlassmorphic extends StatelessWidget {
                               backgroundColor: const Color(0xffF93C53),
                               // file onPressed:
                               onPressed: () {
-                                Get.toNamed(Routes.SHARE_FILES);
+                                controller.openFiles();
                               },
                               padding: 18,
                               child: Assets.svg.fileIcon.svg(

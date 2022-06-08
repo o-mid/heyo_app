@@ -160,6 +160,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/delete_icon.svg
   SvgGenImage get deleteIcon => const SvgGenImage('assets/svg/delete_icon.svg');
 
+  /// File path: assets/svg/docIcon.svg
+  SvgGenImage get docIcon => const SvgGenImage('assets/svg/docIcon.svg');
+
   /// File path: assets/svg/dot_column.svg
   SvgGenImage get dotColumn => const SvgGenImage('assets/svg/dot_column.svg');
 
@@ -270,6 +273,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/pause_record_outlined_icon.svg
   SvgGenImage get pauseRecordOutlinedIcon =>
       const SvgGenImage('assets/svg/pause_record_outlined_icon.svg');
+
+  /// File path: assets/svg/pdfIcon.svg
+  SvgGenImage get pdfIcon => const SvgGenImage('assets/svg/pdfIcon.svg');
 
   /// File path: assets/svg/personIcon.svg
   SvgGenImage get personIcon => const SvgGenImage('assets/svg/personIcon.svg');

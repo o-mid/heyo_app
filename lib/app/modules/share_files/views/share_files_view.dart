@@ -16,69 +16,81 @@ class ShareFilesView extends GetView<ShareFilesController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _shareFilesAppbar(),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomSizes.smallSizedBoxHeight,
-          Padding(
-            padding: CustomSizes.contentPaddingWidth,
-            child: Column(
-              children: [
-                CustomSizes.largeSizedBoxHeight,
-                CUSTOMTEXTFIELD(
-                  textController: controller.inputController,
-                  labelText: LocaleKeys.shareFilePage_textInputTitle.tr,
-                  rightWidget: InkWell(
-                    onTap: () {
-                      controller.inputController.clear();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(14.0),
-                      child: Assets.svg.closeSign
-                          .svg(color: COLORS.kDarkBlueColor),
-                    ),
-                  ),
-                ),
-                CustomSizes.largeSizedBoxHeight,
-              ],
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: COLORS.kGreenMainColor,
+          elevation: 0,
+          centerTitle: false,
+          title: Text(
+            LocaleKeys.newChat_newChatAppBar.tr,
+            style: const TextStyle(
+              fontWeight: FONTS.Bold,
+              fontFamily: FONTS.interFamily,
             ),
           ),
-          const Divider(
-            color: COLORS.kMessagingDividerColor,
-            thickness: 8,
-          ),
-        ],
-      ),
-    );
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: Assets.svg.searchIcon.svg(),
+            ),
+            IconButton(
+                onPressed: () {
+                  controller.pickFiles();
+                },
+                icon: Assets.svg.folderIcon.svg(
+                  width: 5,
+                )),
+          ],
+          automaticallyImplyLeading: true,
+        ),
+        body: Obx(() {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomSizes.smallSizedBoxHeight,
+              Padding(
+                padding: CustomSizes.contentPaddingWidth,
+                child: Column(
+                  children: [
+                    CustomSizes.largeSizedBoxHeight,
+                    CUSTOMTEXTFIELD(
+                      textController: controller.inputController,
+                      labelText: LocaleKeys.shareFilePage_textInputTitle.tr,
+                      rightWidget: InkWell(
+                        onTap: () {
+                          controller.inputController.clear();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Assets.svg.closeSign
+                              .svg(color: COLORS.kDarkBlueColor),
+                        ),
+                      ),
+                    ),
+                    CustomSizes.largeSizedBoxHeight,
+                  ],
+                ),
+              ),
+              const Divider(
+                color: COLORS.kMessagingDividerColor,
+                thickness: 8,
+              ),
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: controller.resetFiles.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                        padding: EdgeInsets.all(8),
+                        width: 200,
+                        height: 40,
+                        color: Colors.red);
+                  },
+                ),
+              )
+            ],
+          );
+        }));
   }
-}
-
-AppBar _shareFilesAppbar() {
-  return AppBar(
-    backgroundColor: COLORS.kGreenMainColor,
-    elevation: 0,
-    centerTitle: false,
-    title: Text(
-      LocaleKeys.newChat_newChatAppBar.tr,
-      style: const TextStyle(
-        fontWeight: FONTS.Bold,
-        fontFamily: FONTS.interFamily,
-      ),
-    ),
-    actions: [
-      IconButton(
-        onPressed: () {},
-        icon: Assets.svg.searchIcon.svg(),
-      ),
-      IconButton(
-          onPressed: () {},
-          icon: Assets.svg.folderIcon.svg(
-            width: 5,
-          )),
-    ],
-    automaticallyImplyLeading: true,
-  );
 }
