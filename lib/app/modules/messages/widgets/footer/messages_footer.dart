@@ -7,8 +7,10 @@ import 'package:heyo/app/modules/messages/data/models/messages/text_message_mode
 import 'package:heyo/app/modules/messages/widgets/footer/send_location_box.dart';
 
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/scale_animated_switcher.dart';
 
+import '../../../shared/widgets/glassmorphic_container.dart';
 import 'compose_message_box.dart';
 import 'message_selection_options.dart';
 import 'replying_to_widget.dart';
@@ -59,7 +61,8 @@ class MessagesFooter extends StatelessWidget {
               child: EmojiPicker(
                 onEmojiSelected: (_, Emoji emoji) =>
                     controller.appendAfterCursorPosition(emoji.emoji),
-                onBackspacePressed: controller.removeCharacterBeforeCursorPosition,
+                onBackspacePressed:
+                    controller.removeCharacterBeforeCursorPosition,
               ),
             ),
           ),
@@ -72,7 +75,8 @@ class MessagesFooter extends StatelessWidget {
     if (controller.selectedMessages.isNotEmpty) {
       return MessageSelectionOptions(
         showReply: controller.selectedMessages.length == 1,
-        showCopy: !controller.selectedMessages.any((m) => m is! TextMessageModel),
+        showCopy:
+            !controller.selectedMessages.any((m) => m is! TextMessageModel),
         selectedMessages: controller.selectedMessages,
       );
     }

@@ -6,6 +6,7 @@ import '../reaction_model.dart';
 class VideoMessageModel extends MessageModel {
   final String url;
   final VideoMetadata metadata;
+
   VideoMessageModel({
     required this.url,
     required this.metadata,
@@ -25,6 +26,7 @@ class VideoMessageModel extends MessageModel {
   VideoMessageModel copyWith({
     String? messageId,
     MESSAGE_STATUS? status,
+    bool? isLocal,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
     bool? isFromMe,

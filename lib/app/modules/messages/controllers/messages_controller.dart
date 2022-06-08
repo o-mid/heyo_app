@@ -1,11 +1,16 @@
 import 'dart:async';
-
+import 'dart:io';
+import 'package:path/path.dart' as path;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_camera/flutter_camera.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/call_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/live_location_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/location_message_model.dart';
@@ -17,15 +22,25 @@ import 'package:heyo/app/modules/messages/data/models/metadatas/image_metadata.d
 import 'package:heyo/app/modules/messages/data/models/metadatas/video_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
+import 'package:heyo/app/modules/messages/widgets/body/camera_picker/receiver_name_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/delete_message_dialog.dart';
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/controllers/live_location_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/audio_message_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/video_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
+import 'package:heyo/app/modules/shared/widgets/permission_dialog.dart';
+import 'package:heyo/app/routes/app_pages.dart';
+import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+
+import '../../../../generated/assets.gen.dart';
+import '../../shared/widgets/gallery_preview_button_widget.dart';
 
 class MessagesController extends GetxController {
   final _globalMessageController = Get.find<GlobalMessageController>();
@@ -127,15 +142,20 @@ class MessagesController extends GetxController {
         str +
         textController.text.substring(currentPos);
 
-    textController.selection = textController.selection
-        .copyWith(baseOffset: currentPos + str.length, extentOffset: currentPos + str.length);
+    textController.selection = textController.selection.copyWith(
+        baseOffset: currentPos + str.length,
+        extentOffset: currentPos + str.length);
 
     newMessage.value = textController.text;
   }
 
   void removeCharacterBeforeCursorPosition() {
     final currentPos = textController.selection.base.offset;
-    final prefix = textController.text.substring(0, currentPos).characters.skipLast(1).toString();
+    final prefix = textController.text
+        .substring(0, currentPos)
+        .characters
+        .skipLast(1)
+        .toString();
     final suffix = textController.text.substring(currentPos);
 
     textController.text = prefix + suffix;
@@ -182,7 +202,8 @@ class MessagesController extends GetxController {
     reaction = reaction.copyWith(
       isReactedByMe: !reaction.isReactedByMe,
     );
-    messages[index] = message.copyWith(reactions: {...message.reactions, emoji: reaction});
+    messages[index] =
+        message.copyWith(reactions: {...message.reactions, emoji: reaction});
 
     messages.refresh();
 
@@ -302,7 +323,8 @@ class MessagesController extends GetxController {
   }
 
   stopSharingLiveLocation(LiveLocationMessageModel message) {
-    Get.find<LiveLocationController>().removeIdFromSharingList(message.messageId);
+    Get.find<LiveLocationController>()
+        .removeIdFromSharingList(message.messageId);
 
     final index = messages.indexWhere((m) => m.messageId == message.messageId);
 
@@ -339,7 +361,8 @@ class MessagesController extends GetxController {
     });
 
     // Todo (libp2p): send message
-    Get.find<LiveLocationController>().startSharing(message.messageId, duration);
+    Get.find<LiveLocationController>()
+        .startSharing(message.messageId, duration);
   }
 
   void replyTo() {
@@ -411,7 +434,8 @@ class MessagesController extends GetxController {
   void copySelectedToClipboard() {
     var text = "";
 
-    if (selectedMessages.length == 1 && selectedMessages.first is TextMessageModel) {
+    if (selectedMessages.length == 1 &&
+        selectedMessages.first is TextMessageModel) {
       text = (selectedMessages.first as TextMessageModel).text;
     } else {
       for (var message in selectedMessages) {
@@ -419,7 +443,8 @@ class MessagesController extends GetxController {
           continue;
         }
 
-        text += "[${message.senderName} - ${message.timestamp.dateInAmPmFormat()}]\n";
+        text +=
+            "[${message.senderName} - ${message.timestamp.dateInAmPmFormat()}]\n";
         text += message.text;
         text += "\n\n";
       }
@@ -437,8 +462,10 @@ class MessagesController extends GetxController {
     messages.addAll([
       TextMessageModel(
         messageId: "${index++}",
-        text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 5)),
+        text:
+            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+        timestamp: DateTime.now()
+            .subtract(const Duration(days: 3, hours: 6, minutes: 5)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
@@ -446,14 +473,16 @@ class MessagesController extends GetxController {
         messageId: "${index++}",
         text:
             "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 4)),
+        timestamp: DateTime.now()
+            .subtract(const Duration(days: 3, hours: 6, minutes: 4)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
       TextMessageModel(
         messageId: "${index++}",
         text: " Nihil, incidunt!",
-        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 3)),
+        timestamp: DateTime.now()
+            .subtract(const Duration(days: 3, hours: 6, minutes: 3)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
@@ -470,7 +499,8 @@ class MessagesController extends GetxController {
         messageId: "${index++}",
         text:
             "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 5, minutes: 58)),
+        timestamp: DateTime.now()
+            .subtract(const Duration(days: 3, hours: 5, minutes: 58)),
         senderName: "",
         senderAvatar: "",
         isFromMe: true,
@@ -480,8 +510,10 @@ class MessagesController extends GetxController {
       //
       TextMessageModel(
         messageId: "${index++}",
-        text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 5)),
+        text:
+            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+        timestamp: DateTime.now()
+            .subtract(const Duration(days: 1, hours: 2, minutes: 5)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
         status: MESSAGE_STATUS.READ,
@@ -490,14 +522,16 @@ class MessagesController extends GetxController {
         messageId: "${index++}",
         text:
             "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 4)),
+        timestamp: DateTime.now()
+            .subtract(const Duration(days: 1, hours: 2, minutes: 4)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
       TextMessageModel(
         messageId: "${index++}",
         text: " Nihil, incidunt!",
-        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 3)),
+        timestamp: DateTime.now()
+            .subtract(const Duration(days: 1, hours: 2, minutes: 3)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
@@ -513,7 +547,8 @@ class MessagesController extends GetxController {
       TextMessageModel(
         messageId: "${index++}",
         text: "Lorem ipsum dolor sit.",
-        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 1, minutes: 58)),
+        timestamp: DateTime.now()
+            .subtract(const Duration(days: 1, hours: 1, minutes: 58)),
         senderName: "",
         senderAvatar: "",
         isFromMe: true,
@@ -523,8 +558,10 @@ class MessagesController extends GetxController {
       //
       TextMessageModel(
         messageId: "${index++}",
-        text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 5)),
+        text:
+            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 2, minutes: 5)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
@@ -532,14 +569,16 @@ class MessagesController extends GetxController {
         messageId: "${index++}",
         text:
             "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 4)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 2, minutes: 4)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
       TextMessageModel(
         messageId: "${index++}",
         text: " Nihil, incidunt!",
-        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 3)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 2, minutes: 3)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
@@ -555,7 +594,8 @@ class MessagesController extends GetxController {
       TextMessageModel(
         messageId: "${index++}",
         text: "Lorem ipsum dolor sit.",
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 58)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 58)),
         senderName: "",
         senderAvatar: "",
         isFromMe: true,
@@ -564,7 +604,8 @@ class MessagesController extends GetxController {
       TextMessageModel(
         messageId: "${index++}",
         text: "Sure thing. Just let me know when sth happens",
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 56)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 56)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
         reactions: {
@@ -589,7 +630,8 @@ class MessagesController extends GetxController {
       TextMessageModel(
         messageId: "${index++}",
         text: "Very nice!",
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 55)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 55)),
         senderName: "",
         senderAvatar: "",
         replyTo: ReplyToModel(
@@ -612,7 +654,8 @@ class MessagesController extends GetxController {
       TextMessageModel(
         messageId: "${index++}",
         text: "Very nice!",
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 54)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 54)),
         senderName: "",
         senderAvatar: "",
         replyTo: ReplyToModel(
@@ -627,7 +670,8 @@ class MessagesController extends GetxController {
       TextMessageModel(
         messageId: "${index++}",
         text: "Lorem ipsum dolor sit.",
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 52)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 52)),
         senderName: "",
         senderAvatar: "",
         isFromMe: true,
@@ -635,10 +679,12 @@ class MessagesController extends GetxController {
       ),
       ImageMessageModel(
         messageId: "${index++}",
+        isLocal: false,
         url:
             "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
         metadata: ImageMetadata(width: 687, height: 1030),
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 50)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 50)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
         replyTo: ReplyToModel(
@@ -650,10 +696,12 @@ class MessagesController extends GetxController {
       ),
       ImageMessageModel(
         messageId: "${index++}",
+        isLocal: false,
         url:
             "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
         metadata: ImageMetadata(width: 2142, height: 806),
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
         senderName: "",
         senderAvatar: "",
         isFromMe: true,
@@ -674,11 +722,13 @@ class MessagesController extends GetxController {
             "https://assets.mixkit.co/videos/preview/mixkit-daytime-city-traffic-aerial-view-56-large.mp4",
         metadata: VideoMetadata(
           durationInSeconds: 120,
+          isLocal: false,
           thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb2.png",
           width: 656,
           height: 368,
         ),
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
         senderName: "",
         senderAvatar: "",
         isFromMe: true,
@@ -698,12 +748,14 @@ class MessagesController extends GetxController {
         url:
             "https://assets.mixkit.co/videos/download/mixkit-microchip-technology-close-up-1140.mp4",
         metadata: VideoMetadata(
+          isLocal: false,
           durationInSeconds: 120,
           thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
           width: 656,
           height: 368,
         ),
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
         senderName: "",
         senderAvatar: "",
         isFromMe: true,
@@ -712,8 +764,10 @@ class MessagesController extends GetxController {
       AudioMessageModel(
         messageId: "${index++}",
         metadata: AudioMetadata(durationInSeconds: 100),
-        url: "https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3",
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 46)),
+        url:
+            "https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3",
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 46)),
         senderName: "",
         senderAvatar: "",
         isFromMe: true,
@@ -723,7 +777,8 @@ class MessagesController extends GetxController {
         messageId: "${index++}",
         metadata: AudioMetadata(durationInSeconds: 19),
         url: "https://download.samplelib.com/mp3/sample-15s.mp3",
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
@@ -732,7 +787,8 @@ class MessagesController extends GetxController {
         latitude: 48.153445,
         longitude: 17.129925,
         address: "Kocelova 11-11, 821 08, Bratislava",
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 44)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 44)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
@@ -741,13 +797,278 @@ class MessagesController extends GetxController {
         latitude: 35.65031,
         longitude: 51.2925217,
         endTime: DateTime.now().subtract(const Duration(minutes: 40)),
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 42)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 42)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      CallMessageModel(
+        messageId: "${index++}",
+        callStatus: CallMessageStatus.declined,
+        callType: CallMessageType.video,
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      CallMessageModel(
+        messageId: "${index++}",
+        callStatus: CallMessageStatus.missed,
+        callType: CallMessageType.audio,
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
     ]);
 
-    messages
-        .sort((a, b) => a.timestamp.millisecondsSinceEpoch - b.timestamp.millisecondsSinceEpoch);
+    messages.sort((a, b) =>
+        a.timestamp.millisecondsSinceEpoch -
+        b.timestamp.millisecondsSinceEpoch);
+  }
+
+  RxBool isMediaGlassmorphicOpen = false.obs;
+  mediaGlassmorphicChangeState() {
+    isMediaGlassmorphicOpen.value = !isMediaGlassmorphicOpen.value;
+  }
+
+  // camera
+  Future<void> pick(BuildContext context) async {
+    final Size size = MediaQuery.of(context).size;
+    final double scale = MediaQuery.of(context).devicePixelRatio;
+    bool isCameraDenied = await Permission.camera.isDenied;
+    bool isMediaDenied = await Permission.mediaLibrary.isDenied;
+    if (GetPlatform.isAndroid) {
+      isMediaDenied = false;
+    }
+    if (isMediaDenied) {
+      bool result = await Get.dialog(PermissionDialog(
+        indicatorIcon: Assets.svg.camerapermissionIcon.svg(
+          width: 28.w,
+          height: 28.w,
+        ),
+        title: LocaleKeys.Permissions_AllowAccess.tr,
+        subtitle: LocaleKeys.Permissions_capturePhotos.tr,
+      ));
+      if (result) {
+        await Permission.mediaLibrary.request().then((value) {
+          if (value.isGranted) {
+            isMediaDenied = false;
+          }
+        });
+      }
+    }
+
+    if (isCameraDenied) {
+      bool result = await Get.dialog(PermissionDialog(
+        indicatorIcon: Assets.svg.camerapermissionIcon.svg(
+          width: 28.w,
+          height: 28.w,
+        ),
+        title: LocaleKeys.Permissions_AllowAccess.tr,
+        subtitle: LocaleKeys.Permissions_camera.tr,
+      ));
+      if (result) {
+        await Permission.camera.request().then((value) {
+          if (value.isGranted) {
+            isCameraDenied = false;
+          }
+        });
+      }
+    }
+
+    if (!isCameraDenied && !isMediaDenied) {
+      openCameraPicker(context);
+    }
+  }
+
+  Future<void> openCameraPicker(BuildContext context) async {
+    try {
+      final AssetEntity? entity = await CameraPicker.pickFromCamera(context,
+          pickerConfig: CameraPickerConfig(
+            textDelegate: EnglishCameraPickerTextDelegate(),
+            sendIcon: Assets.svg.sendIcon.svg(),
+            receiverNameWidget: ReceiverNameWidget(name: args.chat.name),
+            additionalPreviewButtonWidget: const GalleryPreviewButtonWidget(),
+            onEntitySaving: (
+              BuildContext context,
+              CameraPickerViewType viewType,
+              File file,
+              List<Map<String, dynamic>>? confirmedFiles,
+            ) async {
+              AssetEntity? entity;
+
+              switch (viewType) {
+                case CameraPickerViewType.image:
+                  final String filePath = file.path;
+                  entity = await PhotoManager.editor.saveImageWithPath(
+                    filePath,
+                    title: path.basename(filePath),
+                  );
+
+                  break;
+                case CameraPickerViewType.video:
+                  entity = await PhotoManager.editor.saveVideo(
+                    File(file.path),
+                    title: path.basename(file.path),
+                  );
+                  break;
+              }
+              if (entity != null) {
+                switch (viewType) {
+                  case CameraPickerViewType.image:
+                    {
+                      messages.add(
+                        ImageMessageModel(
+                            messageId:
+                                "${messages.lastIndexOf(messages.last) + 1}",
+                            isLocal: true,
+                            metadata: ImageMetadata(
+                              height: entity.height.toDouble(),
+                              width: entity.width.toDouble(),
+                            ),
+                            senderAvatar: '',
+                            senderName: '',
+                            isFromMe: true,
+                            status: MESSAGE_STATUS.SENT,
+                            timestamp: DateTime.now().subtract(
+                                const Duration(hours: 1, minutes: 49)),
+                            url: file.path),
+                      );
+                    }
+                    break;
+                  case CameraPickerViewType.video:
+                    {
+                      messages.add(VideoMessageModel(
+                        messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                        metadata: VideoMetadata(
+                          durationInSeconds: entity.videoDuration.inSeconds,
+                          height: entity.height.toDouble(),
+                          width: entity.width.toDouble(),
+                          isLocal: true,
+                          thumbnailBytes: await entity.thumbnailData,
+                          thumbnailUrl:
+                              "https://mixkit.imgix.net/static/home/video-thumb3.png",
+                        ),
+                        url: file.path,
+                        timestamp: DateTime.now()
+                            .subtract(const Duration(hours: 1, minutes: 49)),
+                        senderName: '',
+                        senderAvatar: '',
+                        isFromMe: true,
+                        status: MESSAGE_STATUS.SENT,
+                      ));
+                    }
+                    break;
+                }
+              }
+
+              Navigator.of(context).pop();
+              Get.back();
+
+              mediaGlassmorphicChangeState();
+              messages.refresh();
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                jumpToBottom();
+              });
+            },
+            inputTextStyle: TEXTSTYLES.kBodySmall
+                .copyWith(color: COLORS.kTextSoftBlueColor),
+            previewTextInputDecoration: InputDecoration(
+              hintText: 'Type something',
+              hintStyle: TEXTSTYLES.kBodySmall
+                  .copyWith(color: COLORS.kTextSoftBlueColor),
+            ),
+          ));
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  Future<void> openGallery() async {
+    final result = await Get.toNamed(
+      Routes.GALLERY_PICKER,
+    );
+    if (result != null) {
+      addSelectedMedia(result: result, closeMediaGlassmorphic: true);
+    }
+  }
+
+  void addSelectedMedia(
+      {@required dynamic result, bool closeMediaGlassmorphic = false}) {
+    if (closeMediaGlassmorphic) mediaGlassmorphicChangeState();
+
+    result.forEach((asset) async {
+      switch (asset["type"]) {
+        case "image":
+          {
+            messages.add(
+              ImageMessageModel(
+                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                  isLocal: true,
+                  metadata: ImageMetadata(
+                    height: double.parse(asset["height"].toString()),
+                    width: double.parse(asset["width"].toString()),
+                  ),
+                  senderAvatar: '',
+                  senderName: '',
+                  isFromMe: true,
+                  status: MESSAGE_STATUS.SENT,
+                  timestamp: DateTime.now()
+                      .subtract(const Duration(hours: 1, minutes: 49)),
+                  url: asset["path"]),
+            );
+          }
+          break;
+
+        case "video":
+          {
+            messages.add(
+              VideoMessageModel(
+                messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                metadata: VideoMetadata(
+                  durationInSeconds: asset["videoDuration"].inSeconds,
+                  height: double.parse(asset["height"].toString()),
+                  width: double.parse(asset["width"].toString()),
+                  isLocal: true,
+                  thumbnailBytes: await asset["thumbnail"],
+                  thumbnailUrl: '',
+                ),
+                url: asset["path"],
+                timestamp: DateTime.now()
+                    .subtract(const Duration(hours: 1, minutes: 49)),
+                senderName: '',
+                senderAvatar: '',
+                isFromMe: true,
+                status: MESSAGE_STATUS.SENT,
+              ),
+            );
+          }
+          break;
+        case "text":
+          {
+            messages.add(
+              TextMessageModel(
+                messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                text: asset["value"],
+                timestamp: DateTime.now()
+                    .subtract(const Duration(hours: 1, minutes: 49)),
+                senderName: '',
+                senderAvatar: '',
+                isFromMe: true,
+                status: MESSAGE_STATUS.SENT,
+              ),
+            );
+          }
+          break;
+
+        default:
+          break;
+      }
+    });
+    messages.refresh();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      jumpToBottom();
+    });
   }
 }

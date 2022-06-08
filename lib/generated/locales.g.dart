@@ -129,9 +129,16 @@ class LocaleKeys {
   static const CallHistory_notAnswered = 'CallHistory_notAnswered';
   static const CallPage_participants = 'CallPage_participants';
   static const CallPage_ringing = 'CallPage_ringing';
+  static const CallPage_calling = 'CallPage_calling';
   static const CallPage_currentlyOffline = 'CallPage_currentlyOffline';
   static const CallPage_sendAMessageButton = 'CallPage_sendAMessageButton';
   static const CallPage_close = 'CallPage_close';
+  static const recordCallDialog_title = 'recordCallDialog_title';
+  static const recordCallDialog_subtitle = 'recordCallDialog_subtitle';
+  static const recordCallDialog_acceptButton = 'recordCallDialog_acceptButton';
+  static const recordCallDialog_cancelButton = 'recordCallDialog_cancelButton';
+  static const IncomingCallPage_incomingVideoCall =
+      'IncomingCallPage_incomingVideoCall';
   static const newChat_newChatAppBar = 'newChat_newChatAppBar';
   static const newChat_slider_contacts = 'newChat_slider_contacts';
   static const newChat_slider_nearbyUsers = 'newChat_slider_nearbyUsers';
@@ -189,6 +196,13 @@ class LocaleKeys {
   static const MessagesPage_finishedLiveShareSubtitle =
       'MessagesPage_finishedLiveShareSubtitle';
   static const MessagesPage_stopSharing = 'MessagesPage_stopSharing';
+  static const MessagesPage_callMessageTitle = 'MessagesPage_callMessageTitle';
+  static const MessagesPage_callMessageSubtitleMissed =
+      'MessagesPage_callMessageSubtitleMissed';
+  static const MessagesPage_callMessageSubtitleDeclined =
+      'MessagesPage_callMessageSubtitleDeclined';
+  static const MessagesPage_callMessageActionButton =
+      'MessagesPage_callMessageActionButton';
   static const MessagesPage_deleteMessagesDialog_title =
       'MessagesPage_deleteMessagesDialog_title';
   static const MessagesPage_deleteMessagesDialog_titlePlural =
@@ -250,6 +264,11 @@ class LocaleKeys {
       'AddContacts_AddNicknameSubtitle';
   static const AddContacts_buttons_addToContacts =
       'AddContacts_buttons_addToContacts';
+  static const Permissions_AllowAccess = 'Permissions_AllowAccess';
+  static const Permissions_capturePhotos = 'Permissions_capturePhotos';
+  static const Permissions_camera = 'Permissions_camera';
+  static const Permissions_buttons_Continue = 'Permissions_buttons_Continue';
+  static const Permissions_buttons_Notnow = 'Permissions_buttons_Notnow';
 }
 
 class Locales {
@@ -345,9 +364,16 @@ class Locales {
     'CallHistory_notAnswered': 'Not answered',
     'CallPage_participants': 'Participants',
     'CallPage_ringing': 'Ringing...',
+    'CallPage_calling': 'Calling...',
     'CallPage_currentlyOffline': 'Currently offline',
     'CallPage_sendAMessageButton': 'Send a message instead',
     'CallPage_close': 'Close',
+    'recordCallDialog_title': 'This call will be recorded',
+    'recordCallDialog_subtitle':
+        'Other participants on this call will receive a notification about you recording this call. It is up to them whether they allow or deny it.',
+    'recordCallDialog_acceptButton': 'Record call',
+    'recordCallDialog_cancelButton': 'Cancel',
+    'IncomingCallPage_incomingVideoCall': 'Incoming video call on Heyo...',
     'newChat_newChatAppBar': 'New Chat',
     'newChat_slider_contacts': 'Contacts',
     'newChat_slider_nearbyUsers': 'Nearby users',
@@ -388,6 +414,10 @@ class Locales {
     'MessagesPage_finishedLiveShareOtherTitle': '@user shared their location',
     'MessagesPage_finishedLiveShareSubtitle': 'Ended on @day at @clock',
     'MessagesPage_stopSharing': 'Stop sharing',
+    'MessagesPage_callMessageTitle': '@user called you',
+    'MessagesPage_callMessageSubtitleMissed': 'Call missed',
+    'MessagesPage_callMessageSubtitleDeclined': 'Call declined',
+    'MessagesPage_callMessageActionButton': 'Call back',
     'MessagesPage_deleteMessagesDialog_title': 'Delete message?',
     'MessagesPage_deleteMessagesDialog_titlePlural': 'Delete @count messages?',
     'MessagesPage_deleteMessagesDialog_subtitle': 'Delete this message?',
@@ -433,5 +463,12 @@ class Locales {
     'AddContacts_AddNicknameSubtitle':
         'Nickname help you to identify others. Only you can \nsee this nickname.',
     'AddContacts_buttons_addToContacts': 'Add to contacts',
+    'Permissions_AllowAccess': 'Allow access',
+    'Permissions_capturePhotos':
+        'To capture photos and videos, you need to allow Heyo access to \n your device’s photos, \n media and files.',
+    'Permissions_camera':
+        'To capture photos and videos, you need to \n allow Heyo access to your camera.',
+    'Permissions_buttons_Continue': 'Continue',
+    'Permissions_buttons_Notnow': 'Not now',
   };
 }

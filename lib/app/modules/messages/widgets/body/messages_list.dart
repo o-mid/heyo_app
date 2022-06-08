@@ -18,50 +18,60 @@ class MessagesList extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<MessagesController>();
     return Obx(() {
-      return ListView.builder(
-        controller: controller.scrollController,
-        padding: EdgeInsets.only(top: 54.h, bottom: 16.h),
-        itemCount: controller.messages.length + 1,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return BeginningOfMessagesHeader(
-              chat: controller.args.chat,
-            );
+      // when the media Media Glassmorphic is Open tap on the rest of the screen will close it
+      return GestureDetector(
+        onTap: () {
+          if (controller.isMediaGlassmorphicOpen.value) {
+            controller.isMediaGlassmorphicOpen.value = false;
           }
-
-          final message = controller.messages[index - 1];
-          final prevMessage = index == 1 ? null : controller.messages[index - 2];
-
-          // Adds date header at beginning of new messages in a certain date
-          var dateHeaderWidgets = <Widget>[];
-          if (prevMessage == null || !prevMessage.timestamp.isSameDate(message.timestamp)) {
-            dateHeaderWidgets = [
-              CustomSizes.mediumSizedBoxHeight,
-              Text(
-                message.timestamp.differenceFromNow(),
-                style: TEXTSTYLES.kBodyTag.copyWith(
-                  color: COLORS.kTextBlueColor,
-                  fontSize: 10.sp,
-                ),
-              ),
-              CustomSizes.mediumSizedBoxHeight,
-            ];
-          }
-
-          return AutoScrollTag(
-            key: Key(index.toString()),
-            index: index,
-            controller: controller.scrollController,
-            child: Column(
-              children: [
-                ...dateHeaderWidgets,
-                MessageSelectionWrapper(
-                  message: message,
-                ),
-              ],
-            ),
-          );
         },
+        child: ListView.builder(
+          controller: controller.scrollController,
+          padding: EdgeInsets.only(top: 54.h, bottom: 16.h),
+          itemCount: controller.messages.length + 1,
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return BeginningOfMessagesHeader(
+                chat: controller.args.chat,
+              );
+            }
+
+            final message = controller.messages[index - 1];
+            final prevMessage =
+                index == 1 ? null : controller.messages[index - 2];
+
+            // Adds date header at beginning of new messages in a certain date
+            var dateHeaderWidgets = <Widget>[];
+            if (prevMessage == null ||
+                !prevMessage.timestamp.isSameDate(message.timestamp)) {
+              dateHeaderWidgets = [
+                CustomSizes.mediumSizedBoxHeight,
+                Text(
+                  message.timestamp.differenceFromNow(),
+                  style: TEXTSTYLES.kBodyTag.copyWith(
+                    color: COLORS.kTextBlueColor,
+                    fontSize: 10.sp,
+                  ),
+                ),
+                CustomSizes.mediumSizedBoxHeight,
+              ];
+            }
+
+            return AutoScrollTag(
+              key: Key(index.toString()),
+              index: index,
+              controller: controller.scrollController,
+              child: Column(
+                children: [
+                  ...dateHeaderWidgets,
+                  MessageSelectionWrapper(
+                    message: message,
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       );
     });
   }
