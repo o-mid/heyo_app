@@ -8,11 +8,18 @@ import 'package:path_provider/path_provider.dart';
 
 class ShareFilesController extends GetxController {
   late TextEditingController inputController;
-  RxList resetFiles = [].obs;
+
+  RxList<FileModel> recentFiles = <FileModel>[].obs;
   final count = 0.obs;
+  RxBool showSearchBar = false.obs;
+  RxBool isTextInputFocused = false.obs;
   @override
   void onInit() {
     inputController = TextEditingController();
+    inputController.addListener(() {
+      searchFiles(inputController.text);
+    });
+
     super.onInit();
   }
 
@@ -35,7 +42,7 @@ class ShareFilesController extends GetxController {
 
     result.files.forEach((element) async {
       final newfile = await saveFile(element);
-      resetFiles.add(FileModel(
+      recentFiles.add(FileModel(
           extension: element.extension ?? "",
           name: element.name,
           path: newfile.path,
@@ -43,7 +50,7 @@ class ShareFilesController extends GetxController {
           timestamp: DateTime.now(),
           isImage: isImageFromString(element.extension ?? "")));
     });
-    resetFiles.refresh();
+    recentFiles.refresh();
     // Get.back();
   }
 
@@ -71,6 +78,18 @@ class ShareFilesController extends GetxController {
     } else {
       return false;
     }
+  }
+
+  RxList<FileModel> searchSuggestions = <FileModel>[].obs;
+  void searchFiles(String query) {
+    searchSuggestions.value = recentFiles.where((file) {
+      String fileName = file.name.toLowerCase();
+      String inputedQuery = query.toLowerCase();
+      return fileName.contains(inputedQuery);
+    }).toList();
+    searchSuggestions
+        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    searchSuggestions.refresh();
   }
 
   void increment() => count.value++;
