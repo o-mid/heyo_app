@@ -3,13 +3,14 @@ class FileModel {
   String name;
   String extension;
   String size;
-  String timestamp;
+  DateTime timestamp;
+  bool isImage;
 
-  FileModel({
-    required this.path,
-    required this.name,
-    required this.extension,
-    required this.size,
-    required this.timestamp,
-  });
+  FileModel(
+      {required this.path,
+      required this.name,
+      required this.extension,
+      required this.size,
+      required this.timestamp,
+      required this.isImage});
 }

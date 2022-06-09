@@ -1,8 +1,9 @@
 import 'dart:io';
-
+import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/share_files/models/file_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ShareFilesController extends GetxController {
@@ -33,11 +34,14 @@ class ShareFilesController extends GetxController {
     if (result == null) return;
 
     result.files.forEach((element) async {
-      resetFiles.add(element);
       final newfile = await saveFile(element);
-      print(element.path);
-      print(newfile.path);
-      print(element.extension);
+      resetFiles.add(FileModel(
+          extension: element.extension ?? "",
+          name: element.name,
+          path: newfile.path,
+          size: formatBytes(element.size, 1),
+          timestamp: DateTime.now(),
+          isImage: isImageFromString(element.extension ?? "")));
     });
     resetFiles.refresh();
     // Get.back();
@@ -47,6 +51,26 @@ class ShareFilesController extends GetxController {
     final appStorage = await getApplicationDocumentsDirectory();
     final newfile = File("${appStorage.path}/${file.name}");
     return File(file.path!).copy(newfile.path);
+  }
+
+  String formatBytes(int bytes, int decimals) {
+    if (bytes <= 0) return "0 B";
+    const suffixes = [
+      "B",
+      "KB",
+      "MB",
+      "GB",
+    ];
+    var i = (log(bytes) / log(1024)).floor();
+    return '${(bytes / pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
+  }
+
+  bool isImageFromString(String str) {
+    if (str == "jpg" || str == "jpeg" || str == "png") {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   void increment() => count.value++;

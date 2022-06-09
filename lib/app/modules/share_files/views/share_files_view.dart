@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:heyo/app/modules/share_files/models/file_model.dart';
+import 'package:heyo/app/modules/share_files/widgets/file_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
@@ -81,11 +84,10 @@ class ShareFilesView extends GetView<ShareFilesController> {
                   shrinkWrap: true,
                   itemCount: controller.resetFiles.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                        padding: EdgeInsets.all(8),
-                        width: 200,
-                        height: 40,
-                        color: Colors.red);
+                    return FileWidget(
+                      file: controller.resetFiles[index],
+                      onTap: () {},
+                    );
                   },
                 ),
               )

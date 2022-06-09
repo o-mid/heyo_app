@@ -239,6 +239,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/moneyIcon.svg
   SvgGenImage get moneyIcon => const SvgGenImage('assets/svg/moneyIcon.svg');
 
+  /// File path: assets/svg/mp3Icon.svg
+  SvgGenImage get mp3Icon => const SvgGenImage('assets/svg/mp3Icon.svg');
+
   /// File path: assets/svg/multipleSelectIcon.svg
   SvgGenImage get multipleSelectIcon =>
       const SvgGenImage('assets/svg/multipleSelectIcon.svg');
@@ -282,6 +285,9 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/play_icon.svg
   SvgGenImage get playIcon => const SvgGenImage('assets/svg/play_icon.svg');
+
+  /// File path: assets/svg/pptxIcon.svg
+  SvgGenImage get pptxIcon => const SvgGenImage('assets/svg/pptxIcon.svg');
 
   /// File path: assets/svg/record_icon.svg
   SvgGenImage get recordIcon => const SvgGenImage('assets/svg/record_icon.svg');
