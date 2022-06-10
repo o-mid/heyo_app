@@ -13,8 +13,14 @@ import 'package:intl/intl.dart';
 class FileWidget extends StatelessWidget {
   final FileModel file;
   final void Function()? onTap;
-  const FileWidget({Key? key, required this.file, required this.onTap})
-      : super(key: key);
+  final void Function()? onLongPress;
+
+  const FileWidget({
+    Key? key,
+    required this.file,
+    required this.onTap,
+    this.onLongPress,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +31,8 @@ class FileWidget extends StatelessWidget {
       displyTime = DateFormat('H:mm').format(file.timestamp);
     }
     return GestureDetector(
-        onTap: () {},
+        onLongPress: onLongPress,
+        onTap: onTap,
         child: Column(
           children: [
             Padding(
@@ -91,15 +98,29 @@ class FileWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Text(
-                    displyTime,
-                    style: TextStyle(
-                      fontFamily: FONTS.interFamily,
-                      fontWeight: FONTS.Medium,
-                      fontSize: 10.sp,
-                      color: COLORS.kTextSoftBlueColor,
-                    ),
-                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        displyTime,
+                        style: TextStyle(
+                          fontFamily: FONTS.interFamily,
+                          fontWeight: FONTS.Medium,
+                          fontSize: 10.sp,
+                          color: COLORS.kTextSoftBlueColor,
+                        ),
+                      ),
+                      Checkbox(
+                          activeColor: COLORS.kGreenMainColor,
+                          // fillColor: MaterialStateProperty.all<Color>(
+                          //     COLORS.kGreenMainColor),
+                          shape: const CircleBorder(),
+                          value: file.isSelected,
+                          onChanged: (v) {
+                            onLongPress!();
+                          }),
+                    ],
+                  )
                 ],
               ),
             ),

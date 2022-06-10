@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:heyo/app/modules/share_files/models/file_model.dart';
 import 'package:heyo/app/modules/share_files/widgets/file_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
@@ -12,7 +8,6 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_fi
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-
 import '../controllers/share_files_controller.dart';
 
 class ShareFilesView extends GetView<ShareFilesController> {
@@ -115,7 +110,14 @@ class ShareFilesView extends GetView<ShareFilesController> {
                         itemBuilder: (BuildContext context, int index) {
                           return FileWidget(
                             file: controller.searchSuggestions[index],
-                            onTap: () {},
+                            onLongPress: () {
+                              controller.addSelectedFile(
+                                  controller.searchSuggestions[index]);
+                            },
+                            onTap: () {
+                              controller.openFile(
+                                  controller.searchSuggestions[index].path);
+                            },
                           );
                         },
                       )
@@ -125,10 +127,39 @@ class ShareFilesView extends GetView<ShareFilesController> {
                         itemBuilder: (BuildContext context, int index) {
                           return FileWidget(
                             file: controller.recentFiles[index],
-                            onTap: () {},
+                            onLongPress: () {
+                              controller.addSelectedFile(
+                                  controller.recentFiles[index]);
+                            },
+                            onTap: () {
+                              controller
+                                  .openFile(controller.recentFiles[index].path);
+                            },
                           );
                         },
                       ),
+              ),
+              const Divider(
+                color: COLORS.kMessagingDividerColor,
+                thickness: 4,
+              ),
+              Padding(
+                padding: CustomSizes.contentPaddingWidth,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    controller.selectedFiles.isNotEmpty
+                        ? Text("${controller.selectedFiles.length}",
+                            style: TEXTSTYLES.kBodySmall.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: COLORS.kGreenMainColor))
+                        : const SizedBox(),
+                    IconButton(
+                        //TODO : send BTN
+                        onPressed: () {},
+                        icon: Assets.svg.sendIcon.svg())
+                  ],
+                ),
               )
             ],
           ));

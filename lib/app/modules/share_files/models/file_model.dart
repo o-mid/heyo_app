@@ -5,6 +5,7 @@ class FileModel {
   String size;
   DateTime timestamp;
   bool isImage;
+  bool isSelected;
 
   FileModel(
       {required this.path,
@@ -12,5 +13,6 @@ class FileModel {
       required this.extension,
       required this.size,
       required this.timestamp,
-      required this.isImage});
+      required this.isImage,
+      required this.isSelected});
 }
