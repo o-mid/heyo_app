@@ -40,25 +40,26 @@ class ShareFilesController extends GetxController {
     final result = await FilePicker.platform
         .pickFiles(allowMultiple: true, type: FileType.any);
 
-    if (result == null) return;
-
-    result.files.forEach((element) async {
-      final newfile = await saveFile(element);
-      recentFiles.add(FileModel(
-          extension: element.extension ?? "",
-          name: element.name,
-          path: newfile.path,
-          size: formatBytes(element.size, 1),
-          timestamp: DateTime.now(),
-          isSelected: false,
-          isImage: isImageFromString(element.extension ?? "")));
-    });
-    recentFiles.refresh();
-    // Get.back();
+    if (result == null) {
+      return;
+    } else {
+      final appStorage = await getApplicationDocumentsDirectory();
+      for (var element in result.files) {
+        final newfile = await saveFile(element, appStorage);
+        recentFiles.add(FileModel(
+            extension: element.extension ?? "",
+            name: element.name,
+            path: newfile.path,
+            size: formatBytes(element.size, 1),
+            timestamp: DateTime.now(),
+            isSelected: false,
+            isImage: isImageFromString(element.extension ?? "")));
+      }
+      sendSelectedFiles(recentFiles);
+    }
   }
 
-  Future<File> saveFile(PlatformFile file) async {
-    final appStorage = await getApplicationDocumentsDirectory();
+  Future<File> saveFile(PlatformFile file, Directory appStorage) async {
     final newfile = File("${appStorage.path}/${file.name}");
     return File(file.path!).copy(newfile.path);
   }
@@ -108,9 +109,15 @@ class ShareFilesController extends GetxController {
     } else {
       selectedFiles.removeWhere((e) => e.path == file.path);
     }
-    print(selectedFiles);
+
     recentFiles.refresh();
     searchSuggestions.refresh();
+  }
+
+  void sendSelectedFiles(RxList<FileModel> Files) {
+    Get.back(
+      result: Files,
+    );
   }
 
   void increment() => count.value++;

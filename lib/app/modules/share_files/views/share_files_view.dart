@@ -155,8 +155,10 @@ class ShareFilesView extends GetView<ShareFilesController> {
                                 color: COLORS.kGreenMainColor))
                         : const SizedBox(),
                     IconButton(
-                        //TODO : send BTN
-                        onPressed: () {},
+                        onPressed: () {
+                          controller
+                              .sendSelectedFiles(controller.selectedFiles);
+                        },
                         icon: Assets.svg.sendIcon.svg())
                   ],
                 ),
