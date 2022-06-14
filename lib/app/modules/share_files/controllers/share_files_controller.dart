@@ -9,10 +9,8 @@ import 'package:path_provider/path_provider.dart';
 
 class ShareFilesController extends GetxController {
   late TextEditingController inputController;
-
   RxList<FileModel> recentFiles = <FileModel>[].obs;
   RxList<FileModel> selectedFiles = <FileModel>[].obs;
-  final count = 0.obs;
   RxBool showSearchBar = false.obs;
   RxBool isTextInputFocused = false.obs;
   @override
@@ -33,29 +31,44 @@ class ShareFilesController extends GetxController {
   @override
   void onClose() {
     inputController.dispose();
+
     super.onClose();
   }
 
   pickFiles() async {
-    final result = await FilePicker.platform
-        .pickFiles(allowMultiple: true, type: FileType.any);
+    final result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      type: FileType.any,
+    );
 
-    if (result == null) {
-      return;
-    } else {
+    if (result != null) {
       final appStorage = await getApplicationDocumentsDirectory();
       for (var element in result.files) {
         final newfile = await saveFile(element, appStorage);
-        recentFiles.add(FileModel(
-            extension: element.extension ?? "",
-            name: element.name,
-            path: newfile.path,
-            size: formatBytes(element.size, 1),
-            timestamp: DateTime.now(),
-            isSelected: false,
-            isImage: isImageFromString(element.extension ?? "")));
+        recentFiles.insert(
+            0,
+            FileModel(
+                extension: element.extension ?? "",
+                name: element.name,
+                path: newfile.path,
+                size: formatBytes(element.size, 1),
+                timestamp: DateTime.now(),
+                isSelected: false,
+                isImage: isImageFromString(element.extension ?? "")));
+        selectedFiles.insert(
+            0,
+            FileModel(
+                extension: element.extension ?? "",
+                name: element.name,
+                path: newfile.path,
+                size: formatBytes(element.size, 1),
+                timestamp: DateTime.now(),
+                isSelected: false,
+                isImage: isImageFromString(element.extension ?? "")));
       }
-      sendSelectedFiles(recentFiles);
+      sendSelectedFiles(selectedFiles);
+    } else {
+      return;
     }
   }
 
@@ -114,11 +127,18 @@ class ShareFilesController extends GetxController {
     searchSuggestions.refresh();
   }
 
-  void sendSelectedFiles(RxList<FileModel> Files) {
+  void sendSelectedFiles(RxList<FileModel> files) {
+    RxList<FileModel> tempFiles = <FileModel>[].obs;
+    tempFiles.addAll(files);
+    for (var element in recentFiles) {
+      element.isSelected = false;
+    }
+    selectedFiles.clear();
+    recentFiles.refresh();
+    selectedFiles.refresh();
+
     Get.back(
-      result: Files,
+      result: tempFiles,
     );
   }
-
-  void increment() => count.value++;
 }

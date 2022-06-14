@@ -1102,7 +1102,9 @@ class MessagesController extends GetxController {
               DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
         ));
       });
+      mediaGlassmorphicChangeState();
       messages.refresh();
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         jumpToBottom();
       });

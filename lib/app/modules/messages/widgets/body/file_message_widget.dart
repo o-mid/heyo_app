@@ -36,11 +36,13 @@ class FileMessageWidget extends StatelessWidget {
                         height: 32,
                         width: 32,
                         child: message.metadata.isImage
-                            ? Image.file(
-                                File(message.metadata.path),
-                                alignment: Alignment.center,
-                                fit: BoxFit.cover,
-                              )
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(4.0),
+                                child: Image.file(
+                                  File(message.metadata.path),
+                                  alignment: Alignment.center,
+                                  fit: BoxFit.cover,
+                                ))
                             : Stack(
                                 alignment: Alignment.center,
                                 children: [

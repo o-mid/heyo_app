@@ -148,12 +148,10 @@ class ShareFilesView extends GetView<ShareFilesController> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    controller.selectedFiles.isNotEmpty
-                        ? Text("${controller.selectedFiles.length}",
-                            style: TEXTSTYLES.kBodySmall.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: COLORS.kGreenMainColor))
-                        : const SizedBox(),
+                    Text("${controller.selectedFiles.length}",
+                        style: TEXTSTYLES.kBodySmall.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: COLORS.kGreenMainColor)),
                     IconButton(
                         onPressed: () {
                           controller

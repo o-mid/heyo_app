@@ -112,8 +112,6 @@ class FileWidget extends StatelessWidget {
                       ),
                       Checkbox(
                           activeColor: COLORS.kGreenMainColor,
-                          // fillColor: MaterialStateProperty.all<Color>(
-                          //     COLORS.kGreenMainColor),
                           shape: const CircleBorder(),
                           value: file.isSelected,
                           onChanged: (v) {
