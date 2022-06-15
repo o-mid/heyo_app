@@ -3,8 +3,6 @@
 ///  FlutterGen
 /// *****************************************************
 
-// coverage:ignore-file
-// ignore_for_file: type=lint
 // ignore_for_file: directives_ordering,unnecessary_import
 
 import 'package:flutter/widgets.dart';
@@ -139,6 +137,9 @@ class $AssetsSvgGen {
   SvgGenImage get chatOutlined =>
       const SvgGenImage('assets/svg/chat_outlined.svg');
 
+  /// File path: assets/svg/clearIcon.svg
+  SvgGenImage get clearIcon => const SvgGenImage('assets/svg/clearIcon.svg');
+
   /// File path: assets/svg/clock.svg
   SvgGenImage get clock => const SvgGenImage('assets/svg/clock.svg');
 
@@ -159,6 +160,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/delete_icon.svg
   SvgGenImage get deleteIcon => const SvgGenImage('assets/svg/delete_icon.svg');
 
+  /// File path: assets/svg/docIcon.svg
+  SvgGenImage get docIcon => const SvgGenImage('assets/svg/docIcon.svg');
+
   /// File path: assets/svg/dot_column.svg
   SvgGenImage get dotColumn => const SvgGenImage('assets/svg/dot_column.svg');
 
@@ -178,6 +182,9 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/filter_icon.svg
   SvgGenImage get filterIcon => const SvgGenImage('assets/svg/filter_icon.svg');
+
+  /// File path: assets/svg/folderIcon.svg
+  SvgGenImage get folderIcon => const SvgGenImage('assets/svg/folderIcon.svg');
 
   /// File path: assets/svg/forward_icon.svg
   SvgGenImage get forwardIcon =>
@@ -232,6 +239,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/moneyIcon.svg
   SvgGenImage get moneyIcon => const SvgGenImage('assets/svg/moneyIcon.svg');
 
+  /// File path: assets/svg/mp3Icon.svg
+  SvgGenImage get mp3Icon => const SvgGenImage('assets/svg/mp3Icon.svg');
+
   /// File path: assets/svg/multipleSelectIcon.svg
   SvgGenImage get multipleSelectIcon =>
       const SvgGenImage('assets/svg/multipleSelectIcon.svg');
@@ -267,11 +277,17 @@ class $AssetsSvgGen {
   SvgGenImage get pauseRecordOutlinedIcon =>
       const SvgGenImage('assets/svg/pause_record_outlined_icon.svg');
 
+  /// File path: assets/svg/pdfIcon.svg
+  SvgGenImage get pdfIcon => const SvgGenImage('assets/svg/pdfIcon.svg');
+
   /// File path: assets/svg/personIcon.svg
   SvgGenImage get personIcon => const SvgGenImage('assets/svg/personIcon.svg');
 
   /// File path: assets/svg/play_icon.svg
   SvgGenImage get playIcon => const SvgGenImage('assets/svg/play_icon.svg');
+
+  /// File path: assets/svg/pptxIcon.svg
+  SvgGenImage get pptxIcon => const SvgGenImage('assets/svg/pptxIcon.svg');
 
   /// File path: assets/svg/record_icon.svg
   SvgGenImage get recordIcon => const SvgGenImage('assets/svg/record_icon.svg');
@@ -299,6 +315,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/reply_outlined.svg
   SvgGenImage get replyOutlined =>
       const SvgGenImage('assets/svg/reply_outlined.svg');
+
+  /// File path: assets/svg/searchIcon.svg
+  SvgGenImage get searchIcon => const SvgGenImage('assets/svg/searchIcon.svg');
 
   /// File path: assets/svg/search_nearby.svg
   SvgGenImage get searchNearby =>
@@ -363,23 +382,19 @@ class Assets {
   static const $AssetsSvgGen svg = $AssetsSvgGen();
 }
 
-class AssetGenImage {
-  const AssetGenImage(this._assetName);
-
-  final String _assetName;
+class AssetGenImage extends AssetImage {
+  const AssetGenImage(String assetName) : super(assetName);
 
   Image image({
     Key? key,
-    AssetBundle? bundle,
     ImageFrameBuilder? frameBuilder,
+    ImageLoadingBuilder? loadingBuilder,
     ImageErrorWidgetBuilder? errorBuilder,
     String? semanticLabel,
     bool excludeFromSemantics = false,
-    double? scale = 1.0,
     double? width,
     double? height,
     Color? color,
-    Animation<double>? opacity,
     BlendMode? colorBlendMode,
     BoxFit? fit,
     AlignmentGeometry alignment = Alignment.center,
@@ -388,24 +403,19 @@ class AssetGenImage {
     bool matchTextDirection = false,
     bool gaplessPlayback = false,
     bool isAntiAlias = false,
-    String? package,
     FilterQuality filterQuality = FilterQuality.low,
-    int? cacheWidth,
-    int? cacheHeight,
   }) {
-    return Image.asset(
-      _assetName,
+    return Image(
       key: key,
-      bundle: bundle,
+      image: this,
       frameBuilder: frameBuilder,
+      loadingBuilder: loadingBuilder,
       errorBuilder: errorBuilder,
       semanticLabel: semanticLabel,
       excludeFromSemantics: excludeFromSemantics,
-      scale: scale,
       width: width,
       height: height,
       color: color,
-      opacity: opacity,
       colorBlendMode: colorBlendMode,
       fit: fit,
       alignment: alignment,
@@ -414,14 +424,11 @@ class AssetGenImage {
       matchTextDirection: matchTextDirection,
       gaplessPlayback: gaplessPlayback,
       isAntiAlias: isAntiAlias,
-      package: package,
       filterQuality: filterQuality,
-      cacheWidth: cacheWidth,
-      cacheHeight: cacheHeight,
     );
   }
 
-  String get path => _assetName;
+  String get path => assetName;
 }
 
 class SvgGenImage {

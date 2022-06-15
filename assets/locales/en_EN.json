@@ -255,5 +255,11 @@
       "Continue": "Continue",
       "Notnow": "Not now"
     }
+  },
+  "shareFilePage": {
+    "appbarTitle": "Send files",
+    "textInputTitle": "Search in files",
+    "searchResults": "Search results",
+    "mostRecent": "Most recent"
   }
 }

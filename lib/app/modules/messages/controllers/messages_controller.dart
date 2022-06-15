@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:heyo/app/modules/messages/data/models/messages/file_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
+import 'package:heyo/app/modules/share_files/models/file_model.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -806,7 +809,8 @@ class MessagesController extends GetxController {
         messageId: "${index++}",
         callStatus: CallMessageStatus.declined,
         callType: CallMessageType.video,
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
@@ -814,7 +818,8 @@ class MessagesController extends GetxController {
         messageId: "${index++}",
         callStatus: CallMessageStatus.missed,
         callType: CallMessageType.audio,
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
@@ -1066,9 +1071,43 @@ class MessagesController extends GetxController {
           break;
       }
     });
+    mediaGlassmorphicChangeState();
     messages.refresh();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       jumpToBottom();
     });
+  }
+
+  Future<void> openFiles() async {
+    final result = await Get.toNamed(
+      Routes.SHARE_FILES,
+    );
+    if (result != null) {
+      result.forEach((asset) async {
+        messages.add(FileMessageModel(
+          senderName: '',
+          senderAvatar: '',
+          isFromMe: true,
+          status: MESSAGE_STATUS.SENT,
+          messageId: "${messages.lastIndexOf(messages.last) + 1}",
+          metadata: FileMetaData(
+            extension: asset.extension,
+            name: asset.name,
+            path: asset.path,
+            size: asset.size,
+            timestamp: asset.timestamp,
+            isImage: asset.isImage,
+          ),
+          timestamp:
+              DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+        ));
+      });
+      mediaGlassmorphicChangeState();
+      messages.refresh();
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        jumpToBottom();
+      });
+    }
   }
 }
