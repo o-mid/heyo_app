@@ -4,8 +4,6 @@ import 'package:heyo/app/modules/call_controller/call_state.dart';
 
 enum P2P_STATUS { ERROR, IN_PROGRESS, SUCCESS, NONE }
 
-//enum CALL_STATUS { ON_GOING, ACCEPTING_CALL, NONE, ACCEPTED_CALL,CALL_RECEIVED }
-
 class P2PState extends GetxController {
   final loginState = P2P_STATUS.NONE.obs;
   final callState = CallState.none().obs;

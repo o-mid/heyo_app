@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
+import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/list_header_widget.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import '../../shared/utils/constants/fonts.dart';
@@ -411,7 +414,19 @@ class _searchInContactsBody extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                           onTap: () {
                             //TODO should be changed
-                            controller.startCall(controller.searchSuggestions[index].walletAddress);
+
+                            //TODO put right data
+                            Get.toNamed(
+                              Routes.CALL,
+                              arguments: CallViewArgumentsModel(
+                                user: UserModel(
+                                  name: "Boiled Dancer",
+                                  icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
+                                  isVerified: true,
+                                  walletAddress: controller.searchSuggestions[index].walletAddress,
+                                ),
+                              ),
+                            );
                            /* openUserPreviewBottomSheet(
                                 controller.searchSuggestions[index]);*/
                           },

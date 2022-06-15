@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
@@ -35,11 +34,13 @@ class P2PNodeResponseStream {
     p2pState.responses.add(event);
 
     print("_onNewResponseEvent : eventName is: ${event.name.toString()}");
+    print("_onNewResponseEvent : body is: ${event.body.toString()}");
+
     if (event.name == P2PReqResNodeNames.login) {
-      if(event.error == null) {
-        p2pState.loginState.value=P2P_STATUS.SUCCESS;
+      if (event.error == null) {
+        p2pState.loginState.value = P2P_STATUS.SUCCESS;
       } else {
-        p2pState.loginState.value=P2P_STATUS.ERROR;
+        p2pState.loginState.value = P2P_STATUS.ERROR;
       }
       // this means the login was successfully sent
       //loginState.value = P2P_STATE.SUCCESS;

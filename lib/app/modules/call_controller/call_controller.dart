@@ -1,40 +1,39 @@
-import 'dart:convert';
-
-import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
-import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/p2p_node/login.dart';
 import 'package:heyo/app/modules/web-rtc/web-rtc-connection.dart';
 
-class CallConnectionController extends GetxController{
+class CallConnectionController extends GetxController {
   WebRTCConnection webRTCConnection;
   Login login;
 
   @override
-  void onInit(){
+  void onInit() {
     webRTCConnection.initiate();
   }
-  CallConnectionController({required this.webRTCConnection, required this.login});
+
+  CallConnectionController(
+      {required this.webRTCConnection, required this.login});
 
   Future startCall(String remoteId) async {
-    String offer = await jsonEncode(await webRTCConnection.createOffer());
-
-    return login.sendOffer(offer, remoteId);
+    String offer = await webRTCConnection.createSDP(true);
+    return login.sendSDP(offer, remoteId, null);
   }
 
-  acceptCall(String session, String eventId) async {
-    webRTCConnection.setRemoteDescriptionWithOfferResult(session);
+  Future acceptCall(String session, String eventId, String remotePeerId,
+      String remoteCoreId) async {
+    print("sebdiubg acceptt");
+    //await webRTCConnection.setRemoteDescriptionWithOfferResult(session);
+    await webRTCConnection.setRemoteDescription(session);
 
-    final acceptedCallResponse = await webRTCConnection.getAcceptedOfferAnswerResult();
-    FlutterP2pCommunicator.sendResponse(
-        info: P2PReqResNodeModel(
-            name: P2PReqResNodeNames.login,
-            body: acceptedCallResponse,
-            id: eventId));
+    final answer = await webRTCConnection.createSDP(false);
+    print("sebdiubg acceptt121");
+    return await login.sendSDP(answer, remoteCoreId, remotePeerId);
   }
 
-  callAccepted(String sessionText, String candidate) async {
-    webRTCConnection.setRemoteDescriptionWithOfferResult(sessionText);
-    webRTCConnection.setCandidate(candidate);
+  callAccepted(String sessionText) async {
+    //await  webRTCConnection.setRemoteDescriptionWithAnswerResult(sessionText);
+    await webRTCConnection.setRemoteDescription(sessionText);
+
+    // webRTCConnection.setCandidate(candidate);
   }
 }

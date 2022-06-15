@@ -207,8 +207,4 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
     }
   }
 
-  //TODO remove its for testing
-  void startCall(String walletAddress) {
-    callConnectionController.startCall(walletAddress);
-  }
 }

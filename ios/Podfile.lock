@@ -23,6 +23,9 @@ PODS:
     - Flutter
   - flutter_secure_storage (3.3.1):
     - Flutter
+  - flutter_webrtc (0.7.1):
+    - Flutter
+    - WebRTC-SDK (= 97.4692.05)
   - geolocator_apple (1.2.0):
     - Flutter
   - GoogleDataTransport (9.1.4):
@@ -111,6 +114,7 @@ PODS:
     - Flutter
   - wakelock (0.0.1):
     - Flutter
+  - WebRTC-SDK (97.4692.05)
 
 DEPENDENCIES:
   - audio_session (from `.symlinks/plugins/audio_session/ios`)
@@ -123,6 +127,7 @@ DEPENDENCIES:
   - flutter_osm_plugin (from `.symlinks/plugins/flutter_osm_plugin/ios`)
   - flutter_p2p_communicator (from `.symlinks/plugins/flutter_p2p_communicator/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - flutter_webrtc (from `.symlinks/plugins/flutter_webrtc/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - image_editor (from `.symlinks/plugins/image_editor/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
@@ -156,6 +161,7 @@ SPEC REPOS:
     - Protobuf
     - ReachabilitySwift
     - Tangram-es
+    - WebRTC-SDK
 
 EXTERNAL SOURCES:
   audio_session:
@@ -178,6 +184,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_p2p_communicator/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  flutter_webrtc:
+    :path: ".symlinks/plugins/flutter_webrtc/ios"
   geolocator_apple:
     :path: ".symlinks/plugins/geolocator_apple/ios"
   image_editor:
@@ -217,6 +225,7 @@ SPEC CHECKSUMS:
   flutter_osm_plugin: f06ae1e854af57270c61ae27bdb8a386cfd4afa5
   flutter_p2p_communicator: d33bc8529500d802aef378aedd31a450f7f74ffb
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
+  flutter_webrtc: c4d09b864e7a8e93ad931bb84eed0ceb1ed51444
   geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
   GoogleDataTransport: 5fffe35792f8b96ec8d6775f5eccd83c998d5a3b
   GoogleMLKit: 755661c46990a85e42278015f26400286d98ad95
@@ -246,7 +255,8 @@ SPEC CHECKSUMS:
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
   video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
+  WebRTC-SDK: a6ee40bda0e3f7dba057907c3897374005c5715b
 
-PODFILE CHECKSUM: 4ec3614b86fbfa704c2839d449cc6f275b3ceef6
+PODFILE CHECKSUM: 0720cd99b269cefc5b7b9120f2f38d5d2ef37b18
 
 COCOAPODS: 1.11.3

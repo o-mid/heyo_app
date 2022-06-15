@@ -9,6 +9,7 @@ class WebRTCConnection {
   late RTCPeerConnection _peerConnection;
   MediaStream? _localStream;
   Login login;
+  String candidate = "";
 
   WebRTCConnection({required this.login});
 
@@ -29,7 +30,7 @@ class WebRTCConnection {
     };
 
     MediaStream stream =
-        await navigator.mediaDevices.getUserMedia(mediaConstraints);
+        await  RTCFactoryNative.instance.navigator.mediaDevices.getUserMedia(mediaConstraints);
 
     _videoRenderer.srcObject = stream;
     return stream;
@@ -58,12 +59,16 @@ class WebRTCConnection {
     pc.addStream(_localStream!);
 
     pc.onIceCandidate = (e) {
+      print("candidate= ${(e.candidate != null)}");
+
       if (e.candidate != null) {
-        print(json.encode({
+        print("candidate= ${(e.candidate)}");
+
+        candidate = json.encode({
           'candidate': e.candidate.toString(),
           'sdpMid': e.sdpMid.toString(),
           'sdpMlineIndex': e.sdpMLineIndex,
-        }));
+        });
       }
     };
 
@@ -79,30 +84,26 @@ class WebRTCConnection {
     return pc;
   }
 
-  Future<String> createOffer() async {
-    RTCSessionDescription description =
-        await _peerConnection.createOffer({'offerToReceiveVideo': 1});
+  Future<String> createSDP(bool isOffer) async {
+    final RTCSessionDescription description;
+    if (isOffer) {
+      _offer = true;
+      description =
+          await _peerConnection.createOffer({'offerToReceiveVideo': 1});
+    } else {
+      description =
+          await _peerConnection.createAnswer({'offerToReceiveVideo': 1});
+    }
     var session = description.sdp.toString();
     _peerConnection.setLocalDescription(description);
-    return session;
+    return json.encode(parse(session));
   }
 
-
-  Future<String> _createAnswer() async {
-    RTCSessionDescription description =
-        await _peerConnection.createAnswer({'offerToReceiveVideo': 1});
-    var session = parse(description.sdp!);
-
-    _peerConnection.setLocalDescription(description);
-    return json.encode(session);
-  }
-
-  Future<Map<String, String>> getAcceptedOfferAnswerResult() async {
-    String candidate = "";
-    String session = await _createAnswer();
+  /*Future<Map<String, String>> getAcceptedOfferAnswerResult() async {
 
     _peerConnection.onIceCandidate = (e) {
       if (e.candidate != null) {
+        print("candidate: $e");
         candidate = jsonEncode({
           'candidate': e.candidate.toString(),
           'sdpMid': e.sdpMid.toString(),
@@ -110,30 +111,48 @@ class WebRTCConnection {
         });
       }
     };
-    while (candidate.isEmpty) {}
-    return {'sdpAnswer':session,'candidate':candidate};
-  }
+    _peerConnection.restartIce();
 
-  void setRemoteDescriptionWithOfferResult(String sessionText) async {
-    dynamic session = await jsonDecode('$sessionText');
+    String session = await _createAnswer();
+
+    while (candidate.isEmpty) {
+    }
+    return {'sdpAnswer': session, 'candidate': candidate};
+  }*/
+
+  Future setRemoteDescriptionWithOfferResult(String sessionText) async {
+    Map<String, dynamic> session = await jsonDecode(sessionText);
     String sdp = write(session, null);
     RTCSessionDescription description = RTCSessionDescription(sdp, 'offer');
-    print(description.toMap());
     await _peerConnection.setRemoteDescription(description);
   }
 
-  void setRemoteDescriptionWithAnswerResult(String sessionText) async {
-    dynamic session = await jsonDecode('$sessionText');
+  Future setRemoteDescriptionWithAnswerResult(String sessionText) async {
+    Map<String, dynamic> session = await jsonDecode(sessionText);
     String sdp = write(session, null);
     RTCSessionDescription description = RTCSessionDescription(sdp, 'answer');
+    await _peerConnection.setRemoteDescription(description);
+  }
+
+  bool _offer = false;
+
+  Future setRemoteDescription(String sessionText) async {
+    print("asfdfda ${_offer}");
+
+    print("asfdfda ${_offer ? 'answer' : 'offer'}");
+    dynamic session = await jsonDecode('$sessionText');
+    String sdp = write(session, null);
+    RTCSessionDescription description =
+        RTCSessionDescription(sdp, _offer ? 'answer' : 'offer');
     print(description.toMap());
     await _peerConnection.setRemoteDescription(description);
   }
-  void setCandidate(String candidateText)async{
 
-    dynamic session= await jsonDecode('$candidateText');
+  Future setCandidate(String candidateText) async {
+    dynamic session = await jsonDecode('$candidateText');
     print(session['candidate']);
-    dynamic candidate=new RTCIceCandidate(session['candidate'], session['sdpMid'], session['sdpMLineIndex']);
+    dynamic candidate = new RTCIceCandidate(
+        session['candidate'], session['sdpMid'], session['sdpMLineIndex']);
     await _peerConnection.addCandidate(candidate);
   }
 }
