@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
+import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 enum CallViewType {
   stack,
@@ -42,6 +45,8 @@ class CallController extends GetxController {
       participants.where((p) => p.status == CallParticipantStatus.inCall).length > 1;
 
   final recordState = RecordState.notRecording.obs;
+
+  final _screenRecorder = EdScreenRecorder();
 
   @override
   void onInit() {
@@ -88,16 +93,31 @@ class CallController extends GetxController {
     );
   }
 
-  // Todo
   void recordCall() {
-    Get.dialog(RecordCallDialog(onRecord: () {
+    Get.dialog(RecordCallDialog(onRecord: () async {
       recordState.value = RecordState.loading;
-      Future.delayed(const Duration(seconds: 2), () => recordState.value = RecordState.recording);
+
+      var permission = await Permission.storage.request();
+      if (!permission.isGranted) {
+        recordState.value = RecordState.notRecording;
+        return;
+      }
+
+      permission = await Permission.microphone.request();
+      if (!permission.isGranted) {
+        recordState.value = RecordState.notRecording;
+        return;
+      }
+      await _screenRecorder.startRecordScreen(
+        fileName: DateFormat('yMMddhhmmss').format(DateTime.now()),
+        audioEnable: true,
+      );
+      recordState.value = RecordState.recording;
     }));
   }
 
-  // Todo
-  void stopRecording() {
+  void stopRecording() async {
+    await _screenRecorder.stopRecord();
     recordState.value = RecordState.notRecording;
   }
 
@@ -118,8 +138,9 @@ class CallController extends GetxController {
   void flipVideoPositions() => isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   @override
-  void onClose() {
+  void onClose() async {
     callTimer?.cancel();
+    await _screenRecorder.stopRecord();
   }
 
   void reorderParticipants(int oldIndex, int newIndex) {
