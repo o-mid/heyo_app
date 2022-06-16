@@ -10,11 +10,13 @@ import 'package:heyo/app/modules/messages/data/models/messages/image_message_mod
 import 'package:heyo/app/modules/messages/data/models/messages/live_location_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/location_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/body/call_message_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/body/file_message_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/body/location/location_message_widget.dart';
+import 'package:heyo/app/modules/messages/widgets/body/multi_media_message_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/body/reactions_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -136,6 +138,11 @@ class _MessageContent extends StatelessWidget {
         return CallMessageWidget(message: message as CallMessageModel);
       case FileMessageModel:
         return FileMessageWidget(message: message as FileMessageModel);
+
+      case MultiMediaMessageModel:
+        return MultiMediaMessageWidget(
+            message: message as MultiMediaMessageModel);
+
       default:
         return const SizedBox.shrink();
     }
