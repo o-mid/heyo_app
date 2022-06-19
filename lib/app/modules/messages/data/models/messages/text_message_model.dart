@@ -13,6 +13,7 @@ class TextMessageModel extends MessageModel {
     super.status = MESSAGE_STATUS.SENDING,
     super.isFromMe = false,
     super.isForwarded = false,
+    super.type = CONTENT_TYPE.TEXT,
     super.isSelected = false,
     super.replyTo,
     super.reactions = const <String, ReactionModel>{},
@@ -23,6 +24,7 @@ class TextMessageModel extends MessageModel {
     String? text,
     String? messageId,
     MESSAGE_STATUS? status,
+    CONTENT_TYPE? type,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
     bool? isFromMe,
@@ -42,6 +44,7 @@ class TextMessageModel extends MessageModel {
       isSelected: isSelected ?? this.isSelected,
       reactions: reactions ?? this.reactions,
       replyTo: clearReply ? null : replyTo,
+      type: type ?? this.type,
     );
   }
 }

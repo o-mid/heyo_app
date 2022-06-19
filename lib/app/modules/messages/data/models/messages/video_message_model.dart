@@ -14,6 +14,7 @@ class VideoMessageModel extends MessageModel {
     required super.timestamp,
     required super.senderName,
     required super.senderAvatar,
+    super.type = CONTENT_TYPE.VIDEO,
     super.status = MESSAGE_STATUS.SENDING,
     super.isFromMe = false,
     super.isForwarded = false,
@@ -28,6 +29,7 @@ class VideoMessageModel extends MessageModel {
     MESSAGE_STATUS? status,
     bool? isLocal,
     DateTime? timestamp,
+    CONTENT_TYPE? type,
     Map<String, ReactionModel>? reactions,
     bool? isFromMe,
     bool? isForwarded,
@@ -47,6 +49,7 @@ class VideoMessageModel extends MessageModel {
       isSelected: isSelected ?? this.isSelected,
       reactions: reactions ?? this.reactions,
       replyTo: clearReply ? null : replyTo,
+      type: type ?? this.type,
     );
   }
 }

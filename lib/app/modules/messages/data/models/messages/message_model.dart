@@ -1,7 +1,17 @@
 import '../reaction_model.dart';
 import '../reply_to_model.dart';
 
-enum CONTENT_TYPE { TEXT, IMAGE, VIDEO, AUDIO, FILE }
+enum CONTENT_TYPE {
+  TEXT,
+  IMAGE,
+  VIDEO,
+  AUDIO,
+  FILE,
+  CALL,
+  LOCATION,
+  LIVE_LOCATION,
+  MULTI_MEDIA;
+}
 
 enum MESSAGE_STATUS {
   SENDING,
@@ -12,6 +22,7 @@ enum MESSAGE_STATUS {
 
 abstract class MessageModel {
   final MESSAGE_STATUS status;
+  final CONTENT_TYPE type;
   final String messageId;
   final DateTime timestamp;
   final ReplyToModel? replyTo;
@@ -27,6 +38,7 @@ abstract class MessageModel {
     required this.timestamp,
     required this.senderName,
     required this.senderAvatar,
+    required this.type,
     this.status = MESSAGE_STATUS.SENDING,
     this.isFromMe = false,
     this.isSelected = false,
@@ -39,6 +51,7 @@ abstract class MessageModel {
     String? messageId,
     MESSAGE_STATUS? status,
     DateTime? timestamp,
+    CONTENT_TYPE? type,
     Map<String, ReactionModel>? reactions,
     bool? isFromMe,
     bool? isForwarded,
