@@ -3,7 +3,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/message_model.dar
 import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 
 class MultiMediaMessageModel extends MessageModel {
-  final List<ImageMessageModel> mediaList;
+  final List<dynamic> mediaList;
 
   MultiMediaMessageModel({
     required this.mediaList,
@@ -16,6 +16,7 @@ class MultiMediaMessageModel extends MessageModel {
     bool? isSelected,
     bool clearReply = false,
     super.status = MESSAGE_STATUS.SENDING,
+    super.type = CONTENT_TYPE.MULTI_MEDIA,
     super.replyTo,
     super.reactions = const <String, ReactionModel>{},
   });
@@ -25,6 +26,7 @@ class MultiMediaMessageModel extends MessageModel {
     List<ImageMessageModel>? mediaList,
     String? messageId,
     MESSAGE_STATUS? status,
+    CONTENT_TYPE? type,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
     bool clearReply = false,
@@ -41,8 +43,9 @@ class MultiMediaMessageModel extends MessageModel {
         reactions: reactions ?? this.reactions,
         status: status ?? this.status,
         replyTo: clearReply ? null : replyTo,
-        isFromMe: isFromMe,
+        isFromMe: isFromMe ?? this.isFromMe,
         isForwarded: isForwarded,
+        type: type ?? this.type,
         isSelected: isSelected);
   }
 }

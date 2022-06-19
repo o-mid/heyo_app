@@ -1,11 +1,16 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+
+import 'video_message_player.dart';
 
 class MultiMediaMessageWidget extends StatelessWidget {
   final MultiMediaMessageModel message;
@@ -14,41 +19,66 @@ class MultiMediaMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black,
-      child: GridView.builder(
-          shrinkWrap: true,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2),
-          itemCount: message.mediaList.length,
-          itemBuilder: (context, index) {
-            return Container(
-              color: Colors.lightGreen,
-              width: 50,
-              height: 50,
-              child: Image.file(
-                File(message.mediaList[index].url),
-              ),
-            );
-            // return LayoutBuilder(builder: (context, constraints) {
-            //   final mWidth = (message.mediaList[index]).metadata.width;
-            //   final mHeight = (message.mediaList[index]).metadata.height;
-            //   final width = min(mWidth, constraints.maxWidth);
-            //   final height = width * (mHeight / mWidth);
-            //   return SizedBox(
-            //     width: width,
-            //     height: height,
-            //     child: ClipRRect(
-            //       borderRadius: BorderRadius.circular(8.r),
-            //       child: (message as ImageMessageModel).isLocal
-            //           ? ExtendedImage.file(
-            //               File((message as ImageMessageModel).url))
-            //           : ExtendedImage.network(
-            //               (message as ImageMessageModel).url),
-            //     ),
-            //   );
-            // });
-          }),
-    );
+    bool isMoreThanSix = message.mediaList.length > 6;
+
+    return GridView.builder(
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 8.w,
+          mainAxisSpacing: 8.w,
+        ),
+        itemCount: isMoreThanSix ? 6 : message.mediaList.length,
+        itemBuilder: (context, index) {
+          bool isMediaLocal;
+          bool isMediaVideo =
+              message.mediaList[index].type == 'CONTENT_TYPE.VIDEO';
+          isMediaVideo
+              ? isMediaLocal = message.mediaList[index].metadata.isLocal
+              : isMediaLocal = true;
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(8.r),
+            child: SizedBox(
+              width: 133.w,
+              height: 133.w,
+              child: isMoreThanSix && index == 5
+                  ? Stack(
+                      alignment: Alignment.center,
+                      fit: StackFit.passthrough,
+                      children: [
+                        ImageFiltered(
+                          imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                          child: isMediaLocal
+                              ? ExtendedImage.file(
+                                  File(message.mediaList[index].url),
+                                  fit: BoxFit.cover,
+                                )
+                              : ExtendedImage.network(
+                                  message.mediaList[index].url),
+                        ),
+                        Center(
+                          child: Text(
+                            '+${message.mediaList.length - 6}',
+                            style: TEXTSTYLES.kHeaderDisplay.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : isMediaVideo
+                      ? VideoMessagePlayer(
+                          message: message.mediaList[index],
+                        )
+                      : isMediaLocal
+                          ? ExtendedImage.file(
+                              File(message.mediaList[index].url),
+                              fit: BoxFit.cover,
+                            )
+                          : ExtendedImage.network(message.mediaList[index].url),
+            ),
+          );
+        });
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:heyo/app/modules/messages/data/models/messages/file_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
@@ -1003,11 +1004,11 @@ class MessagesController extends GetxController {
     }
   }
 
-  void addSelectedMedia(
-      {@required dynamic result, bool closeMediaGlassmorphic = false}) {
+  Future<void> addSelectedMedia(
+      {@required dynamic result, bool closeMediaGlassmorphic = false}) async {
     if (closeMediaGlassmorphic) mediaGlassmorphicChangeState();
 
-    List<ImageMessageModel>? tempImages = [];
+    List? tempImages = [];
     for (var element in result) {
       if (element["type"] == "image") {
         tempImages.add(ImageMessageModel(
@@ -1024,6 +1025,28 @@ class MessagesController extends GetxController {
           timestamp:
               DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
           url: element["path"],
+        ));
+      } else if (element["type"] == "video") {
+        Uint8List thumbnailBytes = await element["thumbnail"];
+        tempImages.add(VideoMessageModel(
+          messageId: "${messages.lastIndexOf(messages.last) + 1}",
+          metadata: VideoMetadata(
+            durationInSeconds: element["videoDuration"].inSeconds,
+            height: double.parse(element["height"].toString()),
+            width: double.parse(element["width"].toString()),
+            isLocal: false,
+            thumbnailBytes: thumbnailBytes,
+            thumbnailUrl:
+                "https://mixkit.imgix.net/static/home/video-thumb3.png",
+          ),
+          url: element["path"],
+          timestamp:
+              DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+          senderName: '',
+          senderAvatar: '',
+          isFromMe: true,
+          status: MESSAGE_STATUS.SENT,
+          type: CONTENT_TYPE.VIDEO,
         ));
       }
     }
