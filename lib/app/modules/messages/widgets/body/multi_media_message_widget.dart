@@ -5,10 +5,12 @@ import 'dart:ui';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 
 import 'video_message_player.dart';
 
@@ -22,21 +24,25 @@ class MultiMediaMessageWidget extends StatelessWidget {
     bool isMoreThanSix = message.mediaList.length > 6;
 
     return GridView.builder(
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 8.w,
-          mainAxisSpacing: 8.w,
-        ),
-        itemCount: isMoreThanSix ? 6 : message.mediaList.length,
-        itemBuilder: (context, index) {
-          bool isMediaLocal;
-          bool isMediaVideo =
-              message.mediaList[index].type == 'CONTENT_TYPE.VIDEO';
-          isMediaVideo
-              ? isMediaLocal = message.mediaList[index].metadata.isLocal
-              : isMediaLocal = true;
-          return ClipRRect(
+      shrinkWrap: true,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 8.w,
+        mainAxisSpacing: 8.w,
+      ),
+      itemCount: isMoreThanSix ? 6 : message.mediaList.length,
+      itemBuilder: (context, index) {
+        bool isMediaLocal;
+        bool isMediaVideo =
+            message.mediaList[index].type == 'CONTENT_TYPE.VIDEO';
+        isMediaVideo
+            ? isMediaLocal = message.mediaList[index].metadata.isLocal
+            : isMediaLocal = true;
+        return GestureDetector(
+          onTap: () {
+            Get.toNamed(Routes.MEDIA_VIEW);
+          },
+          child: ClipRRect(
             borderRadius: BorderRadius.circular(8.r),
             child: SizedBox(
               width: 133.w,
@@ -78,7 +84,9 @@ class MultiMediaMessageWidget extends StatelessWidget {
                             )
                           : ExtendedImage.network(message.mediaList[index].url),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }
