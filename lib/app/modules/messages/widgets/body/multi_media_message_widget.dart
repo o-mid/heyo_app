@@ -44,6 +44,8 @@ class MultiMediaMessageWidget extends StatelessWidget {
             Get.toNamed(Routes.MEDIA_VIEW,
                 arguments: MediaViewArgumentsModel(
                   mediaList: message.mediaList,
+                  isMultiMessage: true,
+                  multiMessage: message,
                   activeIndex: index,
                 ));
           },
