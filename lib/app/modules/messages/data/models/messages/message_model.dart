@@ -1,12 +1,7 @@
 import '../reaction_model.dart';
 import '../reply_to_model.dart';
 
-enum CONTENT_TYPE {
-  TEXT,
-  IMAGE,
-  VIDEO,
-  AUDIO,
-}
+enum CONTENT_TYPE { TEXT, IMAGE, VIDEO, AUDIO, FILE }
 
 enum MESSAGE_STATUS {
   SENDING,

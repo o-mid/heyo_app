@@ -44,12 +44,15 @@ class ForwardMassagesController extends GetxController {
     UserModel(
       name: "Crapps Wallbanger",
       walletAddress: 'CB92...969A',
-      icon: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+      icon:
+          "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
       nickname: "Nickname",
       chatModel: ChatModel(
         name: "Crapps Wallbanger",
-        icon: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
-        lastMessage: "I'm still waiting for the reply. I'll let you know once they get back to me.",
+        icon:
+            "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+        lastMessage:
+            "I'm still waiting for the reply. I'll let you know once they get back to me.",
         timestamp: "15:45",
       ),
     ),
@@ -62,7 +65,8 @@ class ForwardMassagesController extends GetxController {
       chatModel: ChatModel(
         name: "Fancy Potato",
         icon: "https://avatars.githubusercontent.com/u/6634136?v=4",
-        lastMessage: "I can arrange the meeting with her tomorrow if you're ok with that.",
+        lastMessage:
+            "I can arrange the meeting with her tomorrow if you're ok with that.",
         timestamp: "Yesterday",
         isOnline: true,
         isVerified: true,
@@ -91,7 +95,8 @@ class ForwardMassagesController extends GetxController {
       String inputedQuery = query.toLowerCase();
       return username.contains(inputedQuery);
     }).toList();
-    searchSuggestions.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    searchSuggestions
+        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     searchSuggestions.refresh();
   }
 

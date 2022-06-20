@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/website-interact/website_interact_binding.dart';
 
 import '../modules/account/bindings/account_binding.dart';
 import '../modules/account/views/account_view.dart';
@@ -34,12 +33,15 @@ import '../modules/new_chat/bindings/new_chat_binding.dart';
 import '../modules/new_chat/views/new_chat_view.dart';
 import '../modules/search_nearby/bindings/search_nearby_binding.dart';
 import '../modules/search_nearby/views/search_nearby_view.dart';
+import '../modules/share_files/bindings/share_files_binding.dart';
+import '../modules/share_files/views/share_files_view.dart';
 import '../modules/share_location/bindings/share_location_binding.dart';
 import '../modules/share_location/views/share_location_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 import '../modules/wallet/bindings/wallet_binding.dart';
 import '../modules/wallet/views/wallet_view.dart';
+import '../modules/website-interact/website_interact_binding.dart';
 import '../modules/website-interact/website_interact_view.dart';
 
 part 'app_routes.dart';
@@ -154,6 +156,11 @@ class AppPages {
       name: _Paths.INCOMING_CALL,
       page: () => IncomingCallView(),
       binding: IncomingCallBinding(),
+    ),
+    GetPage(
+      name: _Paths.SHARE_FILES,
+      page: () => const ShareFilesView(),
+      binding: ShareFilesBinding(),
     ),
   ];
 }

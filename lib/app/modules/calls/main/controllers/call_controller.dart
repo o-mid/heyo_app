@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
@@ -7,6 +8,8 @@ import 'package:heyo/app/modules/call_controller/call_state.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
+import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 
 enum CallViewType {
@@ -63,6 +66,8 @@ class CallController extends GetxController {
   RTCVideoRenderer getLocalVideRenderer() {
     return callConnectionController.getLocalVideRenderer();
   }
+
+  final _screenRecorder = EdScreenRecorder();
 
   @override
   void onInit() {
@@ -128,17 +133,32 @@ class CallController extends GetxController {
     );
   }
 
-  // Todo
   void recordCall() {
-    Get.dialog(RecordCallDialog(onRecord: () {
+    Get.dialog(RecordCallDialog(onRecord: () async {
       recordState.value = RecordState.loading;
-      Future.delayed(const Duration(seconds: 2),
-          () => recordState.value = RecordState.recording);
-    }));
-  }
+      var permission = await Permission.storage.request();
+      if (!permission.isGranted) {
+        recordState.value = RecordState.notRecording;
+        return;
+      }
 
-  // Todo
-  void stopRecording() {
+      permission = await Permission.microphone.request();
+      if (!permission.isGranted) {
+        recordState.value = RecordState.notRecording;
+        return;
+      }
+      await _screenRecorder.startRecordScreen(
+        fileName: DateFormat('yMMddhhmmss').format(DateTime.now()),
+        audioEnable: true,
+      );
+      recordState.value = RecordState.recording;
+
+    }));
+
+      }
+
+  void stopRecording() async {
+    await _screenRecorder.stopRecord();
     recordState.value = RecordState.notRecording;
   }
 
@@ -160,9 +180,10 @@ class CallController extends GetxController {
       isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   @override
-  void onClose() {
+  void onClose() async {
     callConnectionController.endCall();
     callTimer?.cancel();
+    await _screenRecorder.stopRecord();
   }
 
   void reorderParticipants(int oldIndex, int newIndex) {

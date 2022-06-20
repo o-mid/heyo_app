@@ -272,6 +272,10 @@ class LocaleKeys {
   static const Permissions_camera = 'Permissions_camera';
   static const Permissions_buttons_Continue = 'Permissions_buttons_Continue';
   static const Permissions_buttons_Notnow = 'Permissions_buttons_Notnow';
+  static const shareFilePage_appbarTitle = 'shareFilePage_appbarTitle';
+  static const shareFilePage_textInputTitle = 'shareFilePage_textInputTitle';
+  static const shareFilePage_searchResults = 'shareFilePage_searchResults';
+  static const shareFilePage_mostRecent = 'shareFilePage_mostRecent';
 }
 
 class Locales {
@@ -474,5 +478,9 @@ class Locales {
         'To capture photos and videos, you need to \n allow Heyo access to your camera.',
     'Permissions_buttons_Continue': 'Continue',
     'Permissions_buttons_Notnow': 'Not now',
+    'shareFilePage_appbarTitle': 'Send files',
+    'shareFilePage_textInputTitle': 'Search in files',
+    'shareFilePage_searchResults': 'Search results',
+    'shareFilePage_mostRecent': 'Most recent',
   };
 }
