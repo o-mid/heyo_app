@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
+import 'package:heyo/app/modules/shared/data/models/media_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
@@ -40,7 +41,11 @@ class MultiMediaMessageWidget extends StatelessWidget {
             : isMediaLocal = true;
         return GestureDetector(
           onTap: () {
-            Get.toNamed(Routes.MEDIA_VIEW);
+            Get.toNamed(Routes.MEDIA_VIEW,
+                arguments: MediaViewArgumentsModel(
+                  mediaList: message.mediaList,
+                  activeIndex: index,
+                ));
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8.r),

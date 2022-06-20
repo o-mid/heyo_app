@@ -273,6 +273,12 @@ class LocaleKeys {
   static const shareFilePage_textInputTitle = 'shareFilePage_textInputTitle';
   static const shareFilePage_searchResults = 'shareFilePage_searchResults';
   static const shareFilePage_mostRecent = 'shareFilePage_mostRecent';
+  static const mediaView_bottomSheet_edit = 'mediaView_bottomSheet_edit';
+  static const mediaView_bottomSheet_mediafiles =
+      'mediaView_bottomSheet_mediafiles';
+  static const mediaView_bottomSheet_delete = 'mediaView_bottomSheet_delete';
+  static const mediaView_bottomSheet_share = 'mediaView_bottomSheet_share';
+  static const mediaView_bottomSheet_save = 'mediaView_bottomSheet_save';
 }
 
 class Locales {
@@ -478,5 +484,10 @@ class Locales {
     'shareFilePage_textInputTitle': 'Search in files',
     'shareFilePage_searchResults': 'Search results',
     'shareFilePage_mostRecent': 'Most recent',
+    'mediaView_bottomSheet_edit': 'Edit',
+    'mediaView_bottomSheet_mediafiles': 'Media and files',
+    'mediaView_bottomSheet_delete': 'Delete',
+    'mediaView_bottomSheet_share': 'Share',
+    'mediaView_bottomSheet_save': 'Save to device',
   };
 }
