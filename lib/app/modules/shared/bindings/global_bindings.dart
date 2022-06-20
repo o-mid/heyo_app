@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/call_controller/call_controller.dart';
+import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/modules/calls/home/controllers/calls_controller.dart';
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
 import 'package:heyo/app/modules/information/get_share_info.dart';
@@ -33,10 +33,10 @@ class GlobalBindings extends Bindings {
     p2pState: p2pState,
     accountInfo: accountInfo,
   );
-  static WebRTCConnection webRTCConnection = WebRTCConnection(login: login);
+  static WebRTCConnection webRTCConnection = WebRTCConnection();
   static CallConnectionController callConnectionController =
       CallConnectionController(
-          webRTCConnection: webRTCConnection, login: login);
+          webRTCConnection: webRTCConnection, login: login, p2pState: p2pState);
 
   @override
   void dependencies() {

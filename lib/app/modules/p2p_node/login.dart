@@ -69,7 +69,7 @@ class Login {
     _sendingLoginRequest(_loginModel);
   }
 
-  Future<void> _sendingLoginRequest(P2PLoginBodyModel model) async {
+  Future<void> _sendingLoginRequest(dynamic model) async {
     int retryCount = 0;
     await Future.doWhile(() async {
       p2pState.loginState.value = P2P_STATUS.IN_PROGRESS;
@@ -124,8 +124,6 @@ class Login {
     return _connected;
   }
 
-
-
   Future sendSDP(String sdp, String remoteCoreId, String? remotePeerId) async {
     final localCoreId = await accountInfo.getCoreId();
     if (localCoreId == null) throw 'Core id is null!!';
@@ -150,6 +148,5 @@ class Login {
     _sendingLoginRequest(_loginModel);
   }
 }
-
 const int RETRY_DELAY = 100;
 const int RETRY_NUMBER = 4;

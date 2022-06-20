@@ -18,7 +18,6 @@ class HomeController extends GetxController {
       if (state is CallReceivedState) {
         Get.toNamed(Routes.INCOMING_CALL,
             arguments: IncomingCallViewArguments(
-                eventId: state.eventId,
                 session: state.session,
                 remoteCoreId: state.remoteCoreId,
                 remotePeerId: state.remotePeerId));

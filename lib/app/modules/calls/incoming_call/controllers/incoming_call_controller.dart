@@ -1,8 +1,10 @@
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/call_controller/call_state.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
-import 'package:heyo/app/modules/call_controller/call_controller.dart';
+import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 
 class IncomingCallController extends GetxController {
   late UserModel caller;
@@ -22,6 +24,12 @@ class IncomingCallController extends GetxController {
       isVerified: true,
       walletAddress: "CB11${List.generate(10, (index) => index)}14AB",
     );
+
+    callConnectionController.p2pState.callState.listen((state) {
+      if (state is CallEnded) {
+        Get.back();
+      }
+    });
   }
 
   @override
@@ -49,12 +57,22 @@ class IncomingCallController extends GetxController {
 
   void acceptCall() {
     callConnectionController.acceptCall(
-        args.session.convertHexToString(), args.eventId, args.remotePeerId, args.remoteCoreId);
-    //TODO you should listen to accept call response for moving to call page
-    //  Get.offNamed(Routes.CALL, arguments: CallViewArgumentsModel(user: caller));
+        args.session, args.remotePeerId, args.remoteCoreId);
+
+    Get.offNamed(
+      Routes.CALL,
+      arguments: CallViewArgumentsModel(
+          user: UserModel(
+            name: "Boiled Dancer",
+            icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
+            isVerified: true,
+            walletAddress: args.remoteCoreId,
+          ),
+          initiateCall: false),
+    );
   }
 
   void _hangUp() {
-    // Todo
+    callConnectionController.rejectCall(args.remotePeerId, args.remoteCoreId);
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/generated/assets.gen.dart';
@@ -134,6 +135,40 @@ void openUserPreviewBottomSheet(UserModel user) {
                             alignment: Alignment.center,
                             child: Text(
                               LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
+                              style: TEXTSTYLES.kLinkBig.copyWith(
+                                color: COLORS.kDarkBlueColor,
+                              ),
+                            ))
+                      ],
+                    )),
+                TextButton(
+                    onPressed: () {
+                      Get.toNamed(
+                        Routes.CALL,
+                        arguments: CallViewArgumentsModel(
+                            user: user,
+                            initiateCall: true
+                        ),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: COLORS.kBrightBlueColor,
+                            ),
+                            child: Assets.svg.call.svg(width: 20, height: 20),
+                          ),
+                        ),
+                        CustomSizes.mediumSizedBoxWidth,
+                        Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              LocaleKeys.newChat_userBottomSheet_call_user.tr,
                               style: TEXTSTYLES.kLinkBig.copyWith(
                                 color: COLORS.kDarkBlueColor,
                               ),

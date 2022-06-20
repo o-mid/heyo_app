@@ -1,13 +1,13 @@
 import 'dart:async';
 
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/call_controller/call_controller.dart';
+import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/modules/call_controller/call_state.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 
 enum CallViewType {
   stack,
@@ -29,7 +29,7 @@ class CallController extends GetxController {
   final micEnabled = true.obs;
   final callerVideoEnabled = true.obs;
 
-  final isCallInProgress = false.obs;
+  final isInCall = true.obs;
 
   final calleeVideoEnabled = true.obs;
 
@@ -56,32 +56,48 @@ class CallController extends GetxController {
   CallController(
       {required this.callConnectionController, required this.p2pState});
 
+  RTCVideoRenderer getRemoteVideRenderer() {
+    return callConnectionController.getRemoteVideRenderer();
+  }
+
+  RTCVideoRenderer getLocalVideRenderer() {
+    return callConnectionController.getLocalVideRenderer();
+  }
+
   @override
   void onInit() {
     super.onInit();
 
     args = Get.arguments as CallViewArgumentsModel;
-    callConnectionController.startCall(args.user.walletAddress);
-    p2pState.callState.value=CallState.calling();
+    if (args.initiateCall) {
+      callConnectionController.startCall(args.user.walletAddress);
+      p2pState.callState.value = CallState.calling();
+      isInCall.value = false;
+    } else {
+      isInCall.value = true;
+
+      p2pState.callState.value = CallState.inCall();
+    }
 
     p2pState.callState.listen((state) {
       if (state is CallAccepted) {
-        callConnectionController.callAccepted(state.session.convertHexToString());
+        isInCall.value = true;
+        callConnectionController.callAccepted(
+            state.session, state.remoteCoreId, state.remotePeerId);
+        p2pState.callState.value = CallState.inCall();
+      } else if (state is CallEnded) {
+        Get.back();
+      }
+    });
+
+    callConnectionController.callConnectionFailed.listen((ended) {
+      if (ended) {
+        Get.back();
       }
     });
     participants.add(
       CallParticipantModel(user: args.user),
     );
-
-    // Todo (remove): this is only for testing purposes
-    Future.delayed(const Duration(seconds: 1), () {
-      participants[0] =
-          participants[0].copyWith(status: CallParticipantStatus.inCall);
-      isCallInProgress.value = true;
-      callTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-        callDurationSeconds.value++;
-      });
-    });
   }
 
   @override
@@ -98,7 +114,9 @@ class CallController extends GetxController {
   void toggleMuteCall() {}
 
   // Todo
-  void endCall() {}
+  void endCall() {
+    Get.back();
+  }
 
   // Todo
   void addParticipant() {
@@ -143,6 +161,7 @@ class CallController extends GetxController {
 
   @override
   void onClose() {
+    callConnectionController.endCall();
     callTimer?.cancel();
   }
 
