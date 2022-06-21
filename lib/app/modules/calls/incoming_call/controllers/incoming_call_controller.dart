@@ -18,11 +18,12 @@ class IncomingCallController extends GetxController {
   void onInit() {
     super.onInit();
     args = Get.arguments as IncomingCallViewArguments;
+    //TODO name should be get from contacts
     caller = UserModel(
-      name: "Boiled Dancer",
+      name: "Unknown",
       icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
       isVerified: true,
-      walletAddress: "CB11${List.generate(10, (index) => index)}14AB",
+      walletAddress: args.remoteCoreId,
     );
 
     callConnectionController.p2pState.callState.listen((state) {
@@ -57,13 +58,13 @@ class IncomingCallController extends GetxController {
 
   void acceptCall() {
     callConnectionController.acceptCall(
-        args.session, args.remotePeerId, args.remoteCoreId);
-
+        args.sdp, args.remotePeerId, args.remoteCoreId);
+    //TODO name should be get from contacts
     Get.offNamed(
       Routes.CALL,
       arguments: CallViewArgumentsModel(
           user: UserModel(
-            name: "Boiled Dancer",
+            name: "Unknown",
             icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
             isVerified: true,
             walletAddress: args.remoteCoreId,

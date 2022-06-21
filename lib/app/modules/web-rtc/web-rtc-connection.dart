@@ -95,6 +95,16 @@ class WebRTCConnection {
 
     return pc;
   }
+  void switchCamera() {
+    _localStream?.getVideoTracks()[0].switchCamera();
+  }
+
+  void muteMic() {
+    if (_localStream != null) {
+      bool enabled = _localStream!.getAudioTracks()[0].enabled;
+      _localStream!.getAudioTracks()[0].enabled = !enabled;
+    }
+  }
 
   Future<String> createSDP(bool isOffer) async {
     final RTCSessionDescription description;
@@ -127,6 +137,7 @@ class WebRTCConnection {
   }
 
   void closeStream() {
+
     _peerConnection.close();
     connectionFailed.value = false;
   }

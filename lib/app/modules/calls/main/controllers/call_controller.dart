@@ -112,13 +112,13 @@ class CallController extends GetxController {
 
   // Todo
   void toggleMuteMic() {
+    callConnectionController.muteMic();
     micEnabled.value = !micEnabled.value;
   }
 
   // Todo
   void toggleMuteCall() {}
 
-  // Todo
   void endCall() {
     Get.back();
   }
@@ -152,10 +152,8 @@ class CallController extends GetxController {
         audioEnable: true,
       );
       recordState.value = RecordState.recording;
-
     }));
-
-      }
+  }
 
   void stopRecording() async {
     await _screenRecorder.stopRecord();
@@ -167,8 +165,9 @@ class CallController extends GetxController {
     callerVideoEnabled.value = !callerVideoEnabled.value;
   }
 
-  // Todo
-  void switchCamera() {}
+  void switchCamera() {
+    callConnectionController.switchCamera();
+  }
 
   void toggleImmersiveMode() {
     isImmersiveMode.value = !isImmersiveMode.value;

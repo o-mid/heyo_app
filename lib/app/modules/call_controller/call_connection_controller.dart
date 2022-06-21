@@ -61,12 +61,12 @@ class CallConnectionController extends GetxController {
   }
 
   Future acceptCall(
-      String session, String remotePeerId, String remoteCoreId) async {
+      String sdp, String remotePeerId, String remoteCoreId) async {
     await webRTCConnection.initiate();
 
     this.remoteCoreId = remoteCoreId;
     this.remotePeerId = remotePeerId;
-    await webRTCConnection.setRemoteDescription(session, false);
+    await webRTCConnection.setRemoteDescription(sdp, false);
 
     final answer = await webRTCConnection.createSDP(false);
     return await login.sendSDP(
@@ -104,6 +104,14 @@ class CallConnectionController extends GetxController {
     webRTCConnection.closeStream();
     p2pState.reset();
     callConnectionFailed.value = false;
+  }
+
+  void switchCamera() {
+    webRTCConnection.switchCamera();
+  }
+
+  void muteMic() {
+    webRTCConnection.muteMic();
   }
 
   void rejectCall(String remotePeerId, String remoteCoreId) {
