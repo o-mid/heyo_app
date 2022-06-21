@@ -10,6 +10,7 @@ class AppTranslation {
 
 class LocaleKeys {
   LocaleKeys._();
+
   static const registration_WelcomePage_title =
       'registration_WelcomePage_title';
   static const registration_WelcomePage_subtitle =
@@ -156,6 +157,8 @@ class LocaleKeys {
   static const newChat_userBottomSheet_chat = 'newChat_userBottomSheet_chat';
   static const newChat_userBottomSheet_addToContacts =
       'newChat_userBottomSheet_addToContacts';
+  static const newChat_userBottomSheet_call_user =
+      'newChat_userBottomSheet_call_user';
   static const newChat_userBottomSheet_block = 'newChat_userBottomSheet_block';
   static const newChat_userBottomSheet_userInfo =
       'newChat_userBottomSheet_userInfo';
@@ -392,6 +395,7 @@ class Locales {
     'newChat_buttons_pullDownToRefresh': 'Pull down to refresh',
     'newChat_userBottomSheet_chat': 'Chat',
     'newChat_userBottomSheet_addToContacts': 'Add to contacts',
+    'newChat_userBottomSheet_call_user': 'Call',
     'newChat_userBottomSheet_block': 'Block',
     'newChat_userBottomSheet_userInfo': 'User info',
     'newChat_inviteBottomSheet_inviteYourFriend': 'Invite your friend to Heyo!',

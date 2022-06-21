@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -35,7 +36,14 @@ class _CallerVideoWidgetState extends State<CallerVideoWidget> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Assets.png.caller.image(),
+          Flexible(
+              child: Container(
+            key: const Key('remote'),
+            margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+            decoration: const BoxDecoration(color: Colors.black),
+            child:
+                RTCVideoView(controller.getLocalVideRenderer()),
+          )),
           if (showOptions)
             Positioned(
               bottom: 0,
@@ -45,17 +53,20 @@ class _CallerVideoWidgetState extends State<CallerVideoWidget> {
                 children: [
                   const Spacer(),
                   _buildViewOptionButton(
-                    onPressed: () => controller.updateCallViewType(CallViewType.column),
+                    onPressed: () =>
+                        controller.updateCallViewType(CallViewType.column),
                     icon: Assets.svg.stackVertical.svg(),
                   ),
                   const Spacer(),
                   _buildViewOptionButton(
-                    onPressed: () => controller.updateCallViewType(CallViewType.row),
+                    onPressed: () =>
+                        controller.updateCallViewType(CallViewType.row),
                     icon: Assets.svg.stackHorizontal.svg(),
                   ),
                   const Spacer(),
                   _buildViewOptionButton(
-                    onPressed: () => controller.updateCallViewType(CallViewType.stack),
+                    onPressed: () =>
+                        controller.updateCallViewType(CallViewType.stack),
                     icon: Assets.svg.fullScreen.svg(),
                   ),
                   const Spacer(),
@@ -67,7 +78,8 @@ class _CallerVideoWidgetState extends State<CallerVideoWidget> {
     );
   }
 
-  Widget _buildViewOptionButton({required Widget icon, VoidCallback? onPressed}) {
+  Widget _buildViewOptionButton(
+      {required Widget icon, VoidCallback? onPressed}) {
     return Expanded(
       flex: 3,
       child: CircleIconButton(

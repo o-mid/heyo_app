@@ -1,12 +1,15 @@
 import 'package:get/get.dart';
 
 import '../controllers/call_controller.dart';
+import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 
 class CallBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<CallController>(
-      () => CallController(),
+      () => CallController(
+          callConnectionController: GlobalBindings.callConnectionController,
+          p2pState: GlobalBindings.p2pState),
     );
   }
 }

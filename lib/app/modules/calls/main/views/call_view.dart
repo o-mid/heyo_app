@@ -48,11 +48,14 @@ class CallView extends GetView<CallController> {
                 ],
                 bottom: const RecordIndicatorWidget(),
               ),
-        body: ExpandableBottomSheet(
-          background: controller.isCallInProgress.value
+        body:
+            ExpandableBottomSheet(
+          background: controller.isInCall.value
               ? const CallInProgressWidget()
               : const CallRingingWidget(),
-          persistentHeader: controller.isImmersiveMode.value ? null : const CallBottomSheetHeader(),
+          persistentHeader: controller.isImmersiveMode.value
+              ? null
+              : const CallBottomSheetHeader(),
           expandableContent: controller.isImmersiveMode.value
               ? const SizedBox.shrink()
               : const CallBottomSheetExpandedBody(),

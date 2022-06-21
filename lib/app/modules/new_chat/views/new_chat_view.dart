@@ -367,7 +367,6 @@ class _searchInContactsBody extends StatelessWidget {
   }) : super(key: key);
 
   final NewChatController controller;
-
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -412,7 +411,8 @@ class _searchInContactsBody extends StatelessWidget {
                         InkWell(
                           borderRadius: BorderRadius.circular(8),
                           onTap: () {
-                            openUserPreviewBottomSheet(controller.searchSuggestions[index]);
+                            openUserPreviewBottomSheet(
+                                controller.searchSuggestions[index]);
                           },
                           child: UserWidget(
                             User: suggestedUser,
