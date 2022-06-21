@@ -9,8 +9,6 @@ dependencies:
   sembast: ^3.2.0+1
   flutter_webrtc: ^0.8.7
   sdp_transform: ^0.3.2
-
-  sembast: ^3.2.0
   cupertino_icons: ^1.0.5
   get: ^4.6.5
   qr_flutter: ^4.0.0
