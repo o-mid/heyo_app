@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/shared/data/models/media_view_arguments_model.dart';
@@ -6,14 +8,14 @@ import 'package:intl/intl.dart';
 import '../../messages/data/models/messages/message_model.dart';
 
 class MediaViewController extends GetxController {
-  //TODO: Implement MediaViewController
   late MediaViewArgumentsModel args;
   late List<dynamic> mediaList;
-  late int activeIndex;
+  Rx<int> activeIndex = 0.obs;
   MultiMediaMessageModel? multiMessage;
   late bool isMultiMessage;
   List<MessageModel> messages = [];
   late MessageModel currentMessage;
+  Uint8List? currentVideoThumbnail;
   late bool isVideo;
   String? date;
 
@@ -22,7 +24,7 @@ class MediaViewController extends GetxController {
   void onInit() {
     args = Get.arguments as MediaViewArgumentsModel;
     mediaList = args.mediaList;
-    activeIndex = args.activeIndex;
+    activeIndex.value = args.activeIndex;
     multiMessage = args.multiMessage;
     isMultiMessage = args.isMultiMessage;
     if (isMultiMessage) {
@@ -31,12 +33,20 @@ class MediaViewController extends GetxController {
       messages.add(args.mediaList.first);
     }
     date = DateFormat('MM/dd/yyyy, H:mm').format(mediaList.first.timestamp);
-    currentMessage = mediaList[activeIndex];
+    currentMessage = mediaList[activeIndex.value];
     currentMessage.type == CONTENT_TYPE.VIDEO
         ? isVideo = true
         : isVideo = false;
 
     super.onInit();
+  }
+
+  void setActiveMedia(int index) {
+    activeIndex.value = index;
+    currentMessage = mediaList[activeIndex.value];
+    currentMessage.type == CONTENT_TYPE.VIDEO
+        ? isVideo = true
+        : isVideo = false;
   }
 
   @override
