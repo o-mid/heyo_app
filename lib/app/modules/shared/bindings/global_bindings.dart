@@ -3,7 +3,6 @@ import 'package:heyo/app/modules/call_controller/call_connection_controller.dart
 import 'package:heyo/app/modules/calls/home/controllers/calls_controller.dart';
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
 import 'package:heyo/app/modules/information/get_share_info.dart';
-import 'package:heyo/app/modules/information/shareable_qr_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/live_location_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/audio_message_controller.dart';
@@ -60,6 +59,5 @@ class GlobalBindings extends Bindings {
     );
 
     Get.put(QRInfo(p2pState: p2pState, accountInfo: accountInfo));
-    Get.put(ShareableQRController());
   }
 }

@@ -27,7 +27,6 @@ class P2PNode {
   }
 
   _startP2PNode() async {
-    //TODO shoud be removed later
     if (await accountInfo.getCoreId() == null) {
       await accountInfo.createAccount();
     }
