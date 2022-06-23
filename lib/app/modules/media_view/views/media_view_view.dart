@@ -85,16 +85,27 @@ class MediaViewView extends GetView<MediaViewController> {
                         )
                       : Container(
                           color: Colors.black,
-                          child: PhotoView(
-                            imageProvider: ExtendedFileImageProvider(
-                              File((controller.currentMessage
+                          child: (controller.currentMessage
                                       as ImageMessageModel)
-                                  .url),
-                            ),
-                            scaleStateController:
-                                controller.photoViewcontroller,
-                            minScale: PhotoViewComputedScale.contained * 1.0,
-                          ),
+                                  .isLocal
+                              ? PhotoView(
+                                  imageProvider: ExtendedFileImageProvider(
+                                    File((controller.currentMessage
+                                            as ImageMessageModel)
+                                        .url),
+                                  ),
+                                  scaleStateController:
+                                      controller.photoViewcontroller,
+                                  minScale:
+                                      PhotoViewComputedScale.contained * 1.0,
+                                )
+                              : PhotoView(
+                                  imageProvider: ExtendedNetworkImageProvider(
+                                    (controller.currentMessage
+                                            as ImageMessageModel)
+                                        .url,
+                                  ),
+                                ),
                         ),
                 ),
                 Container(
@@ -150,13 +161,24 @@ class MediaViewView extends GetView<MediaViewController> {
                                                 : SizedBox(
                                                     width: 40.w,
                                                     height: 40.w,
-                                                    child: Image.file(
-                                                      File((controller.mediaList[
-                                                                  index]
-                                                              as ImageMessageModel)
-                                                          .url),
-                                                      fit: BoxFit.cover,
-                                                    ),
+                                                    child: (controller.mediaList[
+                                                                    index]
+                                                                as ImageMessageModel)
+                                                            .isLocal
+                                                        ? Image.file(
+                                                            File((controller.mediaList[
+                                                                        index]
+                                                                    as ImageMessageModel)
+                                                                .url),
+                                                            fit: BoxFit.cover,
+                                                          )
+                                                        : Image.network(
+                                                            (controller.mediaList[
+                                                                        index]
+                                                                    as ImageMessageModel)
+                                                                .url,
+                                                            fit: BoxFit.cover,
+                                                          ),
                                                   )),
                                       ),
                                     )),
