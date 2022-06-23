@@ -1,13 +1,33 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:share_plus/share_plus.dart';
 
-void openMediaViewBottomSheet() {
+void openMediaViewBottomSheet(List<dynamic> mediaList) {
+  List<String> paths = [];
+  void _saveVideo(String path) async {
+    await GallerySaver.saveVideo(path).then((value) {
+      print(value);
+    });
+  }
+
+  void _saveImage(String path) async {
+    await GallerySaver.saveImage(path).then((value) {
+      print(value);
+    });
+  }
+
   Get.bottomSheet(
     backgroundColor: COLORS.kWhiteColor,
     isDismissible: true,
@@ -89,8 +109,28 @@ void openMediaViewBottomSheet() {
                   ],
                 )),
             TextButton(
-                //Todo: share onPressed
-                onPressed: () {},
+                onPressed: () {
+                  if (paths.isEmpty) {
+                    for (var message in mediaList) {
+                      bool isVideo = message.type == CONTENT_TYPE.VIDEO;
+                      bool isLocal = true;
+                      //Todo : Implement SAVE TO GALLERY FOR NOT LOCAL MEDIA
+                      if (isVideo) {
+                        isLocal =
+                            (message as VideoMessageModel).metadata.isLocal;
+                        isLocal
+                            ? paths.add(message.url)
+                            : _saveVideo(message.url);
+                      } else {
+                        isLocal = (message as ImageMessageModel).isLocal;
+                        isLocal
+                            ? paths.add(message.url)
+                            : _saveImage(message.url);
+                      }
+                    }
+                  }
+                  Share.shareFiles(paths);
+                },
                 child: Row(
                   children: [
                     Align(
@@ -121,7 +161,21 @@ void openMediaViewBottomSheet() {
                 )),
             TextButton(
                 //Todo: savw onPressed
-                onPressed: () {},
+                onPressed: () {
+                  if (paths.isEmpty) {
+                    for (var message in mediaList) {
+                      bool isVideo = message.type == CONTENT_TYPE.VIDEO;
+
+                      if (isVideo) {
+                        paths.add(message.url);
+                        _saveVideo(message.url);
+                      } else {
+                        paths.add(message.url);
+                        _saveImage(message.url);
+                      }
+                    }
+                  }
+                },
                 child: Row(
                   children: [
                     Align(

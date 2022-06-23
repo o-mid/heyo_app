@@ -56,7 +56,7 @@ class MediaViewView extends GetView<MediaViewController> {
             IconButton(
               // TODO: open bottomSheet
               onPressed: () {
-                openMediaViewBottomSheet();
+                openMediaViewBottomSheet(controller.mediaList);
               },
               icon: Assets.svg.verticalMenuIcon.svg(
                 height: 15.h,
@@ -67,6 +67,7 @@ class MediaViewView extends GetView<MediaViewController> {
         ),
         body: SafeArea(
           child: Obx(() {
+            print(controller.activeIndex);
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -102,8 +103,10 @@ class MediaViewView extends GetView<MediaViewController> {
                     children: [
                       SizedBox(
                         height: 60,
+                        width: double.infinity,
                         child: ListView.builder(
                           shrinkWrap: true,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           scrollDirection: Axis.horizontal,
                           itemCount: controller.mediaList.length,
                           itemBuilder: (BuildContext context, int index) {

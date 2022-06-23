@@ -6,6 +6,7 @@ import 'package:heyo/app/modules/shared/data/models/media_view_arguments_model.d
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
 
+import '../../messages/data/models/messages/image_message_model.dart';
 import '../../messages/data/models/messages/message_model.dart';
 
 class MediaViewController extends GetxController {
@@ -19,6 +20,7 @@ class MediaViewController extends GetxController {
   List<MessageModel> messages = [];
   late MessageModel currentMessage;
   Uint8List? currentVideoThumbnail;
+
   late bool isVideo;
   String? date;
 

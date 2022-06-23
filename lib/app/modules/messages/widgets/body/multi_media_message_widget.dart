@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/shared/data/models/media_view_arguments_model.dart';
@@ -34,10 +35,10 @@ class MultiMediaMessageWidget extends StatelessWidget {
       itemCount: isMoreThanSix ? 6 : message.mediaList.length,
       itemBuilder: (context, index) {
         bool isMediaLocal;
-        bool isMediaVideo =
-            message.mediaList[index].type == 'CONTENT_TYPE.VIDEO';
+        bool isMediaVideo = message.mediaList[index].type == CONTENT_TYPE.VIDEO;
         isMediaVideo
-            ? isMediaLocal = message.mediaList[index].metadata.isLocal
+            ? isMediaLocal =
+                (message.mediaList[index] as VideoMessageModel).metadata.isLocal
             : isMediaLocal = true;
         return GestureDetector(
           onTap: () {

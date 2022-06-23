@@ -1034,7 +1034,7 @@ class MessagesController extends GetxController {
             durationInSeconds: element["videoDuration"].inSeconds,
             height: double.parse(element["height"].toString()),
             width: double.parse(element["width"].toString()),
-            isLocal: false,
+            isLocal: true,
             thumbnailBytes: thumbnailBytes,
             thumbnailUrl:
                 "https://mixkit.imgix.net/static/home/video-thumb3.png",
