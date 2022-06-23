@@ -1,8 +1,9 @@
 import 'dart:io';
-import 'dart:typed_data';
 
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:photo_view/photo_view.dart';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/forward_massages/data/models/forward_massages_view_arguments_model..dart';
@@ -11,8 +12,8 @@ import 'package:heyo/app/modules/messages/data/models/messages/image_message_mod
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/body/video_message_player.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
@@ -66,23 +67,33 @@ class MediaViewView extends GetView<MediaViewController> {
         ),
         body: SafeArea(
           child: Obx(() {
-            print(controller.activeIndex);
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: controller.isVideo
-                      ? Center(
-                          child: VideoMessagePlayer(
-                            message:
-                                controller.currentMessage as VideoMessageModel,
+                      ? Container(
+                          color: Colors.black,
+                          child: Center(
+                            child: VideoMessagePlayer(
+                              message: controller.currentMessage
+                                  as VideoMessageModel,
+                            ),
                           ),
                         )
-                      : Image.file(
-                          File((controller.currentMessage as ImageMessageModel)
-                              .url),
-                          fit: BoxFit.cover,
+                      : Container(
+                          color: Colors.black,
+                          child: PhotoView(
+                            imageProvider: ExtendedFileImageProvider(
+                              File((controller.currentMessage
+                                      as ImageMessageModel)
+                                  .url),
+                            ),
+                            scaleStateController:
+                                controller.photoViewcontroller,
+                            minScale: PhotoViewComputedScale.contained * 1.0,
+                          ),
                         ),
                 ),
                 Container(
@@ -91,57 +102,64 @@ class MediaViewView extends GetView<MediaViewController> {
                     children: [
                       SizedBox(
                         height: 60,
-                        child: Row(
-                          children: [
-                            ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: controller.mediaList.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                bool isVideo =
-                                    controller.mediaList[index].type ==
-                                        CONTENT_TYPE.VIDEO;
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: controller.mediaList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            bool isVideo = controller.mediaList[index].type ==
+                                CONTENT_TYPE.VIDEO;
 
-                                return GestureDetector(
-                                  onTap: () {
-                                    controller.setActiveMedia(index);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SizedBox(
-                                        width: 40.w,
-                                        height: 40.w,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          child: Expanded(
-                                              child: isVideo
-                                                  ? Container(
-                                                      color: Colors.amber,
-                                                      child: Image.memory(
-                                                        controller
-                                                            .mediaList[index]
-                                                            .metadata
-                                                            .thumbnailBytes,
-                                                        fit: BoxFit.cover,
-                                                      ))
-                                                  : SizedBox(
-                                                      width: 40.w,
-                                                      height: 40.w,
-                                                      child: Image.file(
-                                                        File((controller.mediaList[
-                                                                    index]
-                                                                as ImageMessageModel)
-                                                            .url),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    )),
-                                        )),
-                                  ),
-                                );
+                            return GestureDetector(
+                              onTap: () {
+                                controller.photoViewcontroller.reset();
+                                controller.setActiveMedia(index);
                               },
-                            ),
-                          ],
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                    width: 40.w,
+                                    height: 40.w,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(4),
+                                        border: Border.all(
+                                            color: index ==
+                                                    controller.activeIndex.value
+                                                ? COLORS.kGreenMainColor
+                                                : COLORS.kGreenLighterColor,
+                                            width: 2),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(4),
+                                        child: Expanded(
+                                            child: isVideo
+                                                ? SizedBox(
+                                                    width: 40.w,
+                                                    height: 40.w,
+                                                    child: Image.memory(
+                                                      controller
+                                                          .mediaList[index]
+                                                          .metadata
+                                                          .thumbnailBytes,
+                                                      fit: BoxFit.cover,
+                                                    ))
+                                                : SizedBox(
+                                                    width: 40.w,
+                                                    height: 40.w,
+                                                    child: Image.file(
+                                                      File((controller.mediaList[
+                                                                  index]
+                                                              as ImageMessageModel)
+                                                          .url),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  )),
+                                      ),
+                                    )),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],

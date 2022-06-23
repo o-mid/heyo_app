@@ -4,12 +4,15 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/shared/data/models/media_view_arguments_model.dart';
 import 'package:intl/intl.dart';
+import 'package:photo_view/photo_view.dart';
 
 import '../../messages/data/models/messages/message_model.dart';
 
 class MediaViewController extends GetxController {
   late MediaViewArgumentsModel args;
   late List<dynamic> mediaList;
+  late PhotoViewScaleStateController photoViewcontroller;
+
   Rx<int> activeIndex = 0.obs;
   MultiMediaMessageModel? multiMessage;
   late bool isMultiMessage;
@@ -37,7 +40,7 @@ class MediaViewController extends GetxController {
     currentMessage.type == CONTENT_TYPE.VIDEO
         ? isVideo = true
         : isVideo = false;
-
+    photoViewcontroller = PhotoViewScaleStateController();
     super.onInit();
   }
 
@@ -56,6 +59,7 @@ class MediaViewController extends GetxController {
 
   @override
   void onClose() {
+    photoViewcontroller.dispose();
     super.onClose();
   }
 
