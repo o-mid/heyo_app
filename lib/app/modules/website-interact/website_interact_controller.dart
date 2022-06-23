@@ -4,8 +4,10 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 class WebsiteInteractController extends GetxController {
   MobileScannerController? qrController;
-  final Login login = Get.find<Login>();
-  bool isBusy = false;
+  final Login login;
+
+  WebsiteInteractController({required this.login});
+
   @override
   void onInit() {
     super.onInit();

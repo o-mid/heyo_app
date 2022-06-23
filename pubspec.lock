@@ -306,6 +306,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.3"
+  dart_webrtc:
+    dependency: transitive
+    description:
+      name: dart_webrtc
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
   dartx:
     dependency: transitive
     description:
@@ -327,6 +334,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.6"
+  ed_screen_recorder:
+    dependency: "direct main"
+    description:
+      name: ed_screen_recorder
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.10"
   emoji_picker_flutter:
     dependency: "direct main"
     description:
@@ -505,7 +519,7 @@ packages:
       name: flutter_osm_plugin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.34.1+2"
+    version: "0.34.1+1"
   flutter_p2p_communicator:
     dependency: "direct main"
     description:
@@ -588,6 +602,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_webrtc:
+    dependency: "direct main"
+    description:
+      name: flutter_webrtc
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.7"
   frontend_server_client:
     dependency: transitive
     description:
@@ -1141,6 +1162,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  sdp_transform:
+    dependency: "direct main"
+    description:
+      name: sdp_transform
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.2"
   sembast:
     dependency: "direct main"
     description:
@@ -1540,6 +1568,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.0"
+  webrtc_interface:
+    dependency: transitive
+    description:
+      name: webrtc_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   win32:
     dependency: transitive
     description:

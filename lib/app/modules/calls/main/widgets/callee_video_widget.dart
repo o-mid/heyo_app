@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
-import 'package:heyo/generated/assets.gen.dart';
 
 // Todo: replace this with remote video webrtc
 class CalleeVideoWidget extends StatelessWidget {
@@ -10,10 +11,18 @@ class CalleeVideoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<CallController>();
+    final CallConnectionController callConnectionController=Get.find();
+
     return GestureDetector(
       onTap: controller.toggleImmersiveMode,
       onDoubleTap: controller.flipVideoPositions,
-      child: Assets.png.callee.image(),
+      child: Flexible(
+          child: Container(
+            key: const Key('remote'),
+            margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+            decoration: const BoxDecoration(color: Colors.black),
+            child: RTCVideoView(callConnectionController.getRemoteVideRenderer()),
+          )),
     );
   }
 }

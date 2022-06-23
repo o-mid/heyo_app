@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/modules/calls/home/controllers/calls_controller.dart';
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
 import 'package:heyo/app/modules/information/get_share_info.dart';
@@ -17,36 +18,41 @@ import 'package:heyo/app/modules/p2p_node/p2p_node_request.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
+import 'package:heyo/app/modules/web-rtc/web-rtc-connection.dart';
 
 class GlobalBindings extends Bindings {
   static P2PState p2pState = P2PState();
-  final P2PNodeResponseStream p2pNodeResponseStream =
+  static P2PNodeResponseStream p2pNodeResponseStream =
       P2PNodeResponseStream(p2pState: p2pState);
-  final AccountInfo accountInfo = AccountController(
+  final P2PNodeRequestStream p2pNodeRequestStream =
+      P2PNodeRequestStream(p2pState: p2pState);
+  static AccountInfo accountInfo = AccountController(
       localProvider: SecureStorageProvider(),
       cryptographyKeyGenerator: Web3Keys());
+  static Login login = Login(
+    p2pState: p2pState,
+    accountInfo: accountInfo,
+  );
+  static WebRTCConnection webRTCConnection = WebRTCConnection();
+  static CallConnectionController callConnectionController =
+      CallConnectionController(
+          webRTCConnection: webRTCConnection, login: login, p2pState: p2pState);
 
   @override
   void dependencies() {
+    Get.put(callConnectionController);
     Get.put(ChatsController());
     Get.put(CallsController());
     Get.put(GlobalMessageController());
     Get.put(AudioMessageController());
     Get.put(VideoMessageController());
     Get.put(LiveLocationController());
-    Get.put<Login>(
-      Login(
-        p2pNodeResponseStream: p2pNodeResponseStream,
-        p2pState: p2pState,
-        accountInfo: accountInfo,
-      ),
-    );
 
     Get.put<P2PNodeController>(
       P2PNodeController(
         p2pNode: P2PNode(
             accountInfo: accountInfo,
-            p2pNodeRequestStream: P2PNodeRequestStream(),
+            p2pNodeRequestStream: p2pNodeRequestStream,
             p2pNodeResponseStream: p2pNodeResponseStream,
             p2pState: p2pState),
       ),
