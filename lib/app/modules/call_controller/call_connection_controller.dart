@@ -28,7 +28,6 @@ class CallConnectionController extends GetxController {
     webRTCConnection.connectionFailed.listen((ended) {
       if (ended) {
         callConnectionFailed.value = true;
-        _reset();
       }
     });
     p2pState.candidate.listen((addCandidate) {

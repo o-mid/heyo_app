@@ -5,10 +5,10 @@ import 'package:get/get.dart';
 import 'package:sdp_transform/sdp_transform.dart';
 
 class WebRTCConnection {
-  final remoteVideoRenderer = RTCVideoRenderer();
-  final localVideoRender = RTCVideoRenderer();
+  RTCVideoRenderer remoteVideoRenderer = RTCVideoRenderer();
+  RTCVideoRenderer localVideoRender = RTCVideoRenderer();
 
-  late RTCPeerConnection _peerConnection;
+  RTCPeerConnection? _peerConnection;
   MediaStream? _localStream;
   final candidate = "".obs;
   final RxBool connectionFailed = false.obs;
@@ -20,8 +20,8 @@ class WebRTCConnection {
       _peerConnection = pc;
     });
 
-    _peerConnection.onConnectionState = (state) {
-      if (state == RTCPeerConnectionState.RTCPeerConnectionStateFailed) {
+    _peerConnection!.onConnectionState = (state) {
+      if (state == RTCPeerConnectionState.RTCPeerConnectionStateDisconnected) {
         connectionFailed.value = true;
       }
     };
@@ -95,6 +95,7 @@ class WebRTCConnection {
 
     return pc;
   }
+
   void switchCamera() {
     _localStream?.getVideoTracks()[0].switchCamera();
   }
@@ -110,13 +111,13 @@ class WebRTCConnection {
     final RTCSessionDescription description;
     if (isOffer) {
       description =
-          await _peerConnection.createOffer({'offerToReceiveVideo': 1});
+          await _peerConnection!.createOffer({'offerToReceiveVideo': 1});
     } else {
       description =
-          await _peerConnection.createAnswer({'offerToReceiveVideo': 1});
+          await _peerConnection!.createAnswer({'offerToReceiveVideo': 1});
     }
     var session = description.sdp.toString();
-    _peerConnection.setLocalDescription(description);
+    _peerConnection!.setLocalDescription(description);
     return json.encode(parse(session));
   }
 
@@ -126,19 +127,25 @@ class WebRTCConnection {
     RTCSessionDescription description =
         RTCSessionDescription(sdp, isOffer ? 'answer' : 'offer');
     print(description.toMap());
-    await _peerConnection.setRemoteDescription(description);
+    await _peerConnection!.setRemoteDescription(description);
   }
 
   Future setCandidate(String candidateText) async {
     dynamic session = await jsonDecode('$candidateText');
     dynamic candidate = RTCIceCandidate(
         session['candidate'], session['sdpMid'], session['sdpMlineIndex']);
-    await _peerConnection.addCandidate(candidate);
+    await _peerConnection!.addCandidate(candidate);
   }
 
   void closeStream() {
-
-    _peerConnection.close();
+    remoteVideoRenderer.dispose();
+    localVideoRender.dispose();
+    _localStream?.dispose();
+    _localStream = null;
+    remoteVideoRenderer = RTCVideoRenderer();
+    localVideoRender = RTCVideoRenderer();
+    _peerConnection?.close();
+    _peerConnection = null;
     connectionFailed.value = false;
   }
 }
