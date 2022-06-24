@@ -16,7 +16,7 @@ class NewChatBinding extends Bindings {
       () => NewChatController(
           accountInfo: AccountController(
               localProvider: SecureStorageProvider(),
-              cryptographyKeyGenerator: Web3Keys()),
+              cryptographyKeyGenerator: Web3Keys(web3client: GlobalBindings.web3Client)),
           contactRepository: ContactRepository(
               cacheContractor:
                   CacheRepository(userContact: UserContactProvider()))),

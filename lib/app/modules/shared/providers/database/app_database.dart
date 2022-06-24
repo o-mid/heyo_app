@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path_provider_android/path_provider_android.dart';
+import 'package:path_provider_ios/path_provider_ios.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
@@ -32,6 +35,9 @@ class AppDatabaseProvider {
   }
 
   Future _openDatabase() async {
+    if (Platform.isAndroid) PathProviderAndroid.registerWith();
+    if (Platform.isIOS) PathProviderIOS.registerWith();
+
     // Get a platform-specific directory where persistent app data can be stored
     final appDocumentDir = await getApplicationDocumentsDirectory();
     // Path with the form: /platform-specific-directory/demo.db

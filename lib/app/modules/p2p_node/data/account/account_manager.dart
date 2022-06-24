@@ -25,32 +25,24 @@ class AccountController extends AccountInfo {
 
   @override
   Future<void> createAccount() async {
-    late KeysModel privateKeys;
+    late String privateKey;
     late List<String> phrases;
-    await Future.doWhile(() async {
-      phrases = cryptographyKeyGenerator.generate_mnemonic();
-      privateKeys = await cryptographyKeyGenerator
-          .generatePrivateKeysFromMneomonic(phrases, "198491");
-      if (privateKeys.goldiLockPrivateKey.startsWith("00")) {
-        return true;
-      } else {
-        return false;
-      }
-    });
+    phrases = cryptographyKeyGenerator.generate_mnemonic();
+    privateKey = await cryptographyKeyGenerator
+        .generatePrivateKeysFromMneomonic(phrases, "198491");
 
-    final address = await cryptographyKeyGenerator
-        .generateAddress(privateKeys.goldiLockPrivateKey);
-    final pubKey = await cryptographyKeyGenerator
-        .getPublicKeyFromPrivate(privateKeys.goldiLockPrivateKey);
-    final coreId = await cryptographyKeyGenerator
-        .generateCoreIdFromPriv(privateKeys.goldiLockPrivateKey);
+    final address = await cryptographyKeyGenerator.generateAddress(privateKey);
+    final pubKey =
+        await cryptographyKeyGenerator.getPublicKeyFromPrivate(privateKey);
+    final coreId =
+        await cryptographyKeyGenerator.generateCoreIdFromPriv(privateKey);
     // we save the credentials in the key chain
-    await saveCredentials(coreId, privateKeys.goldiLockPrivateKey,
-        privateKeys.aesKey, phrases, address, pubKey);
+
+    await saveCredentials(coreId, privateKey, null, phrases, address, pubKey);
   }
 
   @override
-  Future<void> saveCredentials(String coreId, String privateKey, String aesKey,
+  Future<void> saveCredentials(String coreId, String privateKey, String? aesKey,
       List<String> mneomns, String address, String publicKey) async {
     final Map<String, dynamic> _credentials = {
       CORE_ID_KEY_IN_STORE: coreId.toLowerCase(),

@@ -1,34 +1,29 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
-
 import 'package:flutter_bip39/bip39.dart';
 import 'package:flutter_bip39/src/models/seed_model.dart';
-import 'package:heyo/app/modules/p2p_node/auth_keys_model.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/cryptography_key_generator.dart';
 import 'package:pointycastle/digests/sha3.dart';
-import 'package:web3dart/credentials.dart';
-import 'package:web3dart/crypto.dart';
+
+import 'package:core_web3dart/src/crypto/formatting.dart';
+import 'package:core_web3dart/web3dart.dart';
+import 'package:core_web3dart/crypto.dart';
 
 class Web3Keys extends CryptographyKeyGenerator {
+  final Web3Client web3client;
+
+  Web3Keys({required this.web3client});
+
   @override
   Future<String> generateAddress(String privateKey) async {
-    // TODO: get the actual address from the web3 lib
-    // TODO: uncomment this for production
-    // final addr = await Ed448Goldilock.getPublicKeyFromPrivateKey(privateKey);
-    final pub = privateKeyBytesToPublic(hexToBytes(privateKey));
-    final addr = publicKeyToAddress(pub);
-    return bytesToHex(addr, include0x: true);
+   return XCBPrivateKey.fromHex(privateKey).extractAddress(await web3client.getNetworkId()).hex;
   }
 
   @override
   Future<String> generateCoreIdFromPriv(String privateKey) async {
-    // TODO: get the actual address from the web3 lib
-    // TODO: uncomment this for production
-
-    // final addr = await Ed448Goldilock.getPublicKeyFromPrivateKey(privateKey);
     final pub = privateKeyBytesToPublic(hexToBytes(privateKey));
-    final addr = publicKeyToAddress(pub);
+    final addr = publicKeyToAddress(pub, await web3client.getNetworkId());
     return bytesToHex(addr, include0x: true);
   }
 
@@ -39,25 +34,17 @@ class Web3Keys extends CryptographyKeyGenerator {
   }
 
   @override
-  Future<KeysModel> generatePrivateKeysFromMneomonic(
-      List<String> phrases, String pinCode) async {
+  Future<String> generatePrivateKeysFromMneomonic(List<String> phrases,
+      String pinCode) async {
     final _mns = phrases.join(" ");
     final _seed = mnemonicToSeed(_mns, passphrase: pinCode);
 
-    String _privGoldilockKey = await _getGoldilockKey(_seed);
-    String aesKey = _getAesKey(_seed);
-    return KeysModel(_privGoldilockKey, aesKey);
-  }
+    //TODO check moji bytesToHex
+    XCBPrivateKey xcbPrivateKey = await XCBPrivateKey.createPrivateKey(
+        bytesToHex(_seed.goldilockKeySeed), 0);
+    final privateKey = bytesToHex(xcbPrivateKey.privateKey);
 
-  Future<String> _getGoldilockKey(SeedModel _seed) async {
-    // TODO: uncomment this for production
-
-    // final _privGoldilockKey = await Ed448Goldilock.generatePrivateKey(
-    //     bytesToHex(_seed.goldilockKeySeed));
-    // return _privGoldilockKey;
-
-    final _privGoldilockKey = EthPrivateKey.createRandom(Random());
-    return bytesToHex((_privGoldilockKey.privateKey));
+    return privateKey;
   }
 
   String _getAesKey(SeedModel _seed) {
@@ -74,17 +61,8 @@ class Web3Keys extends CryptographyKeyGenerator {
 
   @override
   Future<String> getPublicKeyFromPrivate(String privKey) async {
-    // TODO: uncomment this for production
-
-    // final pub = await Ed448Goldilock.getPublicKeyFromPrivateKey(privKey);
     final pub = privateKeyBytesToPublic(hexToBytes(privKey));
     return bytesToHex(pub);
   }
-
-  @override
-  String generateSHA3Hash(String txt) {
-    return bytesToHex(keccak256(hexToBytes(txt)));
-  }
-
 
 }
