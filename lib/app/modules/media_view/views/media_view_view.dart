@@ -151,13 +151,24 @@ class MediaViewView extends GetView<MediaViewController> {
                                                 ? SizedBox(
                                                     width: 40.w,
                                                     height: 40.w,
-                                                    child: Image.memory(
-                                                      controller
-                                                          .mediaList[index]
-                                                          .metadata
-                                                          .thumbnailBytes,
-                                                      fit: BoxFit.cover,
-                                                    ))
+                                                    child: (controller.mediaList[
+                                                                    index]
+                                                                as VideoMessageModel)
+                                                            .metadata
+                                                            .isLocal
+                                                        ? Image.file(File(
+                                                            (controller.mediaList[
+                                                                        index]
+                                                                    as VideoMessageModel)
+                                                                .url))
+                                                        : Image.memory(
+                                                            controller
+                                                                .mediaList[
+                                                                    index]
+                                                                .metadata
+                                                                .thumbnailBytes,
+                                                            fit: BoxFit.cover,
+                                                          ))
                                                 : SizedBox(
                                                     width: 40.w,
                                                     height: 40.w,
