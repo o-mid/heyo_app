@@ -3,22 +3,17 @@ import 'package:heyo/app/modules/information/get_share_info.dart';
 
 class ShareableQRController extends GetxController {
   final count = 0.obs;
-  final QRInfo _qrInfo = Get.find<QRInfo>();
-  late RxString shareableQr;
+  final QRInfo qrInfo;
+
+  RxString shareableQr = "".obs;
+  Rx<String?> coreId = "".obs;
+
+  ShareableQRController({required this.qrInfo});
 
   @override
   void onInit() async {
     super.onInit();
-    shareableQr = (await _qrInfo.getSharableQr()).obs;
+    shareableQr.value = (await qrInfo.getSharableQr());
+    coreId.value = (await qrInfo.getCoreId());
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {}
-
-  void increment() => count.value++;
 }

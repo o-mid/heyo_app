@@ -22,4 +22,9 @@ class QRInfo {
         SHARED_ADDR_SEPARATOR +
         jsonEncode(p2pState.address.value);
   }
+
+  Future<String?> getCoreId(){
+    return accountInfo.getCoreId();
+  }
+
 }

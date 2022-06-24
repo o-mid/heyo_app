@@ -56,18 +56,6 @@ class Login {
     _sendingLoginRequest(_loginModel);
   }
 
-  void sendOffer(String offer, String remoteCoreId) async {
-    final localCoreId = await accountInfo.getCoreId();
-    if (localCoreId == null) throw 'Core id is null!!';
-
-    String hex = offer.getHex();
-
-    final _loginModel = P2PLoginBodyModel(
-        info: P2PTransferModel(
-            localCoreID: localCoreId, remoteCoreID: remoteCoreId),
-        payload: P2PLoginPayloadModel(session: hex));
-    _sendingLoginRequest(_loginModel);
-  }
 
   Future<void> _sendingLoginRequest(dynamic model) async {
     int retryCount = 0;

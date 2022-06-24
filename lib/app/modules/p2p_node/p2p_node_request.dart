@@ -56,36 +56,37 @@ class P2PNodeRequestStream {
             await jsonDecode(session.convertHexToString());
         String? sdp = data['sdp'];
         String? candidate = data['candidate'];
-       String callId=data['call_id'];
+        String callId = data['call_id'];
 
         print("sdp: $sdp : candidate: $candidate");
 
         if (sdp != null) {
           if (p2pState.callState.value is NoneState) {
-            print("Call: in noneState: ${(!p2pState.recordedCallIds.value.contains(callId))}");
+            print(
+                "Call: in noneState: ${(!p2pState.recordedCallIds.value.contains(callId))}");
 
             if (!p2pState.recordedCallIds.value.contains(callId)) {
               print("Call: Call Received");
               p2pState.recordedCallIds.value.add(callId);
-              p2pState.currentCallId.value=callId;
-
-              p2pState.callState.value = CallState.callReceived(
-                  sdp, remoteCoreId, remotePeerId);
+              p2pState.currentCallId.value = callId;
+              p2pState.callState.value =
+                  CallState.callReceived(sdp, remoteCoreId, remotePeerId);
             }
           } else if (p2pState.callState.value is Calling) {
-            print("Call: in inCall: ${(p2pState.recordedCallIds.value.contains(callId))}");
+            print(
+                "Call: in inCall: ${(p2pState.recordedCallIds.value.contains(callId))}");
 
-            if (p2pState.recordedCallIds.value.contains(callId)){
-              p2pState.currentCallId.value=callId;
-              p2pState.callState.value = CallState.callAccepted(
-                  sdp, remoteCoreId, remotePeerId);
+            if (p2pState.recordedCallIds.value.contains(callId)) {
+              p2pState.currentCallId.value = callId;
+              p2pState.callState.value =
+                  CallState.callAccepted(sdp, remoteCoreId, remotePeerId);
             }
           }
         } else if (candidate != null) {
           print("Call: Call exchanging candidate");
           p2pState.candidate.value = candidate;
         } else {
-          if( !p2pState.endedCallIds.value.contains(callId)) {
+          if (!p2pState.endedCallIds.value.contains(callId)) {
             print("Call: Call Ended");
             p2pState.endedCallIds.value.add(callId);
             p2pState.callState.value = CallState.ended();
