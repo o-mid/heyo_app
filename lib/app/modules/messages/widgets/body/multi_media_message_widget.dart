@@ -39,7 +39,8 @@ class MultiMediaMessageWidget extends StatelessWidget {
         isMediaVideo
             ? isMediaLocal =
                 (message.mediaList[index] as VideoMessageModel).metadata.isLocal
-            : isMediaLocal = true;
+            : isMediaLocal =
+                (message.mediaList[index] as ImageMessageModel).isLocal;
         return GestureDetector(
           onTap: () {
             Get.toNamed(Routes.MEDIA_VIEW,
@@ -68,7 +69,8 @@ class MultiMediaMessageWidget extends StatelessWidget {
                                   fit: BoxFit.cover,
                                 )
                               : ExtendedImage.network(
-                                  message.mediaList[index].url),
+                                  message.mediaList[index].url,
+                                ),
                         ),
                         Center(
                           child: Text(
@@ -102,7 +104,10 @@ class MultiMediaMessageWidget extends StatelessWidget {
                               File(message.mediaList[index].url),
                               fit: BoxFit.cover,
                             )
-                          : ExtendedImage.network(message.mediaList[index].url),
+                          : Image.network(
+                              message.mediaList[index].url,
+                              fit: BoxFit.cover,
+                            ),
             ),
           ),
         );

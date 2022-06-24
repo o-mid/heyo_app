@@ -810,6 +810,80 @@ class MessagesController extends GetxController {
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
+      MultiMediaMessageModel(
+        messageId: "${index++}",
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+        type: CONTENT_TYPE.MULTI_MEDIA,
+        isFromMe: true,
+        status: MESSAGE_STATUS.READ,
+        mediaList: [
+          ImageMessageModel(
+            messageId: "${index++}",
+            isLocal: false,
+            type: CONTENT_TYPE.IMAGE,
+            url:
+                "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
+            metadata: ImageMetadata(width: 0, height: 0),
+            timestamp:
+                DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
+            senderName: "",
+            senderAvatar: "",
+            isFromMe: true,
+            status: MESSAGE_STATUS.READ,
+          ),
+          ImageMessageModel(
+            messageId: "${index++}",
+            isLocal: false,
+            url:
+                "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
+            metadata: ImageMetadata(width: 0, height: 0),
+            timestamp:
+                DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
+            senderName: "",
+            senderAvatar: "",
+            isFromMe: true,
+            type: CONTENT_TYPE.IMAGE,
+            status: MESSAGE_STATUS.READ,
+          ),
+          ImageMessageModel(
+            messageId: "${index++}",
+            isLocal: false,
+            url:
+                "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+            metadata: ImageMetadata(width: 687, height: 1030),
+            timestamp:
+                DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
+            senderName: "",
+            senderAvatar: "",
+            isFromMe: true,
+            type: CONTENT_TYPE.IMAGE,
+            status: MESSAGE_STATUS.READ,
+          ),
+          VideoMessageModel(
+            messageId: "${index++}",
+            url:
+                "https://assets.mixkit.co/videos/download/mixkit-microchip-technology-close-up-1140.mp4",
+            metadata: VideoMetadata(
+              isLocal: false,
+              durationInSeconds: 120,
+              thumbnailBytes: null,
+              thumbnailUrl:
+                  "https://mixkit.imgix.net/static/home/video-thumb3.png",
+              width: 656,
+              height: 368,
+            ),
+            timestamp:
+                DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
+            senderName: "",
+            senderAvatar: "",
+            isFromMe: true,
+            status: MESSAGE_STATUS.READ,
+          ),
+        ],
+      ),
       CallMessageModel(
         messageId: "${index++}",
         callStatus: CallMessageStatus.declined,

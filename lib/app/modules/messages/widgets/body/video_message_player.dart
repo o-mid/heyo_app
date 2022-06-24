@@ -99,7 +99,7 @@ class _VideoThumbnail extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  isLocal && imageBytes != null
+                  isLocal
                       ? ExtendedImage.memory(
                           imageBytes!,
                         )
