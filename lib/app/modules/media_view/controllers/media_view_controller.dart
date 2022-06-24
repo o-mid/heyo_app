@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/shared/data/models/media_view_arguments_model.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
@@ -62,6 +63,7 @@ class MediaViewController extends GetxController {
   @override
   void onClose() {
     photoViewcontroller.dispose();
+
     super.onClose();
   }
 

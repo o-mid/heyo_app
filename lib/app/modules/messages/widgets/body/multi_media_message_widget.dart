@@ -82,8 +82,20 @@ class MultiMediaMessageWidget extends StatelessWidget {
                       ],
                     )
                   : isMediaVideo
-                      ? VideoMessagePlayer(
-                          message: message.mediaList[index],
+                      ? Expanded(
+                          child: VideoMessagePlayer(
+                            message: message.mediaList[index],
+                            isMultiMessage: true,
+                            multiMessageOnTap: () {
+                              Get.toNamed(Routes.MEDIA_VIEW,
+                                  arguments: MediaViewArgumentsModel(
+                                    mediaList: message.mediaList,
+                                    isMultiMessage: true,
+                                    multiMessage: message,
+                                    activeIndex: index,
+                                  ));
+                            },
+                          ),
                         )
                       : isMediaLocal
                           ? ExtendedImage.file(

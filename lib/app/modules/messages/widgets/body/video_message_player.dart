@@ -13,7 +13,14 @@ import 'package:heyo/generated/assets.gen.dart';
 
 class VideoMessagePlayer extends GetView<VideoMessageController> {
   final VideoMessageModel message;
-  const VideoMessagePlayer({Key? key, required this.message}) : super(key: key);
+  final bool isMultiMessage;
+  final VoidCallback? multiMessageOnTap;
+  const VideoMessagePlayer({
+    Key? key,
+    required this.message,
+    this.isMultiMessage = false,
+    this.multiMessageOnTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +31,12 @@ class VideoMessagePlayer extends GetView<VideoMessageController> {
         duration: const Duration(milliseconds: 200),
         child: isActive &&
                 chewieController != null &&
-                chewieController.videoPlayerController.value.isInitialized
+                chewieController.videoPlayerController.value.isInitialized &&
+                !isMultiMessage
             ? AspectRatio(
-                aspectRatio:
-                    chewieController.videoPlayerController.value.aspectRatio,
+                aspectRatio: isMultiMessage
+                    ? 1.0
+                    : chewieController.videoPlayerController.value.aspectRatio,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.r),
                   child: Chewie(
@@ -37,12 +46,15 @@ class VideoMessagePlayer extends GetView<VideoMessageController> {
               )
             : _VideoThumbnail(
                 thumbnailUrl: message.metadata.thumbnailUrl,
-                onTap: () => controller.initializePlayer(message),
+                onTap: () => isMultiMessage
+                    ? multiMessageOnTap!()
+                    : controller.initializePlayer(message),
                 isLoading: isActive,
                 mWidth: message.metadata.width,
                 mHeight: message.metadata.height,
                 isLocal: message.metadata.isLocal,
                 imageBytes: message.metadata.thumbnailBytes,
+                isMultiMessage: isMultiMessage,
               ),
       );
     });
@@ -55,6 +67,7 @@ class _VideoThumbnail extends StatelessWidget {
   final double mHeight;
   final VoidCallback? onTap;
   final bool isLoading;
+  final bool isMultiMessage;
   final bool isLocal;
   Uint8List? imageBytes;
   _VideoThumbnail({
@@ -64,6 +77,7 @@ class _VideoThumbnail extends StatelessWidget {
     required this.mHeight,
     required this.isLocal,
     this.imageBytes,
+    this.isMultiMessage = false,
     this.onTap,
     this.isLoading = false,
   }) : super(key: key);
@@ -74,38 +88,41 @@ class _VideoThumbnail extends StatelessWidget {
       final width = min(mWidth, constraints.maxWidth);
       final height = width * (mHeight / mWidth);
       return SizedBox(
-        width: width,
-        height: height,
-        child: GestureDetector(
-          onTap: onTap,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8.r),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                isLocal && imageBytes != null
-                    ? ExtendedImage.memory(
-                        imageBytes!,
-                      )
-                    : ExtendedImage.network(
-                        thumbnailUrl,
-                      ),
-                Container(
-                  width: 40.h,
-                  height: 40.h,
-                  padding: EdgeInsets.all(14.h),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: COLORS.kBlackColor.withOpacity(0.5),
-                  ),
-                  child: isLoading
-                      ? const CircularProgressIndicator(
-                          color: COLORS.kWhiteColor)
-                      : Assets.svg.playIcon.svg(
-                          color: COLORS.kWhiteColor,
+        width: isMultiMessage ? constraints.maxWidth : width,
+        height: isMultiMessage ? constraints.maxHeight : height,
+        child: Container(
+          color: isMultiMessage ? COLORS.kBrightBlueColor : Colors.transparent,
+          child: GestureDetector(
+            onTap: onTap,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.r),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  isLocal && imageBytes != null
+                      ? ExtendedImage.memory(
+                          imageBytes!,
+                        )
+                      : ExtendedImage.network(
+                          thumbnailUrl,
                         ),
-                ),
-              ],
+                  Container(
+                    width: 40.h,
+                    height: 40.h,
+                    padding: EdgeInsets.all(14.h),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: COLORS.kBlackColor.withOpacity(0.5),
+                    ),
+                    child: isLoading && !isMultiMessage
+                        ? const CircularProgressIndicator(
+                            color: COLORS.kWhiteColor)
+                        : Assets.svg.playIcon.svg(
+                            color: COLORS.kWhiteColor,
+                          ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
