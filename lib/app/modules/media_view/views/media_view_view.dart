@@ -10,10 +10,8 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/forward_massages/data/models/forward_massages_view_arguments_model..dart';
 import 'package:heyo/app/modules/media_view/widgets/media_view_bottom_sheet.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
-import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/body/video_message_player.dart';
-import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
@@ -24,7 +22,8 @@ class MediaViewView extends GetView<MediaViewController> {
   const MediaViewView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Obx(() {
+      return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black,
           title: Row(
@@ -34,7 +33,7 @@ class MediaViewView extends GetView<MediaViewController> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Freezy Squeezer", style: TEXTSTYLES.kHeaderMedium),
+                  Text(controller.name.value, style: TEXTSTYLES.kHeaderMedium),
                   Text(controller.date.toString(), style: TEXTSTYLES.kBodyTag),
                 ],
               )
@@ -67,54 +66,52 @@ class MediaViewView extends GetView<MediaViewController> {
           ],
         ),
         body: SafeArea(
-          child: Obx(() {
-            print(controller.activeIndex);
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: controller.isVideo
-                      ? Container(
-                          color: Colors.black,
-                          child: Center(
-                            child: VideoMessagePlayer(
-                              message: controller.currentMessage
-                                  as VideoMessageModel,
-                            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: controller.isVideo
+                    ? Container(
+                        color: Colors.black,
+                        child: Center(
+                          child: VideoMessagePlayer(
+                            message:
+                                controller.currentMessage as VideoMessageModel,
                           ),
-                        )
-                      : Container(
-                          color: Colors.black,
-                          child: (controller.currentMessage
-                                      as ImageMessageModel)
-                                  .isLocal
-                              ? PhotoView(
-                                  imageProvider: ExtendedFileImageProvider(
-                                    File((controller.currentMessage
-                                            as ImageMessageModel)
-                                        .url),
-                                  ),
-                                  scaleStateController:
-                                      controller.photoViewcontroller,
-                                  minScale:
-                                      PhotoViewComputedScale.contained * 1.0,
-                                )
-                              : PhotoView(
-                                  imageProvider: ExtendedNetworkImageProvider(
-                                    (controller.currentMessage
-                                            as ImageMessageModel)
-                                        .url,
-                                  ),
-                                ),
                         ),
-                ),
-                ThumbnailBuilderWidget(
-                  controller: controller,
-                )
-              ],
-            );
-          }),
-        ));
+                      )
+                    : Container(
+                        color: Colors.black,
+                        child: (controller.currentMessage as ImageMessageModel)
+                                .isLocal
+                            ? PhotoView(
+                                imageProvider: ExtendedFileImageProvider(
+                                  File((controller.currentMessage
+                                          as ImageMessageModel)
+                                      .url),
+                                ),
+                                scaleStateController:
+                                    controller.photoViewcontroller,
+                                minScale:
+                                    PhotoViewComputedScale.contained * 1.0,
+                              )
+                            : PhotoView(
+                                imageProvider: ExtendedNetworkImageProvider(
+                                  (controller.currentMessage
+                                          as ImageMessageModel)
+                                      .url,
+                                ),
+                              ),
+                      ),
+              ),
+              ThumbnailBuilderWidget(
+                controller: controller,
+              )
+            ],
+          ),
+        ),
+      );
+    });
   }
 }

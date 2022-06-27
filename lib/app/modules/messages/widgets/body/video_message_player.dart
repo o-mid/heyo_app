@@ -102,9 +102,11 @@ class _VideoThumbnail extends StatelessWidget {
                   isLocal
                       ? ExtendedImage.memory(
                           imageBytes!,
+                          fit: isMultiMessage ? BoxFit.fitHeight : null,
                         )
                       : ExtendedImage.network(
                           thumbnailUrl,
+                          fit: isMultiMessage ? BoxFit.fitHeight : null,
                         ),
                   Container(
                     width: 40.h,

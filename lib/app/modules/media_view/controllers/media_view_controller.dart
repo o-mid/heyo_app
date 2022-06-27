@@ -21,6 +21,7 @@ class MediaViewController extends GetxController {
   List<MessageModel> messages = [];
   late MessageModel currentMessage;
   Uint8List? currentVideoThumbnail;
+  RxString name = "".obs;
 
   late bool isVideo;
   String? date;
@@ -39,6 +40,7 @@ class MediaViewController extends GetxController {
       messages.add(args.mediaList.first);
     }
     date = DateFormat('MM/dd/yyyy, H:mm').format(mediaList.first.timestamp);
+    name.value = mediaList.first.senderName ?? "";
     currentMessage = mediaList[activeIndex.value];
     currentMessage.type == CONTENT_TYPE.VIDEO
         ? isVideo = true
