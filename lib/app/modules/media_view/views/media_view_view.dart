@@ -144,54 +144,54 @@ class MediaViewView extends GetView<MediaViewController> {
                                                 : COLORS.kGreenLighterColor,
                                             width: 2),
                                       ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(4),
-                                        child: Expanded(
-                                            child: isVideo
-                                                ? SizedBox(
-                                                    width: 40.w,
-                                                    height: 40.w,
-                                                    child: (controller.mediaList[
-                                                                    index]
-                                                                as VideoMessageModel)
-                                                            .metadata
-                                                            .isLocal
-                                                        ? Image.file(File(
-                                                            (controller.mediaList[
-                                                                        index]
-                                                                    as VideoMessageModel)
-                                                                .url))
-                                                        : Image.memory(
-                                                            controller
-                                                                .mediaList[
-                                                                    index]
-                                                                .metadata
-                                                                .thumbnailBytes,
-                                                            fit: BoxFit.cover,
-                                                          ))
-                                                : SizedBox(
-                                                    width: 40.w,
-                                                    height: 40.w,
-                                                    child: (controller.mediaList[
-                                                                    index]
-                                                                as ImageMessageModel)
-                                                            .isLocal
-                                                        ? Image.file(
-                                                            File((controller.mediaList[
-                                                                        index]
-                                                                    as ImageMessageModel)
-                                                                .url),
-                                                            fit: BoxFit.cover,
-                                                          )
-                                                        : Image.network(
-                                                            (controller.mediaList[
-                                                                        index]
-                                                                    as ImageMessageModel)
-                                                                .url,
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                  )),
-                                      ),
+                                      child: Expanded(
+                                          child: isVideo
+                                              ? SizedBox(
+                                                  width: 40.w,
+                                                  height: 40.w,
+                                                  child: (controller.mediaList[
+                                                                  index]
+                                                              as VideoMessageModel)
+                                                          .metadata
+                                                          .isLocal
+                                                      ? Image.memory(
+                                                          (controller.mediaList[
+                                                                      index]
+                                                                  as VideoMessageModel)
+                                                              .metadata
+                                                              .thumbnailBytes!,
+                                                          fit: BoxFit.cover,
+                                                        )
+                                                      : Image.network(
+                                                          (controller.mediaList[
+                                                                      index]
+                                                                  as VideoMessageModel)
+                                                              .metadata
+                                                              .thumbnailUrl,
+                                                          fit: BoxFit.cover,
+                                                        ))
+                                              : SizedBox(
+                                                  width: 40.w,
+                                                  height: 40.w,
+                                                  child: (controller.mediaList[
+                                                                  index]
+                                                              as ImageMessageModel)
+                                                          .isLocal
+                                                      ? Image.file(
+                                                          File((controller.mediaList[
+                                                                      index]
+                                                                  as ImageMessageModel)
+                                                              .url),
+                                                          fit: BoxFit.cover,
+                                                        )
+                                                      : Image.network(
+                                                          (controller.mediaList[
+                                                                      index]
+                                                                  as ImageMessageModel)
+                                                              .url,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                )),
                                     )),
                               ),
                             );
