@@ -75,13 +75,14 @@ class CallController extends GetxController {
 
     args = Get.arguments as CallViewArgumentsModel;
     if (args.initiateCall) {
-      callConnectionController.startCall(args.user.walletAddress);
-      p2pState.callState.value = CallState.calling();
+      final callId = DateTime.now().millisecondsSinceEpoch.toString();
+      callConnectionController.startCall(args.user.walletAddress, callId);
+      p2pState.callState.value = CallState.calling(callId);
       isInCall.value = false;
     } else {
       isInCall.value = true;
 
-      p2pState.callState.value = CallState.inCall();
+      p2pState.callState.value = CallState.inCall(args.callId!);
     }
 
     p2pState.callState.listen((state) {
@@ -89,7 +90,7 @@ class CallController extends GetxController {
         isInCall.value = true;
         callConnectionController.callAccepted(
             state.session, state.remoteCoreId, state.remotePeerId);
-        p2pState.callState.value = CallState.inCall();
+        p2pState.callState.value = CallState.inCall(state.callId);
       } else if (state is CallEnded) {
         Get.back();
       }

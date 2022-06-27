@@ -1,35 +1,44 @@
+
+// 1)none, 2)calling, 3)callAccepted, 4)inCall
+// 1)none, 2)callReceived, 3)inCall
 class CallState {
   CallState._();
 
-  factory CallState.callReceived(String session,
+  factory CallState.callReceived(String callId, String session,
       String remoteCoreId, String remotePeerId) = CallReceivedState;
 
   factory CallState.none() = NoneState;
 
-  factory CallState.calling() = Calling;
+  factory CallState.calling(String callId) = Calling;
 
-  factory CallState.callAccepted(
-      String session, String remoteCoreId, String remotePeerId) = CallAccepted;
+  factory CallState.callAccepted(String callId, String session,
+      String remoteCoreId, String remotePeerId) = CallAccepted;
 
-  factory CallState.inCall() = InCall;
+  factory CallState.inCall(String callId) = InCall;
 
-  factory CallState.ended() = CallEnded;
+  factory CallState.ended(String callId) = CallEnded;
 }
 
+
+
 class InCall extends CallState {
-  InCall() : super._();
+  InCall(this.callId) : super._();
+  final String callId;
 }
 
 class CallAccepted extends CallState {
-  CallAccepted(this.session, this.remoteCoreId, this.remotePeerId) : super._();
+  CallAccepted(this.callId, this.session, this.remoteCoreId, this.remotePeerId)
+      : super._();
 
+  final String callId;
   final String session;
   final String remoteCoreId;
   final String remotePeerId;
 }
 
 class CallEnded extends CallState {
-  CallEnded() : super._();
+  CallEnded(this.callId) : super._();
+  final String callId;
 }
 
 class NoneState extends CallState {
@@ -37,14 +46,16 @@ class NoneState extends CallState {
 }
 
 class Calling extends CallState {
-  Calling() : super._();
+  Calling(this.callId) : super._();
+  final String callId;
 }
 
 class CallReceivedState extends CallState {
   CallReceivedState(
-      this.session, this.remoteCoreId, this.remotePeerId)
+      this.callId, this.session, this.remoteCoreId, this.remotePeerId)
       : super._();
 
+  final String callId;
   final String session;
   final String remoteCoreId;
   final String remotePeerId;
