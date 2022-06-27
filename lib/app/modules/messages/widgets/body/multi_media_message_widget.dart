@@ -25,9 +25,11 @@ class MultiMediaMessageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isMoreThanSix = message.mediaList.length > 6;
 
-    return SizedBox(
+    return Directionality(
+      textDirection: TextDirection.ltr,
       child: GridView.builder(
         shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 8.w,

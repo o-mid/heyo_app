@@ -9,11 +9,11 @@ class MultiMediaMessageModel extends MessageModel {
     required this.mediaList,
     required super.messageId,
     required super.timestamp,
+    required super.isFromMe,
     required super.senderName,
     required super.senderAvatar,
-    required bool isFromMe,
-    bool? isForwarded,
-    bool? isSelected,
+    super.isForwarded,
+    super.isSelected,
     bool clearReply = false,
     super.status = MESSAGE_STATUS.SENDING,
     super.type = CONTENT_TYPE.MULTI_MEDIA,
@@ -44,8 +44,8 @@ class MultiMediaMessageModel extends MessageModel {
         status: status ?? this.status,
         replyTo: clearReply ? null : replyTo,
         isFromMe: isFromMe ?? this.isFromMe,
-        isForwarded: isForwarded,
+        isForwarded: isForwarded ?? this.isForwarded,
         type: type ?? this.type,
-        isSelected: isSelected);
+        isSelected: isSelected ?? this.isSelected);
   }
 }
