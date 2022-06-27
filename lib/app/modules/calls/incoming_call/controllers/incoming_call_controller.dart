@@ -63,6 +63,7 @@ class IncomingCallController extends GetxController {
     Get.offNamed(
       Routes.CALL,
       arguments: CallViewArgumentsModel(
+          callId: args.callId,
           user: UserModel(
             name: "Unknown",
             icon: "https://avatars.githubusercontent.com/u/6645136?v=4",

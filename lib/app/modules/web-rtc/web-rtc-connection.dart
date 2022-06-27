@@ -47,7 +47,7 @@ class WebRTCConnection {
       "iceServers": [
         {"url": "stun:stun.l.google.com:19302"},
         {
-          "urls": 'turn:77.73.67.64:3478',
+          "url": 'turn:77.73.67.64:3478',
           "username": 'turn-demo-server',
           "credential": 'coiansliocuna89s7ca',
           "credentialType": 'password',

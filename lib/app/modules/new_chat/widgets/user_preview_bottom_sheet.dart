@@ -29,12 +29,13 @@ void openUserPreviewBottomSheet(UserModel user) {
           children: [
             Text(
               user.name,
-              style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+              style: TEXTSTYLES.kHeaderLarge
+                  .copyWith(color: COLORS.kDarkBlueColor),
             ),
             CustomSizes.smallSizedBoxWidth,
             user.isVerified
                 ? Assets.svg.verifiedWithBluePadding
-                .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
+                    .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
                 : const SizedBox(),
           ],
         ),
@@ -52,7 +53,7 @@ void openUserPreviewBottomSheet(UserModel user) {
               children: [
                 CustomSizes.smallSizedBoxHeight,
                 TextButton(
-                  //Todo: Add User Info onPressed
+                    //Todo: Add User Info onPressed
                     onPressed: () {},
                     child: Row(
                       children: [
@@ -64,7 +65,8 @@ void openUserPreviewBottomSheet(UserModel user) {
                               borderRadius: BorderRadius.circular(100),
                               color: COLORS.kBrightBlueColor,
                             ),
-                            child: Assets.svg.infoIcon.svg(width: 20, height: 20),
+                            child:
+                                Assets.svg.infoIcon.svg(width: 20, height: 20),
                           ),
                         ),
                         CustomSizes.mediumSizedBoxWidth,
@@ -84,7 +86,8 @@ void openUserPreviewBottomSheet(UserModel user) {
                         return;
                       }
                       Get.toNamed(Routes.MESSAGES,
-                          arguments: MessagesViewArgumentsModel(chat: user.chatModel!));
+                          arguments: MessagesViewArgumentsModel(
+                              chat: user.chatModel!));
                     },
                     child: Row(
                       children: [
@@ -96,7 +99,8 @@ void openUserPreviewBottomSheet(UserModel user) {
                               borderRadius: BorderRadius.circular(100),
                               color: COLORS.kBrightBlueColor,
                             ),
-                            child: Assets.svg.newChatIcon.svg(width: 20, height: 20),
+                            child: Assets.svg.newChatIcon
+                                .svg(width: 20, height: 20),
                           ),
                         ),
                         CustomSizes.mediumSizedBoxWidth,
@@ -110,45 +114,46 @@ void openUserPreviewBottomSheet(UserModel user) {
                             ))
                       ],
                     )),
-                if(!user.isContact) TextButton(
-                    onPressed: () {
-                      Get.toNamed(
-                        Routes.ADD_CONTACTS,
-                        arguments: AddContactsViewArgumentsModel(user: user),
-                      );
-                    },
-                    child: Row(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: COLORS.kBrightBlueColor,
-                            ),
-                            child: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
-                          ),
-                        ),
-                        CustomSizes.mediumSizedBoxWidth,
-                        Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
-                              style: TEXTSTYLES.kLinkBig.copyWith(
-                                color: COLORS.kDarkBlueColor,
+                if (!user.isContact)
+                  TextButton(
+                      onPressed: () {
+                        Get.toNamed(
+                          Routes.ADD_CONTACTS,
+                          arguments: AddContactsViewArgumentsModel(user: user),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: COLORS.kBrightBlueColor,
                               ),
-                            ))
-                      ],
-                    )),
+                              child: Assets.svg.addToContactsIcon
+                                  .svg(width: 20, height: 20),
+                            ),
+                          ),
+                          CustomSizes.mediumSizedBoxWidth,
+                          Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                LocaleKeys
+                                    .newChat_userBottomSheet_addToContacts.tr,
+                                style: TEXTSTYLES.kLinkBig.copyWith(
+                                  color: COLORS.kDarkBlueColor,
+                                ),
+                              ))
+                        ],
+                      )),
                 TextButton(
                     onPressed: () {
                       Get.toNamed(
                         Routes.CALL,
                         arguments: CallViewArgumentsModel(
-                            user: user,
-                            initiateCall: true
-                        ),
+                            callId: null, user: user, initiateCall: true),
                       );
                     },
                     child: Row(
@@ -176,7 +181,7 @@ void openUserPreviewBottomSheet(UserModel user) {
                       ],
                     )),
                 TextButton(
-                  //Todo: Block onPressed
+                    //Todo: Block onPressed
                     onPressed: () {},
                     child: Row(
                       children: [
@@ -188,7 +193,8 @@ void openUserPreviewBottomSheet(UserModel user) {
                               borderRadius: BorderRadius.circular(100),
                               color: COLORS.kStatesErrorBackgroundColor,
                             ),
-                            child: Assets.svg.blockIcon.svg(width: 20, height: 20),
+                            child:
+                                Assets.svg.blockIcon.svg(width: 20, height: 20),
                           ),
                         ),
                         CustomSizes.mediumSizedBoxWidth,
@@ -212,7 +218,7 @@ void openUserPreviewBottomSheet(UserModel user) {
     isScrollControlled: true,
     enableDrag: true,
     shape: const RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20), topRight: Radius.circular(20))),
   );
 }
