@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'package:web3dart/credentials.dart';
-import 'package:web3dart/crypto.dart';
-
+import 'package:core_web3dart/src/crypto/formatting.dart';
+import 'package:core_web3dart/web3dart.dart';
 extension ValidateCoreId on String {
   bool isValid() {
     try {
-      EthereumAddress.fromHex(this);
+      XCBAddress.fromHex(this);
       return true;
     } catch (err) {
       return false;

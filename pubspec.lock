@@ -708,7 +708,7 @@ packages:
     source: hosted
     version: "0.15.0"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"
@@ -1566,15 +1566,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-  web3dart:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "5d3de87231d63b7291e39dcac5e4f6355f50b07f"
-      url: "git@git.energy:corepass/web3-dart-ethereum.git"
-    source: git
-    version: "2.3.3"
   web_socket_channel:
     dependency: transitive
     description:

@@ -28,7 +28,6 @@ class CallConnectionController extends GetxController {
     webRTCConnection.connectionFailed.listen((ended) {
       if (ended) {
         callConnectionFailed.value = true;
-        _reset();
       }
     });
     p2pState.candidate.listen((addCandidate) {
@@ -44,12 +43,11 @@ class CallConnectionController extends GetxController {
       required this.login,
       required this.p2pState});
 
-  Future startCall(String remoteId) async {
+  Future startCall(String remoteId, String callId) async {
     await webRTCConnection.initiate();
 
     String offer = await webRTCConnection.createSDP(true);
-    this.remoteCoreId = remoteId;
-    final callId = DateTime.now().millisecondsSinceEpoch.toString();
+    remoteCoreId = remoteId;
     p2pState.recordedCallIds.add(callId);
     p2pState.currentCallId.value = callId;
     return login.sendSDP(_createSDPData(offer, null, callId), remoteId, null);

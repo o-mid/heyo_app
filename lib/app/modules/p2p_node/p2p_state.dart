@@ -12,7 +12,7 @@ class P2PState extends GetxController {
 
   final currentCallId = "".obs;
   final endedCallIds = [].obs;
-  final recordedCallIds = [].obs;
+  final recordedCallIds = [];
   final address = <String>[].obs;
   final peerId = "".obs;
   List<P2PReqResNodeModel> responses = [];

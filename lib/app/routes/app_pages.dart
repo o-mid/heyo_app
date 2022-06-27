@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/information/shareable_qr_binding.dart';
 
 import '../modules/account/bindings/account_binding.dart';
 import '../modules/account/views/account_view.dart';
@@ -138,6 +139,7 @@ class AppPages {
     GetPage(
       name: _Paths.SHREABLE_QR,
       page: () => ShareableQrView(),
+      binding: ShareableQRBinding()
     ),
     GetPage(
       name: _Paths.SCAN_QR,
