@@ -25,67 +25,88 @@ class MultiMediaMessageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isMoreThanSix = message.mediaList.length > 6;
 
-    return GridView.builder(
-      shrinkWrap: true,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 8.w,
-        mainAxisSpacing: 8.w,
-      ),
-      itemCount: isMoreThanSix ? 6 : message.mediaList.length,
-      itemBuilder: (context, index) {
-        bool isMediaLocal;
-        bool isMediaVideo = message.mediaList[index].type == CONTENT_TYPE.VIDEO;
-        isMediaVideo
-            ? isMediaLocal =
-                (message.mediaList[index] as VideoMessageModel).metadata.isLocal
-            : isMediaLocal =
-                (message.mediaList[index] as ImageMessageModel).isLocal;
-        return GestureDetector(
-          onTap: () {
-            Get.toNamed(Routes.MEDIA_VIEW,
-                arguments: MediaViewArgumentsModel(
-                  mediaList: message.mediaList,
-                  isMultiMessage: true,
-                  multiMessage: message,
-                  activeIndex: index,
-                ));
-          },
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8.r),
-            child: SizedBox(
-              width: 133.w,
-              height: 133.w,
-              child: isMoreThanSix && index == 5
-                  ? Stack(
-                      alignment: Alignment.center,
-                      fit: StackFit.passthrough,
-                      children: [
-                        ImageFiltered(
-                          imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                          child: isMediaLocal
-                              ? ExtendedImage.file(
-                                  File(message.mediaList[index].url),
-                                  fit: BoxFit.cover,
-                                )
-                              : ExtendedImage.network(
-                                  message.mediaList[index].url,
-                                ),
-                        ),
-                        Center(
-                          child: Text(
-                            '+${message.mediaList.length - 6}',
-                            style: TEXTSTYLES.kHeaderDisplay.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
+    return SizedBox(
+      child: GridView.builder(
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 8.w,
+          mainAxisSpacing: 8.w,
+        ),
+        itemCount: isMoreThanSix ? 6 : message.mediaList.length,
+        itemBuilder: (context, index) {
+          bool isMediaLocal;
+          bool isMediaVideo =
+              message.mediaList[index].type == CONTENT_TYPE.VIDEO;
+          isMediaVideo
+              ? isMediaLocal = (message.mediaList[index] as VideoMessageModel)
+                  .metadata
+                  .isLocal
+              : isMediaLocal =
+                  (message.mediaList[index] as ImageMessageModel).isLocal;
+          return GestureDetector(
+            onTap: () {
+              Get.toNamed(Routes.MEDIA_VIEW,
+                  arguments: MediaViewArgumentsModel(
+                    mediaList: message.mediaList,
+                    isMultiMessage: true,
+                    multiMessage: message,
+                    activeIndex: index,
+                  ));
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.r),
+              child: SizedBox(
+                width: 133.w,
+                height: 133.w,
+                child: isMoreThanSix && index == 5
+                    ? Stack(
+                        alignment: Alignment.center,
+                        fit: StackFit.passthrough,
+                        children: [
+                          ImageFiltered(
+                            imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                            child: isMediaVideo
+                                ? (message.mediaList[index]
+                                            as VideoMessageModel)
+                                        .metadata
+                                        .isLocal
+                                    ? Image.memory(
+                                        (message.mediaList[index]
+                                                as VideoMessageModel)
+                                            .metadata
+                                            .thumbnailBytes!,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Image.network(
+                                        (message.mediaList[index]
+                                                as VideoMessageModel)
+                                            .metadata
+                                            .thumbnailUrl,
+                                        fit: BoxFit.cover,
+                                      )
+                                : isMediaLocal
+                                    ? ExtendedImage.file(
+                                        File(message.mediaList[index].url),
+                                        fit: BoxFit.cover,
+                                      )
+                                    : ExtendedImage.network(
+                                        message.mediaList[index].url,
+                                      ),
+                          ),
+                          Center(
+                            child: Text(
+                              '+${message.mediaList.length - 6}',
+                              style: TEXTSTYLES.kHeaderDisplay.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  : isMediaVideo
-                      ? Expanded(
-                          child: VideoMessagePlayer(
+                        ],
+                      )
+                    : isMediaVideo
+                        ? VideoMessagePlayer(
                             message: message.mediaList[index],
                             isMultiMessage: true,
                             multiMessageOnTap: () {
@@ -97,21 +118,21 @@ class MultiMediaMessageWidget extends StatelessWidget {
                                     activeIndex: index,
                                   ));
                             },
-                          ),
-                        )
-                      : isMediaLocal
-                          ? ExtendedImage.file(
-                              File(message.mediaList[index].url),
-                              fit: BoxFit.cover,
-                            )
-                          : Image.network(
-                              message.mediaList[index].url,
-                              fit: BoxFit.cover,
-                            ),
+                          )
+                        : isMediaLocal
+                            ? ExtendedImage.file(
+                                File(message.mediaList[index].url),
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                message.mediaList[index].url,
+                                fit: BoxFit.cover,
+                              ),
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

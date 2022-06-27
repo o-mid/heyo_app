@@ -817,7 +817,7 @@ class MessagesController extends GetxController {
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
         type: CONTENT_TYPE.MULTI_MEDIA,
-        isFromMe: true,
+        isFromMe: false,
         status: MESSAGE_STATUS.READ,
         mediaList: [
           ImageMessageModel(
@@ -831,7 +831,7 @@ class MessagesController extends GetxController {
                 DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
             senderName: "",
             senderAvatar: "",
-            isFromMe: true,
+            isFromMe: false,
             status: MESSAGE_STATUS.READ,
           ),
           ImageMessageModel(
@@ -844,7 +844,7 @@ class MessagesController extends GetxController {
                 DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
             senderName: "",
             senderAvatar: "",
-            isFromMe: true,
+            isFromMe: false,
             type: CONTENT_TYPE.IMAGE,
             status: MESSAGE_STATUS.READ,
           ),
@@ -858,7 +858,7 @@ class MessagesController extends GetxController {
                 DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
             senderName: "",
             senderAvatar: "",
-            isFromMe: true,
+            isFromMe: false,
             type: CONTENT_TYPE.IMAGE,
             status: MESSAGE_STATUS.READ,
           ),
@@ -879,7 +879,7 @@ class MessagesController extends GetxController {
                 DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
             senderName: "",
             senderAvatar: "",
-            isFromMe: true,
+            isFromMe: false,
             status: MESSAGE_STATUS.READ,
           ),
         ],
@@ -1205,7 +1205,7 @@ class MessagesController extends GetxController {
         }
       });
     }
-    ;
+
     mediaGlassmorphicChangeState();
     messages.refresh();
     WidgetsBinding.instance.addPostFrameCallback((_) {

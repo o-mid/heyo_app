@@ -11,7 +11,7 @@ class MultiMediaMessageModel extends MessageModel {
     required super.timestamp,
     required super.senderName,
     required super.senderAvatar,
-    bool? isFromMe,
+    required bool isFromMe,
     bool? isForwarded,
     bool? isSelected,
     bool clearReply = false,
