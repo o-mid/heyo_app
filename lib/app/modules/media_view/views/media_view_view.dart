@@ -8,7 +8,6 @@ import 'package:photo_view/photo_view.dart';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/forward_massages/data/models/forward_massages_view_arguments_model..dart';
-import 'package:heyo/app/modules/media_view/widgets/media_view_bottom_sheet.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/body/video_message_player.dart';
@@ -56,7 +55,7 @@ class MediaViewView extends GetView<MediaViewController> {
             IconButton(
               // TODO: open bottomSheet
               onPressed: () {
-                openMediaViewBottomSheet(controller.mediaList);
+                controller.openMediaViewBottomSheet();
               },
               icon: Assets.svg.verticalMenuIcon.svg(
                 height: 15.h,
