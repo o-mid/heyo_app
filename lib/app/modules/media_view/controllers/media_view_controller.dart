@@ -60,7 +60,8 @@ class MediaViewController extends GetxController {
     super.onInit();
   }
 
-  void setActiveMedia(int index) {
+  void setActiveMediaAndResetController(int index) {
+    photoViewcontroller.reset();
     activeIndex.value = index;
     currentMessage = mediaList[activeIndex.value];
     currentMessage.type == CONTENT_TYPE.VIDEO

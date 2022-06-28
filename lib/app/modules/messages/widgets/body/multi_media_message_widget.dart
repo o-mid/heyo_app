@@ -18,12 +18,14 @@ import 'video_message_player.dart';
 
 class MultiMediaMessageWidget extends StatelessWidget {
   final MultiMediaMessageModel message;
-  const MultiMediaMessageWidget({Key? key, required this.message})
+  final int showMediaLimitCount;
+  const MultiMediaMessageWidget(
+      {Key? key, required this.message, this.showMediaLimitCount = 6})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    bool isMoreThanSix = message.mediaList.length > 6;
+    bool isMoreThanLimit = message.mediaList.length > showMediaLimitCount;
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -35,7 +37,8 @@ class MultiMediaMessageWidget extends StatelessWidget {
           crossAxisSpacing: 8.w,
           mainAxisSpacing: 8.w,
         ),
-        itemCount: isMoreThanSix ? 6 : message.mediaList.length,
+        itemCount:
+            isMoreThanLimit ? showMediaLimitCount : message.mediaList.length,
         itemBuilder: (context, index) {
           bool isMediaLocal;
           bool isMediaVideo =
@@ -61,7 +64,7 @@ class MultiMediaMessageWidget extends StatelessWidget {
               child: SizedBox(
                 width: 133.w,
                 height: 133.w,
-                child: isMoreThanSix && index == 5
+                child: isMoreThanLimit && index == showMediaLimitCount - 1
                     ? Stack(
                         alignment: Alignment.center,
                         fit: StackFit.passthrough,
@@ -98,7 +101,7 @@ class MultiMediaMessageWidget extends StatelessWidget {
                           ),
                           Center(
                             child: Text(
-                              '+${message.mediaList.length - 6}',
+                              '+${message.mediaList.length - showMediaLimitCount}',
                               style: TEXTSTYLES.kHeaderDisplay.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500,

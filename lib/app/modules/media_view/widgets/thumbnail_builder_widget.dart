@@ -35,10 +35,8 @@ class ThumbnailBuilderWidget extends StatelessWidget {
                     controller.mediaList[index].type == CONTENT_TYPE.VIDEO;
 
                 return GestureDetector(
-                  onTap: () {
-                    controller.photoViewcontroller.reset();
-                    controller.setActiveMedia(index);
-                  },
+                  onTap: () =>
+                      controller.setActiveMediaAndResetController(index),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
