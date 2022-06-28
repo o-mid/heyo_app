@@ -17,8 +17,8 @@ import 'package:heyo/generated/assets.gen.dart';
 
 import '../controllers/media_view_controller.dart';
 
-class MediaViewView extends GetView<MediaViewController> {
-  const MediaViewView({Key? key}) : super(key: key);
+class MediaView extends GetView<MediaViewController> {
+  const MediaView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Obx(() {

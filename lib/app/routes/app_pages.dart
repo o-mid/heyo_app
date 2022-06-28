@@ -29,7 +29,7 @@ import '../modules/information/shareable_qr_view.dart';
 import '../modules/intro/bindings/intro_binding.dart';
 import '../modules/intro/views/intro_view.dart';
 import '../modules/media_view/bindings/media_view_binding.dart';
-import '../modules/media_view/views/media_view_view.dart';
+import '../modules/media_view/views/media_view.dart';
 import '../modules/messages/bindings/messages_binding.dart';
 import '../modules/messages/views/messages_view.dart';
 import '../modules/new_chat/bindings/new_chat_binding.dart';
@@ -137,10 +137,9 @@ class AppPages {
       binding: ShareLocationBinding(),
     ),
     GetPage(
-      name: _Paths.SHREABLE_QR,
-      page: () => ShareableQrView(),
-      binding: ShareableQRBinding()
-    ),
+        name: _Paths.SHREABLE_QR,
+        page: () => ShareableQrView(),
+        binding: ShareableQRBinding()),
     GetPage(
       name: _Paths.SCAN_QR,
       page: () => WebsiteInteractView(),
@@ -168,7 +167,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.MEDIA_VIEW,
-      page: () => const MediaViewView(),
+      page: () => const MediaView(),
       binding: MediaViewBinding(),
     ),
   ];
