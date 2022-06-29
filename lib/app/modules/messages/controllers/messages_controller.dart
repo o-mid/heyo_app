@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:heyo/app/modules/messages/data/models/messages/file_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
 import 'package:heyo/app/modules/share_files/models/file_model.dart';
 import 'package:path/path.dart' as path;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -387,6 +388,10 @@ class MessagesController extends GetxController {
       case AudioMessageModel:
         // Todo: use video metadata to show audio duration
         replyMsg = LocaleKeys.MessagesPage_replyToAudio.tr;
+        break;
+      case MultiMediaMessageModel:
+        replyMsg = LocaleKeys.MessagesPage_replyToImage.tr;
+        break;
     }
 
     replyingTo.value = ReplyToModel(
@@ -805,6 +810,80 @@ class MessagesController extends GetxController {
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
+      MultiMediaMessageModel(
+        messageId: "${index++}",
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+        type: CONTENT_TYPE.MULTI_MEDIA,
+        isFromMe: false,
+        status: MESSAGE_STATUS.READ,
+        mediaList: [
+          ImageMessageModel(
+            messageId: "${index++}",
+            isLocal: false,
+            type: CONTENT_TYPE.IMAGE,
+            url:
+                "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
+            metadata: ImageMetadata(width: 0, height: 0),
+            timestamp:
+                DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
+            senderName: "",
+            senderAvatar: "",
+            isFromMe: false,
+            status: MESSAGE_STATUS.READ,
+          ),
+          ImageMessageModel(
+            messageId: "${index++}",
+            isLocal: false,
+            url:
+                "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
+            metadata: ImageMetadata(width: 0, height: 0),
+            timestamp:
+                DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
+            senderName: "",
+            senderAvatar: "",
+            isFromMe: false,
+            type: CONTENT_TYPE.IMAGE,
+            status: MESSAGE_STATUS.READ,
+          ),
+          ImageMessageModel(
+            messageId: "${index++}",
+            isLocal: false,
+            url:
+                "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+            metadata: ImageMetadata(width: 687, height: 1030),
+            timestamp:
+                DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
+            senderName: "",
+            senderAvatar: "",
+            isFromMe: false,
+            type: CONTENT_TYPE.IMAGE,
+            status: MESSAGE_STATUS.READ,
+          ),
+          VideoMessageModel(
+            messageId: "${index++}",
+            url:
+                "https://assets.mixkit.co/videos/download/mixkit-microchip-technology-close-up-1140.mp4",
+            metadata: VideoMetadata(
+              isLocal: false,
+              durationInSeconds: 120,
+              thumbnailBytes: null,
+              thumbnailUrl:
+                  "https://mixkit.imgix.net/static/home/video-thumb3.png",
+              width: 656,
+              height: 368,
+            ),
+            timestamp:
+                DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
+            senderName: "",
+            senderAvatar: "",
+            isFromMe: false,
+            status: MESSAGE_STATUS.READ,
+          ),
+        ],
+      ),
       CallMessageModel(
         messageId: "${index++}",
         callStatus: CallMessageStatus.declined,
@@ -999,78 +1078,134 @@ class MessagesController extends GetxController {
     }
   }
 
-  void addSelectedMedia(
-      {@required dynamic result, bool closeMediaGlassmorphic = false}) {
+  Future<void> addSelectedMedia(
+      {@required dynamic result, bool closeMediaGlassmorphic = false}) async {
     if (closeMediaGlassmorphic) mediaGlassmorphicChangeState();
 
-    result.forEach((asset) async {
-      switch (asset["type"]) {
-        case "image":
-          {
-            messages.add(
-              ImageMessageModel(
+    List? tempImages = [];
+    for (var element in result) {
+      if (element["type"] == "image") {
+        tempImages.add(ImageMessageModel(
+          messageId: "${messages.lastIndexOf(messages.last) + 1}",
+          isLocal: true,
+          metadata: ImageMetadata(
+            height: element["height"].toDouble(),
+            width: element["width"].toDouble(),
+          ),
+          senderAvatar: '',
+          senderName: '',
+          isFromMe: true,
+          status: MESSAGE_STATUS.SENT,
+          timestamp:
+              DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+          url: element["path"],
+        ));
+      } else if (element["type"] == "video") {
+        Uint8List thumbnailBytes = await element["thumbnail"];
+        tempImages.add(VideoMessageModel(
+          messageId: "${messages.lastIndexOf(messages.last) + 1}",
+          metadata: VideoMetadata(
+            durationInSeconds: element["videoDuration"].inSeconds,
+            height: double.parse(element["height"].toString()),
+            width: double.parse(element["width"].toString()),
+            isLocal: true,
+            thumbnailBytes: thumbnailBytes,
+            thumbnailUrl:
+                "https://mixkit.imgix.net/static/home/video-thumb3.png",
+          ),
+          url: element["path"],
+          timestamp:
+              DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+          senderName: '',
+          senderAvatar: '',
+          isFromMe: true,
+          status: MESSAGE_STATUS.SENT,
+          type: CONTENT_TYPE.VIDEO,
+        ));
+      }
+    }
+    if (tempImages.length > 1) {
+      messages.add(MultiMediaMessageModel(
+        mediaList: tempImages,
+        messageId: "${messages.lastIndexOf(messages.last) + 1}",
+        senderAvatar: '',
+        senderName: '',
+        isFromMe: true,
+        status: MESSAGE_STATUS.SENT,
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+      ));
+    } else {
+      result.forEach((asset) async {
+        switch (asset["type"]) {
+          case "image":
+            {
+              messages.add(
+                ImageMessageModel(
+                    messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                    isLocal: true,
+                    metadata: ImageMetadata(
+                      height: double.parse(asset["height"].toString()),
+                      width: double.parse(asset["width"].toString()),
+                    ),
+                    senderAvatar: '',
+                    senderName: '',
+                    isFromMe: true,
+                    status: MESSAGE_STATUS.SENT,
+                    timestamp: DateTime.now()
+                        .subtract(const Duration(hours: 1, minutes: 49)),
+                    url: asset["path"]),
+              );
+            }
+            break;
+
+          case "video":
+            {
+              messages.add(
+                VideoMessageModel(
                   messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                  isLocal: true,
-                  metadata: ImageMetadata(
+                  metadata: VideoMetadata(
+                    durationInSeconds: asset["videoDuration"].inSeconds,
                     height: double.parse(asset["height"].toString()),
                     width: double.parse(asset["width"].toString()),
+                    isLocal: true,
+                    thumbnailBytes: await asset["thumbnail"],
+                    thumbnailUrl: '',
                   ),
-                  senderAvatar: '',
-                  senderName: '',
-                  isFromMe: true,
-                  status: MESSAGE_STATUS.SENT,
+                  url: asset["path"],
                   timestamp: DateTime.now()
                       .subtract(const Duration(hours: 1, minutes: 49)),
-                  url: asset["path"]),
-            );
-          }
-          break;
-
-        case "video":
-          {
-            messages.add(
-              VideoMessageModel(
-                messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                metadata: VideoMetadata(
-                  durationInSeconds: asset["videoDuration"].inSeconds,
-                  height: double.parse(asset["height"].toString()),
-                  width: double.parse(asset["width"].toString()),
-                  isLocal: true,
-                  thumbnailBytes: await asset["thumbnail"],
-                  thumbnailUrl: '',
+                  senderName: '',
+                  senderAvatar: '',
+                  isFromMe: true,
+                  status: MESSAGE_STATUS.SENT,
                 ),
-                url: asset["path"],
-                timestamp: DateTime.now()
-                    .subtract(const Duration(hours: 1, minutes: 49)),
-                senderName: '',
-                senderAvatar: '',
-                isFromMe: true,
-                status: MESSAGE_STATUS.SENT,
-              ),
-            );
-          }
-          break;
-        case "text":
-          {
-            messages.add(
-              TextMessageModel(
-                messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                text: asset["value"],
-                timestamp: DateTime.now()
-                    .subtract(const Duration(hours: 1, minutes: 49)),
-                senderName: '',
-                senderAvatar: '',
-                isFromMe: true,
-                status: MESSAGE_STATUS.SENT,
-              ),
-            );
-          }
-          break;
+              );
+            }
+            break;
+          case "text":
+            {
+              messages.add(
+                TextMessageModel(
+                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                  text: asset["value"],
+                  timestamp: DateTime.now()
+                      .subtract(const Duration(hours: 1, minutes: 49)),
+                  senderName: '',
+                  senderAvatar: '',
+                  isFromMe: true,
+                  status: MESSAGE_STATUS.SENT,
+                ),
+              );
+            }
+            break;
 
-        default:
-          break;
-      }
-    });
+          default:
+            break;
+        }
+      });
+    }
+
     mediaGlassmorphicChangeState();
     messages.refresh();
     WidgetsBinding.instance.addPostFrameCallback((_) {

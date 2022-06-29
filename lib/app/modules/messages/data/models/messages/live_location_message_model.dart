@@ -14,6 +14,7 @@ class LiveLocationMessageModel extends MessageModel {
     required super.senderName,
     required super.senderAvatar,
     super.status = MESSAGE_STATUS.SENDING,
+    super.type = CONTENT_TYPE.LIVE_LOCATION,
     super.isFromMe = false,
     super.isForwarded = false,
     super.isSelected = false,
@@ -26,6 +27,7 @@ class LiveLocationMessageModel extends MessageModel {
     DateTime? endTime,
     String? messageId,
     MESSAGE_STATUS? status,
+    CONTENT_TYPE? type,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
     bool? isFromMe,
@@ -47,6 +49,7 @@ class LiveLocationMessageModel extends MessageModel {
       isSelected: isSelected ?? this.isSelected,
       reactions: reactions ?? this.reactions,
       replyTo: clearReply ? null : replyTo,
+      type: type ?? this.type,
     );
   }
 }

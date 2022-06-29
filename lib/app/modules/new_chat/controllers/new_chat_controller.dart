@@ -25,12 +25,10 @@ class NewChatController extends GetxController
   final AccountInfo accountInfo;
 
   NewChatController(
-      {required this.contactRepository,
-      required this.accountInfo});
+      {required this.contactRepository, required this.accountInfo});
 
 // in nearby users Tab after 3 seconds the refresh button will be visible
   RxBool refreshBtnVisibility = false.obs;
-
 
   void makeRefreshBtnVisible() {
     Future.delayed(const Duration(seconds: 3), () {

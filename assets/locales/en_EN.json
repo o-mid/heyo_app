@@ -261,5 +261,14 @@
     "textInputTitle": "Search in files",
     "searchResults": "Search results",
     "mostRecent": "Most recent"
+  },
+  "mediaView": {
+    "bottomSheet": {
+      "edit": "Edit",
+      "mediafiles": "Media and files",
+      "delete": "Delete",
+      "share": "Share",
+      "save": "Save to device"
+    }
   }
 }

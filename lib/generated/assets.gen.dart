@@ -174,6 +174,9 @@ class $AssetsSvgGen {
   SvgGenImage get doubleTickIcon =>
       const SvgGenImage('assets/svg/double_tick_icon.svg');
 
+  /// File path: assets/svg/editIcon.svg
+  SvgGenImage get editIcon => const SvgGenImage('assets/svg/editIcon.svg');
+
   /// File path: assets/svg/emoji_icon.svg
   SvgGenImage get emojiIcon => const SvgGenImage('assets/svg/emoji_icon.svg');
 
@@ -235,6 +238,14 @@ class $AssetsSvgGen {
   /// File path: assets/svg/luna_connection.svg
   SvgGenImage get lunaConnection =>
       const SvgGenImage('assets/svg/luna_connection.svg');
+
+  /// File path: assets/svg/mediaAndFiles.svg
+  SvgGenImage get mediaAndFiles =>
+      const SvgGenImage('assets/svg/mediaAndFiles.svg');
+
+  /// File path: assets/svg/mediaAndFilesIcon.svg
+  SvgGenImage get mediaAndFilesIcon =>
+      const SvgGenImage('assets/svg/mediaAndFilesIcon.svg');
 
   /// File path: assets/svg/moneyIcon.svg
   SvgGenImage get moneyIcon => const SvgGenImage('assets/svg/moneyIcon.svg');
@@ -316,6 +327,10 @@ class $AssetsSvgGen {
   SvgGenImage get replyOutlined =>
       const SvgGenImage('assets/svg/reply_outlined.svg');
 
+  /// File path: assets/svg/saveToDevice.svg
+  SvgGenImage get saveToDevice =>
+      const SvgGenImage('assets/svg/saveToDevice.svg');
+
   /// File path: assets/svg/searchIcon.svg
   SvgGenImage get searchIcon => const SvgGenImage('assets/svg/searchIcon.svg');
 
@@ -329,6 +344,9 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/send_icon.svg
   SvgGenImage get sendIcon => const SvgGenImage('assets/svg/send_icon.svg');
+
+  /// File path: assets/svg/shareIcon.svg
+  SvgGenImage get shareIcon => const SvgGenImage('assets/svg/shareIcon.svg');
 
   /// File path: assets/svg/share_screen.svg
   SvgGenImage get shareScreen =>

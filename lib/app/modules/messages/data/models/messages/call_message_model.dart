@@ -22,6 +22,7 @@ class CallMessageModel extends MessageModel {
     required super.senderName,
     required super.senderAvatar,
     super.status = MESSAGE_STATUS.SENDING,
+    super.type = CONTENT_TYPE.CALL,
     super.isFromMe = false,
     super.isForwarded = false,
     super.isSelected = false,
@@ -38,6 +39,7 @@ class CallMessageModel extends MessageModel {
     bool? isFromMe,
     bool? isForwarded,
     bool? isSelected,
+    CONTENT_TYPE? type,
     bool clearReply = false,
   }) {
     return CallMessageModel(
@@ -53,6 +55,7 @@ class CallMessageModel extends MessageModel {
       isSelected: isSelected ?? this.isSelected,
       reactions: reactions ?? this.reactions,
       replyTo: clearReply ? null : replyTo,
+      type: type ?? this.type,
     );
   }
 }
