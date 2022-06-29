@@ -1,9 +1,11 @@
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/p2p_node/data/account/account_abstract_repo.dart';
 
 class AccountController extends GetxController {
-  //TODO: Implement AccountController
+  final AccountAbstractRepo accountRepo;
 
-  final count = 0.obs;
+  AccountController({required this.accountRepo});
+
   @override
   void onInit() {
     super.onInit();
@@ -16,5 +18,4 @@ class AccountController extends GetxController {
 
   @override
   void onClose() {}
-  void increment() => count.value++;
 }

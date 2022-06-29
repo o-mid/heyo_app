@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/information/shareable_qr_binding.dart';
 
-import '../modules/account/bindings/account_binding.dart';
 import '../modules/account/views/account_view.dart';
 import '../modules/add_contacts/bindings/add_contacts_binding.dart';
 import '../modules/add_contacts/views/add_contacts_view.dart';
@@ -11,7 +10,6 @@ import '../modules/auth/pinCode/bindings/pin_code_binding.dart';
 import '../modules/auth/pinCode/views/pin_code_view.dart';
 import '../modules/auth/sing-up/bindings/sing_up_binding.dart';
 import '../modules/auth/sing-up/views/sing_up_view.dart';
-import '../modules/calls/home/bindings/calls_binding.dart';
 import '../modules/calls/home/views/calls_view.dart';
 import '../modules/calls/incoming_call/bindings/incoming_call_binding.dart';
 import '../modules/calls/incoming_call/views/incoming_call_view.dart';
@@ -82,7 +80,6 @@ class AppPages {
     GetPage(
       name: _Paths.CALLS,
       page: () => CallsView(),
-      binding: CallsBinding(),
     ),
     GetPage(
       name: _Paths.WALLET,
@@ -97,7 +94,6 @@ class AppPages {
     GetPage(
       name: _Paths.ACCOUNT,
       page: () => AccountView(),
-      binding: AccountBinding(),
     ),
     GetPage(
       name: _Paths.HOME,
@@ -137,7 +133,7 @@ class AppPages {
     GetPage(
       name: _Paths.SHREABLE_QR,
       page: () => ShareableQrView(),
-      binding: ShareableQRBinding()
+      binding: ShareableQRBinding(),
     ),
     GetPage(
       name: _Paths.SCAN_QR,

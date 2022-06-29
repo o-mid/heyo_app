@@ -11,14 +11,14 @@ import 'package:core_web3dart/src/crypto/formatting.dart';
 import 'package:core_web3dart/web3dart.dart';
 
 class P2PNode {
-  final AccountAbstractRepo accountInfo;
+  final AccountAbstractRepo accountRepo;
   final P2PNodeResponseStream p2pNodeResponseStream;
   final P2PNodeRequestStream p2pNodeRequestStream;
   final P2PState p2pState;
   final Web3Client web3client;
 
   P2PNode(
-      {required this.accountInfo,
+      {required this.accountRepo,
       required this.p2pNodeRequestStream,
       required this.p2pNodeResponseStream,
       required this.p2pState,
@@ -30,19 +30,19 @@ class P2PNode {
   }
 
   _startP2PNode() async {
-    if (await accountInfo.getCoreId() == null) {
-      await accountInfo.createAccount();
+    if (await accountRepo.getCoreId() == null) {
+      await accountRepo.createAccount();
     }
 
-    String? _peerSeed = await accountInfo.getP2PSecret();
+    String? _peerSeed = await accountRepo.getP2PSecret();
     if (_peerSeed == null) {
       _peerSeed = bytesToHex(mnemonicToSeed(generateMnemonic()).aesKeySeed);
-      await accountInfo.setP2PSecret(_peerSeed);
+      await accountRepo.setP2PSecret(_peerSeed);
     }
     int networkId = await web3client.getNetworkId();
     await FlutterP2pCommunicator.startNode(peerSeed: _peerSeed, networkId: networkId.toString());
 
-    final _privateKey = await accountInfo.getPrivateKey();
+    final _privateKey = await accountRepo.getPrivateKey();
     final _privToAdd =
         P2PReqResNodeModel(name: P2PReqResNodeNames.addCoreID, body: {"privKey": _privateKey});
 
