@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:heyo/app/modules/media_view/widgets/media_view_bottom_sheet_widget.dart';
 import 'package:heyo/app/modules/media_view/widgets/thumbnail_builder_widget.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -54,9 +55,7 @@ class MediaView extends GetView<MediaViewController> {
             ),
             IconButton(
               // TODO: open bottomSheet
-              onPressed: () {
-                controller.openMediaViewBottomSheet();
-              },
+              onPressed: () => controller.openBottomSheet(),
               icon: Assets.svg.verticalMenuIcon.svg(
                 height: 15.h,
                 color: Colors.white,
