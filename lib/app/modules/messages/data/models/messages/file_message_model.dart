@@ -12,6 +12,7 @@ class FileMessageModel extends MessageModel {
     required super.timestamp,
     required super.senderName,
     required super.senderAvatar,
+    super.type = CONTENT_TYPE.FILE,
     super.status = MESSAGE_STATUS.SENDING,
     super.isFromMe = false,
     super.isForwarded = false,
@@ -25,6 +26,7 @@ class FileMessageModel extends MessageModel {
     String? messageId,
     MESSAGE_STATUS? status,
     bool? isLocal,
+    CONTENT_TYPE? type,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
     bool? isFromMe,
@@ -44,6 +46,7 @@ class FileMessageModel extends MessageModel {
       isSelected: isSelected ?? this.isSelected,
       reactions: reactions ?? this.reactions,
       replyTo: clearReply ? null : replyTo,
+      type: type ?? this.type,
     );
   }
 }

@@ -16,6 +16,7 @@ class ImageMessageModel extends MessageModel {
     required super.senderName,
     required super.senderAvatar,
     super.status = MESSAGE_STATUS.SENDING,
+    super.type = CONTENT_TYPE.IMAGE,
     super.isFromMe = false,
     super.isForwarded = false,
     super.isSelected = false,
@@ -30,6 +31,7 @@ class ImageMessageModel extends MessageModel {
     String? messageId,
     MESSAGE_STATUS? status,
     DateTime? timestamp,
+    CONTENT_TYPE? type,
     Map<String, ReactionModel>? reactions,
     bool? isFromMe,
     bool? isForwarded,
@@ -50,6 +52,7 @@ class ImageMessageModel extends MessageModel {
       isSelected: isSelected ?? this.isSelected,
       reactions: reactions ?? this.reactions,
       replyTo: clearReply ? null : replyTo,
+      type: type ?? this.type,
     );
   }
 }

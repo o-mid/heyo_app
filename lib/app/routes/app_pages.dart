@@ -26,6 +26,8 @@ import '../modules/home/views/home_view.dart';
 import '../modules/information/shareable_qr_view.dart';
 import '../modules/intro/bindings/intro_binding.dart';
 import '../modules/intro/views/intro_view.dart';
+import '../modules/media_view/bindings/media_view_binding.dart';
+import '../modules/media_view/views/media_view.dart';
 import '../modules/messages/bindings/messages_binding.dart';
 import '../modules/messages/views/messages_view.dart';
 import '../modules/new_chat/bindings/new_chat_binding.dart';
@@ -159,6 +161,11 @@ class AppPages {
       name: _Paths.SHARE_FILES,
       page: () => const ShareFilesView(),
       binding: ShareFilesBinding(),
+    ),
+    GetPage(
+      name: _Paths.MEDIA_VIEW,
+      page: () => const MediaView(),
+      binding: MediaViewBinding(),
     ),
   ];
 }

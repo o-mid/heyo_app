@@ -14,6 +14,7 @@ class LocationMessageModel extends MessageModel {
     required super.senderName,
     required super.senderAvatar,
     super.status = MESSAGE_STATUS.SENDING,
+    super.type = CONTENT_TYPE.LOCATION,
     super.isFromMe = false,
     super.isForwarded = false,
     super.isSelected = false,
@@ -31,6 +32,7 @@ class LocationMessageModel extends MessageModel {
     bool? isForwarded,
     bool? isSelected,
     bool clearReply = false,
+    CONTENT_TYPE? type,
   }) {
     return LocationMessageModel(
       address: address,
@@ -46,6 +48,7 @@ class LocationMessageModel extends MessageModel {
       isSelected: isSelected ?? this.isSelected,
       reactions: reactions ?? this.reactions,
       replyTo: clearReply ? null : replyTo,
+      type: type ?? this.type,
     );
   }
 }
