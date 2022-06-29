@@ -1,4 +1,4 @@
-abstract class AccountInfo {
+abstract class AccountAbstractRepo {
   Future<void> createAccount();
 
   Future<String?> getP2PSecret();
