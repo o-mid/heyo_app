@@ -5,7 +5,7 @@ import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
 
 class QRInfo {
-  final AccountAbstractRepo accountInfo;
+  final AccountInfo accountInfo;
   final P2PState p2pState;
 
   QRInfo({required this.p2pState, required this.accountInfo});

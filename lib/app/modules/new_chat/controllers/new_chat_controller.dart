@@ -19,7 +19,7 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
   late Animation<double> animation;
   late TextEditingController inputController;
   final ContactRepository contactRepository;
-  final AccountAbstractRepo accountInfo;
+  final AccountInfo accountInfo;
 
   NewChatController({required this.contactRepository, required this.accountInfo});
 

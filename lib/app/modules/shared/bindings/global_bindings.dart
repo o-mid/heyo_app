@@ -28,13 +28,13 @@ class GlobalBindings extends Bindings {
   static Web3Client web3Client =
       Web3Client('https://stg.pingextest.eu/eth', http.Client(), 'ping-dev', 'caC12cas');
 
-  static AccountAbstractRepo accountRepo = AccountRepo(
+  static AccountInfo accountInfo = AccountRepo(
     localProvider: SecureStorageProvider(),
     cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
   );
   static Login login = Login(
     p2pState: p2pState,
-    accountRepo: accountRepo,
+    accountInfo: accountInfo,
   );
   static WebRTCConnection webRTCConnection = WebRTCConnection();
   static CallConnectionController callConnectionController = CallConnectionController(
@@ -48,7 +48,7 @@ class GlobalBindings extends Bindings {
     Get.put(callConnectionController);
     Get.put(ChatsController());
     Get.put(CallsController());
-    Get.put(AccountController(accountRepo: accountRepo));
+    Get.put(AccountController(accountInfo: accountInfo));
     Get.put(GlobalMessageController());
     Get.put(AudioMessageController());
     Get.put(VideoMessageController());
@@ -57,7 +57,7 @@ class GlobalBindings extends Bindings {
     Get.put<P2PNodeController>(
       P2PNodeController(
         p2pNode: P2PNode(
-          accountRepo: accountRepo,
+          accountInfo: accountInfo,
           p2pNodeRequestStream: p2pNodeRequestStream,
           p2pNodeResponseStream: p2pNodeResponseStream,
           p2pState: p2pState,

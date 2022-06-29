@@ -11,9 +11,9 @@ import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 
 class Login {
   final P2PState p2pState;
-  final AccountAbstractRepo accountRepo;
+  final AccountInfo accountInfo;
 
-  Login({required this.p2pState, required this.accountRepo});
+  Login({required this.p2pState, required this.accountInfo});
 
   Future<String> _sendingConnectRequest(P2PAddrModel info) async {
     final id = await FlutterP2pCommunicator.sendRequest(
@@ -32,7 +32,7 @@ class Login {
     if (barcodeValue == null) {
       return; // Todo(qr)
     }
-    final localCoreId = await accountRepo.getCoreId();
+    final localCoreId = await accountInfo.getCoreId();
     if (localCoreId == null) throw 'Core id is null!!';
 
     final remoteCoreId = barcodeValue.getCoreId();
@@ -106,7 +106,7 @@ class Login {
   }
 
   Future sendSDP(String sdp, String remoteCoreId, String? remotePeerId) async {
-    final localCoreId = await accountRepo.getCoreId();
+    final localCoreId = await accountInfo.getCoreId();
     if (localCoreId == null) throw 'Core id is null!!';
 
     String hexSDP = sdp.getHex();
