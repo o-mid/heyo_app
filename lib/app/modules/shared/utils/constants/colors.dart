@@ -15,7 +15,7 @@ class COLORS {
   static const Color kTextBlueColor = Color(0xff697087);
 
   ///Heyo Brand/Text Soft Blue
-  static const Color kTextSoftBlueColor = Color(0xffC7CBDB);
+  static const Color kTextSoftBlueColor = Color(0xff616982);
 
   ///Heyo Brand/Bright Blue
   static const Color kBrightBlueColor = Color(0xffF8F7FF);
@@ -84,8 +84,7 @@ class COLORS {
   static const Color kOnlineBadgeColor = Color(0xff37E028);
 
   /// Tab bar slider background #F8F7FF 80% opacity
-  static const Color kTabbarBackgroundColor =
-      Color.fromARGB(204, 248, 247, 255);
+  static const Color kTabbarBackgroundColor = Color.fromARGB(204, 248, 247, 255);
 
   /// message selection options color
   static const Color kMessageSelectionOption = Color(0xffA9AFC6);
@@ -113,4 +112,7 @@ class COLORS {
 
   ///divider color messaging
   static const Color kMessagingDividerColor = Color(0xffF0EFF9);
+
+  /// Primary/Chat Stroke
+  static const Color kChatStroke = Color(0xffE6E2F0);
 }

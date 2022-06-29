@@ -17,8 +17,7 @@ class Login {
 
   Future<String> _sendingConnectRequest(P2PAddrModel info) async {
     final id = await FlutterP2pCommunicator.sendRequest(
-        info: P2PReqResNodeModel(
-            name: P2PReqResNodeNames.connect, body: info.toJson()));
+        info: P2PReqResNodeModel(name: P2PReqResNodeNames.connect, body: info.toJson()));
 
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: RETRY_DELAY));
@@ -41,21 +40,16 @@ class Login {
     final addresses = barcodeValue.getAddresses();
 
     //TODO ask moji about name and connect usecase in general
-    final connected =
-        await _connect(P2PAddrModel(id: remotePeerId, addrs: addresses));
+    final connected = await _connect(P2PAddrModel(id: remotePeerId, addrs: addresses));
     //TODO session
     final _loginModel = P2PLoginBodyModel(
         info: connected
             ? P2PTransferModel(
-                localCoreID: localCoreId,
-                remotePeerID: remotePeerId,
-                remoteCoreID: remoteCoreId)
-            : P2PTransferModel(
-                localCoreID: localCoreId, remoteCoreID: remoteCoreId),
+                localCoreID: localCoreId, remotePeerID: remotePeerId, remoteCoreID: remoteCoreId)
+            : P2PTransferModel(localCoreID: localCoreId, remoteCoreID: remoteCoreId),
         payload: P2PLoginPayloadModel(session: "0x73"));
     _sendingLoginRequest(_loginModel);
   }
-
 
   Future<void> _sendingLoginRequest(dynamic model) async {
     int retryCount = 0;
@@ -63,8 +57,7 @@ class Login {
       p2pState.loginState.value = P2P_STATUS.IN_PROGRESS;
       retryCount++;
       await FlutterP2pCommunicator.sendRequest(
-          info: P2PReqResNodeModel(
-              name: P2PReqResNodeNames.login, body: model.toJson()));
+          info: P2PReqResNodeModel(name: P2PReqResNodeNames.login, body: model.toJson()));
       print("login request counter is:$retryCount");
       await Future.delayed(const Duration(seconds: 5));
       if (p2pState.loginState.value == P2P_STATUS.SUCCESS) {
@@ -83,8 +76,8 @@ class Login {
   P2PReqResNodeModel? _gettingConnectResponse(String id) {
     P2PReqResNodeModel? _res;
     try {
-      _res = p2pState.responses.singleWhereOrNull((element) =>
-          element.id == id && element.name == P2PReqResNodeNames.connect);
+      _res = p2pState.responses.singleWhereOrNull(
+          (element) => element.id == id && element.name == P2PReqResNodeNames.connect);
     } catch (e) {
       print("error in tryConnect ${e.toString()}");
     }
@@ -120,21 +113,18 @@ class Login {
 
     var connected = false;
     if (remotePeerId != null) {
-      connected = await _connect(
-          P2PAddrModel(id: remotePeerId, addrs: p2pState.address.value));
+      connected = await _connect(P2PAddrModel(id: remotePeerId, addrs: p2pState.address.value));
     }
 
     final _loginModel = P2PLoginBodyModel(
         info: connected
             ? P2PTransferModel(
-                localCoreID: localCoreId,
-                remotePeerID: remotePeerId,
-                remoteCoreID: remoteCoreId)
-            : P2PTransferModel(
-                localCoreID: localCoreId, remoteCoreID: remoteCoreId),
+                localCoreID: localCoreId, remotePeerID: remotePeerId, remoteCoreID: remoteCoreId)
+            : P2PTransferModel(localCoreID: localCoreId, remoteCoreID: remoteCoreId),
         payload: P2PLoginPayloadModel(session: hexSDP));
     _sendingLoginRequest(_loginModel);
   }
 }
+
 const int RETRY_DELAY = 100;
 const int RETRY_NUMBER = 4;

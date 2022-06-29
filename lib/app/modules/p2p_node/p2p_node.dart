@@ -40,18 +40,16 @@ class P2PNode {
       await accountInfo.setP2PSecret(_peerSeed);
     }
     int networkId = await web3client.getNetworkId();
-    await FlutterP2pCommunicator.startNode(
-        peerSeed: _peerSeed, networkId: networkId.toString());
+    await FlutterP2pCommunicator.startNode(peerSeed: _peerSeed, networkId: networkId.toString());
 
     final _privateKey = await accountInfo.getPrivateKey();
-    final _privToAdd = P2PReqResNodeModel(
-        name: P2PReqResNodeNames.addCoreID, body: {"privKey": _privateKey});
+    final _privToAdd =
+        P2PReqResNodeModel(name: P2PReqResNodeNames.addCoreID, body: {"privKey": _privateKey});
 
     await FlutterP2pCommunicator.sendRequest(info: _privToAdd);
 
     await Future.forEach(P2P_Nodes, (P2PAddrModel element) async {
-      final _info = P2PReqResNodeModel(
-          name: P2PReqResNodeNames.connect, body: element.toJson());
+      final _info = P2PReqResNodeModel(name: P2PReqResNodeNames.connect, body: element.toJson());
       await FlutterP2pCommunicator.sendRequest(info: _info);
     });
   }
