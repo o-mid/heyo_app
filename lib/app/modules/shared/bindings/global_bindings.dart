@@ -7,7 +7,7 @@ import 'package:heyo/app/modules/shared/controllers/global_message_controller.da
 import 'package:heyo/app/modules/shared/controllers/live_location_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/audio_message_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/video_message_controller.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_abstract_repo.dart';
+import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_repo.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/web3_keys.dart';
 import 'package:heyo/app/modules/p2p_node/login.dart';

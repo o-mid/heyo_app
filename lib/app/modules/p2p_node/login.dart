@@ -3,7 +3,7 @@ import 'package:flutter_p2p_communicator/model/addr_model.dart';
 import 'package:flutter_p2p_communicator/model/login_mode.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:flutter_p2p_communicator/model/transfer_model.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_abstract_repo.dart';
+import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:collection/src/iterable_extensions.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';

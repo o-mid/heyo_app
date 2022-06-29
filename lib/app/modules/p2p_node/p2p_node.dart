@@ -2,7 +2,7 @@ import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/addr_model.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:flutter_p2p_communicator/utils/constants.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_abstract_repo.dart';
+import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_request.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';

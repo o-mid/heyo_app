@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_abstract_repo.dart';
+import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 
 class AccountController extends GetxController {
   final AccountInfo accountInfo;

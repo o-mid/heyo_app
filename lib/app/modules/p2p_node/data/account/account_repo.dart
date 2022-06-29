@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:heyo/app/modules/p2p_node/data/account/account_abstract_repo.dart';
+import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/cryptography_key_generator.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/local_storages_abstract.dart';
 import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
