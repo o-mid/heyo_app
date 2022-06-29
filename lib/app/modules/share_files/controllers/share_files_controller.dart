@@ -6,6 +6,9 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/share_files/models/file_model.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path_provider_ios/path_provider_ios.dart' as ios_path_provider;
+import 'package:path_provider_android/path_provider_android.dart'
+    as android_path_provider;
 
 class ShareFilesController extends GetxController {
   late TextEditingController inputController;
@@ -42,6 +45,12 @@ class ShareFilesController extends GetxController {
     );
 
     if (result != null) {
+      if (Platform.isAndroid) {
+        android_path_provider.PathProviderAndroid.registerWith();
+      } else if (Platform.isIOS) {
+        ios_path_provider.PathProviderIOS.registerWith();
+      }
+
       final appStorage = await getApplicationDocumentsDirectory();
       for (var element in result.files) {
         final newfile = await saveFile(element, appStorage);

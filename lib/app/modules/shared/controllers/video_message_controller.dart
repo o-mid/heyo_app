@@ -23,6 +23,7 @@ class VideoMessageController extends GetxController {
   @override
   void onClose() {
     _videoPlayerController.value?.dispose();
+
     _chewieController.value?.dispose();
   }
 

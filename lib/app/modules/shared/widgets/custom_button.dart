@@ -7,6 +7,8 @@ class CustomButton extends StatelessWidget {
   final BorderRadius? borderRadius;
   final Color? backgroundColor;
   final TextStyle? textStyle;
+  final bool takeFullWidth;
+  final EdgeInsets? padding;
   const CustomButton({
     Key? key,
     required this.title,
@@ -14,6 +16,8 @@ class CustomButton extends StatelessWidget {
     this.borderRadius,
     this.backgroundColor,
     this.textStyle,
+    this.takeFullWidth = true,
+    this.padding,
   }) : super(key: key);
 
   final disabledOpacity = 0.4;
@@ -25,8 +29,8 @@ class CustomButton extends StatelessWidget {
         onTap: onTap,
         borderRadius: borderRadius ?? BorderRadius.circular(8.w),
         child: Ink(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: 9.w),
+          width: takeFullWidth ? double.infinity : null,
+          padding: padding ?? EdgeInsets.symmetric(vertical: 9.w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8.w),
             color: backgroundColor?.withOpacity(onTap != null ? 1 : disabledOpacity),

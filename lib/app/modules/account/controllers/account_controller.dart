@@ -1,12 +1,16 @@
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 
 class AccountController extends GetxController {
-  //TODO: Implement AccountController
+  final AccountInfo accountInfo;
+  final coreId = "".obs;
 
-  final count = 0.obs;
+  AccountController({required this.accountInfo});
+
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
+    coreId.value = (await accountInfo.getCoreId()) ?? "";
   }
 
   @override
@@ -16,5 +20,4 @@ class AccountController extends GetxController {
 
   @override
   void onClose() {}
-  void increment() => count.value++;
 }

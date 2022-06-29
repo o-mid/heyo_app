@@ -1,7 +1,5 @@
-import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguments_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
@@ -16,21 +14,17 @@ import '../data/models/profile_model.dart';
 import '../data/models/user_model.dart';
 import '../widgets/invite_bttom_sheet.dart';
 
-class NewChatController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class NewChatController extends GetxController with GetSingleTickerProviderStateMixin {
   late AnimationController animController;
   late Animation<double> animation;
   late TextEditingController inputController;
   final ContactRepository contactRepository;
   final AccountInfo accountInfo;
 
-  NewChatController(
-      {required this.contactRepository,
-      required this.accountInfo});
+  NewChatController({required this.contactRepository, required this.accountInfo});
 
 // in nearby users Tab after 3 seconds the refresh button will be visible
   RxBool refreshBtnVisibility = false.obs;
-
 
   void makeRefreshBtnVisible() {
     Future.delayed(const Duration(seconds: 3), () {
@@ -56,8 +50,7 @@ class NewChatController extends GetxController
     inputController.addListener(() {
       searchUsers(inputController.text);
     });
-    nearbyUsers
-        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    nearbyUsers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     super.onInit();
   }
 
@@ -89,24 +82,19 @@ class NewChatController extends GetxController
 
 // Mock data for user profile
   final profile = ProfileModel(
-      name: "Sample",
-      link: "https://heyo.core/m6ljkB4KJ",
-      walletAddress: "CB75...684A");
+      name: "Sample", link: "https://heyo.core/m6ljkB4KJ", walletAddress: "CB75...684A");
 
 // Mock data for the users
   final nearbyUsers = <UserModel>[
     UserModel(
       name: "Crapps Wallbanger",
       walletAddress: 'CB92...969A',
-      icon:
-          "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+      icon: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
       nickname: "Nickname",
       chatModel: ChatModel(
         name: "Crapps Wallbanger",
-        icon:
-            "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
-        lastMessage:
-            "I'm still waiting for the reply. I'll let you know once they get back to me.",
+        icon: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+        lastMessage: "I'm still waiting for the reply. I'll let you know once they get back to me.",
         timestamp: "15:45",
       ),
     ),
@@ -119,8 +107,7 @@ class NewChatController extends GetxController
       chatModel: ChatModel(
         name: "Fancy Potato",
         icon: "https://avatars.githubusercontent.com/u/6634136?v=4",
-        lastMessage:
-            "I can arrange the meeting with her tomorrow if you're ok with that.",
+        lastMessage: "I can arrange the meeting with her tomorrow if you're ok with that.",
         timestamp: "Yesterday",
         isOnline: true,
         isVerified: true,
@@ -155,11 +142,10 @@ class NewChatController extends GetxController
     ),
   ].obs;
 
-  RefreshController refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController refreshController = RefreshController(initialRefresh: false);
 
   void onRefresh() async {
-    await Future.delayed(Duration(milliseconds: 1000));
+    await Future.delayed(const Duration(milliseconds: 1000));
 
     refreshController.refreshCompleted();
   }

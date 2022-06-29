@@ -8,23 +8,20 @@ class QRInfo {
   final AccountInfo accountInfo;
   final P2PState p2pState;
 
-
   QRInfo({required this.p2pState, required this.accountInfo});
 
   Future<String> getSharableQr() async {
+    String? coreId = await accountInfo.getCoreId();
+    if (coreId == null) throw 'core Id is null!!';
 
-    String? _coreId = await accountInfo.getCoreId();
-    if (_coreId == null) throw 'core Id is null!!';
-    
-    return _coreId +
+    return coreId +
         SHARED_ADDR_SEPARATOR +
         p2pState.peerId.value +
         SHARED_ADDR_SEPARATOR +
         jsonEncode(p2pState.address.value);
   }
 
-  Future<String?> getCoreId(){
+  Future<String?> getCoreId() {
     return accountInfo.getCoreId();
   }
-
 }

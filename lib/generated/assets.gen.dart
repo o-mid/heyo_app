@@ -3,6 +3,8 @@
 ///  FlutterGen
 /// *****************************************************
 
+// coverage:ignore-file
+// ignore_for_file: type=lint
 // ignore_for_file: directives_ordering,unnecessary_import
 
 import 'package:flutter/widgets.dart';
@@ -150,6 +152,10 @@ class $AssetsSvgGen {
   SvgGenImage get closeSignOutline =>
       const SvgGenImage('assets/svg/close_sign_outline.svg');
 
+  /// File path: assets/svg/contacts_icon.svg
+  SvgGenImage get contactsIcon =>
+      const SvgGenImage('assets/svg/contacts_icon.svg');
+
   /// File path: assets/svg/copy_icon.svg
   SvgGenImage get copyIcon => const SvgGenImage('assets/svg/copy_icon.svg');
 
@@ -173,6 +179,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/double_tick_icon.svg
   SvgGenImage get doubleTickIcon =>
       const SvgGenImage('assets/svg/double_tick_icon.svg');
+
+  /// File path: assets/svg/editIcon.svg
+  SvgGenImage get editIcon => const SvgGenImage('assets/svg/editIcon.svg');
 
   /// File path: assets/svg/emoji_icon.svg
   SvgGenImage get emojiIcon => const SvgGenImage('assets/svg/emoji_icon.svg');
@@ -235,6 +244,14 @@ class $AssetsSvgGen {
   /// File path: assets/svg/luna_connection.svg
   SvgGenImage get lunaConnection =>
       const SvgGenImage('assets/svg/luna_connection.svg');
+
+  /// File path: assets/svg/mediaAndFiles.svg
+  SvgGenImage get mediaAndFiles =>
+      const SvgGenImage('assets/svg/mediaAndFiles.svg');
+
+  /// File path: assets/svg/mediaAndFilesIcon.svg
+  SvgGenImage get mediaAndFilesIcon =>
+      const SvgGenImage('assets/svg/mediaAndFilesIcon.svg');
 
   /// File path: assets/svg/moneyIcon.svg
   SvgGenImage get moneyIcon => const SvgGenImage('assets/svg/moneyIcon.svg');
@@ -316,6 +333,10 @@ class $AssetsSvgGen {
   SvgGenImage get replyOutlined =>
       const SvgGenImage('assets/svg/reply_outlined.svg');
 
+  /// File path: assets/svg/saveToDevice.svg
+  SvgGenImage get saveToDevice =>
+      const SvgGenImage('assets/svg/saveToDevice.svg');
+
   /// File path: assets/svg/searchIcon.svg
   SvgGenImage get searchIcon => const SvgGenImage('assets/svg/searchIcon.svg');
 
@@ -329,6 +350,9 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/send_icon.svg
   SvgGenImage get sendIcon => const SvgGenImage('assets/svg/send_icon.svg');
+
+  /// File path: assets/svg/shareIcon.svg
+  SvgGenImage get shareIcon => const SvgGenImage('assets/svg/shareIcon.svg');
 
   /// File path: assets/svg/share_screen.svg
   SvgGenImage get shareScreen =>
@@ -382,19 +406,23 @@ class Assets {
   static const $AssetsSvgGen svg = $AssetsSvgGen();
 }
 
-class AssetGenImage extends AssetImage {
-  const AssetGenImage(String assetName) : super(assetName);
+class AssetGenImage {
+  const AssetGenImage(this._assetName);
+
+  final String _assetName;
 
   Image image({
     Key? key,
+    AssetBundle? bundle,
     ImageFrameBuilder? frameBuilder,
-    ImageLoadingBuilder? loadingBuilder,
     ImageErrorWidgetBuilder? errorBuilder,
     String? semanticLabel,
     bool excludeFromSemantics = false,
+    double? scale = 1.0,
     double? width,
     double? height,
     Color? color,
+    Animation<double>? opacity,
     BlendMode? colorBlendMode,
     BoxFit? fit,
     AlignmentGeometry alignment = Alignment.center,
@@ -403,19 +431,24 @@ class AssetGenImage extends AssetImage {
     bool matchTextDirection = false,
     bool gaplessPlayback = false,
     bool isAntiAlias = false,
+    String? package,
     FilterQuality filterQuality = FilterQuality.low,
+    int? cacheWidth,
+    int? cacheHeight,
   }) {
-    return Image(
+    return Image.asset(
+      _assetName,
       key: key,
-      image: this,
+      bundle: bundle,
       frameBuilder: frameBuilder,
-      loadingBuilder: loadingBuilder,
       errorBuilder: errorBuilder,
       semanticLabel: semanticLabel,
       excludeFromSemantics: excludeFromSemantics,
+      scale: scale,
       width: width,
       height: height,
       color: color,
+      opacity: opacity,
       colorBlendMode: colorBlendMode,
       fit: fit,
       alignment: alignment,
@@ -424,11 +457,14 @@ class AssetGenImage extends AssetImage {
       matchTextDirection: matchTextDirection,
       gaplessPlayback: gaplessPlayback,
       isAntiAlias: isAntiAlias,
+      package: package,
       filterQuality: filterQuality,
+      cacheWidth: cacheWidth,
+      cacheHeight: cacheHeight,
     );
   }
 
-  String get path => assetName;
+  String get path => _assetName;
 }
 
 class SvgGenImage {

@@ -4,23 +4,28 @@ import 'dart:math';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/call_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/live_location_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/location_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/body/call_message_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/body/file_message_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/body/location/location_message_widget.dart';
+import 'package:heyo/app/modules/messages/widgets/body/multi_media_message_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/body/reactions_widget.dart';
+import 'package:heyo/app/modules/shared/data/models/media_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/messages/widgets/body/audio_message_player_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/body/video_message_player.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 
 import '../../data/models/messages/file_message_model.dart';
 import 'location/live_location_message_widget.dart';
@@ -91,22 +96,34 @@ class _MessageContent extends StatelessWidget {
           ),
         );
       case ImageMessageModel:
-        return LayoutBuilder(builder: (context, constraints) {
-          final mWidth = (message as ImageMessageModel).metadata.width;
-          final mHeight = (message as ImageMessageModel).metadata.height;
-          final width = min(mWidth, constraints.maxWidth);
-          final height = width * (mHeight / mWidth);
-          return SizedBox(
-            width: width,
-            height: height,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.r),
-              child: (message as ImageMessageModel).isLocal
-                  ? ExtendedImage.file(File((message as ImageMessageModel).url))
-                  : ExtendedImage.network((message as ImageMessageModel).url),
-            ),
-          );
-        });
+        return GestureDetector(
+          onTap: () {
+            List<dynamic> mediaList = [message];
+            Get.toNamed(Routes.MEDIA_VIEW,
+                arguments: MediaViewArgumentsModel(
+                  mediaList: mediaList,
+                  activeIndex: 0,
+                  isMultiMessage: false,
+                ));
+          },
+          child: LayoutBuilder(builder: (context, constraints) {
+            final mWidth = (message as ImageMessageModel).metadata.width;
+            final mHeight = (message as ImageMessageModel).metadata.height;
+            final width = min(mWidth, constraints.maxWidth);
+            final height = width * (mHeight / mWidth);
+            return SizedBox(
+              width: width,
+              height: height,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.r),
+                child: (message as ImageMessageModel).isLocal
+                    ? ExtendedImage.file(
+                        File((message as ImageMessageModel).url))
+                    : ExtendedImage.network((message as ImageMessageModel).url),
+              ),
+            );
+          }),
+        );
       case VideoMessageModel:
         return VideoMessagePlayer(
           message: message as VideoMessageModel,
@@ -136,6 +153,11 @@ class _MessageContent extends StatelessWidget {
         return CallMessageWidget(message: message as CallMessageModel);
       case FileMessageModel:
         return FileMessageWidget(message: message as FileMessageModel);
+
+      case MultiMediaMessageModel:
+        return MultiMediaMessageWidget(
+            message: message as MultiMediaMessageModel);
+
       default:
         return const SizedBox.shrink();
     }

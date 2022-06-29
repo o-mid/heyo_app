@@ -138,6 +138,19 @@
   "IncomingCallPage": {
     "incomingVideoCall": "Incoming video call on Heyo..."
   },
+  "ShareableQrPage": {
+    "appBarTitle": "Share my CoreID",
+    "scanQrTitle": "Scan your QR code with people so they can add you and start chatting.",
+    "shareQrButtonTitle": "Share my QR Code",
+    "textDividerTitle": "OR",
+    "shareCoreIdTitle": "Share your CoreID address",
+    "shareCoreIdButtonTitle": "Share my CoreID",
+    "copiedToClipboardText": "CoreID copied to clipboard"
+  },
+  "AccountPage": {
+    "appBarTitle": "Account",
+    "contacts": "Contacts"
+  },
   "newChat": {
     "newChatAppBar": "New Chat",
     "slider": {
@@ -261,5 +274,14 @@
     "textInputTitle": "Search in files",
     "searchResults": "Search results",
     "mostRecent": "Most recent"
+  },
+  "mediaView": {
+    "bottomSheet": {
+      "edit": "Edit",
+      "mediafiles": "Media and files",
+      "delete": "Delete",
+      "share": "Share",
+      "save": "Save to device"
+    }
   }
 }
