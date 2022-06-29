@@ -19,6 +19,7 @@ class AccountView extends GetView<AccountController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: COLORS.kAppBackground,
       appBar: AppBar(
         title: Text(
           LocaleKeys.AccountPage_appBarTitle.tr,
