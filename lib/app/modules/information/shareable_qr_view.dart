@@ -127,6 +127,7 @@ class ShareableQrView extends GetView<ShareableQRController> {
       final textStyle = TEXTSTYLES.kLinkBig.copyWith(
         color: COLORS.kTextSoftBlueColor,
       );
+      const trailingStringLength = 4;
       return Container(
         padding: EdgeInsets.symmetric(vertical: 13.h, horizontal: 16.w),
         margin: EdgeInsets.symmetric(horizontal: 20.w),
@@ -134,20 +135,20 @@ class ShareableQrView extends GetView<ShareableQRController> {
           color: COLORS.kMessagingDividerColor,
           borderRadius: BorderRadius.circular(8.r),
         ),
-        child: coreId == null || coreId.length < 4
+        child: coreId == null || coreId.length < trailingStringLength
             ? const Text('')
             : Row(
                 children: [
                   Expanded(
                     child: Text(
-                      coreId.substring(0, coreId.length - 4),
+                      coreId.substring(0, coreId.length - trailingStringLength),
                       style: textStyle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Text(
-                    coreId.substring(coreId.length - 4),
+                    coreId.substring(coreId.length - trailingStringLength),
                     style: textStyle,
                   ),
                   SizedBox(width: 22.w),
