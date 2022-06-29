@@ -138,6 +138,15 @@
   "IncomingCallPage": {
     "incomingVideoCall": "Incoming video call on Heyo..."
   },
+  "ShareableQrPage": {
+    "appBarTitle": "Share my CoreID",
+    "scanQrTitle": "Scan your QR code with people so they can add you and start chatting.",
+    "shareQrButtonTitle": "Share my QR Code",
+    "textDividerTitle": "OR",
+    "shareCoreIdTitle": "Share your CoreID address",
+    "shareCoreIdButtonTitle": "Share my CoreID",
+    "copiedToClipboardText": "CoreID copied to clipboard"
+  },
   "newChat": {
     "newChatAppBar": "New Chat",
     "slider": {
