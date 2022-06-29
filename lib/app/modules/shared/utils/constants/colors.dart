@@ -112,4 +112,7 @@ class COLORS {
 
   ///divider color messaging
   static const Color kMessagingDividerColor = Color(0xffF0EFF9);
+
+  /// Primary/Chat Stroke
+  static const Color kChatStroke = Color(0xffE6E2F0);
 }

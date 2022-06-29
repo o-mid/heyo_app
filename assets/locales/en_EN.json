@@ -147,6 +147,10 @@
     "shareCoreIdButtonTitle": "Share my CoreID",
     "copiedToClipboardText": "CoreID copied to clipboard"
   },
+  "AccountPage": {
+    "appBarTitle": "Account",
+    "contacts": "Contacts"
+  },
   "newChat": {
     "newChatAppBar": "New Chat",
     "slider": {

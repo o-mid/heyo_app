@@ -3,12 +3,14 @@ import 'package:heyo/app/modules/p2p_node/data/account/account_abstract_repo.dar
 
 class AccountController extends GetxController {
   final AccountAbstractRepo accountRepo;
+  final coreId = "".obs;
 
   AccountController({required this.accountRepo});
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
+    coreId.value = (await accountRepo.getCoreId()) ?? "";
   }
 
   @override

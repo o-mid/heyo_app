@@ -57,11 +57,12 @@ class GlobalBindings extends Bindings {
     Get.put<P2PNodeController>(
       P2PNodeController(
         p2pNode: P2PNode(
-            accountRepo: accountRepo,
-            p2pNodeRequestStream: p2pNodeRequestStream,
-            p2pNodeResponseStream: p2pNodeResponseStream,
-            p2pState: p2pState,
-            web3client: web3Client),
+          accountRepo: accountRepo,
+          p2pNodeRequestStream: p2pNodeRequestStream,
+          p2pNodeResponseStream: p2pNodeResponseStream,
+          p2pState: p2pState,
+          web3client: web3Client,
+        ),
       ),
       permanent: true,
     );

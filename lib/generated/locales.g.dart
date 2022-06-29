@@ -124,6 +124,8 @@ class LocaleKeys {
   static const ShareableQrPage_shareCoreIdTitle = 'ShareableQrPage_shareCoreIdTitle';
   static const ShareableQrPage_shareCoreIdButtonTitle = 'ShareableQrPage_shareCoreIdButtonTitle';
   static const ShareableQrPage_copiedToClipboardText = 'ShareableQrPage_copiedToClipboardText';
+  static const AccountPage_appBarTitle = 'AccountPage_appBarTitle';
+  static const AccountPage_contacts = 'AccountPage_contacts';
   static const newChat_newChatAppBar = 'newChat_newChatAppBar';
   static const newChat_slider_contacts = 'newChat_slider_contacts';
   static const newChat_slider_nearbyUsers = 'newChat_slider_nearbyUsers';
@@ -334,6 +336,8 @@ class Locales {
     'ShareableQrPage_shareCoreIdTitle': 'Share your CoreID address',
     'ShareableQrPage_shareCoreIdButtonTitle': 'Share my CoreID',
     'ShareableQrPage_copiedToClipboardText': 'CoreID copied to clipboard',
+    'AccountPage_appBarTitle': 'Account',
+    'AccountPage_contacts': 'Contacts',
     'newChat_newChatAppBar': 'New Chat',
     'newChat_slider_contacts': 'Contacts',
     'newChat_slider_nearbyUsers': 'Nearby users',
