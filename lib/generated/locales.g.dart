@@ -359,6 +359,7 @@ class Locales {
     'newChat_userBottomSheet_chat': 'Chat',
     'newChat_userBottomSheet_addToContacts': 'Add to contacts',
     'newChat_userBottomSheet_block': 'Block',
+    'newChat_userBottomSheet_call_user': 'Call',
     'newChat_userBottomSheet_userInfo': 'User info',
     'newChat_inviteBottomSheet_inviteYourFriend': 'Invite your friend to Heyo!',
     'newChat_inviteBottomSheet_shareLink': 'Share link',
