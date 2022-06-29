@@ -32,7 +32,7 @@ class CallConnectionController extends GetxController {
     });
     p2pState.candidate.listen((addCandidate) {
       if ((p2pState.callState.value is CallAccepted) ||
-          (p2pState.callState.value is InCall)) {
+          (p2pState.callState.value is InCall) && addCandidate.isNotEmpty) {
         webRTCConnection.setCandidate(addCandidate);
       }
     });
