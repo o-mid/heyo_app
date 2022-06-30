@@ -28,7 +28,7 @@ class IncomingCallController extends GetxController {
 
     callConnectionController.p2pState.callState.listen((state) {
       if (state is CallEnded) {
-        Get.back();
+        Get.until((route)=>Get.currentRoute!=Routes.INCOMING_CALL);
       }
     });
   }
