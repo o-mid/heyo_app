@@ -3,7 +3,6 @@ import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
 
 class UserContactProvider {
-
   static const String _USER_CONTACTS_STORE_NAME = 'user_contacts';
 
   // A Store with int keys and Map<String, dynamic> values.
@@ -15,7 +14,7 @@ class UserContactProvider {
   Future<Database> get _db async => await AppDatabaseProvider.instance.database;
 
   Future insert(UserContact user) async {
-    await _userStore.add(await _db, user.toMap());
+    await _userStore.add(await _db, user.toJson());
   }
 
   Future update(UserContact user) async {
@@ -24,7 +23,7 @@ class UserContactProvider {
     final finder = Finder(filter: Filter.byKey(user.coreId));
     await _userStore.update(
       await _db,
-      user.toMap(),
+      user.toJson(),
       finder: finder,
     );
   }
@@ -40,18 +39,15 @@ class UserContactProvider {
   Future<List<UserContact>> getAllSortedByName() async {
     // Finder object can also sort data.
     final finder = Finder(sortOrders: [
-      SortOrder(UserContact.nickNameGetSerializeName()),
+      SortOrder('nickname'),
     ]);
 
-    final recordSnapshots = await _userStore.find(
+    final records = await _userStore.find(
       await _db,
       finder: finder,
     );
 
     // Making a List<User> out of List<RecordSnapshot>
-    return recordSnapshots.map((snapshot) {
-      final user = UserContact.fromMap(snapshot.value);
-      return user;
-    }).toList();
+    return records.map((e) => UserContact.fromJson(e.value)).toList();
   }
 }

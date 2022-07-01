@@ -151,6 +151,10 @@
     "appBarTitle": "Account",
     "contacts": "Contacts"
   },
+  "ContactsPage": {
+    "appBarTitle": "Contacts",
+    "contactListHeader": "Contact List (@count)"
+  },
   "newChat": {
     "newChatAppBar": "New Chat",
     "slider": {
@@ -171,7 +175,8 @@
       "chat": "Chat",
       "addToContacts": "Add to contacts",
       "block": "Block",
-      "userInfo": "User info"
+      "userInfo": "User info",
+      "callUser": "Call"
     },
     "inviteBottomSheet": {
       "inviteYourFriend": "Invite your friend to Heyo!",

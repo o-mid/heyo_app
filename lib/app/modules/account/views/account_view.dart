@@ -21,19 +21,12 @@ class AccountView extends GetView<AccountController> {
     return Scaffold(
       backgroundColor: COLORS.kAppBackground,
       appBar: AppBar(
+        backgroundColor: COLORS.kGreenMainColor,
         title: Text(
           LocaleKeys.AccountPage_appBarTitle.tr,
           style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kWhiteColor),
         ),
-        leading: IconButton(
-          onPressed: Get.back,
-          icon: const Icon(
-            Icons.arrow_back,
-            color: COLORS.kWhiteColor,
-          ),
-        ),
         centerTitle: false,
-        backgroundColor: COLORS.kGreenMainColor,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -72,6 +65,9 @@ class AccountView extends GetView<AccountController> {
             ),
             SizedBox(height: 12.h),
             _buildAccountOption(
+              onTap: () {
+                Get.toNamed(Routes.CONTACTS);
+              },
               title: LocaleKeys.AccountPage_contacts.tr,
               icon: Assets.svg.contactsIcon.svg(
                 color: const Color(0xFF039200),

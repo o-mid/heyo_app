@@ -7,11 +7,9 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../../../generated/locales.g.dart';
 import '../../new_chat/widgets/user_widget.dart';
-import '../controllers/forward_massages_controller.dart';
 
-class recentContactsWidget extends StatelessWidget {
-  const recentContactsWidget(
-      {Key? key, required this.users, required this.userSelect})
+class RecentContactsWidget extends StatelessWidget {
+  const RecentContactsWidget({Key? key, required this.users, required this.userSelect})
       : super(key: key);
   final Function(UserModel user) userSelect;
   final RxList<UserModel> users;
@@ -29,8 +27,7 @@ class recentContactsWidget extends StatelessWidget {
             children: [
               Text(
                 LocaleKeys.forwardMassagesPage_recentContacts.tr,
-                style: TEXTSTYLES.kLinkSmall
-                    .copyWith(color: COLORS.kTextBlueColor),
+                style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextBlueColor),
               ),
               CustomSizes.smallSizedBoxHeight,
               ListView.builder(
@@ -48,7 +45,7 @@ class recentContactsWidget extends StatelessWidget {
                       onTap: () {
                         userSelect(users[index]);
                       },
-                      child: UserWidget(User: users[index]),
+                      child: UserWidget(user: users[index]),
                     ),
                   );
                 },

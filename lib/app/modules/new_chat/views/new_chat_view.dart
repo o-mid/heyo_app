@@ -17,6 +17,8 @@ import '../widgets/app_bar_action_bottom_sheet.dart';
 import '../widgets/user_widget.dart';
 
 class NewChatView extends GetView<NewChatController> {
+  const NewChatView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +27,7 @@ class NewChatView extends GetView<NewChatController> {
       body: DefaultTabController(
         length: 2,
         child: Container(
-          child: _contacts(
+          child: _Contacts(
             controller: controller,
           )
           /*Container(
@@ -317,8 +319,8 @@ class _nearbyUsersEmptyState extends StatelessWidget {
 }
 */
 
-class _contacts extends StatelessWidget {
-  const _contacts({
+class _Contacts extends StatelessWidget {
+  const _Contacts({
     Key? key,
     required this.controller,
   }) : super(key: key);
@@ -351,8 +353,8 @@ class _contacts extends StatelessWidget {
               ),
             ),
             controller.searchSuggestions.value.isEmpty
-                ? _emptyContactsBody(controller: controller)
-                : _searchInContactsBody(controller: controller),
+                ? _EmptyContactsBody(controller: controller)
+                : _SearchInContactsBody(controller: controller),
           ],
         ),
       );
@@ -360,8 +362,8 @@ class _contacts extends StatelessWidget {
   }
 }
 
-class _searchInContactsBody extends StatelessWidget {
-  const _searchInContactsBody({
+class _SearchInContactsBody extends StatelessWidget {
+  const _SearchInContactsBody({
     Key? key,
     required this.controller,
   }) : super(key: key);
@@ -391,11 +393,11 @@ class _searchInContactsBody extends StatelessWidget {
                   itemBuilder: (BuildContext context, int index) {
                     //this will grab the current user and
                     // extract the first character from its name
-                    String _currentUsernamefirstchar =
+                    String currentUsernameFirstChar =
                         controller.searchSuggestions[index].name.characters.first;
                     //this will grab the next user in the list if its not null and
                     // extract the first character from its name
-                    String _nextUsernamefirstchar =
+                    String nextUsernameFirstChar =
                         controller.searchSuggestions.indexOf(controller.searchSuggestions.last) >
                                 index + 1
                             ? controller.searchSuggestions[index + 1].name.characters.first
@@ -403,7 +405,7 @@ class _searchInContactsBody extends StatelessWidget {
                     var suggestedUser = controller.searchSuggestions[index];
                     return Column(
                       children: [
-                        _currentUsernamefirstchar != _nextUsernamefirstchar
+                        currentUsernameFirstChar != nextUsernameFirstChar
                             ? ListHeaderWidget(
                                 title: controller.searchSuggestions[index].name.characters.first
                                     .toUpperCase())
@@ -411,11 +413,10 @@ class _searchInContactsBody extends StatelessWidget {
                         InkWell(
                           borderRadius: BorderRadius.circular(8),
                           onTap: () {
-                            openUserPreviewBottomSheet(
-                                controller.searchSuggestions[index]);
+                            openUserPreviewBottomSheet(controller.searchSuggestions[index]);
                           },
                           child: UserWidget(
-                            User: suggestedUser,
+                            user: suggestedUser,
                           ),
                         ),
                       ],
@@ -431,8 +432,8 @@ class _searchInContactsBody extends StatelessWidget {
   }
 }
 
-class _emptyContactsBody extends StatelessWidget {
-  const _emptyContactsBody({
+class _EmptyContactsBody extends StatelessWidget {
+  const _EmptyContactsBody({
     Key? key,
     required this.controller,
   }) : super(key: key);
