@@ -1,23 +1,27 @@
 class UserContact {
+  static const coreIdSerializedName = "coreId";
+  static const nicknameSerializedName = "nickname";
+  static const iconSerializedName = "icon";
+
   String coreId;
-  String nickName;
+  String nickname;
   String icon;
 
   UserContact({
     required this.coreId,
-    required this.nickName,
+    required this.nickname,
     required this.icon,
   });
 
   factory UserContact.fromJson(Map<String, dynamic> json) => UserContact(
-        coreId: json["coreId"],
-        nickName: json["nickName"],
-        icon: json["icon"],
+        coreId: json[coreIdSerializedName],
+        nickname: json[nicknameSerializedName],
+        icon: json[iconSerializedName],
       );
 
   Map<String, dynamic> toJson() => {
-        "coreId": coreId,
-        "nickName": nickName,
-        "icon": icon,
+        coreIdSerializedName: coreId,
+        nicknameSerializedName: nickname,
+        iconSerializedName: icon,
       };
 }

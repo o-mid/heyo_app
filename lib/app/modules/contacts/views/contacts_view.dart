@@ -68,7 +68,7 @@ class ContactsView extends GetView<ContactsController> {
       onTap: () {
         openUserPreviewBottomSheet(
           UserModel(
-            name: contact.nickName,
+            name: contact.nickname,
             icon: contact.icon,
             walletAddress: contact.coreId,
             isContact: true,
@@ -88,7 +88,7 @@ class ContactsView extends GetView<ContactsController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    contact.nickName,
+                    contact.nickname,
                     style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kDarkBlueColor),
                   ),
                   Text(

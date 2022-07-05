@@ -156,7 +156,7 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
     //TODO icon and chatmodel should be filled with correct data
     List<UserModel> searchedItems = (await contactRepository.search(query))
         .map((userContact) => UserModel(
-            name: userContact.nickName,
+            name: userContact.nickname,
             icon: userContact.icon,
             walletAddress: userContact.coreId,
             isContact: true,
