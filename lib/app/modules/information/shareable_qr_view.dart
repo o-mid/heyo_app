@@ -132,7 +132,7 @@ class ShareableQrView extends GetView<ShareableQRController> {
         padding: EdgeInsets.symmetric(vertical: 13.h, horizontal: 16.w),
         margin: EdgeInsets.symmetric(horizontal: 20.w),
         decoration: BoxDecoration(
-          color: COLORS.kMessagingDividerColor,
+          color: COLORS.kBrightBlueColor,
           borderRadius: BorderRadius.circular(8.r),
         ),
         child: coreId == null || coreId.length < trailingStringLength
