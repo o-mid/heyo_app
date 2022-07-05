@@ -156,6 +156,11 @@ class LocaleKeys {
   static const ContactsPage_appBarTitle = 'ContactsPage_appBarTitle';
   static const ContactsPage_contactListHeader =
       'ContactsPage_contactListHeader';
+  static const NewCallPage_appBarTitle = 'NewCallPage_appBarTitle';
+  static const NewCallPage_contactListHeader = 'NewCallPage_contactListHeader';
+  static const NewCallPage_emptyStateContactsTitle =
+      'NewCallPage_emptyStateContactsTitle';
+  static const NewCallPage_invite = 'NewCallPage_invite';
   static const newChat_newChatAppBar = 'newChat_newChatAppBar';
   static const newChat_slider_contacts = 'newChat_slider_contacts';
   static const newChat_slider_nearbyUsers = 'newChat_slider_nearbyUsers';
@@ -415,6 +420,11 @@ class Locales {
     'AccountPage_contacts': 'Contacts',
     'ContactsPage_appBarTitle': 'Contacts',
     'ContactsPage_contactListHeader': 'Contact List (@count)',
+    'NewCallPage_appBarTitle': 'New Call',
+    'NewCallPage_contactListHeader': 'Contacts (@count)',
+    'NewCallPage_emptyStateContactsTitle':
+        'You don’t have any contacts to call with. You can search for new users or invite them.',
+    'NewCallPage_invite': 'Invite',
     'newChat_newChatAppBar': 'New Chat',
     'newChat_slider_contacts': 'Contacts',
     'newChat_slider_nearbyUsers': 'Nearby users',

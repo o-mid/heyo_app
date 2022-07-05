@@ -155,6 +155,12 @@
     "appBarTitle": "Contacts",
     "contactListHeader": "Contact List (@count)"
   },
+  "NewCallPage": {
+    "appBarTitle": "New Call",
+    "contactListHeader": "Contacts (@count)",
+    "emptyStateContactsTitle": "You don’t have any contacts to call with. You can search for new users or invite them.",
+    "invite": "Invite"
+  },
   "newChat": {
     "newChatAppBar": "New Chat",
     "slider": {

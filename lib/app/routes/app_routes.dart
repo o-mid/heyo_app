@@ -29,6 +29,7 @@ abstract class Routes {
   static const SHARE_FILES = _Paths.SHARE_FILES;
   static const MEDIA_VIEW = _Paths.MEDIA_VIEW;
   static const CONTACTS = _Paths.CONTACTS;
+  static const NEW_CALL = _Paths.NEW_CALL;
 }
 
 abstract class _Paths {
@@ -59,4 +60,5 @@ abstract class _Paths {
   static const SHARE_FILES = '/share-files';
   static const MEDIA_VIEW = '/media-view';
   static const CONTACTS = '/contacts';
+  static const NEW_CALL = '/new-call';
 }

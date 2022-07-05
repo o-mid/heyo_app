@@ -32,6 +32,8 @@ import '../modules/media_view/bindings/media_view_binding.dart';
 import '../modules/media_view/views/media_view.dart';
 import '../modules/messages/bindings/messages_binding.dart';
 import '../modules/messages/views/messages_view.dart';
+import '../modules/new_call/bindings/new_call_binding.dart';
+import '../modules/new_call/views/new_call_view.dart';
 import '../modules/new_chat/bindings/new_chat_binding.dart';
 import '../modules/new_chat/views/new_chat_view.dart';
 import '../modules/search_nearby/bindings/search_nearby_binding.dart';
@@ -173,6 +175,11 @@ class AppPages {
       name: _Paths.CONTACTS,
       page: () => const ContactsView(),
       binding: ContactsBinding(),
+    ),
+    GetPage(
+      name: _Paths.NEW_CALL,
+      page: () => const NewCallView(),
+      binding: NewCallBinding(),
     ),
   ];
 }
