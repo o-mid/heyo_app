@@ -60,8 +60,8 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
       // if openQrScaner is set to true then this will open the qr scaner
       // and search for users using qr code right after initializing
 
-      final args = Get.arguments as NewchatArgumentsModel;
-      if (args.openQrScaner) {
+      final args = Get.arguments as NewChatArgumentsModel;
+      if (args.openQrScanner) {
         openQrScannerBottomSheet(handleScannedValue);
       }
       // if openInviteBottomSheet is set to true then this will
@@ -165,7 +165,7 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
 
     if (searchedItems.isEmpty) {
       String? currentUserCoreId = await accountInfo.getCoreId();
-      if (query.isValid() && currentUserCoreId != query) {
+      if (query.isValidCoreId() && currentUserCoreId != query) {
         //its a new user
         //TODO update fields based on correct data
         searchSuggestions.value = [

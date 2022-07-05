@@ -51,7 +51,7 @@ class NewCallController extends GetxController {
 
     if (searchedItems.isEmpty) {
       String? currentUserCoreId = await accountInfo.getCoreId();
-      if (query.isValid() && currentUserCoreId != query) {
+      if (query.isValidCoreId() && currentUserCoreId != query) {
         //its a new user
         //TODO update fields based on correct data
         searchSuggestions.value = [
