@@ -59,30 +59,22 @@ class P2PNodeRequestStream {
         String callId = data['call_id'];
 
         print("sdp: $sdp : candidate: $candidate");
-
+        print("callState Value : ${p2pState.callState.value}");
+        print("conditions: ${(p2pState.callState.value is NoneState)} : ${(!p2pState.recordedCallIds.contains(callId))} : ${(p2pState.callState.value is Calling)} : ${(p2pState.recordedCallIds.contains(callId))}");
         if (sdp != null) {
-          if (p2pState.callState.value is NoneState) {
-            print(
-                "Call: in noneState: ${(!p2pState.recordedCallIds.contains(callId))}");
-
-            if (!p2pState.recordedCallIds.contains(callId)) {
+          if (!p2pState.recordedCallIds.contains(callId)) {
               print("Call: Call Received");
               p2pState.recordedCallIds.add(callId);
               p2pState.currentCallId.value = callId;
               p2pState.callState.value =
                   CallState.callReceived(callId,sdp, remoteCoreId, remotePeerId);
-            }
-          } else if (p2pState.callState.value is Calling) {
-            print(
-                "Call: in inCall: ${(p2pState.recordedCallIds.contains(callId))}");
 
-            if (p2pState.recordedCallIds.contains(callId)) {
+          } else if (p2pState.callState.value is Calling && p2pState.currentCallId.value==callId ) {
               p2pState.currentCallId.value = callId;
               p2pState.callState.value =
                   CallState.callAccepted(callId,sdp, remoteCoreId, remotePeerId);
-            }
           }
-        } else if (candidate != null) {
+        } else if (candidate != null && p2pState.currentCallId.value==callId) {
           print("Call: Call exchanging candidate");
           p2pState.candidate.value = candidate;
         } else {
@@ -90,6 +82,7 @@ class P2PNodeRequestStream {
             print("Call: Call Ended");
             p2pState.endedCallIds.value.add(callId);
             p2pState.callState.value = CallState.ended(callId);
+            p2pState.callState.value=CallState.none();
           }
         }
       }

@@ -8,6 +8,7 @@ import 'package:heyo/app/modules/call_controller/call_state.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
@@ -91,13 +92,13 @@ class CallController extends GetxController {
             state.session, state.remoteCoreId, state.remotePeerId);
         p2pState.callState.value = CallState.inCall(state.callId);
       } else if (state is CallEnded) {
-        Get.back();
+        Get.until((route) => Get.currentRoute != Routes.CALL);
       }
     });
 
     callConnectionController.callConnectionFailed.listen((ended) {
       if (ended) {
-        Get.back();
+        Get.until((route) => Get.currentRoute != Routes.CALL);
       }
     });
     participants.add(
