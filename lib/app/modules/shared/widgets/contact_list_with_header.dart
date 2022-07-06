@@ -13,12 +13,14 @@ import 'list_header_widget.dart';
 class ContactListWithHeader extends StatelessWidget {
   final List<UserModel> contacts;
   final bool searchMode;
-  final bool showCallButton;
+  final bool showAudioCallButton;
+  final bool showVideoCallButton;
   const ContactListWithHeader({
     Key? key,
     required this.contacts,
     required this.searchMode,
-    this.showCallButton = false,
+    this.showAudioCallButton = false,
+    this.showVideoCallButton = false,
   }) : super(key: key);
 
   @override
@@ -62,7 +64,8 @@ class ContactListWithHeader extends StatelessWidget {
                   },
                   child: UserWidget(
                     user: suggestedUser,
-                    showCallButton: showCallButton,
+                    showAudioCallButton: showAudioCallButton,
+                    showVideoCallButton: showVideoCallButton,
                   ),
                 ),
               ],

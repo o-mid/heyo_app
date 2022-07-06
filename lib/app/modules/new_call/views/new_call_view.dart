@@ -94,7 +94,8 @@ class NewCallView extends GetView<NewCallController> {
                           child: ContactListWithHeader(
                             contacts: controller.searchSuggestions.toList(),
                             searchMode: controller.inputController.text.isNotEmpty,
-                            showCallButton: true,
+                            showAudioCallButton: true,
+                            showVideoCallButton: true,
                           ),
                         ),
                       ],

@@ -13,11 +13,13 @@ import 'package:heyo/generated/assets.gen.dart';
 
 class UserWidget extends StatelessWidget {
   final UserModel user;
-  final bool showCallButton;
+  final bool showAudioCallButton;
+  final bool showVideoCallButton;
   const UserWidget({
     Key? key,
     required this.user,
-    this.showCallButton = false,
+    this.showAudioCallButton = false,
+    this.showVideoCallButton = false,
   }) : super(key: key);
 
   @override
@@ -52,7 +54,7 @@ class UserWidget extends StatelessWidget {
           ],
         ),
         const Spacer(),
-        if (showCallButton)
+        if (showAudioCallButton)
           CircleIconButton(
             onPressed: () {
               Get.toNamed(
@@ -66,6 +68,23 @@ class UserWidget extends StatelessWidget {
             },
             backgroundColor: COLORS.kBrightBlueColor,
             icon: Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor),
+          ),
+        CustomSizes.mediumSizedBoxWidth,
+        if (showVideoCallButton)
+          CircleIconButton(
+            onPressed: () {
+              Get.toNamed(
+                Routes.CALL,
+                arguments: CallViewArgumentsModel(
+                  user: user,
+                  initiateCall: true,
+                  callId: null,
+                  enableVideo: true,
+                ),
+              );
+            },
+            backgroundColor: COLORS.kBrightBlueColor,
+            icon: Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
           ),
       ],
     );
