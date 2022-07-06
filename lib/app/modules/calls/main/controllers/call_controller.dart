@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:ed_screen_recorder/ed_screen_recorder.dart';
+import 'package:flutter_beep/flutter_beep.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
@@ -80,8 +81,10 @@ class CallController extends GetxController {
       callConnectionController.startCall(args.user.walletAddress, callId);
       p2pState.callState.value = CallState.calling(callId);
       isInCall.value = false;
+      _playWatingBeep();
     } else {
       isInCall.value = true;
+      _stopWatingBeep();
 
       p2pState.callState.value = CallState.inCall(args.callId!);
     }
@@ -89,10 +92,12 @@ class CallController extends GetxController {
     p2pState.callState.listen((state) {
       if (state is CallAccepted) {
         isInCall.value = true;
+        _stopWatingBeep();
         callConnectionController.callAccepted(
             state.session, state.remoteCoreId, state.remotePeerId);
         p2pState.callState.value = CallState.inCall(state.callId);
       } else if (state is CallEnded) {
+        _stopWatingBeep();
         Get.until((route) => Get.currentRoute != Routes.CALL);
       }
     });
@@ -184,11 +189,21 @@ class CallController extends GetxController {
   void onClose() async {
     callConnectionController.endCall();
     callTimer?.cancel();
+    _stopWatingBeep();
     await _screenRecorder.stopRecord();
   }
 
   void reorderParticipants(int oldIndex, int newIndex) {
     final p = participants.removeAt(oldIndex);
     participants.insert(newIndex, p);
+  }
+
+  void _playWatingBeep() {
+    FlutterBeep.playSysSound(AndroidSoundIDs.TONE_SUP_CALL_WAITING);
+  }
+
+  void _stopWatingBeep() {
+    // silent tone
+    FlutterBeep.playSysSound(AndroidSoundIDs.TONE_CDMA_CALL_SIGNAL_ISDN_PAT5);
   }
 }
