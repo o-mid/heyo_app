@@ -121,7 +121,7 @@ class WebRTCConnection {
     return json.encode(parse(session));
   }
 
-  Future setRemoteDescription(String sessionText, bool isOffer) async {
+  Future<void> setRemoteDescription(String sessionText, bool isOffer) async {
     dynamic session = await jsonDecode('$sessionText');
     String sdp = write(session, null);
     RTCSessionDescription description =
