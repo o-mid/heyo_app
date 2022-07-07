@@ -42,7 +42,7 @@ class _CallerVideoWidgetState extends State<CallerVideoWidget> {
             margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
             decoration: const BoxDecoration(color: Colors.black),
             child:
-                RTCVideoView(controller.getLocalVideRenderer()),
+                RTCVideoView(controller.getLocalVideRenderer(),objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitContain),
           )),
           if (showOptions)
             Positioned(

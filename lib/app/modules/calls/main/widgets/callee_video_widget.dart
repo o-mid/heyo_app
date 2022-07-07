@@ -11,7 +11,6 @@ class CalleeVideoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<CallController>();
-    final CallConnectionController callConnectionController=Get.find();
 
     return GestureDetector(
       onTap: controller.toggleImmersiveMode,
@@ -21,7 +20,7 @@ class CalleeVideoWidget extends StatelessWidget {
             key: const Key('remote'),
             margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
             decoration: const BoxDecoration(color: Colors.black),
-            child: RTCVideoView(callConnectionController.getRemoteVideRenderer()),
+            child: RTCVideoView(controller.getRemoteVideRenderer(),objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover),
           )),
     );
   }
