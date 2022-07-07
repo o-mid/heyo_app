@@ -45,11 +45,12 @@ class CallController extends GetxController {
 
   final isVideoPositionsFlipped = false.obs;
 
-  bool get isGroupCall =>
-      participants
+  bool get isGroupCall => false;
+
+  /* participants
           .where((p) => p.status == CallParticipantStatus.inCall)
           .length >
-      1;
+      1;*/
 
   final recordState = RecordState.notRecording.obs;
   final CallConnectionController callConnectionController;
@@ -84,33 +85,42 @@ class CallController extends GetxController {
 
     await initRenderers();
 
-    callConnectionController.signaling.onRemoveRemoteStream = ((_, stream) {
-      _remoteRenderer.srcObject = null;
-    });
-    callConnectionController.signaling.onAddRemoteStream = (session, stream) {
-      _remoteRenderer.srcObject = stream;
-    };
+    observeSignalingStreams();
 
     if (args.session == null) {
-      final callId = DateTime.now().millisecondsSinceEpoch.toString();
-      Session session = (await callConnectionController.startCall(
-          args.user.walletAddress, callId));
-      sessionId = session.sid;
-
-      isInCall.value = false;
+      await callerSetup();
     } else {
-      sessionId = args.session!.sid;
-      await callConnectionController.acceptCall(args.session!);
-
-      args.session?.pc?.getRemoteStreams().forEach((element) {
-        _remoteRenderer.srcObject = element;
-      });
-
-      isInCall.value = true;
+      await calleeSetup();
     }
 
     _localRenderer.srcObject = callConnectionController.localStream;
 
+    observeCallStates();
+
+    participants.add(
+      CallParticipantModel(user: args.user),
+    );
+  }
+
+  Future callerSetup() async {
+    final callId = DateTime.now().millisecondsSinceEpoch.toString();
+    Session session = (await callConnectionController.startCall(
+        args.user.walletAddress, callId));
+    sessionId = session.sid;
+
+    isInCall.value = false;
+  }
+
+  Future calleeSetup() async {
+    sessionId = args.session!.sid;
+    await callConnectionController.acceptCall(args.session!);
+    args.session?.pc?.getRemoteStreams().forEach((element) {
+      _remoteRenderer.srcObject = element;
+    });
+    isInCall.value = true;
+  }
+
+  void observeCallStates() {
     callConnectionController.callState.listen((state) {
       if (state == CallState.CallStateConnected) {
         isInCall.value = true;
@@ -119,15 +129,15 @@ class CallController extends GetxController {
         _remoteRenderer.srcObject = null;
       }
     });
-
-    participants.add(
-      CallParticipantModel(user: args.user),
-    );
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  void observeSignalingStreams() {
+    callConnectionController.signaling.onRemoveRemoteStream = ((_, stream) {
+      _remoteRenderer.srcObject = null;
+    });
+    callConnectionController.signaling.onAddRemoteStream = (session, stream) {
+      _remoteRenderer.srcObject = stream;
+    };
   }
 
   // Todo

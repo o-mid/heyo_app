@@ -89,7 +89,7 @@ class Signaling {
 
   Future<Session> invite(
       String coreId, String media, bool useScreen, String selfId) async {
-    var sessionId = selfId + '-' + coreId+'-';
+    var sessionId = selfId + '-' + coreId + '-';
     Session session = await _createSession(null,
         coreId: coreId,
         peerId: null,
@@ -111,9 +111,13 @@ class Signaling {
 
     if (sess != null) {
       _closeSession(sess);
-      _send('bye', {
-        'session_id': sessionId,
-      },sess.cid,sess.pid);
+      _send(
+          'bye',
+          {
+            'session_id': sessionId,
+          },
+          sess.cid,
+          sess.pid);
     }
   }
 
@@ -121,7 +125,7 @@ class Signaling {
     var session = _sessions[sessionId];
     print(sessionId);
     print("${_sessions.keys}");
-    print("feafesfse ${session==null}");
+    print("feafesfse ${session == null}");
     print("${_sessions.values}");
 
     if (session == null) {
@@ -217,7 +221,7 @@ class Signaling {
         {
           var sessionId = data['session_id'];
           var session = _sessions.remove(sessionId);
-          print('bye: ' + sessionId +' ${(session != null)}');
+          print('bye: ' + sessionId + ' ${(session != null)}');
 
           if (session != null) {
             onCallStateChange?.call(session, CallState.CallStateBye);
@@ -351,7 +355,9 @@ class Signaling {
       // and should be thoroughly tested in your own environment.
       await Future.delayed(
           const Duration(seconds: 1),
-          () => _send('candidate', {
+          () => _send(
+              'candidate',
+              {
                 'to': peerId,
                 'candidate': {
                   'sdpMLineIndex': candidate.sdpMLineIndex,
@@ -359,7 +365,9 @@ class Signaling {
                   'candidate': candidate.candidate,
                 },
                 'session_id': sessionId,
-              },coreId,peerId));
+              },
+              coreId,
+              peerId));
     };
 
     pc.onIceConnectionState = (state) {};
@@ -402,12 +410,16 @@ class Signaling {
       RTCSessionDescription s =
           await session.pc!.createOffer(media == 'data' ? _dcConstraints : {});
       await session.pc!.setLocalDescription(s);
-      _send('offer', {
-        'to': session.cid,
-        'description': {'sdp': s.sdp, 'type': s.type},
-        'session_id': session.sid,
-        'media': media,
-      },session.cid,session.pid);
+      _send(
+          'offer',
+          {
+            'to': session.cid,
+            'description': {'sdp': s.sdp, 'type': s.type},
+            'session_id': session.sid,
+            'media': media,
+          },
+          session.cid,
+          session.pid);
     } catch (e) {
       print(e.toString());
     }
@@ -436,8 +448,6 @@ class Signaling {
     var request = Map();
     request["type"] = event;
     request["data"] = data;
-    //TODO send data
-    //_socket?.send(_encoder.convert(request));
     login.sendSDP(_encoder.convert(request), remoteCoreId, remotePeerId);
   }
 

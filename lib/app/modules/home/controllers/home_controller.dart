@@ -1,8 +1,6 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/home/controllers/data_request_dialog.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
-import 'package:heyo/app/routes/app_pages.dart';
-import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 
 class HomeController extends GetxController {

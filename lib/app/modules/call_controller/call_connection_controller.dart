@@ -5,6 +5,7 @@ import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
 class CallConnectionController extends GetxController {
+
   Signaling signaling;
   AccountInfo accountInfo;
   late Rx<CallState?> callState = Rx(null);
@@ -16,6 +17,10 @@ class CallConnectionController extends GetxController {
       localStream = stream;
     });
 
+    observeCallStatus();
+  }
+
+  void observeCallStatus() {
     signaling.onCallStateChange = (session, state) async {
       callState.value = state;
 
