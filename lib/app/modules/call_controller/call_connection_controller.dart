@@ -11,17 +11,21 @@ class CallConnectionController extends GetxController {
   Rx<CallState?> callState = Rxn<CallState>();
   Rx<MediaStream?> remoteStream = Rxn<MediaStream>();
   Rx<MediaStream?> removeStream = Rxn<MediaStream>();
+  Rx<MediaStream?> localStream = Rxn<MediaStream>();
 
-  late MediaStream? localStream;
+  MediaStream? _localStream;
 
   @override
   void onInit() {
     init();
   }
 
+  MediaStream? getLocalStream() => _localStream;
+
   Future<void> init() async {
     signaling.onLocalStream = ((stream) {
-      localStream = stream;
+      _localStream = stream;
+      localStream.value = stream;
     });
 
     observeCallStatus();
@@ -85,6 +89,6 @@ class CallConnectionController extends GetxController {
 
   void close() {
     signaling.close();
-    localStream = null;
+    localStream.value = null;
   }
 }

@@ -46,14 +46,18 @@ class CallController extends GetxController {
   final isVideoPositionsFlipped = false.obs;
 
   bool get isGroupCall =>
-      participants.where((p) => p.status == CallParticipantStatus.inCall).length > 1;
+      participants
+          .where((p) => p.status == CallParticipantStatus.inCall)
+          .length >
+      1;
 
   final recordState = RecordState.notRecording.obs;
   final CallConnectionController callConnectionController;
   final P2PState p2pState;
   late String sessionId;
 
-  CallController({required this.callConnectionController, required this.p2pState});
+  CallController(
+      {required this.callConnectionController, required this.p2pState});
 
   final RTCVideoRenderer _localRenderer = RTCVideoRenderer();
   final RTCVideoRenderer _remoteRenderer = RTCVideoRenderer();
@@ -91,14 +95,20 @@ class CallController extends GetxController {
 
     observeSignalingStreams();
 
+    callConnectionController.localStream.listen((stream) {
+      _localRenderer.srcObject = stream;
+    });
+
+
+
     if (args.session == null) {
       await callerSetup();
     } else {
       await calleeSetup();
     }
-
-    _localRenderer.srcObject = callConnectionController.localStream;
-
+    if (callConnectionController.getLocalStream() != null) {
+      _localRenderer.srcObject = callConnectionController.getLocalStream();
+    }
     observeCallStates();
   }
 
@@ -210,7 +220,8 @@ class CallController extends GetxController {
 
   void updateCallViewType(CallViewType type) => callViewType.value = type;
 
-  void flipVideoPositions() => isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
+  void flipVideoPositions() =>
+      isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   @override
   void onClose() async {

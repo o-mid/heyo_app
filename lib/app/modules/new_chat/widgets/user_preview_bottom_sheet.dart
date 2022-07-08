@@ -148,7 +148,7 @@ void openUserPreviewBottomSheet(UserModel user) {
                       Get.toNamed(
                         Routes.CALL,
                         arguments:
-                            CallViewArgumentsModel(session:null,callId : null, user: user, initiateCall: true),
+                            CallViewArgumentsModel(session:null,callId : null, user: user),
                       );
                     },
                     child: Row(
