@@ -31,8 +31,7 @@ class ShareFilesView extends GetView<ShareFilesController> {
             actions: [
               IconButton(
                 onPressed: () {
-                  controller.showSearchBar.value =
-                      !controller.showSearchBar.value;
+                  controller.showSearchBar.value = !controller.showSearchBar.value;
                 },
                 icon: Assets.svg.searchIcon.svg(),
               ),
@@ -62,16 +61,14 @@ class ShareFilesView extends GetView<ShareFilesController> {
                                     controller.isTextInputFocused.value = focus,
                                 child: CUSTOMTEXTFIELD(
                                   textController: controller.inputController,
-                                  labelText: LocaleKeys
-                                      .shareFilePage_textInputTitle.tr,
+                                  labelText: LocaleKeys.shareFilePage_textInputTitle.tr,
                                   rightWidget: InkWell(
                                     onTap: () {
                                       controller.inputController.clear();
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(14.0),
-                                      child: Assets.svg.closeSign
-                                          .svg(color: COLORS.kDarkBlueColor),
+                                      child: Assets.svg.closeSign.svg(color: COLORS.kDarkBlueColor),
                                     ),
                                   ),
                                 ),
@@ -81,7 +78,7 @@ class ShareFilesView extends GetView<ShareFilesController> {
                           ),
                         ),
                         const Divider(
-                          color: COLORS.kMessagingDividerColor,
+                          color: COLORS.kBrightBlueColor,
                           thickness: 8,
                         ),
                       ],
@@ -96,8 +93,7 @@ class ShareFilesView extends GetView<ShareFilesController> {
                     controller.showSearchBar.value
                         ? LocaleKeys.shareFilePage_searchResults.tr
                         : LocaleKeys.shareFilePage_mostRecent.tr,
-                    style: TEXTSTYLES.kLinkSmall
-                        .copyWith(color: COLORS.kTextBlueColor),
+                    style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextBlueColor),
                   ),
                 ),
               ),
@@ -111,12 +107,10 @@ class ShareFilesView extends GetView<ShareFilesController> {
                           return FileWidget(
                             file: controller.searchSuggestions[index],
                             onLongPress: () {
-                              controller.addSelectedFile(
-                                  controller.searchSuggestions[index]);
+                              controller.addSelectedFile(controller.searchSuggestions[index]);
                             },
                             onTap: () {
-                              controller.openFile(
-                                  controller.searchSuggestions[index].path);
+                              controller.openFile(controller.searchSuggestions[index].path);
                             },
                           );
                         },
@@ -128,19 +122,17 @@ class ShareFilesView extends GetView<ShareFilesController> {
                           return FileWidget(
                             file: controller.recentFiles[index],
                             onLongPress: () {
-                              controller.addSelectedFile(
-                                  controller.recentFiles[index]);
+                              controller.addSelectedFile(controller.recentFiles[index]);
                             },
                             onTap: () {
-                              controller
-                                  .openFile(controller.recentFiles[index].path);
+                              controller.openFile(controller.recentFiles[index].path);
                             },
                           );
                         },
                       ),
               ),
               const Divider(
-                color: COLORS.kMessagingDividerColor,
+                color: COLORS.kBrightBlueColor,
                 thickness: 4,
               ),
               Padding(
@@ -149,13 +141,11 @@ class ShareFilesView extends GetView<ShareFilesController> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text("${controller.selectedFiles.length}",
-                        style: TEXTSTYLES.kBodySmall.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: COLORS.kGreenMainColor)),
+                        style: TEXTSTYLES.kBodySmall
+                            .copyWith(fontWeight: FontWeight.bold, color: COLORS.kGreenMainColor)),
                     IconButton(
                         onPressed: () {
-                          controller
-                              .sendSelectedFiles(controller.selectedFiles);
+                          controller.sendSelectedFiles(controller.selectedFiles);
                         },
                         icon: Assets.svg.sendIcon.svg())
                   ],

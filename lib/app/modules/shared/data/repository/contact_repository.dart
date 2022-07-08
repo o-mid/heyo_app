@@ -19,8 +19,9 @@ class ContactRepository {
   Future<List<UserContact>> search(String query) async {
     List<UserContact> contacts = await getContacts();
     return contacts
-        .where((element) => element.nickName.toString().toLowerCase().contains(query.toLowerCase())
-        || element.coreId.startsWith(query))
+        .where((element) =>
+            element.nickname.toString().toLowerCase().contains(query.toLowerCase()) ||
+            element.coreId.startsWith(query))
         .toList();
   }
 }

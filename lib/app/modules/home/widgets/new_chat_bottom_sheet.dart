@@ -65,8 +65,8 @@ void openNewChatBottomSheet() {
                 ),
                 IconButton(
                     onPressed: () => Get.toNamed(Routes.NEW_CHAT,
-                        arguments: NewchatArgumentsModel(
-                          openQrScaner: true,
+                        arguments: NewChatArgumentsModel(
+                          openQrScanner: true,
                         )),
                     alignment: Alignment.center,
                     iconSize: 21.w,
@@ -106,7 +106,7 @@ void openNewChatBottomSheet() {
                 )),
             TextButton(
                 onPressed: () => Get.toNamed(Routes.NEW_CHAT,
-                    arguments: NewchatArgumentsModel(
+                    arguments: NewChatArgumentsModel(
                       openInviteBottomSheet: true,
                     )),
                 child: Row(

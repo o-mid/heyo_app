@@ -123,7 +123,7 @@ class FileWidget extends StatelessWidget {
               ),
             ),
             const Divider(
-              color: COLORS.kMessagingDividerColor,
+              color: COLORS.kBrightBlueColor,
               thickness: 2,
             )
           ],

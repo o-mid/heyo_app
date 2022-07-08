@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/information/shareable_qr_binding.dart';
 
 import '../modules/account/views/account_view.dart';
 import '../modules/add_contacts/bindings/add_contacts_binding.dart';
@@ -17,12 +16,15 @@ import '../modules/calls/main/bindings/call_binding.dart';
 import '../modules/calls/main/views/call_view.dart';
 import '../modules/calls/user_call_history/bindings/user_call_history_binding.dart';
 import '../modules/calls/user_call_history/views/user_call_history_view.dart';
+import '../modules/contacts/bindings/contacts_binding.dart';
+import '../modules/contacts/views/contacts_view.dart';
 import '../modules/forward_massages/bindings/forward_massages_binding.dart';
 import '../modules/forward_massages/views/forward_massages_view.dart';
 import '../modules/gallery_picker/bindings/gallery_picker_binding.dart';
 import '../modules/gallery_picker/views/gallery_picker_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/information/shareable_qr_binding.dart';
 import '../modules/information/shareable_qr_view.dart';
 import '../modules/intro/bindings/intro_binding.dart';
 import '../modules/intro/views/intro_view.dart';
@@ -30,6 +32,8 @@ import '../modules/media_view/bindings/media_view_binding.dart';
 import '../modules/media_view/views/media_view.dart';
 import '../modules/messages/bindings/messages_binding.dart';
 import '../modules/messages/views/messages_view.dart';
+import '../modules/new_call/bindings/new_call_binding.dart';
+import '../modules/new_call/views/new_call_view.dart';
 import '../modules/new_chat/bindings/new_chat_binding.dart';
 import '../modules/new_chat/views/new_chat_view.dart';
 import '../modules/search_nearby/bindings/search_nearby_binding.dart';
@@ -166,6 +170,16 @@ class AppPages {
       name: _Paths.MEDIA_VIEW,
       page: () => const MediaView(),
       binding: MediaViewBinding(),
+    ),
+    GetPage(
+      name: _Paths.CONTACTS,
+      page: () => const ContactsView(),
+      binding: ContactsBinding(),
+    ),
+    GetPage(
+      name: _Paths.NEW_CALL,
+      page: () => const NewCallView(),
+      binding: NewCallBinding(),
     ),
   ];
 }

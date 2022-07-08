@@ -4,6 +4,7 @@ import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.da
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/routes/app_pages.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 class IncomingCallController extends GetxController {
   late UserModel caller;
@@ -24,8 +25,19 @@ class IncomingCallController extends GetxController {
       isVerified: true,
       walletAddress: args.remoteCoreId,
     );
+    _playRingtone();
+
   }
 
+  @override
+  void onReady() {
+    super.onReady();
+  }
+
+  @override
+  void onClose() {
+    _stopRingtone();
+  }
 
   void goToChat() {
     _hangUp();
@@ -33,16 +45,19 @@ class IncomingCallController extends GetxController {
   }
 
   void mute() {
+    _stopRingtone();
     muted.value = true;
-    // Todo: stop ringtone
   }
 
   void declineCall() {
     _hangUp();
+    _stopRingtone();
     Get.back();
   }
 
   void acceptCall() async {
+    _stopRingtone();
+
     //TODO name should be get from contacts
     Get.offNamed(
       Routes.CALL,
@@ -61,5 +76,13 @@ class IncomingCallController extends GetxController {
   void _hangUp() {
     callConnectionController.rejectCall(args.session.sid);
     callConnectionController.close();
+  }
+
+  void _playRingtone() {
+    FlutterRingtonePlayer.playRingtone();
+  }
+
+  void _stopRingtone() {
+    FlutterRingtonePlayer.stop();
   }
 }

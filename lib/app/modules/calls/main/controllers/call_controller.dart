@@ -30,7 +30,7 @@ class CallController extends GetxController {
 
   // Todo: check whether they are actually enabled or not
   final micEnabled = true.obs;
-  final callerVideoEnabled = true.obs;
+  final callerVideoEnabled = false.obs;
 
   final isInCall = true.obs;
 
@@ -45,20 +45,15 @@ class CallController extends GetxController {
 
   final isVideoPositionsFlipped = false.obs;
 
-  bool get isGroupCall => false;
-
-  /* participants
-          .where((p) => p.status == CallParticipantStatus.inCall)
-          .length >
-      1;*/
+  bool get isGroupCall =>
+      participants.where((p) => p.status == CallParticipantStatus.inCall).length > 1;
 
   final recordState = RecordState.notRecording.obs;
   final CallConnectionController callConnectionController;
   final P2PState p2pState;
   late String sessionId;
 
-  CallController(
-      {required this.callConnectionController, required this.p2pState});
+  CallController({required this.callConnectionController, required this.p2pState});
 
   final RTCVideoRenderer _localRenderer = RTCVideoRenderer();
   final RTCVideoRenderer _remoteRenderer = RTCVideoRenderer();
@@ -82,6 +77,7 @@ class CallController extends GetxController {
   void onInit() {
     super.onInit();
     args = Get.arguments as CallViewArgumentsModel;
+    callerVideoEnabled.value = args.enableVideo;
 
     setUp();
 
@@ -214,8 +210,7 @@ class CallController extends GetxController {
 
   void updateCallViewType(CallViewType type) => callViewType.value = type;
 
-  void flipVideoPositions() =>
-      isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
+  void flipVideoPositions() => isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   @override
   void onClose() async {

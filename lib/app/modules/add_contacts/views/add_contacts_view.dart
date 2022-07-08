@@ -6,6 +6,7 @@ import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_mode
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
@@ -14,17 +15,15 @@ import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-
-
 import '../../new_chat/data/models/user_model.dart';
 import '../controllers/add_contacts_controller.dart';
 
-
-
 class AddContactsView extends GetView<AddContactsController> {
+  const AddContactsView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    UserModel _User = controller.args.user;
+    UserModel user = controller.args.user;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -33,7 +32,7 @@ class AddContactsView extends GetView<AddContactsController> {
           centerTitle: false,
           title: Text(
             LocaleKeys.AddContacts_addToContacts.tr,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FONTS.Bold,
               fontFamily: FONTS.interFamily,
             ),
@@ -51,22 +50,19 @@ class AddContactsView extends GetView<AddContactsController> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CustomSizes.largeSizedBoxHeight,
-                      CustomCircleAvatar(url: _User.icon, size: 64),
+                      CustomCircleAvatar(url: user.icon, size: 64),
                       CustomSizes.mediumSizedBoxHeight,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            _User.name,
-                            style: TEXTSTYLES.kHeaderLarge
-                                .copyWith(color: COLORS.kDarkBlueColor),
+                            user.name,
+                            style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
                           ),
                           CustomSizes.smallSizedBoxWidth,
-                          _User.isVerified
-                              ? Assets.svg.verifiedWithBluePadding.svg(
-                                  alignment: Alignment.center,
-                                  height: 24.w,
-                                  width: 24.w)
+                          user.isVerified
+                              ? Assets.svg.verifiedWithBluePadding
+                                  .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
                               : SizedBox(),
                         ],
                       ),
@@ -75,12 +71,11 @@ class AddContactsView extends GetView<AddContactsController> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            _User.walletAddress,
-                            style: TEXTSTYLES.kBodySmall
-                                .copyWith(color: COLORS.kTextBlueColor),
+                            user.walletAddress.shortenCoreId,
+                            style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
                           ),
                           controller.nickname.value.isEmpty
-                              ? SizedBox()
+                              ? const SizedBox()
                               : Row(
                                   children: [
                                     CustomSizes.smallSizedBoxWidth,
@@ -88,8 +83,8 @@ class AddContactsView extends GetView<AddContactsController> {
                                     CustomSizes.smallSizedBoxWidth,
                                     Text(
                                       controller.nickname.value,
-                                      style: TEXTSTYLES.kBodySmall.copyWith(
-                                          color: COLORS.kTextBlueColor),
+                                      style: TEXTSTYLES.kBodySmall
+                                          .copyWith(color: COLORS.kTextBlueColor),
                                     )
                                   ],
                                 )
@@ -101,8 +96,7 @@ class AddContactsView extends GetView<AddContactsController> {
                       ),
                       CUSTOMTEXTFIELD(
                         labelText: LocaleKeys.AddContacts_addNickname.tr,
-                        onChanged: (String value) =>
-                            controller.setNickname(value),
+                        onChanged: (String value) => controller.setNickname(value),
                       ),
                       CustomSizes.mediumSizedBoxHeight,
                       Align(
@@ -120,10 +114,8 @@ class AddContactsView extends GetView<AddContactsController> {
                         // TODO : chatModel should be filled with correct data
                         onTap: () {
                           controller.addContact();
-                          Get.offNamedUntil(Routes.MESSAGES,
-                              ModalRoute.withName(Routes.HOME),
-                              arguments:
-                              MessagesViewArgumentsModel(chat: _User.chatModel!));
+                          Get.offNamedUntil(Routes.MESSAGES, ModalRoute.withName(Routes.HOME),
+                              arguments: MessagesViewArgumentsModel(chat: user.chatModel!));
                         },
 
                         titleWidget: Text(

@@ -19,7 +19,6 @@ class AddContactsController extends GetxController {
     super.onInit();
   }
 
-
   void setNickname(String name) {
     args.user.nickname = name;
     nickname.value = name;
@@ -27,8 +26,6 @@ class AddContactsController extends GetxController {
 
   void addContact() {
     contactRepository.addContact(UserContact(
-        coreId: args.user.walletAddress,
-        nickName: nickname.value,
-        icon: args.user.icon));
+        coreId: args.user.walletAddress, nickname: nickname.value, icon: args.user.icon));
   }
 }
