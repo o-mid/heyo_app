@@ -4,34 +4,34 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/p2p_node/login.dart';
 
 enum CallState {
-  CallStateNew,
-  CallStateRinging,
-  CallStateInvite,
-  CallStateConnected,
-  CallStateBye,
+  callStateNew,
+  callStateRinging,
+  callStateInvite,
+  callStateConnected,
+  callStateBye,
 }
 
 class Session {
   Session({required this.sid, required this.cid, required this.pid});
 
-  String cid;
-  String sid;
-  String? pid;
+  final String cid;
+  final String sid;
+  final String? pid;
   RTCPeerConnection? pc;
   RTCDataChannel? dc;
-  List<RTCIceCandidate> remoteCandidates = [];
+  final List<RTCIceCandidate> remoteCandidates = [];
 }
 
 class Signaling {
   final Login login;
-  JsonEncoder _encoder = JsonEncoder();
-  JsonDecoder _decoder = JsonDecoder();
+  final JsonEncoder _encoder = const JsonEncoder();
+  final JsonDecoder _decoder = const JsonDecoder();
 
   Signaling({required this.login});
 
-  Map<String, Session> _sessions = {};
+  final Map<String, Session> _sessions = {};
   MediaStream? _localStream;
-  List<MediaStream> _remoteStreams = <MediaStream>[];
+  final List<MediaStream> _remoteStreams = <MediaStream>[];
 
   Function(Session session, CallState state)? onCallStateChange;
   Function(MediaStream stream)? onLocalStream;
@@ -89,7 +89,7 @@ class Signaling {
 
   Future<Session> invite(
       String coreId, String media, bool useScreen, String selfId) async {
-    var sessionId = selfId + '-' + coreId + '-';
+    final sessionId = '$selfId-$coreId-';
     Session session = await _createSession(null,
         coreId: coreId,
         peerId: null,
@@ -101,8 +101,8 @@ class Signaling {
       _createDataChannel(session);
     }
     _createOffer(session, media);
-    onCallStateChange?.call(session, CallState.CallStateNew);
-    onCallStateChange?.call(session, CallState.CallStateInvite);
+    onCallStateChange?.call(session, CallState.callStateNew);
+    onCallStateChange?.call(session, CallState.callStateInvite);
     return session;
   }
 
@@ -166,18 +166,18 @@ class Signaling {
               RTCSessionDescription(description['sdp'], description['type']));
           // await _createAnswer(newSession, media);
 
-          if (newSession.remoteCandidates.length > 0) {
-            newSession.remoteCandidates.forEach((candidate) async {
+          if (newSession.remoteCandidates.isNotEmpty) {
+            for (var candidate in newSession.remoteCandidates)  {
               await newSession.pc?.addCandidate(candidate);
-            });
+            }
             newSession.remoteCandidates.clear();
           }
           print("feafesfse beffo $sessionId");
           print("feafesfse beffo ${newSession.sid}");
 
-          onCallStateChange?.call(newSession, CallState.CallStateNew);
+          onCallStateChange?.call(newSession, CallState.callStateNew);
 
-          onCallStateChange?.call(newSession, CallState.CallStateRinging);
+          onCallStateChange?.call(newSession, CallState.callStateRinging);
         }
         break;
       case 'answer':
@@ -187,7 +187,7 @@ class Signaling {
           var session = _sessions[sessionId];
           session?.pc?.setRemoteDescription(
               RTCSessionDescription(description['sdp'], description['type']));
-          onCallStateChange?.call(session!, CallState.CallStateConnected);
+          onCallStateChange?.call(session!, CallState.callStateConnected);
         }
         break;
       case 'candidate':
@@ -224,7 +224,7 @@ class Signaling {
           print('bye: ' + sessionId + ' ${(session != null)}');
 
           if (session != null) {
-            onCallStateChange?.call(session, CallState.CallStateBye);
+            onCallStateChange?.call(session, CallState.callStateBye);
             _closeSession(session);
           }
         }
@@ -445,7 +445,7 @@ class Signaling {
   }
 
   _send(event, data, remoteCoreId, remotePeerId) {
-    var request = Map();
+    var request = {};
     request["type"] = event;
     request["data"] = data;
     login.sendSDP(_encoder.convert(request), remoteCoreId, remotePeerId);
@@ -469,13 +469,13 @@ class Signaling {
   void _closeSessionByPeerId(String peerId) {
     var session;
     _sessions.removeWhere((String key, Session sess) {
-      var ids = key.split('-');
+      final ids = key.split('-');
       session = sess;
       return peerId == ids[0] || peerId == ids[1];
     });
     if (session != null) {
       _closeSession(session);
-      onCallStateChange?.call(session, CallState.CallStateBye);
+      onCallStateChange?.call(session, CallState.callStateBye);
     }
   }
 

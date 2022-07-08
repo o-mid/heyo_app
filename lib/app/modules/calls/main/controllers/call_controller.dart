@@ -122,9 +122,9 @@ class CallController extends GetxController {
 
   void observeCallStates() {
     callConnectionController.callState.listen((state) {
-      if (state == CallState.CallStateConnected) {
+      if (state == CallState.callStateConnected) {
         isInCall.value = true;
-      } else if (state == CallState.CallStateBye) {
+      } else if (state == CallState.callStateBye) {
         _localRenderer.srcObject = null;
         _remoteRenderer.srcObject = null;
       }

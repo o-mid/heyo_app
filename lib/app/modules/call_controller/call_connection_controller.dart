@@ -3,13 +3,14 @@ import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/routes/app_pages.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 class CallConnectionController extends GetxController {
 
-  Signaling signaling;
-  AccountInfo accountInfo;
-  late Rx<CallState?> callState = Rx(null);
-  late dynamic localStream;
+  final Signaling signaling;
+  final AccountInfo accountInfo;
+  Rx<CallState?> callState =  Rxn<CallState>();
+  late MediaStream? localStream;
 
   @override
   void onInit() async {
@@ -26,7 +27,7 @@ class CallConnectionController extends GetxController {
 
       print("Call State changed, state is: $state");
 
-      if (state == CallState.CallStateRinging) {
+      if (state == CallState.callStateRinging) {
         Get.toNamed(Routes.INCOMING_CALL,
             arguments: IncomingCallViewArguments(
                 session: session,
@@ -34,7 +35,7 @@ class CallConnectionController extends GetxController {
                 sdp: session.sid,
                 remoteCoreId: session.cid,
                 remotePeerId: session.pid!));
-      } else if (state == CallState.CallStateBye) {
+      } else if (state == CallState.callStateBye) {
         if (Get.currentRoute == Routes.CALL) {
           Get.until((route) => Get.currentRoute != Routes.CALL);
         } else if (Get.currentRoute == Routes.INCOMING_CALL) {
