@@ -6,10 +6,12 @@ import 'package:heyo/app/routes/app_pages.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 class CallConnectionController extends GetxController {
-
   final Signaling signaling;
   final AccountInfo accountInfo;
-  Rx<CallState?> callState =  Rxn<CallState>();
+  Rx<CallState?> callState = Rxn<CallState>();
+  Rx<MediaStream?> remoteStream = Rxn<MediaStream>();
+  Rx<MediaStream?> removeStream = Rxn<MediaStream>();
+
   late MediaStream? localStream;
 
   @override
@@ -43,6 +45,12 @@ class CallConnectionController extends GetxController {
         }
       }
     };
+    signaling.onAddRemoteStream = (session, stream) async {
+      remoteStream.value = stream;
+    };
+    signaling.onRemoveRemoteStream = (session, stream) async {
+      removeStream.value = stream;
+    };
   }
 
   CallConnectionController(
@@ -75,6 +83,4 @@ class CallConnectionController extends GetxController {
     signaling.close();
     localStream = null;
   }
-
-
 }

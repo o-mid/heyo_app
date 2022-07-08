@@ -60,6 +60,6 @@ class IncomingCallController extends GetxController {
 
   void _hangUp() {
     callConnectionController.rejectCall(args.session.sid);
-    callConnectionController.signaling.close();
+    callConnectionController.close();
   }
 }

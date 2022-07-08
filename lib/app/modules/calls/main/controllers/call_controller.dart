@@ -132,12 +132,12 @@ class CallController extends GetxController {
   }
 
   void observeSignalingStreams() {
-    callConnectionController.signaling.onRemoveRemoteStream = ((_, stream) {
+    callConnectionController.removeStream.listen((p0) {
       _remoteRenderer.srcObject = null;
     });
-    callConnectionController.signaling.onAddRemoteStream = (session, stream) {
+    callConnectionController.remoteStream.listen((stream) {
       _remoteRenderer.srcObject = stream;
-    };
+    });
   }
 
   // Todo
