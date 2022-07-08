@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/data/models/profile_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
+import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
@@ -77,6 +79,14 @@ class NewCallController extends GetxController {
   }
 
   RxBool isTextInputFocused = false.obs;
+
+  qrBottomSheet() {
+    openQrScannerBottomSheet(handleScannedValue);
+  }
+
+  inviteBottomSheet() {
+    openInviteBottomSheet(profile);
+  }
 
   handleScannedValue(String? barcodeValue) {
     // TODO: Implement the right filter logic for QRCode

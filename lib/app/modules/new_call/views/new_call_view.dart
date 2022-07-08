@@ -3,8 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/widgets/app_bar_action_bottom_sheet.dart';
-import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
-import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
@@ -56,7 +54,7 @@ class NewCallView extends GetView<NewCallController> {
                           Icons.qr_code_rounded,
                           color: COLORS.kDarkBlueColor,
                         ),
-                        onPressed: () => {openQrScannerBottomSheet(controller.handleScannedValue)},
+                        onPressed: controller.qrBottomSheet,
                       ),
                     ),
                   ),
@@ -66,7 +64,7 @@ class NewCallView extends GetView<NewCallController> {
                   ? EmptyContactsBody(
                       infoText: LocaleKeys.NewCallPage_emptyStateContactsTitle.tr,
                       buttonText: LocaleKeys.NewCallPage_invite.tr,
-                      onInvite: () => openInviteBottomSheet(controller.profile),
+                      onInvite: controller.inviteBottomSheet,
                     )
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

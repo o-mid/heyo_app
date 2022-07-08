@@ -10,8 +10,12 @@ class ContactsController extends GetxController {
   ContactsController({required this.contactRepo});
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
+    getContacts();
+  }
+
+  getContacts() async {
     contacts.value = await contactRepo.getContacts();
   }
 }
