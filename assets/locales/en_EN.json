@@ -151,6 +151,16 @@
     "appBarTitle": "Account",
     "contacts": "Contacts"
   },
+  "ContactsPage": {
+    "appBarTitle": "Contacts",
+    "contactListHeader": "Contact List (@count)"
+  },
+  "NewCallPage": {
+    "appBarTitle": "New Call",
+    "contactListHeader": "Contacts (@count)",
+    "emptyStateContactsTitle": "You don’t have any contacts to call with. You can search for new users or invite them.",
+    "invite": "Invite"
+  },
   "newChat": {
     "newChatAppBar": "New Chat",
     "slider": {
@@ -171,7 +181,8 @@
       "chat": "Chat",
       "addToContacts": "Add to contacts",
       "block": "Block",
-      "userInfo": "User info"
+      "userInfo": "User info",
+      "callUser": "Call"
     },
     "inviteBottomSheet": {
       "inviteYourFriend": "Invite your friend to Heyo!",

@@ -1,12 +1,12 @@
-class NewchatArgumentsModel {
+class NewChatArgumentsModel {
   // pass true if we want to navigate to new chat screen and
-  //serach for users using QRCode,
+  //search for users using QRCode,
 
-  final bool openQrScaner;
+  final bool openQrScanner;
   final bool openInviteBottomSheet;
 
-  NewchatArgumentsModel({
-    this.openQrScaner = false,
+  NewChatArgumentsModel({
+    this.openQrScanner = false,
     this.openInviteBottomSheet = false,
   });
 }

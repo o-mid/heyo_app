@@ -8,6 +8,7 @@ import 'package:heyo/app/modules/search_nearby/views/search_nearby_view.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/widgets/bottom_navigation_bar.dart';
 import 'package:heyo/app/modules/wallet/views/wallet_view.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import '../controllers/home_controller.dart';
 
@@ -28,7 +29,7 @@ class HomeView extends GetView<HomeController> {
     ),
     FloatingActionButton(
       onPressed: () {
-        //TODO define new behavior
+        Get.toNamed(Routes.NEW_CALL);
         /*Get.toNamed(
           Routes.CALL,
           arguments: CallViewArgumentsModel(
@@ -41,7 +42,6 @@ class HomeView extends GetView<HomeController> {
           ),
         );*/
       },
-      // onPressed: null,
       backgroundColor: COLORS.kGreenMainColor,
       child: const Icon(Icons.add_circle_outline),
     ),

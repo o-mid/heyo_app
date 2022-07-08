@@ -9,8 +9,8 @@ import '../../../../generated/locales.g.dart';
 import '../../new_chat/widgets/user_widget.dart';
 import '../../shared/widgets/list_header_widget.dart';
 
-class contactsWidget extends StatelessWidget {
-  const contactsWidget({
+class ContactsWidget extends StatelessWidget {
+  const ContactsWidget({
     Key? key,
     required this.searchSuggestions,
     required this.isTextInputFocused,
@@ -35,8 +35,7 @@ class contactsWidget extends StatelessWidget {
                 isTextInputFocused.value
                     ? LocaleKeys.forwardMassagesPage_contacts.tr
                     : LocaleKeys.forwardMassagesPage_OtherContacts.tr,
-                style: TEXTSTYLES.kLinkSmall
-                    .copyWith(color: COLORS.kTextBlueColor),
+                style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextBlueColor),
               ),
               ListView.builder(
                 itemCount: searchSuggestions.length,
@@ -45,13 +44,11 @@ class contactsWidget extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   //this will grab the current user and
                   // extract the first character from its name
-                  String _currentUsernamefirstchar =
-                      searchSuggestions[index].name.characters.first;
+                  String currentUsernameFirstChar = searchSuggestions[index].name.characters.first;
                   //this will grab the next user in the list if its not null and
                   // extract the first character from its name
-                  String _nextUsernamefirstchar =
-                      searchSuggestions.indexOf(searchSuggestions.last) >
-                              index + 1
+                  String nextUsernameFirstChar =
+                      searchSuggestions.indexOf(searchSuggestions.last) > index + 1
                           ? searchSuggestions[index + 1].name.characters.first
                           : "";
                   return Padding(
@@ -61,20 +58,16 @@ class contactsWidget extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        _currentUsernamefirstchar != _nextUsernamefirstchar
+                        currentUsernameFirstChar != nextUsernameFirstChar
                             ? ListHeaderWidget(
-                                title: searchSuggestions[index]
-                                    .name
-                                    .characters
-                                    .first
-                                    .toUpperCase())
+                                title: searchSuggestions[index].name.characters.first.toUpperCase())
                             : const SizedBox(),
                         InkWell(
                           borderRadius: BorderRadius.circular(8),
                           onTap: () {
                             userSelect(searchSuggestions[index]);
                           },
-                          child: UserWidget(User: searchSuggestions[index]),
+                          child: UserWidget(user: searchSuggestions[index]),
                         ),
                       ],
                     ),

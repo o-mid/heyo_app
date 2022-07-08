@@ -18,7 +18,7 @@ class COLORS {
   static const Color kTextSoftBlueColor = Color(0xff616982);
 
   ///Heyo Brand/Bright Blue
-  static const Color kBrightBlueColor = Color(0xffF8F7FF);
+  static const Color kBrightBlueColor = Color(0xffF0EFF9);
 
   ///Heyo Brand/Background
   static const Color kAppBackground = Color(0xffFFFFFF);
@@ -109,9 +109,6 @@ class COLORS {
 
   /// Call Page Dark Blue Color
   static const Color kCallPageDarkGrey = Color(0xff4E5469);
-
-  ///divider color messaging
-  static const Color kMessagingDividerColor = Color(0xffF0EFF9);
 
   /// Primary/Chat Stroke
   static const Color kChatStroke = Color(0xffE6E2F0);

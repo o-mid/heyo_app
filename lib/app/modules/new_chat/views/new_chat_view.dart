@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
-import 'package:heyo/app/modules/new_chat/widgets/user_preview_bottom_sheet.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/app/modules/shared/utils/screen-utils/buttons/custom_button.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
-import 'package:heyo/app/modules/shared/widgets/list_header_widget.dart';
+import 'package:heyo/app/modules/shared/widgets/contact_list_with_header.dart';
+import 'package:heyo/app/modules/shared/widgets/empty_contacts_body.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import '../../shared/utils/constants/fonts.dart';
 import '../controllers/new_chat_controller.dart';
 import '../widgets/app_bar_action_bottom_sheet.dart';
-import '../widgets/user_widget.dart';
 
 class NewChatView extends GetView<NewChatController> {
+  const NewChatView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,27 +24,8 @@ class NewChatView extends GetView<NewChatController> {
       backgroundColor: COLORS.kWhiteColor,
       body: DefaultTabController(
         length: 2,
-        child: Container(
-          child: _contacts(
-            controller: controller,
-          )
-          /*Container(
-              color: COLORS.kTabbarBackgroundColor,
-              child: _tabbarSlider(),
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  _contacts(
-                    controller: controller,
-                  ),
-                  _nearbyUsers(
-                    controller: controller,
-                  )
-                ],
-              ),
-            ),*/
-          ,
+        child: _Contacts(
+          controller: controller,
         ),
       ),
     );
@@ -88,10 +69,11 @@ class NewChatView extends GetView<NewChatController> {
           icon: Assets.svg.filterIcon.svg(),
         ),
         IconButton(
-            onPressed: () => openAppBarActionBottomSheet(controller.profile),
-            icon: Assets.svg.dotColumn.svg(
-              width: 5,
-            )),
+          onPressed: () => openAppBarActionBottomSheet(controller.profile),
+          icon: Assets.svg.dotColumn.svg(
+            width: 5,
+          ),
+        ),
       ],
       automaticallyImplyLeading: true,
     );
@@ -106,18 +88,20 @@ class NewChatView extends GetView<NewChatController> {
             children: [
               CustomSizes.smallSizedBoxHeight,
               Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton.icon(
-                      // Close the bottom sheet
-                      onPressed: () => Get.back(),
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: COLORS.kDarkBlueColor,
-                      ),
-                      label: Text(
-                        LocaleKeys.newChat_buttons_filter.tr,
-                        style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
-                      ))),
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  // Close the bottom sheet
+                  onPressed: () => Get.back(),
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: COLORS.kDarkBlueColor,
+                  ),
+                  label: Text(
+                    LocaleKeys.newChat_buttons_filter.tr,
+                    style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+                  ),
+                ),
+              ),
               Obx(() {
                 return ListView.builder(
                   itemCount: controller.filters.length,
@@ -317,8 +301,8 @@ class _nearbyUsersEmptyState extends StatelessWidget {
 }
 */
 
-class _contacts extends StatelessWidget {
-  const _contacts({
+class _Contacts extends StatelessWidget {
+  const _Contacts({
     Key? key,
     required this.controller,
   }) : super(key: key);
@@ -350,9 +334,13 @@ class _contacts extends StatelessWidget {
                 ),
               ),
             ),
-            controller.searchSuggestions.value.isEmpty
-                ? _emptyContactsBody(controller: controller)
-                : _searchInContactsBody(controller: controller),
+            controller.searchSuggestions.isEmpty
+                ? EmptyContactsBody(
+                    infoText: LocaleKeys.newChat_emptyStateTitleContacts.tr,
+                    buttonText: LocaleKeys.newChat_buttons_invite.tr,
+                    onInvite: () => openInviteBottomSheet(controller.profile),
+                  )
+                : _SearchInContactsBody(controller: controller),
           ],
         ),
       );
@@ -360,8 +348,8 @@ class _contacts extends StatelessWidget {
   }
 }
 
-class _searchInContactsBody extends StatelessWidget {
-  const _searchInContactsBody({
+class _SearchInContactsBody extends StatelessWidget {
+  const _SearchInContactsBody({
     Key? key,
     required this.controller,
   }) : super(key: key);
@@ -377,94 +365,13 @@ class _searchInContactsBody extends StatelessWidget {
           CustomSizes.largeSizedBoxHeight,
           Padding(
             padding: CustomSizes.mainContentPadding,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  LocaleKeys.newChat_searchResults.tr,
-                  style: TEXTSTYLES.kLinkSmall,
-                ),
-                CustomSizes.mediumSizedBoxHeight,
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: controller.searchSuggestions.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    //this will grab the current user and
-                    // extract the first character from its name
-                    String _currentUsernamefirstchar =
-                        controller.searchSuggestions[index].name.characters.first;
-                    //this will grab the next user in the list if its not null and
-                    // extract the first character from its name
-                    String _nextUsernamefirstchar =
-                        controller.searchSuggestions.indexOf(controller.searchSuggestions.last) >
-                                index + 1
-                            ? controller.searchSuggestions[index + 1].name.characters.first
-                            : "";
-                    var suggestedUser = controller.searchSuggestions[index];
-                    return Column(
-                      children: [
-                        _currentUsernamefirstchar != _nextUsernamefirstchar
-                            ? ListHeaderWidget(
-                                title: controller.searchSuggestions[index].name.characters.first
-                                    .toUpperCase())
-                            : const SizedBox(),
-                        InkWell(
-                          borderRadius: BorderRadius.circular(8),
-                          onTap: () {
-                            openUserPreviewBottomSheet(
-                                controller.searchSuggestions[index]);
-                          },
-                          child: UserWidget(
-                            User: suggestedUser,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ],
+            child: ContactListWithHeader(
+              contacts: controller.searchSuggestions.toList(),
+              searchMode: controller.inputController.text.isNotEmpty,
             ),
           ),
         ],
       );
     });
-  }
-}
-
-class _emptyContactsBody extends StatelessWidget {
-  const _emptyContactsBody({
-    Key? key,
-    required this.controller,
-  }) : super(key: key);
-
-  final NewChatController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CustomSizes.largeSizedBoxHeight,
-        Center(
-            child: Assets.png.newChatEmptyState.image(
-          alignment: Alignment.center,
-        )),
-        CustomSizes.largeSizedBoxHeight,
-        Text(
-          LocaleKeys.newChat_emptyStateTitleContacts.tr,
-          style: TEXTSTYLES.kBodyBasic.copyWith(
-            color: COLORS.kTextBlueColor,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        CustomSizes.largeSizedBoxHeight,
-        CustomButton.primarySmall(
-          onTap: () => openInviteBottomSheet(controller.profile),
-          color: COLORS.kGreenLighterColor,
-          title: LocaleKeys.newChat_buttons_invite.tr,
-          style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kGreenMainColor),
-        ),
-      ],
-    );
   }
 }

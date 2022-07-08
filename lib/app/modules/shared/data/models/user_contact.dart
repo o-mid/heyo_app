@@ -1,29 +1,27 @@
 class UserContact {
+  static const coreIdSerializedName = "coreId";
+  static const nicknameSerializedName = "nickname";
+  static const iconSerializedName = "icon";
+
   String coreId;
-  String nickName;
+  String nickname;
   String icon;
 
-  UserContact(
-      {required this.coreId, required this.nickName, required this.icon});
+  UserContact({
+    required this.coreId,
+    required this.nickname,
+    required this.icon,
+  });
 
-  static const _NICK_NAME = "nickName";
-  static const _CORE_ID = "coreId";
-  static const _ICON = "icon";
+  factory UserContact.fromJson(Map<String, dynamic> json) => UserContact(
+        coreId: json[coreIdSerializedName],
+        nickname: json[nicknameSerializedName],
+        icon: json[iconSerializedName],
+      );
 
-  Map<String, dynamic> toMap() {
-    return {
-      _NICK_NAME: nickName,
-      _CORE_ID: coreId,
-      _ICON: icon,
-    };
-  }
-
-  static UserContact fromMap(Map<String, dynamic> map) {
-    return UserContact(
-        nickName: map[_NICK_NAME], coreId: map[_CORE_ID], icon: map[_ICON]);
-  }
-
-  static String nickNameGetSerializeName() {
-    return _NICK_NAME;
-  }
+  Map<String, dynamic> toJson() => {
+        coreIdSerializedName: coreId,
+        nicknameSerializedName: nickname,
+        iconSerializedName: icon,
+      };
 }
