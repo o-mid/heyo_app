@@ -60,8 +60,8 @@ class UserWidget extends StatelessWidget {
               Get.toNamed(
                 Routes.CALL,
                 arguments: CallViewArgumentsModel(
+                  session: null,
                   user: user,
-                  initiateCall: true,
                   callId: null,
                 ),
               );
@@ -76,8 +76,8 @@ class UserWidget extends StatelessWidget {
               Get.toNamed(
                 Routes.CALL,
                 arguments: CallViewArgumentsModel(
+                  session: null,
                   user: user,
-                  initiateCall: true,
                   callId: null,
                   enableVideo: true,
                 ),

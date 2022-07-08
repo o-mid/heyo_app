@@ -8,7 +8,7 @@ class HomeBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<HomeController>(
       () => HomeController(
-          p2pState: GlobalBindings.p2pState),
+          p2pState: GlobalBindings.p2pState,),
     );
   }
 }

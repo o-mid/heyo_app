@@ -4,15 +4,16 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
-import 'package:heyo/app/modules/call_controller/call_state.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
+import 'package:heyo/app/modules/web-rtc/signaling.dart';
 
 class P2PNodeRequestStream {
   StreamSubscription<P2PReqResNodeModel?>? _nodeRequestSubscription;
   final P2PState p2pState;
+  final Signaling signaling;
 
-  P2PNodeRequestStream({required this.p2pState});
+  P2PNodeRequestStream({required this.p2pState, required this.signaling});
 
   void setUp() {
     _setUpRequestStream();
@@ -52,39 +53,9 @@ class P2PNodeRequestStream {
 
       if ((event.body!['payload'])['session'] != null) {
         String session = (event.body!['payload'])['session'];
-        Map<String, dynamic> data =
-            await jsonDecode(session.convertHexToString());
-        String? sdp = data['sdp'];
-        String? candidate = data['candidate'];
-        String callId = data['call_id'];
 
-        print("sdp: $sdp : candidate: $candidate");
-        print("callState Value : ${p2pState.callState.value}");
-        print("conditions: ${(p2pState.callState.value is NoneState)} : ${(!p2pState.recordedCallIds.contains(callId))} : ${(p2pState.callState.value is Calling)} : ${(p2pState.recordedCallIds.contains(callId))}");
-        if (sdp != null) {
-          if (!p2pState.recordedCallIds.contains(callId)) {
-              print("Call: Call Received");
-              p2pState.recordedCallIds.add(callId);
-              p2pState.currentCallId.value = callId;
-              p2pState.callState.value =
-                  CallState.callReceived(callId,sdp, remoteCoreId, remotePeerId);
+        signaling.onMessage(session.convertHexToString(), remoteCoreId, remotePeerId);
 
-          } else if (p2pState.callState.value is Calling && p2pState.currentCallId.value==callId ) {
-              p2pState.currentCallId.value = callId;
-              p2pState.callState.value =
-                  CallState.callAccepted(callId,sdp, remoteCoreId, remotePeerId);
-          }
-        } else if (candidate != null && p2pState.currentCallId.value==callId) {
-          print("Call: Call exchanging candidate");
-          p2pState.candidate.value = candidate;
-        } else {
-          if (!p2pState.endedCallIds.value.contains(callId)) {
-            print("Call: Call Ended");
-            p2pState.endedCallIds.value.add(callId);
-            p2pState.callState.value = CallState.ended(callId);
-            p2pState.callState.value=CallState.none();
-          }
-        }
       }
     }
   }
