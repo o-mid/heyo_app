@@ -79,10 +79,18 @@ class CallController extends GetxController {
   final _screenRecorder = EdScreenRecorder();
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
     args = Get.arguments as CallViewArgumentsModel;
 
+    setUp();
+
+    participants.add(
+      CallParticipantModel(user: args.user),
+    );
+  }
+
+  Future<void> setUp() async {
     await initRenderers();
 
     observeSignalingStreams();
@@ -96,10 +104,6 @@ class CallController extends GetxController {
     _localRenderer.srcObject = callConnectionController.localStream;
 
     observeCallStates();
-
-    participants.add(
-      CallParticipantModel(user: args.user),
-    );
   }
 
   Future callerSetup() async {

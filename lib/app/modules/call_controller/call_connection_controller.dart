@@ -15,7 +15,11 @@ class CallConnectionController extends GetxController {
   late MediaStream? localStream;
 
   @override
-  void onInit() async {
+  void onInit() {
+    init();
+  }
+
+  Future<void> init() async {
     signaling.onLocalStream = ((stream) {
       localStream = stream;
     });
