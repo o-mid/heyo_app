@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:core_web3dart/src/crypto/formatting.dart';
 import 'package:core_web3dart/web3dart.dart';
+
 extension ValidateCoreId on String {
-  bool isValid() {
+  bool isValidCoreId() {
     try {
       XCBAddress.fromHex(this);
       return true;

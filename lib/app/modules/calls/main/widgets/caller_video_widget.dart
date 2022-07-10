@@ -40,11 +40,9 @@ class _CallerVideoWidgetState extends State<CallerVideoWidget> {
             key: const Key('remote'),
             margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
             decoration: const BoxDecoration(color: Colors.black),
-            child: RTCVideoView(
-              controller.getLocalVideRenderer(),
-              objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-            ),
-          ),
+            child:
+                RTCVideoView(controller.getLocalVideRenderer(),objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitContain),
+          )),
           if (showOptions)
             Positioned(
               bottom: 0,

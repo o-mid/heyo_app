@@ -3,14 +3,14 @@ import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart'
 import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart';
 import 'package:heyo/app/modules/shared/providers/database/dao/user_contact_provider.dart';
 
-import '../controllers/add_contacts_controller.dart';
+import '../controllers/contacts_controller.dart';
 
-class AddContactsBinding extends Bindings {
+class ContactsBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<AddContactsController>(
-      () => AddContactsController(
-        contactRepository: ContactRepository(
+    Get.lazyPut<ContactsController>(
+      () => ContactsController(
+        contactRepo: ContactRepository(
           cacheContractor: CacheRepository(userContact: UserContactProvider()),
         ),
       ),

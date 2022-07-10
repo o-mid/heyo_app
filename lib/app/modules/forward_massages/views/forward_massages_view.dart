@@ -71,9 +71,9 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                       //dont show recent Contacts when the input is focused and its searching for users
                       controller.isTextInputFocused.value
                           ? const SizedBox()
-                          : recentContactsWidget(
+                          : RecentContactsWidget(
                               users: controller.users, userSelect: controller.setSelectedUser),
-                      contactsWidget(
+                      ContactsWidget(
                         isTextInputFocused: controller.isTextInputFocused,
                         searchSuggestions: controller.searchSuggestions,
                         userSelect: controller.setSelectedUser,
