@@ -16,66 +16,72 @@ class CallerVideoWidget extends StatefulWidget {
 
 class _CallerVideoWidgetState extends State<CallerVideoWidget> {
   bool showOptions = false;
-  late CallController controller;
 
   @override
   initState() {
     super.initState();
-    controller = Get.find<CallController>();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          showOptions = !showOptions;
-        });
-      },
-      onDoubleTap: controller.flipVideoPositions,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Flexible(
-              child: Container(
-            key: const Key('remote'),
-            margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-            decoration: const BoxDecoration(color: Colors.black),
-            child: RTCVideoView(controller.getLocalVideRenderer(),
-                objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitContain),
-          )),
-          if (showOptions)
-            Positioned(
-              bottom: 0,
-              right: 0,
-              left: 0,
-              child: Row(
-                children: [
-                  const Spacer(),
-                  _buildViewOptionButton(
-                    onPressed: () =>
-                        controller.updateCallViewType(CallViewType.column),
-                    icon: Assets.svg.stackVertical.svg(),
+    return GetBuilder<CallController>(
+        id: "caller",
+        builder: (controller) {
+          RTCVideoRenderer localVideRenderer =
+              controller.getLocalVideRenderer();
+
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                showOptions = !showOptions;
+              });
+            },
+            onDoubleTap: controller.flipVideoPositions,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Flexible(
+                    child: Container(
+                  key: const Key('remote'),
+                  margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  decoration: const BoxDecoration(color: Colors.black),
+                  child: RTCVideoView(localVideRenderer,
+                      objectFit:
+                          RTCVideoViewObjectFit.RTCVideoViewObjectFitContain),
+                )),
+                if (showOptions)
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    left: 0,
+                    child: Row(
+                      children: [
+                        const Spacer(),
+                        _buildViewOptionButton(
+                          onPressed: () => controller
+                              .updateCallViewType(CallViewType.column),
+                          icon: Assets.svg.stackVertical.svg(),
+                        ),
+                        const Spacer(),
+                        _buildViewOptionButton(
+                          onPressed: () =>
+                              controller.updateCallViewType(CallViewType.row),
+                          icon: Assets.svg.stackHorizontal.svg(),
+                        ),
+                        const Spacer(),
+                        _buildViewOptionButton(
+                          onPressed: () =>
+                              controller.updateCallViewType(CallViewType.stack),
+                          icon: Assets.svg.fullScreen.svg(),
+                        ),
+                        const Spacer(),
+                      ],
+                    ),
                   ),
-                  const Spacer(),
-                  _buildViewOptionButton(
-                    onPressed: () =>
-                        controller.updateCallViewType(CallViewType.row),
-                    icon: Assets.svg.stackHorizontal.svg(),
-                  ),
-                  const Spacer(),
-                  _buildViewOptionButton(
-                    onPressed: () =>
-                        controller.updateCallViewType(CallViewType.stack),
-                    icon: Assets.svg.fullScreen.svg(),
-                  ),
-                  const Spacer(),
-                ],
-              ),
+              ],
             ),
-        ],
-      ),
-    );
+          );
+        });
   }
 
   Widget _buildViewOptionButton(

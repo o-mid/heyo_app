@@ -97,6 +97,7 @@ class CallController extends GetxController {
 
     callConnectionController.localStream.listen((stream) {
       _localRenderer.srcObject = stream;
+      updateCaller();
     });
 
     if (args.session == null) {
@@ -104,9 +105,11 @@ class CallController extends GetxController {
     } else {
       await calleeSetup();
     }
+
     if (callConnectionController.getLocalStream() != null) {
       _localRenderer.srcObject = callConnectionController.getLocalStream();
     }
+
     observeCallStates();
   }
 
@@ -124,6 +127,7 @@ class CallController extends GetxController {
     await callConnectionController.acceptCall(args.session!);
     args.session?.pc?.getRemoteStreams().forEach((element) {
       _remoteRenderer.srcObject = element;
+      updateCallee();
     });
     isInCall.value = true;
   }
@@ -145,6 +149,7 @@ class CallController extends GetxController {
     });
     callConnectionController.remoteStream.listen((stream) {
       _remoteRenderer.srcObject = stream;
+      updateCallee();
     });
   }
 
@@ -232,5 +237,13 @@ class CallController extends GetxController {
   void reorderParticipants(int oldIndex, int newIndex) {
     final p = participants.removeAt(oldIndex);
     participants.insert(newIndex, p);
+  }
+
+  void updateCallee() {
+    update(["callee"]);
+  }
+
+  void updateCaller() {
+    update(["caller"]);
   }
 }
