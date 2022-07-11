@@ -246,4 +246,10 @@ class CallController extends GetxController {
   void updateCaller() {
     update(["caller"]);
   }
+
+  RxBool showCallerOptions = false.obs;
+  void changeCallerOptions() {
+    showCallerOptions.value = !showCallerOptions.value;
+    updateCaller();
+  }
 }

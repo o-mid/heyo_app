@@ -7,20 +7,8 @@ import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
 // Todo: Replace this with local video webrtc
-class CallerVideoWidget extends StatefulWidget {
+class CallerVideoWidget extends StatelessWidget {
   const CallerVideoWidget({super.key});
-
-  @override
-  State<CallerVideoWidget> createState() => _CallerVideoWidgetState();
-}
-
-class _CallerVideoWidgetState extends State<CallerVideoWidget> {
-  bool showOptions = false;
-
-  @override
-  initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +19,7 @@ class _CallerVideoWidgetState extends State<CallerVideoWidget> {
               controller.getLocalVideRenderer();
 
           return GestureDetector(
-            onTap: () {
-              setState(() {
-                showOptions = !showOptions;
-              });
-            },
+            onTap: () => controller.changeCallerOptions(),
             onDoubleTap: controller.flipVideoPositions,
             child: Stack(
               alignment: Alignment.center,
@@ -49,7 +33,7 @@ class _CallerVideoWidgetState extends State<CallerVideoWidget> {
                       objectFit:
                           RTCVideoViewObjectFit.RTCVideoViewObjectFitContain),
                 )),
-                if (showOptions)
+                if (controller.showCallerOptions.value)
                   Positioned(
                     bottom: 0,
                     right: 0,
