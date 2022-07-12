@@ -27,38 +27,47 @@ class CallerVideoWidget extends StatelessWidget {
                 Flexible(
                     child: Container(
                   key: const Key('remote'),
-                  margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-                  decoration: const BoxDecoration(color: Colors.black),
+                  margin: const EdgeInsets.all(5),
+                  decoration: const BoxDecoration(color: Colors.transparent),
                   child: RTCVideoView(localVideRenderer,
                       objectFit:
-                          RTCVideoViewObjectFit.RTCVideoViewObjectFitContain),
+                          RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                      mirror: true),
                 )),
                 if (controller.showCallerOptions.value)
                   Positioned(
                     bottom: 0,
                     right: 0,
                     left: 0,
-                    child: Row(
+                    child: Column(
                       children: [
-                        const Spacer(),
-                        _buildViewOptionButton(
-                          onPressed: () => controller
-                              .updateCallViewType(CallViewType.column),
-                          icon: Assets.svg.stackVertical.svg(),
+                        Row(
+                          children: [
+                            const Spacer(),
+                            _buildViewOptionButton(
+                              onPressed: () => controller
+                                  .updateCallViewType(CallViewType.column),
+                              icon: Assets.svg.stackVertical.svg(),
+                            ),
+                            const Spacer(),
+                            _buildViewOptionButton(
+                              onPressed: () => controller
+                                  .updateCallViewType(CallViewType.row),
+                              icon: Assets.svg.stackHorizontal.svg(),
+                            ),
+                            const Spacer(),
+                            _buildViewOptionButton(
+                              onPressed: () => controller
+                                  .updateCallViewType(CallViewType.stack),
+                              icon: Assets.svg.fullScreen.svg(),
+                            ),
+                            const Spacer(),
+                          ],
                         ),
-                        const Spacer(),
-                        _buildViewOptionButton(
-                          onPressed: () =>
-                              controller.updateCallViewType(CallViewType.row),
-                          icon: Assets.svg.stackHorizontal.svg(),
-                        ),
-                        const Spacer(),
-                        _buildViewOptionButton(
-                          onPressed: () =>
-                              controller.updateCallViewType(CallViewType.stack),
-                          icon: Assets.svg.fullScreen.svg(),
-                        ),
-                        const Spacer(),
+                        SizedBox(
+                          height:
+                              controller.isVideoPositionsFlipped.value ? 16 : 0,
+                        )
                       ],
                     ),
                   ),

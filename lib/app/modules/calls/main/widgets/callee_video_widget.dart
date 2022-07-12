@@ -22,8 +22,8 @@ class CalleeVideoWidget extends StatelessWidget {
           child: Flexible(
               child: Container(
             key: const Key('remote'),
-            margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-            decoration: const BoxDecoration(color: Colors.black),
+            margin: const EdgeInsets.all(5),
+            decoration: const BoxDecoration(color: Colors.transparent),
             child: RTCVideoView(remoteVideRenderer,
                 objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover),
           )),
