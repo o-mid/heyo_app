@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:flutter_beep/flutter_beep.dart';
 import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
@@ -97,18 +97,20 @@ class CallController extends GetxController {
 
     callConnectionController.localStream.listen((stream) {
       _localRenderer.srcObject = stream;
+
+      updateCallerVideoWidget();
     });
-
-
 
     if (args.session == null) {
       await callerSetup();
     } else {
       await calleeSetup();
     }
+
     if (callConnectionController.getLocalStream() != null) {
       _localRenderer.srcObject = callConnectionController.getLocalStream();
     }
+
     observeCallStates();
   }
 
@@ -119,6 +121,7 @@ class CallController extends GetxController {
     sessionId = session.sid;
 
     isInCall.value = false;
+    _playWatingBeep();
   }
 
   Future calleeSetup() async {
@@ -126,6 +129,7 @@ class CallController extends GetxController {
     await callConnectionController.acceptCall(args.session!);
     args.session?.pc?.getRemoteStreams().forEach((element) {
       _remoteRenderer.srcObject = element;
+      updateCalleeVideoWidget();
     });
     isInCall.value = true;
   }
@@ -134,9 +138,11 @@ class CallController extends GetxController {
     callConnectionController.callState.listen((state) {
       if (state == CallState.callStateConnected) {
         isInCall.value = true;
+        _stopWatingBeep();
       } else if (state == CallState.callStateBye) {
         _localRenderer.srcObject = null;
         _remoteRenderer.srcObject = null;
+        _stopWatingBeep();
       }
     });
   }
@@ -147,6 +153,7 @@ class CallController extends GetxController {
     });
     callConnectionController.remoteStream.listen((stream) {
       _remoteRenderer.srcObject = stream;
+      updateCalleeVideoWidget();
     });
   }
 
@@ -162,8 +169,10 @@ class CallController extends GetxController {
   void endCall() {
     if (isInCall.value) {
       callConnectionController.signaling.bye(sessionId);
+      _stopWatingBeep();
     } else {
       callConnectionController.signaling.reject(sessionId);
+      _stopWatingBeep();
     }
     Get.back();
   }
@@ -234,5 +243,30 @@ class CallController extends GetxController {
   void reorderParticipants(int oldIndex, int newIndex) {
     final p = participants.removeAt(oldIndex);
     participants.insert(newIndex, p);
+  }
+
+  final String calleeVideoWidgetId = "callee";
+  final String callerVideoWidgetId = "caller";
+  void updateCalleeVideoWidget() {
+    update([calleeVideoWidgetId]);
+  }
+
+  void updateCallerVideoWidget() {
+    update([callerVideoWidgetId]);
+  }
+
+  RxBool showCallerOptions = false.obs;
+  void changeCallerOptions() {
+    showCallerOptions.value = !showCallerOptions.value;
+    updateCallerVideoWidget();
+  }
+
+  void _playWatingBeep() {
+    FlutterBeep.playSysSound(AndroidSoundIDs.TONE_SUP_CALL_WAITING);
+  }
+
+  void _stopWatingBeep() {
+    // silent tone
+    FlutterBeep.playSysSound(AndroidSoundIDs.TONE_CDMA_CALL_SIGNAL_ISDN_PAT5);
   }
 }
