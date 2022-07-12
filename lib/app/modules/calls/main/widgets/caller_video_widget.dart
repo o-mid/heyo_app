@@ -13,7 +13,7 @@ class CallerVideoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CallController>(
-        id: "caller",
+        id: Get.find<CallController>().callerVideoWidgetId,
         builder: (controller) {
           RTCVideoRenderer localVideRenderer =
               controller.getLocalVideRenderer();

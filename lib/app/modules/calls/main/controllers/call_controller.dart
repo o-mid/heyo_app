@@ -98,7 +98,7 @@ class CallController extends GetxController {
     callConnectionController.localStream.listen((stream) {
       _localRenderer.srcObject = stream;
 
-      updateCaller();
+      updateCallerVideoWidget();
     });
 
     if (args.session == null) {
@@ -129,7 +129,7 @@ class CallController extends GetxController {
     await callConnectionController.acceptCall(args.session!);
     args.session?.pc?.getRemoteStreams().forEach((element) {
       _remoteRenderer.srcObject = element;
-      updateCallee();
+      updateCalleeVideoWidget();
     });
     isInCall.value = true;
   }
@@ -153,7 +153,7 @@ class CallController extends GetxController {
     });
     callConnectionController.remoteStream.listen((stream) {
       _remoteRenderer.srcObject = stream;
-      updateCallee();
+      updateCalleeVideoWidget();
     });
   }
 
@@ -245,18 +245,20 @@ class CallController extends GetxController {
     participants.insert(newIndex, p);
   }
 
-  void updateCallee() {
-    update(["callee"]);
+  final String calleeVideoWidgetId = "callee";
+  final String callerVideoWidgetId = "caller";
+  void updateCalleeVideoWidget() {
+    update([calleeVideoWidgetId]);
   }
 
-  void updateCaller() {
-    update(["caller"]);
+  void updateCallerVideoWidget() {
+    update([callerVideoWidgetId]);
   }
 
   RxBool showCallerOptions = false.obs;
   void changeCallerOptions() {
     showCallerOptions.value = !showCallerOptions.value;
-    updateCaller();
+    updateCallerVideoWidget();
   }
 
   void _playWatingBeep() {
