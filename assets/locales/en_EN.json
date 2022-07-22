@@ -295,5 +295,10 @@
       "share": "Share",
       "save": "Save to device"
     }
+  },
+  "ConnectionStatus": {
+    "waiting": "Waiting for connection ...",
+    "updating": "Updating chats",
+    "backOnline": "Back online"
   }
 }

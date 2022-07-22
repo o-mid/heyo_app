@@ -305,6 +305,9 @@ class LocaleKeys {
   static const mediaView_bottomSheet_delete = 'mediaView_bottomSheet_delete';
   static const mediaView_bottomSheet_share = 'mediaView_bottomSheet_share';
   static const mediaView_bottomSheet_save = 'mediaView_bottomSheet_save';
+  static const ConnectionStatus_waiting = 'ConnectionStatus_waiting';
+  static const ConnectionStatus_updating = 'ConnectionStatus_updating';
+  static const ConnectionStatus_backOnline = 'ConnectionStatus_backOnline';
 }
 
 class Locales {
@@ -534,5 +537,8 @@ class Locales {
     'mediaView_bottomSheet_delete': 'Delete',
     'mediaView_bottomSheet_share': 'Share',
     'mediaView_bottomSheet_save': 'Save to device',
+    'ConnectionStatus_waiting': 'Waiting for connection ...',
+    'ConnectionStatus_updating': 'Updating chats',
+    'ConnectionStatus_backOnline': 'Back online',
   };
 }

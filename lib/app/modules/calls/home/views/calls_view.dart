@@ -6,6 +6,7 @@ import 'package:heyo/app/modules/calls/home/widgets/call_log_widget.dart';
 import 'package:heyo/app/modules/calls/home/widgets/empty_calls_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/widgets/connection_status.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
@@ -38,17 +39,27 @@ class CallsView extends GetView<CallsController> {
           }),
         ],
       ),
-      body: Obx(() {
-        return controller.calls.isEmpty
-            ? const EmptyCallsWidget()
-            : AnimatedList(
-                key: controller.animatedListKey,
-                padding: EdgeInsets.symmetric(vertical: 10.h),
-                initialItemCount: controller.calls.length,
-                itemBuilder: (context, index, animation) =>
-                    CallLogWidget(call: controller.calls[index]),
-              );
-      }),
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const ConnectionStatusWidget(),
+          Expanded(
+            child: Obx(
+                  () {
+                    return controller.calls.isEmpty
+                        ? const EmptyCallsWidget()
+                        : AnimatedList(
+                      key: controller.animatedListKey,
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      initialItemCount: controller.calls.length,
+                      itemBuilder: (context, index, animation) =>
+                          CallLogWidget(call: controller.calls[index]),
+                    );
+                  },
+            ),
+          ),
+        ],
+      )
     );
   }
 }

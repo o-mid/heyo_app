@@ -7,6 +7,7 @@ import 'package:heyo/app/modules/chats/widgets/empty_chats_widget.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/widgets/connection_status.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/locales.g.dart';
 
@@ -27,8 +28,16 @@ class ChatsView extends GetView<ChatsController> {
         ),
         automaticallyImplyLeading: false,
       ),
-      body: Obx(
-        () => _buildChats(controller.chats),
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const ConnectionStatusWidget(),
+          Expanded(
+            child: Obx(
+              () => _buildChats(controller.chats),
+            ),
+          ),
+        ],
       ),
     );
   }

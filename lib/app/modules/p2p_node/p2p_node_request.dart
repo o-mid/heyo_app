@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
@@ -38,6 +37,7 @@ class P2PNodeRequestStream {
 
     debugPrint("_onNewRequestEvent: eventName is: ${event.name}");
     debugPrint("_onNewRequestEvent: body is: ${event.body}");
+    debugPrint("_onNewRequestEvent: error is: ${event.error}");
 
     if (event.name == P2PReqResNodeNames.login &&
         event.error == null &&
