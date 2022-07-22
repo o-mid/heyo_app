@@ -26,114 +26,112 @@ void openNewChatBottomSheet() {
     Padding(
       padding: CustomSizes.mainContentPadding,
       child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            CustomSizes.smallSizedBoxHeight,
-            Row(
-              children: [
-                Expanded(
-                  child: TextButton(
-                      //Todo: Start new chat onPressed
-                      onPressed: () {
-                        Get.toNamed(Routes.NEW_CHAT);
-                      },
-                      child: Row(
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: COLORS.kBrightBlueColor,
-                              ),
-                              child: Assets.svg.newChatIcon.svg(width: 20, height: 20),
-                            ),
-                          ),
-                          CustomSizes.mediumSizedBoxWidth,
-                          Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                LocaleKeys.HomePage_bottomSheet_newChat.tr,
-                                style: TEXTSTYLES.kBodyBasic.copyWith(
-                                  color: COLORS.kDarkBlueColor,
-                                ),
-                              ))
-                        ],
-                      )),
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          CustomSizes.smallSizedBoxHeight,
+          Row(
+            children: [
+              Expanded(
+                child: TextButton(
+                  //Todo: Start new chat onPressed
+                  onPressed: () {
+                    Get.toNamed(Routes.NEW_CHAT);
+                  },
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: COLORS.kBrightBlueColor,
+                        ),
+                        child: Assets.svg.chatOutlined.svg(
+                          width: 20,
+                          height: 20,
+                          color: COLORS.kDarkBlueColor,
+                        ),
+                      ),
+                      CustomSizes.mediumSizedBoxWidth,
+                      Text(
+                        LocaleKeys.HomePage_bottomSheet_newChat.tr,
+                        style: TEXTSTYLES.kBodyBasic.copyWith(
+                          color: COLORS.kDarkBlueColor,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-                IconButton(
-                    onPressed: () => Get.toNamed(Routes.NEW_CHAT,
-                        arguments: NewChatArgumentsModel(
-                          openQrScanner: true,
-                        )),
-                    alignment: Alignment.center,
-                    iconSize: 21.w,
-                    icon: const Icon(
-                      Icons.qr_code_rounded,
-                      color: COLORS.kDarkBlueColor,
-                    )),
-                CustomSizes.smallSizedBoxWidth,
+              ),
+              IconButton(
+                onPressed: () => Get.toNamed(
+                  Routes.NEW_CHAT,
+                  arguments: NewChatArgumentsModel(
+                    openQrScanner: true,
+                  ),
+                ),
+                alignment: Alignment.center,
+                iconSize: 21.w,
+                icon: const Icon(
+                  Icons.qr_code_rounded,
+                  color: COLORS.kDarkBlueColor,
+                ),
+              ),
+              CustomSizes.smallSizedBoxWidth,
+            ],
+          ),
+          TextButton(
+            //Todo: Start new group onPressed
+            onPressed: () {},
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: COLORS.kBrightBlueColor,
+                  ),
+                  child: Assets.svg.newGroupIcon.svg(width: 20, height: 20),
+                ),
+                CustomSizes.mediumSizedBoxWidth,
+                Text(
+                  LocaleKeys.HomePage_bottomSheet_newGroup.tr,
+                  style: TEXTSTYLES.kBodyBasic.copyWith(
+                    color: COLORS.kDarkBlueColor,
+                  ),
+                )
               ],
             ),
-            TextButton(
-                //Todo: Start new group onPressed
-                onPressed: () {},
-                child: Row(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: COLORS.kBrightBlueColor,
-                        ),
-                        child: Assets.svg.newGroupIcon.svg(width: 20, height: 20),
-                      ),
-                    ),
-                    CustomSizes.mediumSizedBoxWidth,
-                    Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          LocaleKeys.HomePage_bottomSheet_newGroup.tr,
-                          style: TEXTSTYLES.kBodyBasic.copyWith(
-                            color: COLORS.kDarkBlueColor,
-                          ),
-                        ))
-                  ],
-                )),
-            TextButton(
-                onPressed: () => Get.toNamed(Routes.NEW_CHAT,
-                    arguments: NewChatArgumentsModel(
-                      openInviteBottomSheet: true,
-                    )),
-                child: Row(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: COLORS.kBrightBlueColor,
-                        ),
-                        child: Assets.svg.inviteIcon.svg(width: 20, height: 20),
-                      ),
-                    ),
-                    CustomSizes.mediumSizedBoxWidth,
-                    Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          LocaleKeys.HomePage_bottomSheet_invite.tr,
-                          style: TEXTSTYLES.kBodyBasic.copyWith(
-                            color: COLORS.kDarkBlueColor,
-                          ),
-                        ))
-                  ],
-                )),
-          ]),
+          ),
+          TextButton(
+            onPressed: () => Get.toNamed(
+              Routes.NEW_CHAT,
+              arguments: NewChatArgumentsModel(
+                openInviteBottomSheet: true,
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: COLORS.kBrightBlueColor,
+                  ),
+                  child: Assets.svg.inviteIcon.svg(width: 20, height: 20),
+                ),
+                CustomSizes.mediumSizedBoxWidth,
+                Text(
+                  LocaleKeys.HomePage_bottomSheet_invite.tr,
+                  style: TEXTSTYLES.kBodyBasic.copyWith(
+                    color: COLORS.kDarkBlueColor,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }
