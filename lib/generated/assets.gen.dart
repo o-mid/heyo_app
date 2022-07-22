@@ -274,10 +274,6 @@ class $AssetsSvgGen {
   /// File path: assets/svg/new_chat.svg
   SvgGenImage get newChat => const SvgGenImage('assets/svg/new_chat.svg');
 
-  /// File path: assets/svg/new_chat_icon.svg
-  SvgGenImage get newChatIcon =>
-      const SvgGenImage('assets/svg/new_chat_icon.svg');
-
   /// File path: assets/svg/new_group_icon.svg
   SvgGenImage get newGroupIcon =>
       const SvgGenImage('assets/svg/new_group_icon.svg');
@@ -418,7 +414,7 @@ class AssetGenImage {
     ImageErrorWidgetBuilder? errorBuilder,
     String? semanticLabel,
     bool excludeFromSemantics = false,
-    double? scale = 1.0,
+    double? scale,
     double? width,
     double? height,
     Color? color,
@@ -465,6 +461,8 @@ class AssetGenImage {
   }
 
   String get path => _assetName;
+
+  String get keyName => _assetName;
 }
 
 class SvgGenImage {
