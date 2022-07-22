@@ -1,35 +1,55 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/state_manager.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 
 enum ConnectionStatus { connectionLost, updating, justConnected, online }
 
 class ConnectionController extends GetxController {
   Rx<ConnectionStatus> currentConnectionStatus = ConnectionStatus.online.obs;
+
+  final P2PState p2pState;
+
+  ConnectionController({required this.p2pState});
+
   @override
   void onInit() {
-    // to see the demo of connection UI uncomment next line
-    // demoConnectionUi();
+    setPrimaryState();
+    listenToStatus();
+
     super.onInit();
   }
 
-  // this is just a demo to show the demoConnection Ui
-  // sets the diffrent stage of the connection every 2 secounds
-  // remove after impliment the connection functinallity
-  void demoConnectionUi() {
-    Future.delayed(const Duration(seconds: 2), () {
-      currentConnectionStatus.value = ConnectionStatus.connectionLost;
-    })
-        .whenComplete(() => Future.delayed(const Duration(seconds: 2), () {
-              currentConnectionStatus.value = ConnectionStatus.justConnected;
-            }))
-        .whenComplete(() => Future.delayed(const Duration(seconds: 2), () {
-              currentConnectionStatus.value = ConnectionStatus.updating;
-            }))
-        .whenComplete(() => Future.delayed(const Duration(seconds: 2), () {
-              currentConnectionStatus.value = ConnectionStatus.online;
-            }));
+  void setPrimaryState() async {
+    ConnectivityResult connectivityResult =
+        await Connectivity().checkConnectivity();
+    applyConnectivityStatus(p2pState.advertise.value, connectivityResult);
   }
 
-  void onClose() {
-    super.onClose();
+  void listenToStatus() async {
+    Connectivity().onConnectivityChanged.listen((connectivityResult) async {
+      applyConnectivityStatus(p2pState.advertise.value, connectivityResult);
+    });
+    p2pState.advertise.listen((advertise) async {
+      ConnectivityResult connectivityResult =
+          await Connectivity().checkConnectivity();
+      applyConnectivityStatus(advertise, connectivityResult);
+    });
+  }
+
+  void applyConnectivityStatus(
+      bool advertised, ConnectivityResult connectivityResult) async {
+    if (connectivityResult == ConnectivityResult.none) {
+      currentConnectionStatus.value = ConnectionStatus.connectionLost;
+    } else if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      if (advertised) {
+        currentConnectionStatus.value = ConnectionStatus.justConnected;
+        await Future.delayed(const Duration(seconds: 2), () {
+          currentConnectionStatus.value = ConnectionStatus.online;
+        });
+      } else {
+        currentConnectionStatus.value = ConnectionStatus.updating;
+      }
+    }
   }
 }

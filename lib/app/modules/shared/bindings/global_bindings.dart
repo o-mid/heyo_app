@@ -54,7 +54,7 @@ class GlobalBindings extends Bindings {
     Get.put(AudioMessageController());
     Get.put(VideoMessageController());
     Get.put(LiveLocationController());
-    Get.put(ConnectionController());
+    Get.put(ConnectionController(p2pState: p2pState));
 
     Get.put<P2PNodeController>(
       P2PNodeController(

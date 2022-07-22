@@ -35,6 +35,7 @@ class P2PNodeResponseStream {
 
     print("_onNewResponseEvent : eventName is: ${event.name.toString()}");
     print("_onNewResponseEvent : body is: ${event.body.toString()}");
+    print("_onNewResponseEvent : error is: ${event.error.toString()}");
 
     if (event.name == P2PReqResNodeNames.login) {
       if (event.error == null) {
@@ -49,6 +50,7 @@ class P2PNodeResponseStream {
         !advertised) {
       final _info = P2PReqResNodeModel(name: P2PReqResNodeNames.advertise);
       advertised = true;
+      p2pState.advertise.value=true;
       final _id = await FlutterP2pCommunicator.sendRequest(info: _info);
       /* -------------------------------------------------------------------------- */
       /*                                  get addrs                                 */
