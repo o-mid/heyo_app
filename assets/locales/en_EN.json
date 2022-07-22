@@ -182,6 +182,7 @@
       "addToContacts": "Add to contacts",
       "block": "Block",
       "userInfo": "User info",
+      "contactInfo": "Contact info",
       "callUser": "Call"
     },
     "inviteBottomSheet": {

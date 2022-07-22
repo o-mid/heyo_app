@@ -114,7 +114,9 @@ void openUserPreviewBottomSheet(UserModel user) {
                   //Todo: Add User Info onPressed
                   onPressed: () {},
                   icon: Assets.svg.infoIcon.svg(width: 20, height: 20),
-                  title: LocaleKeys.newChat_userBottomSheet_userInfo.tr,
+                  title: user.isContact
+                      ? LocaleKeys.newChat_userBottomSheet_contactInfo.tr
+                      : LocaleKeys.newChat_userBottomSheet_userInfo.tr,
                 ),
                 if (!user.isContact)
                   _buildIconTextButton(
