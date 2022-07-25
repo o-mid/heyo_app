@@ -65,7 +65,9 @@ class IncomingCallView extends GetView<IncomingCallController> {
               CircleIconButton(
                 onPressed: controller.acceptCall,
                 backgroundColor: COLORS.kStatesSuccessColor,
-                icon: Assets.svg.videoCallIcon.svg(),
+                icon: controller.args.session.isAudioCall
+                    ? Assets.svg.audioCallIcon.svg()
+                    : Assets.svg.videoCallIcon.svg(),
               ),
             ],
           ),

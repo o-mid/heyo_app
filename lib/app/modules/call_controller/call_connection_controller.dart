@@ -61,12 +61,11 @@ class CallConnectionController extends GetxController {
     };
   }
 
-  CallConnectionController(
-      {required this.signaling, required this.accountInfo});
+  CallConnectionController({required this.signaling, required this.accountInfo});
 
-  Future<Session> startCall(String remoteId, String callId) async {
+  Future<Session> startCall(String remoteId, String callId, bool isAudioCall) async {
     String? selfCoreId = await accountInfo.getCoreId();
-    return await signaling.invite(remoteId, 'video', false, selfCoreId!);
+    return await signaling.invite(remoteId, 'video', false, selfCoreId!, isAudioCall);
   }
 
   Future acceptCall(Session session) async {
