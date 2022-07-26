@@ -1,5 +1,5 @@
 abstract class AccountInfo {
-  Future<void> createAccount();
+  Future<void> createAccountAndSaveInStorage();
 
   Future<String?> getP2PSecret();
 

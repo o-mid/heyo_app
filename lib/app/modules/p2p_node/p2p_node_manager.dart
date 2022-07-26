@@ -8,7 +8,6 @@ class P2PNodeController extends GetxController {
   final P2PNode p2pNode;
   P2PNodeController({required this.p2pNode});
 
-
   @override
   void onReady() async {
     Connectivity().onConnectivityChanged.listen((connectivityResult) async {
@@ -20,20 +19,20 @@ class P2PNodeController extends GetxController {
           _stopP2PNode();
         }
         _setUpP2PNode();
-        print("New networkStatus: ${connectivityResult}");
+        print("New networkStatus: $connectivityResult");
         _latestConnectivityStatus = connectivityResult;
       }
     });
     super.onReady();
   }
 
-  _stopP2PNode(){
+  _stopP2PNode() {
     print("p2p stopNode");
     p2pNode.stop();
   }
-  _setUpP2PNode(){
+
+  _setUpP2PNode() {
     print("p2p startNode");
     p2pNode.restart();
   }
-
 }
