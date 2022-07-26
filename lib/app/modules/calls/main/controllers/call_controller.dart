@@ -52,6 +52,8 @@ class CallController extends GetxController {
   final CallConnectionController callConnectionController;
   final P2PState p2pState;
   late String sessionId;
+  final Stopwatch stopwatch = Stopwatch();
+  late Timer? calltimer;
 
   CallController({required this.callConnectionController, required this.p2pState});
 
@@ -87,6 +89,20 @@ class CallController extends GetxController {
     participants.add(
       CallParticipantModel(user: args.user),
     );
+  }
+
+  void startCallTimer() {
+    stopwatch.start();
+    calltimer = Timer.periodic(const Duration(seconds: 1), onCallTick);
+  }
+
+  void onCallTick(Timer timer) {
+    callDurationSeconds.value = stopwatch.elapsed.inSeconds;
+  }
+
+  void stopCallTimer() {
+    calltimer?.cancel();
+    stopwatch.stop();
   }
 
   Future<void> setUp() async {
@@ -131,6 +147,7 @@ class CallController extends GetxController {
       updateCalleeVideoWidget();
     });
     isInCall.value = true;
+    startCallTimer();
   }
 
   void observeCallStates() {
@@ -138,10 +155,12 @@ class CallController extends GetxController {
       if (state == CallState.callStateConnected) {
         isInCall.value = true;
         _stopWatingBeep();
+        startCallTimer();
       } else if (state == CallState.callStateBye) {
         _localRenderer.srcObject = null;
         _remoteRenderer.srcObject = null;
         _stopWatingBeep();
+        stopCallTimer();
       }
     });
   }
@@ -169,9 +188,11 @@ class CallController extends GetxController {
     if (isInCall.value) {
       callConnectionController.signaling.bye(sessionId);
       _stopWatingBeep();
+      stopCallTimer();
     } else {
       callConnectionController.signaling.reject(sessionId);
       _stopWatingBeep();
+      stopCallTimer();
     }
     Get.back();
   }
