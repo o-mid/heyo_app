@@ -24,7 +24,9 @@ class IncomingCallView extends GetView<IncomingCallController> {
           CalleeOrCallerInfoWidget(user: controller.caller),
           SizedBox(height: 40.h),
           Text(
-            LocaleKeys.IncomingCallPage_incomingVideoCall.tr,
+            controller.args.session.isAudioCall
+                ? LocaleKeys.IncomingCallPage_incomingVoiceCall.tr
+                : LocaleKeys.IncomingCallPage_incomingVideoCall.tr,
             style: TEXTSTYLES.kBodyBasic.copyWith(color: COLORS.kWhiteColor),
           ),
           SizedBox(height: 40.h),

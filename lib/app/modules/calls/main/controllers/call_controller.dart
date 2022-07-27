@@ -166,6 +166,7 @@ class CallController extends GetxController {
         updateCalleeVideoWidget();
       } else if (state == CallState.callStateClosedCamera) {
         calleeVideoEnabled.value = false;
+        resetCallView();
       }
     });
   }
@@ -293,5 +294,11 @@ class CallController extends GetxController {
   void _stopWatingBeep() {
     // silent tone
     FlutterBeep.playSysSound(AndroidSoundIDs.TONE_CDMA_CALL_SIGNAL_ISDN_PAT5);
+  }
+
+//reset Call View when one peer turn the Video Disabled
+  void resetCallView() {
+    updateCallViewType(CallViewType.stack);
+    isVideoPositionsFlipped.value = false;
   }
 }
