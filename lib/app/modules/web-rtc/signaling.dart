@@ -9,6 +9,8 @@ enum CallState {
   callStateInvite,
   callStateConnected,
   callStateBye,
+  callStateClosedCamera,
+  callStateOpendCamera
 }
 
 class Session {
@@ -87,6 +89,12 @@ class Signaling {
     }
   }
 
+  void showLocalVideoStream(bool value) {
+    if (_localStream != null) {
+      _localStream!.getVideoTracks()[0].enabled = value;
+    }
+  }
+
   Future<Session> invite(
       String coreId, String media, bool useScreen, String selfId, bool isAudioCall) async {
     final sessionId = '$selfId-$coreId-';
@@ -105,6 +113,34 @@ class Signaling {
     onCallStateChange?.call(session, CallState.callStateNew);
     onCallStateChange?.call(session, CallState.callStateInvite);
     return session;
+  }
+
+  void peerOpendCamera(String sessionId) {
+    var session = _sessions[sessionId];
+
+    if (session != null) {
+      _send(
+          'opendcamera',
+          {
+            'session_id': sessionId,
+          },
+          session.cid,
+          session.pid);
+    }
+  }
+
+  void peerClosedCamera(String sessionId) {
+    var session = _sessions[sessionId];
+
+    if (session != null) {
+      _send(
+          'closedcamera',
+          {
+            'session_id': sessionId,
+          },
+          session.cid,
+          session.pid);
+    }
   }
 
   void bye(String sessionId) {
@@ -240,6 +276,25 @@ class Signaling {
       case 'keepalive':
         {
           print('keepalive response!');
+        }
+        break;
+
+      case "closedcamera":
+        {
+          var sessionId = data['session_id'];
+          var session = _sessions[sessionId];
+          if (session != null) {
+            onCallStateChange?.call(session, CallState.callStateClosedCamera);
+          }
+        }
+        break;
+      case "opendcamera":
+        {
+          var sessionId = data['session_id'];
+          var session = _sessions[sessionId];
+          if (session != null) {
+            onCallStateChange?.call(session, CallState.callStateOpendCamera);
+          }
         }
         break;
       default:

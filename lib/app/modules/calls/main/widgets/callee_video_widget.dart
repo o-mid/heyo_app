@@ -13,8 +13,7 @@ class CalleeVideoWidget extends StatelessWidget {
     return GetBuilder<CallController>(
       id: Get.find<CallController>().calleeVideoWidgetId,
       builder: (controller) {
-        RTCVideoRenderer remoteVideRenderer =
-            controller.getRemoteVideRenderer();
+        RTCVideoRenderer remoteVideRenderer = controller.getRemoteVideRenderer();
 
         return GestureDetector(
           onTap: controller.toggleImmersiveMode,

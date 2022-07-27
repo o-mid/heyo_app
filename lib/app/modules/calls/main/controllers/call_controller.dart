@@ -80,12 +80,7 @@ class CallController extends GetxController {
     super.onInit();
     args = Get.arguments as CallViewArgumentsModel;
     callerVideoEnabled.value = args.enableVideo;
-    if (args.isAudioCall) {
-      callerVideoEnabled.value = false;
-      calleeVideoEnabled.value = false;
-    }
     setUp();
-
     participants.add(
       CallParticipantModel(user: args.user),
     );
@@ -126,6 +121,11 @@ class CallController extends GetxController {
       _localRenderer.srcObject = callConnectionController.getLocalStream();
     }
 
+    if (args.isAudioCall) {
+      callerVideoEnabled.value = false;
+      calleeVideoEnabled.value = false;
+      callConnectionController.showLocalVideoStream(false, "", false);
+    }
     observeCallStates();
   }
 
@@ -161,6 +161,11 @@ class CallController extends GetxController {
         _remoteRenderer.srcObject = null;
         _stopWatingBeep();
         stopCallTimer();
+      } else if (state == CallState.callStateOpendCamera) {
+        calleeVideoEnabled.value = true;
+        updateCalleeVideoWidget();
+      } else if (state == CallState.callStateClosedCamera) {
+        calleeVideoEnabled.value = false;
       }
     });
   }
@@ -237,6 +242,7 @@ class CallController extends GetxController {
   // Todo
   void toggleVideo() {
     callerVideoEnabled.value = !callerVideoEnabled.value;
+    callConnectionController.showLocalVideoStream(callerVideoEnabled.value, sessionId, true);
   }
 
   void switchCamera() {
