@@ -6,6 +6,7 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/app/modules/shared/widgets/scale_animated_switcher.dart';
 import 'package:heyo/generated/assets.gen.dart';
@@ -23,7 +24,7 @@ class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Material(
       color: COLORS.kGreenMainColor,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
+        padding: EdgeInsets.only(top: 12.h, bottom: 12.h, right: 20.w),
         child: SafeArea(
           child: ScaleAnimatedSwitcher(
             child: controller.selectedMessages.isNotEmpty
@@ -77,6 +78,14 @@ class _DefaultAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        CircleIconButton(
+          backgroundColor: Colors.transparent,
+          onPressed: Get.back,
+          icon: const Icon(
+            Icons.arrow_back,
+            color: COLORS.kWhiteColor,
+          ),
+        ),
         CustomCircleAvatar(url: chat.icon, size: 32, isOnline: chat.isOnline),
         CustomSizes.smallSizedBoxWidth,
         Column(

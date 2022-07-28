@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/cryptography_key_generator.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/local_storages_abstract.dart';
@@ -22,18 +23,35 @@ class AccountRepo implements AccountInfo {
   }
 
   @override
-  Future<void> createAccount() async {
-    late String privateKey;
-    late List<String> phrases;
-    phrases = cryptographyKeyGenerator.generate_mnemonic();
-    privateKey = await cryptographyKeyGenerator.generatePrivateKeysFromMneomonic(phrases, "198491");
+  Future<void> createAccountAndSaveInStorage() async {
+    // we save the credentials in the key chain
+    final result = await compute(_createAccount, null);
+
+    await saveCredentials(
+      result.coreId,
+      result.privateKey,
+      null,
+      result.phrases,
+      result.address,
+      result.pubKey,
+    );
+  }
+
+  Future<_CreateAccountResult> _createAccount(_) async {
+    final phrases = cryptographyKeyGenerator.generate_mnemonic();
+    final privateKey =
+        await cryptographyKeyGenerator.generatePrivateKeysFromMneomonic(phrases, "198491");
 
     final address = await cryptographyKeyGenerator.generateAddress(privateKey);
     final pubKey = await cryptographyKeyGenerator.getPublicKeyFromPrivate(privateKey);
     final coreId = await cryptographyKeyGenerator.generateCoreIdFromPriv(privateKey);
-    // we save the credentials in the key chain
-
-    await saveCredentials(coreId, privateKey, null, phrases, address, pubKey);
+    return _CreateAccountResult(
+      address: address,
+      coreId: coreId,
+      phrases: phrases,
+      privateKey: privateKey,
+      pubKey: pubKey,
+    );
   }
 
   @override
@@ -71,4 +89,20 @@ class AccountRepo implements AccountInfo {
       return previousCreds[PRIV_KEY_IN_STORE];
     }
   }
+}
+
+class _CreateAccountResult {
+  final String coreId;
+  final String privateKey;
+  final List<String> phrases;
+  final String address;
+  final String pubKey;
+
+  _CreateAccountResult({
+    required this.coreId,
+    required this.privateKey,
+    required this.phrases,
+    required this.address,
+    required this.pubKey,
+  });
 }
