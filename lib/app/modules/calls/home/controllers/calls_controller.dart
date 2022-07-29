@@ -4,9 +4,14 @@ import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
 import 'package:heyo/app/modules/calls/home/widgets/call_log_widget.dart';
 import 'package:heyo/app/modules/calls/home/widgets/delete_all_calls_bottom_sheet.dart';
 import 'package:heyo/app/modules/calls/home/widgets/delete_call_dialog.dart';
+import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 
 class CallsController extends GetxController {
+  final CallHistoryAbstractRepo callHistoryRepo;
+
+  CallsController({required this.callHistoryRepo});
+
   final calls = <CallModel>[].obs;
   final animatedListKey = GlobalKey<AnimatedListState>();
 
@@ -14,7 +19,8 @@ class CallsController extends GetxController {
   void onInit() {
     super.onInit();
 
-    _addMockData();
+    // _addMockData();
+    callHistoryRepo.getAllCalls().then((value) => calls.value = value);
   }
 
   @override
@@ -77,7 +83,7 @@ class CallsController extends GetxController {
       walletAddress: "CB11${List.generate(10, (index) => index)}532A",
     );
     var index = 0;
-    calls.addAll([
+    final calls = [
       CallModel(
         id: "${index++}",
         type: CallType.audio,
@@ -127,7 +133,11 @@ class CallsController extends GetxController {
         date: DateTime.utc(2022, DateTime.february, 15, 9, 2),
         user: uSwagger,
       ),
-    ]);
+    ];
+
+    for (var call in calls) {
+      callHistoryRepo.addCallToHistory(call);
+    }
   }
 
   void showDeleteAllCallsBottomSheet() {

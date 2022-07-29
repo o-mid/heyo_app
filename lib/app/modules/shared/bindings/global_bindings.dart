@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/account/controllers/account_controller.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/modules/calls/home/controllers/calls_controller.dart';
+import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_provider.dart';
+import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/connection_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
@@ -44,11 +46,15 @@ class GlobalBindings extends Bindings {
     signaling: signaling,
   );
 
+  final callHistoryRepo = CallHistoryRepo(callHistoryProvider: CallHistoryProvider());
+
   @override
   void dependencies() {
     Get.put(callConnectionController, permanent: true);
     Get.put(ChatsController());
-    Get.put(CallsController());
+    Get.put(
+      CallsController(callHistoryRepo: callHistoryRepo),
+    );
     Get.put(AccountController(accountInfo: accountInfo));
     Get.put(GlobalMessageController());
     Get.put(AudioMessageController());
