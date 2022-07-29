@@ -26,7 +26,6 @@ class IncomingCallController extends GetxController {
       walletAddress: args.remoteCoreId,
     );
     _playRingtone();
-
   }
 
   @override
@@ -69,7 +68,8 @@ class IncomingCallController extends GetxController {
             icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
             isVerified: true,
             walletAddress: args.remoteCoreId,
-          )),
+          ),
+          isAudioCall: args.session.isAudioCall),
     );
   }
 

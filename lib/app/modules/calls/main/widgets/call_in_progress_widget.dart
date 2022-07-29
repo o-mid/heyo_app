@@ -25,13 +25,17 @@ class CallInProgressWidget extends StatelessWidget {
 
       final callerWidget = controller.callerVideoEnabled.value
           ? const CallerVideoWidget()
-          : const SizedBox.shrink();
-      final firstWidget = controller.isVideoPositionsFlipped.isFalse
-          ? calleeWidget
-          : callerWidget;
+          : controller.isVideoPositionsFlipped.isTrue
+              ? const CalleeNoVideoWidget()
+              : const SizedBox.shrink();
+
+      final firstWidget = controller.isVideoPositionsFlipped.isFalse ? calleeWidget : callerWidget;
+
       final secondWidget = controller.isVideoPositionsFlipped.isFalse
           ? callerWidget
-          : calleeWidget;
+          : controller.calleeVideoEnabled.value
+              ? calleeWidget
+              : const SizedBox.shrink();
 
       switch (controller.callViewType.value) {
         case CallViewType.column:

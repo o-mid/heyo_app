@@ -136,7 +136,8 @@
     "cancelButton": "Cancel"
   },
   "IncomingCallPage": {
-    "incomingVideoCall": "Incoming video call on Heyo..."
+    "incomingVideoCall": "Incoming video call on Heyo...",
+    "incomingVoiceCall": "Incoming voice call on Heyo..."
   },
   "ShareableQrPage": {
     "appBarTitle": "Share my CoreID",

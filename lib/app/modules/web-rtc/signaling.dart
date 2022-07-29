@@ -9,17 +9,21 @@ enum CallState {
   callStateInvite,
   callStateConnected,
   callStateBye,
+  callStateClosedCamera,
+  callStateOpendCamera
 }
 
 class Session {
-  Session({required this.sid, required this.cid, required this.pid});
+  Session({required this.sid, required this.cid, required this.pid, required this.isAudioCall});
 
   final String cid;
   final String sid;
   final String? pid;
   RTCPeerConnection? pc;
   RTCDataChannel? dc;
+
   final List<RTCIceCandidate> remoteCandidates = [];
+  final bool isAudioCall;
 }
 
 class Signaling {
@@ -37,12 +41,10 @@ class Signaling {
   Function(MediaStream stream)? onLocalStream;
   Function(Session session, MediaStream stream)? onAddRemoteStream;
   Function(Session session, MediaStream stream)? onRemoveRemoteStream;
-  Function(Session session, RTCDataChannel dc, RTCDataChannelMessage data)?
-      onDataChannelMessage;
+  Function(Session session, RTCDataChannel dc, RTCDataChannelMessage data)? onDataChannelMessage;
   Function(Session session, RTCDataChannel dc)? onDataChannel;
 
-  String get sdpSemantics =>
-      WebRTC.platformIsWindows ? 'plan-b' : 'unified-plan';
+  String get sdpSemantics => WebRTC.platformIsWindows ? 'plan-b' : 'unified-plan';
 
   final Map<String, dynamic> _iceServers = {
     'iceServers': [
@@ -87,15 +89,22 @@ class Signaling {
     }
   }
 
+  void showLocalVideoStream(bool value) {
+    if (_localStream != null) {
+      _localStream!.getVideoTracks()[0].enabled = value;
+    }
+  }
+
   Future<Session> invite(
-      String coreId, String media, bool useScreen, String selfId) async {
+      String coreId, String media, bool useScreen, String selfId, bool isAudioCall) async {
     final sessionId = '$selfId-$coreId-';
     Session session = await _createSession(null,
         coreId: coreId,
         peerId: null,
         sessionId: sessionId,
         media: media,
-        screenSharing: useScreen);
+        screenSharing: useScreen,
+        isAudioCall: isAudioCall);
     _sessions[sessionId] = session;
     if (media == 'data') {
       _createDataChannel(session);
@@ -104,6 +113,34 @@ class Signaling {
     onCallStateChange?.call(session, CallState.callStateNew);
     onCallStateChange?.call(session, CallState.callStateInvite);
     return session;
+  }
+
+  void peerOpendCamera(String sessionId) {
+    var session = _sessions[sessionId];
+
+    if (session != null) {
+      _send(
+          'opendcamera',
+          {
+            'session_id': sessionId,
+          },
+          session.cid,
+          session.pid);
+    }
+  }
+
+  void peerClosedCamera(String sessionId) {
+    var session = _sessions[sessionId];
+
+    if (session != null) {
+      _send(
+          'closedcamera',
+          {
+            'session_id': sessionId,
+          },
+          session.cid,
+          session.pid);
+    }
   }
 
   void bye(String sessionId) {
@@ -155,19 +192,23 @@ class Signaling {
           var media = data['media'];
           var sessionId = data['session_id'];
           var session = _sessions[sessionId];
-          var newSession = await _createSession(session,
-              coreId: remoteCoreId,
-              peerId: remotePeerId,
-              sessionId: sessionId,
-              media: media,
-              screenSharing: false);
+          var isAudioCall = data['isAudioCall'];
+          var newSession = await _createSession(
+            session,
+            coreId: remoteCoreId,
+            peerId: remotePeerId,
+            sessionId: sessionId,
+            media: media,
+            screenSharing: false,
+            isAudioCall: isAudioCall,
+          );
           _sessions[sessionId] = newSession;
           await newSession.pc?.setRemoteDescription(
               RTCSessionDescription(description['sdp'], description['type']));
           // await _createAnswer(newSession, media);
 
           if (newSession.remoteCandidates.isNotEmpty) {
-            for (var candidate in newSession.remoteCandidates)  {
+            for (var candidate in newSession.remoteCandidates) {
               await newSession.pc?.addCandidate(candidate);
             }
             newSession.remoteCandidates.clear();
@@ -195,8 +236,8 @@ class Signaling {
           var candidateMap = data['candidate'];
           var sessionId = data['session_id'];
           var session = _sessions[sessionId];
-          RTCIceCandidate candidate = RTCIceCandidate(candidateMap['candidate'],
-              candidateMap['sdpMid'], candidateMap['sdpMLineIndex']);
+          RTCIceCandidate candidate = RTCIceCandidate(
+              candidateMap['candidate'], candidateMap['sdpMid'], candidateMap['sdpMLineIndex']);
 
           if (session != null) {
             if (session.pc != null) {
@@ -205,9 +246,12 @@ class Signaling {
               session.remoteCandidates.add(candidate);
             }
           } else {
-            _sessions[sessionId] =
-                Session(cid: remoteCoreId, sid: sessionId, pid: remotePeerId)
-                  ..remoteCandidates.add(candidate);
+            _sessions[sessionId] = Session(
+                cid: remoteCoreId,
+                sid: sessionId,
+                pid: remotePeerId,
+                isAudioCall: _sessions[sessionId]!.isAudioCall)
+              ..remoteCandidates.add(candidate);
           }
         }
         break;
@@ -234,6 +278,25 @@ class Signaling {
           print('keepalive response!');
         }
         break;
+
+      case "closedcamera":
+        {
+          var sessionId = data['session_id'];
+          var session = _sessions[sessionId];
+          if (session != null) {
+            onCallStateChange?.call(session, CallState.callStateClosedCamera);
+          }
+        }
+        break;
+      case "opendcamera":
+        {
+          var sessionId = data['session_id'];
+          var session = _sessions[sessionId];
+          if (session != null) {
+            onCallStateChange?.call(session, CallState.callStateOpendCamera);
+          }
+        }
+        break;
       default:
         break;
     }
@@ -246,8 +309,7 @@ class Signaling {
           ? true
           : {
               'mandatory': {
-                'minWidth':
-                    '640', // Provide your own width, height and frame rate here
+                'minWidth': '640', // Provide your own width, height and frame rate here
                 'minHeight': '480',
                 'minFrameRate': '30',
               },
@@ -268,11 +330,11 @@ class Signaling {
       required String? peerId,
       required String sessionId,
       required String media,
-      required bool screenSharing}) async {
+      required bool screenSharing,
+      required bool isAudioCall}) async {
     var newSession =
-        session ?? Session(sid: sessionId, cid: coreId, pid: peerId);
-    if (media != 'data')
-      _localStream = await createStream(media, screenSharing);
+        session ?? Session(sid: sessionId, cid: coreId, pid: peerId, isAudioCall: isAudioCall);
+    if (media != 'data') _localStream = await createStream(media, screenSharing);
     print(_iceServers);
     RTCPeerConnection pc = await createPeerConnection({
       ..._iceServers,
@@ -396,12 +458,9 @@ class Signaling {
     onDataChannel?.call(session, channel);
   }
 
-  Future<void> _createDataChannel(Session session,
-      {label: 'fileTransfer'}) async {
-    RTCDataChannelInit dataChannelDict = RTCDataChannelInit()
-      ..maxRetransmits = 30;
-    RTCDataChannel channel =
-        await session.pc!.createDataChannel(label, dataChannelDict);
+  Future<void> _createDataChannel(Session session, {label: 'fileTransfer'}) async {
+    RTCDataChannelInit dataChannelDict = RTCDataChannelInit()..maxRetransmits = 30;
+    RTCDataChannel channel = await session.pc!.createDataChannel(label, dataChannelDict);
     _addDataChannel(session, channel);
   }
 
@@ -417,6 +476,7 @@ class Signaling {
             'description': {'sdp': s.sdp, 'type': s.type},
             'session_id': session.sid,
             'media': media,
+            "isAudioCall": session.isAudioCall,
           },
           session.cid,
           session.pid);
