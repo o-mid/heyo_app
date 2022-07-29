@@ -82,9 +82,9 @@ class CallConnectionController extends GetxController {
     signaling.muteMic();
   }
 
-  void showLocalVideoStream(bool value, String? sessionId, bool changeCallState) {
+  void showLocalVideoStream(bool value, String? sessionId, bool sendSignal) {
     signaling.showLocalVideoStream(value);
-    if (changeCallState == true && sessionId != null) {
+    if (sendSignal == true && sessionId != null) {
       if (value == true) {
         signaling.peerOpendCamera(sessionId);
       } else {

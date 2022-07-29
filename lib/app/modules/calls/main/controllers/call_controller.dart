@@ -160,7 +160,6 @@ class CallController extends GetxController {
         _localRenderer.srcObject = null;
         _remoteRenderer.srcObject = null;
         _stopWatingBeep();
-        stopCallTimer();
       } else if (state == CallState.callStateOpendCamera) {
         calleeVideoEnabled.value = true;
         updateCalleeVideoWidget();
@@ -194,12 +193,11 @@ class CallController extends GetxController {
     if (isInCall.value) {
       callConnectionController.signaling.bye(sessionId);
       _stopWatingBeep();
-      stopCallTimer();
     } else {
       callConnectionController.signaling.reject(sessionId);
       _stopWatingBeep();
-      stopCallTimer();
     }
+
     Get.back();
   }
 
@@ -260,6 +258,7 @@ class CallController extends GetxController {
 
   @override
   void onClose() async {
+    stopCallTimer();
     _localRenderer.dispose();
     _remoteRenderer.dispose();
     callConnectionController.close();
