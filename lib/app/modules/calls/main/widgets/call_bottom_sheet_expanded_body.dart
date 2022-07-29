@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
-import 'package:heyo/app/modules/calls/main/widgets/record_call_button.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
@@ -29,17 +28,24 @@ class CallBottomSheetExpandedBody extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const RecordCallButton(),
+                // const RecordCallButton(),
                 CircleIconButton.p16(
                   icon: Assets.svg.shareScreen.svg(color: COLORS.kWhiteColor),
                   backgroundColor: COLORS.kCallPageDarkGrey,
                 ),
 
-                /// The following two are only here to match the top row which has four buttons
+                /// The following three are only here to match the top row which has four buttons
                 Opacity(
                   opacity: 0,
                   child: CircleIconButton.p16(
                     icon: Assets.svg.muteMicIcon.svg(),
+                    backgroundColor: Colors.transparent,
+                  ),
+                ),
+                Opacity(
+                  opacity: 0,
+                  child: CircleIconButton.p16(
+                    icon: Assets.svg.callEnd.svg(),
                     backgroundColor: Colors.transparent,
                   ),
                 ),

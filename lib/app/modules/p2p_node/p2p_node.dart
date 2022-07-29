@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/addr_model.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
@@ -17,12 +18,13 @@ class P2PNode {
   final P2PState p2pState;
   final Web3Client web3client;
 
-  P2PNode(
-      {required this.accountInfo,
-      required this.p2pNodeRequestStream,
-      required this.p2pNodeResponseStream,
-      required this.p2pState,
-      required this.web3client});
+  P2PNode({
+    required this.accountInfo,
+    required this.p2pNodeRequestStream,
+    required this.p2pNodeResponseStream,
+    required this.p2pState,
+    required this.web3client,
+  });
 
   _setUpP2PNode() async {
     _listenToStreams();
@@ -31,26 +33,28 @@ class P2PNode {
 
   _startP2PNode() async {
     if (await accountInfo.getCoreId() == null) {
-      await accountInfo.createAccount();
+      await accountInfo.createAccountAndSaveInStorage();
     }
 
-    String? _peerSeed = await accountInfo.getP2PSecret();
-    if (_peerSeed == null) {
-      _peerSeed = bytesToHex(mnemonicToSeed(generateMnemonic()).aesKeySeed);
-      await accountInfo.setP2PSecret(_peerSeed);
+    String? peerSeed = await accountInfo.getP2PSecret();
+
+    if (peerSeed == null) {
+      final generatedMnemonic = await compute(mnemonicToSeed, generateMnemonic());
+      peerSeed = bytesToHex(generatedMnemonic.aesKeySeed);
+      await accountInfo.setP2PSecret(peerSeed);
     }
     int networkId = await web3client.getNetworkId();
-    await FlutterP2pCommunicator.startNode(peerSeed: _peerSeed, networkId: networkId.toString());
+    await FlutterP2pCommunicator.startNode(peerSeed: peerSeed, networkId: networkId.toString());
 
-    final _privateKey = await accountInfo.getPrivateKey();
-    final _privToAdd =
-        P2PReqResNodeModel(name: P2PReqResNodeNames.addCoreID, body: {"privKey": _privateKey});
+    final privateKey = await accountInfo.getPrivateKey();
+    final privToAdd =
+        P2PReqResNodeModel(name: P2PReqResNodeNames.addCoreID, body: {"privKey": privateKey});
 
-    await FlutterP2pCommunicator.sendRequest(info: _privToAdd);
+    await FlutterP2pCommunicator.sendRequest(info: privToAdd);
 
     await Future.forEach(P2P_Nodes, (P2PAddrModel element) async {
-      final _info = P2PReqResNodeModel(name: P2PReqResNodeNames.connect, body: element.toJson());
-      await FlutterP2pCommunicator.sendRequest(info: _info);
+      final info = P2PReqResNodeModel(name: P2PReqResNodeNames.connect, body: element.toJson());
+      await FlutterP2pCommunicator.sendRequest(info: info);
     });
   }
 
