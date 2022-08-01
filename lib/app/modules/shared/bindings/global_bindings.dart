@@ -46,7 +46,8 @@ class GlobalBindings extends Bindings {
     signaling: signaling,
   );
 
-  final callHistoryRepo = CallHistoryRepo(callHistoryProvider: CallHistoryProvider());
+  // Todo
+  static final callHistoryRepo = CallHistoryRepo(callHistoryProvider: CallHistoryProvider());
 
   @override
   void dependencies() {

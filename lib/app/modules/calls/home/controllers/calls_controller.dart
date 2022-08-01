@@ -34,7 +34,8 @@ class CallsController extends GetxController {
   void showDeleteCallDialog(CallModel call) {
     Get.dialog(
       DeleteCallDialog(
-        deleteCall: () {
+        deleteCall: () async {
+          await callHistoryRepo.deleteOneCall(call.id);
           final index = calls.indexWhere((c) => c.id == call.id);
           animatedListKey.currentState?.removeItem(
             index,
@@ -54,33 +55,33 @@ class CallsController extends GetxController {
       name: "Boiled Dealmaker",
       icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
       isVerified: true,
-      walletAddress: "CB11${List.generate(10, (index) => index)}14AB",
+      walletAddress: "CB11${List.generate(11, (index) => index).join()}14AB",
     );
     final uCrapps = UserModel(
       name: "Crapps Wallbanger",
       icon: "https://avatars.githubusercontent.com/u/2345136?v=4",
-      walletAddress: "CB11${List.generate(10, (index) => index)}49BB",
+      walletAddress: "CB11${List.generate(11, (index) => index).join()}49BB",
     );
     final uFancy = UserModel(
       name: "Fancy Potato",
       icon: "https://avatars.githubusercontent.com/u/6644146?v=4",
-      walletAddress: "CB11${List.generate(10, (index) => index)}11FE",
+      walletAddress: "CB11${List.generate(11, (index) => index).join()}11FE",
     );
     final uOckerito = UserModel(
       name: "Ockerito Fazola",
       icon: "https://avatars.githubusercontent.com/u/7844146?v=4",
-      walletAddress: "CB11${List.generate(10, (index) => index)}5A5D",
+      walletAddress: "CB11${List.generate(11, (index) => index).join()}5A5D",
       isVerified: true,
     );
     final uUnchained = UserModel(
       name: "Unchained Banana",
       icon: "https://avatars.githubusercontent.com/u/7847725?v=4",
-      walletAddress: "CB11${List.generate(10, (index) => index)}44AC",
+      walletAddress: "CB11${List.generate(11, (index) => index).join()}44AC",
     );
     final uSwagger = UserModel(
       name: "Swagger Uncut",
       icon: "https://avatars.githubusercontent.com/u/9947725?v=4",
-      walletAddress: "CB11${List.generate(10, (index) => index)}532A",
+      walletAddress: "CB11${List.generate(11, (index) => index).join()}532A",
     );
     var index = 0;
     final calls = [
@@ -141,6 +142,11 @@ class CallsController extends GetxController {
   }
 
   void showDeleteAllCallsBottomSheet() {
-    openDeleteAllCallsBottomSheet(onDelete: () => calls.clear());
+    openDeleteAllCallsBottomSheet(
+      onDelete: () async {
+        await callHistoryRepo.deleteAllCalls();
+        calls.clear();
+      },
+    );
   }
 }

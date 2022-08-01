@@ -44,68 +44,70 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
       body: SingleChildScrollView(
         child: SizedBox(
           width: double.infinity,
-          child: Column(
-            children: [
-              SizedBox(height: 40.h),
-              CustomCircleAvatar(url: controller.args.user.icon, size: 64),
-              CustomSizes.mediumSizedBoxHeight,
-              Text(
-                controller.args.user.name,
-                style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
-              ),
-              SizedBox(height: 4.h),
-              Text(
-                controller.args.user.walletAddress.shortenCoreId,
-                style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
-              ),
-              SizedBox(height: 40.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleIconButton(
-                    backgroundColor: COLORS.kBrightBlueColor,
-                    padding: EdgeInsets.all(14.w),
-                    onPressed: () {},
-                    icon: Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor),
-                  ),
-                  SizedBox(width: 24.w),
-                  CircleIconButton(
-                    backgroundColor: COLORS.kBrightBlueColor,
-                    padding: EdgeInsets.all(14.w),
-                    onPressed: () {},
-                    icon: Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
-                  ),
-                  SizedBox(width: 24.w),
-                  CircleIconButton(
-                    backgroundColor: COLORS.kBrightBlueColor,
-                    padding: EdgeInsets.all(14.w),
-                    onPressed: () {},
-                    icon: Assets.svg.chatOutlined.svg(color: COLORS.kDarkBlueColor),
-                  ),
-                ],
-              ),
-              SizedBox(height: 40.h),
-              Container(color: COLORS.kBrightBlueColor, height: 8.h),
-              SizedBox(height: 24.h),
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Text(
-                  LocaleKeys.CallHistory_appbar.tr,
-                  style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextBlueColor),
+          child: Obx(() {
+            return Column(
+              children: [
+                SizedBox(height: 40.h),
+                CustomCircleAvatar(url: controller.args.user.icon, size: 64),
+                CustomSizes.mediumSizedBoxHeight,
+                Text(
+                  controller.args.user.name,
+                  style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
                 ),
-              ),
-              CustomSizes.smallSizedBoxHeight,
-              ...controller.calls.map(
-                (call) => Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-                  child: HistoryCallLogWidget(call: call),
+                SizedBox(height: 4.h),
+                Text(
+                  controller.args.user.walletAddress.shortenCoreId,
+                  style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
                 ),
-              ),
-              CustomSizes.mediumSizedBoxHeight,
-            ],
-          ),
+                SizedBox(height: 40.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleIconButton(
+                      backgroundColor: COLORS.kBrightBlueColor,
+                      padding: EdgeInsets.all(14.w),
+                      onPressed: () {},
+                      icon: Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor),
+                    ),
+                    SizedBox(width: 24.w),
+                    CircleIconButton(
+                      backgroundColor: COLORS.kBrightBlueColor,
+                      padding: EdgeInsets.all(14.w),
+                      onPressed: () {},
+                      icon: Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
+                    ),
+                    SizedBox(width: 24.w),
+                    CircleIconButton(
+                      backgroundColor: COLORS.kBrightBlueColor,
+                      padding: EdgeInsets.all(14.w),
+                      onPressed: () {},
+                      icon: Assets.svg.chatOutlined.svg(color: COLORS.kDarkBlueColor),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 40.h),
+                Container(color: COLORS.kBrightBlueColor, height: 8.h),
+                SizedBox(height: 24.h),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Text(
+                    LocaleKeys.CallHistory_appbar.tr,
+                    style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextBlueColor),
+                  ),
+                ),
+                CustomSizes.smallSizedBoxHeight,
+                ...controller.calls.map(
+                  (call) => Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                    child: HistoryCallLogWidget(call: call),
+                  ),
+                ),
+                CustomSizes.mediumSizedBoxHeight,
+              ],
+            );
+          }),
         ),
       ),
     );

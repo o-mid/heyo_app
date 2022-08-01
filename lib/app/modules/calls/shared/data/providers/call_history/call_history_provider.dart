@@ -1,5 +1,6 @@
 import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_abstract_provider.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
 
@@ -21,21 +22,38 @@ class CallHistoryProvider implements CallHistoryAbstractProvider {
   }
 
   @override
-  Future<void> deleteOne(String callId) {
-    // TODO: implement deleteOneCall
-    throw UnimplementedError();
+  Future<void> deleteOne(String callId) async {
+    await _store.delete(
+      await _db,
+      finder: Finder(
+        filter: Filter.equals(CallModel.idSerializedName, callId),
+      ),
+    );
   }
 
   @override
   Future<List<CallModel>> getAllCalls() async {
-    final records = await _store.find(await _db);
+    final records = await _store.find(
+      await _db,
+      finder: Finder(sortOrders: [SortOrder(CallModel.dateSerializedName, false)]),
+    );
 
     return records.map((e) => CallModel.fromJson(e.value)).toList();
   }
 
   @override
-  Future<List<CallModel>> getCallsFromUserId(String userId) {
-    // TODO: implement getCallsFromUserId
-    throw UnimplementedError();
+  Future<List<CallModel>> getCallsFromUserId(String userId) async {
+    final records = await _store.find(
+      await _db,
+      finder: Finder(
+        sortOrders: [SortOrder(CallModel.dateSerializedName, false)],
+        filter: Filter.equals(
+          "${CallModel.userSerializedName}.${UserModel.walletAddressSerializedName}",
+          userId,
+        ),
+      ),
+    );
+
+    return records.map((e) => CallModel.fromJson(e.value)).toList();
   }
 }
