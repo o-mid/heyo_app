@@ -139,6 +139,8 @@ class LocaleKeys {
   static const recordCallDialog_cancelButton = 'recordCallDialog_cancelButton';
   static const IncomingCallPage_incomingVideoCall =
       'IncomingCallPage_incomingVideoCall';
+  static const IncomingCallPage_incomingVoiceCall =
+      'IncomingCallPage_incomingVoiceCall';
   static const ShareableQrPage_appBarTitle = 'ShareableQrPage_appBarTitle';
   static const ShareableQrPage_scanQrTitle = 'ShareableQrPage_scanQrTitle';
   static const ShareableQrPage_shareQrButtonTitle =
@@ -413,6 +415,7 @@ class Locales {
     'recordCallDialog_acceptButton': 'Record call',
     'recordCallDialog_cancelButton': 'Cancel',
     'IncomingCallPage_incomingVideoCall': 'Incoming video call on Heyo...',
+    'IncomingCallPage_incomingVoiceCall': 'Incoming voice call on Heyo...',
     'ShareableQrPage_appBarTitle': 'Share my CoreID',
     'ShareableQrPage_scanQrTitle':
         'Scan your QR code with people so they can add you and start chatting.',

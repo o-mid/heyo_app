@@ -70,7 +70,12 @@ void openUserPreviewBottomSheet(UserModel user) {
                 onPressed: () {
                   Get.toNamed(
                     Routes.CALL,
-                    arguments: CallViewArgumentsModel(session: null, callId: null, user: user),
+                    arguments: CallViewArgumentsModel(
+                        session: null,
+                        callId: null,
+                        user: user,
+                        enableVideo: false,
+                        isAudioCall: true),
                   );
                 },
                 backgroundColor: COLORS.kBrightBlueColor,
@@ -84,11 +89,11 @@ void openUserPreviewBottomSheet(UserModel user) {
                   Get.toNamed(
                     Routes.CALL,
                     arguments: CallViewArgumentsModel(
-                      session: null,
-                      callId: null,
-                      user: user,
-                      enableVideo: true,
-                    ),
+                        session: null,
+                        callId: null,
+                        user: user,
+                        enableVideo: true,
+                        isAudioCall: false),
                   );
                 },
                 backgroundColor: COLORS.kBrightBlueColor,

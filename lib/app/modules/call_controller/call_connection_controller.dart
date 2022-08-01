@@ -61,12 +61,11 @@ class CallConnectionController extends GetxController {
     };
   }
 
-  CallConnectionController(
-      {required this.signaling, required this.accountInfo});
+  CallConnectionController({required this.signaling, required this.accountInfo});
 
-  Future<Session> startCall(String remoteId, String callId) async {
+  Future<Session> startCall(String remoteId, String callId, bool isAudioCall) async {
     String? selfCoreId = await accountInfo.getCoreId();
-    return await signaling.invite(remoteId, 'video', false, selfCoreId!);
+    return await signaling.invite(remoteId, 'video', false, selfCoreId!, isAudioCall);
   }
 
   Future acceptCall(Session session) async {
@@ -81,6 +80,17 @@ class CallConnectionController extends GetxController {
 
   void muteMic() {
     signaling.muteMic();
+  }
+
+  void showLocalVideoStream(bool value, String? sessionId, bool sendSignal) {
+    signaling.showLocalVideoStream(value);
+    if (sendSignal == true && sessionId != null) {
+      if (value == true) {
+        signaling.peerOpendCamera(sessionId);
+      } else {
+        signaling.peerClosedCamera(sessionId);
+      }
+    }
   }
 
   void rejectCall(String sessionId) {

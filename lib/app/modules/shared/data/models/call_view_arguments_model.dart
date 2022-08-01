@@ -6,12 +6,13 @@ class CallViewArgumentsModel {
   final bool enableVideo;
   final Session? session;
   final String? callId;
-
+  final bool isAudioCall;
 
   CallViewArgumentsModel({
     required this.session,
     required this.user,
     required this.callId,
     this.enableVideo = false,
+    required this.isAudioCall,
   });
 }

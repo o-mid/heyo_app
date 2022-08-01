@@ -46,18 +46,16 @@ class CallController extends GetxController {
   final isVideoPositionsFlipped = false.obs;
 
   bool get isGroupCall =>
-      participants
-          .where((p) => p.status == CallParticipantStatus.inCall)
-          .length >
-      1;
+      participants.where((p) => p.status == CallParticipantStatus.inCall).length > 1;
 
   final recordState = RecordState.notRecording.obs;
   final CallConnectionController callConnectionController;
   final P2PState p2pState;
   late String sessionId;
+  final Stopwatch stopwatch = Stopwatch();
+  late Timer? calltimer;
 
-  CallController(
-      {required this.callConnectionController, required this.p2pState});
+  CallController({required this.callConnectionController, required this.p2pState});
 
   final RTCVideoRenderer _localRenderer = RTCVideoRenderer();
   final RTCVideoRenderer _remoteRenderer = RTCVideoRenderer();
@@ -82,12 +80,24 @@ class CallController extends GetxController {
     super.onInit();
     args = Get.arguments as CallViewArgumentsModel;
     callerVideoEnabled.value = args.enableVideo;
-
     setUp();
-
     participants.add(
       CallParticipantModel(user: args.user),
     );
+  }
+
+  void startCallTimer() {
+    stopwatch.start();
+    calltimer = Timer.periodic(const Duration(seconds: 1), onCallTick);
+  }
+
+  void onCallTick(Timer timer) {
+    callDurationSeconds.value = stopwatch.elapsed.inSeconds;
+  }
+
+  void stopCallTimer() {
+    calltimer?.cancel();
+    stopwatch.stop();
   }
 
   Future<void> setUp() async {
@@ -111,13 +121,18 @@ class CallController extends GetxController {
       _localRenderer.srcObject = callConnectionController.getLocalStream();
     }
 
+    if (args.isAudioCall) {
+      callerVideoEnabled.value = false;
+      calleeVideoEnabled.value = false;
+      callConnectionController.showLocalVideoStream(false, "", false);
+    }
     observeCallStates();
   }
 
   Future callerSetup() async {
     final callId = DateTime.now().millisecondsSinceEpoch.toString();
     Session session = (await callConnectionController.startCall(
-        args.user.walletAddress, callId));
+        args.user.walletAddress, callId, args.isAudioCall));
     sessionId = session.sid;
 
     isInCall.value = false;
@@ -132,6 +147,7 @@ class CallController extends GetxController {
       updateCalleeVideoWidget();
     });
     isInCall.value = true;
+    startCallTimer();
   }
 
   void observeCallStates() {
@@ -139,10 +155,17 @@ class CallController extends GetxController {
       if (state == CallState.callStateConnected) {
         isInCall.value = true;
         _stopWatingBeep();
+        startCallTimer();
       } else if (state == CallState.callStateBye) {
         _localRenderer.srcObject = null;
         _remoteRenderer.srcObject = null;
         _stopWatingBeep();
+      } else if (state == CallState.callStateOpendCamera) {
+        calleeVideoEnabled.value = true;
+        updateCalleeVideoWidget();
+      } else if (state == CallState.callStateClosedCamera) {
+        calleeVideoEnabled.value = false;
+        resetCallView();
       }
     });
   }
@@ -174,6 +197,7 @@ class CallController extends GetxController {
       callConnectionController.signaling.reject(sessionId);
       _stopWatingBeep();
     }
+
     Get.back();
   }
 
@@ -217,6 +241,7 @@ class CallController extends GetxController {
   // Todo
   void toggleVideo() {
     callerVideoEnabled.value = !callerVideoEnabled.value;
+    callConnectionController.showLocalVideoStream(callerVideoEnabled.value, sessionId, true);
   }
 
   void switchCamera() {
@@ -229,11 +254,11 @@ class CallController extends GetxController {
 
   void updateCallViewType(CallViewType type) => callViewType.value = type;
 
-  void flipVideoPositions() =>
-      isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
+  void flipVideoPositions() => isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   @override
   void onClose() async {
+    stopCallTimer();
     _localRenderer.dispose();
     _remoteRenderer.dispose();
     callConnectionController.close();
@@ -268,5 +293,11 @@ class CallController extends GetxController {
   void _stopWatingBeep() {
     // silent tone
     FlutterBeep.playSysSound(AndroidSoundIDs.TONE_CDMA_CALL_SIGNAL_ISDN_PAT5);
+  }
+
+//reset Call View when one peer turn the Video Disabled
+  void resetCallView() {
+    updateCallViewType(CallViewType.stack);
+    isVideoPositionsFlipped.value = false;
   }
 }
