@@ -262,6 +262,7 @@ class CallController extends GetxController {
     _localRenderer.dispose();
     _remoteRenderer.dispose();
     callConnectionController.close();
+    _stopWatingBeep();
     await _screenRecorder.stopRecord();
   }
 
