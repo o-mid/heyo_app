@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/p2p_node/login.dart';
 
@@ -14,7 +15,7 @@ enum CallState {
 }
 
 class Session {
-  Session({required this.sid, required this.cid, required this.pid, required this.isAudioCall});
+  Session({required this.sid, required this.cid, required this.pid, this.isAudioCall = false});
 
   final String cid;
   final String sid;
@@ -247,11 +248,10 @@ class Signaling {
             }
           } else {
             _sessions[sessionId] = Session(
-                cid: remoteCoreId,
-                sid: sessionId,
-                pid: remotePeerId,
-                isAudioCall: _sessions[sessionId]!.isAudioCall)
-              ..remoteCandidates.add(candidate);
+              cid: remoteCoreId,
+              sid: sessionId,
+              pid: remotePeerId,
+            )..remoteCandidates.add(candidate);
           }
         }
         break;
