@@ -36,6 +36,7 @@ class CallStatusIconAndDate extends StatelessWidget {
         return Assets.svg.callOutgoing.svg();
 
       case CallStatus.incomingAnswered:
+      case CallStatus.incomingDeclined:
         return Assets.svg.callIncoming.svg(color: COLORS.kStatesSuccessColor);
       case CallStatus.incomingMissed:
         return Assets.svg.callIncoming.svg(color: COLORS.kStatesErrorColor);
@@ -79,6 +80,14 @@ class CallStatusIconAndDate extends StatelessWidget {
     }
 
     if (minutes > 0) {
+      duration += LocaleKeys.HomePage_Calls_minute.trPluralParams(
+        LocaleKeys.HomePage_Calls_minutes,
+        minutes,
+        {"count": minutes.toString()},
+      );
+    }
+
+    if (minutes == 0 && hours == 0) {
       duration += LocaleKeys.HomePage_Calls_minute.trPluralParams(
         LocaleKeys.HomePage_Calls_minutes,
         minutes,

@@ -53,6 +53,7 @@ class HistoryCallLogWidget extends StatelessWidget {
       case CallStatus.incomingMissed:
         return LocaleKeys.CallHistory_missedCall.tr;
       case CallStatus.incomingAnswered:
+      case CallStatus.incomingDeclined:
         return LocaleKeys.CallHistory_incoming.tr;
       case CallStatus.outgoingAnswered:
       case CallStatus.outgoingCanceled:

@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/shared/controllers/call_history_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
@@ -31,6 +33,11 @@ class IncomingCallController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+    Get.find<CallHistoryController>().createMissedCallRecord(
+      caller,
+      args.session.sid,
+      args.session.isAudioCall ? CallType.audio : CallType.video,
+    );
   }
 
   @override
@@ -49,6 +56,10 @@ class IncomingCallController extends GetxController {
   }
 
   void declineCall() {
+    Get.find<CallHistoryController>().updateCallStatusAndDuration(
+      callId: args.session.sid,
+      status: CallStatus.incomingDeclined,
+    );
     _hangUp();
     _stopRingtone();
     Get.back();
@@ -56,6 +67,10 @@ class IncomingCallController extends GetxController {
 
   void acceptCall() async {
     _stopRingtone();
+    Get.find<CallHistoryController>().updateCallStatusAndDuration(
+      callId: args.session.sid,
+      status: CallStatus.incomingAnswered,
+    );
 
     //TODO name should be get from contacts
     Get.offNamed(

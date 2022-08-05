@@ -13,6 +13,16 @@ class CallHistoryRepo implements CallHistoryAbstractRepo {
   }
 
   @override
+  Future<List<CallModel>> getAllCalls() {
+    return callHistoryProvider.getAllCalls();
+  }
+
+  @override
+  Future<CallModel?> getOneCall(String callId) {
+    return callHistoryProvider.getOneCall(callId);
+  }
+
+  @override
   Future<void> deleteAllCalls() async {
     await callHistoryProvider.deleteAll();
   }
@@ -20,11 +30,6 @@ class CallHistoryRepo implements CallHistoryAbstractRepo {
   @override
   Future<void> deleteOneCall(String callId) async {
     await callHistoryProvider.deleteOne(callId);
-  }
-
-  @override
-  Future<List<CallModel>> getAllCalls() {
-    return callHistoryProvider.getAllCalls();
   }
 
   @override

@@ -10,4 +10,6 @@ abstract class CallHistoryAbstractProvider {
   Future<void> deleteAll();
 
   Future<void> deleteOne(String callId);
+
+  Future<CallModel?> getOneCall(String callId);
 }

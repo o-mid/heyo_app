@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
+import 'package:heyo/app/modules/shared/controllers/call_history_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/routes/app_pages.dart';
@@ -38,13 +40,16 @@ class CallConnectionController extends GetxController {
       print("Call State changed, state is: $state");
 
       if (state == CallState.callStateRinging) {
-        Get.toNamed(Routes.INCOMING_CALL,
-            arguments: IncomingCallViewArguments(
-                session: session,
-                callId: "",
-                sdp: session.sid,
-                remoteCoreId: session.cid,
-                remotePeerId: session.pid!));
+        Get.toNamed(
+          Routes.INCOMING_CALL,
+          arguments: IncomingCallViewArguments(
+            session: session,
+            callId: "",
+            sdp: session.sid,
+            remoteCoreId: session.cid,
+            remotePeerId: session.pid!,
+          ),
+        );
       } else if (state == CallState.callStateBye) {
         if (Get.currentRoute == Routes.CALL) {
           Get.until((route) => Get.currentRoute != Routes.CALL);
@@ -95,6 +100,8 @@ class CallConnectionController extends GetxController {
 
   void rejectCall(String sessionId) {
     signaling.reject(sessionId);
+    Get.find<CallHistoryController>()
+        .updateCallStatusAndDuration(callId: sessionId, status: CallStatus.incomingDeclined);
   }
 
   void close() {

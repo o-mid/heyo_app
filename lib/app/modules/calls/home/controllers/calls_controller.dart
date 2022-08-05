@@ -20,7 +20,7 @@ class CallsController extends GetxController {
     super.onInit();
 
     // _addMockData();
-    callHistoryRepo.getAllCalls().then((value) => calls.value = value);
+    refreshCallHistory();
   }
 
   @override
@@ -30,6 +30,10 @@ class CallsController extends GetxController {
 
   @override
   void onClose() {}
+
+  void refreshCallHistory() async {
+    calls.value = await callHistoryRepo.getAllCalls();
+  }
 
   void showDeleteCallDialog(CallModel call) {
     Get.dialog(

@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
+import 'package:heyo/app/modules/shared/controllers/call_history_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:intl/intl.dart';
@@ -40,6 +42,8 @@ class CallController extends GetxController {
 
   final callDurationSeconds = 0.obs;
 
+  var isCaller = false;
+
   // Todo: reset [callViewType] and [isVideoPositionsFlipped] when other user disables video
   final callViewType = CallViewType.stack.obs;
 
@@ -53,7 +57,7 @@ class CallController extends GetxController {
   final P2PState p2pState;
   late String sessionId;
   final Stopwatch stopwatch = Stopwatch();
-  late Timer? calltimer;
+  Timer? calltimer;
 
   CallController({required this.callConnectionController, required this.p2pState});
 
@@ -130,10 +134,17 @@ class CallController extends GetxController {
   }
 
   Future callerSetup() async {
+    isCaller = true;
     final callId = DateTime.now().millisecondsSinceEpoch.toString();
     Session session = (await callConnectionController.startCall(
         args.user.walletAddress, callId, args.isAudioCall));
     sessionId = session.sid;
+
+    await Get.find<CallHistoryController>().createOutgoingNotAnsweredRecord(
+      args.user,
+      sessionId,
+      args.isAudioCall ? CallType.audio : CallType.video,
+    );
 
     isInCall.value = false;
     _playWatingBeep();
@@ -258,11 +269,33 @@ class CallController extends GetxController {
 
   @override
   void onClose() async {
+    _updateCallLog();
     stopCallTimer();
     _localRenderer.dispose();
     _remoteRenderer.dispose();
     callConnectionController.close();
     await _screenRecorder.stopRecord();
+  }
+
+  void _updateCallLog() async {
+    if (stopwatch.elapsedTicks > 0 && isCaller) {
+      Get.find<CallHistoryController>().updateCallStatusAndDuration(
+        callId: sessionId,
+        status: CallStatus.outgoingAnswered,
+        duration: stopwatch.elapsed,
+      );
+    } else if (stopwatch.elapsedTicks > 0 && !isCaller) {
+      Get.find<CallHistoryController>().updateCallStatusAndDuration(
+        callId: sessionId,
+        status: CallStatus.incomingAnswered,
+        duration: stopwatch.elapsed,
+      );
+    } else {
+      Get.find<CallHistoryController>().updateCallStatusAndDuration(
+        callId: sessionId,
+        status: CallStatus.outgoingCanceled,
+      );
+    }
   }
 
   void reorderParticipants(int oldIndex, int newIndex) {

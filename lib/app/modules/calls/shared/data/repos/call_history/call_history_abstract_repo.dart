@@ -5,6 +5,8 @@ abstract class CallHistoryAbstractRepo {
 
   Future<List<CallModel>> getAllCalls();
 
+  Future<CallModel?> getOneCall(String callId);
+
   Future<List<CallModel>> getCallsFromUserId(String userId);
 
   Future<void> deleteAllCalls();

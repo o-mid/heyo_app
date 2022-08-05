@@ -42,6 +42,21 @@ class CallHistoryProvider implements CallHistoryAbstractProvider {
   }
 
   @override
+  Future<CallModel?> getOneCall(String callId) async {
+    final records = await _store.find(
+      await _db,
+      finder: Finder(filter: Filter.equals(CallModel.idSerializedName, callId)),
+    );
+
+    if (records.isEmpty) {
+      return null;
+    }
+
+    final callJson = records.first.value;
+    return CallModel.fromJson(callJson);
+  }
+
+  @override
   Future<List<CallModel>> getCallsFromUserId(String userId) async {
     final records = await _store.find(
       await _db,
