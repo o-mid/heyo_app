@@ -11,6 +11,7 @@ import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
+import 'package:wakelock/wakelock.dart';
 
 enum CallViewType {
   stack,
@@ -127,6 +128,7 @@ class CallController extends GetxController {
       callConnectionController.showLocalVideoStream(false, "", false);
     }
     observeCallStates();
+    enableWakeScreenLock();
   }
 
   Future callerSetup() async {
@@ -157,10 +159,6 @@ class CallController extends GetxController {
         _stopWatingBeep();
         startCallTimer();
       } else if (state == CallState.callStateBye) {
-        // _localRenderer.srcObject = null;
-        // _remoteRenderer.srcObject = null;
-        // using dispose insted of "srcObject = null" will also dispose the mic and camera after call ended
-        // and dont allow it to run in the background
         _localRenderer.dispose();
         _remoteRenderer.dispose();
         _stopWatingBeep();
@@ -267,6 +265,7 @@ class CallController extends GetxController {
     _remoteRenderer.dispose();
     callConnectionController.close();
     _stopWatingBeep();
+    disableWakeScreenLock();
     await _screenRecorder.stopRecord();
   }
 
@@ -304,5 +303,13 @@ class CallController extends GetxController {
   void resetCallView() {
     updateCallViewType(CallViewType.stack);
     isVideoPositionsFlipped.value = false;
+  }
+
+  Future<void> enableWakeScreenLock() async {
+    await Wakelock.toggle(enable: true);
+  }
+
+  Future<void> disableWakeScreenLock() async {
+    await Wakelock.toggle(enable: false);
   }
 }
