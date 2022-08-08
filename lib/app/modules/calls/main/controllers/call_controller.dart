@@ -168,8 +168,12 @@ class CallController extends GetxController {
         _stopWatingBeep();
         startCallTimer();
       } else if (state == CallState.callStateBye) {
-        _localRenderer.srcObject = null;
-        _remoteRenderer.srcObject = null;
+        // _localRenderer.srcObject = null;
+        // _remoteRenderer.srcObject = null;
+        // using dispose insted of "srcObject = null" will also dispose the mic and camera after call ended
+        // and dont allow it to run in the background
+        _localRenderer.dispose();
+        _remoteRenderer.dispose();
         _stopWatingBeep();
       } else if (state == CallState.callStateOpendCamera) {
         calleeVideoEnabled.value = true;
@@ -274,6 +278,7 @@ class CallController extends GetxController {
     _localRenderer.dispose();
     _remoteRenderer.dispose();
     callConnectionController.close();
+    _stopWatingBeep();
     await _screenRecorder.stopRecord();
   }
 
