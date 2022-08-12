@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
-import 'package:heyo/app/modules/shared/controllers/call_history_controller.dart';
+import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/routes/app_pages.dart';
@@ -10,15 +9,18 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 class CallConnectionController extends GetxController {
   final Signaling signaling;
   final AccountInfo accountInfo;
-  Rx<CallState?> callState = Rxn<CallState>();
-  Rx<MediaStream?> remoteStream = Rxn<MediaStream>();
-  Rx<MediaStream?> removeStream = Rxn<MediaStream>();
-  Rx<MediaStream?> localStream = Rxn<MediaStream>();
+
+  final callState = Rxn<CallState>();
+  final callHistoryState = Rxn<CallHistoryState>();
+  final remoteStream = Rxn<MediaStream>();
+  final removeStream = Rxn<MediaStream>();
+  final localStream = Rxn<MediaStream>();
 
   MediaStream? _localStream;
 
   @override
   void onInit() {
+    super.onInit();
     init();
   }
 
@@ -36,6 +38,8 @@ class CallConnectionController extends GetxController {
   void observeCallStatus() {
     signaling.onCallStateChange = (session, state) async {
       callState.value = state;
+
+      callHistoryState.value = CallHistoryState(session: session, callState: state);
 
       print("Call State changed, state is: $state");
 
@@ -70,13 +74,19 @@ class CallConnectionController extends GetxController {
 
   Future<Session> startCall(String remoteId, String callId, bool isAudioCall) async {
     String? selfCoreId = await accountInfo.getCoreId();
-    return await signaling.invite(remoteId, 'video', false, selfCoreId!, isAudioCall);
+    final session = await signaling.invite(remoteId, 'video', false, selfCoreId!, isAudioCall);
+
+    callHistoryState.value = CallHistoryState(session: session, callState: CallState.callStateNew);
+    return session;
   }
 
   Future acceptCall(Session session) async {
     signaling.accept(
       session.sid,
     );
+
+    callHistoryState.value =
+        CallHistoryState(session: session, callState: CallState.callStateConnected);
   }
 
   void switchCamera() {
@@ -98,10 +108,8 @@ class CallConnectionController extends GetxController {
     }
   }
 
-  void rejectCall(String sessionId) {
-    signaling.reject(sessionId);
-    Get.find<CallHistoryController>()
-        .updateCallStatusAndDuration(callId: sessionId, status: CallStatus.incomingDeclined);
+  void rejectCall(Session session) {
+    signaling.reject(session);
   }
 
   void close() {

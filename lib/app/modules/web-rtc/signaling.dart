@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/p2p_node/login.dart';
 
@@ -11,7 +10,7 @@ enum CallState {
   callStateConnected,
   callStateBye,
   callStateClosedCamera,
-  callStateOpendCamera
+  callStateOpendCamera,
 }
 
 class Session {
@@ -144,7 +143,8 @@ class Signaling {
     }
   }
 
-  void bye(String sessionId) {
+  void bye(Session session) {
+    final sessionId = session.sid;
     var sess = _sessions[sessionId];
 
     if (sess != null) {
@@ -156,6 +156,8 @@ class Signaling {
           },
           sess.cid,
           sess.pid);
+
+      onCallStateChange?.call(session, CallState.callStateBye);
     }
   }
 
@@ -173,12 +175,11 @@ class Signaling {
     _createAnswer(session, 'video');
   }
 
-  void reject(String sessionId) {
-    var session = _sessions[sessionId];
-    if (session == null) {
+  void reject(Session session) {
+    if (_sessions[session.sid] == null) {
       return;
     }
-    bye(session.sid);
+    bye(session);
   }
 
   void onMessage(message, String remoteCoreId, String remotePeerId) async {

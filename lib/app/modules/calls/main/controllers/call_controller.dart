@@ -6,8 +6,6 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
-import 'package:heyo/app/modules/shared/controllers/call_history_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:intl/intl.dart';
@@ -55,7 +53,7 @@ class CallController extends GetxController {
   final recordState = RecordState.notRecording.obs;
   final CallConnectionController callConnectionController;
   final P2PState p2pState;
-  late String sessionId;
+  late Session session;
   final Stopwatch stopwatch = Stopwatch();
   Timer? calltimer;
 
@@ -136,22 +134,15 @@ class CallController extends GetxController {
   Future callerSetup() async {
     isCaller = true;
     final callId = DateTime.now().millisecondsSinceEpoch.toString();
-    Session session = (await callConnectionController.startCall(
+    session = (await callConnectionController.startCall(
         args.user.walletAddress, callId, args.isAudioCall));
-    sessionId = session.sid;
-
-    await Get.find<CallHistoryController>().createOutgoingNotAnsweredRecord(
-      args.user,
-      sessionId,
-      args.isAudioCall ? CallType.audio : CallType.video,
-    );
 
     isInCall.value = false;
     _playWatingBeep();
   }
 
   Future calleeSetup() async {
-    sessionId = args.session!.sid;
+    session = args.session!;
     await callConnectionController.acceptCall(args.session!);
     args.session?.pc?.getRemoteStreams().forEach((element) {
       _remoteRenderer.srcObject = element;
@@ -206,10 +197,10 @@ class CallController extends GetxController {
 
   void endCall() {
     if (isInCall.value) {
-      callConnectionController.signaling.bye(sessionId);
+      callConnectionController.signaling.bye(session);
       _stopWatingBeep();
     } else {
-      callConnectionController.signaling.reject(sessionId);
+      callConnectionController.signaling.reject(session);
       _stopWatingBeep();
     }
 
@@ -256,7 +247,7 @@ class CallController extends GetxController {
   // Todo
   void toggleVideo() {
     callerVideoEnabled.value = !callerVideoEnabled.value;
-    callConnectionController.showLocalVideoStream(callerVideoEnabled.value, sessionId, true);
+    callConnectionController.showLocalVideoStream(callerVideoEnabled.value, session.sid, true);
   }
 
   void switchCamera() {
@@ -273,34 +264,12 @@ class CallController extends GetxController {
 
   @override
   void onClose() async {
-    _updateCallLog();
     stopCallTimer();
     _localRenderer.dispose();
     _remoteRenderer.dispose();
     callConnectionController.close();
     _stopWatingBeep();
     await _screenRecorder.stopRecord();
-  }
-
-  void _updateCallLog() async {
-    if (stopwatch.elapsedTicks > 0 && isCaller) {
-      Get.find<CallHistoryController>().updateCallStatusAndDuration(
-        callId: sessionId,
-        status: CallStatus.outgoingAnswered,
-        duration: stopwatch.elapsed,
-      );
-    } else if (stopwatch.elapsedTicks > 0 && !isCaller) {
-      Get.find<CallHistoryController>().updateCallStatusAndDuration(
-        callId: sessionId,
-        status: CallStatus.incomingAnswered,
-        duration: stopwatch.elapsed,
-      );
-    } else {
-      Get.find<CallHistoryController>().updateCallStatusAndDuration(
-        callId: sessionId,
-        status: CallStatus.outgoingCanceled,
-      );
-    }
   }
 
   void reorderParticipants(int oldIndex, int newIndex) {

@@ -52,7 +52,12 @@ class GlobalBindings extends Bindings {
 
   @override
   void dependencies() {
-    Get.put(CallHistoryController(callHistoryRepo: callHistoryRepo));
+    Get.put(
+      CallHistoryController(
+        callHistoryRepo: callHistoryRepo,
+        callConnectionController: callConnectionController,
+      ),
+    );
     Get.put(callConnectionController, permanent: true);
     Get.put(ChatsController());
     Get.put(
