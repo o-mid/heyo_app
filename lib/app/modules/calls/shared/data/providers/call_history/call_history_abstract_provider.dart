@@ -12,4 +12,6 @@ abstract class CallHistoryAbstractProvider {
   Future<void> deleteOne(String callId);
 
   Future<CallModel?> getOneCall(String callId);
+
+  Future<Stream<List<CallModel>>> getCallsStream();
 }

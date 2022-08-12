@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
@@ -15,12 +17,14 @@ class CallsController extends GetxController {
   final calls = <CallModel>[].obs;
   final animatedListKey = GlobalKey<AnimatedListState>();
 
+  late StreamSubscription _callsStreamSubscription;
+
   @override
   void onInit() {
     super.onInit();
 
     // _addMockData();
-    refreshCallHistory();
+    init();
   }
 
   @override
@@ -29,10 +33,16 @@ class CallsController extends GetxController {
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    _callsStreamSubscription.cancel();
+    super.onClose();
+  }
 
-  void refreshCallHistory() async {
+  void init() async {
     calls.value = await callHistoryRepo.getAllCalls();
+    _callsStreamSubscription = (await callHistoryRepo.getCallsStream()).listen((event) {
+      // calls.value = event; // Todo: find a way to update animated list state as well and uncomment this
+    });
   }
 
   void showDeleteCallDialog(CallModel call) {

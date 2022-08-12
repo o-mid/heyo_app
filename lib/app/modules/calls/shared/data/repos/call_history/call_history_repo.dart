@@ -36,4 +36,9 @@ class CallHistoryRepo implements CallHistoryAbstractRepo {
   Future<List<CallModel>> getCallsFromUserId(String userId) {
     return callHistoryProvider.getCallsFromUserId(userId);
   }
+
+  @override
+  Future<Stream<List<CallModel>>> getCallsStream() {
+    return callHistoryProvider.getCallsStream();
+  }
 }

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
-import 'package:heyo/app/modules/calls/home/controllers/calls_controller.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
@@ -126,8 +125,6 @@ class CallHistoryController extends GetxController {
     );
 
     await callHistoryRepo.addCallToHistory(call);
-
-    Get.find<CallsController>().refreshCallHistory();
   }
 
   Future<void> _createOutgoingNotAnsweredRecord(
@@ -141,7 +138,6 @@ class CallHistoryController extends GetxController {
     );
 
     await callHistoryRepo.addCallToHistory(call);
-    Get.find<CallsController>().refreshCallHistory();
   }
 
   Future<void> _updateCallStatusAndDuration({
@@ -160,8 +156,6 @@ class CallHistoryController extends GetxController {
         duration: duration,
       ),
     );
-
-    Get.find<CallsController>().refreshCallHistory();
   }
 
   UserModel _getUserFromCoreId(String coreId) {
