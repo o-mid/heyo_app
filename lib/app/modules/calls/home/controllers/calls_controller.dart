@@ -40,8 +40,27 @@ class CallsController extends GetxController {
 
   void init() async {
     calls.value = await callHistoryRepo.getAllCalls();
-    _callsStreamSubscription = (await callHistoryRepo.getCallsStream()).listen((event) {
-      // calls.value = event; // Todo: find a way to update animated list state as well and uncomment this
+    _callsStreamSubscription = (await callHistoryRepo.getCallsStream()).listen((newCalls) {
+      // remove the deleted calls
+      for (int i = 0; i < calls.length; i++) {
+        if (!newCalls.any((call) => call.id == calls[i].id)) {
+          _removeAtAnimatedList(i, calls[i]);
+          calls.removeAt(i);
+        }
+      }
+
+      // add new calls
+      for (int i = 0; i < newCalls.length; i++) {
+        if (!calls.any((call) => call.id == newCalls[i].id)) {
+          calls.insert(i, newCalls[i]);
+          animatedListKey.currentState?.insertItem(i);
+        }
+      }
+
+      // update calls to latest changes
+      for (int i = 0; i < newCalls.length; i++) {
+        calls[i] = newCalls[i];
+      }
     });
   }
 
@@ -50,16 +69,17 @@ class CallsController extends GetxController {
       DeleteCallDialog(
         deleteCall: () async {
           await callHistoryRepo.deleteOneCall(call.id);
-          final index = calls.indexWhere((c) => c.id == call.id);
-          animatedListKey.currentState?.removeItem(
-            index,
-            (context, animation) => SizeTransition(
-              sizeFactor: animation,
-              child: CallLogWidget(call: call),
-            ),
-          );
-          calls.removeAt(index);
         },
+      ),
+    );
+  }
+
+  void _removeAtAnimatedList(int index, CallModel call) {
+    animatedListKey.currentState?.removeItem(
+      index,
+      (context, animation) => SizeTransition(
+        sizeFactor: animation,
+        child: CallLogWidget(call: call),
       ),
     );
   }
