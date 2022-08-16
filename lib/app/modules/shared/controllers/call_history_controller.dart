@@ -5,7 +5,7 @@ import 'package:heyo/app/modules/call_controller/call_connection_controller.dart
 import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
-import 'package:heyo/app/modules/web-rtc/signaling.dart';
+import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 
 class CallHistoryController extends GetxController {
   final CallHistoryAbstractRepo callHistoryRepo;
@@ -29,8 +29,8 @@ class CallHistoryController extends GetxController {
       if (state == null) {
         return;
       }
-      switch (state.callState) {
-        case CallState.callStateRinging:
+      switch (state.callHistoryStatus) {
+        case CallHistoryStatus.ringing:
           {
             await _createMissedCallRecord(
               _getUserFromCoreId(state.session.cid),
@@ -39,7 +39,7 @@ class CallHistoryController extends GetxController {
             );
             break;
           }
-        case CallState.callStateInvite:
+        case CallHistoryStatus.invite:
           {
             await _createOutgoingNotAnsweredRecord(
               _getUserFromCoreId(state.session.cid),
@@ -48,15 +48,7 @@ class CallHistoryController extends GetxController {
             );
             break;
           }
-        // case CallState.callStateReject:
-        //   {
-        //     await _updateCallStatusAndDuration(
-        //       callId: state.session.sid,
-        //       status: CallStatus.incomingDeclined,
-        //     );
-        //     break;
-        //   }
-        case CallState.callStateConnected:
+        case CallHistoryStatus.connected:
           {
             final call = await callHistoryRepo.getOneCall(state.session.sid);
             if (call == null) {
@@ -74,7 +66,8 @@ class CallHistoryController extends GetxController {
             );
             break;
           }
-        case CallState.callStateBye:
+        case CallHistoryStatus.byeSent:
+        case CallHistoryStatus.byeReceived:
           {
             final call = await callHistoryRepo.getOneCall(state.session.sid);
             if (call == null) {
@@ -84,16 +77,13 @@ class CallHistoryController extends GetxController {
             final startTime = _callStartTimestamps[call.id];
 
             if (startTime == null) {
+              await _updateCallStatusAndDuration(
+                callId: call.id,
+                status:
+                    _determineCallStatusFromPrevAndHistory(call.status, state.callHistoryStatus),
+              );
               return;
             }
-            // Todo: find a way to differentiate between cancel and reject for outgoing and missed and reject for incoming
-            // if (startTime == null && call.status == CallStatus.outgoingNotAnswered) {
-            //   await _updateCallStatusAndDuration(
-            //     callId: call.id,
-            //     status: CallStatus.outgoingCanceled,
-            //   );
-            //   return;
-            // }
 
             await _updateCallStatusAndDuration(
               callId: call.id,
@@ -101,9 +91,8 @@ class CallHistoryController extends GetxController {
             );
             break;
           }
-        case CallState.callStateNew:
-        case CallState.callStateClosedCamera:
-        case CallState.callStateOpendCamera:
+        case CallHistoryStatus.initial:
+        case CallHistoryStatus.nop:
           break;
       }
     });
@@ -113,6 +102,29 @@ class CallHistoryController extends GetxController {
   void onClose() {
     stateListener.cancel();
     super.onClose();
+  }
+
+  CallStatus? _determineCallStatusFromPrevAndHistory(
+      CallStatus prevStatus, CallHistoryStatus historyStatus) {
+    if (prevStatus == CallStatus.outgoingNotAnswered &&
+        historyStatus == CallHistoryStatus.byeSent) {
+      return CallStatus.outgoingCanceled;
+    }
+
+    if (prevStatus == CallStatus.outgoingNotAnswered &&
+        historyStatus == CallHistoryStatus.byeReceived) {
+      return CallStatus.outgoingDeclined;
+    }
+
+    if (prevStatus == CallStatus.incomingMissed && historyStatus == CallHistoryStatus.byeSent) {
+      return CallStatus.incomingDeclined;
+    }
+
+    if (prevStatus == CallStatus.incomingMissed && historyStatus == CallHistoryStatus.byeReceived) {
+      return CallStatus.incomingMissed;
+    }
+
+    return null;
   }
 
   Future<void> _createMissedCallRecord(UserModel user, String callId, CallType type) async {

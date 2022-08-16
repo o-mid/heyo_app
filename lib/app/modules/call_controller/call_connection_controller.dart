@@ -39,7 +39,10 @@ class CallConnectionController extends GetxController {
     signaling.onCallStateChange = (session, state) async {
       callState.value = state;
 
-      callHistoryState.value = CallHistoryState(session: session, callState: state);
+      callHistoryState.value = CallHistoryState(
+        session: session,
+        callHistoryStatus: CallHistoryState.mapCallStateToCallHistoryStatus(state),
+      );
 
       print("Call State changed, state is: $state");
 
@@ -76,7 +79,8 @@ class CallConnectionController extends GetxController {
     String? selfCoreId = await accountInfo.getCoreId();
     final session = await signaling.invite(remoteId, 'video', false, selfCoreId!, isAudioCall);
 
-    callHistoryState.value = CallHistoryState(session: session, callState: CallState.callStateNew);
+    callHistoryState.value =
+        CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.initial);
     return session;
   }
 
@@ -86,7 +90,7 @@ class CallConnectionController extends GetxController {
     );
 
     callHistoryState.value =
-        CallHistoryState(session: session, callState: CallState.callStateConnected);
+        CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.connected);
   }
 
   void switchCamera() {
@@ -110,10 +114,18 @@ class CallConnectionController extends GetxController {
 
   void rejectCall(Session session) {
     signaling.reject(session);
+    callHistoryState.value =
+        CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.connected);
   }
 
   void close() {
     signaling.close();
     localStream.value = null;
+  }
+
+  void endOrCancelCall(Session session) {
+    signaling.reject(session);
+    callHistoryState.value =
+        CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.byeSent);
   }
 }

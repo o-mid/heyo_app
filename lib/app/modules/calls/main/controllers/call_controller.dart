@@ -196,14 +196,8 @@ class CallController extends GetxController {
   void toggleMuteCall() {}
 
   void endCall() {
-    if (isInCall.value) {
-      callConnectionController.signaling.bye(session);
-      _stopWatingBeep();
-    } else {
-      callConnectionController.signaling.reject(session);
-      _stopWatingBeep();
-    }
-
+    callConnectionController.endOrCancelCall(session);
+    _stopWatingBeep();
     Get.back();
   }
 

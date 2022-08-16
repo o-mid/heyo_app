@@ -156,8 +156,6 @@ class Signaling {
           },
           sess.cid,
           sess.pid);
-
-      onCallStateChange?.call(session, CallState.callStateBye);
     }
   }
 
