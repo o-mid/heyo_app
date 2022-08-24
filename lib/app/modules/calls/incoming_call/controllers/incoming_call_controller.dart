@@ -29,11 +29,6 @@ class IncomingCallController extends GetxController {
   }
 
   @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
   void onClose() {
     _stopRingtone();
   }
@@ -74,7 +69,7 @@ class IncomingCallController extends GetxController {
   }
 
   void _hangUp() {
-    callConnectionController.rejectCall(args.session.sid);
+    callConnectionController.rejectCall(args.session);
     callConnectionController.close();
   }
 
