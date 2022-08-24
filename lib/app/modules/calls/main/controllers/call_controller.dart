@@ -129,6 +129,7 @@ class CallController extends GetxController {
       calleeVideoEnabled.value = false;
       callConnectionController.showLocalVideoStream(false, "", false);
     }
+    updateCallerVideoWidget();
     observeCallStates();
     enableWakeScreenLock();
   }
