@@ -20,6 +20,7 @@ import 'package:heyo/app/modules/p2p_node/p2p_node_manager.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_request.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
+import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
 import 'package:core_web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
@@ -52,6 +53,8 @@ class GlobalBindings extends Bindings {
 
   @override
   void dependencies() {
+    AppDatabaseProvider.init(accountInfo);
+
     Get.put(
       CallHistoryController(
         callHistoryRepo: callHistoryRepo,

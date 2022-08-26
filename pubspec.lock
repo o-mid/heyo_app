@@ -279,7 +279,7 @@ packages:
     source: hosted
     version: "0.3.3+1"
   crypto:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: crypto
       url: "https://pub.dartlang.org"
@@ -356,7 +356,7 @@ packages:
     source: hosted
     version: "0.9.9"
   encrypt:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: encrypt
       url: "https://pub.dartlang.org"
