@@ -7,6 +7,9 @@ import 'package:heyo/app/modules/calls/main/widgets/callee_video_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/caller_video_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/draggable_video.dart';
 import 'package:heyo/app/modules/calls/main/widgets/group_call_widget.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 
 class CallInProgressWidget extends StatelessWidget {
   const CallInProgressWidget({Key? key}) : super(key: key);
@@ -42,7 +45,6 @@ class CallInProgressWidget extends StatelessWidget {
           return Center(
             child: Column(
               children: [
-                const Spacer(),
                 Expanded(child: firstWidget),
                 Expanded(child: secondWidget),
                 const Spacer(),
@@ -50,10 +52,40 @@ class CallInProgressWidget extends StatelessWidget {
             ),
           );
         case CallViewType.row:
-          return Row(
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Expanded(child: firstWidget),
-              Expanded(child: secondWidget),
+              const Spacer(
+                flex: 1,
+              ),
+              Obx(() {
+                return Text(
+                  "${controller.callDurationSeconds.value ~/ 60}:${(controller.callDurationSeconds.value % 60).toString().padLeft(2, "0")}",
+                  style: TEXTSTYLES.kBodyBasic.copyWith(color: COLORS.kWhiteColor),
+                );
+              }),
+              CustomSizes.largeSizedBoxHeight,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                      child: AspectRatio(
+                          aspectRatio: 175 / 318,
+                          child: ClipRRect(
+                              borderRadius: const BorderRadius.all(Radius.circular(16)),
+                              child: firstWidget))),
+                  Expanded(
+                      child: AspectRatio(
+                          aspectRatio: 175 / 318,
+                          child: ClipRRect(
+                              borderRadius: const BorderRadius.all(Radius.circular(16)),
+                              child: secondWidget))),
+                ],
+              ),
+              const Spacer(
+                flex: 2,
+              ),
             ],
           );
         case CallViewType.stack:
