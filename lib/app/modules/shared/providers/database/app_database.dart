@@ -10,23 +10,14 @@ import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
 class AppDatabaseProvider {
-  //singleton instance
-  static final AppDatabaseProvider _instance = AppDatabaseProvider._();
 
-  //public accessor
-  static AppDatabaseProvider get instance => _instance;
+  final AccountInfo accountInfo;
 
-  static late AccountInfo _accountInfo;
+  AppDatabaseProvider({required this.accountInfo});
 
   //for opening database we use completer which uses for transforming sync code into async code and stores a future in itself
   Completer<Database>? _dbOpenCompleter;
 
-  // private constructor allows us to create instance only from the class
-  AppDatabaseProvider._();
-
-  static void init(AccountInfo accountInfo) {
-    _accountInfo = accountInfo;
-  }
 
   // Database object accessor
   Future<Database> get database async {
@@ -51,7 +42,7 @@ class AppDatabaseProvider {
     // Path with the form: /platform-specific-directory/demo.db
     final dbPath = join(appDocumentDir.path, 'heyo.db');
 
-    final password = await _accountInfo.getPrivateKey();
+    final password = await accountInfo.getPrivateKey();
     assert(password != null);
 
     final database = await databaseFactoryIo.openDatabase(

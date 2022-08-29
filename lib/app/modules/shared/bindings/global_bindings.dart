@@ -29,11 +29,12 @@ import 'package:heyo/app/modules/web-rtc/signaling.dart';
 class GlobalBindings extends Bindings {
   static P2PState p2pState = P2PState();
   static Signaling signaling = Signaling(login: login);
-  static P2PNodeResponseStream p2pNodeResponseStream = P2PNodeResponseStream(p2pState: p2pState);
+  static P2PNodeResponseStream p2pNodeResponseStream =
+      P2PNodeResponseStream(p2pState: p2pState);
   final P2PNodeRequestStream p2pNodeRequestStream =
       P2PNodeRequestStream(p2pState: p2pState, signaling: signaling);
-  static Web3Client web3Client =
-      Web3Client('https://stg.pingextest.eu/eth', http.Client(), 'ping-dev', 'caC12cas');
+  static Web3Client web3Client = Web3Client(
+      'https://stg.pingextest.eu/eth', http.Client(), 'ping-dev', 'caC12cas');
 
   static AccountInfo accountInfo = AccountRepo(
     localProvider: SecureStorageProvider(),
@@ -43,28 +44,32 @@ class GlobalBindings extends Bindings {
     p2pState: p2pState,
     accountInfo: accountInfo,
   );
-  static CallConnectionController callConnectionController = CallConnectionController(
+  static CallConnectionController callConnectionController =
+      CallConnectionController(
     accountInfo: accountInfo,
     signaling: signaling,
   );
 
-  // Todo
-  static final callHistoryRepo = CallHistoryRepo(callHistoryProvider: CallHistoryProvider());
-
   @override
   void dependencies() {
-    AppDatabaseProvider.init(accountInfo);
-
+    Get.put(AppDatabaseProvider(accountInfo: accountInfo), permanent: true);
     Get.put(
       CallHistoryController(
-        callHistoryRepo: callHistoryRepo,
+        callHistoryRepo: CallHistoryRepo(
+            callHistoryProvider: CallHistoryProvider(
+                appDatabaseProvider: Get.find<AppDatabaseProvider>())),
         callConnectionController: callConnectionController,
       ),
     );
     Get.put(callConnectionController, permanent: true);
     Get.put(ChatsController());
+    //also this
     Get.put(
-      CallsController(callHistoryRepo: callHistoryRepo),
+      CallsController(
+        callHistoryRepo: CallHistoryRepo(
+            callHistoryProvider: CallHistoryProvider(
+                appDatabaseProvider: Get.find<AppDatabaseProvider>())),
+      ),
     );
     Get.put(AccountController(accountInfo: accountInfo));
     Get.put(GlobalMessageController());
