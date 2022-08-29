@@ -42,13 +42,27 @@ class CallInProgressWidget extends StatelessWidget {
 
       switch (controller.callViewType.value) {
         case CallViewType.column:
-          return Center(
-            child: Column(
-              children: [
-                Expanded(child: firstWidget),
-                Expanded(child: secondWidget),
-                const Spacer(),
-              ],
+          return SafeArea(
+            child: Center(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: AspectRatio(
+                      aspectRatio: 359 / 283,
+                      child: firstWidget,
+                    ),
+                  ),
+                  Expanded(
+                    child: AspectRatio(
+                      aspectRatio: 359 / 283,
+                      child: secondWidget,
+                    ),
+                  ),
+                  SizedBox(
+                    height: controller.isImmersiveMode.value ? 8.h : 100.h,
+                  )
+                ],
+              ),
             ),
           );
         case CallViewType.row:
