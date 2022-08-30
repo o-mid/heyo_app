@@ -309,4 +309,7 @@ class CallController extends GetxController {
   Future<void> disableWakeScreenLock() async {
     await Wakelock.toggle(enable: false);
   }
+
+  final Duration callerScaleDuration = const Duration(milliseconds: 200);
+  final Duration callerScaleReverseDuration = const Duration(milliseconds: 200);
 }

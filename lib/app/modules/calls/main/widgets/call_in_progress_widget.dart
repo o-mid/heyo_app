@@ -31,6 +31,9 @@ class CallInProgressWidget extends StatelessWidget {
           : controller.isVideoPositionsFlipped.isTrue
               ? const CalleeNoVideoWidget()
               : const SizedBox.shrink();
+      final bool changeCallerWidgetSize = controller.showCallerOptions.value &&
+          controller.callViewType.value == CallViewType.stack &&
+          controller.isVideoPositionsFlipped.isFalse;
 
       final firstWidget = controller.isVideoPositionsFlipped.isFalse ? calleeWidget : callerWidget;
 
@@ -111,10 +114,17 @@ class CallInProgressWidget extends StatelessWidget {
                   child: firstWidget,
                 ),
                 DraggableVideo(
-                  child: SizedBox(
-                    width: 96.w,
-                    height: 144.h,
-                    child: secondWidget,
+                  child: AnimatedSize(
+                    clipBehavior: Clip.hardEdge,
+                    curve: Curves.easeInOut,
+                    alignment: Alignment.bottomLeft,
+                    duration: controller.callerScaleDuration,
+                    reverseDuration: controller.callerScaleReverseDuration,
+                    child: SizedBox(
+                      width: changeCallerWidgetSize ? 184.w : 96.w,
+                      height: changeCallerWidgetSize ? 257.h : 144.h,
+                      child: secondWidget,
+                    ),
                   ),
                 ),
               ],

@@ -59,7 +59,10 @@ class CallerVideoWidget extends StatelessWidget {
                           ],
                         ),
                         SizedBox(
-                          height: controller.isVideoPositionsFlipped.value ? 16 : 0,
+                          height: controller.isVideoPositionsFlipped.isFalse &&
+                                  controller.callViewType.value == CallViewType.stack
+                              ? 8
+                              : 16,
                         )
                       ],
                     ),
