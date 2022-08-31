@@ -69,6 +69,7 @@ dependencies:
   flutter_ringtone_player: ^3.2.0
   flutter_beep: ^1.0.0
   wakelock: ^0.6.2
+  flutter_draggable_gridview: ^0.0.7
 dependency_overrides:
   permission_handler: ^9.2.0
 

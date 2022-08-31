@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_draggable_gridview/flutter_draggable_gridview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
@@ -43,6 +44,26 @@ class CallInProgressWidget extends StatelessWidget {
               ? calleeWidget
               : const SizedBox.shrink();
 
+      List<DraggableGridItem> draggableRowChidren = [
+        DraggableGridItem(
+          isDraggable: true,
+          child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.5,
+              child: AspectRatio(
+                aspectRatio: controller.callRowViewAspectRatio,
+                child: firstWidget,
+              )),
+        ),
+        DraggableGridItem(
+          isDraggable: true,
+          child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.5,
+              child: AspectRatio(
+                aspectRatio: controller.callRowViewAspectRatio,
+                child: secondWidget,
+              )),
+        ),
+      ];
       switch (controller.callViewType.value) {
         case CallViewType.column:
           return SafeArea(
@@ -51,13 +72,13 @@ class CallInProgressWidget extends StatelessWidget {
                 children: [
                   Expanded(
                     child: AspectRatio(
-                      aspectRatio: 359 / 283,
+                      aspectRatio: controller.callColumnViewAspectRatio,
                       child: firstWidget,
                     ),
                   ),
                   Expanded(
                     child: AspectRatio(
-                      aspectRatio: 359 / 283,
+                      aspectRatio: controller.callColumnViewAspectRatio,
                       child: secondWidget,
                     ),
                   ),
@@ -82,27 +103,32 @@ class CallInProgressWidget extends StatelessWidget {
                 );
               }),
               CustomSizes.largeSizedBoxHeight,
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                      child: AspectRatio(
-                          aspectRatio: 175 / 318,
-                          child: ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(16)),
-                              child: firstWidget))),
-                  Expanded(
-                      child: AspectRatio(
-                          aspectRatio: 175 / 318,
-                          child: ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(16)),
-                              child: secondWidget))),
-                ],
+              Expanded(
+                flex: 5,
+                child: DraggableGridViewBuilder(
+                  dragPlaceHolder: (List<DraggableGridItem> list, int index) {
+                    return PlaceHolderWidget(
+                      child: Container(
+                        color: Colors.transparent,
+                      ),
+                    );
+                  },
+                  dragFeedback: (List<DraggableGridItem> list, int index) {
+                    return list[index].child;
+                  },
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: controller.callRowViewAspectRatio,
+                  ),
+                  dragCompletion: (List<DraggableGridItem> list, int beforeIndex, int afterIndex) {
+                    print('onDragAccept: $beforeIndex -> $afterIndex');
+                  },
+                  children: draggableRowChidren,
+                ),
               ),
-              const Spacer(
-                flex: 2,
-              ),
+              // const Spacer(
+              //   flex: 1,
+              // ),
             ],
           );
         case CallViewType.stack:

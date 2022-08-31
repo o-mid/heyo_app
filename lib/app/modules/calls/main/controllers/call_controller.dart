@@ -312,4 +312,6 @@ class CallController extends GetxController {
 
   final Duration callerScaleDuration = const Duration(milliseconds: 200);
   final Duration callerScaleReverseDuration = const Duration(milliseconds: 200);
+  final double callColumnViewAspectRatio = 359 / 283;
+  final double callRowViewAspectRatio = 175 / 318;
 }
