@@ -7,11 +7,14 @@ import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
 
 class CallHistoryProvider implements CallHistoryAbstractProvider {
+
+  final AppDatabaseProvider appDatabaseProvider;
+  CallHistoryProvider({required this.appDatabaseProvider});
   static const String callHistoryStoreName = 'call_history';
 
   final _store = intMapStoreFactory.store(callHistoryStoreName);
 
-  Future<Database> get _db async => await AppDatabaseProvider.instance.database;
+  Future<Database> get _db async => await appDatabaseProvider.database;
 
   @override
   Future<void> insert(CallModel call) async {
