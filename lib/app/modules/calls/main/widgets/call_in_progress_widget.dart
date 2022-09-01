@@ -69,22 +69,59 @@ class CallInProgressWidget extends StatelessWidget {
           return SafeArea(
             child: Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: AspectRatio(
-                      aspectRatio: controller.callColumnViewAspectRatio,
-                      child: firstWidget,
-                    ),
-                  ),
-                  Expanded(
-                    child: AspectRatio(
-                      aspectRatio: controller.callColumnViewAspectRatio,
-                      child: secondWidget,
-                    ),
+                  Center(
+                    child: Expanded(
+                        child: DraggableGridViewBuilder(
+                      children: [
+                        DraggableGridItem(
+                          isDraggable: true,
+                          child: AspectRatio(
+                            aspectRatio: controller.callColumnViewAspectRatio,
+                            child: firstWidget,
+                          ),
+                        ),
+                        DraggableGridItem(
+                          isDraggable: true,
+                          child: AspectRatio(
+                            aspectRatio: controller.callColumnViewAspectRatio,
+                            child: secondWidget,
+                          ),
+                        ),
+                      ],
+                      dragPlaceHolder: (List<DraggableGridItem> list, int index) {
+                        return PlaceHolderWidget(
+                          child: Container(
+                            color: Colors.transparent,
+                          ),
+                        );
+                      },
+                      dragFeedback: (List<DraggableGridItem> list, int index) {
+                        return SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: list[index].child,
+                        );
+                      },
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 1,
+                        crossAxisSpacing: 0,
+                        mainAxisSpacing: 0,
+                        childAspectRatio: controller.callColumnViewAspectRatio,
+                      ),
+                      dragCompletion:
+                          (List<DraggableGridItem> list, int beforeIndex, int afterIndex) {
+                        print('onDragAccept: $beforeIndex -> $afterIndex');
+                      },
+                    )),
                   ),
                   SizedBox(
                     height: controller.isImmersiveMode.value ? 8.h : 100.h,
-                  )
+                  ),
                 ],
               ),
             ),
