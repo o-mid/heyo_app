@@ -3,6 +3,8 @@ import 'package:flutter_draggable_gridview/flutter_draggable_gridview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
+import 'package:heyo/app/modules/calls/main/widgets/call_view_type_column_widget.dart';
+import 'package:heyo/app/modules/calls/main/widgets/call_view_type_row_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/callee_no_video_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/callee_video_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/caller_video_widget.dart';
@@ -44,130 +46,11 @@ class CallInProgressWidget extends StatelessWidget {
               ? calleeWidget
               : const SizedBox.shrink();
 
-      List<DraggableGridItem> draggableRowChidren = [
-        DraggableGridItem(
-          isDraggable: true,
-          child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.5,
-              child: AspectRatio(
-                aspectRatio: controller.callRowViewAspectRatio,
-                child: firstWidget,
-              )),
-        ),
-        DraggableGridItem(
-          isDraggable: true,
-          child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.5,
-              child: AspectRatio(
-                aspectRatio: controller.callRowViewAspectRatio,
-                child: secondWidget,
-              )),
-        ),
-      ];
       switch (controller.callViewType.value) {
         case CallViewType.column:
-          return SafeArea(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Center(
-                    child: Expanded(
-                        child: DraggableGridViewBuilder(
-                      children: [
-                        DraggableGridItem(
-                          isDraggable: true,
-                          child: AspectRatio(
-                            aspectRatio: controller.callColumnViewAspectRatio,
-                            child: firstWidget,
-                          ),
-                        ),
-                        DraggableGridItem(
-                          isDraggable: true,
-                          child: AspectRatio(
-                            aspectRatio: controller.callColumnViewAspectRatio,
-                            child: secondWidget,
-                          ),
-                        ),
-                      ],
-                      dragPlaceHolder: (List<DraggableGridItem> list, int index) {
-                        return PlaceHolderWidget(
-                          child: Container(
-                            color: Colors.transparent,
-                          ),
-                        );
-                      },
-                      dragFeedback: (List<DraggableGridItem> list, int index) {
-                        return SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: list[index].child,
-                        );
-                      },
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 1,
-                        crossAxisSpacing: 0,
-                        mainAxisSpacing: 0,
-                        childAspectRatio: controller.callColumnViewAspectRatio,
-                      ),
-                      dragCompletion:
-                          (List<DraggableGridItem> list, int beforeIndex, int afterIndex) {
-                        print('onDragAccept: $beforeIndex -> $afterIndex');
-                      },
-                    )),
-                  ),
-                  SizedBox(
-                    height: controller.isImmersiveMode.value ? 8.h : 100.h,
-                  ),
-                ],
-              ),
-            ),
-          );
+          return CallViewTypeColumnWidget(firstWidget: firstWidget, secondWidget: secondWidget);
         case CallViewType.row:
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const Spacer(
-                flex: 1,
-              ),
-              Obx(() {
-                return Text(
-                  "${controller.callDurationSeconds.value ~/ 60}:${(controller.callDurationSeconds.value % 60).toString().padLeft(2, "0")}",
-                  style: TEXTSTYLES.kBodyBasic.copyWith(color: COLORS.kWhiteColor),
-                );
-              }),
-              CustomSizes.largeSizedBoxHeight,
-              Expanded(
-                flex: 5,
-                child: DraggableGridViewBuilder(
-                  dragPlaceHolder: (List<DraggableGridItem> list, int index) {
-                    return PlaceHolderWidget(
-                      child: Container(
-                        color: Colors.transparent,
-                      ),
-                    );
-                  },
-                  dragFeedback: (List<DraggableGridItem> list, int index) {
-                    return list[index].child;
-                  },
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: controller.callRowViewAspectRatio,
-                  ),
-                  dragCompletion: (List<DraggableGridItem> list, int beforeIndex, int afterIndex) {
-                    print('onDragAccept: $beforeIndex -> $afterIndex');
-                  },
-                  children: draggableRowChidren,
-                ),
-              ),
-              // const Spacer(
-              //   flex: 1,
-              // ),
-            ],
-          );
+          return CallViewTypeRowWidget(firstWidget: firstWidget, secondWidget: secondWidget);
         case CallViewType.stack:
           return SafeArea(
             child: Stack(
