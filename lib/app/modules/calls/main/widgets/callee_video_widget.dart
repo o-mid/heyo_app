@@ -23,8 +23,11 @@ class CalleeVideoWidget extends StatelessWidget {
           child: GestureDetector(
             onTap: controller.toggleImmersiveMode,
             onDoubleTap: controller.flipVideoPositions,
-            child: RTCVideoView(remoteVideRenderer,
-                objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: RTCVideoView(remoteVideRenderer,
+                  objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover),
+            ),
           ),
         ));
       },

@@ -75,9 +75,6 @@ class CallViewTypeRowWidget extends StatelessWidget {
             ],
           ),
         ),
-        // const Spacer(
-        //   flex: 1,
-        // ),
       ],
     );
   }
