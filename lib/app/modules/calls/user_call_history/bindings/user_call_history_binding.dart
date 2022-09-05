@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
+import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_provider.dart';
+import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
+import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 
 import '../controllers/user_call_history_controller.dart';
 
@@ -7,7 +9,9 @@ class UserCallHistoryBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<UserCallHistoryController>(
-      () => UserCallHistoryController(callHistoryRepo: GlobalBindings.callHistoryRepo),
+      () => UserCallHistoryController(callHistoryRepo:  CallHistoryRepo(
+          callHistoryProvider: CallHistoryProvider(
+              appDatabaseProvider: Get.find<AppDatabaseProvider>()))),
     );
   }
 }

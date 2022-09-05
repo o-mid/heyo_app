@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
+import 'package:heyo/app/modules/shared/utils/encrypt_codec.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_android/path_provider_android.dart';
@@ -8,17 +10,14 @@ import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
 class AppDatabaseProvider {
-  //singleton instance
-  static final AppDatabaseProvider _instance = AppDatabaseProvider._();
 
-  //public accessor
-  static AppDatabaseProvider get instance => _instance;
+  final AccountInfo accountInfo;
+
+  AppDatabaseProvider({required this.accountInfo});
 
   //for opening database we use completer which uses for transforming sync code into async code and stores a future in itself
   Completer<Database>? _dbOpenCompleter;
 
-  // private constructor allows us to create instance only from the class
-  AppDatabaseProvider._();
 
   // Database object accessor
   Future<Database> get database async {
@@ -43,7 +42,13 @@ class AppDatabaseProvider {
     // Path with the form: /platform-specific-directory/demo.db
     final dbPath = join(appDocumentDir.path, 'heyo.db');
 
-    final database = await databaseFactoryIo.openDatabase(dbPath);
+    final password = await accountInfo.getPrivateKey();
+    assert(password != null);
+
+    final database = await databaseFactoryIo.openDatabase(
+      dbPath,
+      codec: getEncryptSembastCodec(password: password!),
+    );
     // Any code awaiting the Completer's future will now start executing
     _dbOpenCompleter!.complete(database);
   }

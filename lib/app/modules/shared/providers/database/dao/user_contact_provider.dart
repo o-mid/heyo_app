@@ -3,6 +3,8 @@ import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
 
 class UserContactProvider {
+  final AppDatabaseProvider appDatabaseProvider;
+  UserContactProvider({required this.appDatabaseProvider});
   static const String userContactsStoreName = 'user_contacts';
 
   // A Store with int keys and Map<String, dynamic> values.
@@ -11,7 +13,7 @@ class UserContactProvider {
 
   // Private getter to shorten the amount of code needed to get the
   // singleton instance of an opened database.
-  Future<Database> get _db async => await AppDatabaseProvider.instance.database;
+  Future<Database> get _db async => await appDatabaseProvider.database;
 
   Future insert(UserContact user) async {
     await _userStore.add(await _db, user.toJson());
