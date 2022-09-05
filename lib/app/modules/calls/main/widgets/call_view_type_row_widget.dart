@@ -44,33 +44,30 @@ class CallViewTypeRowWidget extends StatelessWidget {
               );
             },
             dragFeedback: (List<DraggableGridItem> list, int index) {
-              return list[index].child;
+              return SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: list[index].child,
+              );
             },
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: controller.callRowViewAspectRatio,
             ),
-            dragCompletion: (List<DraggableGridItem> list, int beforeIndex, int afterIndex) {
-              print('onDragAccept: $beforeIndex -> $afterIndex');
-            },
+            dragCompletion: (List<DraggableGridItem> list, int beforeIndex, int afterIndex) {},
             children: [
               DraggableGridItem(
                 isDraggable: true,
-                child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    child: AspectRatio(
-                      aspectRatio: controller.callRowViewAspectRatio,
-                      child: firstWidget,
-                    )),
+                child: AspectRatio(
+                  aspectRatio: controller.callRowViewAspectRatio,
+                  child: firstWidget,
+                ),
               ),
               DraggableGridItem(
                 isDraggable: true,
-                child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    child: AspectRatio(
-                      aspectRatio: controller.callRowViewAspectRatio,
-                      child: secondWidget,
-                    )),
+                child: AspectRatio(
+                  aspectRatio: controller.callRowViewAspectRatio,
+                  child: secondWidget,
+                ),
               ),
             ],
           ),

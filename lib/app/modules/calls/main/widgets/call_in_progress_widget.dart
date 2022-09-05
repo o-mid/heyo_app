@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/calls/main/widgets/call_view_type_column_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/call_view_type_row_widget.dart';
+import 'package:heyo/app/modules/calls/main/widgets/call_view_type_stack_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/callee_no_video_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/callee_video_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/caller_video_widget.dart';
@@ -30,9 +31,6 @@ class CallInProgressWidget extends StatelessWidget {
           : controller.isVideoPositionsFlipped.isTrue
               ? const CalleeNoVideoWidget()
               : const SizedBox.shrink();
-      final bool changeCallerWidgetSize = controller.showCallerOptions.value &&
-          controller.callViewType.value == CallViewType.stack &&
-          controller.isVideoPositionsFlipped.isFalse;
 
       final firstWidget = controller.isVideoPositionsFlipped.isFalse ? calleeWidget : callerWidget;
 
@@ -48,30 +46,7 @@ class CallInProgressWidget extends StatelessWidget {
         case CallViewType.row:
           return CallViewTypeRowWidget(firstWidget: firstWidget, secondWidget: secondWidget);
         case CallViewType.stack:
-          return SafeArea(
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: firstWidget,
-                ),
-                DraggableVideo(
-                  child: AnimatedSize(
-                    clipBehavior: Clip.hardEdge,
-                    curve: Curves.easeInOut,
-                    alignment: Alignment.bottomLeft,
-                    duration: controller.callerScaleDuration,
-                    reverseDuration: controller.callerScaleReverseDuration,
-                    child: SizedBox(
-                      width: changeCallerWidgetSize ? 184.w : 96.w,
-                      height: changeCallerWidgetSize ? 257.h : 144.h,
-                      child: secondWidget,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
+          return CallViewTypeStackWidget(firstWidget: firstWidget, secondWidget: secondWidget);
       }
     });
   }

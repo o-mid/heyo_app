@@ -57,6 +57,7 @@ class CallViewTypeColumnWidget extends StatelessWidget {
                   );
                 },
                 shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
                 scrollDirection: Axis.vertical,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 1,
@@ -64,9 +65,7 @@ class CallViewTypeColumnWidget extends StatelessWidget {
                   mainAxisSpacing: 0,
                   childAspectRatio: controller.callColumnViewAspectRatio,
                 ),
-                dragCompletion: (List<DraggableGridItem> list, int beforeIndex, int afterIndex) {
-                  print('onDragAccept: $beforeIndex -> $afterIndex');
-                },
+                dragCompletion: (List<DraggableGridItem> list, int beforeIndex, int afterIndex) {},
               )),
             ),
             SizedBox(
