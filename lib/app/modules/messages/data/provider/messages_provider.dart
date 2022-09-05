@@ -3,6 +3,7 @@ import 'package:heyo/app/modules/messages/data/provider/messages_abstract_provid
 import 'package:heyo/app/modules/messages/utils/message_from_json.dart';
 import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
+import 'package:sembast/utils/value_utils.dart';
 
 class MessagesProvider implements MessagesAbstractProvider {
   final AppDatabaseProvider appDatabaseProvider;
@@ -15,7 +16,9 @@ class MessagesProvider implements MessagesAbstractProvider {
 
   @override
   Future<void> createMessage({required MessageModel message, required String chatId}) async {
-    final messages = await _store.record(chatId).get(await _db) ?? [];
+    var messages = await _store.record(chatId).get(await _db) ?? [];
+
+    messages = cloneList(messages);
 
     messages.add(message.toJson());
     await _store.record(chatId).put(await _db, messages);
@@ -41,15 +44,16 @@ class MessagesProvider implements MessagesAbstractProvider {
 
   @override
   Future<List<MessageModel>> getMessages(String chatId) async {
-    final messages = await _store.record(chatId).get(await _db) ?? [];
+    var messages = await _store.record(chatId).get(await _db) ?? [];
+    messages = cloneList(messages);
+
     messages.removeWhere((element) => element == null);
 
-    final nullableMessages = messages
-        .whereType<String>()
-        .map((m) => messageFromJson(m as Map<String, dynamic>))
-        .toList();
+    final nullableMessages =
+        messages.map((m) => messageFromJson(m as Map<String, dynamic>)).toList();
 
-    return nullableMessages.whereType<MessageModel>().toList();
+    return nullableMessages.whereType<MessageModel>().toList()
+      ..sort((a, b) => a.timestamp.millisecondsSinceEpoch - b.timestamp.millisecondsSinceEpoch);
   }
 
   @override

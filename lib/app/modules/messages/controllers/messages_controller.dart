@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:heyo/app/modules/messages/data/models/messages/file_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
+import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,10 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import '../../shared/widgets/gallery_preview_button_widget.dart';
 
 class MessagesController extends GetxController {
+  final MessagesAbstractRepo messagesRepo;
+
+  MessagesController({required this.messagesRepo});
+
   final _globalMessageController = Get.find<GlobalMessageController>();
   double _keyboardHeight = 0;
 
@@ -69,7 +74,8 @@ class MessagesController extends GetxController {
 
     args = Get.arguments as MessagesViewArgumentsModel;
 
-    _addMockData();
+    _getMessages();
+
     if (args.forwardedMessages != null) {
       // Todo (libp2p): Send forwarded messages
       messages.addAll(
@@ -453,9 +459,10 @@ class MessagesController extends GetxController {
     clearSelected();
   }
 
-  void _addMockData() {
+  Future<void> _addMockData() async {
     var index = 0;
-    messages.addAll([
+
+    final ms = [
       TextMessageModel(
         messageId: "${index++}",
         text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
@@ -854,10 +861,11 @@ class MessagesController extends GetxController {
         senderName: args.chat.name,
         senderAvatar: args.chat.icon,
       ),
-    ]);
+    ];
 
-    messages
-        .sort((a, b) => a.timestamp.millisecondsSinceEpoch - b.timestamp.millisecondsSinceEpoch);
+    for (int i = 0; i < ms.length; i++) {
+      await messagesRepo.createMessage(message: ms[i], chatId: args.chat.id);
+    }
   }
 
   RxBool isMediaGlassmorphicOpen = false.obs;
@@ -1182,5 +1190,13 @@ class MessagesController extends GetxController {
         jumpToBottom();
       });
     }
+  }
+
+  void _getMessages() async {
+    // await _addMockData();
+    messages.value = await messagesRepo.getMessages(args.chat.id);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      jumpToBottom();
+    });
   }
 }
