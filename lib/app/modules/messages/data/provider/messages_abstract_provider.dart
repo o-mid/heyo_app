@@ -1,0 +1,11 @@
+import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
+
+abstract class MessagesAbstractProvider {
+  Future<void> createMessage({required MessageModel message, required String chatId});
+
+  Future<List<MessageModel>> getMessages(String chatId);
+
+  Future<MessageModel?> updateMessage({required MessageModel message, required String chatId});
+
+  Future<MessageModel?> deleteMessage({required String messageId, required String chatId});
+}
