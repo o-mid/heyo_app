@@ -65,7 +65,8 @@ class TextMessageModel extends MessageModel {
         type: MessageContentType.values.byName(json[MessageModel.typeSerializedName]),
         isFromMe: json[MessageModel.isFromMeSerializedName],
         isForwarded: json[MessageModel.isForwardedSerializedName],
-        reactions: jsonDecode(json[MessageModel.reactionsSerializedName]),
+        reactions: (jsonDecode(json[MessageModel.reactionsSerializedName]) as Map<String, dynamic>)
+            .map((String k, v) => MapEntry(k, ReactionModel.fromJson(v))),
         replyTo: json[MessageModel.replyToSerializedName] == null
             ? null
             : ReplyToModel.fromJson(json[MessageModel.replyToSerializedName]),
