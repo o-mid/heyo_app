@@ -8,4 +8,6 @@ abstract class MessagesAbstractProvider {
   Future<MessageModel?> updateMessage({required MessageModel message, required String chatId});
 
   Future<MessageModel?> deleteMessage({required String messageId, required String chatId});
+
+  Future<void> deleteMessages({required List<String> messageIds, required String chatId});
 }

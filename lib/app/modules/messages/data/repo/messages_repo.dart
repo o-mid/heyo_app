@@ -13,11 +13,6 @@ class MessagesRepo implements MessagesAbstractRepo {
   }
 
   @override
-  Future<MessageModel?> deleteMessage({required String messageId, required String chatId}) {
-    return messagesProvider.deleteMessage(messageId: messageId, chatId: chatId);
-  }
-
-  @override
   Future<List<MessageModel>> getMessages(String chatId) {
     return messagesProvider.getMessages(chatId);
   }
@@ -25,5 +20,15 @@ class MessagesRepo implements MessagesAbstractRepo {
   @override
   Future<MessageModel?> updateMessage({required MessageModel message, required String chatId}) {
     return messagesProvider.updateMessage(message: message, chatId: chatId);
+  }
+
+  @override
+  Future<MessageModel?> deleteMessage({required String messageId, required String chatId}) {
+    return messagesProvider.deleteMessage(messageId: messageId, chatId: chatId);
+  }
+
+  @override
+  Future<void> deleteMessages({required List<String> messageIds, required String chatId}) {
+    return messagesProvider.deleteMessages(messageIds: messageIds, chatId: chatId);
   }
 }

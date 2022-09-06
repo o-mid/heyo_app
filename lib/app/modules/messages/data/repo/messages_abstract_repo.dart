@@ -14,4 +14,7 @@ abstract class MessagesAbstractRepo {
   /// deletes message from a certain chat with id of [chatId] and returns it if the [messageId]
   /// exists, otherwise returns null
   Future<MessageModel?> deleteMessage({required String messageId, required String chatId});
+
+  /// deletes a list of messages from [chatId]
+  Future<void> deleteMessages({required List<String> messageIds, required String chatId});
 }

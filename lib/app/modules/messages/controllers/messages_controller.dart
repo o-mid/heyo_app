@@ -234,7 +234,7 @@ class MessagesController extends GetxController {
     selectedMessages.clear();
   }
 
-  void sendTextMessage() {
+  void sendTextMessage() async {
     var message = TextMessageModel(
       // Todo: Generate random id
       messageId: messages.length.toString(),
@@ -425,6 +425,13 @@ class MessagesController extends GetxController {
       messages.removeWhere((msg) => msg.messageId == toDelete.messageId);
       // Todo: libp2p - delete for others
     }
+
+    // delete messages from local database
+    messagesRepo.deleteMessages(
+      messageIds: selectedMessages.map((m) => m.messageId).toList(),
+      chatId: args.chat.id,
+    );
+
     clearSelected();
   }
 
@@ -432,6 +439,13 @@ class MessagesController extends GetxController {
     for (var toDelete in selectedMessages) {
       messages.removeWhere((msg) => msg.messageId == toDelete.messageId);
     }
+
+    // delete messages from local database
+    messagesRepo.deleteMessages(
+      messageIds: selectedMessages.map((m) => m.messageId).toList(),
+      chatId: args.chat.id,
+    );
+
     clearSelected();
   }
 
@@ -457,6 +471,338 @@ class MessagesController extends GetxController {
     );
 
     clearSelected();
+  }
+
+  RxBool isMediaGlassmorphicOpen = false.obs;
+  mediaGlassmorphicChangeState() {
+    isMediaGlassmorphicOpen.value = !isMediaGlassmorphicOpen.value;
+  }
+
+  // camera
+  Future<void> pick(BuildContext context) async {
+    final Size size = MediaQuery.of(context).size;
+    final double scale = MediaQuery.of(context).devicePixelRatio;
+    bool isCameraDenied = await Permission.camera.isDenied;
+    bool isMediaDenied = await Permission.mediaLibrary.isDenied;
+    if (GetPlatform.isAndroid) {
+      isMediaDenied = false;
+    }
+    if (isMediaDenied) {
+      bool result = await Get.dialog(PermissionDialog(
+        indicatorIcon: Assets.svg.camerapermissionIcon.svg(
+          width: 28.w,
+          height: 28.w,
+        ),
+        title: LocaleKeys.Permissions_AllowAccess.tr,
+        subtitle: LocaleKeys.Permissions_capturePhotos.tr,
+      ));
+      if (result) {
+        await Permission.mediaLibrary.request().then((value) {
+          if (value.isGranted) {
+            isMediaDenied = false;
+          }
+        });
+      }
+    }
+
+    if (isCameraDenied) {
+      bool result = await Get.dialog(PermissionDialog(
+        indicatorIcon: Assets.svg.camerapermissionIcon.svg(
+          width: 28.w,
+          height: 28.w,
+        ),
+        title: LocaleKeys.Permissions_AllowAccess.tr,
+        subtitle: LocaleKeys.Permissions_camera.tr,
+      ));
+      if (result) {
+        await Permission.camera.request().then((value) {
+          if (value.isGranted) {
+            isCameraDenied = false;
+          }
+        });
+      }
+    }
+
+    if (!isCameraDenied && !isMediaDenied) {
+      openCameraPicker(context);
+    }
+  }
+
+  Future<void> openCameraPicker(BuildContext context) async {
+    try {
+      final AssetEntity? entity = await CameraPicker.pickFromCamera(context,
+          pickerConfig: CameraPickerConfig(
+            textDelegate: EnglishCameraPickerTextDelegate(),
+            sendIcon: Assets.svg.sendIcon.svg(),
+            receiverNameWidget: ReceiverNameWidget(name: args.chat.name),
+            additionalPreviewButtonWidget: const GalleryPreviewButtonWidget(),
+            onEntitySaving: (
+              BuildContext context,
+              CameraPickerViewType viewType,
+              File file,
+              List<Map<String, dynamic>>? confirmedFiles,
+            ) async {
+              AssetEntity? entity;
+
+              switch (viewType) {
+                case CameraPickerViewType.image:
+                  final String filePath = file.path;
+                  entity = await PhotoManager.editor.saveImageWithPath(
+                    filePath,
+                    title: path.basename(filePath),
+                  );
+
+                  break;
+                case CameraPickerViewType.video:
+                  entity = await PhotoManager.editor.saveVideo(
+                    File(file.path),
+                    title: path.basename(file.path),
+                  );
+                  break;
+              }
+              if (entity != null) {
+                switch (viewType) {
+                  case CameraPickerViewType.image:
+                    {
+                      messages.add(
+                        ImageMessageModel(
+                            messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                            isLocal: true,
+                            metadata: ImageMetadata(
+                              height: entity.height.toDouble(),
+                              width: entity.width.toDouble(),
+                            ),
+                            senderAvatar: '',
+                            senderName: '',
+                            isFromMe: true,
+                            status: MessageStatus.sent,
+                            timestamp:
+                                DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+                            url: file.path),
+                      );
+                    }
+                    break;
+                  case CameraPickerViewType.video:
+                    {
+                      messages.add(VideoMessageModel(
+                        messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                        metadata: VideoMetadata(
+                          durationInSeconds: entity.videoDuration.inSeconds,
+                          height: entity.height.toDouble(),
+                          width: entity.width.toDouble(),
+                          isLocal: true,
+                          thumbnailBytes: await entity.thumbnailData,
+                          thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+                        ),
+                        url: file.path,
+                        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+                        senderName: '',
+                        senderAvatar: '',
+                        isFromMe: true,
+                        status: MessageStatus.sent,
+                      ));
+                    }
+                    break;
+                }
+              }
+
+              Navigator.of(context).pop();
+              Get.back();
+
+              mediaGlassmorphicChangeState();
+              messages.refresh();
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                jumpToBottom();
+              });
+            },
+            inputTextStyle: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
+            previewTextInputDecoration: InputDecoration(
+              hintText: 'Type something',
+              hintStyle: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
+            ),
+          ));
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  Future<void> openGallery() async {
+    final result = await Get.toNamed(
+      Routes.GALLERY_PICKER,
+    );
+    if (result != null) {
+      addSelectedMedia(result: result, closeMediaGlassmorphic: true);
+    }
+  }
+
+  Future<void> addSelectedMedia(
+      {@required dynamic result, bool closeMediaGlassmorphic = false}) async {
+    if (closeMediaGlassmorphic) mediaGlassmorphicChangeState();
+
+    List? tempImages = [];
+    for (var element in result) {
+      if (element["type"] == "image") {
+        tempImages.add(ImageMessageModel(
+          messageId: "${messages.lastIndexOf(messages.last) + 1}",
+          isLocal: true,
+          metadata: ImageMetadata(
+            height: element["height"].toDouble(),
+            width: element["width"].toDouble(),
+          ),
+          senderAvatar: '',
+          senderName: '',
+          isFromMe: true,
+          status: MessageStatus.sent,
+          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+          url: element["path"],
+        ));
+      } else if (element["type"] == "video") {
+        Uint8List thumbnailBytes = await element["thumbnail"];
+        tempImages.add(VideoMessageModel(
+          messageId: "${messages.lastIndexOf(messages.last) + 1}",
+          metadata: VideoMetadata(
+            durationInSeconds: element["videoDuration"].inSeconds,
+            height: double.parse(element["height"].toString()),
+            width: double.parse(element["width"].toString()),
+            isLocal: true,
+            thumbnailBytes: thumbnailBytes,
+            thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+          ),
+          url: element["path"],
+          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+          senderName: '',
+          senderAvatar: '',
+          isFromMe: true,
+          status: MessageStatus.sent,
+          type: MessageContentType.video,
+        ));
+      }
+    }
+    if (tempImages.length > 1) {
+      messages.add(MultiMediaMessageModel(
+        mediaList: tempImages,
+        messageId: "${messages.lastIndexOf(messages.last) + 1}",
+        senderAvatar: '',
+        senderName: '',
+        isFromMe: true,
+        status: MessageStatus.sent,
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+      ));
+    } else {
+      result.forEach((asset) async {
+        switch (asset["type"]) {
+          case "image":
+            {
+              messages.add(
+                ImageMessageModel(
+                    messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                    isLocal: true,
+                    metadata: ImageMetadata(
+                      height: double.parse(asset["height"].toString()),
+                      width: double.parse(asset["width"].toString()),
+                    ),
+                    senderAvatar: '',
+                    senderName: '',
+                    isFromMe: true,
+                    status: MessageStatus.sent,
+                    timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+                    url: asset["path"]),
+              );
+            }
+            break;
+
+          case "video":
+            {
+              messages.add(
+                VideoMessageModel(
+                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                  metadata: VideoMetadata(
+                    durationInSeconds: asset["videoDuration"].inSeconds,
+                    height: double.parse(asset["height"].toString()),
+                    width: double.parse(asset["width"].toString()),
+                    isLocal: true,
+                    thumbnailBytes: await asset["thumbnail"],
+                    thumbnailUrl: '',
+                  ),
+                  url: asset["path"],
+                  timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+                  senderName: '',
+                  senderAvatar: '',
+                  isFromMe: true,
+                  status: MessageStatus.sent,
+                ),
+              );
+            }
+            break;
+          case "text":
+            {
+              messages.add(
+                TextMessageModel(
+                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                  text: asset["value"],
+                  timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+                  senderName: '',
+                  senderAvatar: '',
+                  isFromMe: true,
+                  status: MessageStatus.sent,
+                ),
+              );
+            }
+            break;
+
+          default:
+            break;
+        }
+      });
+    }
+
+    mediaGlassmorphicChangeState();
+    messages.refresh();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      jumpToBottom();
+    });
+  }
+
+  Future<void> openFiles() async {
+    final result = await Get.toNamed(
+      Routes.SHARE_FILES,
+    );
+    if (result != null) {
+      result.forEach((asset) async {
+        messages.add(FileMessageModel(
+          senderName: '',
+          senderAvatar: '',
+          isFromMe: true,
+          status: MessageStatus.sent,
+          messageId: "${messages.lastIndexOf(messages.last) + 1}",
+          metadata: FileMetaData(
+            extension: asset.extension,
+            name: asset.name,
+            path: asset.path,
+            size: asset.size,
+            timestamp: asset.timestamp,
+            isImage: asset.isImage,
+          ),
+          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+        ));
+      });
+      mediaGlassmorphicChangeState();
+      messages.refresh();
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        jumpToBottom();
+      });
+    }
+  }
+
+  void _getMessages() async {
+    // await _addMockData();
+    messages.value = await messagesRepo.getMessages(args.chat.id);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      jumpToBottom();
+    });
   }
 
   Future<void> _addMockData() async {
@@ -866,337 +1212,5 @@ class MessagesController extends GetxController {
     for (int i = 0; i < ms.length; i++) {
       await messagesRepo.createMessage(message: ms[i], chatId: args.chat.id);
     }
-  }
-
-  RxBool isMediaGlassmorphicOpen = false.obs;
-  mediaGlassmorphicChangeState() {
-    isMediaGlassmorphicOpen.value = !isMediaGlassmorphicOpen.value;
-  }
-
-  // camera
-  Future<void> pick(BuildContext context) async {
-    final Size size = MediaQuery.of(context).size;
-    final double scale = MediaQuery.of(context).devicePixelRatio;
-    bool isCameraDenied = await Permission.camera.isDenied;
-    bool isMediaDenied = await Permission.mediaLibrary.isDenied;
-    if (GetPlatform.isAndroid) {
-      isMediaDenied = false;
-    }
-    if (isMediaDenied) {
-      bool result = await Get.dialog(PermissionDialog(
-        indicatorIcon: Assets.svg.camerapermissionIcon.svg(
-          width: 28.w,
-          height: 28.w,
-        ),
-        title: LocaleKeys.Permissions_AllowAccess.tr,
-        subtitle: LocaleKeys.Permissions_capturePhotos.tr,
-      ));
-      if (result) {
-        await Permission.mediaLibrary.request().then((value) {
-          if (value.isGranted) {
-            isMediaDenied = false;
-          }
-        });
-      }
-    }
-
-    if (isCameraDenied) {
-      bool result = await Get.dialog(PermissionDialog(
-        indicatorIcon: Assets.svg.camerapermissionIcon.svg(
-          width: 28.w,
-          height: 28.w,
-        ),
-        title: LocaleKeys.Permissions_AllowAccess.tr,
-        subtitle: LocaleKeys.Permissions_camera.tr,
-      ));
-      if (result) {
-        await Permission.camera.request().then((value) {
-          if (value.isGranted) {
-            isCameraDenied = false;
-          }
-        });
-      }
-    }
-
-    if (!isCameraDenied && !isMediaDenied) {
-      openCameraPicker(context);
-    }
-  }
-
-  Future<void> openCameraPicker(BuildContext context) async {
-    try {
-      final AssetEntity? entity = await CameraPicker.pickFromCamera(context,
-          pickerConfig: CameraPickerConfig(
-            textDelegate: EnglishCameraPickerTextDelegate(),
-            sendIcon: Assets.svg.sendIcon.svg(),
-            receiverNameWidget: ReceiverNameWidget(name: args.chat.name),
-            additionalPreviewButtonWidget: const GalleryPreviewButtonWidget(),
-            onEntitySaving: (
-              BuildContext context,
-              CameraPickerViewType viewType,
-              File file,
-              List<Map<String, dynamic>>? confirmedFiles,
-            ) async {
-              AssetEntity? entity;
-
-              switch (viewType) {
-                case CameraPickerViewType.image:
-                  final String filePath = file.path;
-                  entity = await PhotoManager.editor.saveImageWithPath(
-                    filePath,
-                    title: path.basename(filePath),
-                  );
-
-                  break;
-                case CameraPickerViewType.video:
-                  entity = await PhotoManager.editor.saveVideo(
-                    File(file.path),
-                    title: path.basename(file.path),
-                  );
-                  break;
-              }
-              if (entity != null) {
-                switch (viewType) {
-                  case CameraPickerViewType.image:
-                    {
-                      messages.add(
-                        ImageMessageModel(
-                            messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                            isLocal: true,
-                            metadata: ImageMetadata(
-                              height: entity.height.toDouble(),
-                              width: entity.width.toDouble(),
-                            ),
-                            senderAvatar: '',
-                            senderName: '',
-                            isFromMe: true,
-                            status: MessageStatus.sent,
-                            timestamp:
-                                DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                            url: file.path),
-                      );
-                    }
-                    break;
-                  case CameraPickerViewType.video:
-                    {
-                      messages.add(VideoMessageModel(
-                        messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                        metadata: VideoMetadata(
-                          durationInSeconds: entity.videoDuration.inSeconds,
-                          height: entity.height.toDouble(),
-                          width: entity.width.toDouble(),
-                          isLocal: true,
-                          thumbnailBytes: await entity.thumbnailData,
-                          thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
-                        ),
-                        url: file.path,
-                        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                        senderName: '',
-                        senderAvatar: '',
-                        isFromMe: true,
-                        status: MessageStatus.sent,
-                      ));
-                    }
-                    break;
-                }
-              }
-
-              Navigator.of(context).pop();
-              Get.back();
-
-              mediaGlassmorphicChangeState();
-              messages.refresh();
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                jumpToBottom();
-              });
-            },
-            inputTextStyle: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
-            previewTextInputDecoration: InputDecoration(
-              hintText: 'Type something',
-              hintStyle: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
-            ),
-          ));
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-    }
-  }
-
-  Future<void> openGallery() async {
-    final result = await Get.toNamed(
-      Routes.GALLERY_PICKER,
-    );
-    if (result != null) {
-      addSelectedMedia(result: result, closeMediaGlassmorphic: true);
-    }
-  }
-
-  Future<void> addSelectedMedia(
-      {@required dynamic result, bool closeMediaGlassmorphic = false}) async {
-    if (closeMediaGlassmorphic) mediaGlassmorphicChangeState();
-
-    List? tempImages = [];
-    for (var element in result) {
-      if (element["type"] == "image") {
-        tempImages.add(ImageMessageModel(
-          messageId: "${messages.lastIndexOf(messages.last) + 1}",
-          isLocal: true,
-          metadata: ImageMetadata(
-            height: element["height"].toDouble(),
-            width: element["width"].toDouble(),
-          ),
-          senderAvatar: '',
-          senderName: '',
-          isFromMe: true,
-          status: MessageStatus.sent,
-          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-          url: element["path"],
-        ));
-      } else if (element["type"] == "video") {
-        Uint8List thumbnailBytes = await element["thumbnail"];
-        tempImages.add(VideoMessageModel(
-          messageId: "${messages.lastIndexOf(messages.last) + 1}",
-          metadata: VideoMetadata(
-            durationInSeconds: element["videoDuration"].inSeconds,
-            height: double.parse(element["height"].toString()),
-            width: double.parse(element["width"].toString()),
-            isLocal: true,
-            thumbnailBytes: thumbnailBytes,
-            thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
-          ),
-          url: element["path"],
-          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-          senderName: '',
-          senderAvatar: '',
-          isFromMe: true,
-          status: MessageStatus.sent,
-          type: MessageContentType.video,
-        ));
-      }
-    }
-    if (tempImages.length > 1) {
-      messages.add(MultiMediaMessageModel(
-        mediaList: tempImages,
-        messageId: "${messages.lastIndexOf(messages.last) + 1}",
-        senderAvatar: '',
-        senderName: '',
-        isFromMe: true,
-        status: MessageStatus.sent,
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-      ));
-    } else {
-      result.forEach((asset) async {
-        switch (asset["type"]) {
-          case "image":
-            {
-              messages.add(
-                ImageMessageModel(
-                    messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                    isLocal: true,
-                    metadata: ImageMetadata(
-                      height: double.parse(asset["height"].toString()),
-                      width: double.parse(asset["width"].toString()),
-                    ),
-                    senderAvatar: '',
-                    senderName: '',
-                    isFromMe: true,
-                    status: MessageStatus.sent,
-                    timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                    url: asset["path"]),
-              );
-            }
-            break;
-
-          case "video":
-            {
-              messages.add(
-                VideoMessageModel(
-                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                  metadata: VideoMetadata(
-                    durationInSeconds: asset["videoDuration"].inSeconds,
-                    height: double.parse(asset["height"].toString()),
-                    width: double.parse(asset["width"].toString()),
-                    isLocal: true,
-                    thumbnailBytes: await asset["thumbnail"],
-                    thumbnailUrl: '',
-                  ),
-                  url: asset["path"],
-                  timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                  senderName: '',
-                  senderAvatar: '',
-                  isFromMe: true,
-                  status: MessageStatus.sent,
-                ),
-              );
-            }
-            break;
-          case "text":
-            {
-              messages.add(
-                TextMessageModel(
-                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                  text: asset["value"],
-                  timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                  senderName: '',
-                  senderAvatar: '',
-                  isFromMe: true,
-                  status: MessageStatus.sent,
-                ),
-              );
-            }
-            break;
-
-          default:
-            break;
-        }
-      });
-    }
-
-    mediaGlassmorphicChangeState();
-    messages.refresh();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      jumpToBottom();
-    });
-  }
-
-  Future<void> openFiles() async {
-    final result = await Get.toNamed(
-      Routes.SHARE_FILES,
-    );
-    if (result != null) {
-      result.forEach((asset) async {
-        messages.add(FileMessageModel(
-          senderName: '',
-          senderAvatar: '',
-          isFromMe: true,
-          status: MessageStatus.sent,
-          messageId: "${messages.lastIndexOf(messages.last) + 1}",
-          metadata: FileMetaData(
-            extension: asset.extension,
-            name: asset.name,
-            path: asset.path,
-            size: asset.size,
-            timestamp: asset.timestamp,
-            isImage: asset.isImage,
-          ),
-          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-        ));
-      });
-      mediaGlassmorphicChangeState();
-      messages.refresh();
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        jumpToBottom();
-      });
-    }
-  }
-
-  void _getMessages() async {
-    // await _addMockData();
-    messages.value = await messagesRepo.getMessages(args.chat.id);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      jumpToBottom();
-    });
   }
 }

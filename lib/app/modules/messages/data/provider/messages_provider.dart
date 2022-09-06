@@ -25,24 +25,6 @@ class MessagesProvider implements MessagesAbstractProvider {
   }
 
   @override
-  Future<MessageModel?> deleteMessage({
-    required String messageId,
-    required String chatId,
-  }) async {
-    final messages = await getMessages(chatId);
-    final index = messages.indexWhere((m) => m.messageId == messageId);
-
-    // message not found
-    if (index < 0) {
-      return null;
-    }
-
-    final message = messages.removeAt(index);
-    await _store.record(chatId).put(await _db, messages);
-    return message;
-  }
-
-  @override
   Future<List<MessageModel>> getMessages(String chatId) async {
     var messages = await _store.record(chatId).get(await _db) ?? [];
     messages = cloneList(messages);
@@ -68,7 +50,35 @@ class MessagesProvider implements MessagesAbstractProvider {
     }
 
     messages[index] = message;
-    await _store.record(chatId).put(await _db, messages);
+    await _store.record(chatId).put(await _db, messages.map((m) => m.toJson()).toList());
     return message;
+  }
+
+  @override
+  Future<MessageModel?> deleteMessage({
+    required String messageId,
+    required String chatId,
+  }) async {
+    final messages = await getMessages(chatId);
+    final index = messages.indexWhere((m) => m.messageId == messageId);
+
+    // message not found
+    if (index < 0) {
+      return null;
+    }
+
+    final message = messages.removeAt(index);
+    await _store.record(chatId).put(await _db, messages.map((m) => m.toJson()).toList());
+    return message;
+  }
+
+  @override
+  Future<void> deleteMessages({
+    required List<String> messageIds,
+    required String chatId,
+  }) async {
+    final messages = await getMessages(chatId);
+    messages.removeWhere((m) => messageIds.contains(m.messageId));
+    await _store.record(chatId).put(await _db, messages.map((m) => m.toJson()).toList());
   }
 }
