@@ -10,14 +10,12 @@ import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
 class AppDatabaseProvider {
-
   final AccountInfo accountInfo;
 
   AppDatabaseProvider({required this.accountInfo});
 
   //for opening database we use completer which uses for transforming sync code into async code and stores a future in itself
   Completer<Database>? _dbOpenCompleter;
-
 
   // Database object accessor
   Future<Database> get database async {
@@ -42,12 +40,15 @@ class AppDatabaseProvider {
     // Path with the form: /platform-specific-directory/demo.db
     final dbPath = join(appDocumentDir.path, 'heyo.db');
 
-    final password = await accountInfo.getPrivateKey();
-    assert(password != null);
+    var password = await accountInfo.getPrivateKey();
+    while (password == null) {
+      Future.delayed(const Duration(milliseconds: 500));
+      password = await accountInfo.getPrivateKey();
+    }
 
     final database = await databaseFactoryIo.openDatabase(
       dbPath,
-      codec: getEncryptSembastCodec(password: password!),
+      codec: getEncryptSembastCodec(password: password),
     );
     // Any code awaiting the Completer's future will now start executing
     _dbOpenCompleter!.complete(database);
