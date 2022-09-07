@@ -256,11 +256,7 @@ class MessagesController extends GetxController {
     textController.clear();
     newMessage.value = "";
 
-    clearReplyTo();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      jumpToBottom();
-    });
+    _postMessageSendOperations(message);
   }
 
   void sendAudioMessage(String path, int duration) {
@@ -280,11 +276,7 @@ class MessagesController extends GetxController {
 
     messages.add(message);
 
-    messages.refresh();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      jumpToBottom();
-    });
+    _postMessageSendOperations(message);
   }
 
   void sendLocationMessage() {
@@ -295,15 +287,46 @@ class MessagesController extends GetxController {
 
     messages.add(message);
 
+    _postMessageSendOperations(message);
+
+    locationMessage.value = null;
+  }
+
+  void sendLiveLocation({
+    required Duration duration,
+    required double startLat,
+    required double startLong,
+  }) {
+    final message = LiveLocationMessageModel(
+      latitude: startLat,
+      longitude: startLong,
+      endTime: DateTime.now().add(duration),
+      messageId: (messages.length + 1).toString(),
+      timestamp: DateTime.now(),
+      senderName: "",
+      senderAvatar: "",
+      isFromMe: true,
+    );
+
+    messages.add(message);
+    _postMessageSendOperations(message);
+
+    // Todo (libp2p): send message
+    Get.find<LiveLocationController>().startSharing(message.messageId, duration);
+  }
+
+  void _postMessageSendOperations(MessageModel msg) {
     messages.refresh();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       jumpToBottom();
     });
 
-    // Todo (libp2p): send message
+    _saveMessageInDb(msg);
+  }
 
-    locationMessage.value = null;
+  Future<void> _saveMessageInDb(MessageModel msg) async {
+    await messagesRepo.createMessage(message: msg, chatId: args.chat.id);
   }
 
   void prepareLocationMessageForSending({
@@ -337,32 +360,6 @@ class MessagesController extends GetxController {
     messages.refresh();
 
     // Todo (libp2p): update message
-  }
-
-  void sendLiveLocation({
-    required Duration duration,
-    required double startLat,
-    required double startLong,
-  }) {
-    final message = LiveLocationMessageModel(
-      latitude: startLat,
-      longitude: startLong,
-      endTime: DateTime.now().add(duration),
-      messageId: (messages.length + 1).toString(),
-      timestamp: DateTime.now(),
-      senderName: "",
-      senderAvatar: "",
-      isFromMe: true,
-    );
-
-    messages.add(message);
-    messages.refresh();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      jumpToBottom();
-    });
-
-    // Todo (libp2p): send message
-    Get.find<LiveLocationController>().startSharing(message.messageId, duration);
   }
 
   void replyTo() {
