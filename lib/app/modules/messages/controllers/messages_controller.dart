@@ -239,7 +239,7 @@ class MessagesController extends GetxController {
       // Todo: Generate random id
       messageId: messages.length.toString(),
       text: newMessage.value,
-      timestamp: DateTime.now().toUtc(),
+      timestamp: DateTime.now(),
       replyTo: replyingTo.value,
       // Todo: fill with user info
       senderName: "",
