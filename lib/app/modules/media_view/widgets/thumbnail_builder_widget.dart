@@ -32,7 +32,7 @@ class ThumbnailBuilderWidget extends StatelessWidget {
               itemCount: controller.mediaList.length,
               itemBuilder: (BuildContext context, int index) {
                 bool isVideo =
-                    controller.mediaList[index].type == CONTENT_TYPE.VIDEO;
+                    controller.mediaList[index].type == MessageContentType.video;
 
                 return GestureDetector(
                   onTap: () =>

@@ -7,8 +7,7 @@ class MediaViewBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<MediaViewController>(
-      () => MediaViewController(
-          photoViewcontroller: PhotoViewScaleStateController()),
+      () => MediaViewController(photoViewController: PhotoViewScaleStateController()),
     );
   }
 }

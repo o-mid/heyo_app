@@ -1,8 +1,15 @@
+import 'dart:convert';
+
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
+import 'package:heyo/app/modules/messages/utils/message_from_json.dart';
+
+import '../reply_to_model.dart';
 
 class MultiMediaMessageModel extends MessageModel {
+  static const mediaListSerializedName = 'mediaList';
+
   final List<dynamic> mediaList;
 
   MultiMediaMessageModel({
@@ -15,8 +22,8 @@ class MultiMediaMessageModel extends MessageModel {
     super.isForwarded,
     super.isSelected,
     bool clearReply = false,
-    super.status = MESSAGE_STATUS.SENDING,
-    super.type = CONTENT_TYPE.MULTI_MEDIA,
+    super.status = MessageStatus.sending,
+    super.type = MessageContentType.multiMedia,
     super.replyTo,
     super.reactions = const <String, ReactionModel>{},
   });
@@ -25,8 +32,8 @@ class MultiMediaMessageModel extends MessageModel {
   MultiMediaMessageModel copyWith({
     List<ImageMessageModel>? mediaList,
     String? messageId,
-    MESSAGE_STATUS? status,
-    CONTENT_TYPE? type,
+    MessageStatus? status,
+    MessageContentType? type,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
     bool clearReply = false,
@@ -48,4 +55,38 @@ class MultiMediaMessageModel extends MessageModel {
         type: type ?? this.type,
         isSelected: isSelected ?? this.isSelected);
   }
+
+  factory MultiMediaMessageModel.fromJson(Map<String, dynamic> json) => MultiMediaMessageModel(
+        mediaList: List<dynamic>.from(json[mediaListSerializedName].map((x) => messageFromJson(x))),
+        // parent props:
+        messageId: json[MessageModel.messageIdSerializedName],
+        timestamp: DateTime.parse(json[MessageModel.timestampSerializedName]),
+        senderName: json[MessageModel.senderNameSerializedName],
+        senderAvatar: json[MessageModel.senderAvatarSerializedName],
+        status: MessageStatus.values.byName(json[MessageModel.statusSerializedName]),
+        type: MessageContentType.values.byName(json[MessageModel.typeSerializedName]),
+        isFromMe: json[MessageModel.isFromMeSerializedName],
+        isForwarded: json[MessageModel.isForwardedSerializedName],
+        reactions: (jsonDecode(json[MessageModel.reactionsSerializedName]) as Map<String, dynamic>)
+            .map((String k, v) => MapEntry(k, ReactionModel.fromJson(v))),
+        replyTo: json[MessageModel.replyToSerializedName] == null
+            ? null
+            : ReplyToModel.fromJson(json[MessageModel.replyToSerializedName]),
+      );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        mediaListSerializedName: List<dynamic>.from(mediaList.map((x) => x.toJson())),
+        // parent props:
+        MessageModel.messageIdSerializedName: messageId,
+        MessageModel.timestampSerializedName: timestamp.toIso8601String(),
+        MessageModel.senderNameSerializedName: senderName,
+        MessageModel.senderAvatarSerializedName: senderAvatar,
+        MessageModel.statusSerializedName: status.name,
+        MessageModel.typeSerializedName: type.name,
+        MessageModel.isFromMeSerializedName: isFromMe,
+        MessageModel.isForwardedSerializedName: isForwarded,
+        MessageModel.reactionsSerializedName: jsonEncode(reactions),
+        MessageModel.replyToSerializedName: replyTo?.toJson(),
+      };
 }

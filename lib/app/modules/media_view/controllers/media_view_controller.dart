@@ -1,29 +1,20 @@
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/media_view/widgets/media_view_bottom_sheet_widget.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
-import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/shared/data/models/media_view_arguments_model.dart';
-import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
-import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
-import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
-import 'package:heyo/generated/assets.gen.dart';
-import 'package:heyo/generated/locales.g.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../messages/data/models/messages/image_message_model.dart';
 import '../../messages/data/models/messages/message_model.dart';
 
 class MediaViewController extends GetxController {
-  PhotoViewScaleStateController photoViewcontroller;
+  PhotoViewScaleStateController photoViewController;
   MediaViewController({
-    required this.photoViewcontroller,
+    required this.photoViewController,
   });
   late MediaViewArgumentsModel args;
   late List<dynamic> mediaList;
@@ -54,25 +45,21 @@ class MediaViewController extends GetxController {
     date = DateFormat('MM/dd/yyyy, H:mm').format(mediaList.first.timestamp);
     name.value = mediaList.first.senderName ?? "";
     currentMessage = mediaList[activeIndex.value];
-    currentMessage.type == CONTENT_TYPE.VIDEO
-        ? isVideo = true
-        : isVideo = false;
-    photoViewcontroller = PhotoViewScaleStateController();
+    currentMessage.type == MessageContentType.video ? isVideo = true : isVideo = false;
+    photoViewController = PhotoViewScaleStateController();
     super.onInit();
   }
 
   void setActiveMediaAndResetController(int index) {
-    photoViewcontroller.reset();
+    photoViewController.reset();
     activeIndex.value = index;
     currentMessage = mediaList[activeIndex.value];
-    currentMessage.type == CONTENT_TYPE.VIDEO
-        ? isVideo = true
-        : isVideo = false;
+    currentMessage.type == MessageContentType.video ? isVideo = true : isVideo = false;
   }
 
   @override
   void onClose() {
-    photoViewcontroller.dispose();
+    photoViewController.dispose();
     super.onClose();
   }
 
@@ -92,7 +79,7 @@ class MediaViewController extends GetxController {
   Future<void> saveFiles() async {
     if (paths.isEmpty) {
       for (var message in mediaList) {
-        bool isVideo = message.type == CONTENT_TYPE.VIDEO;
+        bool isVideo = message.type == MessageContentType.video;
         if (isVideo) {
           paths.add(message.url);
           await _saveVideo(message.url);

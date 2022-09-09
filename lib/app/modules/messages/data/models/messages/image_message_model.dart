@@ -1,9 +1,16 @@
+import 'dart:convert';
+
 import 'package:heyo/app/modules/messages/data/models/metadatas/image_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 
+import '../reply_to_model.dart';
 import 'message_model.dart';
 
 class ImageMessageModel extends MessageModel {
+  static const urlSerializedName = 'url';
+  static const metadataSerializedName = 'metadata';
+  static const isLocalSerializedName = 'isLocal';
+
   final String url;
   final ImageMetadata metadata;
   final bool isLocal;
@@ -15,8 +22,8 @@ class ImageMessageModel extends MessageModel {
     required super.timestamp,
     required super.senderName,
     required super.senderAvatar,
-    super.status = MESSAGE_STATUS.SENDING,
-    super.type = CONTENT_TYPE.IMAGE,
+    super.status = MessageStatus.sending,
+    super.type = MessageContentType.image,
     super.isFromMe = false,
     super.isForwarded = false,
     super.isSelected = false,
@@ -29,9 +36,9 @@ class ImageMessageModel extends MessageModel {
     String? url,
     bool? isLocal,
     String? messageId,
-    MESSAGE_STATUS? status,
+    MessageStatus? status,
     DateTime? timestamp,
-    CONTENT_TYPE? type,
+    MessageContentType? type,
     Map<String, ReactionModel>? reactions,
     bool? isFromMe,
     bool? isForwarded,
@@ -55,4 +62,42 @@ class ImageMessageModel extends MessageModel {
       type: type ?? this.type,
     );
   }
+
+  factory ImageMessageModel.fromJson(Map<String, dynamic> json) => ImageMessageModel(
+        url: json[urlSerializedName],
+        metadata: ImageMetadata.fromJson(json[metadataSerializedName]),
+        isLocal: json[isLocalSerializedName],
+        // parent props:
+        messageId: json[MessageModel.messageIdSerializedName],
+        timestamp: DateTime.parse(json[MessageModel.timestampSerializedName]),
+        senderName: json[MessageModel.senderNameSerializedName],
+        senderAvatar: json[MessageModel.senderAvatarSerializedName],
+        status: MessageStatus.values.byName(json[MessageModel.statusSerializedName]),
+        type: MessageContentType.values.byName(json[MessageModel.typeSerializedName]),
+        isFromMe: json[MessageModel.isFromMeSerializedName],
+        isForwarded: json[MessageModel.isForwardedSerializedName],
+        reactions: (jsonDecode(json[MessageModel.reactionsSerializedName]) as Map<String, dynamic>)
+            .map((String k, v) => MapEntry(k, ReactionModel.fromJson(v))),
+        replyTo: json[MessageModel.replyToSerializedName] == null
+            ? null
+            : ReplyToModel.fromJson(json[MessageModel.replyToSerializedName]),
+      );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        urlSerializedName: url,
+        metadataSerializedName: metadata.toJson(),
+        isLocalSerializedName: isLocal,
+        // parent props:
+        MessageModel.messageIdSerializedName: messageId,
+        MessageModel.timestampSerializedName: timestamp.toIso8601String(),
+        MessageModel.senderNameSerializedName: senderName,
+        MessageModel.senderAvatarSerializedName: senderAvatar,
+        MessageModel.statusSerializedName: status.name,
+        MessageModel.typeSerializedName: type.name,
+        MessageModel.isFromMeSerializedName: isFromMe,
+        MessageModel.isForwardedSerializedName: isForwarded,
+        MessageModel.reactionsSerializedName: jsonEncode(reactions),
+        MessageModel.replyToSerializedName: replyTo?.toJson(),
+      };
 }

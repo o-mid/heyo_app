@@ -1,28 +1,39 @@
 import '../reaction_model.dart';
 import '../reply_to_model.dart';
 
-enum CONTENT_TYPE {
-  TEXT,
-  IMAGE,
-  VIDEO,
-  AUDIO,
-  FILE,
-  CALL,
-  LOCATION,
-  LIVE_LOCATION,
-  MULTI_MEDIA;
+enum MessageContentType {
+  text,
+  image,
+  video,
+  audio,
+  file,
+  call,
+  location,
+  liveLocation,
+  multiMedia,
 }
 
-enum MESSAGE_STATUS {
-  SENDING,
-  SENT,
-  FAILED,
-  READ,
+enum MessageStatus {
+  sending,
+  sent,
+  failed,
+  read,
 }
 
 abstract class MessageModel {
-  final MESSAGE_STATUS status;
-  final CONTENT_TYPE type;
+  static const statusSerializedName = 'status';
+  static const typeSerializedName = 'type';
+  static const messageIdSerializedName = 'messageId';
+  static const timestampSerializedName = 'timestamp';
+  static const replyToSerializedName = 'replyTo';
+  static const reactionsSerializedName = 'reactions';
+  static const senderNameSerializedName = 'senderName';
+  static const senderAvatarSerializedName = 'senderAvatar';
+  static const isFromMeSerializedName = 'isFromMe';
+  static const isForwardedSerializedName = 'isForwarded';
+
+  final MessageStatus status;
+  final MessageContentType type;
   final String messageId;
   final DateTime timestamp;
   final ReplyToModel? replyTo;
@@ -39,7 +50,7 @@ abstract class MessageModel {
     required this.senderName,
     required this.senderAvatar,
     required this.type,
-    this.status = MESSAGE_STATUS.SENDING,
+    this.status = MessageStatus.sending,
     this.isFromMe = false,
     this.isSelected = false,
     this.isForwarded = false,
@@ -49,13 +60,15 @@ abstract class MessageModel {
 
   MessageModel copyWith({
     String? messageId,
-    MESSAGE_STATUS? status,
+    MessageStatus? status,
     DateTime? timestamp,
-    CONTENT_TYPE? type,
+    MessageContentType? type,
     Map<String, ReactionModel>? reactions,
     bool? isFromMe,
     bool? isForwarded,
     bool? isSelected,
     bool clearReply,
   });
+
+  Map<String, dynamic> toJson();
 }
