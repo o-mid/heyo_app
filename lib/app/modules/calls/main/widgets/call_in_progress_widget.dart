@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
+import 'package:heyo/app/modules/calls/main/widgets/call_view_type_column_widget.dart';
+import 'package:heyo/app/modules/calls/main/widgets/call_view_type_row_widget.dart';
+import 'package:heyo/app/modules/calls/main/widgets/call_view_type_stack_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/callee_no_video_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/callee_video_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/caller_video_widget.dart';
@@ -39,41 +42,11 @@ class CallInProgressWidget extends StatelessWidget {
 
       switch (controller.callViewType.value) {
         case CallViewType.column:
-          return Center(
-            child: Column(
-              children: [
-                const Spacer(),
-                Expanded(child: firstWidget),
-                Expanded(child: secondWidget),
-                const Spacer(),
-              ],
-            ),
-          );
+          return CallViewTypeColumnWidget(firstWidget: firstWidget, secondWidget: secondWidget);
         case CallViewType.row:
-          return Row(
-            children: [
-              Expanded(child: firstWidget),
-              Expanded(child: secondWidget),
-            ],
-          );
+          return CallViewTypeRowWidget(firstWidget: firstWidget, secondWidget: secondWidget);
         case CallViewType.stack:
-          return SafeArea(
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: firstWidget,
-                ),
-                DraggableVideo(
-                  child: SizedBox(
-                    width: 96.w,
-                    height: 144.h,
-                    child: secondWidget,
-                  ),
-                ),
-              ],
-            ),
-          );
+          return CallViewTypeStackWidget(firstWidget: firstWidget, secondWidget: secondWidget);
       }
     });
   }

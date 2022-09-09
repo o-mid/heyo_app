@@ -58,6 +58,7 @@ class IncomingCallController extends GetxController {
       arguments: CallViewArgumentsModel(
           session: args.session,
           callId: args.callId,
+          enableVideo: args.session.isAudioCall ? false : true,
           user: UserModel(
             name: "Unknown",
             icon: "https://avatars.githubusercontent.com/u/6645136?v=4",

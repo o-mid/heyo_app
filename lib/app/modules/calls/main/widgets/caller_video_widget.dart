@@ -15,8 +15,7 @@ class CallerVideoWidget extends StatelessWidget {
     return GetBuilder<CallController>(
         id: Get.find<CallController>().callerVideoWidgetId,
         builder: (controller) {
-          RTCVideoRenderer localVideRenderer =
-              controller.getLocalVideRenderer();
+          RTCVideoRenderer localVideRenderer = controller.getLocalVideRenderer();
 
           return GestureDetector(
             onTap: () => controller.changeCallerOptions(),
@@ -29,10 +28,11 @@ class CallerVideoWidget extends StatelessWidget {
                   key: const Key('remote'),
                   margin: const EdgeInsets.all(5),
                   decoration: const BoxDecoration(color: Colors.transparent),
-                  child: RTCVideoView(localVideRenderer,
-                      objectFit:
-                          RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-                      mirror: true),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: RTCVideoView(localVideRenderer,
+                        objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover, mirror: true),
+                  ),
                 )),
                 if (controller.showCallerOptions.value)
                   Positioned(
@@ -45,28 +45,27 @@ class CallerVideoWidget extends StatelessWidget {
                           children: [
                             const Spacer(),
                             _buildViewOptionButton(
-                              onPressed: () => controller
-                                  .updateCallViewType(CallViewType.column),
+                              onPressed: () => controller.updateCallViewType(CallViewType.column),
                               icon: Assets.svg.stackVertical.svg(),
                             ),
                             const Spacer(),
                             _buildViewOptionButton(
-                              onPressed: () => controller
-                                  .updateCallViewType(CallViewType.row),
+                              onPressed: () => controller.updateCallViewType(CallViewType.row),
                               icon: Assets.svg.stackHorizontal.svg(),
                             ),
                             const Spacer(),
                             _buildViewOptionButton(
-                              onPressed: () => controller
-                                  .updateCallViewType(CallViewType.stack),
+                              onPressed: () => controller.updateCallViewType(CallViewType.stack),
                               icon: Assets.svg.fullScreen.svg(),
                             ),
                             const Spacer(),
                           ],
                         ),
                         SizedBox(
-                          height:
-                              controller.isVideoPositionsFlipped.value ? 16 : 0,
+                          height: controller.isVideoPositionsFlipped.isFalse &&
+                                  controller.callViewType.value == CallViewType.stack
+                              ? 8
+                              : 16,
                         )
                       ],
                     ),
@@ -77,8 +76,7 @@ class CallerVideoWidget extends StatelessWidget {
         });
   }
 
-  Widget _buildViewOptionButton(
-      {required Widget icon, VoidCallback? onPressed}) {
+  Widget _buildViewOptionButton({required Widget icon, VoidCallback? onPressed}) {
     return Expanded(
       flex: 3,
       child: CircleIconButton(
