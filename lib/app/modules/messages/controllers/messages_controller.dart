@@ -62,7 +62,6 @@ class MessagesController extends GetxController {
   final selectedMessages = <MessageModel>[].obs;
   final replyingTo = Rxn<ReplyToModel>();
   final locationMessage = Rxn<LocationMessageModel>();
-  StreamSubscription? keyboardListener;
   late MessagesViewArgumentsModel args;
 
   @override
@@ -75,7 +74,9 @@ class MessagesController extends GetxController {
     args = Get.arguments as MessagesViewArgumentsModel;
 
     _getMessages();
+    //TODO ramin, start listening to the database changes and apply them
 
+    //TODO ramin, check it out and move it to a function
     if (args.forwardedMessages != null) {
       // Todo (libp2p): Send forwarded messages
       messages.addAll(
@@ -92,6 +93,7 @@ class MessagesController extends GetxController {
       );
     }
 
+    //TODO ramin refactor move them into a function
     // Close emoji picker when keyboard opens
     final keyboardVisibilityController = KeyboardVisibilityController();
 
@@ -142,7 +144,7 @@ class MessagesController extends GetxController {
   void toggleEmojiPicker() {
     showEmojiPicker.value = !showEmojiPicker.value;
   }
-
+  //TODO ramin, a small comment can help to someone that reads the codes to understand what part of the application is handling by this function
   void appendAfterCursorPosition(String str) {
     final currentPos = textController.selection.base.offset;
 
@@ -155,7 +157,7 @@ class MessagesController extends GetxController {
 
     newMessage.value = textController.text;
   }
-
+  //TODO ramin, like above
   void removeCharacterBeforeCursorPosition() {
     final currentPos = textController.selection.base.offset;
     final prefix = textController.text.substring(0, currentPos).characters.skipLast(1).toString();
@@ -233,8 +235,10 @@ class MessagesController extends GetxController {
     messages.setAll(0, messages.map((m) => m.copyWith(isSelected: false)));
     selectedMessages.clear();
   }
-
+  //Todo ramin all send messages it's better to be located in a one place, i will explain, search about useCase
   void sendTextMessage() async {
+    //TODO ramin use the timestamp with miliseconds accuracy for generating the message id
+
     var message = TextMessageModel(
       // Todo: Generate random id
       messageId: messages.length.toString(),
@@ -258,7 +262,7 @@ class MessagesController extends GetxController {
 
     _postMessageSendOperations(message);
   }
-
+  //TODO ramin like above
   void sendAudioMessage(String path, int duration) {
     final message = AudioMessageModel(
       url: "",
@@ -278,7 +282,7 @@ class MessagesController extends GetxController {
 
     _postMessageSendOperations(message);
   }
-
+  //TODO ramin like above
   void sendLocationMessage() {
     final message = locationMessage.value;
     if (message == null) {
@@ -291,7 +295,7 @@ class MessagesController extends GetxController {
 
     locationMessage.value = null;
   }
-
+  //TODO ramin like above
   void sendLiveLocation({
     required Duration duration,
     required double startLat,
@@ -324,11 +328,11 @@ class MessagesController extends GetxController {
 
     _saveMessageInDb(msg);
   }
-
+  //TODO ramin, we should move it to the usecase logic
   Future<void> _saveMessageInDb(MessageModel msg) async {
     await messagesRepo.createMessage(message: msg, chatId: args.chat.id);
   }
-
+  //TODO ramin, it has been called by another controller that is a connected to a different view
   void prepareLocationMessageForSending({
     required double latitude,
     required double longitude,
@@ -362,6 +366,7 @@ class MessagesController extends GetxController {
     // Todo (libp2p): update message
   }
 
+  //TODO Ramin, this is a part of send method in our use case
   void replyTo() {
     if (selectedMessages.length != 1) return;
     final msg = selectedMessages.first;
@@ -475,7 +480,7 @@ class MessagesController extends GetxController {
     isMediaGlassmorphicOpen.value = !isMediaGlassmorphicOpen.value;
   }
 
-  // camera
+  //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> pick(BuildContext context) async {
     final Size size = MediaQuery.of(context).size;
     final double scale = MediaQuery.of(context).devicePixelRatio;
@@ -524,7 +529,7 @@ class MessagesController extends GetxController {
       openCameraPicker(context);
     }
   }
-
+  //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> openCameraPicker(BuildContext context) async {
     try {
       final AssetEntity? entity = await CameraPicker.pickFromCamera(context,
@@ -624,7 +629,7 @@ class MessagesController extends GetxController {
       }
     }
   }
-
+  //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> openGallery() async {
     final result = await Get.toNamed(
       Routes.GALLERY_PICKER,
@@ -633,7 +638,7 @@ class MessagesController extends GetxController {
       addSelectedMedia(result: result, closeMediaGlassmorphic: true);
     }
   }
-
+  //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> addSelectedMedia(
       {@required dynamic result, bool closeMediaGlassmorphic = false}) async {
     if (closeMediaGlassmorphic) mediaGlassmorphicChangeState();
