@@ -6,7 +6,7 @@ environment:
   sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
-  sembast: ^3.2.0+1
+  sembast: ^3.3.0
   http: ^0.13.4
   path_provider_android: ^2.0.15
   path_provider_ios: ^2.0.10

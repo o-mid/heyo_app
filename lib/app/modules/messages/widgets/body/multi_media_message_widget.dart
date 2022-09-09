@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:extended_image/extended_image.dart';
@@ -19,8 +18,7 @@ import 'video_message_player.dart';
 class MultiMediaMessageWidget extends StatelessWidget {
   final MultiMediaMessageModel message;
   final int showMediaLimitCount;
-  const MultiMediaMessageWidget(
-      {Key? key, required this.message, this.showMediaLimitCount = 6})
+  const MultiMediaMessageWidget({Key? key, required this.message, this.showMediaLimitCount = 6})
       : super(key: key);
 
   @override
@@ -37,18 +35,13 @@ class MultiMediaMessageWidget extends StatelessWidget {
           crossAxisSpacing: 8.w,
           mainAxisSpacing: 8.w,
         ),
-        itemCount:
-            isMoreThanLimit ? showMediaLimitCount : message.mediaList.length,
+        itemCount: isMoreThanLimit ? showMediaLimitCount : message.mediaList.length,
         itemBuilder: (context, index) {
           bool isMediaLocal;
-          bool isMediaVideo =
-              message.mediaList[index].type == CONTENT_TYPE.VIDEO;
+          bool isMediaVideo = message.mediaList[index].type == MessageContentType.video;
           isMediaVideo
-              ? isMediaLocal = (message.mediaList[index] as VideoMessageModel)
-                  .metadata
-                  .isLocal
-              : isMediaLocal =
-                  (message.mediaList[index] as ImageMessageModel).isLocal;
+              ? isMediaLocal = (message.mediaList[index] as VideoMessageModel).metadata.isLocal
+              : isMediaLocal = (message.mediaList[index] as ImageMessageModel).isLocal;
           return GestureDetector(
             onTap: () {
               Get.toNamed(Routes.MEDIA_VIEW,
@@ -72,20 +65,15 @@ class MultiMediaMessageWidget extends StatelessWidget {
                           ImageFiltered(
                             imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
                             child: isMediaVideo
-                                ? (message.mediaList[index]
-                                            as VideoMessageModel)
-                                        .metadata
-                                        .isLocal
+                                ? (message.mediaList[index] as VideoMessageModel).metadata.isLocal
                                     ? Image.memory(
-                                        (message.mediaList[index]
-                                                as VideoMessageModel)
+                                        (message.mediaList[index] as VideoMessageModel)
                                             .metadata
                                             .thumbnailBytes!,
                                         fit: BoxFit.cover,
                                       )
                                     : Image.network(
-                                        (message.mediaList[index]
-                                                as VideoMessageModel)
+                                        (message.mediaList[index] as VideoMessageModel)
                                             .metadata
                                             .thumbnailUrl,
                                         fit: BoxFit.cover,

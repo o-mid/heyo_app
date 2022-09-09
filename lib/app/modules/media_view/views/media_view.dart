@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:heyo/app/modules/media_view/widgets/media_view_bottom_sheet_widget.dart';
 import 'package:heyo/app/modules/media_view/widgets/thumbnail_builder_widget.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -74,31 +73,23 @@ class MediaView extends GetView<MediaViewController> {
                         color: Colors.black,
                         child: Center(
                           child: VideoMessagePlayer(
-                            message:
-                                controller.currentMessage as VideoMessageModel,
+                            message: controller.currentMessage as VideoMessageModel,
                           ),
                         ),
                       )
                     : Container(
                         color: Colors.black,
-                        child: (controller.currentMessage as ImageMessageModel)
-                                .isLocal
+                        child: (controller.currentMessage as ImageMessageModel).isLocal
                             ? PhotoView(
                                 imageProvider: ExtendedFileImageProvider(
-                                  File((controller.currentMessage
-                                          as ImageMessageModel)
-                                      .url),
+                                  File((controller.currentMessage as ImageMessageModel).url),
                                 ),
-                                scaleStateController:
-                                    controller.photoViewcontroller,
-                                minScale:
-                                    PhotoViewComputedScale.contained * 1.0,
+                                scaleStateController: controller.photoViewController,
+                                minScale: PhotoViewComputedScale.contained * 1.0,
                               )
                             : PhotoView(
                                 imageProvider: ExtendedNetworkImageProvider(
-                                  (controller.currentMessage
-                                          as ImageMessageModel)
-                                      .url,
+                                  (controller.currentMessage as ImageMessageModel).url,
                                 ),
                               ),
                       ),

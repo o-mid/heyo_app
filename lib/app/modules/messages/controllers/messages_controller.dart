@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:heyo/app/modules/messages/data/models/messages/file_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
-import 'package:heyo/app/modules/share_files/models/file_model.dart';
+import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -43,10 +43,13 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
-import '../../../../generated/assets.gen.dart';
 import '../../shared/widgets/gallery_preview_button_widget.dart';
 
 class MessagesController extends GetxController {
+  final MessagesAbstractRepo messagesRepo;
+
+  MessagesController({required this.messagesRepo});
+
   final _globalMessageController = Get.find<GlobalMessageController>();
   double _keyboardHeight = 0;
 
@@ -59,7 +62,6 @@ class MessagesController extends GetxController {
   final selectedMessages = <MessageModel>[].obs;
   final replyingTo = Rxn<ReplyToModel>();
   final locationMessage = Rxn<LocationMessageModel>();
-  StreamSubscription? keyboardListener;
   late MessagesViewArgumentsModel args;
 
   @override
@@ -71,7 +73,10 @@ class MessagesController extends GetxController {
 
     args = Get.arguments as MessagesViewArgumentsModel;
 
-    _addMockData();
+    _getMessages();
+    //TODO ramin, start listening to the database changes and apply them
+
+    //TODO ramin, check it out and move it to a function
     if (args.forwardedMessages != null) {
       // Todo (libp2p): Send forwarded messages
       messages.addAll(
@@ -80,7 +85,7 @@ class MessagesController extends GetxController {
             // messageId: , // Todo: Generate new id for forwarded message
             isFromMe: true,
             isForwarded: true,
-            status: MESSAGE_STATUS.SENDING,
+            status: MessageStatus.sending,
             clearReply: true,
             reactions: <String, ReactionModel>{},
           ),
@@ -88,6 +93,7 @@ class MessagesController extends GetxController {
       );
     }
 
+    //TODO ramin refactor move them into a function
     // Close emoji picker when keyboard opens
     final keyboardVisibilityController = KeyboardVisibilityController();
 
@@ -138,7 +144,7 @@ class MessagesController extends GetxController {
   void toggleEmojiPicker() {
     showEmojiPicker.value = !showEmojiPicker.value;
   }
-
+  //TODO ramin, a small comment can help to someone that reads the codes to understand what part of the application is handling by this function
   void appendAfterCursorPosition(String str) {
     final currentPos = textController.selection.base.offset;
 
@@ -146,20 +152,15 @@ class MessagesController extends GetxController {
         str +
         textController.text.substring(currentPos);
 
-    textController.selection = textController.selection.copyWith(
-        baseOffset: currentPos + str.length,
-        extentOffset: currentPos + str.length);
+    textController.selection = textController.selection
+        .copyWith(baseOffset: currentPos + str.length, extentOffset: currentPos + str.length);
 
     newMessage.value = textController.text;
   }
-
+  //TODO ramin, like above
   void removeCharacterBeforeCursorPosition() {
     final currentPos = textController.selection.base.offset;
-    final prefix = textController.text
-        .substring(0, currentPos)
-        .characters
-        .skipLast(1)
-        .toString();
+    final prefix = textController.text.substring(0, currentPos).characters.skipLast(1).toString();
     final suffix = textController.text.substring(currentPos);
 
     textController.text = prefix + suffix;
@@ -206,8 +207,7 @@ class MessagesController extends GetxController {
     reaction = reaction.copyWith(
       isReactedByMe: !reaction.isReactedByMe,
     );
-    messages[index] =
-        message.copyWith(reactions: {...message.reactions, emoji: reaction});
+    messages[index] = message.copyWith(reactions: {...message.reactions, emoji: reaction});
 
     messages.refresh();
 
@@ -235,13 +235,15 @@ class MessagesController extends GetxController {
     messages.setAll(0, messages.map((m) => m.copyWith(isSelected: false)));
     selectedMessages.clear();
   }
+  //Todo ramin all send messages it's better to be located in a one place, i will explain, search about useCase
+  void sendTextMessage() async {
+    //TODO ramin use the timestamp with miliseconds accuracy for generating the message id
 
-  void sendTextMessage() {
     var message = TextMessageModel(
       // Todo: Generate random id
       messageId: messages.length.toString(),
       text: newMessage.value,
-      timestamp: DateTime.now().toUtc(),
+      timestamp: DateTime.now(),
       replyTo: replyingTo.value,
       // Todo: fill with user info
       senderName: "",
@@ -250,7 +252,7 @@ class MessagesController extends GetxController {
     );
 
     // Todo: change status once message was successfully sent
-    message = message.copyWith(status: MESSAGE_STATUS.SENT);
+    message = message.copyWith(status: MessageStatus.sent);
 
     // Todo: send message with libp2p.
 
@@ -258,13 +260,9 @@ class MessagesController extends GetxController {
     textController.clear();
     newMessage.value = "";
 
-    clearReplyTo();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      jumpToBottom();
-    });
+    _postMessageSendOperations(message);
   }
-
+  //TODO ramin like above
   void sendAudioMessage(String path, int duration) {
     final message = AudioMessageModel(
       url: "",
@@ -282,13 +280,9 @@ class MessagesController extends GetxController {
 
     messages.add(message);
 
-    messages.refresh();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      jumpToBottom();
-    });
+    _postMessageSendOperations(message);
   }
-
+  //TODO ramin like above
   void sendLocationMessage() {
     final message = locationMessage.value;
     if (message == null) {
@@ -297,17 +291,48 @@ class MessagesController extends GetxController {
 
     messages.add(message);
 
+    _postMessageSendOperations(message);
+
+    locationMessage.value = null;
+  }
+  //TODO ramin like above
+  void sendLiveLocation({
+    required Duration duration,
+    required double startLat,
+    required double startLong,
+  }) {
+    final message = LiveLocationMessageModel(
+      latitude: startLat,
+      longitude: startLong,
+      endTime: DateTime.now().add(duration),
+      messageId: (messages.length + 1).toString(),
+      timestamp: DateTime.now(),
+      senderName: "",
+      senderAvatar: "",
+      isFromMe: true,
+    );
+
+    messages.add(message);
+    _postMessageSendOperations(message);
+
+    // Todo (libp2p): send message
+    Get.find<LiveLocationController>().startSharing(message.messageId, duration);
+  }
+
+  void _postMessageSendOperations(MessageModel msg) {
     messages.refresh();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       jumpToBottom();
     });
 
-    // Todo (libp2p): send message
-
-    locationMessage.value = null;
+    _saveMessageInDb(msg);
   }
-
+  //TODO ramin, we should move it to the usecase logic
+  Future<void> _saveMessageInDb(MessageModel msg) async {
+    await messagesRepo.createMessage(message: msg, chatId: args.chat.id);
+  }
+  //TODO ramin, it has been called by another controller that is a connected to a different view
   void prepareLocationMessageForSending({
     required double latitude,
     required double longitude,
@@ -327,8 +352,7 @@ class MessagesController extends GetxController {
   }
 
   stopSharingLiveLocation(LiveLocationMessageModel message) {
-    Get.find<LiveLocationController>()
-        .removeIdFromSharingList(message.messageId);
+    Get.find<LiveLocationController>().removeIdFromSharingList(message.messageId);
 
     final index = messages.indexWhere((m) => m.messageId == message.messageId);
 
@@ -342,33 +366,7 @@ class MessagesController extends GetxController {
     // Todo (libp2p): update message
   }
 
-  void sendLiveLocation({
-    required Duration duration,
-    required double startLat,
-    required double startLong,
-  }) {
-    final message = LiveLocationMessageModel(
-      latitude: startLat,
-      longitude: startLong,
-      endTime: DateTime.now().add(duration),
-      messageId: (messages.length + 1).toString(),
-      timestamp: DateTime.now(),
-      senderName: "",
-      senderAvatar: "",
-      isFromMe: true,
-    );
-
-    messages.add(message);
-    messages.refresh();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      jumpToBottom();
-    });
-
-    // Todo (libp2p): send message
-    Get.find<LiveLocationController>()
-        .startSharing(message.messageId, duration);
-  }
-
+  //TODO Ramin, this is a part of send method in our use case
   void replyTo() {
     if (selectedMessages.length != 1) return;
     final msg = selectedMessages.first;
@@ -429,6 +427,13 @@ class MessagesController extends GetxController {
       messages.removeWhere((msg) => msg.messageId == toDelete.messageId);
       // Todo: libp2p - delete for others
     }
+
+    // delete messages from local database
+    messagesRepo.deleteMessages(
+      messageIds: selectedMessages.map((m) => m.messageId).toList(),
+      chatId: args.chat.id,
+    );
+
     clearSelected();
   }
 
@@ -436,14 +441,20 @@ class MessagesController extends GetxController {
     for (var toDelete in selectedMessages) {
       messages.removeWhere((msg) => msg.messageId == toDelete.messageId);
     }
+
+    // delete messages from local database
+    messagesRepo.deleteMessages(
+      messageIds: selectedMessages.map((m) => m.messageId).toList(),
+      chatId: args.chat.id,
+    );
+
     clearSelected();
   }
 
   void copySelectedToClipboard() {
     var text = "";
 
-    if (selectedMessages.length == 1 &&
-        selectedMessages.first is TextMessageModel) {
+    if (selectedMessages.length == 1 && selectedMessages.first is TextMessageModel) {
       text = (selectedMessages.first as TextMessageModel).text;
     } else {
       for (var message in selectedMessages) {
@@ -451,8 +462,7 @@ class MessagesController extends GetxController {
           continue;
         }
 
-        text +=
-            "[${message.senderName} - ${message.timestamp.dateInAmPmFormat()}]\n";
+        text += "[${message.senderName} - ${message.timestamp.dateInAmPmFormat()}]\n";
         text += message.text;
         text += "\n\n";
       }
@@ -465,456 +475,12 @@ class MessagesController extends GetxController {
     clearSelected();
   }
 
-  void _addMockData() {
-    var index = 0;
-    messages.addAll([
-      TextMessageModel(
-        messageId: "${index++}",
-        text:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-        timestamp: DateTime.now()
-            .subtract(const Duration(days: 3, hours: 6, minutes: 5)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-      ),
-      TextMessageModel(
-        messageId: "${index++}",
-        text:
-            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-        timestamp: DateTime.now()
-            .subtract(const Duration(days: 3, hours: 6, minutes: 4)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-      ),
-      TextMessageModel(
-        messageId: "${index++}",
-        text: " Nihil, incidunt!",
-        timestamp: DateTime.now()
-            .subtract(const Duration(days: 3, hours: 6, minutes: 3)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-      ),
-      TextMessageModel(
-        messageId: "${index++}",
-        text: "Lorem ipsum dolor sit.",
-        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6)),
-        senderName: "",
-        senderAvatar: "",
-        isFromMe: true,
-        status: MESSAGE_STATUS.READ,
-      ),
-      TextMessageModel(
-        messageId: "${index++}",
-        text:
-            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-        timestamp: DateTime.now()
-            .subtract(const Duration(days: 3, hours: 5, minutes: 58)),
-        senderName: "",
-        senderAvatar: "",
-        isFromMe: true,
-        status: MESSAGE_STATUS.READ,
-      ),
-
-      //
-      TextMessageModel(
-        messageId: "${index++}",
-        text:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-        timestamp: DateTime.now()
-            .subtract(const Duration(days: 1, hours: 2, minutes: 5)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-        status: MESSAGE_STATUS.READ,
-      ),
-      TextMessageModel(
-        messageId: "${index++}",
-        text:
-            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-        timestamp: DateTime.now()
-            .subtract(const Duration(days: 1, hours: 2, minutes: 4)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-      ),
-      TextMessageModel(
-        messageId: "${index++}",
-        text: " Nihil, incidunt!",
-        timestamp: DateTime.now()
-            .subtract(const Duration(days: 1, hours: 2, minutes: 3)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-      ),
-      TextMessageModel(
-        messageId: "${index++}",
-        text: "Lorem ipsum dolor sit.",
-        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2)),
-        senderName: "",
-        senderAvatar: "",
-        isFromMe: true,
-        status: MESSAGE_STATUS.READ,
-      ),
-      TextMessageModel(
-        messageId: "${index++}",
-        text: "Lorem ipsum dolor sit.",
-        timestamp: DateTime.now()
-            .subtract(const Duration(days: 1, hours: 1, minutes: 58)),
-        senderName: "",
-        senderAvatar: "",
-        isFromMe: true,
-        status: MESSAGE_STATUS.READ,
-      ),
-
-      //
-      TextMessageModel(
-        messageId: "${index++}",
-        text:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 2, minutes: 5)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-      ),
-      TextMessageModel(
-        messageId: "${index++}",
-        text:
-            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 2, minutes: 4)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-      ),
-      TextMessageModel(
-        messageId: "${index++}",
-        text: " Nihil, incidunt!",
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 2, minutes: 3)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-      ),
-      TextMessageModel(
-        messageId: "${index++}",
-        text: "Lorem ipsum dolor sit.",
-        timestamp: DateTime.now().subtract(const Duration(hours: 2)),
-        senderName: "",
-        senderAvatar: "",
-        isFromMe: true,
-        status: MESSAGE_STATUS.READ,
-      ),
-      TextMessageModel(
-        messageId: "${index++}",
-        text: "Lorem ipsum dolor sit.",
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 58)),
-        senderName: "",
-        senderAvatar: "",
-        isFromMe: true,
-        status: MESSAGE_STATUS.READ,
-      ),
-      TextMessageModel(
-        messageId: "${index++}",
-        text: "Sure thing. Just let me know when sth happens",
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 56)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-        reactions: {
-          "🎉": ReactionModel(
-            users: List.generate(12, (index) => ""),
-          ),
-          "🤘": ReactionModel(
-            users: List.generate(3, (index) => ""),
-            isReactedByMe: true,
-          ),
-          "🔥": ReactionModel(
-            users: List.generate(5, (index) => ""),
-          ),
-          "👍": ReactionModel(
-            users: List.generate(2, (index) => ""),
-          ),
-          "😎": ReactionModel(
-            users: List.generate(1, (index) => ""),
-          ),
-        },
-      ),
-      TextMessageModel(
-        messageId: "${index++}",
-        text: "Very nice!",
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 55)),
-        senderName: "",
-        senderAvatar: "",
-        replyTo: ReplyToModel(
-          repliedToMessageId: "${index - 2}",
-          repliedToMessage: "Sure thing. Just let me know when sth happens",
-          repliedToName: args.chat.name,
-        ),
-        isFromMe: true,
-        status: MESSAGE_STATUS.READ,
-        reactions: {
-          "🤗": ReactionModel(
-            users: List.generate(1, (index) => ""),
-          ),
-          "😘": ReactionModel(
-            users: List.generate(2, (index) => ""),
-            isReactedByMe: true,
-          ),
-        },
-      ),
-      TextMessageModel(
-        messageId: "${index++}",
-        text: "Very nice!",
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 54)),
-        senderName: "",
-        senderAvatar: "",
-        replyTo: ReplyToModel(
-          repliedToMessageId: "0",
-          repliedToMessage:
-              "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-          repliedToName: args.chat.name,
-        ),
-        isFromMe: true,
-        status: MESSAGE_STATUS.READ,
-      ),
-      TextMessageModel(
-        messageId: "${index++}",
-        text: "Lorem ipsum dolor sit.",
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 52)),
-        senderName: "",
-        senderAvatar: "",
-        isFromMe: true,
-        status: MESSAGE_STATUS.SENT,
-      ),
-      ImageMessageModel(
-        messageId: "${index++}",
-        isLocal: false,
-        url:
-            "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-        metadata: ImageMetadata(width: 687, height: 1030),
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 50)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-        replyTo: ReplyToModel(
-          repliedToMessageId: "0",
-          repliedToMessage:
-              "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-          repliedToName: args.chat.name,
-        ),
-      ),
-      ImageMessageModel(
-        messageId: "${index++}",
-        isLocal: false,
-        url:
-            "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
-        metadata: ImageMetadata(width: 2142, height: 806),
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-        senderName: "",
-        senderAvatar: "",
-        isFromMe: true,
-        status: MESSAGE_STATUS.READ,
-        reactions: {
-          "🤗": ReactionModel(
-            users: List.generate(1, (index) => ""),
-          ),
-          "😘": ReactionModel(
-            users: List.generate(2, (index) => ""),
-            isReactedByMe: true,
-          ),
-        },
-      ),
-      VideoMessageModel(
-        messageId: "${index++}",
-        url:
-            "https://assets.mixkit.co/videos/preview/mixkit-daytime-city-traffic-aerial-view-56-large.mp4",
-        metadata: VideoMetadata(
-          durationInSeconds: 120,
-          isLocal: false,
-          thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb2.png",
-          width: 656,
-          height: 368,
-        ),
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
-        senderName: "",
-        senderAvatar: "",
-        isFromMe: true,
-        status: MESSAGE_STATUS.READ,
-        reactions: {
-          "🤗": ReactionModel(
-            users: List.generate(1, (index) => ""),
-          ),
-          "😘": ReactionModel(
-            users: List.generate(2, (index) => ""),
-            isReactedByMe: true,
-          ),
-        },
-      ),
-      VideoMessageModel(
-        messageId: "${index++}",
-        url:
-            "https://assets.mixkit.co/videos/download/mixkit-microchip-technology-close-up-1140.mp4",
-        metadata: VideoMetadata(
-          isLocal: false,
-          durationInSeconds: 120,
-          thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
-          width: 656,
-          height: 368,
-        ),
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
-        senderName: "",
-        senderAvatar: "",
-        isFromMe: true,
-        status: MESSAGE_STATUS.READ,
-      ),
-      AudioMessageModel(
-        messageId: "${index++}",
-        metadata: AudioMetadata(durationInSeconds: 100),
-        url:
-            "https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3",
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 46)),
-        senderName: "",
-        senderAvatar: "",
-        isFromMe: true,
-        status: MESSAGE_STATUS.READ,
-      ),
-      AudioMessageModel(
-        messageId: "${index++}",
-        metadata: AudioMetadata(durationInSeconds: 19),
-        url: "https://download.samplelib.com/mp3/sample-15s.mp3",
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-      ),
-      LocationMessageModel(
-        messageId: "${index++}",
-        latitude: 48.153445,
-        longitude: 17.129925,
-        address: "Kocelova 11-11, 821 08, Bratislava",
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 44)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-      ),
-      LiveLocationMessageModel(
-        messageId: "${index++}",
-        latitude: 35.65031,
-        longitude: 51.2925217,
-        endTime: DateTime.now().subtract(const Duration(minutes: 40)),
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 42)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-      ),
-      MultiMediaMessageModel(
-        messageId: "${index++}",
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-        type: CONTENT_TYPE.MULTI_MEDIA,
-        isFromMe: false,
-        status: MESSAGE_STATUS.READ,
-        mediaList: [
-          ImageMessageModel(
-            messageId: "${index++}",
-            isLocal: false,
-            type: CONTENT_TYPE.IMAGE,
-            url:
-                "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
-            metadata: ImageMetadata(width: 0, height: 0),
-            timestamp:
-                DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
-            senderName: "",
-            senderAvatar: "",
-            isFromMe: false,
-            status: MESSAGE_STATUS.READ,
-          ),
-          ImageMessageModel(
-            messageId: "${index++}",
-            isLocal: false,
-            url:
-                "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
-            metadata: ImageMetadata(width: 0, height: 0),
-            timestamp:
-                DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
-            senderName: "",
-            senderAvatar: "",
-            isFromMe: false,
-            type: CONTENT_TYPE.IMAGE,
-            status: MESSAGE_STATUS.READ,
-          ),
-          ImageMessageModel(
-            messageId: "${index++}",
-            isLocal: false,
-            url:
-                "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-            metadata: ImageMetadata(width: 687, height: 1030),
-            timestamp:
-                DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
-            senderName: "",
-            senderAvatar: "",
-            isFromMe: false,
-            type: CONTENT_TYPE.IMAGE,
-            status: MESSAGE_STATUS.READ,
-          ),
-          VideoMessageModel(
-            messageId: "${index++}",
-            url:
-                "https://assets.mixkit.co/videos/download/mixkit-microchip-technology-close-up-1140.mp4",
-            metadata: VideoMetadata(
-              isLocal: false,
-              durationInSeconds: 120,
-              thumbnailBytes: null,
-              thumbnailUrl:
-                  "https://mixkit.imgix.net/static/home/video-thumb3.png",
-              width: 656,
-              height: 368,
-            ),
-            timestamp:
-                DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
-            senderName: "",
-            senderAvatar: "",
-            isFromMe: false,
-            status: MESSAGE_STATUS.READ,
-          ),
-        ],
-      ),
-      CallMessageModel(
-        messageId: "${index++}",
-        callStatus: CallMessageStatus.declined,
-        callType: CallMessageType.video,
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-      ),
-      CallMessageModel(
-        messageId: "${index++}",
-        callStatus: CallMessageStatus.missed,
-        callType: CallMessageType.audio,
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
-        senderName: args.chat.name,
-        senderAvatar: args.chat.icon,
-      ),
-    ]);
-
-    messages.sort((a, b) =>
-        a.timestamp.millisecondsSinceEpoch -
-        b.timestamp.millisecondsSinceEpoch);
-  }
-
   RxBool isMediaGlassmorphicOpen = false.obs;
   mediaGlassmorphicChangeState() {
     isMediaGlassmorphicOpen.value = !isMediaGlassmorphicOpen.value;
   }
 
-  // camera
+  //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> pick(BuildContext context) async {
     final Size size = MediaQuery.of(context).size;
     final double scale = MediaQuery.of(context).devicePixelRatio;
@@ -963,7 +529,7 @@ class MessagesController extends GetxController {
       openCameraPicker(context);
     }
   }
-
+  //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> openCameraPicker(BuildContext context) async {
     try {
       final AssetEntity? entity = await CameraPicker.pickFromCamera(context,
@@ -1002,8 +568,7 @@ class MessagesController extends GetxController {
                     {
                       messages.add(
                         ImageMessageModel(
-                            messageId:
-                                "${messages.lastIndexOf(messages.last) + 1}",
+                            messageId: "${messages.lastIndexOf(messages.last) + 1}",
                             isLocal: true,
                             metadata: ImageMetadata(
                               height: entity.height.toDouble(),
@@ -1012,9 +577,9 @@ class MessagesController extends GetxController {
                             senderAvatar: '',
                             senderName: '',
                             isFromMe: true,
-                            status: MESSAGE_STATUS.SENT,
-                            timestamp: DateTime.now().subtract(
-                                const Duration(hours: 1, minutes: 49)),
+                            status: MessageStatus.sent,
+                            timestamp:
+                                DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
                             url: file.path),
                       );
                     }
@@ -1029,16 +594,14 @@ class MessagesController extends GetxController {
                           width: entity.width.toDouble(),
                           isLocal: true,
                           thumbnailBytes: await entity.thumbnailData,
-                          thumbnailUrl:
-                              "https://mixkit.imgix.net/static/home/video-thumb3.png",
+                          thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
                         ),
                         url: file.path,
-                        timestamp: DateTime.now()
-                            .subtract(const Duration(hours: 1, minutes: 49)),
+                        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
                         senderName: '',
                         senderAvatar: '',
                         isFromMe: true,
-                        status: MESSAGE_STATUS.SENT,
+                        status: MessageStatus.sent,
                       ));
                     }
                     break;
@@ -1054,12 +617,10 @@ class MessagesController extends GetxController {
                 jumpToBottom();
               });
             },
-            inputTextStyle: TEXTSTYLES.kBodySmall
-                .copyWith(color: COLORS.kTextSoftBlueColor),
+            inputTextStyle: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
             previewTextInputDecoration: InputDecoration(
               hintText: 'Type something',
-              hintStyle: TEXTSTYLES.kBodySmall
-                  .copyWith(color: COLORS.kTextSoftBlueColor),
+              hintStyle: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
             ),
           ));
     } catch (e) {
@@ -1068,7 +629,7 @@ class MessagesController extends GetxController {
       }
     }
   }
-
+  //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> openGallery() async {
     final result = await Get.toNamed(
       Routes.GALLERY_PICKER,
@@ -1077,7 +638,7 @@ class MessagesController extends GetxController {
       addSelectedMedia(result: result, closeMediaGlassmorphic: true);
     }
   }
-
+  //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> addSelectedMedia(
       {@required dynamic result, bool closeMediaGlassmorphic = false}) async {
     if (closeMediaGlassmorphic) mediaGlassmorphicChangeState();
@@ -1095,9 +656,8 @@ class MessagesController extends GetxController {
           senderAvatar: '',
           senderName: '',
           isFromMe: true,
-          status: MESSAGE_STATUS.SENT,
-          timestamp:
-              DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+          status: MessageStatus.sent,
+          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
           url: element["path"],
         ));
       } else if (element["type"] == "video") {
@@ -1110,17 +670,15 @@ class MessagesController extends GetxController {
             width: double.parse(element["width"].toString()),
             isLocal: true,
             thumbnailBytes: thumbnailBytes,
-            thumbnailUrl:
-                "https://mixkit.imgix.net/static/home/video-thumb3.png",
+            thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
           ),
           url: element["path"],
-          timestamp:
-              DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
           senderName: '',
           senderAvatar: '',
           isFromMe: true,
-          status: MESSAGE_STATUS.SENT,
-          type: CONTENT_TYPE.VIDEO,
+          status: MessageStatus.sent,
+          type: MessageContentType.video,
         ));
       }
     }
@@ -1131,9 +689,8 @@ class MessagesController extends GetxController {
         senderAvatar: '',
         senderName: '',
         isFromMe: true,
-        status: MESSAGE_STATUS.SENT,
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+        status: MessageStatus.sent,
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
       ));
     } else {
       result.forEach((asset) async {
@@ -1151,9 +708,8 @@ class MessagesController extends GetxController {
                     senderAvatar: '',
                     senderName: '',
                     isFromMe: true,
-                    status: MESSAGE_STATUS.SENT,
-                    timestamp: DateTime.now()
-                        .subtract(const Duration(hours: 1, minutes: 49)),
+                    status: MessageStatus.sent,
+                    timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
                     url: asset["path"]),
               );
             }
@@ -1173,12 +729,11 @@ class MessagesController extends GetxController {
                     thumbnailUrl: '',
                   ),
                   url: asset["path"],
-                  timestamp: DateTime.now()
-                      .subtract(const Duration(hours: 1, minutes: 49)),
+                  timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
                   senderName: '',
                   senderAvatar: '',
                   isFromMe: true,
-                  status: MESSAGE_STATUS.SENT,
+                  status: MessageStatus.sent,
                 ),
               );
             }
@@ -1189,12 +744,11 @@ class MessagesController extends GetxController {
                 TextMessageModel(
                   messageId: "${messages.lastIndexOf(messages.last) + 1}",
                   text: asset["value"],
-                  timestamp: DateTime.now()
-                      .subtract(const Duration(hours: 1, minutes: 49)),
+                  timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
                   senderName: '',
                   senderAvatar: '',
                   isFromMe: true,
-                  status: MESSAGE_STATUS.SENT,
+                  status: MessageStatus.sent,
                 ),
               );
             }
@@ -1223,7 +777,7 @@ class MessagesController extends GetxController {
           senderName: '',
           senderAvatar: '',
           isFromMe: true,
-          status: MESSAGE_STATUS.SENT,
+          status: MessageStatus.sent,
           messageId: "${messages.lastIndexOf(messages.last) + 1}",
           metadata: FileMetaData(
             extension: asset.extension,
@@ -1233,8 +787,7 @@ class MessagesController extends GetxController {
             timestamp: asset.timestamp,
             isImage: asset.isImage,
           ),
-          timestamp:
-              DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
         ));
       });
       mediaGlassmorphicChangeState();
@@ -1243,6 +796,423 @@ class MessagesController extends GetxController {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         jumpToBottom();
       });
+    }
+  }
+
+  void _getMessages() async {
+    // await _addMockData();
+    messages.value = await messagesRepo.getMessages(args.chat.id);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      jumpToBottom();
+    });
+  }
+
+  Future<void> _addMockData() async {
+    var index = 0;
+
+    final ms = [
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 5)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text:
+            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 4)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: " Nihil, incidunt!",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 3)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text:
+            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 5, minutes: 58)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+
+      //
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 5)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text:
+            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 4)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: " Nihil, incidunt!",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 3)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 1, minutes: 58)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+
+      //
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 5)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text:
+            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 4)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: " Nihil, incidunt!",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 3)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 58)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Sure thing. Just let me know when sth happens",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 56)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+        reactions: {
+          "🎉": ReactionModel(
+            users: List.generate(12, (index) => ""),
+          ),
+          "🤘": ReactionModel(
+            users: List.generate(3, (index) => ""),
+            isReactedByMe: true,
+          ),
+          "🔥": ReactionModel(
+            users: List.generate(5, (index) => ""),
+          ),
+          "👍": ReactionModel(
+            users: List.generate(2, (index) => ""),
+          ),
+          "😎": ReactionModel(
+            users: List.generate(1, (index) => ""),
+          ),
+        },
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Very nice!",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 55)),
+        senderName: "",
+        senderAvatar: "",
+        replyTo: ReplyToModel(
+          repliedToMessageId: "${index - 2}",
+          repliedToMessage: "Sure thing. Just let me know when sth happens",
+          repliedToName: args.chat.name,
+        ),
+        isFromMe: true,
+        status: MessageStatus.read,
+        reactions: {
+          "🤗": ReactionModel(
+            users: List.generate(1, (index) => ""),
+          ),
+          "😘": ReactionModel(
+            users: List.generate(2, (index) => ""),
+            isReactedByMe: true,
+          ),
+        },
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Very nice!",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 54)),
+        senderName: "",
+        senderAvatar: "",
+        replyTo: ReplyToModel(
+          repliedToMessageId: "0",
+          repliedToMessage:
+              "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+          repliedToName: args.chat.name,
+        ),
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 52)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.sent,
+      ),
+      ImageMessageModel(
+        messageId: "${index++}",
+        isLocal: false,
+        url:
+            "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+        metadata: ImageMetadata(width: 687, height: 1030),
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 50)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+        replyTo: ReplyToModel(
+          repliedToMessageId: "0",
+          repliedToMessage:
+              "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+          repliedToName: args.chat.name,
+        ),
+      ),
+      ImageMessageModel(
+        messageId: "${index++}",
+        isLocal: false,
+        url:
+            "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
+        metadata: ImageMetadata(width: 2142, height: 806),
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+        reactions: {
+          "🤗": ReactionModel(
+            users: List.generate(1, (index) => ""),
+          ),
+          "😘": ReactionModel(
+            users: List.generate(2, (index) => ""),
+            isReactedByMe: true,
+          ),
+        },
+      ),
+      VideoMessageModel(
+        messageId: "${index++}",
+        url:
+            "https://assets.mixkit.co/videos/preview/mixkit-daytime-city-traffic-aerial-view-56-large.mp4",
+        metadata: VideoMetadata(
+          durationInSeconds: 120,
+          isLocal: false,
+          thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb2.png",
+          width: 656,
+          height: 368,
+        ),
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+        reactions: {
+          "🤗": ReactionModel(
+            users: List.generate(1, (index) => ""),
+          ),
+          "😘": ReactionModel(
+            users: List.generate(2, (index) => ""),
+            isReactedByMe: true,
+          ),
+        },
+      ),
+      VideoMessageModel(
+        messageId: "${index++}",
+        url:
+            "https://assets.mixkit.co/videos/download/mixkit-microchip-technology-close-up-1140.mp4",
+        metadata: VideoMetadata(
+          isLocal: false,
+          durationInSeconds: 120,
+          thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+          width: 656,
+          height: 368,
+        ),
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      AudioMessageModel(
+        messageId: "${index++}",
+        metadata: AudioMetadata(durationInSeconds: 100),
+        url: "https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 46)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      AudioMessageModel(
+        messageId: "${index++}",
+        metadata: AudioMetadata(durationInSeconds: 19),
+        url: "https://download.samplelib.com/mp3/sample-15s.mp3",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      LocationMessageModel(
+        messageId: "${index++}",
+        latitude: 48.153445,
+        longitude: 17.129925,
+        address: "Kocelova 11-11, 821 08, Bratislava",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 44)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      LiveLocationMessageModel(
+        messageId: "${index++}",
+        latitude: 35.65031,
+        longitude: 51.2925217,
+        endTime: DateTime.now().subtract(const Duration(minutes: 40)),
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 42)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      MultiMediaMessageModel(
+        messageId: "${index++}",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+        type: MessageContentType.multiMedia,
+        isFromMe: false,
+        status: MessageStatus.read,
+        mediaList: [
+          ImageMessageModel(
+            messageId: "${index++}",
+            isLocal: false,
+            type: MessageContentType.image,
+            url:
+                "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
+            metadata: ImageMetadata(width: 0, height: 0),
+            timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
+            senderName: "",
+            senderAvatar: "",
+            isFromMe: false,
+            status: MessageStatus.read,
+          ),
+          ImageMessageModel(
+            messageId: "${index++}",
+            isLocal: false,
+            url:
+                "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
+            metadata: ImageMetadata(width: 0, height: 0),
+            timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
+            senderName: "",
+            senderAvatar: "",
+            isFromMe: false,
+            type: MessageContentType.image,
+            status: MessageStatus.read,
+          ),
+          ImageMessageModel(
+            messageId: "${index++}",
+            isLocal: false,
+            url:
+                "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+            metadata: ImageMetadata(width: 687, height: 1030),
+            timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
+            senderName: "",
+            senderAvatar: "",
+            isFromMe: false,
+            type: MessageContentType.image,
+            status: MessageStatus.read,
+          ),
+          VideoMessageModel(
+            messageId: "${index++}",
+            url:
+                "https://assets.mixkit.co/videos/download/mixkit-microchip-technology-close-up-1140.mp4",
+            metadata: VideoMetadata(
+              isLocal: false,
+              durationInSeconds: 120,
+              thumbnailBytes: null,
+              thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+              width: 656,
+              height: 368,
+            ),
+            timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
+            senderName: "",
+            senderAvatar: "",
+            isFromMe: false,
+            status: MessageStatus.read,
+          ),
+        ],
+      ),
+      CallMessageModel(
+        messageId: "${index++}",
+        callStatus: CallMessageStatus.declined,
+        callType: CallMessageType.video,
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+      CallMessageModel(
+        messageId: "${index++}",
+        callStatus: CallMessageStatus.missed,
+        callType: CallMessageType.audio,
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
+        senderName: args.chat.name,
+        senderAvatar: args.chat.icon,
+      ),
+    ];
+
+    for (int i = 0; i < ms.length; i++) {
+      await messagesRepo.createMessage(message: ms[i], chatId: args.chat.id);
     }
   }
 }

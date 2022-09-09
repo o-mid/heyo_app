@@ -30,17 +30,17 @@ class MessageHeaderWidget extends StatelessWidget {
         /// Status Indicator
         if (message.isFromMe) ...[
           SizedBox(width: 4.w),
-          if (message.status == MESSAGE_STATUS.SENDING)
+          if (message.status == MessageStatus.sending)
             Assets.svg.clock.svg(
               width: 10.w,
               height: 10.w,
             ),
-          if (message.status == MESSAGE_STATUS.SENT)
+          if (message.status == MessageStatus.sent)
             Assets.svg.singleTickIcon.svg(
               width: 8.w,
               height: 8.w,
             ),
-          if (message.status == MESSAGE_STATUS.READ)
+          if (message.status == MessageStatus.read)
             Assets.svg.doubleTickIcon.svg(
               width: 12.w,
               height: 8.w,

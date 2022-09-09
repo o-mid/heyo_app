@@ -1,13 +1,15 @@
 class ChatModel {
-  String name;
-  String icon;
-  String lastMessage;
-  String timestamp;
-  bool isOnline;
-  bool isVerified;
-  int notificationCount;
+  final String id;
+  final String name;
+  final String icon;
+  final String lastMessage;
+  final String timestamp;
+  final bool isOnline;
+  final bool isVerified;
+  final int notificationCount;
 
   ChatModel({
+    required this.id,
     required this.name,
     required this.icon,
     required this.lastMessage,
