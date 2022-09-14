@@ -5,6 +5,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/file_message_mode
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
+import 'package:heyo/app/modules/messages/data/usecases/send_message.usecase.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -76,24 +77,28 @@ class MessagesController extends GetxController {
     _getMessages();
     //TODO ramin, start listening to the database changes and apply them
 
-    //TODO ramin, check it out and move it to a function
-    if (args.forwardedMessages != null) {
-      // Todo (libp2p): Send forwarded messages
-      messages.addAll(
-        args.forwardedMessages!.map(
-          (m) => m.copyWith(
-            // messageId: , // Todo: Generate new id for forwarded message
-            isFromMe: true,
-            isForwarded: true,
-            status: MessageStatus.sending,
-            clearReply: true,
-            reactions: <String, ReactionModel>{},
-          ),
-        ),
-      );
-    }
+    _sendForwardedMessages();
 
-    //TODO ramin refactor move them into a function
+    // Close emoji picker when keyboard opens
+    _handleKeyboardVisibilityChanges();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    jumpToBottom();
+  }
+
+  @override
+  void onClose() {
+    // Todo: remove this when a global player is implemented
+    Get.find<AudioMessageController>().player.stop();
+
+    Get.find<VideoMessageController>().stopAndClearPreviousVideo();
+    super.onClose();
+  }
+
+  void _handleKeyboardVisibilityChanges() {
     // Close emoji picker when keyboard opens
     final keyboardVisibilityController = KeyboardVisibilityController();
 
@@ -113,6 +118,8 @@ class MessagesController extends GetxController {
           }
         });
       } else {
+        // when keyboard closes scroll in the amount of keyboard height so that
+        // the same part of the messages as before remains visible
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (scrollController.hasClients) {
             scrollController.animateTo(
@@ -126,25 +133,29 @@ class MessagesController extends GetxController {
     }));
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-    jumpToBottom();
-  }
-
-  @override
-  void onClose() {
-    // Todo: remove this when a global player is implemented
-    Get.find<AudioMessageController>().player.stop();
-
-    Get.find<VideoMessageController>().stopAndClearPreviousVideo();
-    super.onClose();
+  void _sendForwardedMessages() {
+    if (args.forwardedMessages != null) {
+      // Todo (libp2p): Send forwarded messages
+      messages.addAll(
+        args.forwardedMessages!.map(
+          (m) => m.copyWith(
+            // messageId: , // Todo: Generate new id for forwarded message
+            isFromMe: true,
+            isForwarded: true,
+            status: MessageStatus.sending,
+            clearReply: true,
+            reactions: <String, ReactionModel>{},
+          ),
+        ),
+      );
+    }
   }
 
   void toggleEmojiPicker() {
     showEmojiPicker.value = !showEmojiPicker.value;
   }
-  //TODO ramin, a small comment can help to someone that reads the codes to understand what part of the application is handling by this function
+
+  // adds a string after cursor position and cursor moves to the correct place.
   void appendAfterCursorPosition(String str) {
     final currentPos = textController.selection.base.offset;
 
@@ -157,7 +168,9 @@ class MessagesController extends GetxController {
 
     newMessage.value = textController.text;
   }
-  //TODO ramin, like above
+
+  // this method handles backspace of emoji keyboard since the plugin doesn't handle that itself.
+  // the character before cursor is removed and cursor moves to the correct place.
   void removeCharacterBeforeCursorPosition() {
     final currentPos = textController.selection.base.offset;
     final prefix = textController.text.substring(0, currentPos).characters.skipLast(1).toString();
@@ -235,103 +248,85 @@ class MessagesController extends GetxController {
     messages.setAll(0, messages.map((m) => m.copyWith(isSelected: false)));
     selectedMessages.clear();
   }
-  //Todo ramin all send messages it's better to be located in a one place, i will explain, search about useCase
-  void sendTextMessage() async {
-    //TODO ramin use the timestamp with miliseconds accuracy for generating the message id
 
-    var message = TextMessageModel(
-      // Todo: Generate random id
-      messageId: messages.length.toString(),
+  void sendTextMessage() async {
+    SendMessage.text(
+      messagesRepo: messagesRepo,
       text: newMessage.value,
-      timestamp: DateTime.now(),
+    ).execute(
       replyTo: replyingTo.value,
-      // Todo: fill with user info
-      senderName: "",
-      senderAvatar: "",
-      isFromMe: true,
+      chatId: args.chat.id,
     );
 
-    // Todo: change status once message was successfully sent
-    message = message.copyWith(status: MessageStatus.sent);
-
-    // Todo: send message with libp2p.
-
-    messages.add(message);
     textController.clear();
     newMessage.value = "";
 
-    _postMessageSendOperations(message);
+    _postMessageSendOperations();
   }
-  //TODO ramin like above
+
   void sendAudioMessage(String path, int duration) {
-    final message = AudioMessageModel(
-      url: "",
-      localUrl: path,
+    SendMessage.audio(
+      messagesRepo: messagesRepo,
+      path: path,
       metadata: AudioMetadata(durationInSeconds: duration),
-      messageId: messages.length.toString(), // Todo
-      timestamp: DateTime.now(),
-      senderName: "",
-      senderAvatar: "",
-      isFromMe: true,
+    ).execute(
+      replyTo: replyingTo.value,
+      chatId: args.chat.id,
     );
 
-    // Todo: upload file to decentralized storage and save the url
-    // Todo (libp2p): send message with libp2p
-
-    messages.add(message);
-
-    _postMessageSendOperations(message);
+    _postMessageSendOperations();
   }
-  //TODO ramin like above
+
   void sendLocationMessage() {
     final message = locationMessage.value;
     if (message == null) {
       return;
     }
 
-    messages.add(message);
-
-    _postMessageSendOperations(message);
+    SendMessage.location(
+      messagesRepo: messagesRepo,
+      lat: message.latitude,
+      long: message.longitude,
+      address: message.address,
+    ).execute(
+      replyTo: replyingTo.value,
+      chatId: args.chat.id,
+    );
 
     locationMessage.value = null;
+
+    _postMessageSendOperations();
   }
-  //TODO ramin like above
+
   void sendLiveLocation({
     required Duration duration,
     required double startLat,
     required double startLong,
   }) {
-    final message = LiveLocationMessageModel(
-      latitude: startLat,
-      longitude: startLong,
-      endTime: DateTime.now().add(duration),
-      messageId: (messages.length + 1).toString(),
-      timestamp: DateTime.now(),
-      senderName: "",
-      senderAvatar: "",
-      isFromMe: true,
+    SendMessage.liveLocation(
+      messagesRepo: messagesRepo,
+      startLat: startLat,
+      startLong: startLong,
+      duration: duration,
+    ).execute(
+      replyTo: replyingTo.value,
+      chatId: args.chat.id,
     );
 
-    messages.add(message);
-    _postMessageSendOperations(message);
+    _postMessageSendOperations();
 
     // Todo (libp2p): send message
-    Get.find<LiveLocationController>().startSharing(message.messageId, duration);
+    // Get.find<LiveLocationController>().startSharing(message.messageId, duration);
   }
 
-  void _postMessageSendOperations(MessageModel msg) {
+  void _postMessageSendOperations() {
     messages.refresh();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       jumpToBottom();
     });
+  }
 
-    _saveMessageInDb(msg);
-  }
-  //TODO ramin, we should move it to the usecase logic
-  Future<void> _saveMessageInDb(MessageModel msg) async {
-    await messagesRepo.createMessage(message: msg, chatId: args.chat.id);
-  }
   //TODO ramin, it has been called by another controller that is a connected to a different view
   void prepareLocationMessageForSending({
     required double latitude,
@@ -525,110 +520,113 @@ class MessagesController extends GetxController {
       }
     }
 
-    if (!isCameraDenied && !isMediaDenied) {
+    if (!isCameraDenied && !isMediaDenied && !isClosed) {
       openCameraPicker(context);
     }
   }
+
   //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> openCameraPicker(BuildContext context) async {
     try {
-      final AssetEntity? entity = await CameraPicker.pickFromCamera(context,
-          pickerConfig: CameraPickerConfig(
-            textDelegate: EnglishCameraPickerTextDelegate(),
-            sendIcon: Assets.svg.sendIcon.svg(),
-            receiverNameWidget: ReceiverNameWidget(name: args.chat.name),
-            additionalPreviewButtonWidget: const GalleryPreviewButtonWidget(),
-            onEntitySaving: (
-              BuildContext context,
-              CameraPickerViewType viewType,
-              File file,
-              List<Map<String, dynamic>>? confirmedFiles,
-            ) async {
-              AssetEntity? entity;
+      await CameraPicker.pickFromCamera(
+        context,
+        pickerConfig: CameraPickerConfig(
+          textDelegate: EnglishCameraPickerTextDelegate(),
+          sendIcon: Assets.svg.sendIcon.svg(),
+          receiverNameWidget: ReceiverNameWidget(name: args.chat.name),
+          additionalPreviewButtonWidget: const GalleryPreviewButtonWidget(),
+          onEntitySaving: (
+            BuildContext context,
+            CameraPickerViewType viewType,
+            File file,
+            List<Map<String, dynamic>>? confirmedFiles,
+          ) async {
+            AssetEntity? entity;
 
+            switch (viewType) {
+              case CameraPickerViewType.image:
+                final String filePath = file.path;
+                entity = await PhotoManager.editor.saveImageWithPath(
+                  filePath,
+                  title: path.basename(filePath),
+                );
+
+                break;
+              case CameraPickerViewType.video:
+                entity = await PhotoManager.editor.saveVideo(
+                  File(file.path),
+                  title: path.basename(file.path),
+                );
+                break;
+            }
+            if (entity != null) {
               switch (viewType) {
                 case CameraPickerViewType.image:
-                  final String filePath = file.path;
-                  entity = await PhotoManager.editor.saveImageWithPath(
-                    filePath,
-                    title: path.basename(filePath),
-                  );
-
+                  {
+                    messages.add(
+                      ImageMessageModel(
+                          messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                          isLocal: true,
+                          metadata: ImageMetadata(
+                            height: entity.height.toDouble(),
+                            width: entity.width.toDouble(),
+                          ),
+                          senderAvatar: '',
+                          senderName: '',
+                          isFromMe: true,
+                          status: MessageStatus.sent,
+                          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+                          url: file.path),
+                    );
+                  }
                   break;
                 case CameraPickerViewType.video:
-                  entity = await PhotoManager.editor.saveVideo(
-                    File(file.path),
-                    title: path.basename(file.path),
-                  );
+                  {
+                    messages.add(VideoMessageModel(
+                      messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                      metadata: VideoMetadata(
+                        durationInSeconds: entity.videoDuration.inSeconds,
+                        height: entity.height.toDouble(),
+                        width: entity.width.toDouble(),
+                        isLocal: true,
+                        thumbnailBytes: await entity.thumbnailData,
+                        thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+                      ),
+                      url: file.path,
+                      timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+                      senderName: '',
+                      senderAvatar: '',
+                      isFromMe: true,
+                      status: MessageStatus.sent,
+                    ));
+                  }
                   break;
               }
-              if (entity != null) {
-                switch (viewType) {
-                  case CameraPickerViewType.image:
-                    {
-                      messages.add(
-                        ImageMessageModel(
-                            messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                            isLocal: true,
-                            metadata: ImageMetadata(
-                              height: entity.height.toDouble(),
-                              width: entity.width.toDouble(),
-                            ),
-                            senderAvatar: '',
-                            senderName: '',
-                            isFromMe: true,
-                            status: MessageStatus.sent,
-                            timestamp:
-                                DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                            url: file.path),
-                      );
-                    }
-                    break;
-                  case CameraPickerViewType.video:
-                    {
-                      messages.add(VideoMessageModel(
-                        messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                        metadata: VideoMetadata(
-                          durationInSeconds: entity.videoDuration.inSeconds,
-                          height: entity.height.toDouble(),
-                          width: entity.width.toDouble(),
-                          isLocal: true,
-                          thumbnailBytes: await entity.thumbnailData,
-                          thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
-                        ),
-                        url: file.path,
-                        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                        senderName: '',
-                        senderAvatar: '',
-                        isFromMe: true,
-                        status: MessageStatus.sent,
-                      ));
-                    }
-                    break;
-                }
-              }
+            }
 
-              Navigator.of(context).pop();
-              Get.back();
+            Navigator.of(context).pop();
+            Get.back();
 
-              mediaGlassmorphicChangeState();
-              messages.refresh();
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                jumpToBottom();
-              });
-            },
-            inputTextStyle: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
-            previewTextInputDecoration: InputDecoration(
-              hintText: 'Type something',
-              hintStyle: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
-            ),
-          ));
+            mediaGlassmorphicChangeState();
+            messages.refresh();
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              jumpToBottom();
+            });
+          },
+          inputTextStyle: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
+          previewTextInputDecoration: InputDecoration(
+            hintText: 'Type something',
+            hintStyle: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
+          ),
+        ),
+      );
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
     }
   }
+
   //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> openGallery() async {
     final result = await Get.toNamed(
@@ -638,6 +636,7 @@ class MessagesController extends GetxController {
       addSelectedMedia(result: result, closeMediaGlassmorphic: true);
     }
   }
+
   //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> addSelectedMedia(
       {@required dynamic result, bool closeMediaGlassmorphic = false}) async {
