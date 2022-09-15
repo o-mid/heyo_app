@@ -477,52 +477,57 @@ class MessagesController extends GetxController {
 
   //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> pick(BuildContext context) async {
-    final Size size = MediaQuery.of(context).size;
-    final double scale = MediaQuery.of(context).devicePixelRatio;
-    bool isCameraDenied = await Permission.camera.isDenied;
-    bool isMediaDenied = await Permission.mediaLibrary.isDenied;
-    if (GetPlatform.isAndroid) {
-      isMediaDenied = false;
-    }
-    if (isMediaDenied) {
-      bool result = await Get.dialog(PermissionDialog(
+    final mediaPermission = await _requestPermission(
+      permission: Permission.mediaLibrary,
+      dialog: PermissionDialog(
         indicatorIcon: Assets.svg.camerapermissionIcon.svg(
           width: 28.w,
           height: 28.w,
         ),
         title: LocaleKeys.Permissions_AllowAccess.tr,
         subtitle: LocaleKeys.Permissions_capturePhotos.tr,
-      ));
-      if (result) {
-        await Permission.mediaLibrary.request().then((value) {
-          if (value.isGranted) {
-            isMediaDenied = false;
-          }
-        });
-      }
+      ),
+    );
+
+    if (!mediaPermission) {
+      return;
     }
 
-    if (isCameraDenied) {
-      bool result = await Get.dialog(PermissionDialog(
+    final cameraPermission = await _requestPermission(
+      permission: Permission.camera,
+      dialog: PermissionDialog(
         indicatorIcon: Assets.svg.camerapermissionIcon.svg(
           width: 28.w,
           height: 28.w,
         ),
         title: LocaleKeys.Permissions_AllowAccess.tr,
         subtitle: LocaleKeys.Permissions_camera.tr,
-      ));
-      if (result) {
-        await Permission.camera.request().then((value) {
-          if (value.isGranted) {
-            isCameraDenied = false;
-          }
-        });
+      ),
+    );
+
+    if (!cameraPermission) {
+      return;
+    }
+
+    if (!isClosed) {
+      openCameraPicker(context);
+    }
+  }
+
+  Future<bool> _requestPermission({required Permission permission, required Widget dialog}) async {
+    if (await permission.isDenied) {
+      bool result = await Get.dialog(dialog);
+
+      if (!result) {
+        return false;
+      }
+
+      if (!await permission.request().isGranted) {
+        return false;
       }
     }
 
-    if (!isCameraDenied && !isMediaDenied && !isClosed) {
-      openCameraPicker(context);
-    }
+    return true;
   }
 
   //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
@@ -535,6 +540,11 @@ class MessagesController extends GetxController {
           sendIcon: Assets.svg.sendIcon.svg(),
           receiverNameWidget: ReceiverNameWidget(name: args.chat.name),
           additionalPreviewButtonWidget: const GalleryPreviewButtonWidget(),
+          inputTextStyle: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
+          previewTextInputDecoration: InputDecoration(
+            hintText: 'Type something',
+            hintStyle: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
+          ),
           onEntitySaving: (
             BuildContext context,
             CameraPickerViewType viewType,
@@ -551,61 +561,62 @@ class MessagesController extends GetxController {
                   title: path.basename(filePath),
                 );
 
+                if (entity == null) {
+                  break;
+                }
+
+                messages.add(
+                  ImageMessageModel(
+                    messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                    isLocal: true,
+                    metadata: ImageMetadata(
+                      height: entity.height.toDouble(),
+                      width: entity.width.toDouble(),
+                    ),
+                    senderAvatar: '',
+                    senderName: '',
+                    isFromMe: true,
+                    status: MessageStatus.sent,
+                    timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+                    url: file.path,
+                  ),
+                );
+
                 break;
               case CameraPickerViewType.video:
                 entity = await PhotoManager.editor.saveVideo(
                   File(file.path),
                   title: path.basename(file.path),
                 );
+
+                if (entity == null) {
+                  break;
+                }
+
+                messages.add(
+                  VideoMessageModel(
+                    messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                    metadata: VideoMetadata(
+                      durationInSeconds: entity.videoDuration.inSeconds,
+                      height: entity.height.toDouble(),
+                      width: entity.width.toDouble(),
+                      isLocal: true,
+                      thumbnailBytes: await entity.thumbnailData,
+                      thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+                    ),
+                    url: file.path,
+                    timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+                    senderName: '',
+                    senderAvatar: '',
+                    isFromMe: true,
+                    status: MessageStatus.sent,
+                  ),
+                );
+
                 break;
             }
-            if (entity != null) {
-              switch (viewType) {
-                case CameraPickerViewType.image:
-                  {
-                    messages.add(
-                      ImageMessageModel(
-                          messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                          isLocal: true,
-                          metadata: ImageMetadata(
-                            height: entity.height.toDouble(),
-                            width: entity.width.toDouble(),
-                          ),
-                          senderAvatar: '',
-                          senderName: '',
-                          isFromMe: true,
-                          status: MessageStatus.sent,
-                          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                          url: file.path),
-                    );
-                  }
-                  break;
-                case CameraPickerViewType.video:
-                  {
-                    messages.add(VideoMessageModel(
-                      messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                      metadata: VideoMetadata(
-                        durationInSeconds: entity.videoDuration.inSeconds,
-                        height: entity.height.toDouble(),
-                        width: entity.width.toDouble(),
-                        isLocal: true,
-                        thumbnailBytes: await entity.thumbnailData,
-                        thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
-                      ),
-                      url: file.path,
-                      timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                      senderName: '',
-                      senderAvatar: '',
-                      isFromMe: true,
-                      status: MessageStatus.sent,
-                    ));
-                  }
-                  break;
-              }
-            }
 
-            Navigator.of(context).pop();
-            Get.back();
+            Get.until((route) => Get.currentRoute == Routes.MESSAGES);
 
             mediaGlassmorphicChangeState();
             messages.refresh();
@@ -613,11 +624,6 @@ class MessagesController extends GetxController {
               jumpToBottom();
             });
           },
-          inputTextStyle: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
-          previewTextInputDecoration: InputDecoration(
-            hintText: 'Type something',
-            hintStyle: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
-          ),
         ),
       );
     } catch (e) {
