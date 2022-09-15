@@ -1,7 +1,10 @@
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
-import 'package:heyo/app/modules/share_location/widgets/location_permission_dialog.dart';
+import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
+import 'package:heyo/generated/assets.gen.dart';
+import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ShareLocationController extends GetxController {
@@ -20,17 +23,19 @@ class ShareLocationController extends GetxController {
   @override
   void onReady() async {
     super.onReady();
-    if (await Permission.location.isDenied) {
-      final result = await Get.dialog(const LocationPermissionDialog());
-      if (!result) {
-        Get.back();
-        return;
-      }
 
-      if (!await Permission.location.request().isGranted) {
-        Get.back();
-        return;
-      }
+    final isLocationPermissionGranted = await PermissionFlow(
+      permission: Permission.location,
+      subtitle: LocaleKeys.Permissions_location.tr,
+      indicatorIcon: Assets.svg.locationOutlined.svg(
+        width: 28.w,
+        height: 28.w,
+      ),
+    ).start();
+
+    if (!isLocationPermissionGranted) {
+      Get.back();
+      return;
     }
 
     _controller.value = MapController();

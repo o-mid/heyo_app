@@ -258,11 +258,6 @@ class LocaleKeys {
       'forwardMassagesPage_bottomBar_forwardTO';
   static const forwardMassagesPage_bottomBar_messages =
       'forwardMassagesPage_bottomBar_messages';
-  static const permissionDialog_continue = 'permissionDialog_continue';
-  static const permissionDialog_notNow = 'permissionDialog_notNow';
-  static const permissionDialog_allowAccess = 'permissionDialog_allowAccess';
-  static const permissionDialog_locationSubtitle =
-      'permissionDialog_locationSubtitle';
   static const shareLocationPage_appBar = 'shareLocationPage_appBar';
   static const shareLocationPage_bottomSheet_shareLiveLocation =
       'shareLocationPage_bottomSheet_shareLiveLocation';
@@ -295,8 +290,9 @@ class LocaleKeys {
   static const Permissions_AllowAccess = 'Permissions_AllowAccess';
   static const Permissions_capturePhotos = 'Permissions_capturePhotos';
   static const Permissions_camera = 'Permissions_camera';
-  static const Permissions_buttons_Continue = 'Permissions_buttons_Continue';
-  static const Permissions_buttons_Notnow = 'Permissions_buttons_Notnow';
+  static const Permissions_location = 'Permissions_location';
+  static const Permissions_buttons_continue = 'Permissions_buttons_continue';
+  static const Permissions_buttons_notNow = 'Permissions_buttons_notNow';
   static const shareFilePage_appbarTitle = 'shareFilePage_appbarTitle';
   static const shareFilePage_textInputTitle = 'shareFilePage_textInputTitle';
   static const shareFilePage_searchResults = 'shareFilePage_searchResults';
@@ -496,11 +492,6 @@ class Locales {
     'forwardMassagesPage_contacts': 'Contacts',
     'forwardMassagesPage_bottomBar_forwardTO': 'Forward to ',
     'forwardMassagesPage_bottomBar_messages': ' messages',
-    'permissionDialog_continue': 'Continue',
-    'permissionDialog_notNow': 'Not now',
-    'permissionDialog_allowAccess': 'Allow access',
-    'permissionDialog_locationSubtitle':
-        'To share location, you need to allow Heyo access to your device\'s location.',
     'shareLocationPage_appBar': 'Share Location',
     'shareLocationPage_bottomSheet_shareLiveLocation': 'Share My Live Location',
     'shareLocationPage_bottomSheet_sendPickerLocation': 'Send Picker Location',
@@ -529,8 +520,10 @@ class Locales {
         'To capture photos and videos, you need to allow Heyo access to \n your device’s photos, \n media and files.',
     'Permissions_camera':
         'To capture photos and videos, you need to \n allow Heyo access to your camera.',
-    'Permissions_buttons_Continue': 'Continue',
-    'Permissions_buttons_Notnow': 'Not now',
+    'Permissions_location':
+        'To share location, you need to allow Heyo access to your device\'s location.',
+    'Permissions_buttons_continue': 'Continue',
+    'Permissions_buttons_notNow': 'Not now',
     'shareFilePage_appbarTitle': 'Send files',
     'shareFilePage_textInputTitle': 'Search in files',
     'shareFilePage_searchResults': 'Search results',

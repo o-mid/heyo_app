@@ -6,6 +6,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/multi_media_messa
 import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message.usecase.dart';
+import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,6 @@ import 'package:heyo/app/modules/shared/controllers/audio_message_controller.dar
 import 'package:heyo/app/modules/shared/controllers/video_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
-import 'package:heyo/app/modules/shared/widgets/permission_dialog.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -475,35 +475,28 @@ class MessagesController extends GetxController {
     isMediaGlassmorphicOpen.value = !isMediaGlassmorphicOpen.value;
   }
 
-  //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> pick(BuildContext context) async {
-    final mediaPermission = await _requestPermission(
+    final mediaPermission = await PermissionFlow(
       permission: Permission.mediaLibrary,
-      dialog: PermissionDialog(
-        indicatorIcon: Assets.svg.camerapermissionIcon.svg(
-          width: 28.w,
-          height: 28.w,
-        ),
-        title: LocaleKeys.Permissions_AllowAccess.tr,
-        subtitle: LocaleKeys.Permissions_capturePhotos.tr,
+      subtitle: LocaleKeys.Permissions_capturePhotos.tr,
+      indicatorIcon: Assets.svg.camerapermissionIcon.svg(
+        width: 28.w,
+        height: 28.w,
       ),
-    );
+    ).start();
 
     if (!mediaPermission) {
       return;
     }
 
-    final cameraPermission = await _requestPermission(
+    final cameraPermission = await PermissionFlow(
       permission: Permission.camera,
-      dialog: PermissionDialog(
-        indicatorIcon: Assets.svg.camerapermissionIcon.svg(
-          width: 28.w,
-          height: 28.w,
-        ),
-        title: LocaleKeys.Permissions_AllowAccess.tr,
-        subtitle: LocaleKeys.Permissions_camera.tr,
+      subtitle: LocaleKeys.Permissions_camera.tr,
+      indicatorIcon: Assets.svg.camerapermissionIcon.svg(
+        width: 28.w,
+        height: 28.w,
       ),
-    );
+    ).start();
 
     if (!cameraPermission) {
       return;
@@ -512,22 +505,6 @@ class MessagesController extends GetxController {
     if (!isClosed) {
       openCameraPicker(context);
     }
-  }
-
-  Future<bool> _requestPermission({required Permission permission, required Widget dialog}) async {
-    if (await permission.isDenied) {
-      bool result = await Get.dialog(dialog);
-
-      if (!result) {
-        return false;
-      }
-
-      if (!await permission.request().isGranted) {
-        return false;
-      }
-    }
-
-    return true;
   }
 
   //TODO ramin, i think they can be moved in a helper class, wee need to discuss further

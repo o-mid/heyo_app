@@ -239,12 +239,6 @@
       "messages": " messages"
     }
   },
-  "permissionDialog": {
-    "continue": "Continue",
-    "notNow": "Not now",
-    "allowAccess": "Allow access",
-    "locationSubtitle": "To share location, you need to allow Heyo access to your device's location."
-  },
   "shareLocationPage": {
     "appBar": "Share Location",
     "bottomSheet": {
@@ -277,9 +271,10 @@
     "AllowAccess": "Allow access",
     "capturePhotos": "To capture photos and videos, you need to allow Heyo access to \n your device’s photos, \n media and files.",
     "camera": "To capture photos and videos, you need to \n allow Heyo access to your camera.",
+    "location": "To share location, you need to allow Heyo access to your device's location.",
     "buttons": {
-      "Continue": "Continue",
-      "Notnow": "Not now"
+      "continue": "Continue",
+      "notNow": "Not now"
     }
   },
   "shareFilePage": {
