@@ -7,7 +7,7 @@ import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_histo
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 
-class CallHistoryController extends GetxController {
+class CallHistoryObserver extends GetxController {
   final CallHistoryAbstractRepo callHistoryRepo;
   final CallConnectionController callConnectionController;
 
@@ -17,7 +17,7 @@ class CallHistoryController extends GetxController {
 
   late StreamSubscription stateListener;
 
-  CallHistoryController({
+  CallHistoryObserver({
     required this.callHistoryRepo,
     required this.callConnectionController,
   });
