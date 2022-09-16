@@ -6,6 +6,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/multi_media_messa
 import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message.usecase.dart';
+import 'package:heyo/app/modules/messages/utils/open_camera_for_sending_media_message.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
@@ -28,11 +29,8 @@ import 'package:heyo/app/modules/messages/data/models/metadatas/image_metadata.d
 import 'package:heyo/app/modules/messages/data/models/metadatas/video_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
-import 'package:heyo/app/modules/messages/widgets/body/camera_picker/receiver_name_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/delete_message_dialog.dart';
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
-import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
-import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/controllers/live_location_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/audio_message_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/video_message_controller.dart';
@@ -43,8 +41,6 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-
-import '../../shared/widgets/gallery_preview_button_widget.dart';
 
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
@@ -510,98 +506,68 @@ class MessagesController extends GetxController {
   //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> openCameraPicker(BuildContext context) async {
     try {
-      await CameraPicker.pickFromCamera(
+      await openCameraForSendingMediaMessage(
         context,
-        pickerConfig: CameraPickerConfig(
-          textDelegate: EnglishCameraPickerTextDelegate(),
-          sendIcon: Assets.svg.sendIcon.svg(),
-          receiverNameWidget: ReceiverNameWidget(name: args.chat.name),
-          additionalPreviewButtonWidget: const GalleryPreviewButtonWidget(),
-          inputTextStyle: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
-          previewTextInputDecoration: InputDecoration(
-            hintText: 'Type something',
-            hintStyle: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
-          ),
-          onEntitySaving: (
-            BuildContext context,
-            CameraPickerViewType viewType,
-            File file,
-            List<Map<String, dynamic>>? confirmedFiles,
-          ) async {
-            AssetEntity? entity;
+        receiverName: args.chat.name,
+        onEntitySaving: (CameraPickerViewType viewType, File file) async {
+          AssetEntity? entity;
 
-            switch (viewType) {
-              case CameraPickerViewType.image:
-                final String filePath = file.path;
-                entity = await PhotoManager.editor.saveImageWithPath(
-                  filePath,
-                  title: path.basename(filePath),
-                );
+          switch (viewType) {
+            case CameraPickerViewType.image:
+              final String filePath = file.path;
+              entity = await PhotoManager.editor.saveImageWithPath(
+                filePath,
+                title: path.basename(filePath),
+              );
 
-                if (entity == null) {
-                  break;
-                }
-
-                messages.add(
-                  ImageMessageModel(
-                    messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                    isLocal: true,
-                    metadata: ImageMetadata(
-                      height: entity.height.toDouble(),
-                      width: entity.width.toDouble(),
-                    ),
-                    senderAvatar: '',
-                    senderName: '',
-                    isFromMe: true,
-                    status: MessageStatus.sent,
-                    timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                    url: file.path,
-                  ),
-                );
-
+              if (entity == null) {
                 break;
-              case CameraPickerViewType.video:
-                entity = await PhotoManager.editor.saveVideo(
-                  File(file.path),
-                  title: path.basename(file.path),
-                );
+              }
 
-                if (entity == null) {
-                  break;
-                }
+              await SendMessage.image(
+                path: file.path,
+                metadata: ImageMetadata(
+                  height: entity.height.toDouble(),
+                  width: entity.width.toDouble(),
+                ),
+                messagesRepo: messagesRepo,
+              ).execute(replyTo: replyingTo.value, chatId: args.chat.id);
 
-                messages.add(
-                  VideoMessageModel(
-                    messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                    metadata: VideoMetadata(
-                      durationInSeconds: entity.videoDuration.inSeconds,
-                      height: entity.height.toDouble(),
-                      width: entity.width.toDouble(),
-                      isLocal: true,
-                      thumbnailBytes: await entity.thumbnailData,
-                      thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
-                    ),
-                    url: file.path,
-                    timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                    senderName: '',
-                    senderAvatar: '',
-                    isFromMe: true,
-                    status: MessageStatus.sent,
-                  ),
-                );
+              break;
+            case CameraPickerViewType.video:
+              entity = await PhotoManager.editor.saveVideo(
+                File(file.path),
+                title: path.basename(file.path),
+              );
 
+              if (entity == null) {
                 break;
-            }
+              }
 
-            Get.until((route) => Get.currentRoute == Routes.MESSAGES);
+              await SendMessage.video(
+                path: file.path,
+                metadata: VideoMetadata(
+                  durationInSeconds: entity.videoDuration.inSeconds,
+                  height: entity.height.toDouble(),
+                  width: entity.width.toDouble(),
+                  isLocal: true,
+                  thumbnailBytes: await entity.thumbnailData,
+                  thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+                ),
+                messagesRepo: messagesRepo,
+              ).execute(replyTo: replyingTo.value, chatId: args.chat.id);
 
-            mediaGlassmorphicChangeState();
-            messages.refresh();
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              jumpToBottom();
-            });
-          },
-        ),
+              break;
+          }
+
+          Get.until((route) => Get.currentRoute == Routes.MESSAGES);
+
+          mediaGlassmorphicChangeState();
+          messages.refresh();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            jumpToBottom();
+          });
+        },
       );
     } catch (e) {
       if (kDebugMode) {

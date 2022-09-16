@@ -1,9 +1,13 @@
 import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/live_location_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/location_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/audio_metadata.dart';
+import 'package:heyo/app/modules/messages/data/models/metadatas/image_metadata.dart';
+import 'package:heyo/app/modules/messages/data/models/metadatas/video_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 
@@ -36,6 +40,18 @@ class SendMessage {
     required Duration duration,
     required MessagesAbstractRepo messagesRepo,
   }) = SendLiveLocationMessage;
+
+  factory SendMessage.image({
+    required String path,
+    required ImageMetadata metadata,
+    required MessagesAbstractRepo messagesRepo,
+  }) = SendImageMessage;
+
+  factory SendMessage.video({
+    required String path,
+    required VideoMetadata metadata,
+    required MessagesAbstractRepo messagesRepo,
+  }) = SendVideoMessage;
 
   Future<void> execute({required ReplyToModel? replyTo, required String chatId}) async {
     final id = DateTime.now().millisecondsSinceEpoch.toString(); // Todo: use uuid
@@ -103,6 +119,35 @@ class SendMessage {
           isFromMe: true,
         );
         break;
+      case SendImageMessage:
+        msg = ImageMessageModel(
+          url: (this as SendImageMessage).path,
+          metadata: (this as SendImageMessage).metadata,
+          isLocal: true,
+          messageId: id,
+          timestamp: timestamp,
+          senderName: senderName,
+          senderAvatar: senderAvatar,
+          replyTo: replyTo,
+          type: MessageContentType.image,
+          status: MessageStatus.sending,
+          isFromMe: true,
+        );
+        break;
+      case SendVideoMessage:
+        msg = VideoMessageModel(
+          url: (this as SendVideoMessage).path,
+          metadata: (this as SendVideoMessage).metadata,
+          messageId: id,
+          timestamp: timestamp,
+          senderName: senderName,
+          senderAvatar: senderAvatar,
+          replyTo: replyTo,
+          type: MessageContentType.video,
+          status: MessageStatus.sending,
+          isFromMe: true,
+        );
+        break;
     }
 
     if (msg == null) {
@@ -155,6 +200,28 @@ class SendLiveLocationMessage extends SendMessage {
     required this.startLat,
     required this.startLong,
     required this.duration,
+    required super.messagesRepo,
+  });
+}
+
+class SendImageMessage extends SendMessage {
+  final String path;
+  final ImageMetadata metadata;
+
+  SendImageMessage({
+    required this.path,
+    required this.metadata,
+    required super.messagesRepo,
+  });
+}
+
+class SendVideoMessage extends SendMessage {
+  final String path;
+  final VideoMetadata metadata;
+
+  SendVideoMessage({
+    required this.path,
+    required this.metadata,
     required super.messagesRepo,
   });
 }
