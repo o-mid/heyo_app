@@ -43,6 +43,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../share_files/models/file_model.dart';
+import '../data/usecases/delete_message.usecase.dart';
 
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
@@ -421,11 +422,10 @@ class MessagesController extends GetxController {
       // Todo: libp2p - delete for others
     }
 
-    // delete messages from local database
-    messagesRepo.deleteMessages(
-      messageIds: selectedMessages.map((m) => m.messageId).toList(),
-      chatId: args.chat.id,
-    );
+    DeleteMessage.forEveryone(
+      messagesRepo: messagesRepo,
+      selectedMessages: selectedMessages,
+    ).execute(chatId: args.chat.id);
 
     clearSelected();
   }
@@ -434,12 +434,10 @@ class MessagesController extends GetxController {
     for (var toDelete in selectedMessages) {
       messages.removeWhere((msg) => msg.messageId == toDelete.messageId);
     }
-
-    // delete messages from local database
-    messagesRepo.deleteMessages(
-      messageIds: selectedMessages.map((m) => m.messageId).toList(),
-      chatId: args.chat.id,
-    );
+    DeleteMessage.forMe(
+      messagesRepo: messagesRepo,
+      selectedMessages: selectedMessages,
+    ).execute(chatId: args.chat.id);
 
     clearSelected();
   }

@@ -161,8 +161,6 @@ class SendMessage {
         break;
       case SendFileMessage:
         msg = FileMessageModel(
-          // url: (this as SendFileMessage).path,
-
           metadata: (this as SendFileMessage).metadata,
           messageId: id,
           timestamp: timestamp,
