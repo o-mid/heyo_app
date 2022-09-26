@@ -42,6 +42,8 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
+import '../../share_files/models/file_model.dart';
+
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
 
@@ -720,13 +722,9 @@ class MessagesController extends GetxController {
       Routes.SHARE_FILES,
     );
     if (result != null) {
-      result.forEach((asset) async {
-        messages.add(FileMessageModel(
-          senderName: '',
-          senderAvatar: '',
-          isFromMe: true,
-          status: MessageStatus.sent,
-          messageId: "${messages.lastIndexOf(messages.last) + 1}",
+      result as RxList<FileModel>;
+      for (var asset in result) {
+        await SendMessage.file(
           metadata: FileMetaData(
             extension: asset.extension,
             name: asset.name,
@@ -735,9 +733,9 @@ class MessagesController extends GetxController {
             timestamp: asset.timestamp,
             isImage: asset.isImage,
           ),
-          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-        ));
-      });
+          messagesRepo: messagesRepo,
+        ).execute(replyTo: replyingTo.value, chatId: args.chat.id);
+      }
       mediaGlassmorphicChangeState();
       messages.refresh();
 

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/live_location_message_model.dart';
@@ -6,10 +7,14 @@ import 'package:heyo/app/modules/messages/data/models/messages/message_model.dar
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/audio_metadata.dart';
+import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/image_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/video_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
+import 'package:uuid/uuid.dart';
+
+import '../models/messages/file_message_model.dart';
 
 class SendMessage {
   final MessagesAbstractRepo messagesRepo;
@@ -53,8 +58,14 @@ class SendMessage {
     required MessagesAbstractRepo messagesRepo,
   }) = SendVideoMessage;
 
+  factory SendMessage.file({
+    required FileMetaData metadata,
+    required MessagesAbstractRepo messagesRepo,
+  }) = SendFileMessage;
+
   Future<void> execute({required ReplyToModel? replyTo, required String chatId}) async {
-    final id = DateTime.now().millisecondsSinceEpoch.toString(); // Todo: use uuid
+    var uuid = const Uuid();
+    final id = uuid.v4();
     final timestamp = DateTime.now();
     const senderName = ""; // Todo: get sender name from user repo
     const senderAvatar = ""; // Todo: get sender avatar from user repo
@@ -148,6 +159,21 @@ class SendMessage {
           isFromMe: true,
         );
         break;
+      case SendFileMessage:
+        msg = FileMessageModel(
+          // url: (this as SendFileMessage).path,
+
+          metadata: (this as SendFileMessage).metadata,
+          messageId: id,
+          timestamp: timestamp,
+          senderName: senderName,
+          senderAvatar: senderAvatar,
+          replyTo: replyTo,
+          type: MessageContentType.file,
+          status: MessageStatus.sending,
+          isFromMe: true,
+        );
+        break;
     }
 
     if (msg == null) {
@@ -221,6 +247,15 @@ class SendVideoMessage extends SendMessage {
 
   SendVideoMessage({
     required this.path,
+    required this.metadata,
+    required super.messagesRepo,
+  });
+}
+
+class SendFileMessage extends SendMessage {
+  final FileMetaData metadata;
+
+  SendFileMessage({
     required this.metadata,
     required super.messagesRepo,
   });
