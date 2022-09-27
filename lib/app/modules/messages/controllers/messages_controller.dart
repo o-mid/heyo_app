@@ -44,6 +44,7 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../share_files/models/file_model.dart';
 import '../data/usecases/delete_message.usecase.dart';
+import '../data/usecases/update_message.usecase.dart';
 
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
@@ -201,29 +202,10 @@ class MessagesController extends GetxController {
   }
 
   void toggleReaction(MessageModel msg, String emoji) {
-    final index = messages.indexWhere((m) => m.messageId == msg.messageId);
-    if (index < 0) {
-      return;
-    }
-
-    final message = messages[index];
-    var reaction = message.reactions[emoji] ?? ReactionModel();
-
-    if (reaction.isReactedByMe) {
-      // Todo: remove user core id from list
-      reaction.users.removeLast();
-    } else {
-      // Todo: add user core id
-      reaction = reaction.copyWith(users: [...reaction.users, ""]);
-    }
-    reaction = reaction.copyWith(
-      isReactedByMe: !reaction.isReactedByMe,
-    );
-    messages[index] = message.copyWith(reactions: {...message.reactions, emoji: reaction});
-
-    messages.refresh();
-
-    // Todo: send updated reactions with libp2p
+    UpdateMessage.updateReactions(messagesRepo: messagesRepo, selectedMessage: msg, emoji: emoji)
+        .execute(chatId: args.chat.id)
+        // TODO : remove this after implementing database listener
+        .then((value) => {_getMessages()});
   }
 
   void toggleMessageSelection(String id) {
@@ -252,10 +234,13 @@ class MessagesController extends GetxController {
     SendMessage.text(
       messagesRepo: messagesRepo,
       text: newMessage.value,
-    ).execute(
-      replyTo: replyingTo.value,
-      chatId: args.chat.id,
-    );
+    )
+        .execute(
+          replyTo: replyingTo.value,
+          chatId: args.chat.id,
+        )
+        // TODO : remove this after implementing database listener
+        .then((value) => {_getMessages()});
 
     textController.clear();
     newMessage.value = "";
