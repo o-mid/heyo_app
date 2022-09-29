@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/provider/messages_abstract_provider.dart';
 import 'package:heyo/app/modules/messages/utils/message_from_json.dart';
@@ -80,5 +82,24 @@ class MessagesProvider implements MessagesAbstractProvider {
     final messages = await getMessages(chatId);
     messages.removeWhere((m) => messageIds.contains(m.messageId));
     await _store.record(chatId).put(await _db, messages.map((m) => m.toJson()).toList());
+  }
+
+  @override
+  Future<Stream<List<MessageModel>>> getMessagesStream(String chatId) async {
+    return _store.record(chatId).onSnapshot(await _db).transform(
+      StreamTransformer.fromHandlers(
+        handleData: (data, sink) {
+          var messages = data?.value ?? [];
+          messages = cloneList(messages);
+
+          messages.removeWhere((element) => element == null);
+
+          final nullableMessages =
+              messages.map((m) => messageFromJson(m as Map<String, dynamic>)).toList();
+
+          sink.add(nullableMessages.whereType<MessageModel>().toList());
+        },
+      ),
+    );
   }
 }

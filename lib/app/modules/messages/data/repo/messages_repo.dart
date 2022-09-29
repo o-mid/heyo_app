@@ -31,4 +31,9 @@ class MessagesRepo implements MessagesAbstractRepo {
   Future<void> deleteMessages({required List<String> messageIds, required String chatId}) {
     return messagesProvider.deleteMessages(messageIds: messageIds, chatId: chatId);
   }
+
+  @override
+  Future<Stream<List<MessageModel>>> getMessagesStream(String chatId) {
+    return messagesProvider.getMessagesStream(chatId);
+  }
 }

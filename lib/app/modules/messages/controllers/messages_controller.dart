@@ -64,7 +64,7 @@ class MessagesController extends GetxController {
   final replyingTo = Rxn<ReplyToModel>();
   final locationMessage = Rxn<LocationMessageModel>();
   late MessagesViewArgumentsModel args;
-
+  late StreamSubscription _messagesStreamSubscription;
   @override
   void onInit() {
     super.onInit();
@@ -76,11 +76,19 @@ class MessagesController extends GetxController {
 
     _getMessages();
     //TODO ramin, start listening to the database changes and apply them
+    initMessagesStream();
 
     _sendForwardedMessages();
 
     // Close emoji picker when keyboard opens
     _handleKeyboardVisibilityChanges();
+  }
+
+  void initMessagesStream() async {
+    _messagesStreamSubscription =
+        (await messagesRepo.getMessagesStream(args.chat.id)).listen((newMessages) {
+      messages.value = newMessages;
+    });
   }
 
   @override
@@ -95,6 +103,7 @@ class MessagesController extends GetxController {
     Get.find<AudioMessageController>().player.stop();
 
     Get.find<VideoMessageController>().stopAndClearPreviousVideo();
+    _messagesStreamSubscription.cancel();
     super.onClose();
   }
 
@@ -203,9 +212,7 @@ class MessagesController extends GetxController {
 
   void toggleReaction(MessageModel msg, String emoji) {
     UpdateMessage.updateReactions(messagesRepo: messagesRepo, selectedMessage: msg, emoji: emoji)
-        .execute(chatId: args.chat.id)
-        // TODO : remove this after implementing database listener
-        .then((value) => {_getMessages()});
+        .execute(chatId: args.chat.id);
   }
 
   void toggleMessageSelection(String id) {
@@ -234,13 +241,10 @@ class MessagesController extends GetxController {
     SendMessage.text(
       messagesRepo: messagesRepo,
       text: newMessage.value,
-    )
-        .execute(
-          replyTo: replyingTo.value,
-          chatId: args.chat.id,
-        )
-        // TODO : remove this after implementing database listener
-        .then((value) => {_getMessages()});
+    ).execute(
+      replyTo: replyingTo.value,
+      chatId: args.chat.id,
+    );
 
     textController.clear();
     newMessage.value = "";
