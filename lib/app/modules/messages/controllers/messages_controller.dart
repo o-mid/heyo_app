@@ -5,7 +5,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/file_message_mode
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
-import 'package:heyo/app/modules/messages/data/usecases/send_message.usecase.dart';
+import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/messages/utils/open_camera_for_sending_media_message.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:path/path.dart' as path;
@@ -43,8 +43,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../share_files/models/file_model.dart';
-import '../data/usecases/delete_message.usecase.dart';
-import '../data/usecases/update_message.usecase.dart';
+import '../data/usecases/delete_message_usecase.dart';
+import '../data/usecases/update_message_usecase.dart';
 
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
