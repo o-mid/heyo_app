@@ -211,8 +211,12 @@ class MessagesController extends GetxController {
   }
 
   void toggleReaction(MessageModel msg, String emoji) {
-    UpdateMessage.updateReactions(messagesRepo: messagesRepo, selectedMessage: msg, emoji: emoji)
-        .execute(chatId: args.chat.id);
+    UpdateMessage(messagesRepo: messagesRepo).execute(
+        updateMessageType: UpdateMessageType.updateReactions(
+      selectedMessage: msg,
+      emoji: emoji,
+      chatId: args.chat.id,
+    ));
   }
 
   void toggleMessageSelection(String id) {
@@ -238,12 +242,12 @@ class MessagesController extends GetxController {
   }
 
   void sendTextMessage() async {
-    SendMessage.text(
-      messagesRepo: messagesRepo,
-      text: newMessage.value,
-    ).execute(
-      replyTo: replyingTo.value,
-      chatId: args.chat.id,
+    SendMessage(messagesRepo: messagesRepo).execute(
+      sendMessageType: SendMessageType.text(
+        text: newMessage.value,
+        replyTo: replyingTo.value,
+        chatId: args.chat.id,
+      ),
     );
 
     textController.clear();
@@ -253,13 +257,13 @@ class MessagesController extends GetxController {
   }
 
   void sendAudioMessage(String path, int duration) {
-    SendMessage.audio(
-      messagesRepo: messagesRepo,
-      path: path,
-      metadata: AudioMetadata(durationInSeconds: duration),
-    ).execute(
-      replyTo: replyingTo.value,
-      chatId: args.chat.id,
+    SendMessage(messagesRepo: messagesRepo).execute(
+      sendMessageType: SendMessageType.audio(
+        path: path,
+        metadata: AudioMetadata(durationInSeconds: duration),
+        replyTo: replyingTo.value,
+        chatId: args.chat.id,
+      ),
     );
 
     _postMessageSendOperations();
@@ -271,14 +275,14 @@ class MessagesController extends GetxController {
       return;
     }
 
-    SendMessage.location(
-      messagesRepo: messagesRepo,
-      lat: message.latitude,
-      long: message.longitude,
-      address: message.address,
-    ).execute(
-      replyTo: replyingTo.value,
-      chatId: args.chat.id,
+    SendMessage(messagesRepo: messagesRepo).execute(
+      sendMessageType: SendMessageType.location(
+        lat: message.latitude,
+        long: message.longitude,
+        address: message.address,
+        replyTo: replyingTo.value,
+        chatId: args.chat.id,
+      ),
     );
 
     locationMessage.value = null;
@@ -291,14 +295,14 @@ class MessagesController extends GetxController {
     required double startLat,
     required double startLong,
   }) {
-    SendMessage.liveLocation(
-      messagesRepo: messagesRepo,
-      startLat: startLat,
-      startLong: startLong,
-      duration: duration,
-    ).execute(
-      replyTo: replyingTo.value,
-      chatId: args.chat.id,
+    SendMessage(messagesRepo: messagesRepo).execute(
+      sendMessageType: SendMessageType.liveLocation(
+        startLat: startLat,
+        startLong: startLong,
+        duration: duration,
+        replyTo: replyingTo.value,
+        chatId: args.chat.id,
+      ),
     );
 
     _postMessageSendOperations();
@@ -405,29 +409,20 @@ class MessagesController extends GetxController {
   }
 
   void deleteSelectedForEveryone() {
-    // Todo: update status of messages instead of removing from list
-    for (var toDelete in selectedMessages) {
-      messages.removeWhere((msg) => msg.messageId == toDelete.messageId);
-      // Todo: libp2p - delete for others
-    }
-
-    DeleteMessage.forEveryone(
-      messagesRepo: messagesRepo,
+    DeleteMessage(messagesRepo: messagesRepo).execute(
+        deleteMessageType: DeleteMessageType.forEveryone(
+      chatId: args.chat.id,
       selectedMessages: selectedMessages,
-    ).execute(chatId: args.chat.id);
-
+    ));
     clearSelected();
   }
 
   void deleteSelectedForMe() {
-    for (var toDelete in selectedMessages) {
-      messages.removeWhere((msg) => msg.messageId == toDelete.messageId);
-    }
-    DeleteMessage.forMe(
-      messagesRepo: messagesRepo,
+    DeleteMessage(messagesRepo: messagesRepo).execute(
+        deleteMessageType: DeleteMessageType.forMe(
+      chatId: args.chat.id,
       selectedMessages: selectedMessages,
-    ).execute(chatId: args.chat.id);
-
+    ));
     clearSelected();
   }
 
@@ -512,15 +507,17 @@ class MessagesController extends GetxController {
               if (entity == null) {
                 break;
               }
-
-              await SendMessage.image(
-                path: file.path,
-                metadata: ImageMetadata(
-                  height: entity.height.toDouble(),
-                  width: entity.width.toDouble(),
+              await SendMessage(messagesRepo: messagesRepo).execute(
+                sendMessageType: SendMessageType.image(
+                  path: file.path,
+                  metadata: ImageMetadata(
+                    height: entity.height.toDouble(),
+                    width: entity.width.toDouble(),
+                  ),
+                  replyTo: replyingTo.value,
+                  chatId: args.chat.id,
                 ),
-                messagesRepo: messagesRepo,
-              ).execute(replyTo: replyingTo.value, chatId: args.chat.id);
+              );
 
               break;
             case CameraPickerViewType.video:
@@ -533,18 +530,21 @@ class MessagesController extends GetxController {
                 break;
               }
 
-              await SendMessage.video(
-                path: file.path,
-                metadata: VideoMetadata(
-                  durationInSeconds: entity.videoDuration.inSeconds,
-                  height: entity.height.toDouble(),
-                  width: entity.width.toDouble(),
-                  isLocal: true,
-                  thumbnailBytes: await entity.thumbnailData,
-                  thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+              await SendMessage(messagesRepo: messagesRepo).execute(
+                sendMessageType: SendMessageType.video(
+                  path: file.path,
+                  metadata: VideoMetadata(
+                    durationInSeconds: entity.videoDuration.inSeconds,
+                    height: entity.height.toDouble(),
+                    width: entity.width.toDouble(),
+                    isLocal: true,
+                    thumbnailBytes: await entity.thumbnailData,
+                    thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+                  ),
+                  replyTo: replyingTo.value,
+                  chatId: args.chat.id,
                 ),
-                messagesRepo: messagesRepo,
-              ).execute(replyTo: replyingTo.value, chatId: args.chat.id);
+              );
 
               break;
           }
@@ -711,17 +711,20 @@ class MessagesController extends GetxController {
     if (result != null) {
       result as RxList<FileModel>;
       for (var asset in result) {
-        await SendMessage.file(
-          metadata: FileMetaData(
-            extension: asset.extension,
-            name: asset.name,
-            path: asset.path,
-            size: asset.size,
-            timestamp: asset.timestamp,
-            isImage: asset.isImage,
+        await SendMessage(messagesRepo: messagesRepo).execute(
+          sendMessageType: SendMessageType.file(
+            metadata: FileMetaData(
+              extension: asset.extension,
+              name: asset.name,
+              path: asset.path,
+              size: asset.size,
+              timestamp: asset.timestamp,
+              isImage: asset.isImage,
+            ),
+            replyTo: replyingTo.value,
+            chatId: args.chat.id,
           ),
-          messagesRepo: messagesRepo,
-        ).execute(replyTo: replyingTo.value, chatId: args.chat.id);
+        );
       }
       mediaGlassmorphicChangeState();
       messages.refresh();

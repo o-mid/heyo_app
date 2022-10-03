@@ -6,46 +6,52 @@ class DeleteMessage {
 
   DeleteMessage({required this.messagesRepo});
 
-  factory DeleteMessage.forMe({
-    required MessagesAbstractRepo messagesRepo,
-    required List<MessageModel> selectedMessages,
-  }) = DeleteLocalMessages;
-
-  factory DeleteMessage.forEveryone({
-    required MessagesAbstractRepo messagesRepo,
-    required List<MessageModel> selectedMessages,
-  }) = DeleteRemoteMessages;
-
-  Future<void> execute({required String chatId}) async {
-    switch (runtimeType) {
+  execute({required DeleteMessageType deleteMessageType}) async {
+    switch (deleteMessageType.runtimeType) {
       case DeleteLocalMessages:
-        final localMessages = (this as DeleteLocalMessages).selectedMessages;
+        final localMessages = (deleteMessageType as DeleteLocalMessages).selectedMessages;
         final messageIds = localMessages.map((e) => e.messageId).toList();
-        await messagesRepo.deleteMessages(messageIds: messageIds, chatId: chatId);
+        await messagesRepo.deleteMessages(messageIds: messageIds, chatId: deleteMessageType.chatId);
         break;
 
       case DeleteRemoteMessages:
         // Todo: libp2p - delete for others
-        final remoteMessages = (this as DeleteRemoteMessages).selectedMessages;
+        final remoteMessages = (deleteMessageType as DeleteRemoteMessages).selectedMessages;
         final messageIds = remoteMessages.map((e) => e.messageId).toList();
-        await messagesRepo.deleteMessages(messageIds: messageIds, chatId: chatId);
+        await messagesRepo.deleteMessages(messageIds: messageIds, chatId: deleteMessageType.chatId);
         break;
     }
   }
 }
 
-class DeleteLocalMessages extends DeleteMessage {
+class DeleteMessageType {
+  final String chatId;
+
+  DeleteMessageType({required this.chatId});
+
+  factory DeleteMessageType.forMe({
+    required List<MessageModel> selectedMessages,
+    required String chatId,
+  }) = DeleteLocalMessages;
+
+  factory DeleteMessageType.forEveryone({
+    required List<MessageModel> selectedMessages,
+    required String chatId,
+  }) = DeleteRemoteMessages;
+}
+
+class DeleteLocalMessages extends DeleteMessageType {
   final List<MessageModel> selectedMessages;
   DeleteLocalMessages({
-    required super.messagesRepo,
+    required super.chatId,
     required this.selectedMessages,
   });
 }
 
-class DeleteRemoteMessages extends DeleteMessage {
+class DeleteRemoteMessages extends DeleteMessageType {
   final List<MessageModel> selectedMessages;
   DeleteRemoteMessages({
-    required super.messagesRepo,
+    required super.chatId,
     required this.selectedMessages,
   });
 }

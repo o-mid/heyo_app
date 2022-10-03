@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/live_location_message_model.dart';
@@ -21,49 +20,9 @@ class SendMessage {
 
   SendMessage({required this.messagesRepo});
 
-  factory SendMessage.text({
-    required String text,
-    required MessagesAbstractRepo messagesRepo,
-  }) = SendTextMessage;
-
-  factory SendMessage.audio({
-    required String path,
-    required AudioMetadata metadata,
-    required MessagesAbstractRepo messagesRepo,
-  }) = SendAudioMessage;
-
-  factory SendMessage.location({
-    required double lat,
-    required double long,
-    required String address,
-    required MessagesAbstractRepo messagesRepo,
-  }) = SendLocationMessage;
-
-  factory SendMessage.liveLocation({
-    required double startLat,
-    required double startLong,
-    required Duration duration,
-    required MessagesAbstractRepo messagesRepo,
-  }) = SendLiveLocationMessage;
-
-  factory SendMessage.image({
-    required String path,
-    required ImageMetadata metadata,
-    required MessagesAbstractRepo messagesRepo,
-  }) = SendImageMessage;
-
-  factory SendMessage.video({
-    required String path,
-    required VideoMetadata metadata,
-    required MessagesAbstractRepo messagesRepo,
-  }) = SendVideoMessage;
-
-  factory SendMessage.file({
-    required FileMetaData metadata,
-    required MessagesAbstractRepo messagesRepo,
-  }) = SendFileMessage;
-
-  Future<void> execute({required ReplyToModel? replyTo, required String chatId}) async {
+  execute({
+    required SendMessageType sendMessageType,
+  }) async {
     var uuid = const Uuid();
     final id = uuid.v4();
     final timestamp = DateTime.now();
@@ -71,15 +30,15 @@ class SendMessage {
     const senderAvatar = ""; // Todo: get sender avatar from user repo
 
     MessageModel? msg;
-    switch (runtimeType) {
+    switch (sendMessageType.runtimeType) {
       case SendTextMessage:
         msg = TextMessageModel(
-          text: (this as SendTextMessage).text,
+          text: (sendMessageType as SendTextMessage).text,
           messageId: id,
           timestamp: timestamp,
           senderName: senderName,
           senderAvatar: senderAvatar,
-          replyTo: replyTo,
+          replyTo: sendMessageType.replyTo,
           type: MessageContentType.text,
           status: MessageStatus.sending,
           isFromMe: true,
@@ -88,13 +47,13 @@ class SendMessage {
       case SendAudioMessage:
         msg = AudioMessageModel(
           url: "",
-          localUrl: (this as SendAudioMessage).path,
-          metadata: (this as SendAudioMessage).metadata,
+          localUrl: (sendMessageType as SendAudioMessage).path,
+          metadata: (sendMessageType).metadata,
           messageId: id,
           timestamp: timestamp,
           senderName: senderName,
           senderAvatar: senderAvatar,
-          replyTo: replyTo,
+          replyTo: sendMessageType.replyTo,
           type: MessageContentType.audio,
           status: MessageStatus.sending,
           isFromMe: true,
@@ -102,14 +61,14 @@ class SendMessage {
         break;
       case SendLocationMessage:
         msg = LocationMessageModel(
-          latitude: (this as SendLocationMessage).lat,
-          longitude: (this as SendLocationMessage).long,
-          address: (this as SendLocationMessage).address,
+          latitude: (sendMessageType as SendLocationMessage).lat,
+          longitude: (sendMessageType).long,
+          address: (sendMessageType).address,
           messageId: id,
           timestamp: timestamp,
           senderName: senderName,
           senderAvatar: senderAvatar,
-          replyTo: replyTo,
+          replyTo: sendMessageType.replyTo,
           type: MessageContentType.location,
           status: MessageStatus.sending,
           isFromMe: true,
@@ -117,14 +76,14 @@ class SendMessage {
         break;
       case SendLiveLocationMessage:
         msg = LiveLocationMessageModel(
-          latitude: (this as SendLiveLocationMessage).startLat,
-          longitude: (this as SendLiveLocationMessage).startLong,
-          endTime: DateTime.now().add((this as SendLiveLocationMessage).duration),
+          latitude: (sendMessageType as SendLiveLocationMessage).startLat,
+          longitude: (sendMessageType).startLong,
+          endTime: DateTime.now().add((sendMessageType).duration),
           messageId: id,
           timestamp: timestamp,
           senderName: senderName,
           senderAvatar: senderAvatar,
-          replyTo: replyTo,
+          replyTo: sendMessageType.replyTo,
           type: MessageContentType.liveLocation,
           status: MessageStatus.sending,
           isFromMe: true,
@@ -132,14 +91,14 @@ class SendMessage {
         break;
       case SendImageMessage:
         msg = ImageMessageModel(
-          url: (this as SendImageMessage).path,
-          metadata: (this as SendImageMessage).metadata,
+          url: (sendMessageType as SendImageMessage).path,
+          metadata: (sendMessageType).metadata,
           isLocal: true,
           messageId: id,
           timestamp: timestamp,
           senderName: senderName,
           senderAvatar: senderAvatar,
-          replyTo: replyTo,
+          replyTo: sendMessageType.replyTo,
           type: MessageContentType.image,
           status: MessageStatus.sending,
           isFromMe: true,
@@ -147,13 +106,13 @@ class SendMessage {
         break;
       case SendVideoMessage:
         msg = VideoMessageModel(
-          url: (this as SendVideoMessage).path,
-          metadata: (this as SendVideoMessage).metadata,
+          url: (sendMessageType as SendVideoMessage).path,
+          metadata: (sendMessageType).metadata,
           messageId: id,
           timestamp: timestamp,
           senderName: senderName,
           senderAvatar: senderAvatar,
-          replyTo: replyTo,
+          replyTo: sendMessageType.replyTo,
           type: MessageContentType.video,
           status: MessageStatus.sending,
           isFromMe: true,
@@ -161,12 +120,12 @@ class SendMessage {
         break;
       case SendFileMessage:
         msg = FileMessageModel(
-          metadata: (this as SendFileMessage).metadata,
+          metadata: (sendMessageType as SendFileMessage).metadata,
           messageId: id,
           timestamp: timestamp,
           senderName: senderName,
           senderAvatar: senderAvatar,
-          replyTo: replyTo,
+          replyTo: sendMessageType.replyTo,
           type: MessageContentType.file,
           status: MessageStatus.sending,
           isFromMe: true,
@@ -178,83 +137,136 @@ class SendMessage {
       return;
     }
 
-    await messagesRepo.createMessage(message: msg, chatId: chatId);
+    await messagesRepo.createMessage(message: msg, chatId: sendMessageType.chatId);
   }
 }
 
-class SendTextMessage extends SendMessage {
+class SendMessageType {
+  final ReplyToModel? replyTo;
+  final String chatId;
+
+  SendMessageType({required this.replyTo, required this.chatId});
+  factory SendMessageType.text(
+      {required String text,
+      required ReplyToModel? replyTo,
+      required String chatId}) = SendTextMessage;
+
+  factory SendMessageType.audio(
+      {required String path,
+      required AudioMetadata metadata,
+      required ReplyToModel? replyTo,
+      required String chatId}) = SendAudioMessage;
+
+  factory SendMessageType.location(
+      {required double lat,
+      required double long,
+      required String address,
+      required ReplyToModel? replyTo,
+      required String chatId}) = SendLocationMessage;
+
+  factory SendMessageType.liveLocation(
+      {required double startLat,
+      required double startLong,
+      required Duration duration,
+      required ReplyToModel? replyTo,
+      required String chatId}) = SendLiveLocationMessage;
+
+  factory SendMessageType.image(
+      {required String path,
+      required ImageMetadata metadata,
+      required ReplyToModel? replyTo,
+      required String chatId}) = SendImageMessage;
+
+  factory SendMessageType.video(
+      {required String path,
+      required VideoMetadata metadata,
+      required ReplyToModel? replyTo,
+      required String chatId}) = SendVideoMessage;
+
+  factory SendMessageType.file(
+      {required FileMetaData metadata,
+      required ReplyToModel? replyTo,
+      required String chatId}) = SendFileMessage;
+}
+
+class SendTextMessage extends SendMessageType {
   final String text;
 
   SendTextMessage({
     required this.text,
-    required super.messagesRepo,
+    required super.replyTo,
+    required super.chatId,
   });
 }
 
-class SendAudioMessage extends SendMessage {
+class SendAudioMessage extends SendMessageType {
   final String path;
   final AudioMetadata metadata;
 
   SendAudioMessage({
     required this.path,
     required this.metadata,
-    required super.messagesRepo,
+    required super.replyTo,
+    required super.chatId,
   });
 }
 
-class SendLocationMessage extends SendMessage {
+class SendLocationMessage extends SendMessageType {
   final double lat;
   final double long;
   final String address;
 
-  SendLocationMessage({
-    required this.lat,
-    required this.long,
-    required this.address,
-    required super.messagesRepo,
-  });
+  SendLocationMessage(
+      {required this.lat,
+      required this.long,
+      required this.address,
+      required super.replyTo,
+      required super.chatId});
 }
 
-class SendLiveLocationMessage extends SendMessage {
+class SendLiveLocationMessage extends SendMessageType {
   final double startLat;
   final double startLong;
   final Duration duration;
 
-  SendLiveLocationMessage({
-    required this.startLat,
-    required this.startLong,
-    required this.duration,
-    required super.messagesRepo,
-  });
+  SendLiveLocationMessage(
+      {required this.startLat,
+      required this.startLong,
+      required this.duration,
+      required super.replyTo,
+      required super.chatId});
 }
 
-class SendImageMessage extends SendMessage {
+class SendImageMessage extends SendMessageType {
   final String path;
   final ImageMetadata metadata;
 
   SendImageMessage({
     required this.path,
     required this.metadata,
-    required super.messagesRepo,
+    required super.replyTo,
+    required super.chatId,
   });
 }
 
-class SendVideoMessage extends SendMessage {
+class SendVideoMessage extends SendMessageType {
   final String path;
   final VideoMetadata metadata;
 
   SendVideoMessage({
     required this.path,
     required this.metadata,
-    required super.messagesRepo,
+    required super.replyTo,
+    required super.chatId,
   });
 }
 
-class SendFileMessage extends SendMessage {
+class SendFileMessage extends SendMessageType {
   final FileMetaData metadata;
 
   SendFileMessage({
     required this.metadata,
-    required super.messagesRepo,
+    required super.replyTo,
+    required super.chatId,
   });
 }

@@ -5,20 +5,16 @@ import '../repo/messages_abstract_repo.dart';
 class UpdateMessage {
   final MessagesAbstractRepo messagesRepo;
 
-  UpdateMessage({required this.messagesRepo});
+  UpdateMessage({
+    required this.messagesRepo,
+  });
 
-  factory UpdateMessage.updateReactions({
-    required MessagesAbstractRepo messagesRepo,
-    required MessageModel selectedMessage,
-    required String emoji,
-  }) = UpdateReactions;
-
-  Future<void> execute({required String chatId}) async {
-    switch (runtimeType) {
+  execute({required UpdateMessageType updateMessageType}) async {
+    switch (updateMessageType.runtimeType) {
       case UpdateReactions:
-        final message = (this as UpdateReactions).selectedMessage;
+        final message = (updateMessageType as UpdateReactions).selectedMessage;
 
-        final emoji = (this as UpdateReactions).emoji;
+        final emoji = (updateMessageType).emoji;
 
         var reaction = message.reactions[emoji] ?? ReactionModel();
 
@@ -36,19 +32,31 @@ class UpdateMessage {
 
         await messagesRepo.updateMessage(
             message: message.copyWith(reactions: {...message.reactions, emoji: reaction}),
-            chatId: chatId);
+            chatId: updateMessageType.chatId);
         // Todo: send updated reactions with libp2p
         break;
     }
   }
 }
 
-class UpdateReactions extends UpdateMessage {
+class UpdateMessageType {
+  final String chatId;
+
+  UpdateMessageType({required this.chatId});
+
+  factory UpdateMessageType.updateReactions({
+    required MessageModel selectedMessage,
+    required String emoji,
+    required String chatId,
+  }) = UpdateReactions;
+}
+
+class UpdateReactions extends UpdateMessageType {
   final MessageModel selectedMessage;
   final String emoji;
   UpdateReactions({
-    required super.messagesRepo,
     required this.selectedMessage,
     required this.emoji,
+    required super.chatId,
   });
 }
