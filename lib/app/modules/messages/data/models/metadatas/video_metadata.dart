@@ -28,7 +28,7 @@ class VideoMetadata {
         durationInSeconds: json[durationInSecondsSerializedName],
         thumbnailUrl: json[thumbnailUrlSerializedName],
         isLocal: json[isLocalSerializedName],
-        thumbnailBytes: json[thumbnailBytesSerializedName],
+        thumbnailBytes: Uint8List.fromList(List<int>.from(json[thumbnailBytesSerializedName])),
         width: json[widthSerializedName],
         height: json[heightSerializedName],
       );
@@ -37,7 +37,7 @@ class VideoMetadata {
         durationInSecondsSerializedName: durationInSeconds,
         thumbnailUrlSerializedName: thumbnailUrl,
         isLocalSerializedName: isLocal,
-        thumbnailBytesSerializedName: thumbnailBytes,
+        thumbnailBytesSerializedName: thumbnailBytes?.toList(),
         widthSerializedName: width,
         heightSerializedName: height,
       };

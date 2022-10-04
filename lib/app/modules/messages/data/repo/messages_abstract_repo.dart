@@ -17,4 +17,7 @@ abstract class MessagesAbstractRepo {
 
   /// deletes a list of messages from [chatId]
   Future<void> deleteMessages({required List<String> messageIds, required String chatId});
+
+  /// returns Stream of messages of a certain chat with id of [chatId]
+  Future<Stream<List<MessageModel>>> getMessagesStream(String chatId);
 }
