@@ -5,6 +5,7 @@ import 'package:heyo/app/modules/calls/home/controllers/calls_controller.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
+import 'package:heyo/app/modules/messaging/messaging.dart';
 import 'package:heyo/app/modules/shared/controllers/call_history_observer.dart';
 import 'package:heyo/app/modules/shared/controllers/connection_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
@@ -29,9 +30,10 @@ import 'package:heyo/app/modules/web-rtc/signaling.dart';
 class GlobalBindings extends Bindings {
   static P2PState p2pState = P2PState();
   static Signaling signaling = Signaling(login: login);
+  static Messaging messaging = Messaging(login: login);
   static P2PNodeResponseStream p2pNodeResponseStream = P2PNodeResponseStream(p2pState: p2pState);
   final P2PNodeRequestStream p2pNodeRequestStream =
-      P2PNodeRequestStream(p2pState: p2pState, signaling: signaling);
+      P2PNodeRequestStream(p2pState: p2pState, signaling: signaling, messaging: messaging);
   static Web3Client web3Client =
       Web3Client('https://stg.pingextest.eu/eth', http.Client(), 'ping-dev', 'caC12cas');
 
