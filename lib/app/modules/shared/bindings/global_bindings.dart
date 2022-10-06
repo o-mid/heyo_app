@@ -27,6 +27,9 @@ import 'package:core_web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 
+import '../../chats/data/providers/chat_history/chat_history_provider.dart';
+import '../../chats/data/repos/chat_history/chat_history_repo.dart';
+
 class GlobalBindings extends Bindings {
   static P2PState p2pState = P2PState();
   static Signaling signaling = Signaling(login: login);
@@ -63,7 +66,12 @@ class GlobalBindings extends Bindings {
       ),
     );
     Get.put(callConnectionController, permanent: true);
-    Get.put(ChatsController());
+    Get.put(ChatsController(
+      chatHistoryRepo: ChatHistoryRepo(
+        chatHistoryProvider:
+            ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+      ),
+    ));
     //also this
     Get.put(
       CallsController(
