@@ -29,6 +29,7 @@ import 'package:heyo/app/modules/web-rtc/signaling.dart';
 
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
 import '../../chats/data/repos/chat_history/chat_history_repo.dart';
+import '../../messaging/controllers/messaging_connection_controller.dart';
 
 class GlobalBindings extends Bindings {
   static P2PState p2pState = P2PState();
@@ -88,6 +89,8 @@ class GlobalBindings extends Bindings {
     Get.put(VideoMessageController());
     Get.put(LiveLocationController());
     Get.put(ConnectionController(p2pState: p2pState));
+    Get.put(MessagingConnectionController(messaging: messaging, accountInfo: accountInfo),
+        permanent: true);
 
     Get.put<P2PNodeController>(
       P2PNodeController(

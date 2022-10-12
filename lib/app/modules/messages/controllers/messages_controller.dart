@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/file_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
@@ -42,14 +43,17 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
+import '../../messaging/controllers/messaging_connection_controller.dart';
+import '../../messaging/messaging_session.dart';
 import '../../share_files/models/file_model.dart';
 import '../data/usecases/delete_message_usecase.dart';
 import '../data/usecases/update_message_usecase.dart';
 
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
+  final MessagingConnectionController messagingConnection;
 
-  MessagesController({required this.messagesRepo});
+  MessagesController({required this.messagesRepo, required this.messagingConnection});
 
   final _globalMessageController = Get.find<GlobalMessageController>();
   double _keyboardHeight = 0;
@@ -65,6 +69,7 @@ class MessagesController extends GetxController {
   final locationMessage = Rxn<LocationMessageModel>();
   late MessagesViewArgumentsModel args;
   late StreamSubscription _messagesStreamSubscription;
+  late String sessionId;
   @override
   void onInit() {
     super.onInit();
@@ -79,9 +84,62 @@ class MessagesController extends GetxController {
     initMessagesStream();
 
     _sendForwardedMessages();
+    _initDataChannel();
 
     // Close emoji picker when keyboard opens
     _handleKeyboardVisibilityChanges();
+  }
+
+  _initDataChannel() async {
+    if (args.session == null) {
+      await messageSenderSetup();
+    } else {
+      await messageReceiverSetup();
+      Get.snackbar("acceptMessageConnection", "${args.session?.cid}");
+    }
+    messagingConnection.messaging.onDataChannelMessage = (_, dc, RTCDataChannelMessage data) {
+      print(" ${data.text}");
+      if (data.isBinary) {
+        print('Got binary [' + data.binary.toString() + ']');
+      } else {
+        print("  ${data.text}");
+      }
+      var receivedMessage = TextMessageModel(
+        // Todo: Generate random id
+        messageId: messages.length.toString(),
+        text: data.text,
+        timestamp: DateTime.now().toUtc(),
+        replyTo: replyingTo.value,
+        // Todo: fill with user info
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: false,
+      );
+      messages.add(receivedMessage);
+      messages.refresh();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        jumpToBottom();
+      });
+    };
+  }
+
+  Future messageSenderSetup() async {
+    await startDataChannelMessaging();
+  }
+
+  Future messageReceiverSetup() async {
+    sessionId = args.session!.sid;
+
+    await messagingConnection.acceptMessageConnection(args.session!);
+  }
+
+  Future<void> startDataChannelMessaging() async {
+    final callId = DateTime.now().millisecondsSinceEpoch.toString();
+    MessageSession session = await messagingConnection.startMessaging(
+      args.chat.id,
+      callId,
+    );
+    sessionId = session.sid;
   }
 
   void initMessagesStream() async {
