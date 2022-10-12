@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/user_call_history/widgets/history_call_log_widget.dart';
+import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
@@ -12,6 +13,7 @@ import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
+import '../../../../routes/app_pages.dart';
 import '../controllers/user_call_history_controller.dart';
 
 class UserCallHistoryView extends GetView<UserCallHistoryController> {
@@ -66,17 +68,34 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                     CircleIconButton(
                       backgroundColor: COLORS.kBrightBlueColor,
                       padding: EdgeInsets.all(14.w),
-                      onPressed: () {},
+                      onPressed: () => Get.toNamed(
+                        Routes.CALL,
+                        arguments: CallViewArgumentsModel(
+                            session: null,
+                            callId: null,
+                            user: controller.args.user,
+                            enableVideo: false,
+                            isAudioCall: true),
+                      ),
                       icon: Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor),
                     ),
                     SizedBox(width: 24.w),
                     CircleIconButton(
                       backgroundColor: COLORS.kBrightBlueColor,
                       padding: EdgeInsets.all(14.w),
-                      onPressed: () {},
+                      onPressed: () => Get.toNamed(
+                        Routes.CALL,
+                        arguments: CallViewArgumentsModel(
+                            session: null,
+                            callId: null,
+                            user: controller.args.user,
+                            enableVideo: true,
+                            isAudioCall: false),
+                      ),
                       icon: Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
                     ),
                     SizedBox(width: 24.w),
+                    // Todo Omid : add go to messaging screen
                     CircleIconButton(
                       backgroundColor: COLORS.kBrightBlueColor,
                       padding: EdgeInsets.all(14.w),
