@@ -134,12 +134,15 @@ class MessagesController extends GetxController {
   }
 
   Future<void> startDataChannelMessaging() async {
-    final callId = DateTime.now().millisecondsSinceEpoch.toString();
-    MessageSession session = await messagingConnection.startMessaging(
-      args.chat.id,
-      callId,
-    );
-    sessionId = session.sid;
+    //TODO OMID
+    if (args.user?.walletAddress != null) {
+      final callId = DateTime.now().millisecondsSinceEpoch.toString();
+      MessageSession session = await messagingConnection.startMessaging(
+        args.user!.walletAddress,
+        callId,
+      );
+      sessionId = session.sid;
+    }
   }
 
   void initMessagesStream() async {

@@ -67,9 +67,15 @@ class Messaging {
 
   Future<MessageSession> connectionRequest(
       String coreId, String media, bool useScreen, String selfId) async {
-    final sessionId = coreId;
-    MessageSession session = await _createSession(null,
-        coreId: coreId, peerId: null, sessionId: sessionId, media: media, screenSharing: useScreen);
+    final sessionId = '$selfId-$coreId-${DateTime.now().millisecondsSinceEpoch}';
+    MessageSession session = await _createSession(
+      null,
+      coreId: coreId,
+      peerId: null,
+      sessionId: sessionId,
+      media: media,
+      screenSharing: useScreen,
+    );
     _sessions[sessionId] = session;
     _createDataChannel(session);
     _createOffer(session, media);

@@ -98,6 +98,7 @@ class Signaling {
   Future<Session> invite(
       String coreId, String media, bool useScreen, String selfId, bool isAudioCall) async {
     final sessionId = '$selfId-$coreId-${DateTime.now().millisecondsSinceEpoch}';
+
     Session session = await _createSession(null,
         coreId: coreId,
         peerId: null,
