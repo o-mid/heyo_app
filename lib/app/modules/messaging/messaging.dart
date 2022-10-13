@@ -188,28 +188,28 @@ class Messaging {
     }
   }
 
-  Future<MediaStream> createStream(String media, bool userScreen) async {
-    final Map<String, dynamic> mediaConstraints = {
-      'audio': userScreen ? false : true,
-      'video': userScreen
-          ? true
-          : {
-              'mandatory': {
-                'minWidth': '640', // Provide your own width, height and frame rate here
-                'minHeight': '480',
-                'minFrameRate': '30',
-              },
-              'facingMode': 'user',
-              'optional': [],
-            }
-    };
+  // Future<MediaStream> createStream(String media, bool userScreen) async {
+  //   final Map<String, dynamic> mediaConstraints = {
+  //     'audio': userScreen ? false : true,
+  //     'video': userScreen
+  //         ? true
+  //         : {
+  //             'mandatory': {
+  //               'minWidth': '640', // Provide your own width, height and frame rate here
+  //               'minHeight': '480',
+  //               'minFrameRate': '30',
+  //             },
+  //             'facingMode': 'user',
+  //             'optional': [],
+  //           }
+  //   };
 
-    MediaStream stream = userScreen
-        ? await navigator.mediaDevices.getDisplayMedia(mediaConstraints)
-        : await navigator.mediaDevices.getUserMedia(mediaConstraints);
-    // onLocalStream?.call(stream);
-    return stream;
-  }
+  //   MediaStream stream = userScreen
+  //       ? await navigator.mediaDevices.getDisplayMedia(mediaConstraints)
+  //       : await navigator.mediaDevices.getUserMedia(mediaConstraints);
+  //   // onLocalStream?.call(stream);
+  //   return stream;
+  // }
 
   Future<MessageSession> _createSession(MessageSession? session,
       {required String coreId,
@@ -272,7 +272,7 @@ class Messaging {
     onDataChannel?.call(session, channel);
   }
 
-  Future<void> _createDataChannel(MessageSession session, {label: 'fileTransfer'}) async {
+  Future<void> _createDataChannel(MessageSession session, {label = 'fileTransfer'}) async {
     RTCDataChannelInit dataChannelDict = RTCDataChannelInit()..maxRetransmits = 30;
     RTCDataChannel channel = await session.pc!.createDataChannel(label, dataChannelDict);
     _addDataChannel(session, channel);
@@ -365,6 +365,6 @@ class Messaging {
       return;
     }
 
-    _createAnswer(session, 'video');
+    _createAnswer(session, 'data');
   }
 }

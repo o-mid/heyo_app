@@ -70,7 +70,7 @@ class MessagingConnectionController extends GetxController {
     String callId,
   ) async {
     String? selfCoreId = await accountInfo.getCoreId();
-    return await messaging.connectionRequest(remoteId, 'video', false, selfCoreId!);
+    return await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
   }
 
   void sendTextMessage(String text) async {

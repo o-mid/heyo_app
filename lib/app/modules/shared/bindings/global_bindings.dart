@@ -53,6 +53,11 @@ class GlobalBindings extends Bindings {
     accountInfo: accountInfo,
     signaling: signaling,
   );
+  static MessagingConnectionController messagingConnectionController =
+      MessagingConnectionController(
+    accountInfo: accountInfo,
+    messaging: messaging,
+  );
 
   @override
   void dependencies() {
@@ -89,8 +94,10 @@ class GlobalBindings extends Bindings {
     Get.put(VideoMessageController());
     Get.put(LiveLocationController());
     Get.put(ConnectionController(p2pState: p2pState));
-    Get.put(MessagingConnectionController(messaging: messaging, accountInfo: accountInfo),
-        permanent: true);
+    Get.put(
+      messagingConnectionController,
+      permanent: true,
+    );
 
     Get.put<P2PNodeController>(
       P2PNodeController(

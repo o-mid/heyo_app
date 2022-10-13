@@ -57,6 +57,7 @@ class P2PNodeRequestStream {
         String request = (event.body!['payload'])['session'];
 
         onRequestReceived(request.convertHexToString(), remoteCoreId, remotePeerId);
+
         //signaling.onMessage(session.convertHexToString(), remoteCoreId, remotePeerId);
 
       }
@@ -65,6 +66,7 @@ class P2PNodeRequestStream {
 
   void onRequestReceived(String request, String remoteCoreId, String remotePeerId) {
     Map<String, dynamic> mapData = _decoder.convert(request);
+
     if (mapData['command'] == "call") {
       signaling.onMessage(mapData, remoteCoreId, remotePeerId);
     } else {
