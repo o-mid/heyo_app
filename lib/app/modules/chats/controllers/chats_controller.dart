@@ -15,7 +15,7 @@ class ChatsController extends GetxController {
   final chats = <ChatModel>[].obs;
   @override
   void onInit() {
-    _addMockData();
+    //_addMockData();
     init();
     super.onInit();
   }

@@ -57,11 +57,16 @@ class GlobalBindings extends Bindings {
   );
   static MessagingConnectionController messagingConnectionController =
       MessagingConnectionController(
-          accountInfo: accountInfo,
-          messaging: messaging,
-          messagesRepo: MessagesRepo(
-              messagesProvider:
-                  MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())));
+    accountInfo: accountInfo,
+    messaging: messaging,
+    messagesRepo: MessagesRepo(
+      messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+    ),
+    chatHistoryRepo: ChatHistoryRepo(
+      chatHistoryProvider:
+          ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+    ),
+  );
 
   @override
   void dependencies() {

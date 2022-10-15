@@ -57,6 +57,7 @@ class MessagesController extends GetxController {
 
   final _globalMessageController = Get.find<GlobalMessageController>();
   double _keyboardHeight = 0;
+  late String chatId;
 
   late TextEditingController textController;
   late AutoScrollController scrollController;
@@ -71,20 +72,20 @@ class MessagesController extends GetxController {
   late StreamSubscription _messagesStreamSubscription;
   late String sessionId;
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
     _globalMessageController.reset();
     textController = _globalMessageController.textController;
     scrollController = _globalMessageController.scrollController;
 
     args = Get.arguments as MessagesViewArgumentsModel;
-
+    chatId = args.user!.walletAddress;
+    await _initDataChannel();
     _getMessages();
     //TODO ramin, start listening to the database changes and apply them
     initMessagesStream();
 
     _sendForwardedMessages();
-    _initDataChannel();
 
     // Close emoji picker when keyboard opens
     _handleKeyboardVisibilityChanges();
@@ -97,26 +98,6 @@ class MessagesController extends GetxController {
       // await messageReceiverSetup();
       Get.snackbar("acceptMessageConnection", "${args.session?.cid}");
     }
-    // messagingConnection.messaging.onDataChannelMessage = (_, dc, RTCDataChannelMessage data) {
-    //   print(" ${data.text}");
-
-    //   // var receivedMessage = TextMessageModel(
-    //   //   // Todo: Generate random id
-    //   //   messageId: messages.length.toString(),
-    //   //   text: data.text,
-    //   //   timestamp: DateTime.now().toUtc(),
-    //   //   replyTo: replyingTo.value,
-    //   //   // Todo: fill with user info
-    //   //   senderName: "",
-    //   //   senderAvatar: "",
-    //   //   isFromMe: false,
-    //   // );
-    //   // messages.add(receivedMessage);
-    //   // messages.refresh();
-    //   // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   //   jumpToBottom();
-    //   // });
-    // };
   }
 
   Future messageSenderSetup() async {
@@ -138,12 +119,13 @@ class MessagesController extends GetxController {
         callId,
       );
       sessionId = session.sid;
+      chatId = session.sid;
     }
   }
 
   void initMessagesStream() async {
     _messagesStreamSubscription =
-        (await messagesRepo.getMessagesStream(args.chat.id)).listen((newMessages) {
+        (await messagesRepo.getMessagesStream(chatId)).listen((newMessages) {
       messages.value = newMessages;
     });
   }
@@ -272,7 +254,7 @@ class MessagesController extends GetxController {
         updateMessageType: UpdateMessageType.updateReactions(
       selectedMessage: msg,
       emoji: emoji,
-      chatId: args.chat.id,
+      chatId: chatId,
     ));
   }
 
@@ -306,7 +288,7 @@ class MessagesController extends GetxController {
       sendMessageType: SendMessageType.text(
         text: newMessage.value,
         replyTo: replyingTo.value,
-        chatId: args.chat.id,
+        chatId: chatId,
       ),
     );
 
@@ -325,7 +307,7 @@ class MessagesController extends GetxController {
         path: path,
         metadata: AudioMetadata(durationInSeconds: duration),
         replyTo: replyingTo.value,
-        chatId: args.chat.id,
+        chatId: chatId,
       ),
     );
 
@@ -347,7 +329,7 @@ class MessagesController extends GetxController {
         long: message.longitude,
         address: message.address,
         replyTo: replyingTo.value,
-        chatId: args.chat.id,
+        chatId: chatId,
       ),
     );
 
@@ -370,7 +352,7 @@ class MessagesController extends GetxController {
         startLong: startLong,
         duration: duration,
         replyTo: replyingTo.value,
-        chatId: args.chat.id,
+        chatId: chatId,
       ),
     );
 
@@ -480,7 +462,7 @@ class MessagesController extends GetxController {
   void deleteSelectedForEveryone() {
     DeleteMessage(messagesRepo: messagesRepo).execute(
         deleteMessageType: DeleteMessageType.forEveryone(
-      chatId: args.chat.id,
+      chatId: chatId,
       selectedMessages: selectedMessages,
     ));
     clearSelected();
@@ -489,7 +471,7 @@ class MessagesController extends GetxController {
   void deleteSelectedForMe() {
     DeleteMessage(messagesRepo: messagesRepo).execute(
         deleteMessageType: DeleteMessageType.forMe(
-      chatId: args.chat.id,
+      chatId: chatId,
       selectedMessages: selectedMessages,
     ));
     clearSelected();
@@ -586,7 +568,7 @@ class MessagesController extends GetxController {
                     width: entity.width.toDouble(),
                   ),
                   replyTo: replyingTo.value,
-                  chatId: args.chat.id,
+                  chatId: chatId,
                 ),
               );
 
@@ -615,7 +597,7 @@ class MessagesController extends GetxController {
                     thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
                   ),
                   replyTo: replyingTo.value,
-                  chatId: args.chat.id,
+                  chatId: chatId,
                 ),
               );
 
@@ -798,7 +780,7 @@ class MessagesController extends GetxController {
               isImage: asset.isImage,
             ),
             replyTo: replyingTo.value,
-            chatId: args.chat.id,
+            chatId: chatId,
           ),
         );
       }
@@ -813,7 +795,7 @@ class MessagesController extends GetxController {
 
   void _getMessages() async {
     // await _addMockData();
-    messages.value = await messagesRepo.getMessages(args.chat.id);
+    messages.value = await messagesRepo.getMessages(chatId);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       jumpToBottom();
     });
@@ -1224,7 +1206,7 @@ class MessagesController extends GetxController {
     ];
 
     for (int i = 0; i < ms.length; i++) {
-      await messagesRepo.createMessage(message: ms[i], chatId: args.chat.id);
+      await messagesRepo.createMessage(message: ms[i], chatId: chatId);
     }
   }
 }

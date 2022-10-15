@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/messaging/messaging.dart';
 import 'package:heyo/app/modules/messaging/messaging_session.dart';
@@ -19,13 +20,17 @@ import '../../shared/data/models/messages_view_arguments_model.dart';
 class MessagingConnectionController extends GetxController {
   final Messaging messaging;
   final MessagesAbstractRepo messagesRepo;
+  final ChatHistoryAbstractRepo chatHistoryRepo;
   final AccountInfo accountInfo;
   bool isConnectionConnected = false;
   final JsonDecoder _decoder = const JsonDecoder();
   Rx<ConnectionStatus?> connectionStatus = Rxn<ConnectionStatus>();
   MessagingConnectionController(
-      {required this.messaging, required this.accountInfo, required this.messagesRepo});
-  RTCDataChannel? _dataChannel;
+      {required this.messaging,
+      required this.accountInfo,
+      required this.messagesRepo,
+      required this.chatHistoryRepo});
+  late RTCDataChannel _dataChannel;
   @override
   void onInit() {
     init();
@@ -46,64 +51,50 @@ class MessagingConnectionController extends GetxController {
 
       if (status == ConnectionStatus.RINGING) {
         await acceptMessageConnection(session);
+
+        ChatModel userChatModel = ChatModel(
+            id: session.sid,
+            name: session.pid?.characters.takeLast(5).string ?? "",
+            icon: "",
+            lastMessage: "",
+            timestamp: DateTime.now());
+
+        chatHistoryRepo.addChatToHistory(userChatModel);
+
         Get.toNamed(
           Routes.MESSAGES,
           arguments: MessagesViewArgumentsModel(
-            session: session,
+              session: session,
 
-            // Todo Omid :
-            chat: ChatModel(
-                icon: "",
-                id: session.cid,
-                lastMessage: "",
-                name: "",
-                timestamp: DateTime.now(),
-                isOnline: true,
-                isVerified: true,
-                notificationCount: 0),
-          ),
+              // Todo Omid :
+              chat: userChatModel),
         );
-      } else if (status == ConnectionStatus.BYE) {
-        //    Get.snackbar("ConnectionLost", "ConnectionLost");
-        if (Get.currentRoute == Routes.MESSAGES) {
-          Get.until((route) => Get.currentRoute != Routes.MESSAGES);
-        }
       }
+
       if (status == ConnectionStatus.CONNECTED) {
         isConnectionConnected = true;
-        messaging.onDataChannelMessage = (_, dc, RTCDataChannelMessage data) {
+        messaging.onDataChannel = (_, channel) {
+          _dataChannel = channel;
+        };
+        messaging.onDataChannelMessage = (_, dc, RTCDataChannelMessage data) async {
           String text = data.text;
           // print(text);
           Map<String, dynamic> json = _decoder.convert(text);
 
           //  MessageModel? message = messageFromJson(json);
           TextMessageModel message = TextMessageModel.fromJson(json);
-          print(message);
+          print(message.text);
 
-          messagesRepo.createMessage(message: message, chatId: session.cid);
-          messagesRepo.getMessages(session.cid).asStream().listen((event) {
-            print(event);
-          });
-
-//messagesRepo.createMessage(message: message, chatId: chatId)
-
-          // var receivedMessage = TextMessageModel(
-          //   // Todo: Generate random id
-          //   messageId: messages.length.toString(),
-          //   text: data.text,ß
-          //   timestamp: DateTime.now().toUtc(),
-          //   replyTo: replyingTo.value,
-          //   // Todo: fill with user info
-          //   senderName: "",
-          //   senderAvatar: "",
-          //   isFromMe: false,
-          // );
-          // messages.add(receivedMessage);
-          // messages.refresh();
-          // WidgetsBinding.instance.addPostFrameCallback((_) {
-          //   jumpToBottom();
-          // });
+          await messagesRepo.createMessage(
+              message: message.copyWith(isFromMe: false), chatId: session.sid);
         };
+      }
+
+      if (status == ConnectionStatus.BYE) {
+        //    Get.snackbar("ConnectionLost", "ConnectionLost");
+        if (Get.currentRoute == Routes.MESSAGES) {
+          Get.until((route) => Get.currentRoute != Routes.MESSAGES);
+        }
       }
     };
   }
@@ -113,15 +104,25 @@ class MessagingConnectionController extends GetxController {
     String callId,
   ) async {
     String? selfCoreId = await accountInfo.getCoreId();
-    return await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
+
+    MessageSession session =
+        await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
+    ChatModel userChatModel = ChatModel(
+        id: session.sid,
+        name: remoteId.characters.takeLast(5).string,
+        icon: "",
+        lastMessage: "",
+        timestamp: DateTime.now());
+    chatHistoryRepo.addChatToHistory(userChatModel);
+    return session;
   }
 
   void sendTextMessage(String text) async {
-    await _dataChannel?.send(RTCDataChannelMessage(text));
+    await _dataChannel.send(RTCDataChannelMessage(text));
   }
 
   void sendBinaryMessage(Uint8List binary) async {
-    await _dataChannel?.send(RTCDataChannelMessage.fromBinary(binary));
+    await _dataChannel.send(RTCDataChannelMessage.fromBinary(binary));
   }
 
   MessageSession? getSession(String coreId) {
