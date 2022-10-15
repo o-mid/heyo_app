@@ -94,44 +94,40 @@ class MessagesController extends GetxController {
     if (args.session == null) {
       await messageSenderSetup();
     } else {
-      await messageReceiverSetup();
+      // await messageReceiverSetup();
       Get.snackbar("acceptMessageConnection", "${args.session?.cid}");
     }
-    messagingConnection.messaging.onDataChannelMessage = (_, dc, RTCDataChannelMessage data) {
-      print(" ${data.text}");
-      if (data.isBinary) {
-        print('Got binary [' + data.binary.toString() + ']');
-      } else {
-        print("  ${data.text}");
-      }
-      var receivedMessage = TextMessageModel(
-        // Todo: Generate random id
-        messageId: messages.length.toString(),
-        text: data.text,
-        timestamp: DateTime.now().toUtc(),
-        replyTo: replyingTo.value,
-        // Todo: fill with user info
-        senderName: "",
-        senderAvatar: "",
-        isFromMe: false,
-      );
-      messages.add(receivedMessage);
-      messages.refresh();
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        jumpToBottom();
-      });
-    };
+    // messagingConnection.messaging.onDataChannelMessage = (_, dc, RTCDataChannelMessage data) {
+    //   print(" ${data.text}");
+
+    //   // var receivedMessage = TextMessageModel(
+    //   //   // Todo: Generate random id
+    //   //   messageId: messages.length.toString(),
+    //   //   text: data.text,
+    //   //   timestamp: DateTime.now().toUtc(),
+    //   //   replyTo: replyingTo.value,
+    //   //   // Todo: fill with user info
+    //   //   senderName: "",
+    //   //   senderAvatar: "",
+    //   //   isFromMe: false,
+    //   // );
+    //   // messages.add(receivedMessage);
+    //   // messages.refresh();
+    //   // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   //   jumpToBottom();
+    //   // });
+    // };
   }
 
   Future messageSenderSetup() async {
     await startDataChannelMessaging();
   }
 
-  Future messageReceiverSetup() async {
-    sessionId = args.session!.sid;
+  // Future messageReceiverSetup() async {
+  //   sessionId = args.session!.sid;
 
-    await messagingConnection.acceptMessageConnection(args.session!);
-  }
+  //   await messagingConnection.acceptMessageConnection(args.session!);
+  // }
 
   Future<void> startDataChannelMessaging() async {
     //TODO OMID
@@ -303,7 +299,10 @@ class MessagesController extends GetxController {
   }
 
   void sendTextMessage() async {
-    SendMessage(messagesRepo: messagesRepo).execute(
+    SendMessage(
+      messagesRepo: messagesRepo,
+      messagingConnection: messagingConnection,
+    ).execute(
       sendMessageType: SendMessageType.text(
         text: newMessage.value,
         replyTo: replyingTo.value,
@@ -318,7 +317,10 @@ class MessagesController extends GetxController {
   }
 
   void sendAudioMessage(String path, int duration) {
-    SendMessage(messagesRepo: messagesRepo).execute(
+    SendMessage(
+      messagesRepo: messagesRepo,
+      messagingConnection: messagingConnection,
+    ).execute(
       sendMessageType: SendMessageType.audio(
         path: path,
         metadata: AudioMetadata(durationInSeconds: duration),
@@ -336,7 +338,10 @@ class MessagesController extends GetxController {
       return;
     }
 
-    SendMessage(messagesRepo: messagesRepo).execute(
+    SendMessage(
+      messagesRepo: messagesRepo,
+      messagingConnection: messagingConnection,
+    ).execute(
       sendMessageType: SendMessageType.location(
         lat: message.latitude,
         long: message.longitude,
@@ -356,7 +361,10 @@ class MessagesController extends GetxController {
     required double startLat,
     required double startLong,
   }) {
-    SendMessage(messagesRepo: messagesRepo).execute(
+    SendMessage(
+      messagesRepo: messagesRepo,
+      messagingConnection: messagingConnection,
+    ).execute(
       sendMessageType: SendMessageType.liveLocation(
         startLat: startLat,
         startLong: startLong,
@@ -568,7 +576,9 @@ class MessagesController extends GetxController {
               if (entity == null) {
                 break;
               }
-              await SendMessage(messagesRepo: messagesRepo).execute(
+              await SendMessage(
+                      messagesRepo: messagesRepo, messagingConnection: messagingConnection)
+                  .execute(
                 sendMessageType: SendMessageType.image(
                   path: file.path,
                   metadata: ImageMetadata(
@@ -591,7 +601,9 @@ class MessagesController extends GetxController {
                 break;
               }
 
-              await SendMessage(messagesRepo: messagesRepo).execute(
+              await SendMessage(
+                      messagesRepo: messagesRepo, messagingConnection: messagingConnection)
+                  .execute(
                 sendMessageType: SendMessageType.video(
                   path: file.path,
                   metadata: VideoMetadata(
@@ -772,7 +784,10 @@ class MessagesController extends GetxController {
     if (result != null) {
       result as RxList<FileModel>;
       for (var asset in result) {
-        await SendMessage(messagesRepo: messagesRepo).execute(
+        await SendMessage(
+          messagesRepo: messagesRepo,
+          messagingConnection: messagingConnection,
+        ).execute(
           sendMessageType: SendMessageType.file(
             metadata: FileMetaData(
               extension: asset.extension,

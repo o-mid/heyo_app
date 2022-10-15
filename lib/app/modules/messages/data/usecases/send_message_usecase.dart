@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/live_location_message_model.dart';
@@ -13,12 +15,16 @@ import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../messaging/controllers/messaging_connection_controller.dart';
 import '../models/messages/file_message_model.dart';
 
 class SendMessage {
   final MessagesAbstractRepo messagesRepo;
-
-  SendMessage({required this.messagesRepo});
+  MessagingConnectionController messagingConnection;
+  SendMessage({
+    required this.messagesRepo,
+    required this.messagingConnection,
+  });
 
   execute({
     required SendMessageType sendMessageType,
@@ -43,6 +49,7 @@ class SendMessage {
           status: MessageStatus.sending,
           isFromMe: true,
         );
+
         break;
       case SendAudioMessage:
         msg = AudioMessageModel(
@@ -138,6 +145,9 @@ class SendMessage {
     }
 
     await messagesRepo.createMessage(message: msg, chatId: sendMessageType.chatId);
+    Map<String, dynamic> message = msg.toJson();
+
+    messagingConnection.sendTextMessage(jsonEncode(message));
   }
 }
 

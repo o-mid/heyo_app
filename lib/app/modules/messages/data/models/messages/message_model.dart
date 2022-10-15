@@ -1,5 +1,5 @@
-import '../reaction_model.dart';
-import '../reply_to_model.dart';
+import "../reaction_model.dart";
+import "../reply_to_model.dart";
 
 enum MessageContentType {
   text,
@@ -21,16 +21,16 @@ enum MessageStatus {
 }
 
 abstract class MessageModel {
-  static const statusSerializedName = 'status';
-  static const typeSerializedName = 'type';
-  static const messageIdSerializedName = 'messageId';
-  static const timestampSerializedName = 'timestamp';
-  static const replyToSerializedName = 'replyTo';
-  static const reactionsSerializedName = 'reactions';
-  static const senderNameSerializedName = 'senderName';
-  static const senderAvatarSerializedName = 'senderAvatar';
-  static const isFromMeSerializedName = 'isFromMe';
-  static const isForwardedSerializedName = 'isForwarded';
+  static const statusSerializedName = "status";
+  static const typeSerializedName = "type";
+  static const messageIdSerializedName = "messageId";
+  static const timestampSerializedName = "timestamp";
+  static const replyToSerializedName = "replyTo";
+  static const reactionsSerializedName = "reactions";
+  static const senderNameSerializedName = "senderName";
+  static const senderAvatarSerializedName = "senderAvatar";
+  static const isFromMeSerializedName = "isFromMe";
+  static const isForwardedSerializedName = "isForwarded";
 
   final MessageStatus status;
   final MessageContentType type;

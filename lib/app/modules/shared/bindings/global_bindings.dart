@@ -29,6 +29,8 @@ import 'package:heyo/app/modules/web-rtc/signaling.dart';
 
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
 import '../../chats/data/repos/chat_history/chat_history_repo.dart';
+import '../../messages/data/provider/messages_provider.dart';
+import '../../messages/data/repo/messages_repo.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 
 class GlobalBindings extends Bindings {
@@ -55,9 +57,11 @@ class GlobalBindings extends Bindings {
   );
   static MessagingConnectionController messagingConnectionController =
       MessagingConnectionController(
-    accountInfo: accountInfo,
-    messaging: messaging,
-  );
+          accountInfo: accountInfo,
+          messaging: messaging,
+          messagesRepo: MessagesRepo(
+              messagesProvider:
+                  MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())));
 
   @override
   void dependencies() {
