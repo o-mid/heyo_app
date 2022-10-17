@@ -6,12 +6,12 @@ import '../../../messages/data/models/messages/message_model.dart';
 
 class MessagesViewArgumentsModel {
   final ChatModel chat;
-  final UserModel? user;
+  final UserModel user;
   final List<MessageModel>? forwardedMessages;
   final MessageSession? session;
   MessagesViewArgumentsModel({
     required this.chat,
-    this.user,
+    required this.user,
     this.forwardedMessages,
     this.session,
   });

@@ -73,6 +73,7 @@ class MessagesController extends GetxController {
   late StreamSubscription _messagesStreamSubscription;
   final JsonDecoder _decoder = const JsonDecoder();
   late String sessionId;
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -114,9 +115,9 @@ class MessagesController extends GetxController {
   }
 
   Future<void> startDataChannelMessaging() async {
-    if (args.user?.walletAddress != null) {
+    if (args.user.walletAddress != "") {
       await messagingConnection.startMessaging(
-        args.user!.walletAddress,
+        args.user.walletAddress,
       );
     }
   }

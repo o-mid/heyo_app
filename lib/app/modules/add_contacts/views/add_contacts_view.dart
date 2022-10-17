@@ -115,7 +115,8 @@ class AddContactsView extends GetView<AddContactsController> {
                         onTap: () {
                           controller.addContact();
                           Get.offNamedUntil(Routes.MESSAGES, ModalRoute.withName(Routes.HOME),
-                              arguments: MessagesViewArgumentsModel(chat: user.chatModel!));
+                              arguments:
+                                  MessagesViewArgumentsModel(chat: user.chatModel!, user: user));
                         },
 
                         titleWidget: Text(
