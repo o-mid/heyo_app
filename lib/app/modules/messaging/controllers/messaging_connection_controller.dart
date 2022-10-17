@@ -8,6 +8,7 @@ import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abst
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/messaging/messaging.dart';
 import 'package:heyo/app/modules/messaging/messaging_session.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
 import '../../chats/data/models/chat_model.dart';
@@ -48,9 +49,17 @@ class MessagingConnectionController extends GetxController {
       if (status == ConnectionStatus.RINGING) {
         ChatModel userChatModel = ChatModel(
             id: session.cid,
-            name: session.cid.characters.takeLast(5).string,
-            icon: "",
+            isOnline: true,
+            name:
+                "${session.cid.characters.take(4).string}...${session.cid.characters.takeLast(4).string}",
+            icon: ([
+              "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+              "https://avatars.githubusercontent.com/u/6634136?v=4",
+              "https://avatars.githubusercontent.com/u/9801359?v=4",
+            ]..shuffle())
+                .first,
             lastMessage: "",
+            isVerified: true,
             timestamp: DateTime.now());
 
         chatHistoryRepo.addChatToHistory(userChatModel);
@@ -59,7 +68,12 @@ class MessagingConnectionController extends GetxController {
           Routes.MESSAGES,
           arguments: MessagesViewArgumentsModel(
               session: session,
-
+              user: UserModel(
+                icon: userChatModel.icon,
+                name: userChatModel.name,
+                walletAddress: session.cid,
+                isOnline: userChatModel.isOnline,
+              ),
               // Todo Omid :
               chat: userChatModel),
         );
@@ -107,11 +121,18 @@ class MessagingConnectionController extends GetxController {
     MessageSession session =
         await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
     ChatModel userChatModel = ChatModel(
-        // TODO: Omid cheack this
         id: session.cid,
-        name: remoteId.characters.takeLast(5).string,
-        icon: "",
+        name:
+            "${session.cid.characters.take(4).string}...${session.cid.characters.takeLast(4).string}",
+        icon: ([
+          "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+          "https://avatars.githubusercontent.com/u/6634136?v=4",
+          "https://avatars.githubusercontent.com/u/9801359?v=4",
+        ]..shuffle())
+            .first,
         lastMessage: "",
+        isOnline: true,
+        isVerified: true,
         timestamp: DateTime.now());
     chatHistoryRepo.addChatToHistory(userChatModel);
   }

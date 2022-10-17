@@ -100,7 +100,7 @@ class MessagesController extends GetxController {
     } else {
       await messageReceiverSetup();
 
-      Get.snackbar("acceptMessageConnection", "${args.session?.cid}");
+      Get.snackbar(" Message Connection Accepted", "${args.session?.cid}");
     }
   }
 
@@ -114,13 +114,10 @@ class MessagesController extends GetxController {
   }
 
   Future<void> startDataChannelMessaging() async {
-    //TODO OMID
     if (args.user?.walletAddress != null) {
       await messagingConnection.startMessaging(
         args.user!.walletAddress,
       );
-//sessionId = session.sid;
-      //    chatId = session.cid;
     }
   }
 
