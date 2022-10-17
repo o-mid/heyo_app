@@ -77,16 +77,15 @@ class MessagesController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
     args = Get.arguments as MessagesViewArgumentsModel;
-    // chatId = args.chat.id;
+    chatId = args.chat.id;
 
-    chatId = "1";
     _globalMessageController.reset();
     textController = _globalMessageController.textController;
     scrollController = _globalMessageController.scrollController;
 
     await _initDataChannel();
     _getMessages();
-    //TODO ramin, start listening to the database changes and apply them
+
     initMessagesStream();
 
     _sendForwardedMessages();
@@ -100,19 +99,8 @@ class MessagesController extends GetxController {
       await messageSenderSetup();
     } else {
       await messageReceiverSetup();
+
       Get.snackbar("acceptMessageConnection", "${args.session?.cid}");
-      // messagingConnection.messaging.onDataChannelMessage =
-      //     (_, dc, RTCDataChannelMessage data) async {
-      //   String text = data.text;
-      //   // print(text);
-      //   Map<String, dynamic> json = _decoder.convert(text);
-
-      //   //  MessageModel? message = messageFromJson(json);
-      //   TextMessageModel message = TextMessageModel.fromJson(json);
-      //   print(message.text);
-
-      //   await messagesRepo.createMessage(message: message.copyWith(isFromMe: false), chatId: "1");
-      // };
     }
   }
 
@@ -121,8 +109,6 @@ class MessagesController extends GetxController {
   }
 
   Future messageReceiverSetup() async {
-    //sessionId = args.session!.sid;
-
     await messagingConnection.acceptMessageConnection(args.session!);
     messagingConnection.channelMessageListener();
   }

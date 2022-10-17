@@ -47,8 +47,8 @@ class MessagingConnectionController extends GetxController {
 
       if (status == ConnectionStatus.RINGING) {
         ChatModel userChatModel = ChatModel(
-            id: "1",
-            name: session.pid?.characters.takeLast(5).string ?? "",
+            id: session.cid,
+            name: session.cid.characters.takeLast(5).string,
             icon: "",
             lastMessage: "",
             timestamp: DateTime.now());
@@ -95,21 +95,8 @@ class MessagingConnectionController extends GetxController {
           message: message.copyWith(
             isFromMe: false,
           ),
-          chatId: "1");
+          chatId: session.cid);
     };
-
-    // messaging.onDataChannelMessage = (session, dc, RTCDataChannelMessage data) async {
-    //   dc.messageStream.listen((event) {});
-    //   String text = data.text;
-    //   // print(text);
-    //   Map<String, dynamic> json = _decoder.convert(text);
-
-    //   //  MessageModel? message = messageFromJson(json);
-    //   TextMessageModel message = TextMessageModel.fromJson(json);
-    //   print(message.text);
-
-    //   await messagesRepo.createMessage(message: message.copyWith(isFromMe: false), chatId: "1");
-    // };
   }
 
   Future<void> startMessaging(
@@ -117,9 +104,11 @@ class MessagingConnectionController extends GetxController {
   ) async {
     String? selfCoreId = await accountInfo.getCoreId();
 
-    await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
+    MessageSession session =
+        await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
     ChatModel userChatModel = ChatModel(
-        id: "1",
+        // TODO: Omid cheack this
+        id: session.cid,
         name: remoteId.characters.takeLast(5).string,
         icon: "",
         lastMessage: "",

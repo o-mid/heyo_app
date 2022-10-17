@@ -149,7 +149,7 @@ class SendMessage {
     Map<String, dynamic> message = msg.toJson();
 
     messagingConnection.sendTextMessage(jsonEncode(message));
-    print(message);
+    print("message sent:  $message");
   }
 }
 

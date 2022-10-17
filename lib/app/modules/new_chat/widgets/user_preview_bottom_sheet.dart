@@ -57,7 +57,8 @@ void openUserPreviewBottomSheet(UserModel user) {
                   }
                   Get.toNamed(
                     Routes.MESSAGES,
-                    arguments: MessagesViewArgumentsModel(chat: user.chatModel!, user: user),
+                    arguments: MessagesViewArgumentsModel(
+                        chat: user.chatModel!.copyWith(id: user.walletAddress), user: user),
                   );
                 },
                 backgroundColor: COLORS.kBrightBlueColor,
