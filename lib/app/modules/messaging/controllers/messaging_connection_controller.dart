@@ -33,10 +33,6 @@ class MessagingConnectionController extends GetxController {
   late RTCDataChannel _dataChannel;
   @override
   void onInit() {
-    init();
-  }
-
-  init() async {
     messaging.onDataChannel = (_, channel) {
       _dataChannel = channel;
     };
@@ -50,10 +46,8 @@ class MessagingConnectionController extends GetxController {
       print("Connection Status changed, state is: $status");
 
       if (status == ConnectionStatus.RINGING) {
-        await acceptMessageConnection(session);
-
         ChatModel userChatModel = ChatModel(
-            id: session.sid,
+            id: "1",
             name: session.pid?.characters.takeLast(5).string ?? "",
             icon: "",
             lastMessage: "",
@@ -69,28 +63,16 @@ class MessagingConnectionController extends GetxController {
               // Todo Omid :
               chat: userChatModel),
         );
-      }
-
-      if (status == ConnectionStatus.CONNECTED) {
+      } else if (status == ConnectionStatus.CONNECTED) {
         isConnectionConnected = true;
-        messaging.onDataChannel = (_, channel) {
-          _dataChannel = channel;
-        };
-        messaging.onDataChannelMessage = (_, dc, RTCDataChannelMessage data) async {
-          String text = data.text;
-          // print(text);
-          Map<String, dynamic> json = _decoder.convert(text);
+        print("Connection Status changed, state is: $status");
 
-          //  MessageModel? message = messageFromJson(json);
-          TextMessageModel message = TextMessageModel.fromJson(json);
-          print(message.text);
+        channelMessageListener();
+        // messaging.onDataChannel = (_, channel) {
+        //   _dataChannel = channel;
+        // };
 
-          await messagesRepo.createMessage(
-              message: message.copyWith(isFromMe: false), chatId: session.sid);
-        };
-      }
-
-      if (status == ConnectionStatus.BYE) {
+      } else if (status == ConnectionStatus.BYE) {
         //    Get.snackbar("ConnectionLost", "ConnectionLost");
         if (Get.currentRoute == Routes.MESSAGES) {
           Get.until((route) => Get.currentRoute != Routes.MESSAGES);
@@ -99,22 +81,50 @@ class MessagingConnectionController extends GetxController {
     };
   }
 
-  Future<MessageSession> startMessaging(
+  channelMessageListener() {
+    messaging.onDataChannelMessage = (session, dc, RTCDataChannelMessage data) async {
+      String text = data.text;
+      // print(text);
+      Map<String, dynamic> json = _decoder.convert(text);
+
+      //  MessageModel? message = messageFromJson(json);
+      TextMessageModel message = TextMessageModel.fromJson(json);
+      print(message.text);
+
+      await messagesRepo.createMessage(
+          message: message.copyWith(
+            isFromMe: false,
+          ),
+          chatId: "1");
+    };
+
+    // messaging.onDataChannelMessage = (session, dc, RTCDataChannelMessage data) async {
+    //   dc.messageStream.listen((event) {});
+    //   String text = data.text;
+    //   // print(text);
+    //   Map<String, dynamic> json = _decoder.convert(text);
+
+    //   //  MessageModel? message = messageFromJson(json);
+    //   TextMessageModel message = TextMessageModel.fromJson(json);
+    //   print(message.text);
+
+    //   await messagesRepo.createMessage(message: message.copyWith(isFromMe: false), chatId: "1");
+    // };
+  }
+
+  Future<void> startMessaging(
     String remoteId,
-    String callId,
   ) async {
     String? selfCoreId = await accountInfo.getCoreId();
 
-    MessageSession session =
-        await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
+    await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
     ChatModel userChatModel = ChatModel(
-        id: session.sid,
+        id: "1",
         name: remoteId.characters.takeLast(5).string,
         icon: "",
         lastMessage: "",
         timestamp: DateTime.now());
     chatHistoryRepo.addChatToHistory(userChatModel);
-    return session;
   }
 
   void sendTextMessage(String text) async {

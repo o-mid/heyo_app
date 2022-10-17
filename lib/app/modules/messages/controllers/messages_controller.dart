@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -70,16 +71,19 @@ class MessagesController extends GetxController {
   final locationMessage = Rxn<LocationMessageModel>();
   late MessagesViewArgumentsModel args;
   late StreamSubscription _messagesStreamSubscription;
+  final JsonDecoder _decoder = const JsonDecoder();
   late String sessionId;
   @override
   Future<void> onInit() async {
     super.onInit();
+    args = Get.arguments as MessagesViewArgumentsModel;
+    // chatId = args.chat.id;
+
+    chatId = "1";
     _globalMessageController.reset();
     textController = _globalMessageController.textController;
     scrollController = _globalMessageController.scrollController;
 
-    args = Get.arguments as MessagesViewArgumentsModel;
-    chatId = args.user!.walletAddress;
     await _initDataChannel();
     _getMessages();
     //TODO ramin, start listening to the database changes and apply them
@@ -95,8 +99,20 @@ class MessagesController extends GetxController {
     if (args.session == null) {
       await messageSenderSetup();
     } else {
-      // await messageReceiverSetup();
+      await messageReceiverSetup();
       Get.snackbar("acceptMessageConnection", "${args.session?.cid}");
+      // messagingConnection.messaging.onDataChannelMessage =
+      //     (_, dc, RTCDataChannelMessage data) async {
+      //   String text = data.text;
+      //   // print(text);
+      //   Map<String, dynamic> json = _decoder.convert(text);
+
+      //   //  MessageModel? message = messageFromJson(json);
+      //   TextMessageModel message = TextMessageModel.fromJson(json);
+      //   print(message.text);
+
+      //   await messagesRepo.createMessage(message: message.copyWith(isFromMe: false), chatId: "1");
+      // };
     }
   }
 
@@ -104,22 +120,21 @@ class MessagesController extends GetxController {
     await startDataChannelMessaging();
   }
 
-  // Future messageReceiverSetup() async {
-  //   sessionId = args.session!.sid;
+  Future messageReceiverSetup() async {
+    //sessionId = args.session!.sid;
 
-  //   await messagingConnection.acceptMessageConnection(args.session!);
-  // }
+    await messagingConnection.acceptMessageConnection(args.session!);
+    messagingConnection.channelMessageListener();
+  }
 
   Future<void> startDataChannelMessaging() async {
     //TODO OMID
     if (args.user?.walletAddress != null) {
-      final callId = DateTime.now().millisecondsSinceEpoch.toString();
-      MessageSession session = await messagingConnection.startMessaging(
+      await messagingConnection.startMessaging(
         args.user!.walletAddress,
-        callId,
       );
-      sessionId = session.sid;
-      chatId = session.sid;
+//sessionId = session.sid;
+      //    chatId = session.cid;
     }
   }
 
@@ -127,6 +142,9 @@ class MessagesController extends GetxController {
     _messagesStreamSubscription =
         (await messagesRepo.getMessagesStream(chatId)).listen((newMessages) {
       messages.value = newMessages;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        jumpToBottom();
+      });
     });
   }
 

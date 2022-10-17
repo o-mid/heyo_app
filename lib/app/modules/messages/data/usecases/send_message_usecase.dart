@@ -144,10 +144,12 @@ class SendMessage {
       return;
     }
 
-    await messagesRepo.createMessage(message: msg, chatId: sendMessageType.chatId);
+    await messagesRepo.createMessage(
+        message: msg.copyWith(status: MessageStatus.sent), chatId: sendMessageType.chatId);
     Map<String, dynamic> message = msg.toJson();
 
     messagingConnection.sendTextMessage(jsonEncode(message));
+    print(message);
   }
 }
 

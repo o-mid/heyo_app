@@ -32,9 +32,6 @@ class Messaging {
       onDataChannelMessage;
   Function(MessageSession session, RTCDataChannel dc)? onDataChannel;
 
-  /* String get sdpSemantics =>
-      WebRTC.platformIsWindows ? 'plan-b' : 'unified-plan';
-*/
   final Map<String, dynamic> _iceServers = {
     'iceServers': [
       {'url': 'stun:stun.l.google.com:19302'},
