@@ -67,15 +67,17 @@ class MessagingConnectionController extends GetxController {
         Get.toNamed(
           Routes.MESSAGES,
           arguments: MessagesViewArgumentsModel(
-              session: session,
-              user: UserModel(
-                icon: userChatModel.icon,
-                name: userChatModel.name,
-                walletAddress: session.cid,
-                isOnline: userChatModel.isOnline,
-              ),
-              // Todo Omid :
-              chat: userChatModel),
+            session: session,
+            user: UserModel(
+              icon: userChatModel.icon,
+              name: userChatModel.name,
+              walletAddress: session.cid,
+              isOnline: userChatModel.isOnline,
+              chatModel: userChatModel,
+            ),
+            // Todo Omid :
+            // chat: userChatModel,
+          ),
         );
       } else if (status == ConnectionStatus.CONNECTED) {
         isConnectionConnected = true;

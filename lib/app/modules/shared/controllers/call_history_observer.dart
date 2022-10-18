@@ -7,6 +7,8 @@ import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_histo
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 
+import '../../chats/data/models/chat_model.dart';
+
 class CallHistoryObserver extends GetxController {
   final CallHistoryAbstractRepo callHistoryRepo;
   final CallConnectionController callConnectionController;
@@ -172,10 +174,16 @@ class CallHistoryObserver extends GetxController {
 
   UserModel _getUserFromCoreId(String coreId) {
     return UserModel(
-      name: "Unknown",
-      icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
-      isVerified: true,
-      walletAddress: coreId,
-    );
+        name: "Unknown",
+        icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
+        isVerified: true,
+        walletAddress: coreId,
+        chatModel: ChatModel(
+          icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
+          id: coreId,
+          lastMessage: '',
+          name: 'unknown',
+          timestamp: DateTime.now(),
+        ));
   }
 }

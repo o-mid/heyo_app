@@ -9,6 +9,8 @@ import 'package:heyo/app/modules/calls/home/widgets/delete_call_dialog.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 
+import '../../../chats/data/models/chat_model.dart';
+
 class CallsController extends GetxController {
   final CallHistoryAbstractRepo callHistoryRepo;
 
@@ -90,33 +92,73 @@ class CallsController extends GetxController {
       icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
       isVerified: true,
       walletAddress: "CB11${List.generate(11, (index) => index).join()}14AB",
+      chatModel: ChatModel(
+        name: "Boiled Dealmaker",
+        icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
+        isVerified: true,
+        id: "CB11${List.generate(11, (index) => index).join()}14AB",
+        lastMessage: "",
+        timestamp: DateTime.now(),
+      ),
     );
     final uCrapps = UserModel(
       name: "Crapps Wallbanger",
       icon: "https://avatars.githubusercontent.com/u/2345136?v=4",
       walletAddress: "CB11${List.generate(11, (index) => index).join()}49BB",
+      chatModel: ChatModel(
+        name: "Crapps Wallbanger",
+        icon: "https://avatars.githubusercontent.com/u/2345136?v=4",
+        id: "CB11${List.generate(11, (index) => index).join()}49BB",
+        lastMessage: "",
+        timestamp: DateTime.now(),
+      ),
     );
     final uFancy = UserModel(
-      name: "Fancy Potato",
-      icon: "https://avatars.githubusercontent.com/u/6644146?v=4",
-      walletAddress: "CB11${List.generate(11, (index) => index).join()}11FE",
-    );
+        name: "Fancy Potato",
+        icon: "https://avatars.githubusercontent.com/u/6644146?v=4",
+        walletAddress: "CB11${List.generate(11, (index) => index).join()}11FE",
+        chatModel: ChatModel(
+          name: "Fancy Potato",
+          icon: "https://avatars.githubusercontent.com/u/6644146?v=4",
+          id: "CB11${List.generate(11, (index) => index).join()}11FE",
+          lastMessage: "",
+          timestamp: DateTime.now(),
+        ));
     final uOckerito = UserModel(
-      name: "Ockerito Fazola",
-      icon: "https://avatars.githubusercontent.com/u/7844146?v=4",
-      walletAddress: "CB11${List.generate(11, (index) => index).join()}5A5D",
-      isVerified: true,
-    );
+        name: "Ockerito Fazola",
+        isVerified: true,
+        icon: "https://avatars.githubusercontent.com/u/7844146?v=4",
+        walletAddress: "CB11${List.generate(11, (index) => index).join()}5A5D",
+        chatModel: ChatModel(
+          name: "Ockerito Fazola",
+          icon: "https://avatars.githubusercontent.com/u/7844146?v=4",
+          id: "CB11${List.generate(11, (index) => index).join()}5A5D",
+          isVerified: true,
+          lastMessage: "",
+          timestamp: DateTime.now(),
+        ));
     final uUnchained = UserModel(
-      name: "Unchained Banana",
-      icon: "https://avatars.githubusercontent.com/u/7847725?v=4",
-      walletAddress: "CB11${List.generate(11, (index) => index).join()}44AC",
-    );
+        name: "Unchained Banana",
+        icon: "https://avatars.githubusercontent.com/u/7847725?v=4",
+        walletAddress: "CB11${List.generate(11, (index) => index).join()}44AC",
+        chatModel: ChatModel(
+          name: "Unchained Banana",
+          icon: "https://avatars.githubusercontent.com/u/7847725?v=4",
+          id: "CB11${List.generate(11, (index) => index).join()}44AC",
+          lastMessage: "",
+          timestamp: DateTime.now(),
+        ));
     final uSwagger = UserModel(
-      name: "Swagger Uncut",
-      icon: "https://avatars.githubusercontent.com/u/9947725?v=4",
-      walletAddress: "CB11${List.generate(11, (index) => index).join()}532A",
-    );
+        name: "Swagger Uncut",
+        icon: "https://avatars.githubusercontent.com/u/9947725?v=4",
+        walletAddress: "CB11${List.generate(11, (index) => index).join()}532A",
+        chatModel: ChatModel(
+          name: "Swagger Uncut",
+          icon: "https://avatars.githubusercontent.com/u/9947725?v=4",
+          id: "CB11${List.generate(11, (index) => index).join()}532A",
+          lastMessage: "",
+          timestamp: DateTime.now(),
+        ));
     var index = 0;
     final calls = [
       CallModel(

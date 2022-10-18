@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/profile_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
@@ -44,11 +45,17 @@ class NewCallController extends GetxController {
     //TODO icon and chatmodel should be filled with correct data
     List<UserModel> searchedItems = (await contactRepository.search(query))
         .map((userContact) => UserModel(
+            name: userContact.nickname,
+            icon: userContact.icon,
+            walletAddress: userContact.coreId,
+            isContact: true,
+            chatModel: ChatModel(
               name: userContact.nickname,
               icon: userContact.icon,
-              walletAddress: userContact.coreId,
-              isContact: true,
-            ))
+              id: userContact.coreId,
+              lastMessage: "",
+              timestamp: DateTime.now(),
+            )))
         .toList();
 
     if (searchedItems.isEmpty) {
@@ -58,15 +65,26 @@ class NewCallController extends GetxController {
         //TODO update fields based on correct data
         searchSuggestions.value = [
           UserModel(
-            name: 'unknown',
-            icon: ([
-              "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
-              "https://avatars.githubusercontent.com/u/6634136?v=4",
-              "https://avatars.githubusercontent.com/u/9801359?v=4",
-            ]..shuffle())
-                .first,
-            walletAddress: query,
-          )
+              name: 'unknown',
+              icon: ([
+                "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+                "https://avatars.githubusercontent.com/u/6634136?v=4",
+                "https://avatars.githubusercontent.com/u/9801359?v=4",
+              ]..shuffle())
+                  .first,
+              walletAddress: query,
+              chatModel: ChatModel(
+                icon: ([
+                  "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+                  "https://avatars.githubusercontent.com/u/6634136?v=4",
+                  "https://avatars.githubusercontent.com/u/9801359?v=4",
+                ]..shuffle())
+                    .first,
+                id: query,
+                lastMessage: '',
+                name: 'unknown',
+                timestamp: DateTime.now(),
+              ))
         ];
       } else {
         searchSuggestions.value = [];

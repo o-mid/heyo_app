@@ -32,18 +32,16 @@ class MessagesList extends StatelessWidget {
           itemBuilder: (context, index) {
             if (index == 0) {
               return BeginningOfMessagesHeader(
-                chat: controller.args.chat,
+                chat: controller.args.user.chatModel,
               );
             }
 
             final message = controller.messages[index - 1];
-            final prevMessage =
-                index == 1 ? null : controller.messages[index - 2];
+            final prevMessage = index == 1 ? null : controller.messages[index - 2];
 
             // Adds date header at beginning of new messages in a certain date
             var dateHeaderWidgets = <Widget>[];
-            if (prevMessage == null ||
-                !prevMessage.timestamp.isSameDate(message.timestamp)) {
+            if (prevMessage == null || !prevMessage.timestamp.isSameDate(message.timestamp)) {
               dateHeaderWidgets = [
                 CustomSizes.mediumSizedBoxHeight,
                 Text(

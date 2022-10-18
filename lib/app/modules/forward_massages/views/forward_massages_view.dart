@@ -133,7 +133,6 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                                       Routes.MESSAGES,
                                       ModalRoute.withName(Routes.HOME),
                                       arguments: MessagesViewArgumentsModel(
-                                          chat: controller.selectedUser!.chatModel!,
                                           user: controller.selectedUser!,
                                           forwardedMessages: controller.selectedMessages),
                                     );

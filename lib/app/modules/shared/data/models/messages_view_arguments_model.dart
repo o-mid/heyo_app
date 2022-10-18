@@ -5,12 +5,10 @@ import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import '../../../messages/data/models/messages/message_model.dart';
 
 class MessagesViewArgumentsModel {
-  final ChatModel chat;
   final UserModel user;
   final List<MessageModel>? forwardedMessages;
   final MessageSession? session;
   MessagesViewArgumentsModel({
-    required this.chat,
     required this.user,
     this.forwardedMessages,
     this.session,

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
@@ -20,11 +21,17 @@ class IncomingCallController extends GetxController {
     args = Get.arguments as IncomingCallViewArguments;
     //TODO name should be get from contacts
     caller = UserModel(
-      name: "Unknown",
-      icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
-      isVerified: true,
-      walletAddress: args.remoteCoreId,
-    );
+        name: "Unknown",
+        icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
+        isVerified: true,
+        walletAddress: args.remoteCoreId,
+        chatModel: ChatModel(
+            name: "Unknown",
+            icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
+            isVerified: true,
+            id: args.remoteCoreId,
+            lastMessage: "",
+            timestamp: DateTime.now()));
     _playRingtone();
   }
 
@@ -60,11 +67,17 @@ class IncomingCallController extends GetxController {
           callId: args.callId,
           enableVideo: args.session.isAudioCall ? false : true,
           user: UserModel(
-            name: "Unknown",
-            icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
-            isVerified: true,
-            walletAddress: args.remoteCoreId,
-          ),
+              name: "Unknown",
+              icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
+              isVerified: true,
+              walletAddress: args.remoteCoreId,
+              chatModel: ChatModel(
+                  name: "Unknown",
+                  icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
+                  isVerified: true,
+                  id: args.remoteCoreId,
+                  lastMessage: "",
+                  timestamp: DateTime.now())),
           isAudioCall: args.session.isAudioCall),
     );
   }
