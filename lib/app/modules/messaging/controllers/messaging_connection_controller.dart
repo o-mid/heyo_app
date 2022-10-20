@@ -11,6 +11,7 @@ import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
 import '../../chats/data/models/chat_model.dart';
+import '../../messages/data/models/messages/image_message_model.dart';
 import '../../messages/data/models/messages/message_model.dart';
 import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/utils/message_from_json.dart';
@@ -98,6 +99,9 @@ class MessagingConnectionController extends GetxController {
         MessageModel? message = messageFromJson(json);
         print(message);
         if (message != null) {
+          if (message.type == MessageContentType.image) {
+            message = (message as ImageMessageModel).copyWith(isLocal: false);
+          }
           await messagesRepo.createMessage(
               message: message.copyWith(
                 isFromMe: false,

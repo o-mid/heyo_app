@@ -565,6 +565,7 @@ class MessagesController extends GetxController {
                   .execute(
                 sendMessageType: SendMessageType.image(
                   path: file.path,
+                  intlist: file.readAsBytesSync().toList(),
                   metadata: ImageMetadata(
                     height: entity.height.toDouble(),
                     width: entity.width.toDouble(),
@@ -642,6 +643,7 @@ class MessagesController extends GetxController {
       if (element["type"] == "image") {
         tempImages.add(ImageMessageModel(
           messageId: "${messages.lastIndexOf(messages.last) + 1}",
+          intlist: await pathToUint8List(element["path"]),
           isLocal: true,
           metadata: ImageMetadata(
             height: element["height"].toDouble(),
@@ -695,6 +697,9 @@ class MessagesController extends GetxController {
                 ImageMessageModel(
                     messageId: "${messages.lastIndexOf(messages.last) + 1}",
                     isLocal: true,
+                    intlist: await rootBundle
+                        .load(asset["path"])
+                        .then((value) => value.buffer.asUint8List().toList()),
                     metadata: ImageMetadata(
                       height: double.parse(asset["height"].toString()),
                       width: double.parse(asset["width"].toString()),
@@ -1005,43 +1010,51 @@ class MessagesController extends GetxController {
         isFromMe: true,
         status: MessageStatus.sent,
       ),
-      ImageMessageModel(
-        messageId: "${index++}",
-        isLocal: false,
-        url:
-            "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-        metadata: ImageMetadata(width: 687, height: 1030),
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 50)),
-        senderName: args.user.chatModel.name,
-        senderAvatar: args.user.chatModel.icon,
-        replyTo: ReplyToModel(
-          repliedToMessageId: "0",
-          repliedToMessage:
-              "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-          repliedToName: args.user.chatModel.name,
-        ),
-      ),
-      ImageMessageModel(
-        messageId: "${index++}",
-        isLocal: false,
-        url:
-            "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
-        metadata: ImageMetadata(width: 2142, height: 806),
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-        senderName: "",
-        senderAvatar: "",
-        isFromMe: true,
-        status: MessageStatus.read,
-        reactions: {
-          "🤗": ReactionModel(
-            users: List.generate(1, (index) => ""),
-          ),
-          "😘": ReactionModel(
-            users: List.generate(2, (index) => ""),
-            isReactedByMe: true,
-          ),
-        },
-      ),
+      // ImageMessageModel(
+      //   messageId: "${index++}",
+      //   intlist: await rootBundle
+      //       .load(
+      //           "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80")
+      //       .then((value) => value.buffer.asUint8List().toList()),
+      //   isLocal: false,
+      //   url:
+      //       "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+      //   metadata: ImageMetadata(width: 687, height: 1030),
+      //   timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 50)),
+      //   senderName: args.user.chatModel.name,
+      //   senderAvatar: args.user.chatModel.icon,
+      //   replyTo: ReplyToModel(
+      //     repliedToMessageId: "0",
+      //     repliedToMessage:
+      //         "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+      //     repliedToName: args.user.chatModel.name,
+      //   ),
+      // ),
+      // ImageMessageModel(
+      //   messageId: "${index++}",
+      //   isLocal: false,
+      //   intlist: await rootBundle
+      //       .load(
+      //           "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80")
+      //       .then((value) => value.buffer.asUint8List().toList()),
+      //   url:
+      //       "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
+      //   metadata: ImageMetadata(width: 2142, height: 806),
+      //   timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+      //   senderName: "",
+      //   senderAvatar: "",
+      //   isFromMe: true,
+      //   status: MessageStatus.read,
+      //   reactions: {
+      //     "🤗": ReactionModel(
+      //       users: List.generate(1, (index) => ""),
+      //     ),
+      //     "😘": ReactionModel(
+      //       users: List.generate(2, (index) => ""),
+      //       isReactedByMe: true,
+      //     ),
+      //   },
+      // ),
       VideoMessageModel(
         messageId: "${index++}",
         url:
@@ -1130,45 +1143,50 @@ class MessagesController extends GetxController {
         isFromMe: false,
         status: MessageStatus.read,
         mediaList: [
-          ImageMessageModel(
-            messageId: "${index++}",
-            isLocal: false,
-            type: MessageContentType.image,
-            url:
-                "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
-            metadata: ImageMetadata(width: 0, height: 0),
-            timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
-            senderName: "",
-            senderAvatar: "",
-            isFromMe: false,
-            status: MessageStatus.read,
-          ),
-          ImageMessageModel(
-            messageId: "${index++}",
-            isLocal: false,
-            url:
-                "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
-            metadata: ImageMetadata(width: 0, height: 0),
-            timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
-            senderName: "",
-            senderAvatar: "",
-            isFromMe: false,
-            type: MessageContentType.image,
-            status: MessageStatus.read,
-          ),
-          ImageMessageModel(
-            messageId: "${index++}",
-            isLocal: false,
-            url:
-                "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-            metadata: ImageMetadata(width: 687, height: 1030),
-            timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
-            senderName: "",
-            senderAvatar: "",
-            isFromMe: false,
-            type: MessageContentType.image,
-            status: MessageStatus.read,
-          ),
+          // ImageMessageModel(
+          //   messageId: "${index++}",
+          //   isLocal: false,
+          //   type: MessageContentType.image,
+          //   url:
+          //       "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
+          //   metadata: ImageMetadata(width: 0, height: 0),
+          //   timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
+          //   senderName: "",
+          //   senderAvatar: "",
+          //   isFromMe: false,
+          //   status: MessageStatus.read,
+          // ),
+          // ImageMessageModel(
+          //   messageId: "${index++}",
+          //   isLocal: false,
+          //   unit8list:
+          //   await rootBundle
+          //       .load(
+          //           "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80")
+          //       .then((value) => value.buffer.asUint8List()),
+          //   url:
+          //       "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
+          //   metadata: ImageMetadata(width: 0, height: 0),
+          //   timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
+          //   senderName: "",
+          //   senderAvatar: "",
+          //   isFromMe: false,
+          //   type: MessageContentType.image,
+          //   status: MessageStatus.read,
+          // ),
+          // ImageMessageModel(
+          //   messageId: "${index++}",
+          //   isLocal: false,
+          //   url:
+          //       "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+          //   metadata: ImageMetadata(width: 687, height: 1030),
+          //   timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
+          //   senderName: "",
+          //   senderAvatar: "",
+          //   isFromMe: false,
+          //   type: MessageContentType.image,
+          //   status: MessageStatus.read,
+          // ),
           VideoMessageModel(
             messageId: "${index++}",
             url:
@@ -1210,5 +1228,10 @@ class MessagesController extends GetxController {
     for (int i = 0; i < ms.length; i++) {
       await messagesRepo.createMessage(message: ms[i], chatId: chatId);
     }
+  }
+
+  Future<List<int>> pathToUint8List(String path) async {
+    var data = await rootBundle.load(path);
+    return data.buffer.asUint8List().toList();
   }
 }

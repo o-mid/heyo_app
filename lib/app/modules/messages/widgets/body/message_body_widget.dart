@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
@@ -55,8 +56,7 @@ class MessageBodyWidget extends StatelessWidget {
                     message: message,
                   ),
                 ),
-                if (message.reactions.isNotEmpty)
-                  ReactionsWidget(message: message),
+                if (message.reactions.isNotEmpty) ReactionsWidget(message: message),
               ],
             ),
           ),
@@ -76,11 +76,9 @@ class _MessageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = message.isFromMe
-        ? COLORS.kGreenMainColor
-        : COLORS.kPinCodeDeactivateColor;
-    final textColor =
-        message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor;
+    final backgroundColor =
+        message.isFromMe ? COLORS.kGreenMainColor : COLORS.kPinCodeDeactivateColor;
+    final textColor = message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor;
 
     switch (message.runtimeType) {
       case TextMessageModel:
@@ -117,9 +115,12 @@ class _MessageContent extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.r),
                 child: (message as ImageMessageModel).isLocal
-                    ? ExtendedImage.file(
-                        File((message as ImageMessageModel).url))
-                    : ExtendedImage.network((message as ImageMessageModel).url),
+                    ? ExtendedImage.file(File((message as ImageMessageModel).url))
+                    : ExtendedImage.memory(
+                        Uint8List.fromList(
+                          (message as ImageMessageModel).intlist,
+                        ),
+                      ),
               ),
             );
           }),
@@ -132,12 +133,9 @@ class _MessageContent extends StatelessWidget {
         return AudioMessagePlayer(
           message: message as AudioMessageModel,
           backgroundColor: backgroundColor,
-          textColor:
-              message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor,
-          iconColor:
-              message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
-          activeSliderColor:
-              message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
+          textColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor,
+          iconColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
+          activeSliderColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
           inactiveSliderColor: message.isFromMe
               ? COLORS.kWhiteColor.withOpacity(0.2)
               : COLORS.kDarkBlueColor.withOpacity(0.2),
@@ -147,16 +145,14 @@ class _MessageContent extends StatelessWidget {
           message: message as LocationMessageModel,
         );
       case LiveLocationMessageModel:
-        return LiveLocationMessageWidget(
-            message: message as LiveLocationMessageModel);
+        return LiveLocationMessageWidget(message: message as LiveLocationMessageModel);
       case CallMessageModel:
         return CallMessageWidget(message: message as CallMessageModel);
       case FileMessageModel:
         return FileMessageWidget(message: message as FileMessageModel);
 
       case MultiMediaMessageModel:
-        return MultiMediaMessageWidget(
-            message: message as MultiMediaMessageModel);
+        return MultiMediaMessageWidget(message: message as MultiMediaMessageModel);
 
       default:
         return const SizedBox.shrink();
