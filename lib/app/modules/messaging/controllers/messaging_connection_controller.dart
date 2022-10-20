@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
-import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/messaging/messaging.dart';
 import 'package:heyo/app/modules/messaging/messaging_session.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
@@ -34,6 +33,7 @@ class MessagingConnectionController extends GetxController {
   late RTCDataChannel _dataChannel;
   @override
   void onInit() {
+    super.onInit();
     messaging.onDataChannel = (_, channel) {
       _dataChannel = channel;
     };
@@ -75,8 +75,6 @@ class MessagingConnectionController extends GetxController {
               isOnline: userChatModel.isOnline,
               chatModel: userChatModel,
             ),
-            // Todo Omid :
-            // chat: userChatModel,
           ),
         );
       } else if (status == ConnectionStatus.CONNECTED) {
@@ -84,12 +82,7 @@ class MessagingConnectionController extends GetxController {
         print("Connection Status changed, state is: $status");
 
         channelMessageListener();
-        // messaging.onDataChannel = (_, channel) {
-        //   _dataChannel = channel;
-        // };
-
       } else if (status == ConnectionStatus.BYE) {
-        //    Get.snackbar("ConnectionLost", "ConnectionLost");
         if (Get.currentRoute == Routes.MESSAGES) {
           Get.until((route) => Get.currentRoute != Routes.MESSAGES);
         }
@@ -99,19 +92,19 @@ class MessagingConnectionController extends GetxController {
 
   channelMessageListener() {
     messaging.onDataChannelMessage = (session, dc, RTCDataChannelMessage data) async {
-      String text = data.text;
-      // print(text);
-      Map<String, dynamic> json = _decoder.convert(text);
-
-      //  MessageModel? message = messageFromJson(json);
-      TextMessageModel message = TextMessageModel.fromJson(json);
-      print(message.text);
-
-      await messagesRepo.createMessage(
-          message: message.copyWith(
-            isFromMe: false,
-          ),
-          chatId: session.cid);
+      if (data.isBinary == false) {
+        String text = data.text;
+        Map<String, dynamic> json = _decoder.convert(text);
+        MessageModel? message = messageFromJson(json);
+        print(message);
+        if (message != null) {
+          await messagesRepo.createMessage(
+              message: message.copyWith(
+                isFromMe: false,
+              ),
+              chatId: session.cid);
+        }
+      }
     };
   }
 
