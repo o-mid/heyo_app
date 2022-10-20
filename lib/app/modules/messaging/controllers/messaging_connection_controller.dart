@@ -17,6 +17,7 @@ import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/utils/message_from_json.dart';
 import '../../p2p_node/data/account/account_info.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
+import '../models/data_channel_message_model.dart';
 
 class MessagingConnectionController extends GetxController {
   final Messaging messaging;
@@ -96,17 +97,21 @@ class MessagingConnectionController extends GetxController {
       if (data.isBinary == false) {
         String text = data.text;
         Map<String, dynamic> json = _decoder.convert(text);
-        MessageModel? message = messageFromJson(json);
-        print(message);
-        if (message != null) {
-          if (message.type == MessageContentType.image) {
-            message = (message as ImageMessageModel).copyWith(isLocal: false);
+        DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(json);
+        print(channelMessage);
+        if (channelMessage.dataChannelMessagetype == DataChannelMessageType.message) {
+          MessageModel? message = messageFromJson(channelMessage.message);
+          print(message);
+          if (message != null) {
+            if (message.type == MessageContentType.image) {
+              message = (message as ImageMessageModel).copyWith(isLocal: false);
+            }
+            await messagesRepo.createMessage(
+                message: message.copyWith(
+                  isFromMe: false,
+                ),
+                chatId: session.cid);
           }
-          await messagesRepo.createMessage(
-              message: message.copyWith(
-                isFromMe: false,
-              ),
-              chatId: session.cid);
         }
       }
     };

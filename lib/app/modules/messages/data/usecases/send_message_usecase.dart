@@ -14,9 +14,11 @@ import 'package:heyo/app/modules/messages/data/models/metadatas/image_metadata.d
 import 'package:heyo/app/modules/messages/data/models/metadatas/video_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
+import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../messaging/controllers/messaging_connection_controller.dart';
+import '../../../messaging/controllers/usecases/send_data_channel_message_usecase.dart';
 import '../models/messages/file_message_model.dart';
 
 class SendMessage {
@@ -149,9 +151,9 @@ class SendMessage {
     await messagesRepo.createMessage(
         message: msg.copyWith(status: MessageStatus.sent), chatId: sendMessageType.chatId);
     Map<String, dynamic> message = msg.toJson();
-
-    messagingConnection.sendTextMessage(jsonEncode(message));
-    print("message sent:  $message");
+    SendDataChannelMessage(messagingConnection: messagingConnection).execute(
+      channelMessageType: ChannelMessageType.message(message: message),
+    );
   }
 }
 
