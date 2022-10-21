@@ -20,6 +20,7 @@ import 'package:uuid/uuid.dart';
 import '../../../messaging/controllers/messaging_connection_controller.dart';
 import '../../../messaging/controllers/usecases/send_data_channel_message_usecase.dart';
 import '../models/messages/file_message_model.dart';
+import '../models/reaction_model.dart';
 
 class SendMessage {
   final MessagesAbstractRepo messagesRepo;
@@ -42,16 +43,16 @@ class SendMessage {
     switch (sendMessageType.runtimeType) {
       case SendTextMessage:
         msg = TextMessageModel(
-          text: (sendMessageType as SendTextMessage).text,
-          messageId: id,
-          timestamp: timestamp,
-          senderName: senderName,
-          senderAvatar: senderAvatar,
-          replyTo: sendMessageType.replyTo,
-          type: MessageContentType.text,
-          status: MessageStatus.sending,
-          isFromMe: true,
-        );
+            text: (sendMessageType as SendTextMessage).text,
+            messageId: id,
+            timestamp: timestamp,
+            senderName: senderName,
+            senderAvatar: senderAvatar,
+            replyTo: sendMessageType.replyTo,
+            type: MessageContentType.text,
+            status: MessageStatus.sending,
+            isFromMe: true,
+            reactions: sendMessageType.reactions);
 
         break;
       case SendAudioMessage:
@@ -160,12 +161,17 @@ class SendMessage {
 class SendMessageType {
   final ReplyToModel? replyTo;
   final String chatId;
+  final Map<String, ReactionModel> reactions;
 
-  SendMessageType({required this.replyTo, required this.chatId});
-  factory SendMessageType.text(
-      {required String text,
-      required ReplyToModel? replyTo,
-      required String chatId}) = SendTextMessage;
+  SendMessageType(
+      {required this.replyTo,
+      required this.chatId,
+      this.reactions = const <String, ReactionModel>{}});
+  factory SendMessageType.text({
+    required String text,
+    required ReplyToModel? replyTo,
+    required String chatId,
+  }) = SendTextMessage;
 
   factory SendMessageType.audio(
       {required String path,

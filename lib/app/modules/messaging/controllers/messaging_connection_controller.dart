@@ -6,6 +6,7 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/delete_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/update_message_model.dart';
 import 'package:heyo/app/modules/messaging/messaging.dart';
 import 'package:heyo/app/modules/messaging/messaging_session.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
@@ -14,6 +15,7 @@ import 'package:heyo/app/routes/app_pages.dart';
 import '../../chats/data/models/chat_model.dart';
 import '../../messages/data/models/messages/image_message_model.dart';
 import '../../messages/data/models/messages/message_model.dart';
+import '../../messages/data/models/reaction_model.dart';
 import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/utils/message_from_json.dart';
 import '../../p2p_node/data/account/account_info.dart';
@@ -104,7 +106,7 @@ class MessagingConnectionController extends GetxController {
   handleDataChannelMessage(String receivedText, MessageSession session) async {
     Map<String, dynamic> receivedjson = _decoder.convert(receivedText);
     DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(receivedjson);
-    print(channelMessage);
+    print(channelMessage.dataChannelMessagetype);
 
     switch (channelMessage.dataChannelMessagetype) {
       case DataChannelMessageType.message:
@@ -130,6 +132,19 @@ class MessagingConnectionController extends GetxController {
       case DataChannelMessageType.confirm:
         break;
       case DataChannelMessageType.update:
+        UpdateMessageModel updateMessage = UpdateMessageModel.fromJson(channelMessage.message);
+
+        Map<String, ReactionModel> recivedreactions =
+            updateMessage.message.reactions.map((key, value) {
+          ReactionModel newValue = value.copyWith(isReactedByMe: false);
+          return MapEntry(key, newValue);
+        });
+        await messagesRepo.updateMessage(
+            message: updateMessage.message.copyWith(
+              isFromMe: false,
+              reactions: recivedreactions,
+            ),
+            chatId: session.cid);
         break;
     }
   }

@@ -1,15 +1,22 @@
+import 'package:heyo/app/modules/messages/data/models/messages/update_message_model.dart';
+
+import '../../../messaging/controllers/messaging_connection_controller.dart';
+import '../../../messaging/controllers/usecases/send_data_channel_message_usecase.dart';
 import '../models/messages/message_model.dart';
 import '../models/reaction_model.dart';
 import '../repo/messages_abstract_repo.dart';
 
 class UpdateMessage {
   final MessagesAbstractRepo messagesRepo;
+  MessagingConnectionController messagingConnection;
 
   UpdateMessage({
     required this.messagesRepo,
+    required this.messagingConnection,
   });
 
   execute({required UpdateMessageType updateMessageType}) async {
+    final String localCoreID = await messagingConnection.accountInfo.getCoreId() ?? "";
     switch (updateMessageType.runtimeType) {
       case UpdateReactions:
         final message = (updateMessageType as UpdateReactions).selectedMessage;
@@ -20,20 +27,32 @@ class UpdateMessage {
 
         if (reaction.isReactedByMe) {
           // Todo: remove user core id from list
-          reaction.users.removeLast();
+          reaction.users.removeWhere((element) => element == localCoreID);
         } else {
           // Todo: add user core id
-          reaction = reaction.copyWith(users: [...reaction.users, ""]);
+          reaction = reaction.copyWith(users: [localCoreID]);
         }
 
         reaction = reaction.copyWith(
           isReactedByMe: !reaction.isReactedByMe,
         );
 
-        await messagesRepo.updateMessage(
-            message: message.copyWith(reactions: {...message.reactions, emoji: reaction}),
-            chatId: updateMessageType.chatId);
-        // Todo: send updated reactions with libp2p
+        MessageModel updatedMessage = message.copyWith(
+          reactions: {
+            ...message.reactions,
+            emoji: reaction,
+          },
+        );
+        await messagesRepo.updateMessage(message: updatedMessage, chatId: updateMessageType.chatId);
+
+        Map<String, dynamic> updatedMessageJson = UpdateMessageModel(
+                message: updatedMessage.copyWith(reactions: updatedMessage.reactions))
+            .toJson();
+        print(updatedMessageJson);
+        SendDataChannelMessage(messagingConnection: messagingConnection).execute(
+          channelMessageType: ChannelMessageType.update(message: updatedMessageJson),
+        );
+
         break;
     }
   }

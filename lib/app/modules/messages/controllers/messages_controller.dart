@@ -68,6 +68,7 @@ class MessagesController extends GetxController {
   final messages = <MessageModel>[].obs;
   final selectedMessages = <MessageModel>[].obs;
   final replyingTo = Rxn<ReplyToModel>();
+
   final locationMessage = Rxn<LocationMessageModel>();
   late MessagesViewArgumentsModel args;
   late StreamSubscription _messagesStreamSubscription;
@@ -252,7 +253,10 @@ class MessagesController extends GetxController {
   }
 
   void toggleReaction(MessageModel msg, String emoji) {
-    UpdateMessage(messagesRepo: messagesRepo).execute(
+    UpdateMessage(
+      messagesRepo: messagesRepo,
+      messagingConnection: messagingConnection,
+    ).execute(
         updateMessageType: UpdateMessageType.updateReactions(
       selectedMessage: msg,
       emoji: emoji,

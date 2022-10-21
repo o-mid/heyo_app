@@ -18,7 +18,8 @@ class ReactionModel {
       );
 
   factory ReactionModel.fromJson(Map<String, dynamic> json) => ReactionModel(
-        users: List<String>.from(json[usersSerializedName].map((x) => x)),
+        users:
+            json[usersSerializedName] == null ? [] : List<String>.from(json[usersSerializedName]),
         isReactedByMe: json[isReactedByMeSerializedName],
       );
 
