@@ -462,7 +462,10 @@ class MessagesController extends GetxController {
   }
 
   void deleteSelectedForEveryone() {
-    DeleteMessage(messagesRepo: messagesRepo).execute(
+    DeleteMessage(
+      messagesRepo: messagesRepo,
+      messagingConnection: messagingConnection,
+    ).execute(
         deleteMessageType: DeleteMessageType.forEveryone(
       chatId: chatId,
       selectedMessages: selectedMessages,
@@ -471,7 +474,10 @@ class MessagesController extends GetxController {
   }
 
   void deleteSelectedForMe() {
-    DeleteMessage(messagesRepo: messagesRepo).execute(
+    DeleteMessage(
+      messagesRepo: messagesRepo,
+      messagingConnection: messagingConnection,
+    ).execute(
         deleteMessageType: DeleteMessageType.forMe(
       chatId: chatId,
       selectedMessages: selectedMessages,

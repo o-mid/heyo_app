@@ -1,10 +1,18 @@
+import 'package:heyo/app/modules/messages/data/models/messages/delete_message_model.dart';
+
+import '../../../messaging/controllers/messaging_connection_controller.dart';
+import '../../../messaging/controllers/usecases/send_data_channel_message_usecase.dart';
 import '../models/messages/message_model.dart';
 import '../repo/messages_abstract_repo.dart';
 
 class DeleteMessage {
   final MessagesAbstractRepo messagesRepo;
+  MessagingConnectionController messagingConnection;
 
-  DeleteMessage({required this.messagesRepo});
+  DeleteMessage({
+    required this.messagesRepo,
+    required this.messagingConnection,
+  });
 
   execute({required DeleteMessageType deleteMessageType}) async {
     switch (deleteMessageType.runtimeType) {
@@ -15,9 +23,13 @@ class DeleteMessage {
         break;
 
       case DeleteRemoteMessages:
-        // Todo: libp2p - delete for others
         final remoteMessages = (deleteMessageType as DeleteRemoteMessages).selectedMessages;
         final messageIds = remoteMessages.map((e) => e.messageId).toList();
+        Map<String, dynamic> deleteMessages = DeleteMessageModel(messageIds: messageIds).toJson();
+
+        SendDataChannelMessage(messagingConnection: messagingConnection).execute(
+          channelMessageType: ChannelMessageType.delete(message: deleteMessages),
+        );
         await messagesRepo.deleteMessages(messageIds: messageIds, chatId: deleteMessageType.chatId);
         break;
     }

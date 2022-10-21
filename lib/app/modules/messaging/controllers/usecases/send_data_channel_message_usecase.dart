@@ -21,7 +21,13 @@ class SendDataChannelMessage {
         );
         break;
 
-      // Todo: Omid, add other cases for update and delete and confirm
+      case DeleteMessage:
+        msg = DataChannelMessageModel(
+          message: (channelMessageType as DeleteMessage).message,
+          dataChannelMessagetype: DataChannelMessageType.delete,
+        );
+
+      // Todo: Omid, add other cases for update and  and confirm
     }
 
     if (msg == null) {
@@ -38,12 +44,24 @@ class ChannelMessageType {
   factory ChannelMessageType.message({
     required Map<String, dynamic> message,
   }) = SendMessage;
+
+  factory ChannelMessageType.delete({
+    required Map<String, dynamic> message,
+  }) = DeleteMessage;
 }
 
 class SendMessage implements ChannelMessageType {
   final Map<String, dynamic> message;
 
   SendMessage({
+    required this.message,
+  });
+}
+
+class DeleteMessage implements ChannelMessageType {
+  final Map<String, dynamic> message;
+
+  DeleteMessage({
     required this.message,
   });
 }

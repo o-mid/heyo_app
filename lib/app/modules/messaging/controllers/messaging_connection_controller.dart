@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/delete_message_model.dart';
 import 'package:heyo/app/modules/messaging/messaging.dart';
 import 'package:heyo/app/modules/messaging/messaging_session.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
@@ -95,26 +96,42 @@ class MessagingConnectionController extends GetxController {
   channelMessageListener() {
     messaging.onDataChannelMessage = (session, dc, RTCDataChannelMessage data) async {
       if (data.isBinary == false) {
-        String text = data.text;
-        Map<String, dynamic> json = _decoder.convert(text);
-        DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(json);
-        print(channelMessage);
-        if (channelMessage.dataChannelMessagetype == DataChannelMessageType.message) {
-          MessageModel? message = messageFromJson(channelMessage.message);
-          print(message);
-          if (message != null) {
-            if (message.type == MessageContentType.image) {
-              message = (message as ImageMessageModel).copyWith(isLocal: false);
-            }
-            await messagesRepo.createMessage(
-                message: message.copyWith(
-                  isFromMe: false,
-                ),
-                chatId: session.cid);
-          }
-        }
+        handleDataChannelMessage(data.text, session);
       }
     };
+  }
+
+  handleDataChannelMessage(String receivedText, MessageSession session) async {
+    Map<String, dynamic> receivedjson = _decoder.convert(receivedText);
+    DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(receivedjson);
+    print(channelMessage);
+
+    switch (channelMessage.dataChannelMessagetype) {
+      case DataChannelMessageType.message:
+        MessageModel? message = messageFromJson(channelMessage.message);
+        print(message);
+        if (message != null) {
+          if (message.type == MessageContentType.image) {
+            message = (message as ImageMessageModel).copyWith(isLocal: false);
+          }
+          await messagesRepo.createMessage(
+              message: message.copyWith(
+                isFromMe: false,
+              ),
+              chatId: session.cid);
+        }
+        break;
+
+      case DataChannelMessageType.delete:
+        DeleteMessageModel deleteMessage = DeleteMessageModel.fromJson(channelMessage.message);
+        await messagesRepo.deleteMessages(
+            messageIds: deleteMessage.messageIds, chatId: session.cid);
+        break;
+      case DataChannelMessageType.confirm:
+        break;
+      case DataChannelMessageType.update:
+        break;
+    }
   }
 
   Future<void> startMessaging(
