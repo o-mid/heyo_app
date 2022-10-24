@@ -118,7 +118,7 @@ class MessagesController extends GetxController {
   Future<void> startDataChannelMessaging() async {
     if (args.user.walletAddress != "") {
       await messagingConnection.startMessaging(
-        args.user.walletAddress,
+        remoteId: args.user.walletAddress,
       );
     }
   }

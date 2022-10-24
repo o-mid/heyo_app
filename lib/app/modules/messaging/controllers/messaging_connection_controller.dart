@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -106,57 +107,79 @@ class MessagingConnectionController extends GetxController {
   handleDataChannelMessage(String receivedText, MessageSession session) async {
     Map<String, dynamic> receivedjson = _decoder.convert(receivedText);
     DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(receivedjson);
-    print(channelMessage.dataChannelMessagetype);
 
     switch (channelMessage.dataChannelMessagetype) {
       case DataChannelMessageType.message:
-        MessageModel? message = messageFromJson(channelMessage.message);
-        print(message);
-        if (message != null) {
-          if (message.type == MessageContentType.image) {
-            message = (message as ImageMessageModel).copyWith(isLocal: false);
-          }
-          await messagesRepo.createMessage(
-              message: message.copyWith(
-                isFromMe: false,
-              ),
-              chatId: session.cid);
-        }
+        await saveReceivedMessage(receivedMessageJson: channelMessage.message, chatId: session.cid);
         break;
 
       case DataChannelMessageType.delete:
-        DeleteMessageModel deleteMessage = DeleteMessageModel.fromJson(channelMessage.message);
-        await messagesRepo.deleteMessages(
-            messageIds: deleteMessage.messageIds, chatId: session.cid);
+        await deleteReceivedMessage(
+            receivedDeleteJson: channelMessage.message, chatId: session.cid);
+        break;
+
+      case DataChannelMessageType.update:
+        await updateReceivedMessage(
+            receivedUpdateJson: channelMessage.message, chatId: session.cid);
+
         break;
       case DataChannelMessageType.confirm:
-        break;
-      case DataChannelMessageType.update:
-        UpdateMessageModel updateMessage = UpdateMessageModel.fromJson(channelMessage.message);
-
-        MessageModel? currentMessage = await messagesRepo.getMessageById(
-            messageId: updateMessage.message.messageId, chatId: session.cid);
-        if (currentMessage != null) {
-          Map<String, ReactionModel> recivedreactions =
-              updateMessage.message.reactions.map((key, value) {
-            ReactionModel newValue = value.copyWith(
-                isReactedByMe: currentMessage.reactions[key]?.isReactedByMe ?? false);
-            return MapEntry(key, newValue);
-          });
-          await messagesRepo.updateMessage(
-              message: updateMessage.message.copyWith(
-                isFromMe: currentMessage.isFromMe,
-                reactions: recivedreactions,
-              ),
-              chatId: session.cid);
-        }
         break;
     }
   }
 
-  Future<void> startMessaging(
-    String remoteId,
-  ) async {
+  Future<void> saveReceivedMessage(
+      {required Map<String, dynamic> receivedMessageJson, required String chatId}) async {
+    MessageModel receivedMessage = messageFromJson(receivedMessageJson);
+    print(receivedMessage);
+
+    // Todo omid : add cases for other message types
+    if (receivedMessage.type == MessageContentType.image) {
+      receivedMessage = (receivedMessage as ImageMessageModel).copyWith(isLocal: false);
+    }
+
+    await messagesRepo.createMessage(
+        message: receivedMessage.copyWith(
+          isFromMe: false,
+        ),
+        chatId: chatId);
+  }
+
+  Future<void> deleteReceivedMessage(
+      {required Map<String, dynamic> receivedDeleteJson, required String chatId}) async {
+    DeleteMessageModel deleteMessage = DeleteMessageModel.fromJson(receivedDeleteJson);
+
+    await messagesRepo.deleteMessages(messageIds: deleteMessage.messageIds, chatId: chatId);
+  }
+
+  Future<void> updateReceivedMessage(
+      {required Map<String, dynamic> receivedUpdateJson, required String chatId}) async {
+    UpdateMessageModel updateMessage = UpdateMessageModel.fromJson(receivedUpdateJson);
+    // this will get the current Message form repo and if message Id is found it will be updated
+    MessageModel? currentMessage = await messagesRepo.getMessageById(
+        messageId: updateMessage.message.messageId, chatId: chatId);
+
+    if (currentMessage != null) {
+      // get the new reactions and check if user is alredy reacted to the message or not
+      Map<String, ReactionModel> recivedreactions =
+          updateMessage.message.reactions.map((key, value) {
+        ReactionModel newValue =
+            value.copyWith(isReactedByMe: currentMessage.reactions[key]?.isReactedByMe ?? false);
+        return MapEntry(key, newValue);
+      });
+
+      await messagesRepo.updateMessage(
+          message: updateMessage.message.copyWith(
+            isFromMe: currentMessage.isFromMe,
+            reactions: recivedreactions,
+          ),
+          chatId: chatId);
+    }
+  }
+
+  Future<void> startMessaging({
+    required String remoteId,
+  }) async {
     String? selfCoreId = await accountInfo.getCoreId();
 
     MessageSession session =
@@ -178,15 +201,15 @@ class MessagingConnectionController extends GetxController {
     chatHistoryRepo.addChatToHistory(userChatModel);
   }
 
-  void sendTextMessage(String text) async {
+  void sendTextMessage({required String text}) async {
     await _dataChannel.send(RTCDataChannelMessage(text));
   }
 
-  void sendBinaryMessage(Uint8List binary) async {
+  void sendBinaryMessage({required Uint8List binary}) async {
     await _dataChannel.send(RTCDataChannelMessage.fromBinary(binary));
   }
 
-  MessageSession? getSession(String coreId) {
+  MessageSession? getSession({required String coreId}) {
     return messaging.getSessions()[coreId];
   }
 

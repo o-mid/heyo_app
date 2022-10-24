@@ -44,7 +44,7 @@ class SendDataChannelMessage {
 
     Map<String, dynamic> message = msg.toJson();
 
-    messagingConnection.sendTextMessage(jsonEncode(message));
+    messagingConnection.sendTextMessage(text: jsonEncode(message));
   }
 }
 
