@@ -10,6 +10,8 @@ import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart'
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 
+import '../../shared/utils/screen-utils/mocks/random_avatar_icon.dart';
+
 class NewCallController extends GetxController {
   late TextEditingController inputController;
   final ContactRepository contactRepository;
@@ -66,20 +68,10 @@ class NewCallController extends GetxController {
         searchSuggestions.value = [
           UserModel(
               name: 'unknown',
-              icon: ([
-                "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
-                "https://avatars.githubusercontent.com/u/6634136?v=4",
-                "https://avatars.githubusercontent.com/u/9801359?v=4",
-              ]..shuffle())
-                  .first,
+              icon: getMockIconUrl(),
               walletAddress: query,
               chatModel: ChatModel(
-                icon: ([
-                  "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
-                  "https://avatars.githubusercontent.com/u/6634136?v=4",
-                  "https://avatars.githubusercontent.com/u/9801359?v=4",
-                ]..shuffle())
-                    .first,
+                icon: getMockIconUrl(),
                 id: query,
                 lastMessage: '',
                 name: 'unknown',

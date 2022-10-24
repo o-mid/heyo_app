@@ -18,21 +18,35 @@ class DeleteMessage {
     switch (deleteMessageType.runtimeType) {
       case DeleteLocalMessages:
         final localMessages = (deleteMessageType as DeleteLocalMessages).selectedMessages;
-        final messageIds = localMessages.map((e) => e.messageId).toList();
-        await messagesRepo.deleteMessages(messageIds: messageIds, chatId: deleteMessageType.chatId);
+        await deleteLocalMessages(localMessages: localMessages, chatId: deleteMessageType.chatId);
         break;
 
       case DeleteRemoteMessages:
         final remoteMessages = (deleteMessageType as DeleteRemoteMessages).selectedMessages;
-        final messageIds = remoteMessages.map((e) => e.messageId).toList();
-        Map<String, dynamic> deleteMessages = DeleteMessageModel(messageIds: messageIds).toJson();
 
-        SendDataChannelMessage(messagingConnection: messagingConnection).execute(
-          channelMessageType: ChannelMessageType.delete(message: deleteMessages),
-        );
-        await messagesRepo.deleteMessages(messageIds: messageIds, chatId: deleteMessageType.chatId);
+        await deleteRemoteMessages(
+            remoteMessages: remoteMessages, chatId: deleteMessageType.chatId);
         break;
     }
+  }
+
+  Future<void> deleteLocalMessages(
+      {required List<MessageModel> localMessages, required String chatId}) async {
+    final messageIds = localMessages.map((e) => e.messageId).toList();
+    await messagesRepo.deleteMessages(messageIds: messageIds, chatId: chatId);
+  }
+
+  Future<void> deleteRemoteMessages(
+      {required List<MessageModel> remoteMessages, required String chatId}) async {
+    final messageIds = remoteMessages.map((e) => e.messageId).toList();
+
+    Map<String, dynamic> deleteMessagesJson = DeleteMessageModel(messageIds: messageIds).toJson();
+
+    await messagesRepo.deleteMessages(messageIds: messageIds, chatId: chatId);
+
+    await SendDataChannelMessage(messagingConnection: messagingConnection).execute(
+      channelMessageType: ChannelMessageType.delete(message: deleteMessagesJson),
+    );
   }
 }
 

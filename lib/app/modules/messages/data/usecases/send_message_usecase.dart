@@ -151,9 +151,10 @@ class SendMessage {
 
     await messagesRepo.createMessage(
         message: msg.copyWith(status: MessageStatus.sent), chatId: sendMessageType.chatId);
-    Map<String, dynamic> message = msg.toJson();
+
+    Map<String, dynamic> messageJson = msg.toJson();
     SendDataChannelMessage(messagingConnection: messagingConnection).execute(
-      channelMessageType: ChannelMessageType.message(message: message),
+      channelMessageType: ChannelMessageType.message(message: messageJson),
     );
   }
 }
