@@ -21,6 +21,7 @@ import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/utils/message_from_json.dart';
 import '../../p2p_node/data/account/account_info.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
+import '../../shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import '../models/data_channel_message_model.dart';
 
 class MessagingConnectionController extends GetxController {
@@ -58,12 +59,7 @@ class MessagingConnectionController extends GetxController {
             isOnline: true,
             name:
                 "${session.cid.characters.take(4).string}...${session.cid.characters.takeLast(4).string}",
-            icon: ([
-              "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
-              "https://avatars.githubusercontent.com/u/6634136?v=4",
-              "https://avatars.githubusercontent.com/u/9801359?v=4",
-            ]..shuffle())
-                .first,
+            icon: getMockIconUrl(),
             lastMessage: "",
             isVerified: true,
             timestamp: DateTime.now());
@@ -163,14 +159,14 @@ class MessagingConnectionController extends GetxController {
       // get the new reactions and check if user is alredy reacted to the message or not
       Map<String, ReactionModel> recivedreactions =
           updateMessage.message.reactions.map((key, value) {
-        ReactionModel newValue =
-            value.copyWith(isReactedByMe: currentMessage.reactions[key]?.isReactedByMe ?? false);
+        ReactionModel newValue = value.copyWith(
+          isReactedByMe: currentMessage.reactions[key]?.isReactedByMe ?? false,
+        );
         return MapEntry(key, newValue);
       });
 
       await messagesRepo.updateMessage(
-          message: updateMessage.message.copyWith(
-            isFromMe: currentMessage.isFromMe,
+          message: currentMessage.copyWith(
             reactions: recivedreactions,
           ),
           chatId: chatId);
@@ -188,12 +184,7 @@ class MessagingConnectionController extends GetxController {
         id: session.cid,
         name:
             "${session.cid.characters.take(4).string}...${session.cid.characters.takeLast(4).string}",
-        icon: ([
-          "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
-          "https://avatars.githubusercontent.com/u/6634136?v=4",
-          "https://avatars.githubusercontent.com/u/9801359?v=4",
-        ]..shuffle())
-            .first,
+        icon: getMockIconUrl(),
         lastMessage: "",
         isOnline: true,
         isVerified: true,
