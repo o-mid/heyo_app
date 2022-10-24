@@ -57,6 +57,19 @@ class MessagesProvider implements MessagesAbstractProvider {
   }
 
   @override
+  Future<MessageModel?> getMessageById({required String messageId, required String chatId}) async {
+    final messages = await getMessages(chatId);
+    final index = messages.indexWhere((m) => m.messageId == messageId);
+
+    // message not found
+    if (index < 0) {
+      return null;
+    }
+
+    return messages[index];
+  }
+
+  @override
   Future<MessageModel?> deleteMessage({
     required String messageId,
     required String chatId,
