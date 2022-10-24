@@ -26,16 +26,21 @@ class UpdateMessage {
         var reaction = message.reactions[emoji] ?? ReactionModel();
 
         if (reaction.isReactedByMe) {
-          // Todo: remove user core id from list
           reaction.users.removeWhere((element) => element == localCoreID);
+          reaction = reaction.copyWith(
+            isReactedByMe: false,
+          );
         } else {
           // Todo: add user core id
-          reaction = reaction.copyWith(users: [localCoreID]);
+          reaction = reaction.copyWith(users: [...reaction.users, localCoreID]);
+          reaction = reaction.copyWith(
+            isReactedByMe: true,
+          );
         }
 
-        reaction = reaction.copyWith(
-          isReactedByMe: !reaction.isReactedByMe,
-        );
+        // reaction = reaction.copyWith(
+        //   isReactedByMe: !reaction.isReactedByMe,
+        // );
 
         MessageModel updatedMessage = message.copyWith(
           reactions: {

@@ -134,17 +134,22 @@ class MessagingConnectionController extends GetxController {
       case DataChannelMessageType.update:
         UpdateMessageModel updateMessage = UpdateMessageModel.fromJson(channelMessage.message);
 
-        Map<String, ReactionModel> recivedreactions =
-            updateMessage.message.reactions.map((key, value) {
-          ReactionModel newValue = value.copyWith(isReactedByMe: false);
-          return MapEntry(key, newValue);
-        });
-        await messagesRepo.updateMessage(
-            message: updateMessage.message.copyWith(
-              isFromMe: false,
-              reactions: recivedreactions,
-            ),
-            chatId: session.cid);
+        MessageModel? currentMessage = await messagesRepo.getMessageById(
+            messageId: updateMessage.message.messageId, chatId: session.cid);
+        if (currentMessage != null) {
+          Map<String, ReactionModel> recivedreactions =
+              updateMessage.message.reactions.map((key, value) {
+            ReactionModel newValue = value.copyWith(
+                isReactedByMe: currentMessage.reactions[key]?.isReactedByMe ?? false);
+            return MapEntry(key, newValue);
+          });
+          await messagesRepo.updateMessage(
+              message: updateMessage.message.copyWith(
+                isFromMe: currentMessage.isFromMe,
+                reactions: recivedreactions,
+              ),
+              chatId: session.cid);
+        }
         break;
     }
   }
