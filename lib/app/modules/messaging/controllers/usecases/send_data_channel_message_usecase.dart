@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:bson/bson.dart';
 
 import '../../../messaging/controllers/messaging_connection_controller.dart';
 import '../../models/data_channel_message_model.dart';
@@ -12,6 +15,8 @@ class SendDataChannelMessage {
   execute({
     required ChannelMessageType channelMessageType,
   }) async {
+    bool isDataBinery = false;
+    final bson = BSON();
     DataChannelMessageModel? msg;
     switch (channelMessageType.runtimeType) {
       case SendMessage:
@@ -19,6 +24,7 @@ class SendDataChannelMessage {
           message: (channelMessageType as SendMessage).message,
           dataChannelMessagetype: DataChannelMessageType.message,
         );
+        isDataBinery = (channelMessageType).isDataBinery;
         break;
 
       case DeleteMessage:
@@ -49,14 +55,22 @@ class SendDataChannelMessage {
     }
 
     Map<String, dynamic> message = msg.toJson();
+    if (isDataBinery) {
+      BsonBinary buffer = bson.serialize(message);
 
-    messagingConnection.sendTextMessage(text: jsonEncode(message));
+      Uint8List byteList = buffer.byteList;
+
+      messagingConnection.sendBinaryMessage(binary: byteList);
+    } else {
+      messagingConnection.sendTextMessage(text: jsonEncode(message));
+    }
   }
 }
 
 class ChannelMessageType {
   factory ChannelMessageType.message({
     required Map<String, dynamic> message,
+    required bool isDataBinery,
   }) = SendMessage;
 
   factory ChannelMessageType.delete({
@@ -73,9 +87,11 @@ class ChannelMessageType {
 
 class SendMessage implements ChannelMessageType {
   final Map<String, dynamic> message;
+  final bool isDataBinery;
 
   SendMessage({
     required this.message,
+    required this.isDataBinery,
   });
 }
 

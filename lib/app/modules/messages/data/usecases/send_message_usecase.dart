@@ -38,6 +38,7 @@ class SendMessage {
     final timestamp = DateTime.now();
     const senderName = ""; // Todo: get sender name from user repo
     const senderAvatar = ""; // Todo: get sender avatar from user repo
+    bool isDataBinery = false;
 
     MessageModel? msg;
     switch (sendMessageType.runtimeType) {
@@ -115,6 +116,7 @@ class SendMessage {
           status: MessageStatus.sending,
           isFromMe: true,
         );
+        isDataBinery = true;
         break;
       case SendVideoMessage:
         msg = VideoMessageModel(
@@ -154,7 +156,8 @@ class SendMessage {
 
     Map<String, dynamic> messageJson = msg.toJson();
     SendDataChannelMessage(messagingConnection: messagingConnection).execute(
-      channelMessageType: ChannelMessageType.message(message: messageJson),
+      channelMessageType:
+          ChannelMessageType.message(message: messageJson, isDataBinery: isDataBinery),
     );
   }
 }

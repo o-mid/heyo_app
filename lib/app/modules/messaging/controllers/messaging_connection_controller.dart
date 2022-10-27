@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:typed_data';
+import 'package:bson/bson.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
@@ -33,6 +34,7 @@ class MessagingConnectionController extends GetxController {
   final AccountInfo accountInfo;
   bool isConnectionConnected = false;
   final JsonDecoder _decoder = const JsonDecoder();
+  final bson = BSON();
   Rx<ConnectionStatus?> connectionStatus = Rxn<ConnectionStatus>();
   MessagingConnectionController(
       {required this.messaging,
@@ -98,16 +100,19 @@ class MessagingConnectionController extends GetxController {
     messaging.onDataChannelMessage = (session, dc, RTCDataChannelMessage data) async {
       data.isBinary
           ? handleDataChannelBinary(binaryData: data.binary, session: session)
-          : handleDataChannelText(receivedText: data.text, session: session);
+          : handleDataChannelText(receivedjson: _decoder.convert(data.text), session: session);
     };
   }
 
   handleDataChannelBinary({required Uint8List binaryData, required MessageSession session}) async {
-    print("Received binary message: ${binaryData.length} bytes");
+    BsonBinary bsonBinary = BsonBinary.from(binaryData);
+    final decodedBson = bson.deserialize(bsonBinary);
+
+    handleDataChannelText(receivedjson: decodedBson, session: session);
   }
 
-  handleDataChannelText({required String receivedText, required MessageSession session}) async {
-    Map<String, dynamic> receivedjson = _decoder.convert(receivedText);
+  handleDataChannelText(
+      {required Map<String, dynamic> receivedjson, required MessageSession session}) async {
     DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(receivedjson);
 
     switch (channelMessage.dataChannelMessagetype) {
