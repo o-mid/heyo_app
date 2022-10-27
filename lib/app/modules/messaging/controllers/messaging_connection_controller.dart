@@ -6,8 +6,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/confirm_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/delete_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/update_message_model.dart';
+import 'package:heyo/app/modules/messaging/controllers/usecases/send_data_channel_message_usecase.dart';
 import 'package:heyo/app/modules/messaging/messaging.dart';
 import 'package:heyo/app/modules/messaging/messaging_session.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
@@ -94,13 +96,17 @@ class MessagingConnectionController extends GetxController {
 
   channelMessageListener() {
     messaging.onDataChannelMessage = (session, dc, RTCDataChannelMessage data) async {
-      if (data.isBinary == false) {
-        handleDataChannelMessage(data.text, session);
-      }
+      data.isBinary
+          ? handleDataChannelBinary(binaryData: data.binary, session: session)
+          : handleDataChannelText(receivedText: data.text, session: session);
     };
   }
 
-  handleDataChannelMessage(String receivedText, MessageSession session) async {
+  handleDataChannelBinary({required Uint8List binaryData, required MessageSession session}) async {
+    print("Received binary message: ${binaryData.length} bytes");
+  }
+
+  handleDataChannelText({required String receivedText, required MessageSession session}) async {
     Map<String, dynamic> receivedjson = _decoder.convert(receivedText);
     DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(receivedjson);
 
@@ -120,6 +126,9 @@ class MessagingConnectionController extends GetxController {
 
         break;
       case DataChannelMessageType.confirm:
+        await confirmReceivedMessage(
+            receivedconfirmJson: channelMessage.message, chatId: session.cid);
+
         break;
     }
   }
@@ -139,6 +148,8 @@ class MessagingConnectionController extends GetxController {
           isFromMe: false,
         ),
         chatId: chatId);
+
+    confirmReceivedMessageById(messageId: receivedMessage.messageId);
   }
 
   Future<void> deleteReceivedMessage(
@@ -170,6 +181,18 @@ class MessagingConnectionController extends GetxController {
             reactions: recivedreactions,
           ),
           chatId: chatId);
+    }
+  }
+
+  Future<void> confirmReceivedMessage(
+      {required Map<String, dynamic> receivedconfirmJson, required String chatId}) async {
+    ConfirmMessageModel confirmMessage = ConfirmMessageModel.fromJson(receivedconfirmJson);
+    final String messageId = confirmMessage.messageId;
+    MessageModel? currentMessage =
+        await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
+    if (currentMessage != null) {
+      await messagesRepo.updateMessage(
+          message: currentMessage.copyWith(status: MessageStatus.read), chatId: chatId);
     }
   }
 
@@ -208,5 +231,18 @@ class MessagingConnectionController extends GetxController {
     messaging.accept(
       session.sid,
     );
+  }
+
+  confirmReceivedMessageById({required String messageId}) async {
+    Map<String, dynamic> confirmMessageJson = ConfirmMessageModel(messageId: messageId).toJson();
+
+    DataChannelMessageModel dataChannelMessage = DataChannelMessageModel(
+      message: confirmMessageJson,
+      dataChannelMessagetype: DataChannelMessageType.confirm,
+    );
+
+    Map<String, dynamic> dataChannelMessageJson = dataChannelMessage.toJson();
+
+    sendTextMessage(text: jsonEncode(dataChannelMessageJson));
   }
 }

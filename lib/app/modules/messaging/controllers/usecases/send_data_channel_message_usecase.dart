@@ -35,6 +35,12 @@ class SendDataChannelMessage {
         );
         break;
 
+      case ConfirmMessage:
+        msg = DataChannelMessageModel(
+          message: (channelMessageType as ConfirmMessage).message,
+          dataChannelMessagetype: DataChannelMessageType.confirm,
+        );
+
       // Todo: Omid, add other case confirm
     }
 
@@ -60,6 +66,9 @@ class ChannelMessageType {
   factory ChannelMessageType.update({
     required Map<String, dynamic> message,
   }) = UpdateMessage;
+  factory ChannelMessageType.confirm({
+    required Map<String, dynamic> message,
+  }) = UpdateMessage;
 }
 
 class SendMessage implements ChannelMessageType {
@@ -82,6 +91,14 @@ class UpdateMessage implements ChannelMessageType {
   final Map<String, dynamic> message;
 
   UpdateMessage({
+    required this.message,
+  });
+}
+
+class ConfirmMessage implements ChannelMessageType {
+  final Map<String, dynamic> message;
+
+  ConfirmMessage({
     required this.message,
   });
 }
