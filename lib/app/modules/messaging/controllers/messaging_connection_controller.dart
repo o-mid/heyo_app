@@ -19,6 +19,7 @@ import 'package:heyo/app/routes/app_pages.dart';
 import '../../chats/data/models/chat_model.dart';
 import '../../messages/data/models/messages/image_message_model.dart';
 import '../../messages/data/models/messages/message_model.dart';
+import '../../messages/data/models/messages/video_message_model.dart';
 import '../../messages/data/models/reaction_model.dart';
 import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/utils/message_from_json.dart';
@@ -36,18 +37,20 @@ class MessagingConnectionController extends GetxController {
   final JsonDecoder _decoder = const JsonDecoder();
   final bson = BSON();
   Rx<ConnectionStatus?> connectionStatus = Rxn<ConnectionStatus>();
+
   MessagingConnectionController(
       {required this.messaging,
       required this.accountInfo,
       required this.messagesRepo,
       required this.chatHistoryRepo});
   late RTCDataChannel _dataChannel;
+
   @override
   void onInit() {
     super.onInit();
-    messaging.onDataChannel = (_, channel) {
-      _dataChannel = channel;
-    };
+
+    setDataChannel();
+
     observeMessagingStatus();
   }
 
@@ -57,41 +60,47 @@ class MessagingConnectionController extends GetxController {
 
       print("Connection Status changed, state is: $status");
 
-      if (status == ConnectionStatus.RINGING) {
-        ChatModel userChatModel = ChatModel(
-            id: session.cid,
-            isOnline: true,
-            name:
-                "${session.cid.characters.take(4).string}...${session.cid.characters.takeLast(4).string}",
-            icon: getMockIconUrl(),
-            lastMessage: "",
-            isVerified: true,
-            timestamp: DateTime.now());
+      switch (status) {
+        case ConnectionStatus.RINGING:
+          ChatModel userChatModel = setUserChatModel(sessionSid: session.cid);
 
-        chatHistoryRepo.addChatToHistory(userChatModel);
+          await chatHistoryRepo.addChatToHistory(userChatModel);
 
-        Get.toNamed(
-          Routes.MESSAGES,
-          arguments: MessagesViewArgumentsModel(
-            session: session,
-            user: UserModel(
-              icon: userChatModel.icon,
-              name: userChatModel.name,
-              walletAddress: session.cid,
-              isOnline: userChatModel.isOnline,
-              chatModel: userChatModel,
+          Get.toNamed(
+            Routes.MESSAGES,
+            arguments: MessagesViewArgumentsModel(
+              session: session,
+              user: UserModel(
+                icon: userChatModel.icon,
+                name: userChatModel.name,
+                walletAddress: session.cid,
+                isOnline: userChatModel.isOnline,
+                chatModel: userChatModel,
+              ),
             ),
-          ),
-        );
-      } else if (status == ConnectionStatus.CONNECTED) {
-        isConnectionConnected = true;
-        print("Connection Status changed, state is: $status");
+          );
+          break;
 
-        channelMessageListener();
-      } else if (status == ConnectionStatus.BYE) {
-        if (Get.currentRoute == Routes.MESSAGES) {
-          Get.until((route) => Get.currentRoute != Routes.MESSAGES);
-        }
+        case ConnectionStatus.CONNECTED:
+          isConnectionConnected = true;
+          print("Connection Status changed, state is: $status");
+
+          channelMessageListener();
+          break;
+        case ConnectionStatus.BYE:
+          if (Get.currentRoute == Routes.MESSAGES) {
+            Get.until((route) => Get.currentRoute != Routes.MESSAGES);
+          }
+          break;
+        case ConnectionStatus.CONNECTING:
+          // TODO: Handle this case.
+          break;
+        case ConnectionStatus.NEW:
+          // TODO: Handle this case.
+          break;
+        case ConnectionStatus.INVITE:
+          // TODO: Handle this case.
+          break;
       }
     };
   }
@@ -141,11 +150,17 @@ class MessagingConnectionController extends GetxController {
   Future<void> saveReceivedMessage(
       {required Map<String, dynamic> receivedMessageJson, required String chatId}) async {
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
-    print(receivedMessage);
 
     // Todo omid : add cases for other message types
-    if (receivedMessage.type == MessageContentType.image) {
-      receivedMessage = (receivedMessage as ImageMessageModel).copyWith(isLocal: false);
+    switch (receivedMessage.type) {
+      case MessageContentType.image:
+        receivedMessage = (receivedMessage as ImageMessageModel).copyWith(isLocal: false);
+        break;
+      case MessageContentType.video:
+        receivedMessage = (receivedMessage as VideoMessageModel).copyWith(isLocal: false);
+        break;
+      default:
+        break;
     }
 
     await messagesRepo.createMessage(
@@ -192,9 +207,12 @@ class MessagingConnectionController extends GetxController {
   Future<void> confirmReceivedMessage(
       {required Map<String, dynamic> receivedconfirmJson, required String chatId}) async {
     ConfirmMessageModel confirmMessage = ConfirmMessageModel.fromJson(receivedconfirmJson);
+
     final String messageId = confirmMessage.messageId;
+
     MessageModel? currentMessage =
         await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
+    // check if message is found and update the Message status
     if (currentMessage != null) {
       await messagesRepo.updateMessage(
           message: currentMessage.copyWith(status: MessageStatus.read), chatId: chatId);
@@ -208,16 +226,9 @@ class MessagingConnectionController extends GetxController {
 
     MessageSession session =
         await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
-    ChatModel userChatModel = ChatModel(
-        id: session.cid,
-        name:
-            "${session.cid.characters.take(4).string}...${session.cid.characters.takeLast(4).string}",
-        icon: getMockIconUrl(),
-        lastMessage: "",
-        isOnline: true,
-        isVerified: true,
-        timestamp: DateTime.now());
-    chatHistoryRepo.addChatToHistory(userChatModel);
+
+    ChatModel userChatModel = setUserChatModel(sessionSid: session.cid);
+    await chatHistoryRepo.addChatToHistory(userChatModel);
   }
 
   void sendTextMessage({required String text}) async {
@@ -226,10 +237,6 @@ class MessagingConnectionController extends GetxController {
 
   void sendBinaryMessage({required Uint8List binary}) async {
     await _dataChannel.send(RTCDataChannelMessage.fromBinary(binary));
-  }
-
-  MessageSession? getSession({required String coreId}) {
-    return messaging.getSessions()[coreId];
   }
 
   Future acceptMessageConnection(MessageSession session) async {
@@ -249,5 +256,23 @@ class MessagingConnectionController extends GetxController {
     Map<String, dynamic> dataChannelMessageJson = dataChannelMessage.toJson();
 
     sendTextMessage(text: jsonEncode(dataChannelMessageJson));
+  }
+
+  void setDataChannel() {
+    messaging.onDataChannel = (_, channel) {
+      _dataChannel = channel;
+    };
+  }
+
+  ChatModel setUserChatModel({required String sessionSid}) {
+    return ChatModel(
+        id: sessionSid,
+        isOnline: true,
+        name:
+            "${sessionSid.characters.take(4).string}...${sessionSid.characters.takeLast(4).string}",
+        icon: getMockIconUrl(),
+        lastMessage: "",
+        isVerified: true,
+        timestamp: DateTime.now());
   }
 }
