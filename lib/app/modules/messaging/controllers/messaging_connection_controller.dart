@@ -114,10 +114,25 @@ class MessagingConnectionController extends GetxController {
   }
 
   handleDataChannelBinary({required Uint8List binaryData, required MessageSession session}) async {
-    BsonBinary bsonBinary = BsonBinary.from(binaryData);
-    final decodedBson = bson.deserialize(bsonBinary);
+    const mAXIMUM_MESSAGE_SIZE = 4 * 1024;
 
-    handleDataChannelText(receivedjson: decodedBson, session: session);
+    List<int> receivedBuffers = [];
+    print(binaryData.lengthInBytes);
+    bool isLastMessage = binaryData.lengthInBytes < mAXIMUM_MESSAGE_SIZE;
+    print(isLastMessage);
+    print(binaryData.length);
+
+    receivedBuffers.followedBy(binaryData.buffer.asUint8List().toList());
+    if (isLastMessage) {
+      print("last message");
+      print(receivedBuffers.length);
+      print(receivedBuffers);
+      BsonBinary bsonBinary = BsonBinary.from(Uint8List.fromList(receivedBuffers));
+
+      final decodedBson = bson.deserialize(bsonBinary);
+
+      handleDataChannelText(receivedjson: decodedBson, session: session);
+    }
   }
 
   handleDataChannelText(
