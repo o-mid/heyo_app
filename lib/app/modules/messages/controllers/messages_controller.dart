@@ -109,7 +109,7 @@ class MessagesController extends GetxController {
   Future messageSenderSetup() async {
     await startDataChannelMessaging();
   }
-
+  //TODO messaging accepting message logic should be out of the controller
   Future messageReceiverSetup() async {
     await messagingConnection.acceptMessageConnection(args.session!);
     messagingConnection.channelMessageListener();
@@ -466,6 +466,7 @@ class MessagesController extends GetxController {
   }
 
   void deleteSelectedForEveryone() {
+    //TODO messaging inject dependency
     DeleteMessage(
       messagesRepo: messagesRepo,
       messagingConnection: messagingConnection,
@@ -478,6 +479,8 @@ class MessagesController extends GetxController {
   }
 
   void deleteSelectedForMe() {
+    //TODO messaging inject dependency
+
     DeleteMessage(
       messagesRepo: messagesRepo,
       messagingConnection: messagingConnection,
@@ -817,7 +820,7 @@ class MessagesController extends GetxController {
       jumpToBottom();
     });
   }
-
+//TODO remove?
   Future<void> _addMockData() async {
     var index = 0;
 
