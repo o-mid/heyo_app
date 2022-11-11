@@ -54,39 +54,5 @@ class ChatsController extends GetxController {
     _chatsStreamSubscription.cancel();
     super.onClose();
   }
-  //TODO messaging: remove?
-  void _addMockData() {
-    var index = 0;
-    final mockChats = [
-      ChatModel(
-        id: "${index++}",
-        name: "Crapps Wallbanger",
-        icon: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
-        lastMessage: "I'm still waiting for the reply. I'll let you know once they get back to me.",
-        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 5)),
-      ),
-      ChatModel(
-        id: "${index++}",
-        name: "Fancy Potato",
-        icon: "https://avatars.githubusercontent.com/u/6634136?v=4",
-        lastMessage: "I can arrange the meeting with her tomorrow if you're ok with that.",
-        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 5)),
-        isOnline: true,
-        isVerified: true,
-        notificationCount: 4,
-      ),
-      ChatModel(
-        id: "${index++}",
-        name: "Manly Cupholder",
-        icon: "https://avatars.githubusercontent.com/u/9801359?v=4",
-        lastMessage: "That's nice!",
-        timestamp: DateTime.now().subtract(const Duration(days: 10, hours: 2, minutes: 5)),
-        isOnline: true,
-        notificationCount: 11,
-      ),
-    ];
-    for (var chat in mockChats) {
-      chatHistoryRepo.addChatToHistory(chat);
-    }
-  }
+
 }
