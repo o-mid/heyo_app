@@ -95,7 +95,7 @@ class MessagesController extends GetxController {
     // Close emoji picker when keyboard opens
     _handleKeyboardVisibilityChanges();
   }
-
+//TODO messaging: instead of having sender or receiver side, it's better to have not that!:))(will discuss:D)
   _initDataChannel() async {
     if (args.session == null) {
       await messageSenderSetup();
@@ -252,6 +252,7 @@ class MessagesController extends GetxController {
     );
   }
 
+  //TODO inject dependency
   void toggleReaction(MessageModel msg, String emoji) {
     UpdateMessage(
       messagesRepo: messagesRepo,
@@ -285,7 +286,7 @@ class MessagesController extends GetxController {
     messages.setAll(0, messages.map((m) => m.copyWith(isSelected: false)));
     selectedMessages.clear();
   }
-
+  //TODO messaging: inject dependency
   void sendTextMessage() async {
     SendMessage(
       messagesRepo: messagesRepo,
@@ -303,7 +304,7 @@ class MessagesController extends GetxController {
 
     _postMessageSendOperations();
   }
-
+//TODO
   void sendAudioMessage(String path, int duration) {
     SendMessage(
       messagesRepo: messagesRepo,
@@ -319,7 +320,7 @@ class MessagesController extends GetxController {
 
     _postMessageSendOperations();
   }
-
+//TODO
   void sendLocationMessage() {
     final message = locationMessage.value;
     if (message == null) {
@@ -343,7 +344,7 @@ class MessagesController extends GetxController {
 
     _postMessageSendOperations();
   }
-
+//TODO
   void sendLiveLocation({
     required Duration duration,
     required double startLat,

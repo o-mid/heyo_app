@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/messaging/messaging_session.dart';
 import 'package:heyo/app/modules/p2p_node/login.dart';
-
+//TODO messaging: refactor
 enum ConnectionStatus {
   CONNECTING,
   NEW,
