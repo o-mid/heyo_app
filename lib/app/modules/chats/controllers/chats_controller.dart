@@ -54,7 +54,7 @@ class ChatsController extends GetxController {
     _chatsStreamSubscription.cancel();
     super.onClose();
   }
-
+  //TODO messaging: remove?
   void _addMockData() {
     var index = 0;
     final mockChats = [
