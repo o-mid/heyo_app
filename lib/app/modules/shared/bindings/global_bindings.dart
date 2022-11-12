@@ -62,7 +62,7 @@ class GlobalBindings extends Bindings {
     messagesRepo: MessagesRepo(
       messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
     ),
-    chatHistoryRepo: ChatHistoryRepo(
+    chatHistoryRepo: ChatHistoryLocalRepo(
       chatHistoryProvider:
           ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
     ),
@@ -82,7 +82,7 @@ class GlobalBindings extends Bindings {
     );
     Get.put(callConnectionController, permanent: true);
     Get.put(ChatsController(
-      chatHistoryRepo: ChatHistoryRepo(
+      chatHistoryRepo: ChatHistoryLocalRepo(
         chatHistoryProvider:
             ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
       ),

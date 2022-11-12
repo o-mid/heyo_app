@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/messaging/messaging_session.dart';
 import 'package:heyo/app/modules/p2p_node/login.dart';
+
 //TODO messaging: refactor
 enum ConnectionStatus {
   CONNECTING,
@@ -190,29 +191,6 @@ class Messaging {
           sess.pid);
     }
   }
-
-  // Future<MediaStream> createStream(String media, bool userScreen) async {
-  //   final Map<String, dynamic> mediaConstraints = {
-  //     'audio': userScreen ? false : true,
-  //     'video': userScreen
-  //         ? true
-  //         : {
-  //             'mandatory': {
-  //               'minWidth': '640', // Provide your own width, height and frame rate here
-  //               'minHeight': '480',
-  //               'minFrameRate': '30',
-  //             },
-  //             'facingMode': 'user',
-  //             'optional': [],
-  //           }
-  //   };
-
-  //   MediaStream stream = userScreen
-  //       ? await navigator.mediaDevices.getDisplayMedia(mediaConstraints)
-  //       : await navigator.mediaDevices.getUserMedia(mediaConstraints);
-  //   // onLocalStream?.call(stream);
-  //   return stream;
-  // }
 
   Future<MessageSession> _createSession(MessageSession? session,
       {required String coreId,

@@ -31,7 +31,7 @@ import '../models/data_channel_message_model.dart';
 class MessagingConnectionController extends GetxController {
   final Messaging messaging;
   final MessagesAbstractRepo messagesRepo;
-  final ChatHistoryAbstractRepo chatHistoryRepo;
+  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final AccountInfo accountInfo;
   bool isConnectionConnected = false;
   final JsonDecoder _decoder = const JsonDecoder();
@@ -186,7 +186,7 @@ class MessagingConnectionController extends GetxController {
 
     confirmReceivedMessageById(messageId: receivedMessage.messageId);
   }
-//TODO messaging
+
   Future<void> deleteReceivedMessage(
       {required Map<String, dynamic> receivedDeleteJson, required String chatId}) async {
     DeleteMessageModel deleteMessage = DeleteMessageModel.fromJson(receivedDeleteJson);

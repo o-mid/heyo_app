@@ -61,38 +61,11 @@ class SendDataChannelMessage {
 
       ByteBuffer byteBuffer = bsonBinary.byteList.buffer;
       const mAXIMUM_MESSAGE_SIZE = 14 * 1024;
-      // if (byteBuffer.lengthInBytes > mAXIMUM_MESSAGE_SIZE) {
-      //   int numberOfMessages = byteBuffer.lengthInBytes ~/ mAXIMUM_MESSAGE_SIZE;
-      //   int remainder = byteBuffer.lengthInBytes % mAXIMUM_MESSAGE_SIZE;
-      //   if (remainder > 0) {
-      //     numberOfMessages++;
-      //   }
-      //   int start = 0;
-      //   int end = mAXIMUM_MESSAGE_SIZE;
-      //   for (int i = 0; i < numberOfMessages; i++) {
-      //     if (i == numberOfMessages - 1) {
-      //       end = byteBuffer.lengthInBytes;
-      //     }
-      //     Uint8List subList = byteBuffer.asUint8List(start, end);
-      //     messagingConnection.sendBinaryMessage(
-      //       binary: subList,
-      //     );
-      //     start = end;
-      //     end += mAXIMUM_MESSAGE_SIZE;
-      //   }
-      // } else {
-      //   messagingConnection.sendBinaryMessage(
-      //     binary: byteBuffer.asUint8List(),
-      //   );
-      // }
+
       for (var i = 0; i < byteBuffer.lengthInBytes; i += mAXIMUM_MESSAGE_SIZE) {
         messagingConnection.sendBinaryMessage(
             binary: byteBuffer.asUint8List(i, i + mAXIMUM_MESSAGE_SIZE));
       }
-
-      // Uint8List byteList = bsonBinary.byteList.buffer.asUint8List();
-
-      // messagingConnection.sendBinaryMessage(binary: byteList);
     } else {
       messagingConnection.sendTextMessage(text: jsonEncode(message));
     }
