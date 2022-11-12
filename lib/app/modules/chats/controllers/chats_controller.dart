@@ -6,7 +6,7 @@ import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 
 class ChatsController extends GetxController {
-  final ChatHistoryAbstractRepo chatHistoryRepo;
+  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   ChatsController({required this.chatHistoryRepo});
   final animatedListKey = GlobalKey<AnimatedListState>();
 
@@ -54,5 +54,4 @@ class ChatsController extends GetxController {
     _chatsStreamSubscription.cancel();
     super.onClose();
   }
-
 }

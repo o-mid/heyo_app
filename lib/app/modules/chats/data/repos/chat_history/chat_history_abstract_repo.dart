@@ -1,6 +1,6 @@
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
-//TODO messaging: Naming: Rename to ChatHistoryLocalRepo or LocalChatHistoryRepo
-abstract class ChatHistoryAbstractRepo {
+
+abstract class ChatHistoryLocalAbstractRepo {
   Future<void> addChatToHistory(ChatModel chat);
 
   Future<List<ChatModel>> getAllChats();

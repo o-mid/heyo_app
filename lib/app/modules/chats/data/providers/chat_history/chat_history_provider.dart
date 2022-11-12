@@ -7,7 +7,7 @@ import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
 
-class ChatHistoryProvider implements ChatHistoryAbstractProvider {
+class ChatHistoryProvider implements ChatHistoryLocalAbstractProvider {
   final AppDatabaseProvider appDatabaseProvider;
   ChatHistoryProvider({required this.appDatabaseProvider});
   static const String chatHistoryStoreName = 'chat_history';

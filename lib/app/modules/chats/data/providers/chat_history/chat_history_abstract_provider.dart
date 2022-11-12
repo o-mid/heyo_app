@@ -1,6 +1,6 @@
 import '../../models/chat_model.dart';
 
-abstract class ChatHistoryAbstractProvider {
+abstract class ChatHistoryLocalAbstractProvider {
   Future<void> insert(ChatModel chat);
 
   Future<List<ChatModel>> getAllChats();
