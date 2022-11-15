@@ -45,7 +45,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../messaging/controllers/messaging_connection_controller.dart';
-import '../../messaging/messaging_session.dart';
+
 import '../../share_files/models/file_model.dart';
 import '../data/usecases/delete_message_usecase.dart';
 import '../data/usecases/update_message_usecase.dart';
@@ -95,6 +95,7 @@ class MessagesController extends GetxController {
     // Close emoji picker when keyboard opens
     _handleKeyboardVisibilityChanges();
   }
+
 //TODO messaging: instead of having sender or receiver side, it's better to have not that!:))(will discuss:D)
   _initDataChannel() async {
     if (args.session == null) {
@@ -109,6 +110,7 @@ class MessagesController extends GetxController {
   Future messageSenderSetup() async {
     await startDataChannelMessaging();
   }
+
   //TODO messaging accepting message logic should be out of the controller
   Future messageReceiverSetup() async {
     await messagingConnection.acceptMessageConnection(args.session!);
@@ -252,12 +254,8 @@ class MessagesController extends GetxController {
     );
   }
 
-  //TODO inject dependency
   void toggleReaction(MessageModel msg, String emoji) {
-    UpdateMessage(
-      messagesRepo: messagesRepo,
-      messagingConnection: messagingConnection,
-    ).execute(
+    UpdateMessage().execute(
         updateMessageType: UpdateMessageType.updateReactions(
       selectedMessage: msg,
       emoji: emoji,
@@ -286,12 +284,9 @@ class MessagesController extends GetxController {
     messages.setAll(0, messages.map((m) => m.copyWith(isSelected: false)));
     selectedMessages.clear();
   }
-  //TODO messaging: inject dependency
+
   void sendTextMessage() async {
-    SendMessage(
-      messagesRepo: messagesRepo,
-      messagingConnection: messagingConnection,
-    ).execute(
+    SendMessage().execute(
       sendMessageType: SendMessageType.text(
         text: newMessage.value,
         replyTo: replyingTo.value,
@@ -304,12 +299,10 @@ class MessagesController extends GetxController {
 
     _postMessageSendOperations();
   }
+
 //TODO
   void sendAudioMessage(String path, int duration) {
-    SendMessage(
-      messagesRepo: messagesRepo,
-      messagingConnection: messagingConnection,
-    ).execute(
+    SendMessage().execute(
       sendMessageType: SendMessageType.audio(
         path: path,
         metadata: AudioMetadata(durationInSeconds: duration),
@@ -320,6 +313,7 @@ class MessagesController extends GetxController {
 
     _postMessageSendOperations();
   }
+
 //TODO
   void sendLocationMessage() {
     final message = locationMessage.value;
@@ -327,10 +321,7 @@ class MessagesController extends GetxController {
       return;
     }
 
-    SendMessage(
-      messagesRepo: messagesRepo,
-      messagingConnection: messagingConnection,
-    ).execute(
+    SendMessage().execute(
       sendMessageType: SendMessageType.location(
         lat: message.latitude,
         long: message.longitude,
@@ -344,16 +335,14 @@ class MessagesController extends GetxController {
 
     _postMessageSendOperations();
   }
+
 //TODO
   void sendLiveLocation({
     required Duration duration,
     required double startLat,
     required double startLong,
   }) {
-    SendMessage(
-      messagesRepo: messagesRepo,
-      messagingConnection: messagingConnection,
-    ).execute(
+    SendMessage().execute(
       sendMessageType: SendMessageType.liveLocation(
         startLat: startLat,
         startLong: startLong,
@@ -467,11 +456,7 @@ class MessagesController extends GetxController {
   }
 
   void deleteSelectedForEveryone() {
-    //TODO messaging inject dependency
-    DeleteMessage(
-      messagesRepo: messagesRepo,
-      messagingConnection: messagingConnection,
-    ).execute(
+    DeleteMessage().execute(
         deleteMessageType: DeleteMessageType.forEveryone(
       chatId: chatId,
       selectedMessages: selectedMessages,
@@ -480,12 +465,7 @@ class MessagesController extends GetxController {
   }
 
   void deleteSelectedForMe() {
-    //TODO messaging inject dependency
-
-    DeleteMessage(
-      messagesRepo: messagesRepo,
-      messagingConnection: messagingConnection,
-    ).execute(
+    DeleteMessage().execute(
         deleteMessageType: DeleteMessageType.forMe(
       chatId: chatId,
       selectedMessages: selectedMessages,
@@ -574,9 +554,7 @@ class MessagesController extends GetxController {
               if (entity == null) {
                 break;
               }
-              await SendMessage(
-                      messagesRepo: messagesRepo, messagingConnection: messagingConnection)
-                  .execute(
+              await SendMessage().execute(
                 sendMessageType: SendMessageType.image(
                   path: file.path,
                   intlist: file.readAsBytesSync().toList(),
@@ -600,9 +578,7 @@ class MessagesController extends GetxController {
                 break;
               }
 
-              await SendMessage(
-                      messagesRepo: messagesRepo, messagingConnection: messagingConnection)
-                  .execute(
+              await SendMessage().execute(
                 sendMessageType: SendMessageType.video(
                   path: file.path,
                   metadata: VideoMetadata(
@@ -787,10 +763,7 @@ class MessagesController extends GetxController {
     if (result != null) {
       result as RxList<FileModel>;
       for (var asset in result) {
-        await SendMessage(
-          messagesRepo: messagesRepo,
-          messagingConnection: messagingConnection,
-        ).execute(
+        await SendMessage().execute(
           sendMessageType: SendMessageType.file(
             metadata: FileMetaData(
               extension: asset.extension,
@@ -821,6 +794,7 @@ class MessagesController extends GetxController {
       jumpToBottom();
     });
   }
+
 //TODO remove?
   Future<void> _addMockData() async {
     var index = 0;

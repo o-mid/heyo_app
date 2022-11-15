@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/live_location_message_model.dart';
@@ -21,14 +22,18 @@ import '../../../messaging/controllers/messaging_connection_controller.dart';
 import '../../../messaging/controllers/usecases/send_data_channel_message_usecase.dart';
 import '../models/messages/file_message_model.dart';
 import '../models/reaction_model.dart';
+import '../provider/messages_provider.dart';
+import '../repo/messages_repo.dart';
 
 class SendMessage {
-  final MessagesAbstractRepo messagesRepo;
-  MessagingConnectionController messagingConnection;
-  SendMessage({
-    required this.messagesRepo,
-    required this.messagingConnection,
-  });
+  final MessagesAbstractRepo messagesRepo = MessagesRepo(
+    messagesProvider: MessagesProvider(
+      appDatabaseProvider: Get.find(),
+    ),
+  );
+  final MessagingConnectionController messagingConnection =
+      Get.find<MessagingConnectionController>();
+
 //TODO messaging: check models or make a function for mapping data
   execute({
     required SendMessageType sendMessageType,
