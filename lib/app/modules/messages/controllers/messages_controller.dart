@@ -97,8 +97,7 @@ class MessagesController extends GetxController {
   }
 
   _initDataChannel() async {
-    await messagingConnection.initMessagingConnection(
-        session: args.session, remoteId: args.user.walletAddress);
+    await messagingConnection.initMessagingConnection(remoteId: args.user.walletAddress);
   }
 
   void initMessagesStream() async {

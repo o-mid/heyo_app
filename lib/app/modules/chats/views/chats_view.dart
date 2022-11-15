@@ -59,8 +59,7 @@ class ChatsView extends GetView<ChatsController> {
                       user: UserModel(
                           name: chats[index].name,
                           icon: chats[index].icon,
-                          // Todo Omid :
-                          walletAddress: "",
+                          walletAddress: chats[index].id,
                           chatModel: chats[index]),
                     ),
                   );

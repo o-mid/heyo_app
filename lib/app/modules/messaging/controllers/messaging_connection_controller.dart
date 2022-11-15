@@ -36,6 +36,7 @@ class MessagingConnectionController extends GetxController {
   bool isConnectionConnected = false;
   final JsonDecoder _decoder = const JsonDecoder();
   final bson = BSON();
+  MessageSession? currentSession;
   Rx<ConnectionStatus?> connectionStatus = Rxn<ConnectionStatus>();
 
   MessagingConnectionController(
@@ -57,6 +58,7 @@ class MessagingConnectionController extends GetxController {
   void observeMessagingStatus() {
     messaging.onMessageStateChange = (session, status) async {
       connectionStatus.value = status;
+      currentSession = session;
 
       print("Connection Status changed, state is: $status");
 
@@ -66,6 +68,7 @@ class MessagingConnectionController extends GetxController {
 
           await chatHistoryRepo.addChatToHistory(userChatModel);
           await acceptMessageConnection(session);
+          connectionStatus.value = ConnectionStatus.CONNECTED;
           Get.snackbar(" Message Connection Accepted", session.cid);
           Get.toNamed(
             Routes.MESSAGES,
@@ -242,6 +245,7 @@ class MessagingConnectionController extends GetxController {
 
     MessageSession session =
         await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
+    currentSession = session;
 
     ChatModel userChatModel = setUserChatModel(sessionSid: session.cid);
     await chatHistoryRepo.addChatToHistory(userChatModel);
@@ -292,8 +296,11 @@ class MessagingConnectionController extends GetxController {
         timestamp: DateTime.now());
   }
 
-  initMessagingConnection({required MessageSession? session, required String remoteId}) async {
-    if (session == null) {
+  initMessagingConnection({required String remoteId}) async {
+    bool isConnectionAvailable = connectionStatus.value == ConnectionStatus.CONNECTED ||
+        connectionStatus.value == ConnectionStatus.RINGING;
+
+    if (currentSession?.cid != remoteId || !isConnectionAvailable) {
       await startDataChannelMessaging(remoteId: remoteId);
     } else {
       channelMessageListener();
@@ -310,7 +317,6 @@ class MessagingConnectionController extends GetxController {
       await startMessaging(
         remoteId: remoteId,
       );
-    } else {
       Get.snackbar("Error", "Remote CoreId is empty");
     }
   }
