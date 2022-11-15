@@ -65,7 +65,8 @@ class MessagingConnectionController extends GetxController {
           ChatModel userChatModel = setUserChatModel(sessionSid: session.cid);
 
           await chatHistoryRepo.addChatToHistory(userChatModel);
-
+          await acceptMessageConnection(session);
+          Get.snackbar(" Message Connection Accepted", session.cid);
           Get.toNamed(
             Routes.MESSAGES,
             arguments: MessagesViewArgumentsModel(
@@ -289,5 +290,28 @@ class MessagingConnectionController extends GetxController {
         lastMessage: "",
         isVerified: true,
         timestamp: DateTime.now());
+  }
+
+  initMessagingConnection({required MessageSession? session, required String remoteId}) async {
+    if (session == null) {
+      await startDataChannelMessaging(remoteId: remoteId);
+    } else {
+      channelMessageListener();
+    }
+  }
+
+  Future<void> messageReceiverSetup({required MessageSession session}) async {
+    // await acceptMessageConnection(session);
+    channelMessageListener();
+  }
+
+  Future<void> startDataChannelMessaging({required String remoteId}) async {
+    if (remoteId != "") {
+      await startMessaging(
+        remoteId: remoteId,
+      );
+    } else {
+      Get.snackbar("Error", "Remote CoreId is empty");
+    }
   }
 }

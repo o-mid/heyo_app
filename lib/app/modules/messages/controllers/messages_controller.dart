@@ -45,7 +45,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../messaging/controllers/messaging_connection_controller.dart';
-
+import '../../messaging/messaging_session.dart';
 import '../../share_files/models/file_model.dart';
 import '../data/usecases/delete_message_usecase.dart';
 import '../data/usecases/update_message_usecase.dart';
@@ -96,33 +96,9 @@ class MessagesController extends GetxController {
     _handleKeyboardVisibilityChanges();
   }
 
-//TODO messaging: instead of having sender or receiver side, it's better to have not that!:))(will discuss:D)
   _initDataChannel() async {
-    if (args.session == null) {
-      await messageSenderSetup();
-    } else {
-      await messageReceiverSetup();
-
-      Get.snackbar(" Message Connection Accepted", "${args.session?.cid}");
-    }
-  }
-
-  Future messageSenderSetup() async {
-    await startDataChannelMessaging();
-  }
-
-  //TODO messaging accepting message logic should be out of the controller
-  Future messageReceiverSetup() async {
-    await messagingConnection.acceptMessageConnection(args.session!);
-    messagingConnection.channelMessageListener();
-  }
-
-  Future<void> startDataChannelMessaging() async {
-    if (args.user.walletAddress != "") {
-      await messagingConnection.startMessaging(
-        remoteId: args.user.walletAddress,
-      );
-    }
+    await messagingConnection.initMessagingConnection(
+        session: args.session, remoteId: args.user.walletAddress);
   }
 
   void initMessagesStream() async {
