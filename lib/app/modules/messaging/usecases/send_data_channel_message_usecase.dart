@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:bson/bson.dart';
+import 'package:tuple/tuple.dart';
 
 import '../controllers/messaging_connection_controller.dart';
 import '../models/data_channel_message_model.dart';
+import '../utils/channel_message_from_type.dart';
 
 class SendDataChannelMessage {
   MessagingConnectionController messagingConnection;
@@ -12,44 +14,15 @@ class SendDataChannelMessage {
     required this.messagingConnection,
   });
 
-  //TODO messaging: check models | move mapping objects to another function
   execute({
     required ChannelMessageType channelMessageType,
   }) async {
-    bool isDataBinery = false;
     final bson = BSON();
-    DataChannelMessageModel? msg;
-    switch (channelMessageType.runtimeType) {
-      case SendMessage:
-        msg = DataChannelMessageModel(
-          message: (channelMessageType as SendMessage).message,
-          dataChannelMessagetype: DataChannelMessageType.message,
-        );
-        isDataBinery = (channelMessageType).isDataBinery;
-        break;
 
-      case DeleteMessage:
-        msg = DataChannelMessageModel(
-          message: (channelMessageType as DeleteMessage).message,
-          dataChannelMessagetype: DataChannelMessageType.delete,
-        );
-
-        break;
-      case UpdateMessage:
-        msg = DataChannelMessageModel(
-          message: (channelMessageType as UpdateMessage).message,
-          dataChannelMessagetype: DataChannelMessageType.update,
-        );
-        break;
-
-      case ConfirmMessage:
-        msg = DataChannelMessageModel(
-          message: (channelMessageType as ConfirmMessage).message,
-          dataChannelMessagetype: DataChannelMessageType.confirm,
-        );
-
-      // Todo: Omid, add other case confirm
-    }
+    Tuple2<DataChannelMessageModel?, bool> channelMessageObject =
+        channelmessageFromType(channelMessageType: channelMessageType);
+    DataChannelMessageModel? msg = channelMessageObject.item1;
+    bool isDataBinery = channelMessageObject.item2;
 
     if (msg == null) {
       return;
