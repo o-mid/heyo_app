@@ -3,8 +3,8 @@ import 'dart:typed_data';
 
 import 'package:bson/bson.dart';
 
-import '../../../messaging/controllers/messaging_connection_controller.dart';
-import '../../models/data_channel_message_model.dart';
+import '../controllers/messaging_connection_controller.dart';
+import '../models/data_channel_message_model.dart';
 
 class SendDataChannelMessage {
   MessagingConnectionController messagingConnection;

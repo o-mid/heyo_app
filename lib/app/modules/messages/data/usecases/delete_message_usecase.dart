@@ -3,7 +3,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/delete_message_mo
 import 'package:heyo/app/modules/messages/data/repo/messages_repo.dart';
 
 import '../../../messaging/controllers/messaging_connection_controller.dart';
-import '../../../messaging/controllers/usecases/send_data_channel_message_usecase.dart';
+import '../../../messaging/usecases/send_data_channel_message_usecase.dart';
 import '../models/messages/message_model.dart';
 import '../provider/messages_provider.dart';
 import '../repo/messages_abstract_repo.dart';

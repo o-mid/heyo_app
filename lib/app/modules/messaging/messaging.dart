@@ -17,7 +17,6 @@ enum ConnectionStatus {
 class Messaging {
   final Login login;
   final JsonEncoder _encoder = const JsonEncoder();
-  final JsonDecoder _decoder = const JsonDecoder();
 
   Messaging({required this.login});
 

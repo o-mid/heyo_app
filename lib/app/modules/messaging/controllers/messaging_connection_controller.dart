@@ -10,7 +10,7 @@ import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abst
 import 'package:heyo/app/modules/messages/data/models/messages/confirm_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/delete_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/update_message_model.dart';
-import 'package:heyo/app/modules/messaging/controllers/usecases/send_data_channel_message_usecase.dart';
+import 'package:heyo/app/modules/messaging/usecases/send_data_channel_message_usecase.dart';
 import 'package:heyo/app/modules/messaging/messaging.dart';
 import 'package:heyo/app/modules/messaging/messaging_session.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';

@@ -19,7 +19,7 @@ import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dar
 import 'package:uuid/uuid.dart';
 
 import '../../../messaging/controllers/messaging_connection_controller.dart';
-import '../../../messaging/controllers/usecases/send_data_channel_message_usecase.dart';
+import '../../../messaging/usecases/send_data_channel_message_usecase.dart';
 import '../models/messages/file_message_model.dart';
 import '../models/reaction_model.dart';
 import '../provider/messages_provider.dart';
