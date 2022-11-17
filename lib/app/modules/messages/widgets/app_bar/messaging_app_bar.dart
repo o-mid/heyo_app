@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -13,9 +15,11 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:get/get.dart';
 
+import '../../../../routes/app_pages.dart';
+
 class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final ChatModel chat;
-  const MessagingAppBar({Key? key, required this.chat}) : super(key: key);
+  final UserModel userModel;
+  const MessagingAppBar({Key? key, required this.userModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +33,7 @@ class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: ScaleAnimatedSwitcher(
             child: controller.selectedMessages.isNotEmpty
                 ? const _SelectionModeAppBar()
-                : _DefaultAppBar(chat: chat),
+                : _DefaultAppBar(user: userModel),
           ),
         ),
       ),
@@ -71,11 +75,12 @@ class _SelectionModeAppBar extends StatelessWidget {
 }
 
 class _DefaultAppBar extends StatelessWidget {
-  final ChatModel chat;
-  const _DefaultAppBar({Key? key, required this.chat}) : super(key: key);
+  final UserModel user;
+  const _DefaultAppBar({Key? key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final ChatModel chat = user.chatModel;
     return Row(
       children: [
         CircleIconButton(
@@ -150,10 +155,37 @@ class _DefaultAppBar extends StatelessWidget {
         const Spacer(),
         Row(
           children: [
-            Assets.svg.videoCallIcon.svg(),
-            SizedBox(width: 24.w),
-            Assets.svg.audioCallIcon.svg(),
-            SizedBox(width: 24.w),
+            CircleIconButton(
+              onPressed: () {
+                Get.toNamed(
+                  Routes.CALL,
+                  arguments: CallViewArgumentsModel(
+                      session: null,
+                      callId: null,
+                      user: user,
+                      enableVideo: true,
+                      isAudioCall: false),
+                );
+              },
+              icon: Assets.svg.videoCallIcon.svg(),
+              backgroundColor: Colors.transparent,
+            ),
+            CircleIconButton(
+              onPressed: () {
+                Get.toNamed(
+                  Routes.CALL,
+                  arguments: CallViewArgumentsModel(
+                      session: null,
+                      callId: null,
+                      user: user,
+                      enableVideo: false,
+                      isAudioCall: true),
+                );
+              },
+              backgroundColor: Colors.transparent,
+              icon: Assets.svg.audioCallIcon.svg(),
+            ),
+            CustomSizes.smallSizedBoxWidth,
             Assets.svg.verticalMenuIcon.svg(),
           ],
         ),
