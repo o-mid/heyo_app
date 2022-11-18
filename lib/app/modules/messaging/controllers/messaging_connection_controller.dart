@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'dart:typed_data';
 import 'package:bson/bson.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
@@ -25,6 +26,7 @@ import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/utils/message_from_json.dart';
 import '../../p2p_node/data/account/account_info.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
+import '../../shared/utils/constants/colors.dart';
 import '../../shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import '../models/data_channel_message_model.dart';
 
@@ -69,7 +71,8 @@ class MessagingConnectionController extends GetxController {
           await chatHistoryRepo.addChatToHistory(userChatModel);
           await acceptMessageConnection(session);
           connectionStatus.value = ConnectionStatus.CONNECTED;
-          Get.snackbar(" Message Connection Accepted", session.cid);
+
+          showConnectionStatusSnackbar(title: "Connection Accepted", message: session.cid);
           Get.toNamed(
             Routes.MESSAGES,
             arguments: MessagesViewArgumentsModel(
@@ -87,7 +90,9 @@ class MessagingConnectionController extends GetxController {
 
         case ConnectionStatus.CONNECTED:
           isConnectionConnected = true;
-          print("Connection Status changed, state is: $status");
+          print("Connection Status state is: ${status.name}");
+
+          showConnectionStatusSnackbar(title: "Connection Status state is:", message: status.name);
 
           channelMessageListener();
           break;
@@ -317,7 +322,18 @@ class MessagingConnectionController extends GetxController {
       await startMessaging(
         remoteId: remoteId,
       );
-      Get.snackbar("Error", "Remote CoreId is empty");
     }
+  }
+
+  showConnectionStatusSnackbar({required String title, required String message}) {
+    Get.snackbar(
+      title,
+      message,
+      icon: const Icon(
+        Icons.connect_without_contact_rounded,
+      ),
+      duration: const Duration(seconds: 5),
+      shouldIconPulse: true,
+    );
   }
 }
