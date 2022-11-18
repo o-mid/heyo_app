@@ -30,15 +30,11 @@ class SendDataChannelMessage {
 
     Map<String, dynamic> message = msg.toJson();
     if (isDataBinery) {
-      BsonBinary bsonBinary = bson.serialize(message);
+      BsonBinary buffer = bson.serialize(message);
 
-      ByteBuffer byteBuffer = bsonBinary.byteList.buffer;
-      const mAXIMUM_MESSAGE_SIZE = 14 * 1024;
+      Uint8List byteList = buffer.byteList;
 
-      for (var i = 0; i < byteBuffer.lengthInBytes; i += mAXIMUM_MESSAGE_SIZE) {
-        messagingConnection.sendBinaryMessage(
-            binary: byteBuffer.asUint8List(i, i + mAXIMUM_MESSAGE_SIZE));
-      }
+      messagingConnection.sendBinaryMessage(binary: byteList);
     } else {
       messagingConnection.sendTextMessage(text: jsonEncode(message));
     }
