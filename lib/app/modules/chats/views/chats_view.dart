@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/chats/widgets/chat_widget.dart';
 import 'package:heyo/app/modules/chats/widgets/empty_chats_widget.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -54,7 +55,13 @@ class ChatsView extends GetView<ChatsController> {
                 onTap: () {
                   Get.toNamed(
                     Routes.MESSAGES,
-                    arguments: MessagesViewArgumentsModel(chat: chats[index]),
+                    arguments: MessagesViewArgumentsModel(
+                      user: UserModel(
+                          name: chats[index].name,
+                          icon: chats[index].icon,
+                          walletAddress: chats[index].id,
+                          chatModel: chats[index]),
+                    ),
                   );
                 },
                 child: Padding(

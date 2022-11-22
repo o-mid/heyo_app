@@ -1,26 +1,55 @@
+import 'package:get/get.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/delete_message_model.dart';
+import 'package:heyo/app/modules/messages/data/repo/messages_repo.dart';
+
+import '../../../messaging/controllers/messaging_connection_controller.dart';
+import '../../../messaging/usecases/send_data_channel_message_usecase.dart';
 import '../models/messages/message_model.dart';
+import '../provider/messages_provider.dart';
 import '../repo/messages_abstract_repo.dart';
 
 class DeleteMessage {
-  final MessagesAbstractRepo messagesRepo;
-
-  DeleteMessage({required this.messagesRepo});
+  final MessagesAbstractRepo messagesRepo = MessagesRepo(
+    messagesProvider: MessagesProvider(
+      appDatabaseProvider: Get.find(),
+    ),
+  );
+  final MessagingConnectionController messagingConnection =
+      Get.find<MessagingConnectionController>();
 
   execute({required DeleteMessageType deleteMessageType}) async {
     switch (deleteMessageType.runtimeType) {
       case DeleteLocalMessages:
         final localMessages = (deleteMessageType as DeleteLocalMessages).selectedMessages;
-        final messageIds = localMessages.map((e) => e.messageId).toList();
-        await messagesRepo.deleteMessages(messageIds: messageIds, chatId: deleteMessageType.chatId);
+        await deleteLocalMessages(localMessages: localMessages, chatId: deleteMessageType.chatId);
         break;
 
       case DeleteRemoteMessages:
-        // Todo: libp2p - delete for others
         final remoteMessages = (deleteMessageType as DeleteRemoteMessages).selectedMessages;
-        final messageIds = remoteMessages.map((e) => e.messageId).toList();
-        await messagesRepo.deleteMessages(messageIds: messageIds, chatId: deleteMessageType.chatId);
+
+        await deleteRemoteMessages(
+            remoteMessages: remoteMessages, chatId: deleteMessageType.chatId);
         break;
     }
+  }
+
+  Future<void> deleteLocalMessages(
+      {required List<MessageModel> localMessages, required String chatId}) async {
+    final messageIds = localMessages.map((e) => e.messageId).toList();
+    await messagesRepo.deleteMessages(messageIds: messageIds, chatId: chatId);
+  }
+
+  Future<void> deleteRemoteMessages(
+      {required List<MessageModel> remoteMessages, required String chatId}) async {
+    final messageIds = remoteMessages.map((e) => e.messageId).toList();
+
+    Map<String, dynamic> deleteMessagesJson = DeleteMessageModel(messageIds: messageIds).toJson();
+
+    await messagesRepo.deleteMessages(messageIds: messageIds, chatId: chatId);
+
+    await SendDataChannelMessage(messagingConnection: messagingConnection).execute(
+      channelMessageType: ChannelMessageType.delete(message: deleteMessagesJson),
+    );
   }
 }
 

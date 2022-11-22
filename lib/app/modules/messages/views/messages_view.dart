@@ -21,7 +21,7 @@ class MessagesView extends GetView<MessagesController> {
         print(controller.isInRecordMode);
       }
       return Scaffold(
-        appBar: MessagingAppBar(chat: controller.args.chat),
+        appBar: MessagingAppBar(userModel: controller.args.user),
         backgroundColor: COLORS.kAppBackground,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.end,

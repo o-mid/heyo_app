@@ -9,11 +9,9 @@ import 'package:heyo/app/modules/messages/data/models/messages/multi_media_messa
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 
-MessageModel? messageFromJson(Map<String, dynamic> json) {
+MessageModel messageFromJson(Map<String, dynamic> json) {
   final typeString = json[MessageModel.typeSerializedName];
-  if (typeString == null) {
-    return null;
-  }
+
   final type = MessageContentType.values.byName(typeString);
 
   switch (type) {

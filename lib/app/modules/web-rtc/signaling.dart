@@ -98,6 +98,7 @@ class Signaling {
   Future<Session> invite(
       String coreId, String media, bool useScreen, String selfId, bool isAudioCall) async {
     final sessionId = '$selfId-$coreId-${DateTime.now().millisecondsSinceEpoch}';
+
     Session session = await _createSession(null,
         coreId: coreId,
         peerId: null,
@@ -180,8 +181,7 @@ class Signaling {
     bye(session);
   }
 
-  void onMessage(message, String remoteCoreId, String remotePeerId) async {
-    Map<String, dynamic> mapData = _decoder.convert(message);
+  void onMessage(Map<String, dynamic> mapData, String remoteCoreId, String remotePeerId) async {
     var data = mapData['data'];
     print("onMessage, type: ${mapData['type']}");
 
@@ -507,6 +507,7 @@ class Signaling {
     var request = {};
     request["type"] = event;
     request["data"] = data;
+    request["command"] = "call";
     login.sendSDP(_encoder.convert(request), remoteCoreId, remotePeerId);
   }
 

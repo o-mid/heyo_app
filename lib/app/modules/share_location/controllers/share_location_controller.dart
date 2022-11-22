@@ -17,7 +17,7 @@ class ShareLocationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    chatName = Get.find<MessagesController>().args.chat.name;
+    chatName = Get.find<MessagesController>().args.user.chatModel.name;
   }
 
   @override

@@ -12,6 +12,7 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/locales.g.dart';
 
+import '../../chats/data/models/chat_model.dart';
 import '../controllers/contacts_controller.dart';
 
 class ContactsView extends GetView<ContactsController> {
@@ -72,6 +73,13 @@ class ContactsView extends GetView<ContactsController> {
             icon: contact.icon,
             walletAddress: contact.coreId,
             isContact: true,
+            chatModel: ChatModel(
+              name: contact.nickname,
+              icon: contact.icon,
+              id: contact.coreId,
+              lastMessage: "",
+              timestamp: DateTime.now(),
+            ),
           ),
         );
       },

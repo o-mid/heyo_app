@@ -38,7 +38,7 @@ class ChatWidget extends StatelessWidget {
                           fontWeight: chat.notificationCount > 0 ? FONTS.Bold : FONTS.Medium,
                         ),
                       ),
-                      SizedBox(width: 6),
+                      const SizedBox(width: 6),
                       if (chat.isVerified)
                         Assets.svg.verified.svg(
                           width: 12.w,
@@ -47,7 +47,11 @@ class ChatWidget extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    chat.timestamp,
+                    chat.timestamp.difference(DateTime.now()).inDays == 0
+                        ? '${chat.timestamp.hour}:${chat.timestamp.minute}'
+                        : chat.timestamp.difference(DateTime.now()).inDays == 1
+                            ? 'Yesterday'
+                            : '${chat.timestamp.day}/${chat.timestamp.month}/${chat.timestamp.year}',
                     style: TextStyle(
                       fontFamily: FONTS.interFamily,
                       fontWeight: FONTS.Medium,

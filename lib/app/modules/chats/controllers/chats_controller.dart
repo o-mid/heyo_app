@@ -1,39 +1,47 @@
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
+import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 
 class ChatsController extends GetxController {
-  // Todo: these are mock data and should be removed later.
-  final chats = <ChatModel>[
-    ChatModel(
-      id: "1",
-      name: "Crapps Wallbanger",
-      icon: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
-      lastMessage: "I'm still waiting for the reply. I'll let you know once they get back to me.",
-      timestamp: "15:45",
-    ),
-    ChatModel(
-      id: "2",
-      name: "Fancy Potato",
-      icon: "https://avatars.githubusercontent.com/u/6634136?v=4",
-      lastMessage: "I can arrange the meeting with her tomorrow if you're ok with that.",
-      timestamp: "Yesterday",
-      isOnline: true,
-      isVerified: true,
-      notificationCount: 4,
-    ),
-    ChatModel(
-      id: "3",
-      name: "Manly Cupholder",
-      icon: "https://avatars.githubusercontent.com/u/9801359?v=4",
-      lastMessage: "That's nice!",
-      timestamp: "15/01/2022",
-      isOnline: true,
-      notificationCount: 11,
-    ),
-  ].obs;
+  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
+  ChatsController({required this.chatHistoryRepo});
+  final animatedListKey = GlobalKey<AnimatedListState>();
+
+  late StreamSubscription _chatsStreamSubscription;
+
+  final chats = <ChatModel>[].obs;
   @override
   void onInit() {
+    //_addMockData();
+    init();
     super.onInit();
+  }
+
+  void init() async {
+    chats.value = await chatHistoryRepo.getAllChats();
+    _chatsStreamSubscription = (await chatHistoryRepo.getChatsStream()).listen((newChats) {
+      for (int i = 0; i < chats.length; i++) {
+        if (!newChats.any((chat) => chat.id == chats[i].id)) {
+          chats.removeAt(i);
+        }
+      }
+
+      // add new calls
+      for (int i = 0; i < newChats.length; i++) {
+        if (!chats.any((chat) => chat.id == newChats[i].id)) {
+          chats.insert(i, newChats[i]);
+          animatedListKey.currentState?.insertItem(i);
+        }
+      }
+
+      // update calls to latest changes
+      for (int i = 0; i < newChats.length; i++) {
+        chats[i] = newChats[i];
+      }
+    });
   }
 
   @override
@@ -42,5 +50,8 @@ class ChatsController extends GetxController {
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    _chatsStreamSubscription.cancel();
+    super.onClose();
+  }
 }

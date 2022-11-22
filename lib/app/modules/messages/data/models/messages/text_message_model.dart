@@ -1,12 +1,12 @@
-import 'dart:convert';
+import "dart:convert";
 
-import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
+import "package:heyo/app/modules/messages/data/models/reaction_model.dart";
 
-import '../reply_to_model.dart';
-import 'message_model.dart';
+import "../reply_to_model.dart";
+import "message_model.dart";
 
 class TextMessageModel extends MessageModel {
-  static const textSerializedName = 'text';
+  static const textSerializedName = "text";
 
   final String text;
 
@@ -65,8 +65,11 @@ class TextMessageModel extends MessageModel {
         type: MessageContentType.values.byName(json[MessageModel.typeSerializedName]),
         isFromMe: json[MessageModel.isFromMeSerializedName],
         isForwarded: json[MessageModel.isForwardedSerializedName],
-        reactions: (jsonDecode(json[MessageModel.reactionsSerializedName]) as Map<String, dynamic>)
-            .map((String k, v) => MapEntry(k, ReactionModel.fromJson(v))),
+        reactions: json[MessageModel.reactionsSerializedName] == null
+            ? <String, ReactionModel>{}
+            : (json[MessageModel.reactionsSerializedName] as Map<String, dynamic>).map((k, v) =>
+                MapEntry<String, ReactionModel>(
+                    k, ReactionModel.fromJson(v as Map<String, dynamic>))),
         replyTo: json[MessageModel.replyToSerializedName] == null
             ? null
             : ReplyToModel.fromJson(json[MessageModel.replyToSerializedName]),
@@ -75,7 +78,7 @@ class TextMessageModel extends MessageModel {
   @override
   Map<String, dynamic> toJson() => {
         textSerializedName: text,
-        // parent props:
+        //parent props:
         MessageModel.messageIdSerializedName: messageId,
         MessageModel.timestampSerializedName: timestamp.toIso8601String(),
         MessageModel.senderNameSerializedName: senderName,
@@ -84,7 +87,8 @@ class TextMessageModel extends MessageModel {
         MessageModel.typeSerializedName: type.name,
         MessageModel.isFromMeSerializedName: isFromMe,
         MessageModel.isForwardedSerializedName: isForwarded,
-        MessageModel.reactionsSerializedName: jsonEncode(reactions),
+        MessageModel.reactionsSerializedName:
+            reactions.map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
         MessageModel.replyToSerializedName: replyTo?.toJson(),
       };
 }
