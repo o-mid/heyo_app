@@ -296,5 +296,11 @@
     "waiting": "Waiting for connection ...",
     "updating": "Updating chats",
     "backOnline": "Back online"
+  },
+
+  "DataChannelStatus": {
+    "connecting": "Connecting...",
+    "connected": "Connected",
+    "ConnectionLost": "Connection Lost"
   }
 }
