@@ -30,6 +30,8 @@ import '../../shared/utils/constants/colors.dart';
 import '../../shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import '../models/data_channel_message_model.dart';
 
+enum DataChannelConnectivityStatus { connectionLost, connecting, justConnected, online }
+
 class MessagingConnectionController extends GetxController {
   final Messaging messaging;
   final MessagesAbstractRepo messagesRepo;
@@ -40,7 +42,8 @@ class MessagingConnectionController extends GetxController {
   final bson = BSON();
   MessageSession? currentSession;
   Rx<ConnectionStatus?> connectionStatus = Rxn<ConnectionStatus>();
-
+  Rx<DataChannelConnectivityStatus> dataChannelStatus =
+      DataChannelConnectivityStatus.connecting.obs;
   MessagingConnectionController(
       {required this.messaging,
       required this.accountInfo,
@@ -61,7 +64,7 @@ class MessagingConnectionController extends GetxController {
     messaging.onMessageStateChange = (session, status) async {
       connectionStatus.value = status;
       currentSession = session;
-
+      applyConnectivityStatus(status);
       print("Connection Status changed, state is: $status");
 
       switch (status) {
@@ -73,6 +76,7 @@ class MessagingConnectionController extends GetxController {
           connectionStatus.value = ConnectionStatus.CONNECTED;
 
           showConnectionStatusSnackbar(title: "Connection Accepted", message: session.cid);
+          applyConnectivityStatus(ConnectionStatus.CONNECTED);
           Get.toNamed(
             Routes.MESSAGES,
             arguments: MessagesViewArgumentsModel(
@@ -319,5 +323,29 @@ class MessagingConnectionController extends GetxController {
       duration: const Duration(seconds: 5),
       shouldIconPulse: true,
     );
+  }
+
+  void applyConnectivityStatus(ConnectionStatus status) async {
+    switch (status) {
+      case ConnectionStatus.CONNECTED:
+        dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
+        setConnectivityOnline();
+        break;
+
+      case ConnectionStatus.BYE:
+        dataChannelStatus.value = DataChannelConnectivityStatus.connectionLost;
+
+        break;
+
+      default:
+        dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
+        break;
+    }
+  }
+
+  setConnectivityOnline() async {
+    await Future.delayed(const Duration(seconds: 2), () {
+      dataChannelStatus.value = DataChannelConnectivityStatus.online;
+    });
   }
 }
