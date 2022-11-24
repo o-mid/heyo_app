@@ -15,7 +15,7 @@ import 'package:heyo/app/modules/shared/controllers/video_message_controller.dar
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_repo.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/web3_keys.dart';
-import 'package:heyo/app/modules/p2p_node/login.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_manager.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_request.dart';
@@ -35,8 +35,8 @@ import '../../messaging/controllers/messaging_connection_controller.dart';
 
 class GlobalBindings extends Bindings {
   static P2PState p2pState = P2PState();
-  static Signaling signaling = Signaling(login: login);
-  static Messaging messaging = Messaging(login: login);
+  static Signaling signaling = Signaling(p2pCommunicator: p2pCommunicator);
+  static Messaging messaging = Messaging(p2pCommunicator: p2pCommunicator);
   static P2PNodeResponseStream p2pNodeResponseStream = P2PNodeResponseStream(p2pState: p2pState);
   final P2PNodeRequestStream p2pNodeRequestStream =
       P2PNodeRequestStream(p2pState: p2pState, signaling: signaling, messaging: messaging);
@@ -47,7 +47,7 @@ class GlobalBindings extends Bindings {
     localProvider: SecureStorageProvider(),
     cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
   );
-  static Login login = Login(
+  static P2PCommunicator p2pCommunicator = P2PCommunicator(
     p2pState: p2pState,
     accountInfo: accountInfo,
   );
