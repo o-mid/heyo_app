@@ -64,7 +64,7 @@ class MessagingConnectionController extends GetxController {
     messaging.onMessageStateChange = (session, status) async {
       connectionStatus.value = status;
       currentSession = session;
-      applyConnectivityStatus(status);
+
       print("Connection Status changed, state is: $status");
 
       switch (status) {
@@ -74,8 +74,6 @@ class MessagingConnectionController extends GetxController {
           await chatHistoryRepo.addChatToHistory(userChatModel);
           await acceptMessageConnection(session);
           connectionStatus.value = ConnectionStatus.CONNECTED;
-
-          showConnectionStatusSnackbar(title: "Connection Accepted", message: session.cid);
           applyConnectivityStatus(ConnectionStatus.CONNECTED);
           Get.toNamed(
             Routes.MESSAGES,
@@ -90,13 +88,12 @@ class MessagingConnectionController extends GetxController {
               ),
             ),
           );
+
           break;
 
         case ConnectionStatus.CONNECTED:
           isConnectionConnected = true;
           print("Connection Status state is: ${status.name}");
-
-          showConnectionStatusSnackbar(title: "Connection Status state is:", message: status.name);
 
           channelMessageListener();
           break;
@@ -115,6 +112,7 @@ class MessagingConnectionController extends GetxController {
           // TODO: Handle this case.
           break;
       }
+      applyConnectivityStatus(status);
     };
   }
 
@@ -311,18 +309,6 @@ class MessagingConnectionController extends GetxController {
         remoteId: remoteId,
       );
     }
-  }
-
-  showConnectionStatusSnackbar({required String title, required String message}) {
-    Get.snackbar(
-      title,
-      message,
-      icon: const Icon(
-        Icons.connect_without_contact_rounded,
-      ),
-      duration: const Duration(seconds: 5),
-      shouldIconPulse: true,
-    );
   }
 
   void applyConnectivityStatus(ConnectionStatus status) async {
