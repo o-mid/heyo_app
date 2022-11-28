@@ -26,7 +26,7 @@ import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/utils/message_from_json.dart';
 import '../../p2p_node/data/account/account_info.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
-import '../../shared/utils/constants/colors.dart';
+
 import '../../shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import '../models/data_channel_message_model.dart';
 
@@ -37,7 +37,7 @@ class MessagingConnectionController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final AccountInfo accountInfo;
-  bool isConnectionConnected = false;
+
   final JsonDecoder _decoder = const JsonDecoder();
   final bson = BSON();
   MessageSession? currentSession;
@@ -92,7 +92,6 @@ class MessagingConnectionController extends GetxController {
           break;
 
         case ConnectionStatus.CONNECTED:
-          isConnectionConnected = true;
           print("Connection Status state is: ${status.name}");
 
           channelMessageListener();
