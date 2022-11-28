@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/messaging/messaging_session.dart';
-import 'package:heyo/app/modules/p2p_node/login.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
 
 //TODO messaging: refactor
 enum ConnectionStatus {
@@ -15,10 +15,10 @@ enum ConnectionStatus {
 }
 
 class Messaging {
-  final Login login;
+  final P2PCommunicator p2pCommunicator;
   final JsonEncoder _encoder = const JsonEncoder();
 
-  Messaging({required this.login});
+  Messaging({required this.p2pCommunicator});
 
   final Map<String, MessageSession> _sessions = {};
 
@@ -302,7 +302,7 @@ class Messaging {
     request["type"] = event;
     request["data"] = data;
     request["command"] = "message";
-    login.sendSDP(_encoder.convert(request), remoteCoreId, remotePeerId);
+    p2pCommunicator.sendSDP(_encoder.convert(request), remoteCoreId, remotePeerId);
   }
 
   Future<void> _cleanSessions() async {

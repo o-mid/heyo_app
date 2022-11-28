@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:heyo/app/modules/p2p_node/login.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
 
 enum CallState {
   callStateNew,
@@ -27,11 +27,11 @@ class Session {
 }
 
 class Signaling {
-  final Login login;
+  final P2PCommunicator p2pCommunicator;
   final JsonEncoder _encoder = const JsonEncoder();
   final JsonDecoder _decoder = const JsonDecoder();
 
-  Signaling({required this.login});
+  Signaling({required this.p2pCommunicator});
 
   final Map<String, Session> _sessions = {};
   MediaStream? _localStream;
@@ -508,7 +508,7 @@ class Signaling {
     request["type"] = event;
     request["data"] = data;
     request["command"] = "call";
-    login.sendSDP(_encoder.convert(request), remoteCoreId, remotePeerId);
+    p2pCommunicator.sendSDP(_encoder.convert(request), remoteCoreId, remotePeerId);
   }
 
   Future<void> _cleanSessions() async {

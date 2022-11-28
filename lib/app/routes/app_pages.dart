@@ -46,8 +46,6 @@ import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 import '../modules/wallet/bindings/wallet_binding.dart';
 import '../modules/wallet/views/wallet_view.dart';
-import '../modules/website-interact/website_interact_binding.dart';
-import '../modules/website-interact/website_interact_view.dart';
 
 part 'app_routes.dart';
 
@@ -140,11 +138,6 @@ class AppPages {
       name: _Paths.SHREABLE_QR,
       page: () => ShareableQrView(),
       binding: ShareableQRBinding(),
-    ),
-    GetPage(
-      name: _Paths.SCAN_QR,
-      page: () => WebsiteInteractView(),
-      binding: WebsiteInteractBinding(),
     ),
     GetPage(
       name: _Paths.USER_CALL_HISTORY,

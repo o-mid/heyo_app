@@ -26,21 +26,24 @@ import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/utils/message_from_json.dart';
 import '../../p2p_node/data/account/account_info.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
-import '../../shared/utils/constants/colors.dart';
+
 import '../../shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import '../models/data_channel_message_model.dart';
+
+enum DataChannelConnectivityStatus { connectionLost, connecting, justConnected, online }
 
 class MessagingConnectionController extends GetxController {
   final Messaging messaging;
   final MessagesAbstractRepo messagesRepo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final AccountInfo accountInfo;
-  bool isConnectionConnected = false;
+
   final JsonDecoder _decoder = const JsonDecoder();
   final bson = BSON();
   MessageSession? currentSession;
   Rx<ConnectionStatus?> connectionStatus = Rxn<ConnectionStatus>();
-
+  Rx<DataChannelConnectivityStatus> dataChannelStatus =
+      DataChannelConnectivityStatus.connecting.obs;
   MessagingConnectionController(
       {required this.messaging,
       required this.accountInfo,
@@ -71,8 +74,7 @@ class MessagingConnectionController extends GetxController {
           await chatHistoryRepo.addChatToHistory(userChatModel);
           await acceptMessageConnection(session);
           connectionStatus.value = ConnectionStatus.CONNECTED;
-
-          showConnectionStatusSnackbar(title: "Connection Accepted", message: session.cid);
+          applyConnectivityStatus(ConnectionStatus.CONNECTED);
           Get.toNamed(
             Routes.MESSAGES,
             arguments: MessagesViewArgumentsModel(
@@ -86,13 +88,11 @@ class MessagingConnectionController extends GetxController {
               ),
             ),
           );
+
           break;
 
         case ConnectionStatus.CONNECTED:
-          isConnectionConnected = true;
           print("Connection Status state is: ${status.name}");
-
-          showConnectionStatusSnackbar(title: "Connection Status state is:", message: status.name);
 
           channelMessageListener();
           break;
@@ -111,6 +111,7 @@ class MessagingConnectionController extends GetxController {
           // TODO: Handle this case.
           break;
       }
+      applyConnectivityStatus(status);
     };
   }
 
@@ -309,15 +310,27 @@ class MessagingConnectionController extends GetxController {
     }
   }
 
-  showConnectionStatusSnackbar({required String title, required String message}) {
-    Get.snackbar(
-      title,
-      message,
-      icon: const Icon(
-        Icons.connect_without_contact_rounded,
-      ),
-      duration: const Duration(seconds: 5),
-      shouldIconPulse: true,
-    );
+  void applyConnectivityStatus(ConnectionStatus status) async {
+    switch (status) {
+      case ConnectionStatus.CONNECTED:
+        dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
+        setConnectivityOnline();
+        break;
+
+      case ConnectionStatus.BYE:
+        dataChannelStatus.value = DataChannelConnectivityStatus.connectionLost;
+
+        break;
+
+      default:
+        dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
+        break;
+    }
+  }
+
+  setConnectivityOnline() async {
+    await Future.delayed(const Duration(seconds: 2), () {
+      dataChannelStatus.value = DataChannelConnectivityStatus.online;
+    });
   }
 }

@@ -306,6 +306,10 @@ class LocaleKeys {
   static const ConnectionStatus_waiting = 'ConnectionStatus_waiting';
   static const ConnectionStatus_updating = 'ConnectionStatus_updating';
   static const ConnectionStatus_backOnline = 'ConnectionStatus_backOnline';
+  static const DataChannelStatus_connecting = 'DataChannelStatus_connecting';
+  static const DataChannelStatus_connected = 'DataChannelStatus_connected';
+  static const DataChannelStatus_ConnectionLost =
+      'DataChannelStatus_ConnectionLost';
 }
 
 class Locales {
@@ -536,5 +540,8 @@ class Locales {
     'ConnectionStatus_waiting': 'Waiting for connection ...',
     'ConnectionStatus_updating': 'Updating chats',
     'ConnectionStatus_backOnline': 'Back online',
+    'DataChannelStatus_connecting': 'Connecting...',
+    'DataChannelStatus_connected': 'Connected',
+    'DataChannelStatus_ConnectionLost': 'Connection Lost',
   };
 }

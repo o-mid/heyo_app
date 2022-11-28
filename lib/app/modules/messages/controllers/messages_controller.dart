@@ -617,7 +617,7 @@ class MessagesController extends GetxController {
           senderAvatar: '',
           senderName: '',
           isFromMe: true,
-          status: MessageStatus.sent,
+          status: MessageStatus.sending,
           timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
           url: element["path"],
         ));
@@ -638,7 +638,7 @@ class MessagesController extends GetxController {
           senderName: '',
           senderAvatar: '',
           isFromMe: true,
-          status: MessageStatus.sent,
+          status: MessageStatus.sending,
           type: MessageContentType.video,
         ));
       }
@@ -650,7 +650,7 @@ class MessagesController extends GetxController {
         senderAvatar: '',
         senderName: '',
         isFromMe: true,
-        status: MessageStatus.sent,
+        status: MessageStatus.sending,
         timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
       ));
     } else {
@@ -672,7 +672,7 @@ class MessagesController extends GetxController {
                     senderAvatar: '',
                     senderName: '',
                     isFromMe: true,
-                    status: MessageStatus.sent,
+                    status: MessageStatus.sending,
                     timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
                     url: asset["path"]),
               );
@@ -697,7 +697,7 @@ class MessagesController extends GetxController {
                   senderName: '',
                   senderAvatar: '',
                   isFromMe: true,
-                  status: MessageStatus.sent,
+                  status: MessageStatus.sending,
                 ),
               );
             }
@@ -712,7 +712,7 @@ class MessagesController extends GetxController {
                   senderName: '',
                   senderAvatar: '',
                   isFromMe: true,
-                  status: MessageStatus.sent,
+                  status: MessageStatus.sending,
                 ),
               );
             }
@@ -971,7 +971,7 @@ class MessagesController extends GetxController {
         senderName: "",
         senderAvatar: "",
         isFromMe: true,
-        status: MessageStatus.sent,
+        status: MessageStatus.sending,
       ),
       // ImageMessageModel(
       //   messageId: "${index++}",
