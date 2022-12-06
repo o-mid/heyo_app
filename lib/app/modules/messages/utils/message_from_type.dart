@@ -84,7 +84,6 @@ Tuple2<MessageModel?, bool> messageFromType({required SendMessageType messageTyp
     case SendImageMessage:
       msg = ImageMessageModel(
         url: (messageType as SendImageMessage).path,
-        intlist: (messageType).intlist,
         metadata: (messageType).metadata,
         isLocal: true,
         messageId: id,

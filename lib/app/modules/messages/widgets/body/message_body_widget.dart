@@ -116,11 +116,7 @@ class _MessageContent extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8.r),
                 child: (message as ImageMessageModel).isLocal
                     ? ExtendedImage.file(File((message as ImageMessageModel).url))
-                    : ExtendedImage.memory(
-                        Uint8List.fromList(
-                          (message as ImageMessageModel).intlist,
-                        ),
-                      ),
+                    : ExtendedImage.network((message as ImageMessageModel).url),
               ),
             );
           }),

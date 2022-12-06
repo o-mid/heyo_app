@@ -532,7 +532,6 @@ class MessagesController extends GetxController {
               await SendMessage().execute(
                 sendMessageType: SendMessageType.image(
                   path: file.path,
-                  intlist: file.readAsBytesSync().toList(),
                   metadata: ImageMetadata(
                     height: entity.height.toDouble(),
                     width: entity.width.toDouble(),
@@ -608,7 +607,6 @@ class MessagesController extends GetxController {
       if (element["type"] == "image") {
         tempImages.add(ImageMessageModel(
           messageId: "${messages.lastIndexOf(messages.last) + 1}",
-          intlist: await pathToUint8List(element["path"]),
           isLocal: true,
           metadata: ImageMetadata(
             height: element["height"].toDouble(),
@@ -662,9 +660,6 @@ class MessagesController extends GetxController {
                 ImageMessageModel(
                     messageId: "${messages.lastIndexOf(messages.last) + 1}",
                     isLocal: true,
-                    intlist: await rootBundle
-                        .load(asset["path"])
-                        .then((value) => value.buffer.asUint8List().toList()),
                     metadata: ImageMetadata(
                       height: double.parse(asset["height"].toString()),
                       width: double.parse(asset["width"].toString()),

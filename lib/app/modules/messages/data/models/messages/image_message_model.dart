@@ -11,12 +11,10 @@ class ImageMessageModel extends MessageModel {
   static const urlSerializedName = 'url';
   static const metadataSerializedName = 'metadata';
   static const isLocalSerializedName = 'isLocal';
-  static const intlistSerializedName = 'intlist';
+
   final String url;
   final ImageMetadata metadata;
   final bool isLocal;
-
-  final List<int> intlist;
 
   ImageMessageModel({
     required this.url,
@@ -28,7 +26,6 @@ class ImageMessageModel extends MessageModel {
     required super.senderAvatar,
     super.status = MessageStatus.sending,
     super.type = MessageContentType.image,
-    required this.intlist,
     super.isFromMe = false,
     super.isForwarded = false,
     super.isSelected = false,
@@ -37,19 +34,19 @@ class ImageMessageModel extends MessageModel {
   });
 
   @override
-  ImageMessageModel copyWith(
-      {String? url,
-      bool? isLocal,
-      String? messageId,
-      MessageStatus? status,
-      DateTime? timestamp,
-      MessageContentType? type,
-      Map<String, ReactionModel>? reactions,
-      bool? isFromMe,
-      bool? isForwarded,
-      bool? isSelected,
-      bool clearReply = false,
-      List<int>? intlist}) {
+  ImageMessageModel copyWith({
+    String? url,
+    bool? isLocal,
+    String? messageId,
+    MessageStatus? status,
+    DateTime? timestamp,
+    MessageContentType? type,
+    Map<String, ReactionModel>? reactions,
+    bool? isFromMe,
+    bool? isForwarded,
+    bool? isSelected,
+    bool clearReply = false,
+  }) {
     return ImageMessageModel(
       url: url ?? this.url,
       isLocal: isLocal ?? this.isLocal,
@@ -65,36 +62,35 @@ class ImageMessageModel extends MessageModel {
       reactions: reactions ?? this.reactions,
       replyTo: clearReply ? null : replyTo,
       type: type ?? this.type,
-      intlist: intlist ?? this.intlist,
     );
   }
 
   factory ImageMessageModel.fromJson(Map<String, dynamic> json) => ImageMessageModel(
-      url: json[urlSerializedName],
-      metadata: ImageMetadata.fromJson(json[metadataSerializedName]),
-      isLocal: json[isLocalSerializedName],
-      // parent props:
-      messageId: json[MessageModel.messageIdSerializedName],
-      timestamp: DateTime.parse(json[MessageModel.timestampSerializedName]),
-      senderName: json[MessageModel.senderNameSerializedName],
-      senderAvatar: json[MessageModel.senderAvatarSerializedName],
-      status: MessageStatus.values.byName(json[MessageModel.statusSerializedName]),
-      type: MessageContentType.values.byName(json[MessageModel.typeSerializedName]),
-      isFromMe: json[MessageModel.isFromMeSerializedName],
-      isForwarded: json[MessageModel.isForwardedSerializedName],
-      reactions: (jsonDecode(json[MessageModel.reactionsSerializedName]) as Map<String, dynamic>)
-          .map((String k, v) => MapEntry(k, ReactionModel.fromJson(v))),
-      replyTo: json[MessageModel.replyToSerializedName] == null
-          ? null
-          : ReplyToModel.fromJson(json[MessageModel.replyToSerializedName]),
-      intlist: jsonDecode(json[intlistSerializedName]).cast<int>());
+        url: json[urlSerializedName],
+        metadata: ImageMetadata.fromJson(json[metadataSerializedName]),
+        isLocal: json[isLocalSerializedName],
+        // parent props:
+        messageId: json[MessageModel.messageIdSerializedName],
+        timestamp: DateTime.parse(json[MessageModel.timestampSerializedName]),
+        senderName: json[MessageModel.senderNameSerializedName],
+        senderAvatar: json[MessageModel.senderAvatarSerializedName],
+        status: MessageStatus.values.byName(json[MessageModel.statusSerializedName]),
+        type: MessageContentType.values.byName(json[MessageModel.typeSerializedName]),
+        isFromMe: json[MessageModel.isFromMeSerializedName],
+        isForwarded: json[MessageModel.isForwardedSerializedName],
+        reactions: (jsonDecode(json[MessageModel.reactionsSerializedName]) as Map<String, dynamic>)
+            .map((String k, v) => MapEntry(k, ReactionModel.fromJson(v))),
+        replyTo: json[MessageModel.replyToSerializedName] == null
+            ? null
+            : ReplyToModel.fromJson(json[MessageModel.replyToSerializedName]),
+      );
 
   @override
   Map<String, dynamic> toJson() => {
         urlSerializedName: url,
         metadataSerializedName: metadata.toJson(),
         isLocalSerializedName: isLocal,
-        intlistSerializedName: jsonEncode(intlist),
+
         // parent props:
         MessageModel.messageIdSerializedName: messageId,
         MessageModel.timestampSerializedName: timestamp.toIso8601String(),

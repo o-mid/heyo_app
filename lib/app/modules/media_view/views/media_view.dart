@@ -89,11 +89,8 @@ class MediaView extends GetView<MediaViewController> {
                                 minScale: PhotoViewComputedScale.contained * 1.0,
                               )
                             : PhotoView(
-                                imageProvider: ExtendedMemoryImageProvider(
-                                  Uint8List.fromList(
-                                    (controller.currentMessage as ImageMessageModel).intlist,
-                                  ),
-                                ),
+                                imageProvider: ExtendedFileImageProvider(
+                                    File((controller.currentMessage as ImageMessageModel).url)),
                               ),
                       ),
               ),
