@@ -14,7 +14,7 @@ import '../data/models/messages/file_message_model.dart';
 import '../data/usecases/send_message_usecase.dart';
 
 Tuple2<MessageModel?, bool> messageFromType({required SendMessageType messageType}) {
-  bool isDataBinery = false;
+  bool isDataBinary = false;
   var uuid = const Uuid();
   final id = uuid.v4();
   final timestamp = DateTime.now();
@@ -95,7 +95,7 @@ Tuple2<MessageModel?, bool> messageFromType({required SendMessageType messageTyp
         status: MessageStatus.sending,
         isFromMe: true,
       );
-      isDataBinery = true;
+      isDataBinary = true;
       break;
     case SendVideoMessage:
       msg = VideoMessageModel(
@@ -126,5 +126,5 @@ Tuple2<MessageModel?, bool> messageFromType({required SendMessageType messageTyp
       break;
   }
 
-  return Tuple2(msg, isDataBinery);
+  return Tuple2(msg, isDataBinary);
 }
