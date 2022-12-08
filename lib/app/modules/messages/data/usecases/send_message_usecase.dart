@@ -26,9 +26,11 @@ class SendMessage {
   execute({
     required SendMessageType sendMessageType,
   }) async {
-    Tuple2<MessageModel?, bool> messageObject = messageFromType(messageType: sendMessageType);
+    Tuple3<MessageModel?, bool, String> messageObject =
+        messageFromType(messageType: sendMessageType);
     MessageModel? msg = messageObject.item1;
     bool isDataBinary = messageObject.item2;
+    String messageLocalPath = messageObject.item3;
 
     if (msg == null) {
       return;
@@ -39,8 +41,8 @@ class SendMessage {
 
     Map<String, dynamic> messageJson = msg.toJson();
     SendDataChannelMessage(messagingConnection: messagingConnection).execute(
-      channelMessageType:
-          ChannelMessageType.message(message: messageJson, isDataBinary: isDataBinary),
+      channelMessageType: ChannelMessageType.message(
+          message: messageJson, isDataBinary: isDataBinary, messageLocalPath: messageLocalPath),
     );
   }
 }
