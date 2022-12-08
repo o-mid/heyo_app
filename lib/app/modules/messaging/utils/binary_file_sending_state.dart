@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'binary_single_completer.dart';
+
 class BinaryFileSendingState {
   File file;
-
   RandomAccessFile raFile;
   Map<String, dynamic> meta;
   int fileSize;
@@ -21,10 +22,10 @@ class BinaryFileSendingState {
     this.meta,
   );
 
-  static Future<BinaryFileSendingState> create(
-    File file,
-    Map<String, dynamic> meta,
-  ) async {
+  static Future<BinaryFileSendingState> create({
+    required File file,
+    required Map<String, dynamic> meta,
+  }) async {
     var name = file.uri.pathSegments.last;
     var size = await file.length();
     var raFile = await file.open();
@@ -35,29 +36,5 @@ class BinaryFileSendingState {
       size,
       meta,
     );
-  }
-}
-
-class SingleCompleter<T> {
-  var completer = Completer<T>();
-
-  bool get isCompleted {
-    return completer.isCompleted;
-  }
-
-  Future<T> get future {
-    return completer.future;
-  }
-
-  void completeError(Object error) {
-    if (!completer.isCompleted) {
-      completer.completeError(error);
-    }
-  }
-
-  void complete(T result) {
-    if (!completer.isCompleted) {
-      completer.complete(result);
-    }
   }
 }
