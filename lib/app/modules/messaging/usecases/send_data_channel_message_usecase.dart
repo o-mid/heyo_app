@@ -1,15 +1,18 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:io';
 
-import 'package:bson/bson.dart';
+import 'package:heyo/app/modules/messaging/usecases/send_binary_data_usecase.dart';
 import 'package:tuple/tuple.dart';
 
 import '../controllers/messaging_connection_controller.dart';
 import '../models/data_channel_message_model.dart';
+import '../utils/binary_file_sending_state.dart';
 import '../utils/channel_message_from_type.dart';
 
 class SendDataChannelMessage {
   MessagingConnectionController messagingConnection;
+
   SendDataChannelMessage({
     required this.messagingConnection,
   });
@@ -17,24 +20,23 @@ class SendDataChannelMessage {
   execute({
     required ChannelMessageType channelMessageType,
   }) async {
-    final bson = BSON();
-
-    Tuple2<DataChannelMessageModel?, bool> channelMessageObject =
+    Tuple3<DataChannelMessageModel?, bool, String> channelMessageObject =
         channelmessageFromType(channelMessageType: channelMessageType);
     DataChannelMessageModel? msg = channelMessageObject.item1;
-    bool isDataBinery = channelMessageObject.item2;
+    bool isDataBinary = channelMessageObject.item2;
+    String messageLocalPath = channelMessageObject.item3;
 
     if (msg == null) {
       return;
     }
 
     Map<String, dynamic> message = msg.toJson();
-    if (isDataBinery) {
-      BsonBinary buffer = bson.serialize(message);
-
-      Uint8List byteList = buffer.byteList;
-
-      messagingConnection.sendBinaryMessage(binary: byteList);
+    if (isDataBinary && messageLocalPath.isNotEmpty) {
+      BinaryFileSendingState sendingState = await BinaryFileSendingState.create(
+        file: File(messageLocalPath),
+        meta: msg.message,
+      );
+      await SendBinaryData(sendingState: sendingState).execute();
     } else {
       messagingConnection.sendTextMessage(text: jsonEncode(message));
     }
@@ -42,10 +44,10 @@ class SendDataChannelMessage {
 }
 
 class ChannelMessageType {
-  factory ChannelMessageType.message({
-    required Map<String, dynamic> message,
-    required bool isDataBinery,
-  }) = SendMessage;
+  factory ChannelMessageType.message(
+      {required Map<String, dynamic> message,
+      required bool isDataBinary,
+      required String messageLocalPath}) = SendMessage;
 
   factory ChannelMessageType.delete({
     required Map<String, dynamic> message,
@@ -61,11 +63,13 @@ class ChannelMessageType {
 
 class SendMessage implements ChannelMessageType {
   final Map<String, dynamic> message;
-  final bool isDataBinery;
+  final bool isDataBinary;
+  final String messageLocalPath;
 
   SendMessage({
     required this.message,
-    required this.isDataBinery,
+    required this.isDataBinary,
+    required this.messageLocalPath,
   });
 }
 
