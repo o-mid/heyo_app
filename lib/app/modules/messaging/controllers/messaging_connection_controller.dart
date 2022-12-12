@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:io';
 import 'dart:typed_data';
-import 'package:bson/bson.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -16,6 +17,8 @@ import 'package:heyo/app/modules/messaging/messaging.dart';
 import 'package:heyo/app/modules/messaging/messaging_session.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/routes/app_pages.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../chats/data/models/chat_model.dart';
 import '../../messages/data/models/messages/image_message_model.dart';
@@ -29,6 +32,9 @@ import '../../shared/data/models/messages_view_arguments_model.dart';
 
 import '../../shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import '../models/data_channel_message_model.dart';
+import '../usecases/handle_received_binary_data_usecase.dart';
+import '../utils/binary_file_receiving_state.dart';
+import '../utils/data_binary_message.dart';
 
 enum DataChannelConnectivityStatus { connectionLost, connecting, justConnected, online }
 
@@ -37,11 +43,13 @@ class MessagingConnectionController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final AccountInfo accountInfo;
+  BinaryFileReceivingState? currentState;
 
   final JsonDecoder _decoder = const JsonDecoder();
-  final bson = BSON();
+
   MessageSession? currentSession;
   Rx<ConnectionStatus?> connectionStatus = Rxn<ConnectionStatus>();
+  Function(double progress, int totalSize)? statusUpdateCallback;
   Rx<DataChannelConnectivityStatus> dataChannelStatus =
       DataChannelConnectivityStatus.connecting.obs;
   MessagingConnectionController(
@@ -124,9 +132,15 @@ class MessagingConnectionController extends GetxController {
   }
 
   handleDataChannelBinary({required Uint8List binaryData, required MessageSession session}) async {
-    BsonBinary bsonBinary = BsonBinary.from(binaryData);
-    final decodedBson = bson.deserialize(bsonBinary);
-    handleDataChannelText(receivedjson: decodedBson, session: session);
+    var message = DataBinaryMessage.parse(binaryData);
+
+    if (currentState == null) {
+      currentState = BinaryFileReceivingState(message.filename, message.meta);
+      print('RECEIVER: New file transfer and State started');
+    }
+    currentState!.pendingMessages[message.chunkStart] = message;
+    await HandleReceivedBinaryData(messagesRepo: messagesRepo, chatId: session.cid)
+        .execute(state: currentState!);
   }
 
   handleDataChannelText(
