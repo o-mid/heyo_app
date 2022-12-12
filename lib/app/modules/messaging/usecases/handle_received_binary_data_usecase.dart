@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../messages/data/models/messages/audio_message_model.dart';
@@ -9,14 +10,17 @@ import '../../messages/data/models/messages/image_message_model.dart';
 import '../../messages/data/models/messages/message_model.dart';
 import '../../messages/data/models/messages/video_message_model.dart';
 import '../../messages/data/repo/messages_abstract_repo.dart';
+import '../../messages/data/usecases/cofirm_message_usecase.dart';
 import '../../messages/utils/message_from_json.dart';
+import '../controllers/messaging_connection_controller.dart';
 import '../utils/binary_file_receiving_state.dart';
 
 class HandleReceivedBinaryData {
   final MessagesAbstractRepo messagesRepo;
+  final MessagingConnectionController messagingConnection =
+      Get.find<MessagingConnectionController>();
 
   final String chatId;
-  final IsFileCompleted = false;
 
   HandleReceivedBinaryData({required this.messagesRepo, required this.chatId});
   execute({required BinaryFileReceivingState state}) async {
@@ -79,7 +83,7 @@ class HandleReceivedBinaryData {
     Directory directory = await getApplicationDocumentsDirectory();
 
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
-    File newfile = File("${directory.path}/${fileName}");
+    File newfile = File("${directory.path}/$fileName");
     newfile = await File(file.path).copy(newfile.path);
 
     // Todo omid : add cases for other message types
@@ -122,6 +126,10 @@ class HandleReceivedBinaryData {
           isFromMe: false,
         ),
         chatId: chatId);
+    messagingConnection.confirmReceivedMessageById(messageId: receivedMessage.messageId);
+    await ConfirmMessage().execute(
+        confirmMessageType: ConfirmMessageType.confirmReceivedText(
+            chatId: chatId, messageId: receivedMessage.messageId));
 
     print('RECEIVER: Message saved');
   }
