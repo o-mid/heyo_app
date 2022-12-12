@@ -32,6 +32,7 @@ class VideoMessageModel extends MessageModel {
   @override
   VideoMessageModel copyWith({
     String? messageId,
+    String? url,
     MessageStatus? status,
     bool? isLocal,
     DateTime? timestamp,
@@ -43,7 +44,7 @@ class VideoMessageModel extends MessageModel {
     bool clearReply = false,
   }) {
     return VideoMessageModel(
-      url: url,
+      url: url ?? this.url,
       metadata: metadata,
       messageId: messageId ?? this.messageId,
       timestamp: timestamp ?? this.timestamp,
