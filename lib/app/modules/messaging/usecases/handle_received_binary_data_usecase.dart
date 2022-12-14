@@ -65,7 +65,7 @@ class HandleReceivedBinaryData {
         await saveReceivedMessage(
             receivedMessageJson: message.meta,
             chatId: chatId,
-            file: file,
+            filePath: file.path,
             fileName: message.filename);
       });
 
@@ -77,14 +77,14 @@ class HandleReceivedBinaryData {
   Future<void> saveReceivedMessage({
     required Map<String, dynamic> receivedMessageJson,
     required String chatId,
-    required File file,
+    required String filePath,
     required String fileName,
   }) async {
     Directory directory = await getApplicationDocumentsDirectory();
 
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
     File newfile = File("${directory.path}/$fileName");
-    newfile = await File(file.path).copy(newfile.path);
+    newfile = await File(filePath).copy(newfile.path);
 
     // Todo omid : add cases for other message types
     switch (receivedMessage.type) {

@@ -173,19 +173,6 @@ class MessagingConnectionController extends GetxController {
   Future<void> saveReceivedMessage(
       {required Map<String, dynamic> receivedMessageJson, required String chatId}) async {
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
-
-    // Todo omid : add cases for other message types
-    switch (receivedMessage.type) {
-      case MessageContentType.image:
-        receivedMessage = (receivedMessage as ImageMessageModel).copyWith(isLocal: false);
-        break;
-      case MessageContentType.video:
-        receivedMessage = (receivedMessage as VideoMessageModel).copyWith(isLocal: false);
-        break;
-      default:
-        break;
-    }
-
     await messagesRepo.createMessage(
         message: receivedMessage.copyWith(
           isFromMe: false,
