@@ -41,7 +41,7 @@ class GlobalBindings extends Bindings {
   final P2PNodeRequestStream p2pNodeRequestStream =
       P2PNodeRequestStream(p2pState: p2pState, signaling: signaling, messaging: messaging);
   static Web3Client web3Client =
-      Web3Client('https://stg.pingextest.eu/eth', http.Client(), 'ping-dev', 'caC12cas');
+      Web3Client('https://xcbapi.corecoin.cc', http.Client(),'','');
 
   static AccountInfo accountInfo = AccountRepo(
     localProvider: SecureStorageProvider(),
