@@ -133,14 +133,20 @@ class MessagingConnectionController extends GetxController {
 
   handleDataChannelBinary({required Uint8List binaryData, required MessageSession session}) async {
     var message = DataBinaryMessage.parse(binaryData);
+    if (message.chunk.isNotEmpty) {
+      if (currentState == null) {
+        currentState = BinaryFileReceivingState(message.filename, message.meta);
+        print('RECEIVER: New file transfer and State started');
+      }
+      currentState!.pendingMessages[message.chunkStart] = message;
+      await HandleReceivedBinaryData(messagesRepo: messagesRepo, chatId: session.cid)
+          .execute(state: currentState!);
+    } else {
+      // handle the acknowledge
+      print(message.header);
 
-    if (currentState == null) {
-      currentState = BinaryFileReceivingState(message.filename, message.meta);
-      print('RECEIVER: New file transfer and State started');
+      return;
     }
-    currentState!.pendingMessages[message.chunkStart] = message;
-    await HandleReceivedBinaryData(messagesRepo: messagesRepo, chatId: session.cid)
-        .execute(state: currentState!);
   }
 
   handleDataChannelText(
