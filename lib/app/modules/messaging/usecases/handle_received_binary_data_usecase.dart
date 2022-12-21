@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
@@ -23,9 +25,9 @@ class HandleReceivedBinaryData {
   final String chatId;
 
   HandleReceivedBinaryData({required this.messagesRepo, required this.chatId});
-  execute({required BinaryFileReceivingState state}) async {
+  execute({required BinaryFileReceivingState? state}) async {
     Function(double progress, int totalSize)? statusUpdateCallback;
-    if (state.processingMessage) {
+    if (state!.processingMessage) {
       print('RECEIVER: Skipping, already processing message');
       return;
     }
@@ -44,14 +46,34 @@ class HandleReceivedBinaryData {
       state.processingMessage = false;
       return;
     }
+    if (state.filename != message.filename) {
+      // Improve same file check
+      print("RECEIVER: Ignoring new file since transfer already in progress");
+      state.processingMessage = false;
+      return;
+    }
 
     print(
         'RECEIVER: Chunk received ${message.chunkStart} of ${message.fileSize} of ${message.filename}');
     var tmpFile = await state.tmpFile();
     await tmpFile.writeAsBytes(message.chunk, mode: FileMode.append);
     var writtenLength = message.chunkStart + message.chunk.length;
+    BytesBuilder builder = BytesBuilder();
 
     var fileCompleted = writtenLength == message.fileSize;
+    var json = jsonEncode({
+      "messageSize": message.messageSize,
+      "type": "acknowledge",
+      "acknowledgeChunk": message.chunkStart,
+      "acknowledgeFile": fileCompleted,
+    });
+
+    List<int> askheader = utf8.encode(json);
+
+    builder.add(askheader);
+
+    Uint8List askbytes = builder.toBytes();
+    messagingConnection.sendBinaryMessage(binary: askbytes);
 
     statusUpdateCallback?.call(writtenLength / message.fileSize, message.fileSize);
     state.pendingMessages.remove(nextChunk);
@@ -61,6 +83,7 @@ class HandleReceivedBinaryData {
 
     if (fileCompleted) {
       print("RECEIVER: File received: ${message.filename}");
+
       state.tmpFile().then((file) async {
         await saveReceivedMessage(
             receivedMessageJson: message.meta,

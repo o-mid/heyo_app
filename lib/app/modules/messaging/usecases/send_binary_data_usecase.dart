@@ -4,10 +4,12 @@ import 'dart:typed_data';
 import 'package:get/get.dart';
 import '../controllers/messaging_connection_controller.dart';
 import '../utils/binary_file_sending_state.dart';
+import '../utils/binary_single_completer.dart';
 
 class SendBinaryData {
   final BinaryFileSendingState sendingState;
   int maximumMessageSize = 16000;
+  SingleCompleter<bool>? messageTimeoutCompleter;
   SendBinaryData({required this.sendingState});
   final MessagingConnectionController messagingConnection =
       Get.find<MessagingConnectionController>();
@@ -24,26 +26,31 @@ class SendBinaryData {
       print('SENDER: Cancelled sending chunk due to completed');
       return;
     }
+    try {
+      var state = sendingState;
+      print("SENDER: Sending chunk for ${state.filename}");
 
-    var state = sendingState;
-    print("SENDER: Sending chunk for ${state.filename}");
+      if (state.fileSendingComplete) {
+        print('SENDER: File sent completed, cancelled');
+        return;
+      }
 
-    if (state.fileSendingComplete) {
-      print('SENDER: File sent completed, cancelled');
-      return;
-    }
+      if (state.sendChunkLock) {
+        print('SENDER: Already sending chunk, cancelled');
+        return;
+      }
+      state.sendChunkLock = true;
 
-    if (state.sendChunkLock) {
-      print('SENDER: Already sending chunk, cancelled');
-      return;
-    }
-    state.sendChunkLock = true;
+      await sendChunk();
 
-    await sendChunk();
-
-    state.sendChunkLock = false;
-    if (!state.fileSendingComplete) {
-      sendNext();
+      state.sendChunkLock = false;
+      if (!state.fileSendingComplete) {
+        sendNext();
+      }
+      messageTimeoutCompleter?.complete(true);
+      messageTimeoutCompleter = SingleCompleter();
+    } catch (error) {
+      messageTimeoutCompleter?.complete(true);
     }
   }
 
