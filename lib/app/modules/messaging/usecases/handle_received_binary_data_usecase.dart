@@ -47,20 +47,20 @@ class HandleReceivedBinaryData {
       return;
     }
     if (state.filename != message.filename) {
-      // Improve same file check
-      print("RECEIVER: Ignoring new file since transfer already in progress");
       state.processingMessage = false;
+      state.reset();
       return;
     }
 
     print(
         'RECEIVER: Chunk received ${message.chunkStart} of ${message.fileSize} of ${message.filename}');
     var tmpFile = await state.tmpFile();
-    await tmpFile.writeAsBytes(message.chunk, mode: FileMode.append);
+    tmpFile.writeAsBytesSync(message.chunk, mode: FileMode.append);
     var writtenLength = message.chunkStart + message.chunk.length;
     BytesBuilder builder = BytesBuilder();
 
     var fileCompleted = writtenLength == message.fileSize;
+
     var json = jsonEncode({
       "messageSize": message.messageSize,
       "type": "acknowledge",
@@ -91,9 +91,7 @@ class HandleReceivedBinaryData {
             filePath: file.path,
             fileName: message.filename);
       });
-
-      print(
-          'RECEIVER:  ack for chunk ${message.chunkStart}-${message.chunkStart + message.chunk.length}. Completed: $fileCompleted');
+      state.reset();
     }
   }
 
@@ -109,7 +107,6 @@ class HandleReceivedBinaryData {
     File newfile = File("${directory.path}/$fileName");
     newfile = await File(filePath).copy(newfile.path);
 
-    // Todo omid : add cases for other message types
     switch (receivedMessage.type) {
       case MessageContentType.image:
         receivedMessage = (receivedMessage as ImageMessageModel).copyWith(
@@ -154,6 +151,6 @@ class HandleReceivedBinaryData {
         confirmMessageType: ConfirmMessageType.confirmReceivedText(
             chatId: chatId, messageId: receivedMessage.messageId));
 
-    print('RECEIVER: Message saved');
+    print('RECEIVER: Message saved path: ${newfile.path}');
   }
 }
