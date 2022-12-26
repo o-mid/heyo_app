@@ -9,10 +9,6 @@ class DataBinaryMessage {
     return Map<String, dynamic>.from(header['meta'] as Map? ?? <String, dynamic>{});
   }
 
-  int get version {
-    return header['version'] as int;
-  }
-
   String get filename {
     return header['filename'] as String;
   }

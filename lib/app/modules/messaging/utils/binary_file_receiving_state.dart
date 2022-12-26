@@ -18,6 +18,13 @@ class BinaryFileReceivingState {
     return _tmpFile!;
   }
 
+  void reset() {
+    pendingMessages = {};
+    lastHandledMessage = null;
+    processingMessage = false;
+    _tmpFile = null;
+  }
+
   BinaryFileReceivingState(this.filename, this.meta);
 }
 
