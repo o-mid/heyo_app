@@ -8,7 +8,7 @@ import '../utils/binary_single_completer.dart';
 
 class SendBinaryData {
   final BinaryFileSendingState sendingState;
-  int maximumMessageSize = 16000;
+  int maximumMessageSize = 100000;
   SingleCompleter<bool>? messageTimeoutCompleter;
   SendBinaryData({required this.sendingState});
   final MessagingConnectionController messagingConnection =
