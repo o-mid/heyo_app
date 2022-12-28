@@ -26,9 +26,11 @@ class SendMessage {
   execute({
     required SendMessageType sendMessageType,
   }) async {
-    Tuple2<MessageModel?, bool> messageObject = messageFromType(messageType: sendMessageType);
+    Tuple3<MessageModel?, bool, String> messageObject =
+        messageFromType(messageType: sendMessageType);
     MessageModel? msg = messageObject.item1;
-    bool isDataBinery = messageObject.item2;
+    bool isDataBinary = messageObject.item2;
+    String messageLocalPath = messageObject.item3;
 
     if (msg == null) {
       return;
@@ -39,8 +41,8 @@ class SendMessage {
 
     Map<String, dynamic> messageJson = msg.toJson();
     SendDataChannelMessage(messagingConnection: messagingConnection).execute(
-      channelMessageType:
-          ChannelMessageType.message(message: messageJson, isDataBinery: isDataBinery),
+      channelMessageType: ChannelMessageType.message(
+          message: messageJson, isDataBinary: isDataBinary, messageLocalPath: messageLocalPath),
     );
   }
 }
@@ -84,7 +86,6 @@ class SendMessageType {
       {required String path,
       required ImageMetadata metadata,
       required ReplyToModel? replyTo,
-      required List<int> intlist,
       required String chatId}) = SendImageMessage;
 
   factory SendMessageType.video(
@@ -150,14 +151,12 @@ class SendLiveLocationMessage extends SendMessageType {
 class SendImageMessage extends SendMessageType {
   final String path;
   final ImageMetadata metadata;
-  final List<int> intlist;
 
   SendImageMessage({
     required this.path,
     required this.metadata,
     required super.replyTo,
     required super.chatId,
-    required this.intlist,
   });
 }
 

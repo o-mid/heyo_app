@@ -30,6 +30,7 @@ class FileMessageModel extends MessageModel {
   FileMessageModel copyWith({
     String? messageId,
     MessageStatus? status,
+    FileMetaData? metadata,
     bool? isLocal,
     MessageContentType? type,
     DateTime? timestamp,
@@ -40,7 +41,7 @@ class FileMessageModel extends MessageModel {
     bool clearReply = false,
   }) {
     return FileMessageModel(
-      metadata: metadata,
+      metadata: metadata ?? this.metadata,
       messageId: messageId ?? this.messageId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,

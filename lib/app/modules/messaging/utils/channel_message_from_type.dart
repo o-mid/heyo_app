@@ -2,9 +2,10 @@ import 'package:heyo/app/modules/messaging/usecases/send_data_channel_message_us
 import 'package:tuple/tuple.dart';
 import '../models/data_channel_message_model.dart';
 
-Tuple2<DataChannelMessageModel?, bool> channelmessageFromType(
+Tuple3<DataChannelMessageModel?, bool, String> channelmessageFromType(
     {required ChannelMessageType channelMessageType}) {
-  bool isDataBinery = false;
+  bool isDataBinary = false;
+  String messageLocalPath = '';
   DataChannelMessageModel? msg;
   switch (channelMessageType.runtimeType) {
     case SendMessage:
@@ -12,7 +13,8 @@ Tuple2<DataChannelMessageModel?, bool> channelmessageFromType(
         message: (channelMessageType as SendMessage).message,
         dataChannelMessagetype: DataChannelMessageType.message,
       );
-      isDataBinery = (channelMessageType).isDataBinery;
+      isDataBinary = (channelMessageType).isDataBinary;
+      messageLocalPath = (channelMessageType).messageLocalPath;
       break;
 
     case DeleteMessage:
@@ -36,5 +38,5 @@ Tuple2<DataChannelMessageModel?, bool> channelmessageFromType(
       );
   }
 
-  return Tuple2(msg, isDataBinery);
+  return Tuple3(msg, isDataBinary, messageLocalPath);
 }

@@ -13,14 +13,16 @@ import '../data/models/messages/file_message_model.dart';
 
 import '../data/usecases/send_message_usecase.dart';
 
-Tuple2<MessageModel?, bool> messageFromType({required SendMessageType messageType}) {
-  bool isDataBinery = false;
+Tuple3<MessageModel?, bool, String> messageFromType({required SendMessageType messageType}) {
+  bool isDataBinary = false;
+  String messageLocalPath = "";
   var uuid = const Uuid();
   final id = uuid.v4();
   final timestamp = DateTime.now();
   const senderName = ""; // Todo: get sender name from user repo
   const senderAvatar = ""; // Todo: get sender avatar from user repo
   MessageModel? msg;
+
   switch (messageType.runtimeType) {
     case SendTextMessage:
       msg = TextMessageModel(
@@ -50,6 +52,9 @@ Tuple2<MessageModel?, bool> messageFromType({required SendMessageType messageTyp
         status: MessageStatus.sending,
         isFromMe: true,
       );
+      isDataBinary = true;
+      messageLocalPath = (messageType).path;
+
       break;
     case SendLocationMessage:
       msg = LocationMessageModel(
@@ -84,7 +89,6 @@ Tuple2<MessageModel?, bool> messageFromType({required SendMessageType messageTyp
     case SendImageMessage:
       msg = ImageMessageModel(
         url: (messageType as SendImageMessage).path,
-        intlist: (messageType).intlist,
         metadata: (messageType).metadata,
         isLocal: true,
         messageId: id,
@@ -96,7 +100,9 @@ Tuple2<MessageModel?, bool> messageFromType({required SendMessageType messageTyp
         status: MessageStatus.sending,
         isFromMe: true,
       );
-      isDataBinery = true;
+
+      messageLocalPath = (messageType).path;
+      isDataBinary = true;
       break;
     case SendVideoMessage:
       msg = VideoMessageModel(
@@ -111,6 +117,8 @@ Tuple2<MessageModel?, bool> messageFromType({required SendMessageType messageTyp
         status: MessageStatus.sending,
         isFromMe: true,
       );
+      isDataBinary = true;
+      messageLocalPath = (messageType).path;
       break;
     case SendFileMessage:
       msg = FileMessageModel(
@@ -124,8 +132,10 @@ Tuple2<MessageModel?, bool> messageFromType({required SendMessageType messageTyp
         status: MessageStatus.sending,
         isFromMe: true,
       );
+      isDataBinary = true;
+      messageLocalPath = (messageType).metadata.path;
       break;
   }
 
-  return Tuple2(msg, isDataBinery);
+  return Tuple3(msg, isDataBinary, messageLocalPath);
 }

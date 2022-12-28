@@ -155,6 +155,7 @@ class ShareableQrView extends GetView<ShareableQRController> {
                   CircleIconButton(
                     size: 24.w,
                     onPressed: () async {
+                      print("Core ID : $coreId");
                       await Clipboard.setData(ClipboardData(text: coreId));
                       Get.rawSnackbar(
                         messageText: Text(
