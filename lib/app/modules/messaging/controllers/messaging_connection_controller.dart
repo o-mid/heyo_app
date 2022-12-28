@@ -238,6 +238,7 @@ class MessagingConnectionController extends GetxController {
   Future<void> startMessaging({
     required String remoteId,
   }) async {
+    // make the webrtc connection and set the session to current session
     String? selfCoreId = await accountInfo.getCoreId();
 
     MessageSession session =
@@ -294,6 +295,7 @@ class MessagingConnectionController extends GetxController {
   }
 
   initMessagingConnection({required String remoteId}) async {
+    //checks to see if we have the current session and if we are connected
     bool isConnectionAvailable = connectionStatus.value == ConnectionStatus.CONNECTED ||
         connectionStatus.value == ConnectionStatus.RINGING;
 

@@ -84,7 +84,7 @@ class MessagesController extends GetxController {
     _globalMessageController.reset();
     textController = _globalMessageController.textController;
     scrollController = _globalMessageController.scrollController;
-
+    // initialize the messageing Connection
     await _initDataChannel();
     _getMessages();
 
