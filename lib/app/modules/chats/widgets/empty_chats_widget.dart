@@ -16,19 +16,19 @@ class EmptyChatsWidget extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 67),
+            const SizedBox(height: 67),
             _buildEmptyChats(),
-            SizedBox(height: 76),
+            const SizedBox(height: 76),
             Text(
               LocaleKeys.HomePage_Chats_emptyState_title.tr,
               style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
             ),
-            SizedBox(height: 9),
+            const SizedBox(height: 9),
             Text(
               LocaleKeys.HomePage_Chats_emptyState_subtitle.tr,
               style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             ElevatedButton(
               // Todo
               onPressed: () {},
@@ -40,13 +40,13 @@ class EmptyChatsWidget extends StatelessWidget {
                 width: 80,
                 child: Text(
                   LocaleKeys.HomePage_Chats_emptyState_invite.tr,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: COLORS.kGreenMainColor,
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
           ],
         ),
       ),
@@ -62,7 +62,7 @@ class EmptyChatsWidget extends StatelessWidget {
           _buildSenderChat(
             width: 68,
             profile: Assets.png.profile2,
-            child: Text(
+            child: const Text(
               "🍕 😊",
               textAlign: TextAlign.center,
             ),
@@ -77,8 +77,8 @@ class EmptyChatsWidget extends StatelessWidget {
                 Container(
                   width: 6,
                   height: 6,
-                  margin: EdgeInsets.only(right: 4),
-                  decoration: BoxDecoration(
+                  margin: const EdgeInsets.only(right: 4),
+                  decoration: const BoxDecoration(
                     color: Color(0xffd2d2d2),
                     shape: BoxShape.circle,
                   ),
@@ -86,8 +86,8 @@ class EmptyChatsWidget extends StatelessWidget {
                 Container(
                   width: 6,
                   height: 6,
-                  margin: EdgeInsets.only(right: 4, bottom: 4),
-                  decoration: BoxDecoration(
+                  margin: const EdgeInsets.only(right: 4, bottom: 4),
+                  decoration: const BoxDecoration(
                     color: COLORS.kDarkBlueColor,
                     shape: BoxShape.circle,
                   ),
@@ -95,7 +95,7 @@ class EmptyChatsWidget extends StatelessWidget {
                 Container(
                   width: 6,
                   height: 6,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xffd2d2d2),
                     shape: BoxShape.circle,
                   ),
@@ -119,9 +119,9 @@ class EmptyChatsWidget extends StatelessWidget {
       child: Row(
         children: [
           _buildAvatar(profile),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             width: width,
             height: 32,
             decoration: BoxDecoration(
@@ -145,9 +145,9 @@ class EmptyChatsWidget extends StatelessWidget {
       margin: EdgeInsets.only(bottom: bottomMargin),
       child: Row(
         children: [
-          Spacer(),
+          const Spacer(),
           Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             width: width,
             height: 32,
             decoration: BoxDecoration(
@@ -156,7 +156,7 @@ class EmptyChatsWidget extends StatelessWidget {
             ),
             child: child,
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           _buildAvatar(profile),
         ],
       ),
