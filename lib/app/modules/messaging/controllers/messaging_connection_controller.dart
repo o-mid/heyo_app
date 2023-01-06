@@ -77,29 +77,7 @@ class MessagingConnectionController extends GetxController {
 
       switch (status) {
         case ConnectionStatus.RINGING:
-          await createUserChatModel(sessioncid: session.cid);
-          ChatModel? userChatModel;
-          await chatHistoryRepo.getOneChat(session.cid).then((value) => userChatModel = value);
-
-          await acceptMessageConnection(session);
-          connectionStatus.value = ConnectionStatus.CONNECTED;
-          applyConnectivityStatus(ConnectionStatus.CONNECTED);
-          print(userChatModel);
-          if (userChatModel != null) {
-            Get.toNamed(
-              Routes.MESSAGES,
-              arguments: MessagesViewArgumentsModel(
-                session: session,
-                user: UserModel(
-                  icon: userChatModel!.icon,
-                  name: userChatModel!.name,
-                  walletAddress: session.cid,
-                  isOnline: userChatModel!.isOnline,
-                  chatModel: userChatModel!,
-                ),
-              ),
-            );
-          }
+          await handleConnectionRinging(session: session);
 
           break;
 
@@ -261,7 +239,7 @@ class MessagingConnectionController extends GetxController {
   }
 
   Future acceptMessageConnection(MessageSession session) async {
-    messaging.accept(
+    await messaging.accept(
       session.sid,
     );
   }
@@ -295,8 +273,8 @@ class MessagingConnectionController extends GetxController {
         lastMessage: "",
         isVerified: true,
         timestamp: DateTime.now());
-
-    if (await chatHistoryRepo.getOneChat(userChatModel.id) != null) {
+    final isChatAvailable = await chatHistoryRepo.getOneChat(userChatModel.id);
+    if (isChatAvailable == null) {
       await chatHistoryRepo.addChatToHistory(userChatModel);
     } else {
       await chatHistoryRepo.updateOneChat(userChatModel);
@@ -308,7 +286,7 @@ class MessagingConnectionController extends GetxController {
     bool isConnectionAvailable = connectionStatus.value == ConnectionStatus.CONNECTED ||
         connectionStatus.value == ConnectionStatus.RINGING;
 
-    if (currentSession?.cid != remoteId || !isConnectionAvailable) {
+    if (currentSession?.cid != remoteId || isConnectionAvailable == false) {
       await startDataChannelMessaging(remoteId: remoteId);
     } else {
       channelMessageListener();
@@ -350,5 +328,37 @@ class MessagingConnectionController extends GetxController {
     await Future.delayed(const Duration(seconds: 2), () {
       dataChannelStatus.value = DataChannelConnectivityStatus.online;
     });
+  }
+
+  handleConnectionRinging({required MessageSession session}) async {
+    await createUserChatModel(sessioncid: session.cid);
+    ChatModel? userChatModel;
+    await chatHistoryRepo.getOneChat(session.cid).then((value) {
+      print(value);
+      userChatModel = value;
+    });
+
+    await acceptMessageConnection(session);
+
+    connectionStatus.value = ConnectionStatus.CONNECTED;
+
+    applyConnectivityStatus(ConnectionStatus.CONNECTED);
+
+    print(userChatModel);
+    if (userChatModel != null) {
+      Get.toNamed(
+        Routes.MESSAGES,
+        arguments: MessagesViewArgumentsModel(
+          session: session,
+          user: UserModel(
+            icon: userChatModel!.icon,
+            name: userChatModel!.name,
+            walletAddress: session.cid,
+            isOnline: userChatModel!.isOnline,
+            chatModel: userChatModel!,
+          ),
+        ),
+      );
+    }
   }
 }

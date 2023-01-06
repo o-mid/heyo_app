@@ -23,7 +23,7 @@ class ChatsController extends GetxController {
     chats.clear();
     chats.value = await chatHistoryRepo.getAllChats();
     Stream<List<ChatModel>> chatsStream = await chatHistoryRepo.getChatsStream();
-    addMockChats();
+    //addMockChats();
     _chatsStreamSubscription = chatsStream.listen((newChats) {
       chats.value = newChats;
       chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
