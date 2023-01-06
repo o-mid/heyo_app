@@ -77,25 +77,29 @@ class MessagingConnectionController extends GetxController {
 
       switch (status) {
         case ConnectionStatus.RINGING:
-          ChatModel userChatModel = setUserChatModel(sessionSid: session.cid);
+          await createUserChatModel(sessioncid: session.cid);
+          ChatModel? userChatModel;
+          await chatHistoryRepo.getOneChat(session.cid).then((value) => userChatModel = value);
 
-          await chatHistoryRepo.addChatToHistory(userChatModel);
           await acceptMessageConnection(session);
           connectionStatus.value = ConnectionStatus.CONNECTED;
           applyConnectivityStatus(ConnectionStatus.CONNECTED);
-          Get.toNamed(
-            Routes.MESSAGES,
-            arguments: MessagesViewArgumentsModel(
-              session: session,
-              user: UserModel(
-                icon: userChatModel.icon,
-                name: userChatModel.name,
-                walletAddress: session.cid,
-                isOnline: userChatModel.isOnline,
-                chatModel: userChatModel,
+          print(userChatModel);
+          if (userChatModel != null) {
+            Get.toNamed(
+              Routes.MESSAGES,
+              arguments: MessagesViewArgumentsModel(
+                session: session,
+                user: UserModel(
+                  icon: userChatModel!.icon,
+                  name: userChatModel!.name,
+                  walletAddress: session.cid,
+                  isOnline: userChatModel!.isOnline,
+                  chatModel: userChatModel!,
+                ),
               ),
-            ),
-          );
+            );
+          }
 
           break;
 
@@ -245,8 +249,7 @@ class MessagingConnectionController extends GetxController {
         await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
     currentSession = session;
 
-    ChatModel userChatModel = setUserChatModel(sessionSid: session.cid);
-    await chatHistoryRepo.addChatToHistory(userChatModel);
+    await createUserChatModel(sessioncid: session.cid);
   }
 
   void sendTextMessage({required String text}) async {
@@ -282,16 +285,22 @@ class MessagingConnectionController extends GetxController {
     };
   }
 
-  ChatModel setUserChatModel({required String sessionSid}) {
-    return ChatModel(
-        id: sessionSid,
+  createUserChatModel({required String sessioncid}) async {
+    ChatModel userChatModel = ChatModel(
+        id: sessioncid,
         isOnline: true,
         name:
-            "${sessionSid.characters.take(4).string}...${sessionSid.characters.takeLast(4).string}",
+            "${sessioncid.characters.take(4).string}...${sessioncid.characters.takeLast(4).string}",
         icon: getMockIconUrl(),
         lastMessage: "",
         isVerified: true,
         timestamp: DateTime.now());
+
+    if (await chatHistoryRepo.getOneChat(userChatModel.id) != null) {
+      await chatHistoryRepo.addChatToHistory(userChatModel);
+    } else {
+      await chatHistoryRepo.updateOneChat(userChatModel);
+    }
   }
 
   initMessagingConnection({required String remoteId}) async {
