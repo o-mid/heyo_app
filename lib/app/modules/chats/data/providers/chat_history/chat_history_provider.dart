@@ -62,6 +62,24 @@ class ChatHistoryProvider implements ChatHistoryLocalAbstractProvider {
   }
 
   @override
+  Future<void> updateOneChat(ChatModel chat) async {
+    final records = await _store.find(
+      await _db,
+      finder: Finder(filter: Filter.equals(ChatModel.idSerializedName, chat.id)),
+    );
+
+    if (records.isEmpty) {
+      insert(chat);
+    } else {
+      await _store.update(
+        await _db,
+        chat.toJson(),
+        finder: Finder(filter: Filter.equals(ChatModel.idSerializedName, chat.id)),
+      );
+    }
+  }
+
+  @override
   Future<List<ChatModel>> getChatsFromUserId(String userId) async {
     final records = await _store.find(
       await _db,

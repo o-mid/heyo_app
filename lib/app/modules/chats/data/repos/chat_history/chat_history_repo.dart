@@ -42,4 +42,9 @@ class ChatHistoryLocalRepo implements ChatHistoryLocalAbstractRepo {
   Future<Stream<List<ChatModel>>> getChatsStream() {
     return chatHistoryProvider.getChatsStream();
   }
+
+  @override
+  Future<void> updateOneChat(ChatModel chat) async {
+    await chatHistoryProvider.updateOneChat(chat);
+  }
 }

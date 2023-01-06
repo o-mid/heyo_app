@@ -14,4 +14,6 @@ abstract class ChatHistoryLocalAbstractRepo {
   Future<void> deleteOneChat(String chatId);
 
   Future<Stream<List<ChatModel>>> getChatsStream();
+
+  Future<void> updateOneChat(ChatModel chat);
 }

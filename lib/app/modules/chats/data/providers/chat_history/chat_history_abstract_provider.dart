@@ -14,4 +14,6 @@ abstract class ChatHistoryLocalAbstractProvider {
   Future<ChatModel?> getOneChat(String chatId);
 
   Future<Stream<List<ChatModel>>> getChatsStream();
+
+  Future<void> updateOneChat(ChatModel chat);
 }
