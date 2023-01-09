@@ -22,13 +22,10 @@ class ChatsController extends GetxController {
   void init() async {
     chats.clear();
     chats.value = await chatHistoryRepo.getAllChats();
-    Stream<List<ChatModel>> chatsStream = await chatHistoryRepo.getChatsStream();
-    //addMockChats();
-    _chatsStreamSubscription = chatsStream.listen((newChats) {
-      chats.value = newChats;
-      chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-      chats.refresh();
-    });
+
+    await listenToChatsStream();
+
+    // addMockChats();
   }
 
   @override
@@ -42,7 +39,17 @@ class ChatsController extends GetxController {
     super.onClose();
   }
 
-  addMockChats() async {
+  listenToChatsStream() async {
+    Stream<List<ChatModel>> chatsStream = await chatHistoryRepo.getChatsStream();
+    _chatsStreamSubscription = chatsStream.listen((newChats) {
+      chats.value = newChats;
+      chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+      chats.refresh();
+    });
+  }
+
+// add a single mock chats to the chat history with the given duration
+  addMockChats({Duration duration = const Duration(seconds: 5)}) async {
     List<ChatModel> mockchats = [
       ChatModel(
         id: '1',
@@ -89,7 +96,7 @@ class ChatsController extends GetxController {
     ];
 
     for (int i = 0; i < mockchats.length; i++) {
-      await Future.delayed(const Duration(seconds: 6), () {
+      await Future.delayed(duration, () {
         chatHistoryRepo.addChatToHistory(mockchats[i].copyWith(
             timestamp: DateTime.now(),
             lastMessage: "${DateTime.now()}",

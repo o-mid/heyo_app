@@ -332,7 +332,9 @@ class MessagingConnectionController extends GetxController {
 
   handleConnectionRinging({required MessageSession session}) async {
     await createUserChatModel(sessioncid: session.cid);
+
     ChatModel? userChatModel;
+
     await chatHistoryRepo.getOneChat(session.cid).then((value) {
       print(value);
       userChatModel = value;
@@ -344,7 +346,6 @@ class MessagingConnectionController extends GetxController {
 
     applyConnectivityStatus(ConnectionStatus.CONNECTED);
 
-    print(userChatModel);
     if (userChatModel != null) {
       Get.toNamed(
         Routes.MESSAGES,
