@@ -36,10 +36,9 @@ class MessagesFooter extends StatelessWidget {
             child: controller.isInRecordMode.isTrue
                 ? const VoiceRecorderWidget()
                 : Container(
-                    constraints: BoxConstraints(minHeight: 90.h),
-                    padding: EdgeInsets.all(18),
+                    height: 90.h,
+                    // padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 0),
                     decoration: const BoxDecoration(
-                      color: COLORS.kComposeMessageBackgroundColor,
                       border: Border(
                         top: BorderSide(
                           width: 1,
@@ -47,9 +46,7 @@ class MessagesFooter extends StatelessWidget {
                         ),
                       ),
                     ),
-                    child: ScaleAnimatedSwitcher(
-                      child: _buildActiveBox(controller),
-                    ),
+                    child: ScaleAnimatedSwitcher(child: _buildActiveBox(controller)),
                   ),
           ),
 
@@ -61,8 +58,7 @@ class MessagesFooter extends StatelessWidget {
               child: EmojiPicker(
                 onEmojiSelected: (_, Emoji emoji) =>
                     controller.appendAfterCursorPosition(emoji.emoji),
-                onBackspacePressed:
-                    controller.removeCharacterBeforeCursorPosition,
+                onBackspacePressed: controller.removeCharacterBeforeCursorPosition,
               ),
             ),
           ),
@@ -75,8 +71,7 @@ class MessagesFooter extends StatelessWidget {
     if (controller.selectedMessages.isNotEmpty) {
       return MessageSelectionOptions(
         showReply: controller.selectedMessages.length == 1,
-        showCopy:
-            !controller.selectedMessages.any((m) => m is! TextMessageModel),
+        showCopy: !controller.selectedMessages.any((m) => m is! TextMessageModel),
         selectedMessages: controller.selectedMessages,
       );
     }
