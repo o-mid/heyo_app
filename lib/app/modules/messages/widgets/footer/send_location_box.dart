@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
+import 'package:heyo/app/modules/messages/widgets/footer/send_message_button.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -57,12 +58,11 @@ class SendLocationBox extends StatelessWidget {
                 ),
               ),
               CustomSizes.largeSizedBoxWidth,
-              GestureDetector(
+              SendMessageButton(
                 onTap: () {
                   controller.sendLocationMessage();
                 },
-                child: Assets.svg.sendIcon.svg(),
-              ),
+              )
             ],
           ),
         ],
