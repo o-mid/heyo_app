@@ -69,6 +69,7 @@ class ComposeMessageBox extends StatelessWidget {
                     style: TEXTSTYLES.kBodyBasic.copyWith(
                       color: COLORS.kBlackColor,
                     ),
+                    focusNode: controller.textFocusNode,
                   ),
                 ),
                 CustomSizes.largeSizedBoxWidth,

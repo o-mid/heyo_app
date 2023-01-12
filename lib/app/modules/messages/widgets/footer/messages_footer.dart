@@ -51,14 +51,26 @@ class MessagesFooter extends StatelessWidget {
           ),
 
           // Emoji Picker (Hidden by default)
+
           Offstage(
             offstage: !controller.showEmojiPicker.value,
-            child: SizedBox(
-              height: 250,
-              child: EmojiPicker(
-                onEmojiSelected: (_, Emoji emoji) =>
-                    controller.appendAfterCursorPosition(emoji.emoji),
-                onBackspacePressed: controller.removeCharacterBeforeCursorPosition,
+            child: WillPopScope(
+              onWillPop: () async {
+                if (controller.showEmojiPicker.value) {
+                  controller.showEmojiPicker.value = false;
+                  FocusScope.of(context).requestFocus(controller.textFocusNode);
+
+                  return false;
+                }
+                return true;
+              },
+              child: SizedBox(
+                height: 250,
+                child: EmojiPicker(
+                  onEmojiSelected: (_, Emoji emoji) =>
+                      controller.appendAfterCursorPosition(emoji.emoji),
+                  onBackspacePressed: controller.removeCharacterBeforeCursorPosition,
+                ),
               ),
             ),
           ),

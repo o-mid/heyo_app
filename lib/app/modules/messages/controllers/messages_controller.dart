@@ -74,12 +74,14 @@ class MessagesController extends GetxController {
   late StreamSubscription _messagesStreamSubscription;
   final JsonDecoder _decoder = const JsonDecoder();
   late String sessionId;
-
+  late KeyboardVisibilityController keyboardController;
+  final FocusNode textFocusNode = FocusNode();
   @override
   Future<void> onInit() async {
     super.onInit();
     args = Get.arguments as MessagesViewArgumentsModel;
     chatId = args.user.chatModel.id;
+    keyboardController = KeyboardVisibilityController();
 
     _globalMessageController.reset();
     textController = _globalMessageController.textController;
@@ -128,10 +130,8 @@ class MessagesController extends GetxController {
 
   void _handleKeyboardVisibilityChanges() {
     // Close emoji picker when keyboard opens
-    final keyboardVisibilityController = KeyboardVisibilityController();
-
     _globalMessageController.streamSubscriptions
-        .add(keyboardVisibilityController.onChange.listen((bool visible) {
+        .add(keyboardController.onChange.listen((bool visible) {
       if (visible) {
         showEmojiPicker.value = false;
 
