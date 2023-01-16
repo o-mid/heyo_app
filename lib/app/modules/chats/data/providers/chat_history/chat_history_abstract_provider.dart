@@ -9,11 +9,11 @@ abstract class ChatHistoryLocalAbstractProvider {
 
   Future<void> deleteAll();
 
-  Future<void> deleteOne(String chatId);
+  Future<void> deleteChat(String chatId);
 
-  Future<ChatModel?> getOneChat(String chatId);
+  Future<ChatModel?> getChat(String chatId);
 
   Future<Stream<List<ChatModel>>> getChatsStream();
 
-  Future<void> updateOneChat(ChatModel chat);
+  Future<void> updateChat(ChatModel chat);
 }

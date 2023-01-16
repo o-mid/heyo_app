@@ -5,15 +5,15 @@ abstract class ChatHistoryLocalAbstractRepo {
 
   Future<List<ChatModel>> getAllChats();
 
-  Future<ChatModel?> getOneChat(String chatId);
+  Future<ChatModel?> getChat(String chatId);
 
   Future<List<ChatModel>> getChatsFromUserId(String userId);
 
   Future<void> deleteAllChats();
 
-  Future<void> deleteOneChat(String chatId);
+  Future<void> deleteChat(String chatId);
 
   Future<Stream<List<ChatModel>>> getChatsStream();
 
-  Future<void> updateOneChat(ChatModel chat);
+  Future<void> updateChat(ChatModel chat);
 }

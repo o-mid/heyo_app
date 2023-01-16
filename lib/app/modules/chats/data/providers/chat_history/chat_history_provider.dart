@@ -27,7 +27,7 @@ class ChatHistoryProvider implements ChatHistoryLocalAbstractProvider {
   }
 
   @override
-  Future<void> deleteOne(String chatId) async {
+  Future<void> deleteChat(String chatId) async {
     await _store.delete(
       await _db,
       finder: Finder(
@@ -47,7 +47,7 @@ class ChatHistoryProvider implements ChatHistoryLocalAbstractProvider {
   }
 
   @override
-  Future<ChatModel?> getOneChat(String chatId) async {
+  Future<ChatModel?> getChat(String chatId) async {
     final records = await _store.find(
       await _db,
       finder: Finder(filter: Filter.equals(ChatModel.idSerializedName, chatId)),
@@ -62,7 +62,7 @@ class ChatHistoryProvider implements ChatHistoryLocalAbstractProvider {
   }
 
   @override
-  Future<void> updateOneChat(ChatModel chat) async {
+  Future<void> updateChat(ChatModel chat) async {
     final records = await _store.find(
       await _db,
       finder: Finder(filter: Filter.equals(ChatModel.idSerializedName, chat.id)),

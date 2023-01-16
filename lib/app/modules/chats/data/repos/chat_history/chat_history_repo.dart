@@ -19,8 +19,8 @@ class ChatHistoryLocalRepo implements ChatHistoryLocalAbstractRepo {
   }
 
   @override
-  Future<ChatModel?> getOneChat(String chatId) {
-    return chatHistoryProvider.getOneChat(chatId);
+  Future<ChatModel?> getChat(String chatId) {
+    return chatHistoryProvider.getChat(chatId);
   }
 
   @override
@@ -29,8 +29,8 @@ class ChatHistoryLocalRepo implements ChatHistoryLocalAbstractRepo {
   }
 
   @override
-  Future<void> deleteOneChat(String chatId) async {
-    await chatHistoryProvider.deleteOne(chatId);
+  Future<void> deleteChat(String chatId) async {
+    await chatHistoryProvider.deleteChat(chatId);
   }
 
   @override
@@ -44,7 +44,7 @@ class ChatHistoryLocalRepo implements ChatHistoryLocalAbstractRepo {
   }
 
   @override
-  Future<void> updateOneChat(ChatModel chat) async {
-    await chatHistoryProvider.updateOneChat(chat);
+  Future<void> updateChat(ChatModel chat) async {
+    await chatHistoryProvider.updateChat(chat);
   }
 }

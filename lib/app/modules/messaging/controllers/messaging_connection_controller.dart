@@ -273,11 +273,11 @@ class MessagingConnectionController extends GetxController {
         lastMessage: "",
         isVerified: true,
         timestamp: DateTime.now());
-    final isChatAvailable = await chatHistoryRepo.getOneChat(userChatModel.id);
+    final isChatAvailable = await chatHistoryRepo.getChat(userChatModel.id);
     if (isChatAvailable == null) {
       await chatHistoryRepo.addChatToHistory(userChatModel);
     } else {
-      await chatHistoryRepo.updateOneChat(userChatModel);
+      await chatHistoryRepo.updateChat(userChatModel);
     }
   }
 
@@ -335,7 +335,7 @@ class MessagingConnectionController extends GetxController {
 
     ChatModel? userChatModel;
 
-    await chatHistoryRepo.getOneChat(session.cid).then((value) {
+    await chatHistoryRepo.getChat(session.cid).then((value) {
       print(value);
       userChatModel = value;
     });
