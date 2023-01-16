@@ -7,7 +7,7 @@ import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:flutter_p2p_communicator/model/transfer_model.dart';
 import 'package:collection/src/iterable_extensions.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/p2p_node/extensions/string.extension.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 
 import 'data/account/account_info.dart';
 import 'p2p_state.dart';
