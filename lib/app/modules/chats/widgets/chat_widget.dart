@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
@@ -7,6 +8,10 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/app/modules/shared/widgets/notification_count_badge.dart';
 import 'package:heyo/generated/assets.gen.dart';
+import 'package:intl/intl.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/date.extension.dart';
+
+import '../../../../generated/locales.g.dart';
 
 class ChatWidget extends StatelessWidget {
   final ChatModel chat;
@@ -47,11 +52,11 @@ class ChatWidget extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    chat.timestamp.difference(DateTime.now()).inDays == 0
-                        ? '${chat.timestamp.hour}:${chat.timestamp.minute}'
-                        : chat.timestamp.difference(DateTime.now()).inDays == 1
-                            ? 'Yesterday'
-                            : '${chat.timestamp.day}/${chat.timestamp.month}/${chat.timestamp.year}',
+                    DateHelpers(chat.timestamp).isToday()
+                        ? DateFormat.Hm().format(chat.timestamp)
+                        : DateHelpers(chat.timestamp).isYesterday()
+                            ? LocaleKeys.yesterday.tr
+                            : DateFormat('d/m/yy').format(chat.timestamp),
                     style: TextStyle(
                       fontFamily: FONTS.interFamily,
                       fontWeight: FONTS.Medium,

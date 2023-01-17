@@ -15,33 +15,17 @@ class ChatsController extends GetxController {
   final chats = <ChatModel>[].obs;
   @override
   void onInit() {
-    //_addMockData();
     init();
     super.onInit();
   }
 
   void init() async {
+    chats.clear();
     chats.value = await chatHistoryRepo.getAllChats();
-    _chatsStreamSubscription = (await chatHistoryRepo.getChatsStream()).listen((newChats) {
-      for (int i = 0; i < chats.length; i++) {
-        if (!newChats.any((chat) => chat.id == chats[i].id)) {
-          chats.removeAt(i);
-        }
-      }
 
-      // add new calls
-      for (int i = 0; i < newChats.length; i++) {
-        if (!chats.any((chat) => chat.id == newChats[i].id)) {
-          chats.insert(i, newChats[i]);
-          animatedListKey.currentState?.insertItem(i);
-        }
-      }
+    await listenToChatsStream();
 
-      // update calls to latest changes
-      for (int i = 0; i < newChats.length; i++) {
-        chats[i] = newChats[i];
-      }
-    });
+    // addMockChats();
   }
 
   @override
@@ -53,5 +37,71 @@ class ChatsController extends GetxController {
   void onClose() {
     _chatsStreamSubscription.cancel();
     super.onClose();
+  }
+
+  listenToChatsStream() async {
+    Stream<List<ChatModel>> chatsStream = await chatHistoryRepo.getChatsStream();
+    _chatsStreamSubscription = chatsStream.listen((newChats) {
+      chats.value = newChats;
+      chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+      chats.refresh();
+    });
+  }
+
+// add a single mock chats to the chat history with the given duration
+  addMockChats({Duration duration = const Duration(seconds: 5)}) async {
+    List<ChatModel> mockchats = [
+      ChatModel(
+        id: '1',
+        isOnline: false,
+        icon: "",
+        name: "John ",
+        lastMessage: "",
+        timestamp: DateTime.now(),
+      ),
+      ChatModel(
+        id: '2',
+        isOnline: true,
+        icon: "",
+        name: "emmy",
+        lastMessage: "",
+        timestamp: DateTime.now(),
+      ),
+      ChatModel(
+        id: '3',
+        isOnline: false,
+        icon: "",
+        name: "dow",
+        lastMessage: "",
+        isVerified: true,
+        timestamp: DateTime.now(),
+      ),
+      ChatModel(
+        id: '4',
+        isOnline: true,
+        icon: "",
+        name: "docs",
+        lastMessage: "",
+        timestamp: DateTime.now(),
+      ),
+      ChatModel(
+        id: '5',
+        isOnline: false,
+        icon: "",
+        name: "joseef boran",
+        lastMessage: "",
+        isVerified: true,
+        timestamp: DateTime.now(),
+      ),
+    ];
+
+    for (int i = 0; i < mockchats.length; i++) {
+      await Future.delayed(duration, () {
+        chatHistoryRepo.addChatToHistory(mockchats[i].copyWith(
+            timestamp: DateTime.now(),
+            lastMessage: "${DateTime.now()}",
+            icon: "https://avatars.githubusercontent.com/u/664${i}336?v=4"));
+      });
+    }
   }
 }

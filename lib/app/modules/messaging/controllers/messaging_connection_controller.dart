@@ -77,25 +77,7 @@ class MessagingConnectionController extends GetxController {
 
       switch (status) {
         case ConnectionStatus.RINGING:
-          ChatModel userChatModel = setUserChatModel(sessionSid: session.cid);
-
-          await chatHistoryRepo.addChatToHistory(userChatModel);
-          await acceptMessageConnection(session);
-          connectionStatus.value = ConnectionStatus.CONNECTED;
-          applyConnectivityStatus(ConnectionStatus.CONNECTED);
-          Get.toNamed(
-            Routes.MESSAGES,
-            arguments: MessagesViewArgumentsModel(
-              session: session,
-              user: UserModel(
-                icon: userChatModel.icon,
-                name: userChatModel.name,
-                walletAddress: session.cid,
-                isOnline: userChatModel.isOnline,
-                chatModel: userChatModel,
-              ),
-            ),
-          );
+          await handleConnectionRinging(session: session);
 
           break;
 
@@ -245,8 +227,7 @@ class MessagingConnectionController extends GetxController {
         await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
     currentSession = session;
 
-    ChatModel userChatModel = setUserChatModel(sessionSid: session.cid);
-    await chatHistoryRepo.addChatToHistory(userChatModel);
+    await createUserChatModel(sessioncid: session.cid);
   }
 
   void sendTextMessage({required String text}) async {
@@ -258,7 +239,7 @@ class MessagingConnectionController extends GetxController {
   }
 
   Future acceptMessageConnection(MessageSession session) async {
-    messaging.accept(
+    await messaging.accept(
       session.sid,
     );
   }
@@ -282,16 +263,22 @@ class MessagingConnectionController extends GetxController {
     };
   }
 
-  ChatModel setUserChatModel({required String sessionSid}) {
-    return ChatModel(
-        id: sessionSid,
+  createUserChatModel({required String sessioncid}) async {
+    ChatModel userChatModel = ChatModel(
+        id: sessioncid,
         isOnline: true,
         name:
-            "${sessionSid.characters.take(4).string}...${sessionSid.characters.takeLast(4).string}",
+            "${sessioncid.characters.take(4).string}...${sessioncid.characters.takeLast(4).string}",
         icon: getMockIconUrl(),
         lastMessage: "",
         isVerified: true,
         timestamp: DateTime.now());
+    final isChatAvailable = await chatHistoryRepo.getChat(userChatModel.id);
+    if (isChatAvailable == null) {
+      await chatHistoryRepo.addChatToHistory(userChatModel);
+    } else {
+      await chatHistoryRepo.updateChat(userChatModel);
+    }
   }
 
   initMessagingConnection({required String remoteId}) async {
@@ -299,7 +286,7 @@ class MessagingConnectionController extends GetxController {
     bool isConnectionAvailable = connectionStatus.value == ConnectionStatus.CONNECTED ||
         connectionStatus.value == ConnectionStatus.RINGING;
 
-    if (currentSession?.cid != remoteId || !isConnectionAvailable) {
+    if (currentSession?.cid != remoteId || isConnectionAvailable == false) {
       await startDataChannelMessaging(remoteId: remoteId);
     } else {
       channelMessageListener();
@@ -341,5 +328,38 @@ class MessagingConnectionController extends GetxController {
     await Future.delayed(const Duration(seconds: 2), () {
       dataChannelStatus.value = DataChannelConnectivityStatus.online;
     });
+  }
+
+  handleConnectionRinging({required MessageSession session}) async {
+    await createUserChatModel(sessioncid: session.cid);
+
+    ChatModel? userChatModel;
+
+    await chatHistoryRepo.getChat(session.cid).then((value) {
+      print(value);
+      userChatModel = value;
+    });
+
+    await acceptMessageConnection(session);
+
+    connectionStatus.value = ConnectionStatus.CONNECTED;
+
+    applyConnectivityStatus(ConnectionStatus.CONNECTED);
+
+    if (userChatModel != null) {
+      Get.toNamed(
+        Routes.MESSAGES,
+        arguments: MessagesViewArgumentsModel(
+          session: session,
+          user: UserModel(
+            icon: userChatModel!.icon,
+            name: userChatModel!.name,
+            walletAddress: session.cid,
+            isOnline: userChatModel!.isOnline,
+            chatModel: userChatModel!,
+          ),
+        ),
+      );
+    }
   }
 }

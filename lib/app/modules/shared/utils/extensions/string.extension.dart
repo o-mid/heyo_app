@@ -16,6 +16,7 @@ extension ValidateCoreId on String {
 extension Hex on String {
   String getHex() {
     List<int> bytes = utf8.encode(this);
+    //TODO: check with Farzam for having a prefix on hex SDP
     return "0x${bytesToHex(bytes)}";
   }
 

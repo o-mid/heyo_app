@@ -17,14 +17,14 @@ class Web3Keys extends CryptographyKeyGenerator {
 
   @override
   Future<String> generateAddress(String privateKey) async {
-   return XCBPrivateKey.fromHex(privateKey).extractAddress(await web3client.getNetworkId()).hex;
+    return XCBPrivateKey.fromHex(privateKey).extractAddress(await web3client.getNetworkId()).hex;
   }
 
   @override
   Future<String> generateCoreIdFromPriv(String privateKey) async {
     final pub = privateKeyBytesToPublic(hexToBytes(privateKey));
     final addr = publicKeyToAddress(pub, await web3client.getNetworkId());
-    return bytesToHex(addr, include0x: true);
+    return bytesToHex(addr, include0x: false);
   }
 
   @override
@@ -34,14 +34,13 @@ class Web3Keys extends CryptographyKeyGenerator {
   }
 
   @override
-  Future<String> generatePrivateKeysFromMneomonic(List<String> phrases,
-      String pinCode) async {
+  Future<String> generatePrivateKeysFromMneomonic(List<String> phrases, String pinCode) async {
     final _mns = phrases.join(" ");
     final _seed = mnemonicToSeed(_mns, passphrase: pinCode);
 
     //TODO check moji bytesToHex
-    XCBPrivateKey xcbPrivateKey = await XCBPrivateKey.createPrivateKey(
-        bytesToHex(_seed.goldilockKeySeed), 0);
+    XCBPrivateKey xcbPrivateKey =
+        await XCBPrivateKey.createPrivateKey(bytesToHex(_seed.goldilockKeySeed), 0);
     final privateKey = bytesToHex(xcbPrivateKey.privateKey);
 
     return privateKey;
@@ -50,8 +49,7 @@ class Web3Keys extends CryptographyKeyGenerator {
   String _getAesKey(SeedModel _seed) {
     final SHA3Digest sha3digest = SHA3Digest(512);
     sha3digest.reset();
-    final shaRes = sha3digest
-        .process(Uint8List.fromList(utf8.encode(_seed.aesKeySeed.map((byte) {
+    final shaRes = sha3digest.process(Uint8List.fromList(utf8.encode(_seed.aesKeySeed.map((byte) {
       return byte.toRadixString(16).padLeft(2, '0');
     }).join(''))));
     final shaHex = bytesToHex(shaRes);
@@ -64,5 +62,4 @@ class Web3Keys extends CryptographyKeyGenerator {
     final pub = privateKeyBytesToPublic(hexToBytes(privKey));
     return bytesToHex(pub);
   }
-
 }

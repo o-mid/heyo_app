@@ -334,8 +334,8 @@ class Messaging {
   void sendMessage(String message) {
     //da
   }
-  void accept(String sessionId) {
-    var session = _sessions[sessionId];
+  Future<void> accept(String sessionId) async {
+    MessageSession? session = _sessions[sessionId];
     print(sessionId);
     print("${_sessions.keys}");
     print("feafesfse ${session == null}");
@@ -345,6 +345,6 @@ class Messaging {
       return;
     }
 
-    _createAnswer(session, 'data');
+    await _createAnswer(session, 'data');
   }
 }
