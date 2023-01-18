@@ -47,6 +47,7 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/messaging_session.dart';
 import '../../share_files/models/file_model.dart';
+import '../../shared/utils/constants/animations_constant.dart';
 import '../data/usecases/delete_message_usecase.dart';
 import '../data/usecases/update_message_usecase.dart';
 
@@ -107,7 +108,10 @@ class MessagesController extends GetxController {
         (await messagesRepo.getMessagesStream(chatId)).listen((newMessages) {
       messages.value = newMessages;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        jumpToBottom();
+        animateToBottom(
+          duration: ANIMATIONS.receiveMsgDurtion,
+          curve: ANIMATIONS.getAllMsgscurve,
+        );
       });
     });
   }
@@ -115,7 +119,7 @@ class MessagesController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    jumpToBottom();
+    animateToBottom();
   }
 
   @override
@@ -229,6 +233,17 @@ class MessagesController extends GetxController {
     );
   }
 
+  void animateToBottom({
+    Duration? duration,
+    Curve? curve,
+  }) {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      curve: curve ?? ANIMATIONS.generalMsgTransitioncurve,
+      duration: duration ?? ANIMATIONS.generalMsgTransitionDurtion,
+    );
+  }
+
   void toggleReaction(MessageModel msg, String emoji) {
     UpdateMessage().execute(
         updateMessageType: UpdateMessageType.updateReactions(
@@ -337,7 +352,10 @@ class MessagesController extends GetxController {
     messages.refresh();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      jumpToBottom();
+      animateToBottom(
+        duration: ANIMATIONS.sendMsgDurtion,
+        curve: ANIMATIONS.sendMsgcurve,
+      );
     });
   }
 
@@ -576,7 +594,7 @@ class MessagesController extends GetxController {
           mediaGlassmorphicChangeState();
           messages.refresh();
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            jumpToBottom();
+            animateToBottom();
           });
         },
       );
@@ -722,7 +740,7 @@ class MessagesController extends GetxController {
     mediaGlassmorphicChangeState();
     messages.refresh();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      jumpToBottom();
+      animateToBottom();
     });
   }
 
@@ -752,7 +770,7 @@ class MessagesController extends GetxController {
       messages.refresh();
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        jumpToBottom();
+        animateToBottom();
       });
     }
   }
@@ -761,7 +779,10 @@ class MessagesController extends GetxController {
     // await _addMockData();
     messages.value = await messagesRepo.getMessages(chatId);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      jumpToBottom();
+      animateToBottom(
+        duration: ANIMATIONS.getAllMsgsDurtion,
+        curve: ANIMATIONS.getAllMsgscurve,
+      );
     });
   }
 

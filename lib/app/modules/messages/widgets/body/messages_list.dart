@@ -26,6 +26,7 @@ class MessagesList extends StatelessWidget {
           }
         },
         child: ListView.builder(
+          primary: false,
           controller: controller.scrollController,
           padding: EdgeInsets.only(top: 54.h, bottom: 16.h),
           itemCount: controller.messages.length + 1,
