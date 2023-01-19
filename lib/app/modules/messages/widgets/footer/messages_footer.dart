@@ -56,8 +56,9 @@ class MessagesFooter extends StatelessWidget {
             offstage: !controller.showEmojiPicker.value,
             child: WillPopScope(
               onWillPop: () async {
-                if (controller.showEmojiPicker.value) {
+                if (controller.showEmojiPicker.value || controller.isInRecordMode.isTrue) {
                   controller.showEmojiPicker.value = false;
+                  controller.isInRecordMode.value = false;
                   FocusScope.of(context).requestFocus(controller.textFocusNode);
 
                   return false;
