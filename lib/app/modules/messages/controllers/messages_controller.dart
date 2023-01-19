@@ -613,6 +613,12 @@ class MessagesController extends GetxController {
     if (result != null) {
       addSelectedMedia(result: result, closeMediaGlassmorphic: true);
     }
+    closeMediaGlassmorphic();
+    textFocusNode.unfocus();
+    messages.refresh();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      animateToBottom();
+    });
   }
 
   //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
@@ -773,6 +779,10 @@ class MessagesController extends GetxController {
         animateToBottom();
       });
     }
+  }
+
+  void closeMediaGlassmorphic() {
+    isMediaGlassmorphicOpen.value = false;
   }
 
   void _getMessages() async {
