@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/footer/send_location_box.dart';
+import 'package:heyo/app/modules/shared/utils/constants/animations_constant.dart';
 
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
@@ -32,7 +33,17 @@ class MessagesFooter extends StatelessWidget {
             ),
 
           // Chat Text Field
-          ScaleAnimatedSwitcher(
+          AnimatedSwitcher(
+            transitionBuilder: (child, animation) => SizeTransition(
+              axis: Axis.vertical,
+              axisAlignment: 0,
+              sizeFactor: animation,
+              child: child,
+            ),
+            switchInCurve: ANIMATIONS.openRecordModeCurve,
+            switchOutCurve: ANIMATIONS.closeRecordModeCurve,
+            reverseDuration: ANIMATIONS.closeRecordModeDurtion,
+            duration: ANIMATIONS.openRecordModeDurtion,
             child: controller.isInRecordMode.isTrue
                 ? const VoiceRecorderWidget()
                 : Container(
@@ -46,6 +57,7 @@ class MessagesFooter extends StatelessWidget {
                         ),
                       ),
                     ),
+
                     child: ScaleAnimatedSwitcher(child: _buildActiveBox(controller)),
                   ),
           ),

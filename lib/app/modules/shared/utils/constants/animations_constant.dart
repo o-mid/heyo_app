@@ -12,4 +12,10 @@ class ANIMATIONS {
 
   static const generalMsgTransitionDurtion = Duration(milliseconds: 150);
   static const generalMsgTransitioncurve = Curves.easeInOut;
+
+  static const openRecordModeDurtion = Duration(milliseconds: 150);
+  static const openRecordModeCurve = Curves.linear;
+
+  static const closeRecordModeDurtion = Duration(milliseconds: 150);
+  static const closeRecordModeCurve = Curves.linear;
 }
