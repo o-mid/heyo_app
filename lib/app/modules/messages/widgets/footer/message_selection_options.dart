@@ -30,37 +30,42 @@ class MessageSelectionOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MessagesController>();
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.end,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (showReply)
-          _buildOption(
-            Assets.svg.replyOutlined,
-            LocaleKeys.reply.tr,
-            onTap: controller.replyTo,
-          ),
-        if (showCopy)
-          _buildOption(
-            Assets.svg.copyIcon,
-            LocaleKeys.copy.tr,
-            onTap: controller.copySelectedToClipboard,
-          ),
-        if (showForward)
-          _buildOption(
-            Assets.svg.forwardIcon,
-            LocaleKeys.forward.tr,
-            onTap: (() => Get.toNamed(Routes.FORWARD_MASSAGES,
-                arguments: ForwardMassagesArgumentsModel(
-                  selectedMessages: selectedMessages,
-                ))),
-          ),
-        if (showDelete)
-          _buildOption(
-            Assets.svg.deleteIcon,
-            LocaleKeys.delete.tr,
-            onTap: controller.showDeleteSelectedDialog,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            if (showReply)
+              _buildOption(
+                Assets.svg.replyOutlined,
+                LocaleKeys.reply.tr,
+                onTap: controller.replyTo,
+              ),
+            if (showCopy)
+              _buildOption(
+                Assets.svg.copyIcon,
+                LocaleKeys.copy.tr,
+                onTap: controller.copySelectedToClipboard,
+              ),
+            if (showForward)
+              _buildOption(
+                Assets.svg.forwardIcon,
+                LocaleKeys.forward.tr,
+                onTap: (() => Get.toNamed(Routes.FORWARD_MASSAGES,
+                    arguments: ForwardMassagesArgumentsModel(
+                      selectedMessages: selectedMessages,
+                    ))),
+              ),
+            if (showDelete)
+              _buildOption(
+                Assets.svg.deleteIcon,
+                LocaleKeys.delete.tr,
+                onTap: controller.showDeleteSelectedDialog,
+              ),
+          ],
+        ),
       ],
     );
   }

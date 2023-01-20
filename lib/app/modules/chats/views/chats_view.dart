@@ -32,7 +32,7 @@ class ChatsView extends GetView<ChatsController> {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const ConnectionStatusWidget(),
+          ConnectionStatusWidget(),
           Expanded(
             child: Obx(
               () => _buildChats(controller.chats),

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/footer/send_location_box.dart';
+import 'package:heyo/app/modules/shared/utils/constants/animations_constant.dart';
 
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
@@ -32,14 +33,23 @@ class MessagesFooter extends StatelessWidget {
             ),
 
           // Chat Text Field
-          ScaleAnimatedSwitcher(
+          AnimatedSwitcher(
+            transitionBuilder: (child, animation) => SizeTransition(
+              axis: Axis.vertical,
+              axisAlignment: 0,
+              sizeFactor: animation,
+              child: child,
+            ),
+            switchInCurve: ANIMATIONS.openRecordModeCurve,
+            switchOutCurve: ANIMATIONS.closeRecordModeCurve,
+            reverseDuration: ANIMATIONS.closeRecordModeDurtion,
+            duration: ANIMATIONS.openRecordModeDurtion,
             child: controller.isInRecordMode.isTrue
                 ? const VoiceRecorderWidget()
                 : Container(
-                    constraints: BoxConstraints(minHeight: 90.h),
-                    padding: EdgeInsets.all(18),
+                    height: 90.h,
+                    // padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 0),
                     decoration: const BoxDecoration(
-                      color: COLORS.kComposeMessageBackgroundColor,
                       border: Border(
                         top: BorderSide(
                           width: 1,
@@ -47,22 +57,33 @@ class MessagesFooter extends StatelessWidget {
                         ),
                       ),
                     ),
-                    child: ScaleAnimatedSwitcher(
-                      child: _buildActiveBox(controller),
-                    ),
+
+                    child: ScaleAnimatedSwitcher(child: _buildActiveBox(controller)),
                   ),
           ),
 
           // Emoji Picker (Hidden by default)
+
           Offstage(
             offstage: !controller.showEmojiPicker.value,
-            child: SizedBox(
-              height: 250,
-              child: EmojiPicker(
-                onEmojiSelected: (_, Emoji emoji) =>
-                    controller.appendAfterCursorPosition(emoji.emoji),
-                onBackspacePressed:
-                    controller.removeCharacterBeforeCursorPosition,
+            child: WillPopScope(
+              onWillPop: () async {
+                if (controller.showEmojiPicker.value || controller.isInRecordMode.isTrue) {
+                  controller.showEmojiPicker.value = false;
+                  controller.isInRecordMode.value = false;
+                  FocusScope.of(context).requestFocus(controller.textFocusNode);
+
+                  return false;
+                }
+                return true;
+              },
+              child: SizedBox(
+                height: 250,
+                child: EmojiPicker(
+                  onEmojiSelected: (_, Emoji emoji) =>
+                      controller.appendAfterCursorPosition(emoji.emoji),
+                  onBackspacePressed: controller.removeCharacterBeforeCursorPosition,
+                ),
               ),
             ),
           ),
@@ -75,8 +96,7 @@ class MessagesFooter extends StatelessWidget {
     if (controller.selectedMessages.isNotEmpty) {
       return MessageSelectionOptions(
         showReply: controller.selectedMessages.length == 1,
-        showCopy:
-            !controller.selectedMessages.any((m) => m is! TextMessageModel),
+        showCopy: !controller.selectedMessages.any((m) => m is! TextMessageModel),
         selectedMessages: controller.selectedMessages,
       );
     }

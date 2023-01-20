@@ -18,48 +18,47 @@ class CallsView extends GetView<CallsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: COLORS.kAppBackground,
-      appBar: AppBar(
-        backgroundColor: COLORS.kGreenMainColor,
-        title: Text(
-          LocaleKeys.HomePage_navbarItems_calls.tr,
-          style: TEXTSTYLES.kHeaderLarge,
-        ),
-        automaticallyImplyLeading: false,
-        actions: [
-          Obx(() {
-            if (controller.calls.isNotEmpty) {
-              return IconButton(
-                splashRadius: 18,
-                onPressed: controller.showDeleteAllCallsBottomSheet,
-                icon: Assets.svg.verticalMenuIcon.svg(),
-              );
-            }
-            return const SizedBox.shrink();
-          }),
-        ],
-      ),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const ConnectionStatusWidget(),
-          Expanded(
-            child: Obx(
-                  () {
-                    return controller.calls.isEmpty
-                        ? const EmptyCallsWidget()
-                        : AnimatedList(
-                      key: controller.animatedListKey,
-                      padding: EdgeInsets.symmetric(vertical: 10.h),
-                      initialItemCount: controller.calls.length,
-                      itemBuilder: (context, index, animation) =>
-                          CallLogWidget(call: controller.calls[index]),
-                    );
-                  },
-            ),
+        backgroundColor: COLORS.kAppBackground,
+        appBar: AppBar(
+          backgroundColor: COLORS.kGreenMainColor,
+          title: Text(
+            LocaleKeys.HomePage_navbarItems_calls.tr,
+            style: TEXTSTYLES.kHeaderLarge,
           ),
-        ],
-      )
-    );
+          automaticallyImplyLeading: false,
+          actions: [
+            Obx(() {
+              if (controller.calls.isNotEmpty) {
+                return IconButton(
+                  splashRadius: 18,
+                  onPressed: controller.showDeleteAllCallsBottomSheet,
+                  icon: Assets.svg.verticalMenuIcon.svg(),
+                );
+              }
+              return const SizedBox.shrink();
+            }),
+          ],
+        ),
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ConnectionStatusWidget(),
+            Expanded(
+              child: Obx(
+                () {
+                  return controller.calls.isEmpty
+                      ? const EmptyCallsWidget()
+                      : AnimatedList(
+                          key: controller.animatedListKey,
+                          padding: EdgeInsets.symmetric(vertical: 10.h),
+                          initialItemCount: controller.calls.length,
+                          itemBuilder: (context, index, animation) =>
+                              CallLogWidget(call: controller.calls[index]),
+                        );
+                },
+              ),
+            ),
+          ],
+        ));
   }
 }

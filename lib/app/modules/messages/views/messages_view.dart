@@ -27,7 +27,7 @@ class MessagesView extends GetView<MessagesController> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            const DatachannelConnectionStatusWidget(),
+            DatachannelConnectionStatusWidget(),
             Expanded(
               child: Stack(
                 alignment: Alignment.center,

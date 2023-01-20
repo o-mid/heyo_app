@@ -47,6 +47,7 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/messaging_session.dart';
 import '../../share_files/models/file_model.dart';
+import '../../shared/utils/constants/animations_constant.dart';
 import '../data/usecases/delete_message_usecase.dart';
 import '../data/usecases/update_message_usecase.dart';
 
@@ -74,12 +75,14 @@ class MessagesController extends GetxController {
   late StreamSubscription _messagesStreamSubscription;
   final JsonDecoder _decoder = const JsonDecoder();
   late String sessionId;
-
+  late KeyboardVisibilityController keyboardController;
+  final FocusNode textFocusNode = FocusNode();
   @override
   Future<void> onInit() async {
     super.onInit();
     args = Get.arguments as MessagesViewArgumentsModel;
     chatId = args.user.chatModel.id;
+    keyboardController = KeyboardVisibilityController();
 
     _globalMessageController.reset();
     textController = _globalMessageController.textController;
@@ -105,7 +108,10 @@ class MessagesController extends GetxController {
         (await messagesRepo.getMessagesStream(chatId)).listen((newMessages) {
       messages.value = newMessages;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        jumpToBottom();
+        animateToBottom(
+          duration: ANIMATIONS.receiveMsgDurtion,
+          curve: ANIMATIONS.getAllMsgscurve,
+        );
       });
     });
   }
@@ -113,7 +119,7 @@ class MessagesController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    jumpToBottom();
+    animateToBottom();
   }
 
   @override
@@ -128,10 +134,8 @@ class MessagesController extends GetxController {
 
   void _handleKeyboardVisibilityChanges() {
     // Close emoji picker when keyboard opens
-    final keyboardVisibilityController = KeyboardVisibilityController();
-
     _globalMessageController.streamSubscriptions
-        .add(keyboardVisibilityController.onChange.listen((bool visible) {
+        .add(keyboardController.onChange.listen((bool visible) {
       if (visible) {
         showEmojiPicker.value = false;
 
@@ -226,6 +230,17 @@ class MessagesController extends GetxController {
   void jumpToBottom() {
     scrollController.jumpTo(
       scrollController.position.maxScrollExtent,
+    );
+  }
+
+  void animateToBottom({
+    Duration? duration,
+    Curve? curve,
+  }) {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      curve: curve ?? ANIMATIONS.generalMsgTransitioncurve,
+      duration: duration ?? ANIMATIONS.generalMsgTransitionDurtion,
     );
   }
 
@@ -337,7 +352,10 @@ class MessagesController extends GetxController {
     messages.refresh();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      jumpToBottom();
+      animateToBottom(
+        duration: ANIMATIONS.sendMsgDurtion,
+        curve: ANIMATIONS.sendMsgcurve,
+      );
     });
   }
 
@@ -576,7 +594,7 @@ class MessagesController extends GetxController {
           mediaGlassmorphicChangeState();
           messages.refresh();
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            jumpToBottom();
+            animateToBottom();
           });
         },
       );
@@ -595,6 +613,12 @@ class MessagesController extends GetxController {
     if (result != null) {
       addSelectedMedia(result: result, closeMediaGlassmorphic: true);
     }
+    closeMediaGlassmorphic();
+    textFocusNode.unfocus();
+    messages.refresh();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      animateToBottom();
+    });
   }
 
   //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
@@ -722,7 +746,7 @@ class MessagesController extends GetxController {
     mediaGlassmorphicChangeState();
     messages.refresh();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      jumpToBottom();
+      animateToBottom();
     });
   }
 
@@ -752,16 +776,23 @@ class MessagesController extends GetxController {
       messages.refresh();
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        jumpToBottom();
+        animateToBottom();
       });
     }
+  }
+
+  void closeMediaGlassmorphic() {
+    isMediaGlassmorphicOpen.value = false;
   }
 
   void _getMessages() async {
     // await _addMockData();
     messages.value = await messagesRepo.getMessages(chatId);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      jumpToBottom();
+      animateToBottom(
+        duration: ANIMATIONS.getAllMsgsDurtion,
+        curve: ANIMATIONS.getAllMsgscurve,
+      );
     });
   }
 

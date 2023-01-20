@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,64 +9,81 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 import '../utils/constants/colors.dart';
+import 'connection_status_body.dart';
 
 class ConnectionStatusWidget extends GetView<ConnectionController> {
-  const ConnectionStatusWidget({Key? key}) : super(key: key);
-
+  ConnectionStatusWidget({Key? key}) : super(key: key);
+  final offsetAnimation = Tween<Offset>(
+    begin: const Offset(0, -1),
+    end: const Offset(0, 0),
+  );
   @override
   Widget build(BuildContext context) {
+    // randomStatus(
+    //   frequency: 10,
+    //   delayInSeconds: 4,
+    // );
+
     return Obx(() {
+      Color backgroundColor;
+      String title;
+      Color titleColor;
       switch (controller.currentConnectionStatus.value) {
         case ConnectionStatus.connectionLost:
-          return _StatusBody(
-            title: LocaleKeys.ConnectionStatus_waiting.tr,
-            backgroundColor: COLORS.kStatesLightErrorColor,
-            titleColor: COLORS.kStatesErrorColor,
-          );
+          title = LocaleKeys.ConnectionStatus_waiting.tr;
+          backgroundColor = COLORS.kStatesLightErrorColor;
+          titleColor = COLORS.kStatesErrorColor;
+          break;
 
         case ConnectionStatus.updating:
-          return _StatusBody(
-            title: LocaleKeys.ConnectionStatus_updating.tr,
-            backgroundColor: COLORS.kBrightBlueColor,
-            titleColor: COLORS.kDarkBlueColor,
-          );
+          title = LocaleKeys.ConnectionStatus_updating.tr;
+          backgroundColor = COLORS.kBrightBlueColor;
+          titleColor = COLORS.kDarkBlueColor;
+          break;
 
         case ConnectionStatus.justConnected:
-          return _StatusBody(
-            title: LocaleKeys.ConnectionStatus_backOnline.tr,
-            backgroundColor: COLORS.kGreenLighterColor,
-            titleColor: COLORS.kStatesSuccessColor,
-          );
+          title = LocaleKeys.ConnectionStatus_backOnline.tr;
+          backgroundColor = COLORS.kGreenLighterColor;
+          titleColor = COLORS.kStatesSuccessColor;
+          break;
         default:
-          return const SizedBox(height: 0, width: 0);
+          title = "";
+          backgroundColor = Colors.transparent;
+          titleColor = Colors.transparent;
+          break;
       }
+
+      return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 400),
+          transitionBuilder: (child, animation) => SlideTransition(
+                position: offsetAnimation.animate(
+                  CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+                ),
+                child: child,
+              ),
+          child: title.isNotEmpty
+              ? ConnectionStatusBody(
+                  title: title,
+                  backgroundColor: backgroundColor,
+                  titleColor: titleColor,
+                )
+              : const SizedBox(
+                  height: 0,
+                  width: 0,
+                ));
     });
   }
-}
 
-class _StatusBody extends StatelessWidget {
-  final String title;
-  final Color backgroundColor;
-  final Color titleColor;
-  const _StatusBody(
-      {Key? key, required this.title, required this.backgroundColor, required this.titleColor})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40.h,
-      child: Container(
-        color: backgroundColor,
-        child: Center(
-          child: Text(
-            title,
-            style: TEXTSTYLES.kBodySmall.copyWith(
-              color: titleColor,
-            ),
-          ),
-        ),
-      ),
-    );
+  // change the dataChannel Status randomly base on the frequency and delay given for testing
+  void randomStatus({
+    required int frequency,
+    required int delayInSeconds,
+  }) async {
+    for (var i = 0; i < frequency; i++) {
+      await Future.delayed(Duration(seconds: delayInSeconds), () {
+        controller.currentConnectionStatus.value =
+            ConnectionStatus.values[Random().nextInt(ConnectionStatus.values.length)];
+      });
+    }
   }
 }
