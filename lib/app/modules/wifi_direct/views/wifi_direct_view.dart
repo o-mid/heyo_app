@@ -11,26 +11,28 @@ class WifiDirectView extends GetView<WifiDirectController> {
   const WifiDirectView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: COLORS.kGreenMainColor,
-        elevation: 0,
-        centerTitle: false,
-        title: Text(
-          LocaleKeys.newChat_wifiDirect_wifiDirectAppbar.tr,
-          style: const TextStyle(
-            fontWeight: FONTS.Bold,
-            fontFamily: FONTS.interFamily,
+    return Obx(() {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: COLORS.kGreenMainColor,
+          elevation: 0,
+          centerTitle: false,
+          title: Text(
+            LocaleKeys.newChat_wifiDirect_wifiDirectAppbar.tr,
+            style: const TextStyle(
+              fontWeight: FONTS.Bold,
+              fontFamily: FONTS.interFamily,
+            ),
+          ),
+          automaticallyImplyLeading: true,
+        ),
+        body: Center(
+          child: Text(
+            controller.coreId.value,
+            style: TextStyle(fontSize: 20),
           ),
         ),
-        automaticallyImplyLeading: true,
-      ),
-      body: const Center(
-        child: Text(
-          'WifiDirectView is working',
-          style: TextStyle(fontSize: 20),
-        ),
-      ),
-    );
+      );
+    });
   }
 }

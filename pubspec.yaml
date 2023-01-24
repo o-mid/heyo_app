@@ -75,6 +75,9 @@ dependencies:
   encrypt: ^5.0.1
   uuid: ^3.0.6
   tuple: ^2.0.1
+  heyo_wifi_direct:
+    git:
+      url: git@git.energy:heyo/heyo_wifi_direct.git
 
 dependency_overrides:
   permission_handler: ^9.2.0
