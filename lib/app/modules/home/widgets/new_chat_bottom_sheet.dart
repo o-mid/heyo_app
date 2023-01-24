@@ -130,6 +130,35 @@ void openNewChatBottomSheet() {
               ],
             ),
           ),
+          TextButton(
+            onPressed: () => Get.toNamed(
+              Routes.WIFI_DIRECT,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: COLORS.kBrightBlueColor,
+                  ),
+                  //Todo: Omid Add wifi direct icon
+                  child: Assets.svg.noConnectionWifi.svg(
+                    width: 20,
+                    height: 20,
+                    color: COLORS.kDarkBlueColor,
+                  ),
+                ),
+                CustomSizes.mediumSizedBoxWidth,
+                Text(
+                  LocaleKeys.HomePage_bottomSheet_wifiDirect.tr,
+                  style: TEXTSTYLES.kBodyBasic.copyWith(
+                    color: COLORS.kDarkBlueColor,
+                  ),
+                )
+              ],
+            ),
+          ),
         ],
       ),
     ),
