@@ -30,6 +30,7 @@ abstract class Routes {
   static const MEDIA_VIEW = _Paths.MEDIA_VIEW;
   static const CONTACTS = _Paths.CONTACTS;
   static const NEW_CALL = _Paths.NEW_CALL;
+  static const WIFI_DIRECT = _Paths.WIFI_DIRECT;
 }
 
 abstract class _Paths {
@@ -61,4 +62,5 @@ abstract class _Paths {
   static const MEDIA_VIEW = '/media-view';
   static const CONTACTS = '/contacts';
   static const NEW_CALL = '/new-call';
+  static const WIFI_DIRECT = '/wifi-direct';
 }

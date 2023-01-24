@@ -109,7 +109,8 @@
     "bottomSheet": {
       "newChat": "Start new chat",
       "newGroup": "Start new group",
-      "invite": "Invite"
+      "invite": "Invite",
+      "wifiDirect": "Wifi Direct"
     }
   },
   "CallHistory": {

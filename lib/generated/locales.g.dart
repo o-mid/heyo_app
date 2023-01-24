@@ -120,6 +120,8 @@ class LocaleKeys {
   static const HomePage_bottomSheet_newChat = 'HomePage_bottomSheet_newChat';
   static const HomePage_bottomSheet_newGroup = 'HomePage_bottomSheet_newGroup';
   static const HomePage_bottomSheet_invite = 'HomePage_bottomSheet_invite';
+  static const HomePage_bottomSheet_wifiDirect =
+      'HomePage_bottomSheet_wifiDirect';
   static const CallHistory_appbar = 'CallHistory_appbar';
   static const CallHistory_missedCall = 'CallHistory_missedCall';
   static const CallHistory_outgoing = 'CallHistory_outgoing';
@@ -396,6 +398,7 @@ class Locales {
     'HomePage_bottomSheet_newChat': 'Start new chat',
     'HomePage_bottomSheet_newGroup': 'Start new group',
     'HomePage_bottomSheet_invite': 'Invite',
+    'HomePage_bottomSheet_wifiDirect': 'Wifi Direct',
     'CallHistory_appbar': 'Call history',
     'CallHistory_missedCall': 'Missed call',
     'CallHistory_outgoing': 'Outgoing',
