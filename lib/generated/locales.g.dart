@@ -193,6 +193,8 @@ class LocaleKeys {
       'newChat_inviteBottomSheet_inviteYourFriend';
   static const newChat_inviteBottomSheet_shareLink =
       'newChat_inviteBottomSheet_shareLink';
+  static const newChat_wifiDirect_wifiDirectAppbar =
+      'newChat_wifiDirect_wifiDirectAppbar';
   static const MessagesPage_textFieldHint = 'MessagesPage_textFieldHint';
   static const MessagesPage_endToEndEncryptedMessaging =
       'MessagesPage_endToEndEncryptedMessaging';
@@ -456,6 +458,7 @@ class Locales {
     'newChat_userBottomSheet_callUser': 'Call',
     'newChat_inviteBottomSheet_inviteYourFriend': 'Invite your friend to Heyo!',
     'newChat_inviteBottomSheet_shareLink': 'Share link',
+    'newChat_wifiDirect_wifiDirectAppbar': 'Wifi Direct',
     'MessagesPage_textFieldHint': 'Chat',
     'MessagesPage_endToEndEncryptedMessaging':
         'Any messages you exchange are fully encrypted and can only be read by you and @name',

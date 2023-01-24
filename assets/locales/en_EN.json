@@ -190,6 +190,9 @@
     "inviteBottomSheet": {
       "inviteYourFriend": "Invite your friend to Heyo!",
       "shareLink": "Share link"
+    },
+    "wifiDirect": {
+      "wifiDirectAppbar": "Wifi Direct"
     }
   },
   "MessagesPage": {
