@@ -28,6 +28,8 @@ import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_controller.
 import 'package:http/http.dart' as http;
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 
+import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
+
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
 import '../../chats/data/repos/chat_history/chat_history_repo.dart';
 import '../../messages/data/provider/messages_provider.dart';
@@ -67,6 +69,8 @@ class GlobalBindings extends Bindings {
           ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
     ),
   );
+
+  static HeyoWifiDirect? heyoWifiDirect;
 
   @override
   void dependencies() {

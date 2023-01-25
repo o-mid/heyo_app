@@ -15,6 +15,7 @@ class WifiDirectBinding extends Bindings {
           localProvider: SecureStorageProvider(),
           cryptographyKeyGenerator: Web3Keys(web3client: GlobalBindings.web3Client),
         ),
+        heyoWifiDirect: GlobalBindings.heyoWifiDirect,
       ),
     );
   }
