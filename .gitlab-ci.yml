@@ -29,7 +29,8 @@ flutter_build:
       - development
       - GitlabCi
       - test_builds
-      
+      - fix_builds
+
   variables:
     # APPLICATION VERSION
     APPLICATION_VERSION: "1.0.0"
