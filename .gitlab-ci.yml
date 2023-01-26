@@ -28,8 +28,6 @@ flutter_build:
     refs:
       - development
       - GitlabCi
-      - test_builds
-      - fix_builds
 
   variables:
     # APPLICATION VERSION
