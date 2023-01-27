@@ -190,10 +190,6 @@
     "inviteBottomSheet": {
       "inviteYourFriend": "Invite your friend to Heyo!",
       "shareLink": "Share link"
-    },
-    "wifiDirect": {
-      "wifiDirectAppbar": "Wifi Direct",
-      "emptyPeersTitle": "There is no online peer! \n Searching for available peers ..."
     }
   },
   "MessagesPage": {
@@ -308,5 +304,10 @@
     "connecting": "Connecting...",
     "connected": "Connected",
     "ConnectionLost": "Connection Lost"
+  },
+  "wifiDirect": {
+    "wifiDirectAppbar": "Wifi Direct",
+    "emptyPeersTitle": "There is no online peer! \n Searching for available peers ...",
+    "availablePeers": "Available Peers"
   }
 }

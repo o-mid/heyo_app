@@ -193,10 +193,6 @@ class LocaleKeys {
       'newChat_inviteBottomSheet_inviteYourFriend';
   static const newChat_inviteBottomSheet_shareLink =
       'newChat_inviteBottomSheet_shareLink';
-  static const newChat_wifiDirect_wifiDirectAppbar =
-      'newChat_wifiDirect_wifiDirectAppbar';
-  static const newChat_wifiDirect_emptyPeersTitle =
-      'newChat_wifiDirect_emptyPeersTitle';
   static const MessagesPage_textFieldHint = 'MessagesPage_textFieldHint';
   static const MessagesPage_endToEndEncryptedMessaging =
       'MessagesPage_endToEndEncryptedMessaging';
@@ -318,6 +314,9 @@ class LocaleKeys {
   static const DataChannelStatus_connected = 'DataChannelStatus_connected';
   static const DataChannelStatus_ConnectionLost =
       'DataChannelStatus_ConnectionLost';
+  static const wifiDirect_wifiDirectAppbar = 'wifiDirect_wifiDirectAppbar';
+  static const wifiDirect_emptyPeersTitle = 'wifiDirect_emptyPeersTitle';
+  static const wifiDirect_availablePeers = 'wifiDirect_availablePeers';
 }
 
 class Locales {
@@ -462,9 +461,6 @@ class Locales {
     'newChat_userBottomSheet_callUser': 'Call',
     'newChat_inviteBottomSheet_inviteYourFriend': 'Invite your friend to Heyo!',
     'newChat_inviteBottomSheet_shareLink': 'Share link',
-    'newChat_wifiDirect_wifiDirectAppbar': 'Wifi Direct',
-    'newChat_wifiDirect_emptyPeersTitle':
-        'There is no online peer! \n Searching for available peers ...',
     'MessagesPage_textFieldHint': 'Chat',
     'MessagesPage_endToEndEncryptedMessaging':
         'Any messages you exchange are fully encrypted and can only be read by you and @name',
@@ -557,5 +553,9 @@ class Locales {
     'DataChannelStatus_connecting': 'Connecting...',
     'DataChannelStatus_connected': 'Connected',
     'DataChannelStatus_ConnectionLost': 'Connection Lost',
+    'wifiDirect_wifiDirectAppbar': 'Wifi Direct',
+    'wifiDirect_emptyPeersTitle':
+        'There is no online peer! \n Searching for available peers ...',
+    'wifiDirect_availablePeers': 'Available Peers',
   };
 }

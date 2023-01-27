@@ -1,0 +1,62 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/widgets/empty_users_body.dart';
+
+import '../../../../../generated/locales.g.dart';
+import '../../../new_chat/widgets/user_widget.dart';
+import '../../../shared/utils/constants/colors.dart';
+import '../../../shared/utils/constants/textStyles.dart';
+import '../../../shared/utils/screen-utils/sizing/custom_sizes.dart';
+import '../../controllers/wifi_direct_controller.dart';
+
+class PeersListWidget extends GetView<WifiDirectController> {
+  const PeersListWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        CustomSizes.largeSizedBoxHeight,
+        controller.availablePeers.isEmpty
+            ? Center(
+                child: EmptyUsersBody(
+                  infoText: LocaleKeys.wifiDirect_emptyPeersTitle.tr,
+                ),
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    LocaleKeys.wifiDirect_availablePeers.tr,
+                    style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextSoftBlueColor),
+                  ),
+                  CustomSizes.mediumSizedBoxHeight,
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: controller.availablePeers.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(
+                        children: [
+                          InkWell(
+                            borderRadius: BorderRadius.circular(8),
+                            onTap: () {
+                              //openUserPreviewBottomSheet(controller.availablePeers[index]);
+                            },
+                            child: UserWidget(
+                              user: controller.availablePeers[index],
+                            ),
+                          ),
+                          CustomSizes.mediumSizedBoxHeight,
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+        CustomSizes.largeSizedBoxHeight,
+      ]);
+    });
+  }
+}
