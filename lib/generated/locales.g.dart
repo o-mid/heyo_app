@@ -295,6 +295,8 @@ class LocaleKeys {
   static const Permissions_capturePhotos = 'Permissions_capturePhotos';
   static const Permissions_camera = 'Permissions_camera';
   static const Permissions_location = 'Permissions_location';
+  static const Permissions_wifiDirectLocation =
+      'Permissions_wifiDirectLocation';
   static const Permissions_buttons_continue = 'Permissions_buttons_continue';
   static const Permissions_buttons_notNow = 'Permissions_buttons_notNow';
   static const shareFilePage_appbarTitle = 'shareFilePage_appbarTitle';
@@ -532,6 +534,8 @@ class Locales {
         'To capture photos and videos, you need to \n allow Heyo access to your camera.',
     'Permissions_location':
         'To share location, you need to allow Heyo access to your device\'s location.',
+    'Permissions_wifiDirectLocation':
+        'To use Wi-Fi Direct, you need to allow Heyo access to your device\'s location.',
     'Permissions_buttons_continue': 'Continue',
     'Permissions_buttons_notNow': 'Not now',
     'shareFilePage_appbarTitle': 'Send files',
