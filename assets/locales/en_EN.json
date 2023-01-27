@@ -192,7 +192,8 @@
       "shareLink": "Share link"
     },
     "wifiDirect": {
-      "wifiDirectAppbar": "Wifi Direct"
+      "wifiDirectAppbar": "Wifi Direct",
+      "emptyPeersTitle": "There is no online peer! \n Searching for available peers ..."
     }
   },
   "MessagesPage": {

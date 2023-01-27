@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/widgets/empty_users_body.dart';
 
 import '../../../../generated/locales.g.dart';
 import '../../shared/utils/constants/colors.dart';
 import '../../shared/utils/constants/fonts.dart';
+import '../../shared/utils/screen-utils/buttons/custom_button.dart';
 import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../controllers/wifi_direct_controller.dart';
 
@@ -34,17 +36,25 @@ class WifiDirectView extends GetView<WifiDirectController> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  controller.coreId.value,
-                  style: TEXTSTYLES.kBodyBasic,
-                  textAlign: TextAlign.center,
-                ),
+                controller.availablePeers.isEmpty
+                    ? EmptyUsersBody(
+                        infoText: LocaleKeys.newChat_wifiDirect_emptyPeersTitle.tr,
+                      )
+                    : const SizedBox(),
                 CustomSizes.largeSizedBoxHeight,
-                Text("Wifi Direct is ${controller.wifiDirectEnabled.value ? "on" : "off"}"),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Wifi Direct is ${controller.wifiDirectEnabled.value ? "ON" : "OFF"} "),
+                    controller.wifiDirectEnabled.value
+                        ? const Icon(Icons.wifi, color: COLORS.kGreenMainColor)
+                        : const Icon(Icons.wifi_off, color: COLORS.kStatesErrorColor),
+                  ],
+                ),
                 CustomSizes.mediumSizedBoxHeight,
-                ElevatedButton(
-                  onPressed: () => controller.switchWifiDirect(),
-                  child: const Text('Switch wifi Direct'),
+                CustomButton.primarySmall(
+                  onTap: () => controller.switchWifiDirect(),
+                  title: "Switch wifi Direct",
                 ),
               ],
             ),

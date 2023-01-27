@@ -12,6 +12,7 @@ class WifiDirectController extends GetxController {
   HeyoWifiDirect? heyoWifiDirect;
   bool isLocationPermissionGranted = false;
   final wifiDirectEnabled = false.obs;
+  RxList<Peer> availablePeers = <Peer>[].obs;
 
   WifiDirectController({required this.accountInfo, required this.heyoWifiDirect});
   final coreId = "".obs;

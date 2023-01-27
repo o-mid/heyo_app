@@ -6,17 +6,17 @@ import 'package:heyo/generated/assets.gen.dart';
 
 import '../utils/screen-utils/buttons/custom_button.dart';
 
-class EmptyContactsBody extends StatelessWidget {
-  const EmptyContactsBody({
+class EmptyUsersBody extends StatelessWidget {
+  const EmptyUsersBody({
     Key? key,
-    required this.onInvite,
+    this.onInvite,
     required this.infoText,
-    required this.buttonText,
+    this.buttonText,
   }) : super(key: key);
 
-  final VoidCallback onInvite;
+  final VoidCallback? onInvite;
   final String infoText;
-  final String buttonText;
+  final String? buttonText;
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +38,13 @@ class EmptyContactsBody extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         CustomSizes.largeSizedBoxHeight,
-        CustomButton.primarySmall(
-          onTap: onInvite,
-          color: COLORS.kGreenLighterColor,
-          title: buttonText,
-          style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kGreenMainColor),
-        ),
+        buttonText == null
+            ? const SizedBox()
+            : CustomButton.primarySmall(
+                onTap: onInvite,
+                color: COLORS.kGreenLighterColor,
+                title: buttonText,
+                style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kGreenMainColor)),
       ],
     );
   }

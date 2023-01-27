@@ -195,6 +195,8 @@ class LocaleKeys {
       'newChat_inviteBottomSheet_shareLink';
   static const newChat_wifiDirect_wifiDirectAppbar =
       'newChat_wifiDirect_wifiDirectAppbar';
+  static const newChat_wifiDirect_emptyPeersTitle =
+      'newChat_wifiDirect_emptyPeersTitle';
   static const MessagesPage_textFieldHint = 'MessagesPage_textFieldHint';
   static const MessagesPage_endToEndEncryptedMessaging =
       'MessagesPage_endToEndEncryptedMessaging';
@@ -461,6 +463,8 @@ class Locales {
     'newChat_inviteBottomSheet_inviteYourFriend': 'Invite your friend to Heyo!',
     'newChat_inviteBottomSheet_shareLink': 'Share link',
     'newChat_wifiDirect_wifiDirectAppbar': 'Wifi Direct',
+    'newChat_wifiDirect_emptyPeersTitle':
+        'There is no online peer! \n Searching for available peers ...',
     'MessagesPage_textFieldHint': 'Chat',
     'MessagesPage_endToEndEncryptedMessaging':
         'Any messages you exchange are fully encrypted and can only be read by you and @name',
