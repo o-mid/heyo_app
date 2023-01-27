@@ -11,6 +11,7 @@ class WifiDirectController extends GetxController {
   final AccountInfo accountInfo;
   HeyoWifiDirect? heyoWifiDirect;
   bool isLocationPermissionGranted = false;
+  final wifiDirectEnabled = false.obs;
 
   WifiDirectController({required this.accountInfo, required this.heyoWifiDirect});
   final coreId = "".obs;
@@ -71,5 +72,14 @@ class WifiDirectController extends GetxController {
         height: 28.w,
       ),
     ).start();
+  }
+
+  void switchWifiDirect() async {
+    if (wifiDirectEnabled.value) {
+      await wifiDirectOff();
+    } else {
+      await wifiDirectOn();
+    }
+    wifiDirectEnabled.value = (await heyoWifiDirect?.isWifiDirectEnabled())!;
   }
 }

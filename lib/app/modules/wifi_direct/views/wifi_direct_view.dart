@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 
 import '../../../../generated/locales.g.dart';
 import '../../shared/utils/constants/colors.dart';
 import '../../shared/utils/constants/fonts.dart';
+import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../controllers/wifi_direct_controller.dart';
 
 class WifiDirectView extends GetView<WifiDirectController> {
@@ -26,10 +28,26 @@ class WifiDirectView extends GetView<WifiDirectController> {
           ),
           automaticallyImplyLeading: true,
         ),
-        body: Center(
-          child: Text(
-            controller.coreId.value,
-            style: TextStyle(fontSize: 20),
+        body: Padding(
+          padding: CustomSizes.mainContentPadding,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  controller.coreId.value,
+                  style: TEXTSTYLES.kBodyBasic,
+                  textAlign: TextAlign.center,
+                ),
+                CustomSizes.largeSizedBoxHeight,
+                Text("Wifi Direct is ${controller.wifiDirectEnabled.value ? "on" : "off"}"),
+                CustomSizes.mediumSizedBoxHeight,
+                ElevatedButton(
+                  onPressed: () => controller.switchWifiDirect(),
+                  child: const Text('Switch wifi Direct'),
+                ),
+              ],
+            ),
           ),
         ),
       );
