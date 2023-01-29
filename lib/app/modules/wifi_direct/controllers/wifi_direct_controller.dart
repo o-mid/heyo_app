@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
@@ -11,20 +13,26 @@ import '../../p2p_node/data/account/account_info.dart';
 
 class WifiDirectController extends GetxController {
   final AccountInfo accountInfo;
-  HeyoWifiDirect? heyoWifiDirect;
+  HeyoWifiDirect? _heyoWifiDirect;
   bool isLocationPermissionGranted = false;
   final wifiDirectEnabled = false.obs;
   RxList<UserModel> availablePeers = <UserModel>[].obs;
 
-  WifiDirectController({required this.accountInfo, required this.heyoWifiDirect});
+  WifiDirectController({required this.accountInfo, required HeyoWifiDirect? heyoWifiDirect}) : _heyoWifiDirect = heyoWifiDirect;
   final coreId = "".obs;
+
+  late StreamSubscription _eventListener;
+  late StreamSubscription _messageListener;
+
+  var peersAvailable = <String, Peer>{}.obs;
+
 
   // TODO create and handle listeners for streams of consumerEventSource and tcpMessage controllers
 
   @override
   Future<void> onInit() async {
-    await setCoreid();
-    heyoWifiDirect ?? initializePlugin();
+    await _setCoreId();
+    _heyoWifiDirect ?? _initializePlugin();
     super.onInit();
   }
 
@@ -41,34 +49,85 @@ class WifiDirectController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+    _eventListener.cancel();
+    _messageListener.cancel();
   }
 
-  void initializePlugin() {
+  void _initializePlugin() async {
     if (coreId.value != "") {
       // TODO inspect/define user name for service advertising broadcast
-      heyoWifiDirect = HeyoWifiDirect(coreID: coreId.value, name: 'name');
+      _heyoWifiDirect = HeyoWifiDirect(coreID: coreId.value, name: 'name');
+      await _heyoWifiDirect!.wifiDirectOn();
+      _eventListener = _heyoWifiDirect!.consumerEventSource.stream.listen((event) => _eventHandler(event));
+      _messageListener = _heyoWifiDirect!.tcpMessage.stream.listen((message) => _messageHandler(message));
+      wifiDirectEnabled.value = await _heyoWifiDirect!.isWifiDirectEnabled();
     }
   }
 
+  _eventHandler(WifiDirectEvent event) {
+    print('WifiDirectManager: WifiDirect event: ${event.type}, ${event.dateTime}');
+
+    switch (event.type) {
+
+    // Refresh information about wifi-direct available peers
+      case EventType.peerListRefresh:
+
+      // PeerList peerList = signaling.wifiDirectPlugin.peerList;
+        peersAvailable.value = (event.message as PeerList).peers.obs;
+        print('WifiDirectManager: peerListRefresh: ${peersAvailable.values.toString()}');
+        break;
+
+      case EventType.linkedPeer:
+      // incomingConnection = true.obs;
+      // connectedPeer = event.message as Peer;
+        print('WifiDirectManager: linked to ${(event.message as Peer).multiaddr}');
+        break;
+
+      case EventType.groupStopped:
+      // incomingConnection = false.obs;
+      // outgoingConnection = false.obs;
+      // connectedPeer = null;
+        print('WifiDirectController: Wifi-direct group stopped');
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  _messageHandler(HeyoWifiDirectMessage message) {
+
+  }
+
+  Future<bool> connectPeer(String coreId, {bool encrypt = true}) async {
+    final result = await _heyoWifiDirect!.connectPeer(coreId);
+    if (result.type == EventType.linkedPeer) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
   Future<bool> wifiDirectOn() async {
-    if (heyoWifiDirect != null) {
-      return await heyoWifiDirect!.wifiDirectOn();
+    if (_heyoWifiDirect != null) {
+      return await _heyoWifiDirect!.wifiDirectOn();
     }
     return false;
   }
 
   Future<bool> wifiDirectOff() async {
-    if (heyoWifiDirect != null) {
-      return await heyoWifiDirect!.wifiDirectOff();
+    if (_heyoWifiDirect != null) {
+      return await _heyoWifiDirect!.wifiDirectOff();
     }
     return false;
   }
 
-  Future<void> setCoreid() async {
+  Future<void> _setCoreId() async {
     coreId.value = (await accountInfo.getCoreId()) ?? "";
   }
 
-  // this will show a custum UI permission dialog at first and then the default permission dialog for location permission
+  // this will show a custom UI permission dialog at first and then the default permission dialog for location permission
   Future<void> checkLocationPermission() async {
     isLocationPermissionGranted = await PermissionFlow(
       permission: Permission.location,
@@ -86,7 +145,7 @@ class WifiDirectController extends GetxController {
     } else {
       await wifiDirectOn();
     }
-    wifiDirectEnabled.value = (await heyoWifiDirect?.isWifiDirectEnabled())!;
+    wifiDirectEnabled.value = await _heyoWifiDirect!.isWifiDirectEnabled();
   }
 
   // this will add one UserModel to peers list with the duration provided for testing purposes
