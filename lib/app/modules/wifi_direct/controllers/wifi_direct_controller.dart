@@ -16,15 +16,14 @@ class WifiDirectController extends GetxController {
   HeyoWifiDirect? _heyoWifiDirect;
   bool isLocationPermissionGranted = false;
   final wifiDirectEnabled = false.obs;
-  RxList<UserModel> availablePeers = <UserModel>[].obs;
+  RxList<UserModel> availableDirectUsers = <UserModel>[].obs;
 
   WifiDirectController({required this.accountInfo, required HeyoWifiDirect? heyoWifiDirect}) : _heyoWifiDirect = heyoWifiDirect;
   final coreId = "".obs;
+  final visibleName = "".obs;
 
   late StreamSubscription _eventListener;
   late StreamSubscription _messageListener;
-
-  var peersAvailable = <String, Peer>{}.obs;
 
 
   // TODO create and handle listeners for streams of consumerEventSource and tcpMessage controllers
@@ -42,7 +41,7 @@ class WifiDirectController extends GetxController {
     //checkLocationPermission();
 
     // to add mock users to peers list uncomment the following line
-    //_addMockUsers();
+    // _addMockUsers();
     super.onReady();
   }
 
@@ -56,6 +55,9 @@ class WifiDirectController extends GetxController {
   void _initializePlugin() async {
     if (coreId.value != "") {
       // TODO inspect/define user name for service advertising broadcast
+
+      visibleName.value = "name";
+
       _heyoWifiDirect = HeyoWifiDirect(coreID: coreId.value, name: 'name');
       await _heyoWifiDirect!.wifiDirectOn();
       _eventListener = _heyoWifiDirect!.consumerEventSource.stream.listen((event) => _eventHandler(event));
@@ -65,7 +67,7 @@ class WifiDirectController extends GetxController {
   }
 
   _eventHandler(WifiDirectEvent event) {
-    print('WifiDirectManager: WifiDirect event: ${event.type}, ${event.dateTime}');
+    print('WifiDirectController: WifiDirect event: ${event.type}, ${event.dateTime}');
 
     switch (event.type) {
 
@@ -73,14 +75,15 @@ class WifiDirectController extends GetxController {
       case EventType.peerListRefresh:
 
       // PeerList peerList = signaling.wifiDirectPlugin.peerList;
-        peersAvailable.value = (event.message as PeerList).peers.obs;
-        print('WifiDirectManager: peerListRefresh: ${peersAvailable.values.toString()}');
+        Map<String, Peer> peersAvailable = (event.message as PeerList).peers;
+        print('WifiDirectController: peerListRefresh: ${peersAvailable.toString()}');
+        _peersToUsers(peersAvailable);
         break;
 
       case EventType.linkedPeer:
       // incomingConnection = true.obs;
       // connectedPeer = event.message as Peer;
-        print('WifiDirectManager: linked to ${(event.message as Peer).multiaddr}');
+        print('WifiDirectController: linked to ${(event.message as Peer).multiaddr}');
         break;
 
       case EventType.groupStopped:
@@ -146,6 +149,24 @@ class WifiDirectController extends GetxController {
       await wifiDirectOn();
     }
     wifiDirectEnabled.value = await _heyoWifiDirect!.isWifiDirectEnabled();
+  }
+
+  _peersToUsers(Map<String, Peer> peersAvailable) {
+    availableDirectUsers.value = [];
+    peersAvailable.values.forEach((peer) {
+      final user = UserModel(
+          name: peer.name,
+          icon: "https://avatars.githubusercontent.com/u/7847725?v=4",
+          walletAddress: peer.coreID,
+          chatModel: ChatModel(
+            name: peer.name,
+            icon: "https://avatars.githubusercontent.com/u/7847725?v=4",
+            id: peer.coreID,
+            lastMessage: "",
+            timestamp: DateTime.now(),
+          ));
+      availableDirectUsers.add(user);
+    });
   }
 
   // this will add one UserModel to peers list with the duration provided for testing purposes
@@ -215,7 +236,7 @@ class WifiDirectController extends GetxController {
     ];
     for (int i = 0; i < mockUsers.length; i++) {
       await Future.delayed(duration, () {
-        availablePeers.add(mockUsers[i]);
+        availableDirectUsers.add(mockUsers[i]);
       });
     }
   }

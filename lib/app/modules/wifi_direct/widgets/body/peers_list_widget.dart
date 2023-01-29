@@ -19,7 +19,7 @@ class PeersListWidget extends GetView<WifiDirectController> {
     return Obx(() {
       return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
         CustomSizes.largeSizedBoxHeight,
-        controller.availablePeers.isEmpty
+        controller.availableDirectUsers.isEmpty
             ? Center(
                 child: EmptyUsersBody(
                   infoText: LocaleKeys.wifiDirect_emptyPeersTitle.tr,
@@ -35,7 +35,7 @@ class PeersListWidget extends GetView<WifiDirectController> {
                   CustomSizes.mediumSizedBoxHeight,
                   ListView.builder(
                     shrinkWrap: true,
-                    itemCount: controller.availablePeers.length,
+                    itemCount: controller.availableDirectUsers.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Column(
                         children: [
@@ -45,7 +45,7 @@ class PeersListWidget extends GetView<WifiDirectController> {
                               //openUserPreviewBottomSheet(controller.availablePeers[index]);
                             },
                             child: UserWidget(
-                              user: controller.availablePeers[index],
+                              user: controller.availableDirectUsers[index],
                             ),
                           ),
                           CustomSizes.mediumSizedBoxHeight,
