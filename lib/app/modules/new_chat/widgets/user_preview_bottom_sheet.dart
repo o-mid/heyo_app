@@ -17,7 +17,10 @@ import '../../shared/utils/constants/textStyles.dart';
 import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../shared/widgets/curtom_circle_avatar.dart';
 
-void openUserPreviewBottomSheet(UserModel user) {
+void openUserPreviewBottomSheet({
+  required UserModel user,
+  bool isWifiDirect = false,
+}) {
   Get.bottomSheet(
     SingleChildScrollView(
       child: Column(
@@ -79,15 +82,19 @@ void openUserPreviewBottomSheet(UserModel user) {
               CustomSizes.largeSizedBoxWidth,
               CircleIconButton(
                 onPressed: () {
-                  Get.toNamed(
-                    Routes.CALL,
-                    arguments: CallViewArgumentsModel(
-                        session: null,
-                        callId: null,
-                        user: user,
-                        enableVideo: false,
-                        isAudioCall: true),
-                  );
+                  if (!isWifiDirect) {
+                    Get.toNamed(
+                      Routes.CALL,
+                      arguments: CallViewArgumentsModel(
+                          session: null,
+                          callId: null,
+                          user: user,
+                          enableVideo: false,
+                          isAudioCall: true),
+                    );
+                  } else {
+                    Get.snackbar("Wifi Direct", "Calling over wifi direct are not supported yet");
+                  }
                 },
                 backgroundColor: COLORS.kBrightBlueColor,
                 icon: Assets.svg.audioCallIcon.svg(
@@ -97,15 +104,19 @@ void openUserPreviewBottomSheet(UserModel user) {
               CustomSizes.largeSizedBoxWidth,
               CircleIconButton(
                 onPressed: () {
-                  Get.toNamed(
-                    Routes.CALL,
-                    arguments: CallViewArgumentsModel(
-                        session: null,
-                        callId: null,
-                        user: user,
-                        enableVideo: true,
-                        isAudioCall: false),
-                  );
+                  if (!isWifiDirect) {
+                    Get.toNamed(
+                      Routes.CALL,
+                      arguments: CallViewArgumentsModel(
+                          session: null,
+                          callId: null,
+                          user: user,
+                          enableVideo: true,
+                          isAudioCall: false),
+                    );
+                  } else {
+                    Get.snackbar("Wifi Direct", "Calling over wifi direct are not supported yet");
+                  }
                 },
                 backgroundColor: COLORS.kBrightBlueColor,
                 icon: Assets.svg.videoCallIcon.svg(

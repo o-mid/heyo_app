@@ -68,7 +68,7 @@ class ContactsView extends GetView<ContactsController> {
     return InkWell(
       onTap: () {
         openUserPreviewBottomSheet(
-          UserModel(
+          user: UserModel(
             name: contact.nickname,
             icon: contact.icon,
             walletAddress: contact.coreId,

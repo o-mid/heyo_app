@@ -60,7 +60,7 @@ class ContactListWithHeader extends StatelessWidget {
                 InkWell(
                   borderRadius: BorderRadius.circular(8),
                   onTap: () {
-                    openUserPreviewBottomSheet(contacts[index]);
+                    openUserPreviewBottomSheet(user: contacts[index]);
                   },
                   child: UserWidget(
                     user: suggestedUser,

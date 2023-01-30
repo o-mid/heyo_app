@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/widgets/empty_users_body.dart';
 
 import '../../../../../generated/locales.g.dart';
+import '../../../new_chat/widgets/user_preview_bottom_sheet.dart';
 import '../../../new_chat/widgets/user_widget.dart';
 import '../../../shared/utils/constants/colors.dart';
 import '../../../shared/utils/constants/textStyles.dart';
@@ -42,7 +43,10 @@ class PeersListWidget extends GetView<WifiDirectController> {
                           InkWell(
                             borderRadius: BorderRadius.circular(8),
                             onTap: () {
-                              //openUserPreviewBottomSheet(controller.availablePeers[index]);
+                              openUserPreviewBottomSheet(
+                                user: controller.availableDirectUsers[index],
+                                isWifiDirect: true,
+                              );
                             },
                             child: UserWidget(
                               user: controller.availableDirectUsers[index],

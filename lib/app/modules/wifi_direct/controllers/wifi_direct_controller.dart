@@ -18,13 +18,13 @@ class WifiDirectController extends GetxController {
   final wifiDirectEnabled = false.obs;
   RxList<UserModel> availableDirectUsers = <UserModel>[].obs;
 
-  WifiDirectController({required this.accountInfo, required HeyoWifiDirect? heyoWifiDirect}) : _heyoWifiDirect = heyoWifiDirect;
+  WifiDirectController({required this.accountInfo, required HeyoWifiDirect? heyoWifiDirect})
+      : _heyoWifiDirect = heyoWifiDirect;
   final coreId = "".obs;
   final visibleName = "".obs;
 
   late StreamSubscription _eventListener;
   late StreamSubscription _messageListener;
-
 
   // TODO create and handle listeners for streams of consumerEventSource and tcpMessage controllers
 
@@ -38,7 +38,7 @@ class WifiDirectController extends GetxController {
   @override
   void onReady() {
     //to check location permission uncomment the following line
-    //checkLocationPermission();
+    checkLocationPermission();
 
     // to add mock users to peers list uncomment the following line
     // _addMockUsers();
@@ -60,8 +60,10 @@ class WifiDirectController extends GetxController {
 
       _heyoWifiDirect = HeyoWifiDirect(coreID: coreId.value, name: 'name');
       await _heyoWifiDirect!.wifiDirectOn();
-      _eventListener = _heyoWifiDirect!.consumerEventSource.stream.listen((event) => _eventHandler(event));
-      _messageListener = _heyoWifiDirect!.tcpMessage.stream.listen((message) => _messageHandler(message));
+      _eventListener =
+          _heyoWifiDirect!.consumerEventSource.stream.listen((event) => _eventHandler(event));
+      _messageListener =
+          _heyoWifiDirect!.tcpMessage.stream.listen((message) => _messageHandler(message));
       wifiDirectEnabled.value = await _heyoWifiDirect!.isWifiDirectEnabled();
     }
   }
@@ -70,26 +72,25 @@ class WifiDirectController extends GetxController {
     print('WifiDirectController: WifiDirect event: ${event.type}, ${event.dateTime}');
 
     switch (event.type) {
-
-    // Refresh information about wifi-direct available peers
+      // Refresh information about wifi-direct available peers
       case EventType.peerListRefresh:
 
-      // PeerList peerList = signaling.wifiDirectPlugin.peerList;
+        // PeerList peerList = signaling.wifiDirectPlugin.peerList;
         Map<String, Peer> peersAvailable = (event.message as PeerList).peers;
         print('WifiDirectController: peerListRefresh: ${peersAvailable.toString()}');
         _peersToUsers(peersAvailable);
         break;
 
       case EventType.linkedPeer:
-      // incomingConnection = true.obs;
-      // connectedPeer = event.message as Peer;
+        // incomingConnection = true.obs;
+        // connectedPeer = event.message as Peer;
         print('WifiDirectController: linked to ${(event.message as Peer).multiaddr}');
         break;
 
       case EventType.groupStopped:
-      // incomingConnection = false.obs;
-      // outgoingConnection = false.obs;
-      // connectedPeer = null;
+        // incomingConnection = false.obs;
+        // outgoingConnection = false.obs;
+        // connectedPeer = null;
         print('WifiDirectController: Wifi-direct group stopped');
         break;
 
@@ -99,7 +100,7 @@ class WifiDirectController extends GetxController {
   }
 
   _messageHandler(HeyoWifiDirectMessage message) {
-
+    print('WifiDirectController: WifiDirect message: ${message.body}, from ${message.senderId}');
   }
 
   Future<bool> connectPeer(String coreId, {bool encrypt = true}) async {
@@ -110,7 +111,6 @@ class WifiDirectController extends GetxController {
       return false;
     }
   }
-
 
   Future<bool> wifiDirectOn() async {
     if (_heyoWifiDirect != null) {
