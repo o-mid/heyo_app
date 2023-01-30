@@ -62,16 +62,19 @@ void openUserPreviewBottomSheet({
                     Routes.MESSAGES,
                     arguments: MessagesViewArgumentsModel(
                         user: user.copyWith(
-                      chatModel: user.chatModel.copyWith(
-                        id: user.walletAddress,
-                        icon: user.icon,
-                        isOnline: true,
-                        isVerified: true,
-                        timestamp: DateTime.now(),
-                        name:
-                            "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}",
-                      ),
-                    )),
+                          chatModel: user.chatModel.copyWith(
+                            id: user.walletAddress,
+                            icon: user.icon,
+                            isOnline: true,
+                            isVerified: true,
+                            timestamp: DateTime.now(),
+                            name:
+                                "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}",
+                          ),
+                        ),
+                        connectionType: isWifiDirect
+                            ? MessagingConnectionType.wifiDirect
+                            : MessagingConnectionType.internet),
                   );
                 },
                 backgroundColor: COLORS.kBrightBlueColor,

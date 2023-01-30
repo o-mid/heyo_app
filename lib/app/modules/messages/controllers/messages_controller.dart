@@ -54,6 +54,7 @@ import '../data/usecases/update_message_usecase.dart';
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
   final MessagingConnectionController messagingConnection;
+  late MessagingConnectionType connectionType;
 
   MessagesController({required this.messagesRepo, required this.messagingConnection});
 
@@ -81,6 +82,7 @@ class MessagesController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
     args = Get.arguments as MessagesViewArgumentsModel;
+    connectionType = args.connectionType;
     chatId = args.user.chatModel.id;
     keyboardController = KeyboardVisibilityController();
 
@@ -88,7 +90,7 @@ class MessagesController extends GetxController {
     textController = _globalMessageController.textController;
     scrollController = _globalMessageController.scrollController;
     // initialize the messageing Connection
-    await _initDataChannel();
+    await _initMessagingConnection();
     _getMessages();
 
     initMessagesStream();
@@ -97,6 +99,14 @@ class MessagesController extends GetxController {
 
     // Close emoji picker when keyboard opens
     _handleKeyboardVisibilityChanges();
+  }
+
+  _initMessagingConnection() async {
+    if (connectionType == MessagingConnectionType.internet) {
+      await _initDataChannel();
+    } else if (connectionType == MessagingConnectionType.wifiDirect) {
+      //TODO : handle init wifi direct connection
+    }
   }
 
   _initDataChannel() async {

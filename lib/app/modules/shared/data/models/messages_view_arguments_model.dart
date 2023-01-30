@@ -8,9 +8,14 @@ class MessagesViewArgumentsModel {
   final UserModel user;
   final List<MessageModel>? forwardedMessages;
   final MessageSession? session;
+  final MessagingConnectionType connectionType;
+
   MessagesViewArgumentsModel({
     required this.user,
     this.forwardedMessages,
     this.session,
+    this.connectionType = MessagingConnectionType.internet,
   });
 }
+
+enum MessagingConnectionType { wifiDirect, internet }
