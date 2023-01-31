@@ -35,6 +35,7 @@ import '../../chats/data/repos/chat_history/chat_history_repo.dart';
 import '../../messages/data/provider/messages_provider.dart';
 import '../../messages/data/repo/messages_repo.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
+import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 
 class GlobalBindings extends Bindings {
   static P2PState p2pState = P2PState();
@@ -71,6 +72,8 @@ class GlobalBindings extends Bindings {
   );
 
   static HeyoWifiDirect? heyoWifiDirect;
+  static WifiDirectConnectionController wifiDirectConnectionController =
+      WifiDirectConnectionController();
 
   @override
   void dependencies() {
@@ -109,6 +112,10 @@ class GlobalBindings extends Bindings {
     Get.put(ConnectionController(p2pState: p2pState));
     Get.put(
       messagingConnectionController,
+      permanent: true,
+    );
+    Get.put(
+      wifiDirectConnectionController,
       permanent: true,
     );
 

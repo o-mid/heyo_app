@@ -45,6 +45,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../messaging/controllers/messaging_connection_controller.dart';
+import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../../messaging/messaging_session.dart';
 import '../../share_files/models/file_model.dart';
 import '../../shared/utils/constants/animations_constant.dart';
@@ -54,9 +55,13 @@ import '../data/usecases/update_message_usecase.dart';
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
   final MessagingConnectionController messagingConnection;
+  final WifiDirectConnectionController wifiDirectConnection;
   late MessagingConnectionType connectionType;
 
-  MessagesController({required this.messagesRepo, required this.messagingConnection});
+  MessagesController(
+      {required this.messagesRepo,
+      required this.messagingConnection,
+      required this.wifiDirectConnection});
 
   final _globalMessageController = Get.find<GlobalMessageController>();
   double _keyboardHeight = 0;
@@ -106,11 +111,16 @@ class MessagesController extends GetxController {
       await _initDataChannel();
     } else if (connectionType == MessagingConnectionType.wifiDirect) {
       //TODO : handle init wifi direct connection
+      await _initWifiDirectConnection();
     }
   }
 
   _initDataChannel() async {
     await messagingConnection.initMessagingConnection(remoteId: args.user.walletAddress);
+  }
+
+  _initWifiDirectConnection() async {
+    await wifiDirectConnection.initWifiDirectMessaging();
   }
 
   void initMessagesStream() async {
