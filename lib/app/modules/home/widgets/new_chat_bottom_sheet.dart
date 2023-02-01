@@ -137,16 +137,18 @@ void openNewChatBottomSheet() {
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                     color: COLORS.kBrightBlueColor,
                   ),
-                  //Todo: Omid Add wifi direct icon
-                  child: Assets.svg.noConnectionWifi.svg(
-                    width: 20,
-                    height: 20,
-                    color: COLORS.kDarkBlueColor,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    child: Assets.svg.wifiDirectIcon.svg(
+                      width: 20.w,
+                      fit: BoxFit.fitWidth,
+                      color: COLORS.kDarkBlueColor,
+                    ),
                   ),
                 ),
                 CustomSizes.mediumSizedBoxWidth,
