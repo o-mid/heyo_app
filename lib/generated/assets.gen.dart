@@ -5,7 +5,7 @@
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
-// ignore_for_file: directives_ordering,unnecessary_import
+// ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -77,6 +77,29 @@ class $AssetsPngGen {
 
   /// File path: assets/png/welcome.png
   AssetGenImage get welcome => const AssetGenImage('assets/png/welcome.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+        benefits001,
+        benefits002,
+        benefits003,
+        benefits004,
+        callee,
+        caller,
+        callsEmptyState,
+        chain,
+        groupCall,
+        icon,
+        keys,
+        newChatEmptyState,
+        profile1,
+        profile2,
+        profile3,
+        profile4,
+        sadEmoji,
+        splash,
+        welcome
+      ];
 }
 
 class $AssetsSvgGen {
@@ -393,6 +416,103 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/wallet.svg
   SvgGenImage get wallet => const SvgGenImage('assets/svg/wallet.svg');
+
+  /// File path: assets/svg/wifi_direct_icon.svg
+  SvgGenImage get wifiDirectIcon =>
+      const SvgGenImage('assets/svg/wifi_direct_icon.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [
+        account,
+        addParticipant,
+        addToContactsIcon,
+        arrowIcon,
+        audioCallIcon,
+        blockIcon,
+        bottomsheetHandle,
+        call,
+        callEnd,
+        callIncoming,
+        callOutgoing,
+        cameraIcon,
+        cameraSwitch,
+        camerapermissionIcon,
+        chat,
+        chatOutlined,
+        clearIcon,
+        clock,
+        closeSign,
+        closeSignOutline,
+        contactsIcon,
+        copyIcon,
+        corePassLogo,
+        deleteIcon,
+        docIcon,
+        dotColumn,
+        dotIndicator,
+        doubleTickIcon,
+        editIcon,
+        emojiIcon,
+        fileIcon,
+        filterIcon,
+        folderIcon,
+        forwardIcon,
+        forwardTo,
+        fullScreen,
+        galleryIcon,
+        gpsFixed,
+        heyoLogo,
+        infoIcon,
+        inviteIcon,
+        liveLocation,
+        liveLocationActive,
+        locationIcon,
+        locationFilled,
+        locationOutlined,
+        lunaConnection,
+        mediaAndFiles,
+        mediaAndFilesIcon,
+        moneyIcon,
+        mp3Icon,
+        multipleSelectIcon,
+        muteMicIcon,
+        muteSpeaker,
+        newChat,
+        newGroupIcon,
+        noConnectionWifi,
+        pauseRecordIcon,
+        pauseRecordOutlinedIcon,
+        pdfIcon,
+        personIcon,
+        playIcon,
+        pptxIcon,
+        recordIcon,
+        recordVoiceCircleIcon,
+        recordWordIcon,
+        recordWordWithDot,
+        replyFilled,
+        replyFilledMirror,
+        replyOutlined,
+        saveToDevice,
+        searchIcon,
+        searchNearby,
+        sendImageIcon,
+        sendIcon,
+        shareIcon,
+        shareScreen,
+        singleTickIcon,
+        stackHorizontal,
+        stackVertical,
+        target,
+        verified,
+        verifiedWithBluePadding,
+        verticalMenuIcon,
+        videoCallIcon,
+        videoDisabled,
+        volumeUp,
+        wallet,
+        wifiDirectIcon
+      ];
 }
 
 class Assets {
@@ -460,6 +580,8 @@ class AssetGenImage {
     );
   }
 
+  ImageProvider provider() => AssetImage(_assetName);
+
   String get path => _assetName;
 
   String get keyName => _assetName;
@@ -512,4 +634,6 @@ class SvgGenImage {
   }
 
   String get path => _assetName;
+
+  String get keyName => _assetName;
 }
