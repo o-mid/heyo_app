@@ -167,7 +167,7 @@ class MessagingConnectionController extends GetxController {
         ),
         chatId: chatId);
 
-    confirmReceivedMessageById(
+    confirmMessageById(
         messageId: receivedMessage.messageId, status: ConfirmMessageStatus.delivered);
   }
 
@@ -249,8 +249,7 @@ class MessagingConnectionController extends GetxController {
     );
   }
 
-  confirmReceivedMessageById(
-      {required String messageId, required ConfirmMessageStatus status}) async {
+  confirmMessageById({required String messageId, required ConfirmMessageStatus status}) async {
     Map<String, dynamic> confirmMessageJson =
         ConfirmMessageModel(messageId: messageId, status: status).toJson();
 
@@ -262,6 +261,16 @@ class MessagingConnectionController extends GetxController {
     Map<String, dynamic> dataChannelMessageJson = dataChannelMessage.toJson();
 
     sendTextMessage(text: jsonEncode(dataChannelMessageJson));
+  }
+
+  confirmReadMessages() {
+    // Todo Omid
+
+    // messagesRepo.getUnReadMessages(currentSession!.cid).then((value) {
+    //   for (var element in value) {
+    //     confirmMessageById(messageId: element.messageId, status: ConfirmMessageStatus.read);
+    //   }
+    // });
   }
 
   void setDataChannel() {

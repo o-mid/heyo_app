@@ -147,7 +147,7 @@ class HandleReceivedBinaryData {
           isFromMe: false,
         ),
         chatId: chatId);
-    messagingConnection.confirmReceivedMessageById(
+    messagingConnection.confirmMessageById(
       messageId: receivedMessage.messageId,
       status: ConfirmMessageStatus.delivered,
     );
