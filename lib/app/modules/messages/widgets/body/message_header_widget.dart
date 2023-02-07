@@ -30,21 +30,7 @@ class MessageHeaderWidget extends StatelessWidget {
         /// Status Indicator
         if (message.isFromMe) ...[
           SizedBox(width: 4.w),
-          if (message.status == MessageStatus.sending)
-            Assets.svg.clock.svg(
-              width: 10.w,
-              height: 10.w,
-            ),
-          if (message.status == MessageStatus.sent)
-            Assets.svg.singleTickIcon.svg(
-              width: 8.w,
-              height: 8.w,
-            ),
-          if (message.status == MessageStatus.read)
-            Assets.svg.doubleTickIcon.svg(
-              width: 12.w,
-              height: 8.w,
-            ),
+          messageStatusIcon(),
         ],
 
         /// Forwarded Indicator
@@ -71,5 +57,38 @@ class MessageHeaderWidget extends StatelessWidget {
         ],
       ],
     );
+  }
+
+  Widget messageStatusIcon() {
+    switch (message.status) {
+      case MessageStatus.sending:
+        return Assets.svg.clock.svg(
+          width: 10.w,
+          height: 10.w,
+        );
+
+      case MessageStatus.sent:
+        return Assets.svg.singleTickIcon.svg(
+          width: 8.w,
+          height: 8.w,
+        );
+      case MessageStatus.delivered:
+        return Assets.svg.doubleTickIcon.svg(
+          width: 12.w,
+          height: 8.w,
+          color: COLORS.kTextBlueColor,
+        );
+      case MessageStatus.read:
+        return Assets.svg.doubleTickIcon.svg(
+          width: 12.w,
+          height: 8.w,
+        );
+
+      case MessageStatus.failed:
+        return Assets.svg.failedIcon.svg(
+          height: 13.w,
+          color: COLORS.kStatesErrorColor,
+        );
+    }
   }
 }
