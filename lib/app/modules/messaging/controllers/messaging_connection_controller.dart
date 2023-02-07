@@ -167,7 +167,8 @@ class MessagingConnectionController extends GetxController {
         ),
         chatId: chatId);
 
-    confirmReceivedMessageById(messageId: receivedMessage.messageId);
+    confirmReceivedMessageById(
+        messageId: receivedMessage.messageId, status: ConfirmMessageStatus.delivered);
   }
 
   Future<void> deleteReceivedMessage(
@@ -213,7 +214,11 @@ class MessagingConnectionController extends GetxController {
     // check if message is found and update the Message status
     if (currentMessage != null) {
       await messagesRepo.updateMessage(
-          message: currentMessage.copyWith(status: MessageStatus.read), chatId: chatId);
+          message: currentMessage.copyWith(
+              status: confirmMessage.status == ConfirmMessageStatus.read
+                  ? MessageStatus.read
+                  : MessageStatus.delivered),
+          chatId: chatId);
     }
   }
 
@@ -244,8 +249,10 @@ class MessagingConnectionController extends GetxController {
     );
   }
 
-  confirmReceivedMessageById({required String messageId}) async {
-    Map<String, dynamic> confirmMessageJson = ConfirmMessageModel(messageId: messageId).toJson();
+  confirmReceivedMessageById(
+      {required String messageId, required ConfirmMessageStatus status}) async {
+    Map<String, dynamic> confirmMessageJson =
+        ConfirmMessageModel(messageId: messageId, status: status).toJson();
 
     DataChannelMessageModel dataChannelMessage = DataChannelMessageModel(
       message: confirmMessageJson,

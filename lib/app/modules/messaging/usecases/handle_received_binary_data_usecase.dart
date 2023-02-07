@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../messages/data/models/messages/audio_message_model.dart';
 
+import '../../messages/data/models/messages/confirm_message_model.dart';
 import '../../messages/data/models/messages/file_message_model.dart';
 import '../../messages/data/models/messages/image_message_model.dart';
 import '../../messages/data/models/messages/message_model.dart';
@@ -146,10 +147,16 @@ class HandleReceivedBinaryData {
           isFromMe: false,
         ),
         chatId: chatId);
-    messagingConnection.confirmReceivedMessageById(messageId: receivedMessage.messageId);
+    messagingConnection.confirmReceivedMessageById(
+      messageId: receivedMessage.messageId,
+      status: ConfirmMessageStatus.delivered,
+    );
     await ConfirmMessage().execute(
         confirmMessageType: ConfirmMessageType.confirmReceivedText(
-            chatId: chatId, messageId: receivedMessage.messageId));
+      chatId: chatId,
+      messageId: receivedMessage.messageId,
+      status: ConfirmMessageStatus.delivered,
+    ));
 
     print('RECEIVER: Message saved path: ${newfile.path}');
   }
