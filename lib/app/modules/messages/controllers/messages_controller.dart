@@ -56,7 +56,6 @@ class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
   final MessagingConnectionController messagingConnection;
   final WifiDirectConnectionController wifiDirectConnection;
-  late MessagingConnectionType connectionType;
 
   MessagesController(
       {required this.messagesRepo,
@@ -64,46 +63,93 @@ class MessagesController extends GetxController {
       required this.wifiDirectConnection});
 
   final _globalMessageController = Get.find<GlobalMessageController>();
-  double _keyboardHeight = 0;
+  late MessagingConnectionType connectionType;
+
+  late MessagesViewArgumentsModel args;
+
+  late StreamSubscription _messagesStreamSubscription;
+
   late String chatId;
 
+  late String sessionId;
+
+  late KeyboardVisibilityController keyboardController;
+
   late TextEditingController textController;
+
   late AutoScrollController scrollController;
+
+  double _keyboardHeight = 0;
+
   final newMessage = "".obs;
+
   final showEmojiPicker = false.obs;
+
   final isInRecordMode = false.obs;
+
   final messages = <MessageModel>[].obs;
+
   final selectedMessages = <MessageModel>[].obs;
+
   final replyingTo = Rxn<ReplyToModel>();
 
   final locationMessage = Rxn<LocationMessageModel>();
-  late MessagesViewArgumentsModel args;
-  late StreamSubscription _messagesStreamSubscription;
-  final JsonDecoder _decoder = const JsonDecoder();
-  late String sessionId;
-  late KeyboardVisibilityController keyboardController;
+
   final FocusNode textFocusNode = FocusNode();
+
   @override
   Future<void> onInit() async {
     super.onInit();
-    args = Get.arguments as MessagesViewArgumentsModel;
-    connectionType = args.connectionType;
-    chatId = args.user.chatModel.id;
-    keyboardController = KeyboardVisibilityController();
+    _initMessagesArguments();
+    _initUiControllers();
 
-    _globalMessageController.reset();
-    textController = _globalMessageController.textController;
-    scrollController = _globalMessageController.scrollController;
     // initialize the messageing Connection
     await _initMessagingConnection();
-    _getMessages();
 
-    initMessagesStream();
+    _initMessagesRepo();
 
     _sendForwardedMessages();
 
     // Close emoji picker when keyboard opens
     _handleKeyboardVisibilityChanges();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    animateToBottom();
+  }
+
+  @override
+  void onClose() {
+    _closeMediaPlayers();
+    _messagesStreamSubscription.cancel();
+    super.onClose();
+  }
+
+  _closeMediaPlayers() {
+    // Todo: remove this when a global player is implemented
+    Get.find<AudioMessageController>().player.stop();
+
+    Get.find<VideoMessageController>().stopAndClearPreviousVideo();
+  }
+
+  _initMessagesArguments() {
+    args = Get.arguments as MessagesViewArgumentsModel;
+    connectionType = args.connectionType;
+    chatId = args.user.chatModel.id;
+  }
+
+  _initUiControllers() {
+    keyboardController = KeyboardVisibilityController();
+    _globalMessageController.reset();
+    textController = _globalMessageController.textController;
+    scrollController = _globalMessageController.scrollController;
+  }
+
+  _initMessagesRepo() {
+    _getMessages();
+    _initMessagesStream();
   }
 
   _initMessagingConnection() async {
@@ -123,7 +169,7 @@ class MessagesController extends GetxController {
     await wifiDirectConnection.initWifiDirectMessaging();
   }
 
-  void initMessagesStream() async {
+  void _initMessagesStream() async {
     _messagesStreamSubscription =
         (await messagesRepo.getMessagesStream(chatId)).listen((newMessages) {
       messages.value = newMessages;
@@ -134,22 +180,6 @@ class MessagesController extends GetxController {
         );
       });
     });
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-    animateToBottom();
-  }
-
-  @override
-  void onClose() {
-    // Todo: remove this when a global player is implemented
-    Get.find<AudioMessageController>().player.stop();
-
-    Get.find<VideoMessageController>().stopAndClearPreviousVideo();
-    _messagesStreamSubscription.cancel();
-    super.onClose();
   }
 
   void _handleKeyboardVisibilityChanges() {
@@ -808,6 +838,7 @@ class MessagesController extends GetxController {
   void _getMessages() async {
     // await _addMockData();
     messages.value = await messagesRepo.getMessages(chatId);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       animateToBottom(
         duration: ANIMATIONS.getAllMsgsDurtion,

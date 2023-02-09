@@ -43,53 +43,59 @@ class MessagingConnectionController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final AccountInfo accountInfo;
+
+  MessagingConnectionController(
+      {required this.messaging,
+      required this.accountInfo,
+      required this.messagesRepo,
+      required this.chatHistoryRepo});
+
   BinaryFileReceivingState? currentState;
 
   final JsonDecoder _decoder = const JsonDecoder();
 
   MessageSession? currentSession;
   Rx<ConnectionStatus?> connectionStatus = Rxn<ConnectionStatus>();
+
   Function(double progress, int totalSize)? statusUpdateCallback;
+
   Rx<DataChannelConnectivityStatus> dataChannelStatus =
       DataChannelConnectivityStatus.connecting.obs;
-  MessagingConnectionController(
-      {required this.messaging,
-      required this.accountInfo,
-      required this.messagesRepo,
-      required this.chatHistoryRepo});
+
   late RTCDataChannel _dataChannel;
 
   @override
   void onInit() {
-    super.onInit();
-
+    // set the value _dataChannel from messaging.dataChannel instance
     setDataChannel();
 
+    // observe the messaging status and set the connectionStatus value and currentSession value base on the changes on messaging.onMessageState
     observeMessagingStatus();
+
+    super.onInit();
   }
 
   void observeMessagingStatus() {
     messaging.onMessageStateChange = (session, status) async {
-      connectionStatus.value = status;
-      currentSession = session;
+      print("Message Status changed, state is: $status");
 
-      print("Connection Status changed, state is: $status");
+      connectionStatus.value = status;
+
+      currentSession = session;
 
       switch (status) {
         case ConnectionStatus.RINGING:
+          // accept Messaging Connection and navigate to Messaging screen
           await handleConnectionRinging(session: session);
-
           break;
 
         case ConnectionStatus.CONNECTED:
-          print("Connection Status state is: ${status.name}");
-
           channelMessageListener();
           break;
+
         case ConnectionStatus.BYE:
-          if (Get.currentRoute == Routes.MESSAGES) {
-            Get.until((route) => Get.currentRoute != Routes.MESSAGES);
-          }
+          // closes the connection and navigate to Chats screen
+          handleConnectionClose();
           break;
         case ConnectionStatus.CONNECTING:
           // TODO: Handle this case.
@@ -101,7 +107,8 @@ class MessagingConnectionController extends GetxController {
           // TODO: Handle this case.
           break;
       }
-      applyConnectivityStatus(status);
+      // update the dataChannelStatus widget
+      applyDataChannelConnectivityStatus(status);
     };
   }
 
@@ -113,8 +120,11 @@ class MessagingConnectionController extends GetxController {
     };
   }
 
-  handleDataChannelBinary({required Uint8List binaryData, required MessageSession session}) async {
-    var message = DataBinaryMessage.parse(binaryData);
+  handleDataChannelBinary({
+    required Uint8List binaryData,
+    required MessageSession session,
+  }) async {
+    DataBinaryMessage message = DataBinaryMessage.parse(binaryData);
     if (message.chunk.isNotEmpty) {
       if (currentState == null) {
         currentState = BinaryFileReceivingState(message.filename, message.meta);
@@ -131,28 +141,39 @@ class MessagingConnectionController extends GetxController {
     }
   }
 
-  handleDataChannelText(
-      {required Map<String, dynamic> receivedjson, required MessageSession session}) async {
+  handleDataChannelText({
+    required Map<String, dynamic> receivedjson,
+    required MessageSession session,
+  }) async {
     DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(receivedjson);
 
     switch (channelMessage.dataChannelMessagetype) {
       case DataChannelMessageType.message:
-        await saveReceivedMessage(receivedMessageJson: channelMessage.message, chatId: session.cid);
+        await saveReceivedMessage(
+          receivedMessageJson: channelMessage.message,
+          chatId: session.cid,
+        );
         break;
 
       case DataChannelMessageType.delete:
         await deleteReceivedMessage(
-            receivedDeleteJson: channelMessage.message, chatId: session.cid);
+          receivedDeleteJson: channelMessage.message,
+          chatId: session.cid,
+        );
         break;
 
       case DataChannelMessageType.update:
         await updateReceivedMessage(
-            receivedUpdateJson: channelMessage.message, chatId: session.cid);
+          receivedUpdateJson: channelMessage.message,
+          chatId: session.cid,
+        );
 
         break;
       case DataChannelMessageType.confirm:
         await confirmReceivedMessage(
-            receivedconfirmJson: channelMessage.message, chatId: session.cid);
+          receivedconfirmJson: channelMessage.message,
+          chatId: session.cid,
+        );
 
         break;
     }
@@ -161,12 +182,14 @@ class MessagingConnectionController extends GetxController {
   Future<void> saveReceivedMessage(
       {required Map<String, dynamic> receivedMessageJson, required String chatId}) async {
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
+
     await messagesRepo.createMessage(
         message: receivedMessage.copyWith(
           isFromMe: false,
         ),
         chatId: chatId);
-
+    // after saving the message we confirm it and send a text to sender side with the message id
+    // to confirm delivery
     confirmReceivedMessageById(messageId: receivedMessage.messageId);
   }
 
@@ -263,6 +286,8 @@ class MessagingConnectionController extends GetxController {
     };
   }
 
+// creates a ChatModel and saves it to the chat history if it is not available
+// or updates the available chat
   createUserChatModel({required String sessioncid}) async {
     ChatModel userChatModel = ChatModel(
         id: sessioncid,
@@ -274,6 +299,7 @@ class MessagingConnectionController extends GetxController {
         isVerified: true,
         timestamp: DateTime.now());
     final isChatAvailable = await chatHistoryRepo.getChat(userChatModel.id);
+
     if (isChatAvailable == null) {
       await chatHistoryRepo.addChatToHistory(userChatModel);
     } else {
@@ -285,7 +311,8 @@ class MessagingConnectionController extends GetxController {
     //checks to see if we have the current session and if we are connected
     bool isConnectionAvailable = connectionStatus.value == ConnectionStatus.CONNECTED ||
         connectionStatus.value == ConnectionStatus.RINGING;
-
+// if we dont have the current session with the remote id or the connection is not available
+// we start a new connection
     if (currentSession?.cid != remoteId || isConnectionAvailable == false) {
       await startDataChannelMessaging(remoteId: remoteId);
     } else {
@@ -306,10 +333,11 @@ class MessagingConnectionController extends GetxController {
     }
   }
 
-  void applyConnectivityStatus(ConnectionStatus status) async {
+  void applyDataChannelConnectivityStatus(ConnectionStatus status) async {
     switch (status) {
       case ConnectionStatus.CONNECTED:
         dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
+        // add a delay to show the just connected status for 2 seconds
         setConnectivityOnline();
         break;
 
@@ -336,7 +364,6 @@ class MessagingConnectionController extends GetxController {
     ChatModel? userChatModel;
 
     await chatHistoryRepo.getChat(session.cid).then((value) {
-      print(value);
       userChatModel = value;
     });
 
@@ -344,7 +371,7 @@ class MessagingConnectionController extends GetxController {
 
     connectionStatus.value = ConnectionStatus.CONNECTED;
 
-    applyConnectivityStatus(ConnectionStatus.CONNECTED);
+    applyDataChannelConnectivityStatus(ConnectionStatus.CONNECTED);
 
     if (userChatModel != null) {
       Get.toNamed(
@@ -360,6 +387,12 @@ class MessagingConnectionController extends GetxController {
           ),
         ),
       );
+    }
+  }
+
+  handleConnectionClose() {
+    if (Get.currentRoute == Routes.MESSAGES) {
+      Get.until((route) => Get.currentRoute != Routes.MESSAGES);
     }
   }
 }
