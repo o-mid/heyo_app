@@ -107,6 +107,15 @@ class MessagesController extends GetxController {
     _messagesStreamSubscription =
         (await messagesRepo.getMessagesStream(chatId)).listen((newMessages) {
       messages.value = newMessages;
+      //find the last index of new messages that the status of them is deliverd
+      final lastDeliveredIndex = newMessages.lastIndexWhere(
+        (element) => element.isFromMe == false && element.status == MessageStatus.delivered,
+      );
+      if (lastDeliveredIndex != -1) {
+        print(newMessages[lastDeliveredIndex].messageId);
+        toogleMessageReadStatus(messageId: newMessages[lastDeliveredIndex].messageId);
+      }
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         animateToBottom(
           duration: ANIMATIONS.receiveMsgDurtion,
@@ -251,6 +260,10 @@ class MessagesController extends GetxController {
       emoji: emoji,
       chatId: chatId,
     ));
+  }
+
+  void toogleMessageReadStatus({required String messageId}) async {
+    await messagingConnection.confirmReadMessages(messageId: messageId);
   }
 
   void toggleMessageSelection(String id) {
