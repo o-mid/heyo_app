@@ -60,20 +60,19 @@ class GlobalBindings extends Bindings {
   );
   static MessagingConnectionController messagingConnectionController =
       MessagingConnectionController(
-    accountInfo: accountInfo,
-    messaging: messaging,
-    messagesRepo: MessagesRepo(
-      messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-    ),
-    chatHistoryRepo: ChatHistoryLocalRepo(
-      chatHistoryProvider:
-          ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-    ),
-  );
+        accountInfo: accountInfo,
+        messaging: messaging,
+        messagesRepo: MessagesRepo(messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),),
+        chatHistoryRepo: ChatHistoryLocalRepo(chatHistoryProvider: ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),),
+      );
 
   static HeyoWifiDirect? heyoWifiDirect;
   static WifiDirectConnectionController wifiDirectConnectionController =
-      WifiDirectConnectionController();
+      WifiDirectConnectionController(
+        accountInfo: accountInfo,
+        messagesRepo: MessagesRepo(messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),),
+        chatHistoryRepo: ChatHistoryLocalRepo(chatHistoryProvider: ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),),
+      );
 
   @override
   void dependencies() {

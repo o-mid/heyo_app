@@ -29,9 +29,10 @@ class MessagesView extends GetView<MessagesController> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            controller.connectionType == MessagingConnectionType.internet
-                ? DatachannelConnectionStatusWidget()
-                : WifiDirectConnectionStatusWidget(),
+            DatachannelConnectionStatusWidget(),
+            // controller.connectionType == MessagingConnectionType.internet
+            //     ? DatachannelConnectionStatusWidget()
+            //     : WifiDirectConnectionStatusWidget(),
             Expanded(
               child: Stack(
                 alignment: Alignment.center,

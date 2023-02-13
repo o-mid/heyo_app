@@ -10,14 +10,17 @@ import 'package:heyo/generated/locales.g.dart';
 
 import '../../shared/utils/constants/colors.dart';
 import '../../shared/widgets/connection_status_body.dart';
+import '../controllers/common_messaging_controller.dart';
 import '../controllers/messaging_connection_controller.dart';
 
-class DatachannelConnectionStatusWidget extends GetView<MessagingConnectionController> {
+class DatachannelConnectionStatusWidget extends GetView<CommonMessagingConnectionController> {
   DatachannelConnectionStatusWidget({Key? key}) : super(key: key);
+
   final offsetAnimation = Tween<Offset>(
     begin: const Offset(0, -1),
     end: const Offset(0, 0),
   );
+
   @override
   Widget build(BuildContext context) {
     // randomStatus(

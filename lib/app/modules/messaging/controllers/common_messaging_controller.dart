@@ -28,7 +28,7 @@ enum DataChannelConnectivityStatus { connectionLost, connecting, justConnected, 
 
 /// Declares common entities for using in specific implementations of Internet or Wi-Fi Direct
 /// messaging algorithms.
-abstract class CommonMessagingController extends GetxController {
+abstract class CommonMessagingConnectionController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final AccountInfo accountInfo;
@@ -44,7 +44,7 @@ abstract class CommonMessagingController extends GetxController {
       DataChannelConnectivityStatus.connecting.obs;
 
   //
-  CommonMessagingController(
+  CommonMessagingConnectionController(
       { required this.accountInfo,
         required this.messagesRepo,
         required this.chatHistoryRepo

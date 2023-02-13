@@ -1,13 +1,18 @@
+import 'dart:typed_data';
+
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
+import 'common_messaging_controller.dart';
 import 'messaging_connection_controller.dart';
 
 // Todo :  change this status names if needed base on the connection status of the wifi direct
 enum WifiDirectConnectivityStatus { connectionLost, connecting, justConnected, online }
 
-class WifiDirectConnectionController extends CommonMessagingController {
+class WifiDirectConnectionController extends CommonMessagingConnectionController {
   Rx<WifiDirectConnectivityStatus> wifiDirectStatus = WifiDirectConnectivityStatus.connecting.obs;
+
+  WifiDirectConnectionController({required super.accountInfo, required super.messagesRepo, required super.chatHistoryRepo});
 
   @override
   void onInit() {

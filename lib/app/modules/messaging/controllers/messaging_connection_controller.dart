@@ -37,7 +37,7 @@ import '../utils/binary_file_receiving_state.dart';
 import '../utils/data_binary_message.dart';
 import 'common_messaging_controller.dart';
 
-class MessagingConnectionController extends CommonMessagingController {
+class MessagingConnectionController extends CommonMessagingConnectionController {
   final Messaging messaging;
 
   final JsonDecoder _decoder = const JsonDecoder();

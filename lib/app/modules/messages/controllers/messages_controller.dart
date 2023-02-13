@@ -44,6 +44,7 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
+import '../../messaging/controllers/common_messaging_controller.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../../messaging/messaging_session.dart';
@@ -54,13 +55,16 @@ import '../data/usecases/update_message_usecase.dart';
 
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
-  final MessagingConnectionController messagingConnection;
-  final WifiDirectConnectionController wifiDirectConnection;
+
+  late final CommonMessagingConnectionController messagingConnection;
+  // final MessagingConnectionController messagingConnection;
+  // final WifiDirectConnectionController wifiDirectConnection;
 
   MessagesController(
       {required this.messagesRepo,
-      required this.messagingConnection,
-      required this.wifiDirectConnection});
+      // required this.messagingConnection,
+      // required this.wifiDirectConnection
+      });
 
   final _globalMessageController = Get.find<GlobalMessageController>();
   late MessagingConnectionType connectionType;
@@ -103,7 +107,7 @@ class MessagesController extends GetxController {
     _initMessagesArguments();
     _initUiControllers();
 
-    // initialize the messageing Connection
+    // initialize the messaging Connection
     await _initMessagingConnection();
 
     _initMessagesRepo();
@@ -153,21 +157,43 @@ class MessagesController extends GetxController {
   }
 
   _initMessagingConnection() async {
-    if (connectionType == MessagingConnectionType.internet) {
-      await _initDataChannel();
-    } else if (connectionType == MessagingConnectionType.wifiDirect) {
-      //TODO : handle init wifi direct connection
-      await _initWifiDirectConnection();
+    switch (connectionType) {
+      case MessagingConnectionType.internet:
+      // TODO remove debug print
+        print('switch to the internet connection messaging');
+        messagingConnection = Get.find<MessagingConnectionController>(tag: "internet");
+        break;
+      case MessagingConnectionType.wifiDirect:
+      // TODO remove debug print
+        print('switch to the wifi-direct connection messaging');
+        messagingConnection = Get.find<WifiDirectConnectionController>(tag: "wifi-direct");
+        break;
+      default:
+        // TODO replace this value to correct if connectionType is unknown (if it possible)
+        messagingConnection = Get.find<CommonMessagingConnectionController>(tag: "internet");
+        break;
     }
+
+    messagingConnection.initMessagingConnection(remoteId: args.user.walletAddress);
+
+    // TODO this is debug test of put instance as CommonMessagingConnectionController
+    Get.put(messagingConnection);
+
+    // if (connectionType == MessagingConnectionType.internet) {
+    //   await _initDataChannel();
+    // } else if (connectionType == MessagingConnectionType.wifiDirect) {
+    //   //TODO : handle init wifi direct connection
+    //   await _initWifiDirectConnection();
+    // }
   }
 
-  _initDataChannel() async {
-    await messagingConnection.initMessagingConnection(remoteId: args.user.walletAddress);
-  }
-
-  _initWifiDirectConnection() async {
-    await wifiDirectConnection.initWifiDirectMessaging();
-  }
+  // _initDataChannel() async {
+  //   await messagingConnection.initMessagingConnection(remoteId: args.user.walletAddress);
+  // }
+  //
+  // _initWifiDirectConnection() async {
+  //   await wifiDirectConnection.initWifiDirectMessaging();
+  // }
 
   void _initMessagesStream() async {
     _messagesStreamSubscription =

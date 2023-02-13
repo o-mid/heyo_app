@@ -17,8 +17,9 @@ class MessagesBinding extends Bindings {
               appDatabaseProvider: Get.find(),
             ),
           ),
-          messagingConnection: Get.find<CommonMessagingController>(tag: "internet"),
-          wifiDirectConnection: Get.find<WifiDirectConnectionController>()),
+          // messagingConnection: Get.find<CommonMessagingController>(tag: "internet"),
+          // wifiDirectConnection: Get.find<WifiDirectConnectionController>()
+      ),
     );
   }
 }
