@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import '../../../messaging/controllers/common_messaging_controller.dart';
 import '../../../messaging/controllers/messaging_connection_controller.dart';
 import '../../../messaging/usecases/send_data_channel_message_usecase.dart';
 import '../models/messages/confirm_message_model.dart';
@@ -13,8 +14,8 @@ class ConfirmMessage {
       appDatabaseProvider: Get.find(),
     ),
   );
-  final MessagingConnectionController messagingConnection =
-      Get.find<MessagingConnectionController>();
+  final CommonMessagingConnectionController messagingConnection =
+      Get.find<CommonMessagingConnectionController>();
 
   execute({required ConfirmMessageType confirmMessageType}) async {
     switch (confirmMessageType.runtimeType) {

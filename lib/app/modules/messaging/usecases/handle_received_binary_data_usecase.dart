@@ -21,7 +21,7 @@ import '../utils/binary_file_receiving_state.dart';
 class HandleReceivedBinaryData {
   final MessagesAbstractRepo messagesRepo;
   final CommonMessagingConnectionController messagingConnection =
-      Get.find<MessagingConnectionController>();
+      Get.find<CommonMessagingConnectionController>();
 
   final String chatId;
 

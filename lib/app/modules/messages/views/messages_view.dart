@@ -8,7 +8,6 @@ import 'package:heyo/app/modules/messages/widgets/body/messages_list.dart';
 import 'package:heyo/app/modules/messages/widgets/footer/messages_footer.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import '../../messaging/widgets/datachannel_connection_status.dart';
-import '../../messaging/widgets/wifi_direct_connection_status.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../controllers/messages_controller.dart';
 

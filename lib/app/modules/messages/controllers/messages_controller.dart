@@ -57,14 +57,8 @@ class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
 
   late final CommonMessagingConnectionController messagingConnection;
-  // final MessagingConnectionController messagingConnection;
-  // final WifiDirectConnectionController wifiDirectConnection;
 
-  MessagesController(
-      {required this.messagesRepo,
-      // required this.messagingConnection,
-      // required this.wifiDirectConnection
-      });
+  MessagesController({required this.messagesRepo,});
 
   final _globalMessageController = Get.find<GlobalMessageController>();
   late MessagingConnectionType connectionType;
@@ -106,12 +100,8 @@ class MessagesController extends GetxController {
     super.onInit();
     _initMessagesArguments();
     _initUiControllers();
-
-    // initialize the messaging Connection
-    await _initMessagingConnection();
-
+    _initMessagingConnection();
     _initMessagesRepo();
-
     _sendForwardedMessages();
 
     // Close emoji picker when keyboard opens
@@ -156,44 +146,32 @@ class MessagesController extends GetxController {
     _initMessagesStream();
   }
 
-  _initMessagingConnection() async {
+  _initMessagingConnection() {
     switch (connectionType) {
       case MessagingConnectionType.internet:
       // TODO remove debug print
         print('switch to the internet connection messaging');
-        messagingConnection = Get.find<MessagingConnectionController>(tag: "internet");
+        messagingConnection = Get.find<MessagingConnectionController>();
         break;
       case MessagingConnectionType.wifiDirect:
       // TODO remove debug print
         print('switch to the wifi-direct connection messaging');
-        messagingConnection = Get.find<WifiDirectConnectionController>(tag: "wifi-direct");
+        messagingConnection = Get.find<WifiDirectConnectionController>();
         break;
       default:
         // TODO replace this value to correct if connectionType is unknown (if it possible)
-        messagingConnection = Get.find<CommonMessagingConnectionController>(tag: "internet");
+        print('switch to the unknown connection type messaging (internet by default)');
+        messagingConnection = Get.find<MessagingConnectionController>();
         break;
     }
 
-    messagingConnection.initMessagingConnection(remoteId: args.user.walletAddress);
-
     // TODO this is debug test of put instance as CommonMessagingConnectionController
+    // Put current actual CommonMessagingConnectionController instance to use it in messaging process flow.
     Get.put(messagingConnection);
 
-    // if (connectionType == MessagingConnectionType.internet) {
-    //   await _initDataChannel();
-    // } else if (connectionType == MessagingConnectionType.wifiDirect) {
-    //   //TODO : handle init wifi direct connection
-    //   await _initWifiDirectConnection();
-    // }
-  }
+    messagingConnection.initMessagingConnection(remoteId: args.user.walletAddress);
 
-  // _initDataChannel() async {
-  //   await messagingConnection.initMessagingConnection(remoteId: args.user.walletAddress);
-  // }
-  //
-  // _initWifiDirectConnection() async {
-  //   await wifiDirectConnection.initWifiDirectMessaging();
-  // }
+  }
 
   void _initMessagesStream() async {
     _messagesStreamSubscription =
