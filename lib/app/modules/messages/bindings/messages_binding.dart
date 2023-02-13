@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/provider/messages_provider.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_repo.dart';
+import 'package:heyo/app/modules/messaging/controllers/common_messaging_controller.dart';
 
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
@@ -16,7 +17,7 @@ class MessagesBinding extends Bindings {
               appDatabaseProvider: Get.find(),
             ),
           ),
-          messagingConnection: Get.find<MessagingConnectionController>(),
+          messagingConnection: Get.find<CommonMessagingController>(tag: "internet"),
           wifiDirectConnection: Get.find<WifiDirectConnectionController>()),
     );
   }

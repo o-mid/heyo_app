@@ -112,10 +112,12 @@ class GlobalBindings extends Bindings {
     Get.put(ConnectionController(p2pState: p2pState));
     Get.put(
       messagingConnectionController,
+      tag: "internet",
       permanent: true,
     );
     Get.put(
       wifiDirectConnectionController,
+      tag: "wifi-direct",
       permanent: true,
     );
 

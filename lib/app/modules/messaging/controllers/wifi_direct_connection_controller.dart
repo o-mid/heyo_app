@@ -6,24 +6,25 @@ import 'messaging_connection_controller.dart';
 // Todo :  change this status names if needed base on the connection status of the wifi direct
 enum WifiDirectConnectivityStatus { connectionLost, connecting, justConnected, online }
 
-class WifiDirectConnectionController extends GetxController {
+class WifiDirectConnectionController extends CommonMessagingController {
   Rx<WifiDirectConnectivityStatus> wifiDirectStatus = WifiDirectConnectivityStatus.connecting.obs;
+
   @override
   void onInit() {
     super.onInit();
   }
 
+
   @override
-  void onReady() {
-    super.onReady();
+  Future<void> initMessagingConnection({required String remoteId}) async {
   }
 
   @override
-  void onClose() {}
-
-  // TODO:
-
-  initWifiDirectMessaging() async {
-    print("init Wifi Direct Messaging");
+  Future<void> sendTextMessage({required String text}) async {
   }
+
+  @override
+  Future<void> sendBinaryMessage({required Uint8List binary}) async {
+  }
+
 }
