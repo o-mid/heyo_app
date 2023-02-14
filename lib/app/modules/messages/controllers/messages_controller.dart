@@ -43,6 +43,7 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/messaging_session.dart';
@@ -1239,5 +1240,12 @@ class MessagesController extends GetxController {
   Future<List<int>> pathToUint8List(String path) async {
     var data = await rootBundle.load(path);
     return data.buffer.asUint8List().toList();
+  }
+
+  void onMessagesItemVisibilityChanged(
+      {required VisibilityInfo visibilityInfo, required int itemIndex}) {
+    if (visibilityInfo.visibleFraction == 1) {
+      currentItemIndex.value = itemIndex;
+    }
   }
 }

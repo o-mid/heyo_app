@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
@@ -11,6 +12,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 import 'beginning_of_messages_header.dart';
 import 'message_selection_wrapper.dart';
+import 'message_item_widget.dart';
 
 class MessagesList extends StatelessWidget {
   const MessagesList({Key? key}) : super(key: key);
@@ -28,59 +30,21 @@ class MessagesList extends StatelessWidget {
           }
         },
         child: ListView.builder(
-          primary: false,
-          controller: controller.scrollController,
-          padding: EdgeInsets.only(top: 54.h, bottom: 16.h),
-          itemCount: controller.messages.length + 1,
-          itemBuilder: (context, index) {
-            if (index == 0) {
-              return BeginningOfMessagesHeader(
-                chat: controller.args.user.chatModel,
-              );
-            }
+            primary: false,
+            controller: controller.scrollController,
+            padding: EdgeInsets.only(top: 54.h, bottom: 16.h),
+            itemCount: controller.messages.length + 1,
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return BeginningOfMessagesHeader(
+                  chat: controller.args.user.chatModel,
+                );
+              } else {
+                final message = controller.messages[index - 1];
 
-            final message = controller.messages[index - 1];
-            final prevMessage = index == 1 ? null : controller.messages[index - 2];
-
-            // Adds date header at beginning of new messages in a certain date
-            var dateHeaderWidgets = <Widget>[];
-            if (prevMessage == null || !prevMessage.timestamp.isSameDate(message.timestamp)) {
-              dateHeaderWidgets = [
-                CustomSizes.mediumSizedBoxHeight,
-                Text(
-                  message.timestamp.differenceFromNow(),
-                  style: TEXTSTYLES.kBodyTag.copyWith(
-                    color: COLORS.kTextBlueColor,
-                    fontSize: 10.sp,
-                  ),
-                ),
-                CustomSizes.mediumSizedBoxHeight,
-              ];
-            }
-
-            return VisibilityDetector(
-              key: Key(index.toString()),
-              onVisibilityChanged: (VisibilityInfo info) {
-                if (info.visibleFraction == 1) {
-                  controller.currentItemIndex.value = index;
-                }
-              },
-              child: AutoScrollTag(
-                key: Key(index.toString()),
-                index: index,
-                controller: controller.scrollController,
-                child: Column(
-                  children: [
-                    ...dateHeaderWidgets,
-                    MessageSelectionWrapper(
-                      message: message,
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
+                return MessageItemWidget(index: index, message: message);
+              }
+            }),
       );
     });
   }
