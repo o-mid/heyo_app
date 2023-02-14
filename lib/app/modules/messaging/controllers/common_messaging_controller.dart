@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -23,8 +22,7 @@ import '../usecases/handle_received_binary_data_usecase.dart';
 import '../utils/binary_file_receiving_state.dart';
 import '../utils/data_binary_message.dart';
 
-
-enum DataChannelConnectivityStatus { connectionLost, connecting, justConnected, online }
+enum ConnectivityStatus { connectionLost, connecting, justConnected, online }
 
 /// Declares common entities for using in specific implementations of Internet or Wi-Fi Direct
 /// messaging algorithms.
@@ -40,15 +38,11 @@ abstract class CommonMessagingConnectionController extends GetxController {
 
   /// Represents current status of used data channel.
   // TODO it is necessary to change the source of this property in using classes like DataChannelConnectionStatusWidget
-  Rx<DataChannelConnectivityStatus> dataChannelStatus =
-      DataChannelConnectivityStatus.connecting.obs;
+  Rx<ConnectivityStatus> connectivityStatus = ConnectivityStatus.connecting.obs;
 
   //
   CommonMessagingConnectionController(
-      { required this.accountInfo,
-        required this.messagesRepo,
-        required this.chatHistoryRepo
-      });
+      {required this.accountInfo, required this.messagesRepo, required this.chatHistoryRepo});
 
   @override
   void onInit() {
@@ -78,14 +72,12 @@ abstract class CommonMessagingConnectionController extends GetxController {
   /// Should be overridden in the derived class.
   Future<void> sendBinaryMessage({required Uint8List binary});
 
-
   // Public methods, that are used by derived classes independently of connection type,
   // are declared and implemented below.
 
-
   Future<void> setConnectivityOnline() async {
     await Future.delayed(const Duration(seconds: 2), () {
-      dataChannelStatus.value = DataChannelConnectivityStatus.online;
+      connectivityStatus.value = ConnectivityStatus.online;
     });
   }
 
@@ -105,10 +97,8 @@ abstract class CommonMessagingConnectionController extends GetxController {
   }
 
   /// Handles binary data, received from remote peer.
-  Future<void> handleDataChannelBinary({
-    required Uint8List binaryData,
-    required MessageSession session
-  }) async {
+  Future<void> handleDataChannelBinary(
+      {required Uint8List binaryData, required MessageSession session}) async {
     DataBinaryMessage message = DataBinaryMessage.parse(binaryData);
     if (message.chunk.isNotEmpty) {
       if (currentState == null) {
@@ -127,50 +117,40 @@ abstract class CommonMessagingConnectionController extends GetxController {
   }
 
   /// Handles text data, received from remote peer.
-  Future<void> handleDataChannelText({
-    required Map<String, dynamic> receivedJson,
-    required MessageSession session
-  }) async {
+  Future<void> handleDataChannelText(
+      {required Map<String, dynamic> receivedJson, required MessageSession session}) async {
     DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(receivedJson);
 
     switch (channelMessage.dataChannelMessagetype) {
       case DataChannelMessageType.message:
-        await saveReceivedMessage(
-            receivedMessageJson: channelMessage.message,
-            chatId: session.cid
-        );
+        await saveReceivedMessage(receivedMessageJson: channelMessage.message, chatId: session.cid);
         break;
 
       case DataChannelMessageType.delete:
         await deleteReceivedMessage(
-            receivedDeleteJson: channelMessage.message,
-            chatId: session.cid
-        );
+            receivedDeleteJson: channelMessage.message, chatId: session.cid);
         break;
 
       case DataChannelMessageType.update:
         await updateReceivedMessage(
-            receivedUpdateJson: channelMessage.message,
-            chatId: session.cid
-        );
+            receivedUpdateJson: channelMessage.message, chatId: session.cid);
         break;
 
       case DataChannelMessageType.confirm:
         await confirmReceivedMessage(
-            receivedConfirmJson: channelMessage.message,
-            chatId: session.cid
-        );
+            receivedConfirmJson: channelMessage.message, chatId: session.cid);
         break;
     }
   }
-
 
   Future<void> saveReceivedMessage(
       {required Map<String, dynamic> receivedMessageJson, required String chatId}) async {
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
 
     await messagesRepo.createMessage(
-        message: receivedMessage.copyWith(isFromMe: false,),
+        message: receivedMessage.copyWith(
+          isFromMe: false,
+        ),
         chatId: chatId);
 
     // after saving the message we confirm it and send a text to sender side with the message id
@@ -195,7 +175,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
     if (currentMessage != null) {
       // get the new reactions and check if user is already reacted to the message or not
       Map<String, ReactionModel> receivedReactions =
-      updateMessage.message.reactions.map((key, value) {
+          updateMessage.message.reactions.map((key, value) {
         ReactionModel newValue = value.copyWith(
           isReactedByMe: currentMessage.reactions[key]?.isReactedByMe ?? false,
         );
@@ -217,7 +197,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
     final String messageId = confirmMessage.messageId;
 
     MessageModel? currentMessage =
-    await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
+        await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
     // check if message is found and update the Message status
     if (currentMessage != null) {
       await messagesRepo.updateMessage(
@@ -232,7 +212,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
         id: sessionCid,
         isOnline: true,
         name:
-        "${sessionCid.characters.take(4).string}...${sessionCid.characters.takeLast(4).string}",
+            "${sessionCid.characters.take(4).string}...${sessionCid.characters.takeLast(4).string}",
         icon: getMockIconUrl(),
         lastMessage: "",
         isVerified: true,
@@ -250,5 +230,4 @@ abstract class CommonMessagingConnectionController extends GetxController {
       Get.until((route) => Get.currentRoute != Routes.MESSAGES);
     }
   }
-
 }

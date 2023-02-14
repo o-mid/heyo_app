@@ -13,8 +13,8 @@ import '../../shared/widgets/connection_status_body.dart';
 import '../controllers/common_messaging_controller.dart';
 import '../controllers/messaging_connection_controller.dart';
 
-class DatachannelConnectionStatusWidget extends GetView<CommonMessagingConnectionController> {
-  DatachannelConnectionStatusWidget({Key? key}) : super(key: key);
+class ConnectionStatusWidget extends GetView<CommonMessagingConnectionController> {
+  ConnectionStatusWidget({Key? key}) : super(key: key);
 
   final offsetAnimation = Tween<Offset>(
     begin: const Offset(0, -1),
@@ -31,20 +31,20 @@ class DatachannelConnectionStatusWidget extends GetView<CommonMessagingConnectio
       Color backgroundColor;
       String title;
       Color titleColor;
-      switch (controller.dataChannelStatus.value) {
-        case DataChannelConnectivityStatus.connectionLost:
+      switch (controller.connectivityStatus.value) {
+        case ConnectivityStatus.connectionLost:
           title = LocaleKeys.DataChannelStatus_ConnectionLost.tr;
           backgroundColor = COLORS.kStatesLightErrorColor;
           titleColor = COLORS.kStatesErrorColor;
           break;
 
-        case DataChannelConnectivityStatus.connecting:
+        case ConnectivityStatus.connecting:
           title = LocaleKeys.DataChannelStatus_connecting.tr;
           backgroundColor = COLORS.kBrightBlueColor;
           titleColor = COLORS.kDarkBlueColor;
           break;
 
-        case DataChannelConnectivityStatus.justConnected:
+        case ConnectivityStatus.justConnected:
           title = LocaleKeys.DataChannelStatus_connected.tr;
           backgroundColor = COLORS.kGreenLighterColor;
           titleColor = COLORS.kStatesSuccessColor;
@@ -84,8 +84,8 @@ class DatachannelConnectionStatusWidget extends GetView<CommonMessagingConnectio
   }) async {
     for (var i = 0; i < frequency; i++) {
       await Future.delayed(Duration(seconds: delayInSeconds), () {
-        controller.dataChannelStatus.value = DataChannelConnectivityStatus
-            .values[Random().nextInt(DataChannelConnectivityStatus.values.length)];
+        controller.connectivityStatus.value =
+            ConnectivityStatus.values[Random().nextInt(ConnectivityStatus.values.length)];
       });
     }
   }

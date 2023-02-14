@@ -48,8 +48,12 @@ class MessagingConnectionController extends CommonMessagingConnectionController 
 
   late RTCDataChannel _dataChannel;
 
-  MessagingConnectionController(
-      {required this.messaging, required super.accountInfo, required super.messagesRepo, required super.chatHistoryRepo,});
+  MessagingConnectionController({
+    required this.messaging,
+    required super.accountInfo,
+    required super.messagesRepo,
+    required super.chatHistoryRepo,
+  });
 
   @override
   void onInit() {
@@ -62,7 +66,6 @@ class MessagingConnectionController extends CommonMessagingConnectionController 
     // value base on the changes on messaging.onMessageState
     _observeMessagingStatus();
   }
-
 
   @override
   Future<void> initMessagingConnection({required String remoteId}) async {
@@ -89,8 +92,6 @@ class MessagingConnectionController extends CommonMessagingConnectionController 
     await _dataChannel.send(RTCDataChannelMessage.fromBinary(binary));
   }
 
-
-
   void _setDataChannel() {
     messaging.onDataChannel = (_, channel) {
       _dataChannel = channel;
@@ -111,7 +112,7 @@ class MessagingConnectionController extends CommonMessagingConnectionController 
 
       switch (status) {
         case ConnectionStatus.RINGING:
-        // accept Messaging Connection and navigate to Messaging screen
+          // accept Messaging Connection and navigate to Messaging screen
           await _handleConnectionRinging(session: session);
           break;
 
@@ -180,18 +181,18 @@ class MessagingConnectionController extends CommonMessagingConnectionController 
   Future<void> _applyDataChannelConnectivityStatus(ConnectionStatus status) async {
     switch (status) {
       case ConnectionStatus.CONNECTED:
-        dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
+        connectivityStatus.value = ConnectivityStatus.justConnected;
         // add a delay to show the just connected status for 2 seconds
         setConnectivityOnline();
         break;
 
       case ConnectionStatus.BYE:
-        dataChannelStatus.value = DataChannelConnectivityStatus.connectionLost;
+        connectivityStatus.value = ConnectivityStatus.connectionLost;
 
         break;
 
       default:
-        dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
+        connectivityStatus.value = ConnectivityStatus.connecting;
         break;
     }
   }
@@ -228,5 +229,4 @@ class MessagingConnectionController extends CommonMessagingConnectionController 
       );
     }
   }
-
 }
