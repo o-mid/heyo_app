@@ -60,9 +60,9 @@ class MessageItemWidget extends StatelessWidget {
       return messageBody;
     } else {
       return VisibilityDetector(
-          key: Key(index.toString()),
-          onVisibilityChanged: (info) =>
-              controller.onMessagesItemVisibilityChanged(visibilityInfo: info, itemIndex: index),
+          key: Key(message.messageId),
+          onVisibilityChanged: (info) => controller.onMessagesItemVisibilityChanged(
+              visibilityInfo: info, itemIndex: index, itemKey: message.messageId),
           child: messageBody);
     }
   }

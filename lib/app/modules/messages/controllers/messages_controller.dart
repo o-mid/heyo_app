@@ -70,7 +70,8 @@ class MessagesController extends GetxController {
   final messages = <MessageModel>[].obs;
   final selectedMessages = <MessageModel>[].obs;
   final replyingTo = Rxn<ReplyToModel>();
-  final currentItemIndex = 0.obs;
+  RxInt currentItemIndex = 0.obs;
+  RxInt lastReadRemoteMessagesIndex = 0.obs;
 
   final locationMessage = Rxn<LocationMessageModel>();
   late MessagesViewArgumentsModel args;
@@ -109,15 +110,6 @@ class MessagesController extends GetxController {
     _messagesStreamSubscription =
         (await messagesRepo.getMessagesStream(chatId)).listen((newMessages) {
       messages.value = newMessages;
-      //find the last index of new messages that the status of them is deliverd
-      final lastDeliveredIndex = newMessages.lastIndexWhere(
-        (element) => element.isFromMe == false && element.status == MessageStatus.delivered,
-        currentItemIndex.value + 1,
-      );
-      if (lastDeliveredIndex != -1) {
-        print(newMessages[lastDeliveredIndex].messageId);
-        toogleMessageReadStatus(messageId: newMessages[lastDeliveredIndex].messageId);
-      }
 
       // WidgetsBinding.instance.addPostFrameCallback(
       //   (_) {
@@ -1243,9 +1235,22 @@ class MessagesController extends GetxController {
   }
 
   void onMessagesItemVisibilityChanged(
-      {required VisibilityInfo visibilityInfo, required int itemIndex}) {
+      {required VisibilityInfo visibilityInfo,
+      required int itemIndex,
+      required String itemKey}) async {
     if (visibilityInfo.visibleFraction == 1) {
       currentItemIndex.value = itemIndex;
+      print("currentItemIndex.value: ${currentItemIndex.value}");
+      print("lastReadRemoteMessagesIndex.value: ${lastReadRemoteMessagesIndex.value}");
+      if (currentItemIndex.value > lastReadRemoteMessagesIndex.value) {
+        lastReadRemoteMessagesIndex.value = currentItemIndex.value;
+
+        MessageModel? msg = await messagesRepo.getMessageById(messageId: itemKey, chatId: chatId);
+        if (msg != null && msg.status != MessageStatus.read) {
+          print("${msg.status}");
+          toogleMessageReadStatus(messageId: msg.messageId);
+        }
+      }
     }
   }
 }
