@@ -69,6 +69,7 @@ class MessagesController extends GetxController {
   final messages = <MessageModel>[].obs;
   final selectedMessages = <MessageModel>[].obs;
   final replyingTo = Rxn<ReplyToModel>();
+  final currentItemIndex = 0.obs;
 
   final locationMessage = Rxn<LocationMessageModel>();
   late MessagesViewArgumentsModel args;
@@ -110,18 +111,21 @@ class MessagesController extends GetxController {
       //find the last index of new messages that the status of them is deliverd
       final lastDeliveredIndex = newMessages.lastIndexWhere(
         (element) => element.isFromMe == false && element.status == MessageStatus.delivered,
+        currentItemIndex.value + 1,
       );
       if (lastDeliveredIndex != -1) {
         print(newMessages[lastDeliveredIndex].messageId);
         toogleMessageReadStatus(messageId: newMessages[lastDeliveredIndex].messageId);
       }
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        animateToBottom(
-          duration: ANIMATIONS.receiveMsgDurtion,
-          curve: ANIMATIONS.getAllMsgscurve,
-        );
-      });
+      // WidgetsBinding.instance.addPostFrameCallback(
+      //   (_) {
+      //     animateToBottom(
+      //       duration: ANIMATIONS.receiveMsgDurtion,
+      //       curve: ANIMATIONS.getAllMsgscurve,
+      //     );
+      //   },
+      // );
     });
   }
 

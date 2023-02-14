@@ -7,6 +7,7 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import 'beginning_of_messages_header.dart';
 import 'message_selection_wrapper.dart';
@@ -17,6 +18,7 @@ class MessagesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MessagesController>();
+
     return Obx(() {
       // when the media Media Glassmorphic is Open tap on the rest of the screen will close it
       return GestureDetector(
@@ -56,17 +58,25 @@ class MessagesList extends StatelessWidget {
               ];
             }
 
-            return AutoScrollTag(
+            return VisibilityDetector(
               key: Key(index.toString()),
-              index: index,
-              controller: controller.scrollController,
-              child: Column(
-                children: [
-                  ...dateHeaderWidgets,
-                  MessageSelectionWrapper(
-                    message: message,
-                  ),
-                ],
+              onVisibilityChanged: (VisibilityInfo info) {
+                if (info.visibleFraction == 1) {
+                  controller.currentItemIndex.value = index;
+                }
+              },
+              child: AutoScrollTag(
+                key: Key(index.toString()),
+                index: index,
+                controller: controller.scrollController,
+                child: Column(
+                  children: [
+                    ...dateHeaderWidgets,
+                    MessageSelectionWrapper(
+                      message: message,
+                    ),
+                  ],
+                ),
               ),
             );
           },
