@@ -1,11 +1,12 @@
 import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
 import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
+import 'package:heyo/app/modules/shared/providers/database/dao/user_preferences/user_preferences_abstract_provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/utils/value_utils.dart';
 
-import '../../../data/models/user_preferences.dart';
+import '../../../../data/models/user_preferences.dart';
 
-class UserPreferencesProvider {
+class UserPreferencesProvider implements UserPreferencesAbstractProvider {
   final AppDatabaseProvider appDatabaseProvider;
   UserPreferencesProvider({required this.appDatabaseProvider});
   static const String userPreferencesStoreName = 'user_preferences';
@@ -20,7 +21,8 @@ class UserPreferencesProvider {
   }
 
   // create UserPreferences if not exists or update the exiting one
-  Future<void> createOrUpdateUserPreferences({required UserPreferences user}) async {
+  @override
+  Future<void> createOrUpdateUserPreferences(UserPreferences user) async {
     final finder = Finder(filter: Filter.byKey(user.chatId));
     final record = await _userStore.findFirst(
       await _db,
@@ -37,7 +39,8 @@ class UserPreferencesProvider {
     }
   }
 
-  Future<void> updateUserPreferences({required UserPreferences user}) async {
+  @override
+  Future<void> updateUserPreferences(UserPreferences user) async {
     final finder = Finder(filter: Filter.byKey(user.chatId));
     await _userStore.update(
       await _db,
@@ -46,7 +49,8 @@ class UserPreferencesProvider {
     );
   }
 
-  Future<void> deleteUserPreferences({required String chatId}) async {
+  @override
+  Future<void> deleteUserPreferences(String chatId) async {
     final finder = Finder(filter: Filter.byKey(chatId));
     await _userStore.delete(
       await _db,
@@ -54,7 +58,8 @@ class UserPreferencesProvider {
     );
   }
 
-  Future<UserPreferences?> getUserPreferences({required String chatId}) async {
+  @override
+  Future<UserPreferences?> getUserPreferencesById(String chatId) async {
     final finder = Finder(filter: Filter.byKey(chatId));
     final record = await _userStore.findFirst(
       await _db,
@@ -66,6 +71,7 @@ class UserPreferencesProvider {
     return UserPreferences.fromJson(record.value);
   }
 
+  @override
   Future<List<UserPreferences>> getAllUserPreferences() async {
     final records = await _userStore.find(
       await _db,
