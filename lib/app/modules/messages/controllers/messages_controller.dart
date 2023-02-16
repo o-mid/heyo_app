@@ -9,6 +9,8 @@ import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.da
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/messages/utils/open_camera_for_sending_media_message.dart';
+import 'package:heyo/app/modules/shared/providers/database/dao/user_preferences/user_preferences_abstract_provider.dart';
+import 'package:heyo/app/modules/shared/providers/database/repos/user_preferences/user_preferences_abstract_repo.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
@@ -48,15 +50,20 @@ import 'package:visibility_detector/visibility_detector.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/messaging_session.dart';
 import '../../share_files/models/file_model.dart';
+import '../../shared/data/models/user_preferences.dart';
 import '../../shared/utils/constants/animations_constant.dart';
 import '../data/usecases/delete_message_usecase.dart';
 import '../data/usecases/update_message_usecase.dart';
 
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
+  final UserPreferencesAbstractRepo userPreferencesRepo;
   final MessagingConnectionController messagingConnection;
 
-  MessagesController({required this.messagesRepo, required this.messagingConnection});
+  MessagesController(
+      {required this.messagesRepo,
+      required this.messagingConnection,
+      required this.userPreferencesRepo});
 
   final _globalMessageController = Get.find<GlobalMessageController>();
   double _keyboardHeight = 0;
@@ -72,6 +79,7 @@ class MessagesController extends GetxController {
   final replyingTo = Rxn<ReplyToModel>();
   RxInt currentItemIndex = 0.obs;
   RxInt lastReadRemoteMessagesIndex = 0.obs;
+  RxString lastReadRemoteMessagesKey = "".obs;
 
   final locationMessage = Rxn<LocationMessageModel>();
   late MessagesViewArgumentsModel args;
@@ -125,11 +133,17 @@ class MessagesController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    animateToBottom();
+    // animateToBottom();
   }
 
   @override
-  void onClose() {
+  Future<void> onClose() async {
+    await userPreferencesRepo.createOrUpdateUserPreferences(UserPreferences(
+      chatId: chatId,
+      scrollPosition: lastReadRemoteMessagesKey.value,
+    ));
+
+    print("lastReadRemoteMessagesKey " + lastReadRemoteMessagesKey.value);
     // Todo: remove this when a global player is implemented
     Get.find<AudioMessageController>().player.stop();
 
@@ -798,12 +812,20 @@ class MessagesController extends GetxController {
   void _getMessages() async {
     // await _addMockData();
     messages.value = await messagesRepo.getMessages(chatId);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      animateToBottom(
-        duration: ANIMATIONS.getAllMsgsDurtion,
-        curve: ANIMATIONS.getAllMsgscurve,
-      );
-    });
+    UserPreferences? userPreferences = await userPreferencesRepo.getUserPreferencesById(chatId);
+
+    if (userPreferences != null) {
+      print("userPreferences is not null");
+      print("userPreferences.scrollPosition ${userPreferences.scrollPosition}");
+      scrollToMessage(userPreferences.scrollPosition);
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        animateToBottom(
+          duration: ANIMATIONS.getAllMsgsDurtion,
+          curve: ANIMATIONS.getAllMsgscurve,
+        );
+      });
+    }
   }
 
 //TODO remove?
@@ -1244,7 +1266,8 @@ class MessagesController extends GetxController {
       print("lastReadRemoteMessagesIndex.value: ${lastReadRemoteMessagesIndex.value}");
       if (currentItemIndex.value > lastReadRemoteMessagesIndex.value) {
         lastReadRemoteMessagesIndex.value = currentItemIndex.value;
-
+        lastReadRemoteMessagesKey.value = itemKey;
+        print("lastReadRemoteMessagesKey.value ${lastReadRemoteMessagesKey.value}");
         MessageModel? msg = await messagesRepo.getMessageById(messageId: itemKey, chatId: chatId);
         if (msg != null && msg.status != MessageStatus.read) {
           print("${msg.status}");
