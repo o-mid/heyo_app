@@ -23,7 +23,7 @@ class UserPreferencesProvider implements UserPreferencesAbstractProvider {
   // create UserPreferences if not exists or update the exiting one
   @override
   Future<void> createOrUpdateUserPreferences(UserPreferences user) async {
-    final finder = Finder(filter: Filter.byKey(user.chatId));
+    final finder = Finder(filter: Filter.equals(UserPreferences.chatIdSerializedName, user.chatId));
     final record = await _userStore.findFirst(
       await _db,
       finder: finder,
@@ -41,7 +41,7 @@ class UserPreferencesProvider implements UserPreferencesAbstractProvider {
 
   @override
   Future<void> updateUserPreferences(UserPreferences user) async {
-    final finder = Finder(filter: Filter.byKey(user.chatId));
+    final finder = Finder(filter: Filter.equals(UserPreferences.chatIdSerializedName, user.chatId));
     await _userStore.update(
       await _db,
       user.toJson(),
@@ -51,7 +51,7 @@ class UserPreferencesProvider implements UserPreferencesAbstractProvider {
 
   @override
   Future<void> deleteUserPreferences(String chatId) async {
-    final finder = Finder(filter: Filter.byKey(chatId));
+    final finder = Finder(filter: Filter.equals(UserPreferences.chatIdSerializedName, chatId));
     await _userStore.delete(
       await _db,
       finder: finder,
@@ -60,7 +60,7 @@ class UserPreferencesProvider implements UserPreferencesAbstractProvider {
 
   @override
   Future<UserPreferences?> getUserPreferencesById(String chatId) async {
-    final finder = Finder(filter: Filter.byKey(chatId));
+    final finder = Finder(filter: Filter.equals(UserPreferences.chatIdSerializedName, chatId));
     final record = await _userStore.findFirst(
       await _db,
       finder: finder,
