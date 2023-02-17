@@ -89,6 +89,8 @@ class WifiDirectController extends GetxController {
       case EventType.linkedPeer:
         // incomingConnection = true.obs;
         // connectedPeer = event.message as Peer;
+        wifiDirectConnectionController.eventHandler(event);
+
         print('WifiDirectController: linked to ${(event.message as Peer).multiaddr}');
         break;
 
@@ -96,6 +98,8 @@ class WifiDirectController extends GetxController {
         // incomingConnection = false.obs;
         // outgoingConnection = false.obs;
         // connectedPeer = null;
+        wifiDirectConnectionController.eventHandler(event);
+
         print('WifiDirectController: Wifi-direct group stopped');
         break;
 
@@ -103,7 +107,6 @@ class WifiDirectController extends GetxController {
         break;
     }
 
-    wifiDirectConnectionController.eventHandler(event);
   }
 
   _messageHandler(HeyoWifiDirectMessage message) {

@@ -92,10 +92,18 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
 
   eventHandler(WifiDirectEvent event) {
     print('WifiDirectConnectionController(remoteId $remoteId): WifiDirect event: ${event.type}');
-    if (event.type == EventType.linkedPeer) {
-      remoteId = (event.message as Peer).coreID;
-      _startIncomingMessaging();
+    switch (event.type) {
+      case EventType.linkedPeer:
+        remoteId = (event.message as Peer).coreID;
+        _startIncomingMessaging();
+        break;
+      case EventType.groupStopped:
+        handleConnectionClose();
+        break;
+      default:
+        break;
     }
+
   }
 
   _startIncomingMessaging() async {
