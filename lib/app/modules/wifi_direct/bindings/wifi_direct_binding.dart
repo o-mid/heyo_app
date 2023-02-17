@@ -16,6 +16,7 @@ class WifiDirectBinding extends Bindings {
           cryptographyKeyGenerator: Web3Keys(web3client: GlobalBindings.web3Client),
         ),
         heyoWifiDirect: GlobalBindings.heyoWifiDirect,
+        wifiDirectConnectionController: GlobalBindings.wifiDirectConnectionController,
       ),
     );
   }

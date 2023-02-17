@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../generated/assets.gen.dart';
 import '../../../../generated/locales.g.dart';
 import '../../chats/data/models/chat_model.dart';
+import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../p2p_node/data/account/account_info.dart';
 
@@ -18,7 +20,9 @@ class WifiDirectController extends GetxController {
   final wifiDirectEnabled = false.obs;
   RxList<UserModel> availableDirectUsers = <UserModel>[].obs;
 
-  WifiDirectController({required this.accountInfo, required HeyoWifiDirect? heyoWifiDirect})
+  WifiDirectConnectionController wifiDirectConnectionController;
+
+  WifiDirectController({required this.accountInfo, required HeyoWifiDirect? heyoWifiDirect, required this.wifiDirectConnectionController})
       : _heyoWifiDirect = heyoWifiDirect;
   final coreId = "".obs;
   final visibleName = "".obs;
@@ -65,6 +69,7 @@ class WifiDirectController extends GetxController {
       _messageListener =
           _heyoWifiDirect!.tcpMessage.stream.listen((message) => _messageHandler(message));
       wifiDirectEnabled.value = await _heyoWifiDirect!.isWifiDirectEnabled();
+      GlobalBindings.heyoWifiDirect = _heyoWifiDirect;
     }
   }
 
@@ -97,10 +102,13 @@ class WifiDirectController extends GetxController {
       default:
         break;
     }
+
+    wifiDirectConnectionController.eventHandler(event);
   }
 
   _messageHandler(HeyoWifiDirectMessage message) {
-    print('WifiDirectController: WifiDirect message: ${message.body}, from ${message.senderId}');
+    wifiDirectConnectionController.messageHandler(message);
+
   }
 
   Future<bool> connectPeer(String coreId, {bool encrypt = true}) async {

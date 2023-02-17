@@ -37,7 +37,6 @@ abstract class CommonMessagingConnectionController extends GetxController {
   // MessageSession? currentSession;
 
   /// Represents current status of used data channel.
-  // TODO it is necessary to change the source of this property in using classes like DataChannelConnectionStatusWidget
   Rx<ConnectivityStatus> connectivityStatus = ConnectivityStatus.connecting.obs;
 
   //
@@ -50,6 +49,12 @@ abstract class CommonMessagingConnectionController extends GetxController {
 
     // TODO remove debug
     print('CommonMessagingController initialization');
+  }
+
+  /// Executes connection controller's instance closing code if necessary.
+  @override
+  void onClose() {
+    super.onClose();
   }
 
   // Public abstract methods, that are used for connection control and data transfer
