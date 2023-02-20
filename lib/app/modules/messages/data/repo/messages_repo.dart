@@ -41,4 +41,9 @@ class MessagesRepo implements MessagesAbstractRepo {
   Future<MessageModel?> getMessageById({required String messageId, required String chatId}) {
     return messagesProvider.getMessageById(messageId: messageId, chatId: chatId);
   }
+
+  @override
+  Future<List<MessageModel?>> getUnReadMessages(String chatId) {
+    return messagesProvider.getUnReadMessages(chatId);
+  }
 }

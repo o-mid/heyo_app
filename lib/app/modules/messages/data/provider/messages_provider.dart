@@ -115,4 +115,13 @@ class MessagesProvider implements MessagesAbstractProvider {
       ),
     );
   }
+
+// returns a list of Messages where isFromMe is false and status is delivered (not read)
+  @override
+  Future<List<MessageModel?>> getUnReadMessages(String chatId) async {
+    final messages = await getMessages(chatId);
+    return messages
+        .where((element) => element.isFromMe == false && element.status == MessageStatus.delivered)
+        .toList();
+  }
 }

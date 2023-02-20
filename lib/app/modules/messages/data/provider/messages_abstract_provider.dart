@@ -14,4 +14,6 @@ abstract class MessagesAbstractProvider {
   Future<void> deleteMessages({required List<String> messageIds, required String chatId});
 
   Future<MessageModel?> getMessageById({required String messageId, required String chatId});
+
+  Future<List<MessageModel?>> getUnReadMessages(String chatId);
 }

@@ -164,10 +164,12 @@ class MessagingConnectionController extends GetxController {
     await messagesRepo.createMessage(
         message: receivedMessage.copyWith(
           isFromMe: false,
+          status: MessageStatus.delivered,
         ),
         chatId: chatId);
 
-    confirmReceivedMessageById(messageId: receivedMessage.messageId);
+    confirmMessageById(
+        messageId: receivedMessage.messageId, status: ConfirmMessageStatus.delivered);
   }
 
   Future<void> deleteReceivedMessage(
@@ -208,12 +210,38 @@ class MessagingConnectionController extends GetxController {
 
     final String messageId = confirmMessage.messageId;
 
-    MessageModel? currentMessage =
-        await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
-    // check if message is found and update the Message status
-    if (currentMessage != null) {
-      await messagesRepo.updateMessage(
-          message: currentMessage.copyWith(status: MessageStatus.read), chatId: chatId);
+    if (confirmMessage.status == ConfirmMessageStatus.delivered) {
+      MessageModel? currentMessage =
+          await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
+
+      // check if message is found and update the Message status
+      if (currentMessage != null) {
+        if (currentMessage.status != MessageStatus.read) {
+          await messagesRepo.updateMessage(
+              message: currentMessage.copyWith(status: MessageStatus.delivered), chatId: chatId);
+        }
+      }
+    } else {
+      final List<MessageModel> messages = await messagesRepo.getMessages(chatId);
+      final index = messages.lastIndexWhere((element) => element.messageId == messageId);
+      // print(index);
+      // if the message is found create a sublist of messages
+      // that the status is not read and are from me
+
+      if (index != -1) {
+        final List<MessageModel> messagesToUpdate = messages
+            .sublist(0, index + 1)
+            .where((element) =>
+                element.isFromMe == true &&
+                (element.status == MessageStatus.delivered ||
+                    element.status == MessageStatus.sending))
+            .toList();
+        // update the status of the messages that need to be update to read
+        for (var item in messagesToUpdate) {
+          await messagesRepo.updateMessage(
+              message: item.copyWith(status: MessageStatus.read), chatId: chatId);
+        }
+      }
     }
   }
 
@@ -244,8 +272,9 @@ class MessagingConnectionController extends GetxController {
     );
   }
 
-  confirmReceivedMessageById({required String messageId}) async {
-    Map<String, dynamic> confirmMessageJson = ConfirmMessageModel(messageId: messageId).toJson();
+  confirmMessageById({required String messageId, required ConfirmMessageStatus status}) async {
+    Map<String, dynamic> confirmMessageJson =
+        ConfirmMessageModel(messageId: messageId, status: status).toJson();
 
     DataChannelMessageModel dataChannelMessage = DataChannelMessageModel(
       message: confirmMessageJson,
@@ -255,6 +284,10 @@ class MessagingConnectionController extends GetxController {
     Map<String, dynamic> dataChannelMessageJson = dataChannelMessage.toJson();
 
     sendTextMessage(text: jsonEncode(dataChannelMessageJson));
+  }
+
+  confirmReadMessages({required String messageId}) async {
+    await confirmMessageById(messageId: messageId, status: ConfirmMessageStatus.read);
   }
 
   void setDataChannel() {
@@ -336,7 +369,6 @@ class MessagingConnectionController extends GetxController {
     ChatModel? userChatModel;
 
     await chatHistoryRepo.getChat(session.cid).then((value) {
-      print(value);
       userChatModel = value;
     });
 

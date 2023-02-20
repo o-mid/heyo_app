@@ -16,8 +16,9 @@ enum MessageContentType {
 enum MessageStatus {
   sending,
   sent,
-  failed,
+  delivered,
   read,
+  failed,
 }
 
 abstract class MessageModel {
