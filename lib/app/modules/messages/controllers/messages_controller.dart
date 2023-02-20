@@ -1257,10 +1257,12 @@ class MessagesController extends GetxController {
     return data.buffer.asUint8List().toList();
   }
 
-  void onRemoteMessagesItemVisibilityChanged(
-      {required VisibilityInfo visibilityInfo,
-      required int itemIndex,
-      required String itemMessageId}) async {
+  void onRemoteMessagesItemVisibilityChanged({
+    required VisibilityInfo visibilityInfo,
+    required int itemIndex,
+    required String itemMessageId,
+    required MessageStatus itemStatus,
+  }) async {
     // checks for RemoteMessages if the item is fully visible (visibleFraction = 1)
     //and if its index is bigger than the last index that was visible
     if (visibilityInfo.visibleFraction == 1) {
@@ -1272,16 +1274,13 @@ class MessagesController extends GetxController {
       if (currentRemoteMessagesIndex.value > lastReadRemoteMessagesIndex.value) {
         // print("lastReadRemoteMessagesKey.value ${lastReadRemoteMessagesId.value}");
 
-        // finds the message by id and checks if its status is read or not
+        //  checks if its status is read or not
         // if its not read, it will toogleMessageReadStatus
 
-        MessageModel? msg =
-            await messagesRepo.getMessageById(messageId: itemMessageId, chatId: chatId);
-
-        if (msg != null && msg.status != MessageStatus.read) {
+        if (itemStatus != MessageStatus.read) {
           lastReadRemoteMessagesIndex.value = currentRemoteMessagesIndex.value;
           lastReadRemoteMessagesId.value = itemMessageId;
-          toogleMessageReadStatus(messageId: msg.messageId);
+          toogleMessageReadStatus(messageId: itemMessageId);
         }
       }
     }

@@ -64,7 +64,10 @@ class MessageItemWidget extends StatelessWidget {
       return VisibilityDetector(
           key: Key(message.messageId),
           onVisibilityChanged: (info) => controller.onRemoteMessagesItemVisibilityChanged(
-              visibilityInfo: info, itemIndex: index, itemMessageId: message.messageId),
+              visibilityInfo: info,
+              itemIndex: index,
+              itemMessageId: message.messageId,
+              itemStatus: message.status),
           child: messageBody);
     }
   }
