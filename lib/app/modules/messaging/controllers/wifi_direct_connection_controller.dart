@@ -116,7 +116,6 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
   _startIncomingMessaging() async {
     ChatModel? userChatModel;
 
-    setConnectivityOnline();
     await chatHistoryRepo.getChat(remoteId!).then((value) {
       userChatModel = value;
     });
@@ -133,9 +132,11 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
             isOnline: userChatModel!.isOnline,
             chatModel: userChatModel!,
           ),
+          connectionType: MessagingConnectionType.wifiDirect,
         ),
       );
     }
+    setConnectivityOnline();
 
   }
 
