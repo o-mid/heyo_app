@@ -45,6 +45,7 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:tuple/tuple.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../messaging/controllers/messaging_connection_controller.dart';
@@ -77,14 +78,16 @@ class MessagesController extends GetxController {
   final messages = <MessageModel>[].obs;
   final selectedMessages = <MessageModel>[].obs;
   final replyingTo = Rxn<ReplyToModel>();
-  RxInt currentItemIndex = 0.obs;
+
+  RxInt currentRemoteMessagesIndex = 0.obs;
+
   RxInt lastReadRemoteMessagesIndex = 0.obs;
-  RxString lastReadRemoteMessagesKey = "".obs;
+  RxString lastReadRemoteMessagesId = "".obs;
 
   final locationMessage = Rxn<LocationMessageModel>();
   late MessagesViewArgumentsModel args;
   late StreamSubscription _messagesStreamSubscription;
-  final JsonDecoder _decoder = const JsonDecoder();
+
   late String sessionId;
   late KeyboardVisibilityController keyboardController;
   final FocusNode textFocusNode = FocusNode();
@@ -100,6 +103,7 @@ class MessagesController extends GetxController {
     scrollController = _globalMessageController.scrollController;
     // initialize the messageing Connection
     await _initDataChannel();
+    // get the messages from the database and scroll to the bottom or the last read message
     _getMessages();
 
     initMessagesStream();
@@ -118,6 +122,7 @@ class MessagesController extends GetxController {
     _messagesStreamSubscription =
         (await messagesRepo.getMessagesStream(chatId)).listen((newMessages) {
       messages.value = newMessages;
+      // uncomment this if you want to scroll to the bottom after every new message is received
 
       // WidgetsBinding.instance.addPostFrameCallback(
       //   (_) {
@@ -133,17 +138,12 @@ class MessagesController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    // animateToBottom();
   }
 
   @override
   Future<void> onClose() async {
-    await userPreferencesRepo.createOrUpdateUserPreferences(UserPreferences(
-      chatId: chatId,
-      scrollPosition: lastReadRemoteMessagesKey.value,
-    ));
+    await _saveUserPreferences();
 
-    print("lastReadRemoteMessagesKey " + lastReadRemoteMessagesKey.value);
     // Todo: remove this when a global player is implemented
     Get.find<AudioMessageController>().player.stop();
 
@@ -240,7 +240,8 @@ class MessagesController extends GetxController {
     if (index >= 0) {
       scrollController.scrollToIndex(
         index,
-        duration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 300),
+        preferPosition: AutoScrollPosition.middle,
       );
     } else {
       // Todo: implement loading replied message and scrolling to it
@@ -812,11 +813,11 @@ class MessagesController extends GetxController {
   void _getMessages() async {
     // await _addMockData();
     messages.value = await messagesRepo.getMessages(chatId);
+    // of userPreferences is null, scroll to bottom
+    // eles scroll to last position
     UserPreferences? userPreferences = await userPreferencesRepo.getUserPreferencesById(chatId);
 
     if (userPreferences != null) {
-      print("userPreferences is not null");
-      print("userPreferences.scrollPosition ${userPreferences.scrollPosition}");
       scrollToMessage(userPreferences.scrollPosition);
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -1256,24 +1257,41 @@ class MessagesController extends GetxController {
     return data.buffer.asUint8List().toList();
   }
 
-  void onMessagesItemVisibilityChanged(
+  void onRemoteMessagesItemVisibilityChanged(
       {required VisibilityInfo visibilityInfo,
       required int itemIndex,
-      required String itemKey}) async {
+      required String itemMessageId}) async {
+    // checks for RemoteMessages if the item is fully visible (visibleFraction = 1)
+    //and if its index is bigger than the last index that was visible
     if (visibilityInfo.visibleFraction == 1) {
-      currentItemIndex.value = itemIndex;
-      print("currentItemIndex.value: ${currentItemIndex.value}");
-      print("lastReadRemoteMessagesIndex.value: ${lastReadRemoteMessagesIndex.value}");
-      if (currentItemIndex.value > lastReadRemoteMessagesIndex.value) {
-        lastReadRemoteMessagesIndex.value = currentItemIndex.value;
-        lastReadRemoteMessagesKey.value = itemKey;
-        print("lastReadRemoteMessagesKey.value ${lastReadRemoteMessagesKey.value}");
-        MessageModel? msg = await messagesRepo.getMessageById(messageId: itemKey, chatId: chatId);
+      currentRemoteMessagesIndex.value = itemIndex;
+
+      // print("currentItemIndex.value: ${currentRemoteMessagesIndex.value}");
+      // print("lastReadRemoteMessagesIndex.value: ${lastReadRemoteMessagesIndex.value}");
+
+      if (currentRemoteMessagesIndex.value > lastReadRemoteMessagesIndex.value) {
+        // print("lastReadRemoteMessagesKey.value ${lastReadRemoteMessagesId.value}");
+
+        // finds the message by id and checks if its status is read or not
+        // if its not read, it will toogleMessageReadStatus
+
+        MessageModel? msg =
+            await messagesRepo.getMessageById(messageId: itemMessageId, chatId: chatId);
+
         if (msg != null && msg.status != MessageStatus.read) {
-          print("${msg.status}");
+          lastReadRemoteMessagesIndex.value = currentRemoteMessagesIndex.value;
+          lastReadRemoteMessagesId.value = itemMessageId;
           toogleMessageReadStatus(messageId: msg.messageId);
         }
       }
     }
+  }
+
+  Future<void> _saveUserPreferences() async {
+    // saves the last read message index in the user preferences repo
+    await userPreferencesRepo.createOrUpdateUserPreferences(UserPreferences(
+      chatId: chatId,
+      scrollPosition: lastReadRemoteMessagesId.value,
+    ));
   }
 }

@@ -147,10 +147,7 @@ class HandleReceivedBinaryData {
           isFromMe: false,
         ),
         chatId: chatId);
-    messagingConnection.confirmMessageById(
-      messageId: receivedMessage.messageId,
-      status: ConfirmMessageStatus.delivered,
-    );
+
     await ConfirmMessage().execute(
         confirmMessageType: ConfirmMessageType.confirmReceivedText(
       chatId: chatId,
