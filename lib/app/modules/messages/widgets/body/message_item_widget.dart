@@ -56,13 +56,15 @@ class MessageItemWidget extends StatelessWidget {
         ],
       ),
     );
+
+    // if the message is from me, don't wrap it in a VisibilityDetector
     if (message.isFromMe) {
       return messageBody;
     } else {
       return VisibilityDetector(
           key: Key(message.messageId),
-          onVisibilityChanged: (info) => controller.onMessagesItemVisibilityChanged(
-              visibilityInfo: info, itemIndex: index, itemKey: message.messageId),
+          onVisibilityChanged: (info) => controller.onRemoteMessagesItemVisibilityChanged(
+              visibilityInfo: info, itemIndex: index, itemMessageId: message.messageId),
           child: messageBody);
     }
   }

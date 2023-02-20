@@ -213,6 +213,7 @@ class MessagingConnectionController extends GetxController {
     if (confirmMessage.status == ConfirmMessageStatus.delivered) {
       MessageModel? currentMessage =
           await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
+
       // check if message is found and update the Message status
       if (currentMessage != null) {
         if (currentMessage.status != MessageStatus.read) {
@@ -223,7 +224,9 @@ class MessagingConnectionController extends GetxController {
     } else {
       final List<MessageModel> messages = await messagesRepo.getMessages(chatId);
       final index = messages.lastIndexWhere((element) => element.messageId == messageId);
-      print(index);
+      // print(index);
+      // if the message is found create a sublist of messages
+      // that the status is not read and are from me
 
       if (index != -1) {
         final List<MessageModel> messagesToUpdate = messages
@@ -233,6 +236,7 @@ class MessagingConnectionController extends GetxController {
                 (element.status == MessageStatus.delivered ||
                     element.status == MessageStatus.sending))
             .toList();
+        // update the status of the messages that need to be update to read
         for (var item in messagesToUpdate) {
           await messagesRepo.updateMessage(
               message: item.copyWith(status: MessageStatus.read), chatId: chatId);
@@ -283,8 +287,6 @@ class MessagingConnectionController extends GetxController {
   }
 
   confirmReadMessages({required String messageId}) async {
-    // Todo Omid
-
     await confirmMessageById(messageId: messageId, status: ConfirmMessageStatus.read);
   }
 
@@ -367,7 +369,6 @@ class MessagingConnectionController extends GetxController {
     ChatModel? userChatModel;
 
     await chatHistoryRepo.getChat(session.cid).then((value) {
-      print(value);
       userChatModel = value;
     });
 

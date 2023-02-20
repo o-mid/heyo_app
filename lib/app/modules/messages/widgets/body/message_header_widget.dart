@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -30,7 +31,7 @@ class MessageHeaderWidget extends StatelessWidget {
         /// Status Indicator
         if (message.isFromMe) ...[
           SizedBox(width: 4.w),
-          messageStatusIcon(),
+          messageStatusIconWidget(),
         ],
 
         /// Forwarded Indicator
@@ -59,7 +60,7 @@ class MessageHeaderWidget extends StatelessWidget {
     );
   }
 
-  Widget messageStatusIcon() {
+  SvgPicture messageStatusIconWidget() {
     switch (message.status) {
       case MessageStatus.sending:
         return Assets.svg.clock.svg(
