@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 
@@ -10,8 +10,8 @@ import '../../../routes/app_pages.dart';
 import '../../chats/data/models/chat_model.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
+import '../messaging_session.dart';
 import 'common_messaging_controller.dart';
-import 'messaging_connection_controller.dart';
 
 // Todo :  change this status names if needed base on the connection status of the wifi direct
 enum WifiDirectConnectivityStatus { connectionLost, connecting, justConnected, online }
@@ -27,6 +27,7 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
   // TODO canceling streams listeners avoid errors of repeat using.
   HeyoWifiDirect? _heyoWifiDirect;
 
+  MessageSession? session;
   String? remoteId;
 
 
@@ -82,12 +83,18 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
   Future<void> sendTextMessage({required String text}) async {
     // TODO remove debug output
     print('WifiDirectConnectionController(remoteId $remoteId): sendTextMessage($text)');
+    _heyoWifiDirect!.sendMessage(HeyoWifiDirectMessage(receiverId: remoteId!, isBinary: false, body: text));
+
   }
 
   @override
   Future<void> sendBinaryMessage({required Uint8List binary}) async {
     // TODO remove debug output
-    print('WifiDirectConnectionController(remoteId $remoteId): sendBinaryMessage(binary length: ${binary.length})');
+    print('WifiDirectConnectionController(remoteId $remoteId): sendBinaryMessage(binary length: ${binary.toString()})');
+
+    // TODO implement binary sending
+    _heyoWifiDirect!.sendMessage(HeyoWifiDirectMessage(receiverId: remoteId!, isBinary: true, body: binary));
+
   }
 
   eventHandler(WifiDirectEvent event) {
@@ -134,6 +141,12 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
 
 
   messageHandler(HeyoWifiDirectMessage message) {
-    print('WifiDirectConnectionController(remoteId $remoteId): WifiDirect message: ${message.body}, from ${message.senderId}');
+    print('WifiDirectConnectionController(remoteId $remoteId): WifiDirect message: ${message.body}, from ${message.senderId} to ${message.receiverId}');
+
+    MessageSession session = MessageSession(sid: Constants.coreID, cid: remoteId!, pid: remoteId);
+
+    message.isBinary
+        ? handleDataChannelBinary(binaryData: message.body, session: session)
+        : handleDataChannelText(receivedJson: const JsonDecoder().convert(message.body), session: session);
   }
 }
