@@ -14,6 +14,7 @@ import 'package:heyo/app/modules/shared/widgets/scale_animated_switcher.dart';
 import '../../../shared/widgets/glassmorphic_container.dart';
 import 'compose_message_box.dart';
 import 'message_selection_options.dart';
+import 'messages_active_box_widget.dart';
 import 'replying_to_widget.dart';
 import 'voice_recorder/voice_recorder_widget.dart';
 
@@ -46,20 +47,7 @@ class MessagesFooter extends StatelessWidget {
             duration: ANIMATIONS.openRecordModeDurtion,
             child: controller.isInRecordMode.isTrue
                 ? const VoiceRecorderWidget()
-                : Container(
-                    height: 90.h,
-                    // padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 0),
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        top: BorderSide(
-                          width: 1,
-                          color: COLORS.kComposeMessageBorderColor,
-                        ),
-                      ),
-                    ),
-
-                    child: ScaleAnimatedSwitcher(child: _buildActiveBox(controller)),
-                  ),
+                : const MessagesActiveBoxWidget(),
           ),
 
           // Emoji Picker (Hidden by default)
@@ -90,21 +78,5 @@ class MessagesFooter extends StatelessWidget {
         ],
       );
     });
-  }
-
-  Widget _buildActiveBox(MessagesController controller) {
-    if (controller.selectedMessages.isNotEmpty) {
-      return MessageSelectionOptions(
-        showReply: controller.selectedMessages.length == 1,
-        showCopy: !controller.selectedMessages.any((m) => m is! TextMessageModel),
-        selectedMessages: controller.selectedMessages,
-      );
-    }
-
-    if (controller.locationMessage.value != null) {
-      return const SendLocationBox();
-    }
-
-    return const ComposeMessageBox();
   }
 }
