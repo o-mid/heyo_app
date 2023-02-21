@@ -90,7 +90,10 @@ class MessagesController extends GetxController {
 
   late String sessionId;
   late KeyboardVisibilityController keyboardController;
+
+  late UserPreferences? userPreferences;
   final FocusNode textFocusNode = FocusNode();
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -236,13 +239,15 @@ class MessagesController extends GetxController {
   }
 
   void scrollToMessage(String id) {
-    final index = messages.indexWhere((m) => m.messageId == id);
-    if (index >= 0) {
-      scrollController.scrollToIndex(
-        index,
-        duration: const Duration(milliseconds: 300),
-        preferPosition: AutoScrollPosition.middle,
-      );
+    final index = messages.lastIndexWhere((m) => m.messageId == id);
+    if (index != -1) {
+      WidgetsBinding.instance.scheduleFrameCallback((_) {
+        scrollController.scrollToIndex(
+          index,
+          duration: const Duration(milliseconds: 300),
+          preferPosition: AutoScrollPosition.begin,
+        );
+      });
     } else {
       // Todo: implement loading replied message and scrolling to it
     }
@@ -812,15 +817,21 @@ class MessagesController extends GetxController {
 
   void _getMessages() async {
     // await _addMockData();
-    messages.value = await messagesRepo.getMessages(chatId);
+
+    await userPreferencesRepo.getUserPreferencesById(chatId).then((value) async => {
+          userPreferences = value,
+          await messagesRepo.getMessages(chatId).then((value) => {
+                messages.value = value,
+              })
+        });
+
     // of userPreferences is null, scroll to bottom
     // eles scroll to last position
-    UserPreferences? userPreferences = await userPreferencesRepo.getUserPreferencesById(chatId);
 
     if (userPreferences != null) {
-      scrollToMessage(userPreferences.scrollPosition);
+      scrollToMessage(userPreferences!.scrollPosition);
     } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.scheduleFrameCallback((_) {
         animateToBottom(
           duration: ANIMATIONS.getAllMsgsDurtion,
           curve: ANIMATIONS.getAllMsgscurve,
