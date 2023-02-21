@@ -18,8 +18,9 @@ import 'package:get/get.dart';
 import '../../../../routes/app_pages.dart';
 
 class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final UserModel userModel;
-  const MessagingAppBar({Key? key, required this.userModel}) : super(key: key);
+  const MessagingAppBar({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: ScaleAnimatedSwitcher(
             child: controller.selectedMessages.isNotEmpty
                 ? const _SelectionModeAppBar()
-                : _DefaultAppBar(user: userModel),
+                : _DefaultAppBar(user: controller.args.user),
           ),
         ),
       ),

@@ -15,35 +15,28 @@ class MessagesView extends GetView<MessagesController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      // Should be in a delete
-      // need to not getting Not used any observable in this file error
-      if (kDebugMode) {
-        print(controller.isInRecordMode);
-      }
-      return Scaffold(
-        appBar: MessagingAppBar(userModel: controller.args.user),
-        backgroundColor: COLORS.kAppBackground,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            DatachannelConnectionStatusWidget(),
-            Expanded(
-              child: Stack(
-                alignment: Alignment.center,
-                children: const [
-                  MessagesList(),
-                  Positioned(
-                    bottom: 0,
-                    child: MediaGlassmorphic(),
-                  ),
-                ],
-              ),
+    return Scaffold(
+      appBar: const MessagingAppBar(),
+      backgroundColor: COLORS.kAppBackground,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          DatachannelConnectionStatusWidget(),
+          Expanded(
+            child: Stack(
+              alignment: Alignment.center,
+              children: const [
+                MessagesList(),
+                Positioned(
+                  bottom: 0,
+                  child: MediaGlassmorphic(),
+                ),
+              ],
             ),
-            const MessagesFooter(),
-          ],
-        ),
-      );
-    });
+          ),
+          const MessagesFooter(),
+        ],
+      ),
+    );
   }
 }
