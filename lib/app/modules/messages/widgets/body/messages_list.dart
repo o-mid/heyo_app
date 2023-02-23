@@ -10,7 +10,7 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-import 'beginning_of_messages_header.dart';
+import 'beginning_of_messages_header_widget.dart';
 import 'message_selection_wrapper.dart';
 import 'message_item_widget.dart';
 
@@ -40,9 +40,7 @@ class MessagesList extends StatelessWidget {
                 itemCount: controller.messages.length + 1,
                 itemBuilder: (context, index) {
                   if (index == 0) {
-                    return BeginningOfMessagesHeader(
-                      chat: controller.args.user.chatModel,
-                    );
+                    return const BeginningOfMessagesHeaderWidget();
                   } else {
                     final message = controller.messages[index - 1];
 

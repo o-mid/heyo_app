@@ -10,6 +10,7 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
+import 'message_date_header_widget.dart';
 import 'message_selection_wrapper.dart';
 
 class MessageItemWidget extends StatelessWidget {
@@ -29,27 +30,23 @@ class MessageItemWidget extends StatelessWidget {
     final prevMessage = index == 1 ? null : controller.messages[index - 2];
 
     // Adds date header at beginning of new messages in a certain date
-    List<Widget> dateHeaderWidgets = <Widget>[];
-    if (prevMessage == null || !prevMessage.timestamp.isSameDate(message.timestamp)) {
-      dateHeaderWidgets = [
-        CustomSizes.mediumSizedBoxHeight,
-        Text(
-          message.timestamp.differenceFromNow(),
-          style: TEXTSTYLES.kBodyTag.copyWith(
-            color: COLORS.kTextBlueColor,
-            fontSize: 10.sp,
-          ),
-        ),
-        CustomSizes.mediumSizedBoxHeight,
-      ];
+    Widget dateHeader() {
+      if (prevMessage == null || !prevMessage.timestamp.isSameDate(message.timestamp)) {
+        return MessagesDateHeaderWidget(
+          headerValue: message.timestamp.differenceFromNow(),
+        );
+      } else {
+        return const SizedBox();
+      }
     }
+
     Widget messageBody = AutoScrollTag(
       key: Key(index.toString()),
       index: index,
       controller: controller.scrollController,
       child: Column(
         children: [
-          ...dateHeaderWidgets,
+          dateHeader(),
           MessageSelectionWrapper(
             message: message,
           ),

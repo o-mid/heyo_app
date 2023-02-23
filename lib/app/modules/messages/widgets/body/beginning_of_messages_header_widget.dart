@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
+import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
 
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -11,15 +12,15 @@ import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-class BeginningOfMessagesHeader extends StatelessWidget {
-  final ChatModel chat;
-  const BeginningOfMessagesHeader({
+class BeginningOfMessagesHeaderWidget extends StatelessWidget {
+  const BeginningOfMessagesHeaderWidget({
     Key? key,
-    required this.chat,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<MessagesController>();
+    final ChatModel chat = controller.args.user.chatModel;
     // Todo: Add group header
     return Container(
       margin: EdgeInsets.all(16.w).copyWith(top: 0, bottom: 16.h),
