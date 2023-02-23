@@ -29,24 +29,20 @@ class MessagesList extends StatelessWidget {
             controller.isMediaGlassmorphicOpen.value = false;
           }
         },
-        child: controller.messages.isEmpty
-            ? const CircularProgressIndicator.adaptive(
-                valueColor: AlwaysStoppedAnimation<Color>(COLORS.kGreenMainColor),
-              )
-            : ListView.builder(
-                primary: false,
-                controller: controller.scrollController,
-                padding: EdgeInsets.only(top: 54.h, bottom: 16.h),
-                itemCount: controller.messages.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return const BeginningOfMessagesHeaderWidget();
-                  } else {
-                    final message = controller.messages[index - 1];
+        child: ListView.builder(
+            primary: false,
+            controller: controller.scrollController,
+            padding: EdgeInsets.only(top: 54.h, bottom: 16.h),
+            itemCount: controller.messages.length + 1,
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return const BeginningOfMessagesHeaderWidget();
+              } else {
+                final message = controller.messages[index - 1];
 
-                    return MessageItemWidget(index: index, message: message);
-                  }
-                }),
+                return MessageItemWidget(index: index, message: message);
+              }
+            }),
       );
     });
   }
