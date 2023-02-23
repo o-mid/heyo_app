@@ -83,6 +83,7 @@ class MessagesController extends GetxController {
 
   RxInt lastReadRemoteMessagesIndex = 0.obs;
   RxString lastReadRemoteMessagesId = "".obs;
+  RxString scrollPositionMessagesId = "".obs;
 
   final locationMessage = Rxn<LocationMessageModel>();
   late MessagesViewArgumentsModel args;
@@ -238,14 +239,14 @@ class MessagesController extends GetxController {
     );
   }
 
-  void scrollToMessage(String id) {
-    final index = messages.lastIndexWhere((m) => m.messageId == id);
+  void scrollToMessage({required String messageId}) {
+    final index = messages.lastIndexWhere((m) => m.messageId == messageId);
     if (index != -1) {
       WidgetsBinding.instance.scheduleFrameCallback((_) {
         scrollController.scrollToIndex(
           index,
-          duration: const Duration(milliseconds: 300),
-          preferPosition: AutoScrollPosition.begin,
+          duration: const Duration(milliseconds: 200),
+          preferPosition: AutoScrollPosition.middle,
         );
       });
     } else {
@@ -829,7 +830,9 @@ class MessagesController extends GetxController {
     // eles scroll to last position
 
     if (userPreferences != null) {
-      scrollToMessage(userPreferences!.scrollPosition);
+      lastReadRemoteMessagesId.value = userPreferences!.lastReadMessageId;
+      scrollPositionMessagesId.value = userPreferences!.scrollPosition;
+      scrollToMessage(messageId: userPreferences!.scrollPosition);
     } else {
       WidgetsBinding.instance.scheduleFrameCallback((_) {
         animateToBottom(
@@ -1268,30 +1271,37 @@ class MessagesController extends GetxController {
     return data.buffer.asUint8List().toList();
   }
 
-  void onRemoteMessagesItemVisibilityChanged({
+  void onMessagesItemVisibilityChanged({
     required VisibilityInfo visibilityInfo,
     required int itemIndex,
     required String itemMessageId,
     required MessageStatus itemStatus,
+    required bool isFromMe,
   }) async {
-    // checks for RemoteMessages if the item is fully visible (visibleFraction = 1)
+    // checks for Messages if the item is fully visible (visibleFraction = 1)
     //and if its index is bigger than the last index that was visible
     if (visibilityInfo.visibleFraction == 1) {
-      currentRemoteMessagesIndex.value = itemIndex;
+      // saves the current item index in the scrollPositionMessagesIndex
+      scrollPositionMessagesId.value = itemMessageId;
+      // if the message is not from the current user it will check if its read or not
+      // and if its not read it will toogleMessageReadStatus
+      if (!isFromMe) {
+        currentRemoteMessagesIndex.value = itemIndex;
 
-      // print("currentItemIndex.value: ${currentRemoteMessagesIndex.value}");
-      // print("lastReadRemoteMessagesIndex.value: ${lastReadRemoteMessagesIndex.value}");
+        // print("currentItemIndex.value: ${currentRemoteMessagesIndex.value}");
+        // print("lastReadRemoteMessagesIndex.value: ${lastReadRemoteMessagesIndex.value}");
 
-      if (currentRemoteMessagesIndex.value > lastReadRemoteMessagesIndex.value) {
-        // print("lastReadRemoteMessagesKey.value ${lastReadRemoteMessagesId.value}");
+        if (currentRemoteMessagesIndex.value > lastReadRemoteMessagesIndex.value) {
+          // print("lastReadRemoteMessagesKey.value ${lastReadRemoteMessagesId.value}");
 
-        //  checks if its status is read or not
-        // if its not read, it will toogleMessageReadStatus
+          //  checks if its status is read or not
+          // if its not read, it will toogleMessageReadStatus
 
-        if (itemStatus != MessageStatus.read) {
-          lastReadRemoteMessagesIndex.value = currentRemoteMessagesIndex.value;
-          lastReadRemoteMessagesId.value = itemMessageId;
-          toogleMessageReadStatus(messageId: itemMessageId);
+          if (itemStatus != MessageStatus.read) {
+            lastReadRemoteMessagesIndex.value = currentRemoteMessagesIndex.value;
+            lastReadRemoteMessagesId.value = itemMessageId;
+            toogleMessageReadStatus(messageId: itemMessageId);
+          }
         }
       }
     }
@@ -1301,7 +1311,8 @@ class MessagesController extends GetxController {
     // saves the last read message index in the user preferences repo
     await userPreferencesRepo.createOrUpdateUserPreferences(UserPreferences(
       chatId: chatId,
-      scrollPosition: lastReadRemoteMessagesId.value,
+      lastReadMessageId: lastReadRemoteMessagesId.value,
+      scrollPosition: scrollPositionMessagesId.value,
     ));
   }
 }
