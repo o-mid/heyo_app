@@ -883,7 +883,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: a8c0754ec4bb74327c5c91070efefee88441775b
+      resolved-ref: "6cf65bb5b467312ac1b42ebed1216c656566a8de"
       url: "git@git.energy:heyo/heyo_wifi_direct.git"
     source: git
     version: "0.0.1"

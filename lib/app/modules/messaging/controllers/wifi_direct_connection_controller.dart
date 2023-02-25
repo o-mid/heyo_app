@@ -53,14 +53,21 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
     // TODO remove debug output
     print('WifiDirectConnectionController(remoteId $remoteId): onClose()');
     if (remoteId != null) _heyoWifiDirect?.disconnectPeer(remoteId!);
+    remoteId = null;
     super.onClose();
   }
 
   @override
   Future<void> initMessagingConnection({required String remoteId}) async {
-    // TODO remove debug output
-    print('WifiDirectConnectionController(remoteId $remoteId): initMessagingConnection($remoteId)');
 
+    if (this.remoteId == remoteId) {
+      // TODO remove debug output
+      print('WifiDirectConnectionController(remoteId $remoteId): initMessagingConnection -> already connected');
+      return;
+    }
+
+    // TODO remove debug output
+    print('WifiDirectConnectionController: initMessagingConnection($remoteId)');
     this.remoteId = remoteId;
     _initPlugin();
 
@@ -105,6 +112,7 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
         _startIncomingMessaging();
         break;
       case EventType.groupStopped:
+        remoteId = null;
         handleConnectionClose();
         break;
       default:
@@ -136,6 +144,7 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
         ),
       );
     }
+    connectivityStatus.value = ConnectivityStatus.justConnected;
     setConnectivityOnline();
 
   }

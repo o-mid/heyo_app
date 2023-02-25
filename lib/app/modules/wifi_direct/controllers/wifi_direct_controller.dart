@@ -62,7 +62,7 @@ class WifiDirectController extends GetxController {
 
       visibleName.value = "name";
 
-      _heyoWifiDirect = HeyoWifiDirect(coreID: coreId.value, name: 'name');
+      _heyoWifiDirect = HeyoWifiDirect(coreID: coreId.value, name: 'name', debugOutputEnable: true);
       await _heyoWifiDirect!.wifiDirectOn();
       _eventListener =
           _heyoWifiDirect!.consumerEventSource.stream.listen((event) => _eventHandler(event));
