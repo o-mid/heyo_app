@@ -44,7 +44,7 @@ import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
+
 import 'package:tuple/tuple.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -53,6 +53,7 @@ import '../../messaging/messaging_session.dart';
 import '../../share_files/models/file_model.dart';
 import '../../shared/data/models/user_preferences.dart';
 import '../../shared/utils/constants/animations_constant.dart';
+import '../../shared/utils/scroll_to_index.dart';
 import '../data/usecases/delete_message_usecase.dart';
 import '../data/usecases/update_message_usecase.dart';
 

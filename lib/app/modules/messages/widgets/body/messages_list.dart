@@ -7,7 +7,8 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
+
+import '../../../shared/utils/scroll_to_index.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 import 'beginning_of_messages_header_widget.dart';
