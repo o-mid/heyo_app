@@ -245,9 +245,12 @@ class MessagesController extends GetxController {
     if (index != -1) {
       WidgetsBinding.instance.scheduleFrameCallback((_) {
         scrollController.scrollToIndex(
+          // check if index +1 is avialble
+
+          //index + 1 != 0 ? index - 1 : index,
           index,
           duration: const Duration(milliseconds: 200),
-          preferPosition: AutoScrollPosition.middle,
+          preferPosition: AutoScrollPosition.end,
         );
       });
     } else {

@@ -17,18 +17,18 @@ import 'message_selection_wrapper.dart';
 class MessageItemWidget extends StatelessWidget {
   const MessageItemWidget({
     super.key,
-    required this.message,
     required this.index,
   });
 
-  final MessageModel message;
   final int index;
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MessagesController>();
 
-    final prevMessage = index == 1 ? null : controller.messages[index - 2];
+    final prevMessage = index < 1 ? null : controller.messages[index - 1];
+
+    final MessageModel message = controller.messages[index];
 
     // Adds date header at beginning of new messages in a certain date
     Widget dateHeader() {
@@ -42,7 +42,7 @@ class MessageItemWidget extends StatelessWidget {
     }
 
     Widget messageBody = AutoScrollTag(
-      key: Key(index.toString()),
+      key: Key(message.messageId),
       index: index,
       controller: controller.scrollController,
       child: Column(

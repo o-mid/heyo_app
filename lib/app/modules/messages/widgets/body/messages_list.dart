@@ -39,9 +39,7 @@ class MessagesList extends StatelessWidget {
               if (index == 0) {
                 return const BeginningOfMessagesHeaderWidget();
               } else {
-                final message = controller.messages[index - 1];
-
-                return MessageItemWidget(index: index, message: message);
+                return MessageItemWidget(index: index - 1);
               }
             }),
       );
