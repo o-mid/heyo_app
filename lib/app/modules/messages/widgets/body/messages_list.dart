@@ -57,6 +57,17 @@ class MessagesList extends StatelessWidget {
                     index: reverseIndex - 1);
               }
             },
+
+            childCount: controller.messages.length + 1,
+            // addRepaintBoundaries: false,
+            // addAutomaticKeepAlives: false,
+            findChildIndexCallback: (key) {
+              final valueKey = key as ValueKey<String>;
+
+              final val =
+                  controller.messages.indexWhere((element) => element.messageId == valueKey.value);
+              return controller.messages.length - val - 1;
+            },
           ),
         ),
       );

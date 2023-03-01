@@ -322,7 +322,7 @@ class MessagesController extends GetxController {
     textController.clear();
     newMessage.value = "";
 
-    _postMessageSendOperations();
+    // _postMessageSendOperations();
   }
 
 //TODO
@@ -837,12 +837,12 @@ class MessagesController extends GetxController {
       scrollToMessage(messageId: userPreferences!.scrollPosition);
     } else {
       await _addMockMessages();
-      WidgetsBinding.instance.scheduleFrameCallback((_) {
-        animateToBottom(
-          duration: ANIMATIONS.getAllMsgsDurtion,
-          curve: ANIMATIONS.getAllMsgscurve,
-        );
-      });
+      // WidgetsBinding.instance.scheduleFrameCallback((_) {
+      //   animateToBottom(
+      //     duration: ANIMATIONS.getAllMsgsDurtion,
+      //     curve: ANIMATIONS.getAllMsgscurve,
+      //   );
+      // });
     }
   }
 
