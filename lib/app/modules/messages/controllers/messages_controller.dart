@@ -158,18 +158,22 @@ class MessagesController extends GetxController {
   }
 
   void _handleKeyboardVisibilityChanges() {
-    // Close emoji picker when keyboard opens
     _globalMessageController.streamSubscriptions
-        .add(keyboardController.onChange.listen((bool visible) {
-      if (visible) {
+        .add(keyboardController.onChange.listen((bool keyboardVisible) {
+      if (keyboardVisible) {
+        // Close emoji picker when keyboard opens
         showEmojiPicker.value = false;
 
+        _keyboardHeight = Get.mediaQuery.viewInsets.bottom;
+        // when keyboard opens scroll in the amount of keyboard height so that
+        // the same part of the messages as before remains visible
+
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          _keyboardHeight = Get.mediaQuery.viewInsets.bottom;
           if (scrollController.hasClients) {
-            scrollController.animateTo(
-              scrollController.offset + _keyboardHeight,
-              duration: const Duration(milliseconds: 200),
+            double scrollOffset = scrollController.offset;
+            animateToPosition(
+              offset: scrollOffset + _keyboardHeight,
+              duration: const Duration(milliseconds: 150),
               curve: Curves.ease,
             );
           }
@@ -179,9 +183,10 @@ class MessagesController extends GetxController {
         // the same part of the messages as before remains visible
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (scrollController.hasClients) {
-            scrollController.animateTo(
-              scrollController.offset - _keyboardHeight,
-              duration: const Duration(milliseconds: 200),
+            double scrollOffset = scrollController.offset;
+            animateToPosition(
+              offset: scrollOffset - _keyboardHeight,
+              duration: const Duration(milliseconds: 150),
               curve: Curves.ease,
             );
           }
@@ -269,7 +274,19 @@ class MessagesController extends GetxController {
     Curve? curve,
   }) {
     scrollController.animateTo(
-      scrollController.position.maxScrollExtent,
+      scrollController.position.minScrollExtent,
+      curve: curve ?? ANIMATIONS.generalMsgTransitioncurve,
+      duration: duration ?? ANIMATIONS.generalMsgTransitionDurtion,
+    );
+  }
+
+  void animateToPosition({
+    required double offset,
+    Duration? duration,
+    Curve? curve,
+  }) {
+    scrollController.animateTo(
+      offset,
       curve: curve ?? ANIMATIONS.generalMsgTransitioncurve,
       duration: duration ?? ANIMATIONS.generalMsgTransitionDurtion,
     );
@@ -322,7 +339,7 @@ class MessagesController extends GetxController {
     textController.clear();
     newMessage.value = "";
 
-    // _postMessageSendOperations();
+    _postMessageSendOperations();
   }
 
 //TODO
@@ -381,6 +398,17 @@ class MessagesController extends GetxController {
 
     // Todo (libp2p): send message
     // Get.find<LiveLocationController>().startSharing(message.messageId, duration);
+  }
+
+  void animateToTop({
+    Duration? duration,
+    Curve? curve,
+  }) {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      curve: curve ?? ANIMATIONS.generalMsgTransitioncurve,
+      duration: duration ?? ANIMATIONS.generalMsgTransitionDurtion,
+    );
   }
 
   void _postMessageSendOperations() {
