@@ -35,13 +35,14 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
   void onInit() {
     super.onInit();
 
+    _initPlugin();
     // TODO remove debug output
     print('WifiDirectConnectionController(remoteId $remoteId): onInit()');
   }
 
 
   _initPlugin() {
-    _heyoWifiDirect = GlobalBindings.heyoWifiDirect;
+    _heyoWifiDirect ??= GlobalBindings.heyoWifiDirect;
 
   }
 
@@ -90,6 +91,10 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
   Future<void> sendTextMessage({required String text}) async {
     // TODO remove debug output
     print('WifiDirectConnectionController(remoteId $remoteId): sendTextMessage($text)');
+
+    // TODO needs to be optimized to remove the redundant null check _heyoWifiDirect
+    _initPlugin();
+
     _heyoWifiDirect!.sendMessage(HeyoWifiDirectMessage(receiverId: remoteId!, isBinary: false, body: text));
 
   }
@@ -98,6 +103,9 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
   Future<void> sendBinaryMessage({required Uint8List binary}) async {
     // TODO remove debug output
     print('WifiDirectConnectionController(remoteId $remoteId): sendBinaryMessage(binary length: ${binary.toString()})');
+
+    // TODO needs to be optimized to remove the redundant null check _heyoWifiDirect
+    _initPlugin();
 
     // TODO implement binary sending
     _heyoWifiDirect!.sendMessage(HeyoWifiDirectMessage(receiverId: remoteId!, isBinary: true, body: binary));
