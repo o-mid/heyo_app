@@ -13,47 +13,30 @@ class MessagesList extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<MessagesController>();
 
-    return Obx(() {
-      return GestureDetector(
-        // when the media Media Glassmorphic is Open tap on the rest of the screen will close it
-        onTap: () => controller.closeMediaGlassmorphic(),
-        child: ListView.custom(
+    return GestureDetector(
+      // when the media Media Glassmorphic is Open tap on the rest of the screen will close it
+      onTap: () => controller.closeMediaGlassmorphic(),
+
+      child: Obx(() {
+        return ListView.builder(
           primary: false,
           controller: controller.scrollController,
+          shrinkWrap: true,
           reverse: true,
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
           padding: EdgeInsets.only(top: 54.h, bottom: 16.h),
-          childrenDelegate: SliverChildBuilderDelegate(
-            (context, index) {
-              // reverse index
-              final reverseIndex = controller.messages.length - index;
-              if (reverseIndex == 0) {
-                return const BeginningOfMessagesHeaderWidget();
-              } else {
-                // added a key ( item messageId) to the widget to be able to find it later
-
-                return MessageItemWidget(
-                    key: ValueKey(controller.messages[reverseIndex - 1].messageId),
-                    index: reverseIndex - 1);
-              }
-            },
-            childCount: controller.messages.length + 1,
-            addRepaintBoundaries: false,
-            addAutomaticKeepAlives: true,
-            //  find the new index of a child
-            findChildIndexCallback: (key) {
-              // get the index of the message from the key
-
-              final valueKey = key as ValueKey<String>;
-
-              final msgIndex =
-                  controller.messages.indexWhere((element) => element.messageId == valueKey.value);
-
-              return controller.messages.length - msgIndex - 1;
-            },
-          ),
-        ),
-      );
-    });
+          itemCount: controller.messages.length + 1,
+          itemBuilder: (context, index) {
+            // reverse index
+            final reverseIndex = controller.messages.length - index;
+            if (reverseIndex == 0) {
+              return const BeginningOfMessagesHeaderWidget();
+            } else {
+              return MessageItemWidget(index: reverseIndex - 1);
+            }
+          },
+        );
+      }),
+    );
   }
 }
