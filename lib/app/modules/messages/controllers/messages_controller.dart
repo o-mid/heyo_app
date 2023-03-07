@@ -864,7 +864,7 @@ class MessagesController extends GetxController {
       scrollPositionMessagesId.value = userPreferences!.scrollPosition;
       scrollToMessage(messageId: userPreferences!.scrollPosition);
     } else {
-      await _addMockMessages();
+      //  await _addMockMessages();
       // WidgetsBinding.instance.scheduleFrameCallback((_) {
       //   animateToBottom(
       //     duration: ANIMATIONS.getAllMsgsDurtion,
