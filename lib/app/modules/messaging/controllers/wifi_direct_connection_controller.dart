@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/messaging/utils/data_binary_message.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 
@@ -102,13 +103,20 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
   @override
   Future<void> sendBinaryMessage({required Uint8List binary}) async {
     // TODO remove debug output
-    print('WifiDirectConnectionController(remoteId $remoteId): sendBinaryMessage(binary length: ${binary.toString()})');
+
+    DataBinaryMessage sendingMessage = DataBinaryMessage.parse(binary);
 
     // TODO needs to be optimized to remove the redundant null check _heyoWifiDirect
     _initPlugin();
 
     // TODO implement binary sending
-    _heyoWifiDirect!.sendMessage(HeyoWifiDirectMessage(receiverId: remoteId!, isBinary: true, body: binary));
+
+    _heyoWifiDirect!.sendBinaryData(
+        receiver: remoteId!,
+        header: sendingMessage.header,
+        chunk: sendingMessage.chunk,
+        length: sendingMessage.chunk.length,
+    );
 
   }
 
