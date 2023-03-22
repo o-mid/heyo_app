@@ -96,6 +96,8 @@ class MessagesController extends GetxController {
   late UserPreferences? userPreferences;
   final FocusNode textFocusNode = FocusNode();
 
+  final IsListLoaded = false.obs;
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -260,6 +262,24 @@ class MessagesController extends GetxController {
       });
     } else {
       // Todo: implement loading replied message and scrolling to it
+    }
+  }
+
+  jumpToMessage({required String messageId}) async {
+    final index = messages.lastIndexWhere((m) => m.messageId == messageId);
+    if (index != -1) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await scrollController
+            .scrollToIndex(
+              // check if index +1 is avialble
+
+              //index + 1 != 0 ? index - 1 : index,
+              index,
+              duration: const Duration(milliseconds: 1),
+              preferPosition: AutoScrollPosition.end,
+            )
+            .then((value) => {IsListLoaded.value = true});
+      });
     }
   }
 
@@ -848,7 +868,7 @@ class MessagesController extends GetxController {
     isMediaGlassmorphicOpen.value = false;
   }
 
-  void _getMessages() async {
+  Future<void> _getMessages() async {
     await userPreferencesRepo.getUserPreferencesById(chatId).then((value) async => {
           userPreferences = value,
           await messagesRepo.getMessages(chatId).then((value) => {
@@ -862,15 +882,17 @@ class MessagesController extends GetxController {
     if (userPreferences != null) {
       lastReadRemoteMessagesId.value = userPreferences!.lastReadMessageId;
       scrollPositionMessagesId.value = userPreferences!.scrollPosition;
-      scrollToMessage(messageId: userPreferences!.scrollPosition);
+      // await scrollToMessage(messageId: userPreferences!.scrollPosition);
+      await jumpToMessage(messageId: userPreferences!.scrollPosition);
     } else {
-      //  await _addMockMessages();
-      // WidgetsBinding.instance.scheduleFrameCallback((_) {
-      //   animateToBottom(
-      //     duration: ANIMATIONS.getAllMsgsDurtion,
-      //     curve: ANIMATIONS.getAllMsgscurve,
-      //   );
-      // });
+      await _addMockMessages();
+      WidgetsBinding.instance.scheduleFrameCallback((_) {
+        animateToBottom(
+          duration: ANIMATIONS.getAllMsgsDurtion,
+          curve: ANIMATIONS.getAllMsgscurve,
+        );
+      });
+      IsListLoaded.value = true;
     }
   }
 
