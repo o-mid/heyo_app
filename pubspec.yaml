@@ -75,6 +75,7 @@ dependencies:
   uuid: ^3.0.6
   tuple: ^2.0.1
   visibility_detector: ^0.3.3
+  shimmer: ^2.0.0
 
 dev_dependencies:
   build_runner:

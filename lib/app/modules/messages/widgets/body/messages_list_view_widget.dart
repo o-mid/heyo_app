@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
 
 import '../../data/models/messages/message_model.dart';
-import 'MessagesShimmerWidget.dart';
+import 'MessagesLoadingWidget.dart';
 import 'beginning_of_messages_header_widget.dart';
 import 'message_item_widget.dart';
 
@@ -21,7 +21,7 @@ class MessagesListViewWidget extends StatelessWidget {
         children: [
           controller.IsListLoaded.value
               ? const SizedBox.shrink()
-              : Center(child: MessagesShimmerWidget()),
+              : const Center(child: MessagesLoadingWidget()),
           Opacity(
             opacity: controller.IsListLoaded.value ? 1 : 0,
             child: ListView.builder(
