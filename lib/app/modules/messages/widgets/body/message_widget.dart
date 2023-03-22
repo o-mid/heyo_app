@@ -9,7 +9,9 @@ import 'message_header_widget.dart';
 
 class MessageWidget extends StatelessWidget {
   final MessageModel message;
-  const MessageWidget({Key? key, required this.message}) : super(key: key);
+  final bool isMockMessage;
+  const MessageWidget({Key? key, required this.message, this.isMockMessage = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +23,11 @@ class MessageWidget extends StatelessWidget {
         Expanded(
           child: Column(
             children: [
-              MessageHeaderWidget(message: message),
+              MessageHeaderWidget(message: message, isMockMessage: isMockMessage),
               SizedBox(height: 4.h),
               MessageBodyWidget(
                 message: message,
+                isMockMessage: isMockMessage,
               ),
             ],
           ),

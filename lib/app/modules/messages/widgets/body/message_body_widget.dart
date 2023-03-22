@@ -33,9 +33,11 @@ import 'location/live_location_message_widget.dart';
 
 class MessageBodyWidget extends StatelessWidget {
   final MessageModel message;
+  final bool isMockMessage;
   const MessageBodyWidget({
     Key? key,
     required this.message,
+    this.isMockMessage = false,
   }) : super(key: key);
 
   @override

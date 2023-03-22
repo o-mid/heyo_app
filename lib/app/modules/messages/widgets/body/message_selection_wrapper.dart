@@ -16,9 +16,11 @@ import 'recipient_reply_to_widget.dart';
 
 class MessageSelectionWrapper extends StatefulWidget {
   final MessageModel message;
+  final bool isMockMessage;
   const MessageSelectionWrapper({
     Key? key,
     required this.message,
+    this.isMockMessage = false,
   }) : super(key: key);
 
   @override
@@ -32,6 +34,7 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
     super.build(context);
 
     final message = widget.message;
+    final isMockMessage = widget.isMockMessage;
     final controller = Get.find<MessagesController>();
 
     return Obx(() {
@@ -76,6 +79,7 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
                     padding: EdgeInsets.symmetric(vertical: 4.h),
                     child: MessageWidget(
                       message: message,
+                      isMockMessage: isMockMessage,
                       // showTimeAndProfile: index == controller.messages.length - 1 ||
                       //     controller.messages[index + 1].senderName != message.senderName,
                     ),

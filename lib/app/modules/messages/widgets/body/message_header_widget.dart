@@ -12,7 +12,9 @@ import 'package:heyo/generated/locales.g.dart';
 
 class MessageHeaderWidget extends StatelessWidget {
   final MessageModel message;
-  const MessageHeaderWidget({Key? key, required this.message}) : super(key: key);
+  final bool isMockMessage;
+  const MessageHeaderWidget({Key? key, required this.message, this.isMockMessage = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +22,21 @@ class MessageHeaderWidget extends StatelessWidget {
       textDirection: message.isFromMe ? TextDirection.rtl : TextDirection.ltr,
       children: [
         CustomSizes.mediumSizedBoxWidth,
-        Text(
-          "${message.timestamp.hour.toString().padLeft(2, '0')}:${message.timestamp.minute.toString().padLeft(2, '0')}",
-          style: TEXTSTYLES.kBodyTag.copyWith(
-            color: COLORS.kTextBlueColor,
-            fontSize: 10.sp,
-          ),
-        ),
+        !isMockMessage
+            ? Text(
+                "${message.timestamp.hour.toString().padLeft(2, '0')}:${message.timestamp.minute.toString().padLeft(2, '0')}",
+                style: TEXTSTYLES.kBodyTag.copyWith(
+                  color: COLORS.kTextBlueColor,
+                  fontSize: 10.sp,
+                ),
+              )
+            : Text(
+                "00:00",
+                style: TEXTSTYLES.kBodyTag.copyWith(
+                  color: COLORS.kTextBlueColor,
+                  fontSize: 10.sp,
+                ),
+              ),
 
         /// Status Indicator
         if (message.isFromMe) ...[
