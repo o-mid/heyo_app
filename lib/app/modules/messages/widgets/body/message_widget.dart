@@ -4,6 +4,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/message_model.dar
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 
+import '../../../shared/utils/constants/colors.dart';
 import 'message_body_widget.dart';
 import 'message_header_widget.dart';
 
@@ -19,7 +20,12 @@ class MessageWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (!message.isFromMe) CustomSizes.mediumSizedBoxWidth,
-        if (!message.isFromMe) CustomCircleAvatar(url: message.senderAvatar, size: 20),
+        if (!message.isFromMe)
+          CustomCircleAvatar(
+            url: message.senderAvatar,
+            size: 20,
+            isMockData: isMockMessage,
+          ),
         Expanded(
           child: Column(
             children: [

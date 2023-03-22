@@ -278,7 +278,12 @@ class MessagesController extends GetxController {
               duration: const Duration(milliseconds: 1),
               preferPosition: AutoScrollPosition.end,
             )
-            .then((value) => {IsListLoaded.value = true});
+            .then((value) => {
+                  // Todo: remove this delay
+                  Future.delayed(const Duration(seconds: 2), () {
+                    IsListLoaded.value = true;
+                  })
+                });
       });
     }
   }
