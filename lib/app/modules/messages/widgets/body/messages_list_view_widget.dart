@@ -36,7 +36,9 @@ class MessagesListViewWidget extends StatelessWidget {
                 // reverse index
                 final reverseIndex = controller.messages.length - index;
                 if (reverseIndex == 0) {
-                  return const BeginningOfMessagesHeaderWidget();
+                  return BeginningOfMessagesHeaderWidget(
+                    chat: controller.args.user.chatModel,
+                  );
                 } else {
                   return MessageItemWidget(index: reverseIndex - 1);
                 }

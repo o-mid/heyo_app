@@ -13,14 +13,14 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 class BeginningOfMessagesHeaderWidget extends StatelessWidget {
+  final ChatModel chat;
   const BeginningOfMessagesHeaderWidget({
     Key? key,
+    required this.chat,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<MessagesController>();
-    final ChatModel chat = controller.args.user.chatModel;
     // Todo: Add group header
     return Container(
       margin: EdgeInsets.all(16.w).copyWith(top: 0, bottom: 16.h),

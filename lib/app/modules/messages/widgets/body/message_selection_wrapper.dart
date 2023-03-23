@@ -48,7 +48,7 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      Get.find<MessagesController>().scrollToMessage(
+                      controller.scrollToMessage(
                         messageId: message.replyTo!.repliedToMessageId,
                       );
                     },
