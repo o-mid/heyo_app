@@ -96,7 +96,7 @@ class MessagesController extends GetxController {
   late UserPreferences? userPreferences;
   final FocusNode textFocusNode = FocusNode();
 
-  final IsListLoaded = false.obs;
+  final isListLoaded = false.obs;
 
   @override
   Future<void> onInit() async {
@@ -280,8 +280,8 @@ class MessagesController extends GetxController {
             )
             .then((value) => {
                   // Todo: remove this delay
-                  Future.delayed(const Duration(seconds: 2), () {
-                    IsListLoaded.value = true;
+                  Future.delayed(ANIMATIONS.closeMessagesLoadingShimmerDurtion, () {
+                    isListLoaded.value = true;
                   })
                 });
       });
@@ -897,7 +897,7 @@ class MessagesController extends GetxController {
           curve: ANIMATIONS.getAllMsgscurve,
         );
       });
-      IsListLoaded.value = true;
+      isListLoaded.value = true;
     }
   }
 

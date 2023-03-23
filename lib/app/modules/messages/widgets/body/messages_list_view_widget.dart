@@ -19,11 +19,15 @@ class MessagesListViewWidget extends StatelessWidget {
     return Obx(() {
       return Stack(
         children: [
-          controller.IsListLoaded.value
+          // show loading widget if list is not loaded and scrolled to the saved state
+
+          controller.isListLoaded.value
               ? const SizedBox.shrink()
               : const Center(child: MessagesLoadingWidget()),
+
+          // show list of messages after list is loaded
           Opacity(
-            opacity: controller.IsListLoaded.value ? 1 : 0,
+            opacity: controller.isListLoaded.value ? 1 : 0,
             child: ListView.builder(
               primary: false,
               controller: controller.scrollController,

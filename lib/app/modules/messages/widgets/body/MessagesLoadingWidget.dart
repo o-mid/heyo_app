@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../shared/utils/constants/colors.dart';
 import '../../data/models/messages/message_model.dart';
 import '../../data/models/messages/text_message_model.dart';
 import '../../data/models/reaction_model.dart';
@@ -16,8 +17,9 @@ class MessagesLoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
       direction: ShimmerDirection.ltr,
-      baseColor: Colors.grey.shade300,
-      highlightColor: Colors.grey.shade100,
+      baseColor: COLORS.kShimmerBase,
+      highlightColor: COLORS.kShimmerHighlight,
+      // this will return a list of mock messages for the loading state of the messaging screen
       child: ListView.builder(
         itemBuilder: (context, index) {
           return MessageSelectionWrapper(
