@@ -12,6 +12,7 @@ import 'package:heyo/generated/locales.g.dart';
 
 import '../../../shared/utils/constants/textStyles.dart';
 import '../../../shared/widgets/scale_animated_switcher.dart';
+import 'compose_text_field_widget.dart';
 
 class ComposeMessageBox extends StatelessWidget {
   const ComposeMessageBox({Key? key}) : super(key: key);
@@ -19,69 +20,51 @@ class ComposeMessageBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MessagesController>();
-    return Obx(() {
-      return Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 18),
-                  child: GestureDetector(
-                    // Todo: implement add media button
-                    onTap: () {
-                      controller.mediaGlassmorphicChangeState();
-                    },
-                    child: Container(
-                      width: 20,
-                      height: 20,
-                      decoration: const BoxDecoration(
-                        color: COLORS.kGreenMainColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.add,
-                        color: COLORS.kWhiteColor,
-                        size: 16,
-                      ),
+
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 18),
+                child: GestureDetector(
+                  // Todo: implement add media button
+                  onTap: () {
+                    controller.mediaGlassmorphicChangeState();
+                  },
+                  child: Container(
+                    width: 20,
+                    height: 20,
+                    decoration: const BoxDecoration(
+                      color: COLORS.kGreenMainColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.add,
+                      color: COLORS.kWhiteColor,
+                      size: 16,
                     ),
                   ),
                 ),
-                CustomSizes.mediumSizedBoxWidth,
-                Expanded(
-                  child: TextFormField(
-                    maxLines: 7,
-                    minLines: 1,
-                    onChanged: (msg) {
-                      controller.newMessage.value = msg;
-                    },
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      focusedErrorBorder: InputBorder.none,
-                      hintText: LocaleKeys.MessagesPage_textFieldHint.tr,
-                    ),
-                    controller: controller.textController,
-                    style: TEXTSTYLES.kBodyBasic.copyWith(
-                      color: COLORS.kBlackColor,
-                    ),
-                    focusNode: controller.textFocusNode,
-                  ),
+              ),
+              CustomSizes.mediumSizedBoxWidth,
+              const Expanded(
+                child: ComposeTextFieldWidget(),
+              ),
+              CustomSizes.largeSizedBoxWidth,
+              KeyboardDismissOnTap(
+                dismissOnCapturedTaps: true,
+                child: GestureDetector(
+                  onTap: controller.toggleEmojiPicker,
+                  child: Assets.svg.emojiIcon.svg(color: COLORS.kDarkBlueColor),
                 ),
-                CustomSizes.largeSizedBoxWidth,
-                KeyboardDismissOnTap(
-                  dismissOnCapturedTaps: true,
-                  child: GestureDetector(
-                    onTap: controller.toggleEmojiPicker,
-                    child: Assets.svg.emojiIcon.svg(color: COLORS.kDarkBlueColor),
-                  ),
-                ),
-                CustomSizes.largeSizedBoxWidth,
-                AnimatedSwitcher(
+              ),
+              CustomSizes.largeSizedBoxWidth,
+              Obx(() {
+                return AnimatedSwitcher(
                   duration: const Duration(milliseconds: 100),
                   child: controller.newMessage.isNotEmpty
                       ? SendMessageButton(
@@ -97,12 +80,12 @@ class ComposeMessageBox extends StatelessWidget {
                               padding: const EdgeInsets.only(right: 18),
                               child: Assets.svg.recordIcon.svg(color: COLORS.kDarkBlueColor)),
                         ),
-                ),
-              ],
-            ),
+                );
+              }),
+            ],
           ),
-        ],
-      );
-    });
+        ),
+      ],
+    );
   }
 }

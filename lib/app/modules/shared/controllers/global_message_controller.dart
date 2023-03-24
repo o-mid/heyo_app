@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
+
+import '../utils/scroll_to_index.dart';
 
 class GlobalMessageController extends GetxController {
   var textController = TextEditingController();

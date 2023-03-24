@@ -7,11 +7,13 @@ class CustomCircleAvatar extends StatelessWidget {
   final String url;
   final double size;
   final bool isOnline;
+  final bool isMockData;
   const CustomCircleAvatar({
     Key? key,
     required this.url,
     required this.size,
     this.isOnline = false,
+    this.isMockData = false,
   }) : super(key: key);
 
   @override
@@ -25,10 +27,15 @@ class CustomCircleAvatar extends StatelessWidget {
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
           ),
-          child: ExtendedImage.network(
-            url,
-            enableLoadState: false,
-          ),
+          child: !isMockData
+              ? ExtendedImage.network(
+                  url,
+                  enableLoadState: false,
+                )
+              : Expanded(
+                  child: Container(
+                  color: Colors.grey,
+                )),
         ),
 
         // The two following widgets are to show a green online badge on chat icon

@@ -7,49 +7,47 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
+
 import 'package:visibility_detector/visibility_detector.dart';
 
+import '../../../shared/utils/scroll_to_index.dart';
+import 'message_date_header_widget.dart';
 import 'message_selection_wrapper.dart';
 
 class MessageItemWidget extends StatelessWidget {
   const MessageItemWidget({
     super.key,
-    required this.message,
     required this.index,
   });
 
-  final MessageModel message;
   final int index;
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MessagesController>();
 
-    final prevMessage = index == 1 ? null : controller.messages[index - 2];
+    final prevMessage = index < 1 ? null : controller.messages[index - 1];
+
+    final MessageModel message = controller.messages[index];
 
     // Adds date header at beginning of new messages in a certain date
-    List<Widget> dateHeaderWidgets = <Widget>[];
-    if (prevMessage == null || !prevMessage.timestamp.isSameDate(message.timestamp)) {
-      dateHeaderWidgets = [
-        CustomSizes.mediumSizedBoxHeight,
-        Text(
-          message.timestamp.differenceFromNow(),
-          style: TEXTSTYLES.kBodyTag.copyWith(
-            color: COLORS.kTextBlueColor,
-            fontSize: 10.sp,
-          ),
-        ),
-        CustomSizes.mediumSizedBoxHeight,
-      ];
+    Widget dateHeader() {
+      if (prevMessage == null || !prevMessage.timestamp.isSameDate(message.timestamp)) {
+        return MessagesDateHeaderWidget(
+          headerValue: message.timestamp.differenceFromNow(),
+        );
+      } else {
+        return const SizedBox();
+      }
     }
+
     Widget messageBody = AutoScrollTag(
-      key: Key(index.toString()),
+      key: Key(message.messageId),
       index: index,
       controller: controller.scrollController,
       child: Column(
         children: [
-          ...dateHeaderWidgets,
+          dateHeader(),
           MessageSelectionWrapper(
             message: message,
           ),
@@ -57,18 +55,14 @@ class MessageItemWidget extends StatelessWidget {
       ),
     );
 
-    // if the message is from me, don't wrap it in a VisibilityDetector
-    if (message.isFromMe) {
-      return messageBody;
-    } else {
-      return VisibilityDetector(
-          key: Key(message.messageId),
-          onVisibilityChanged: (info) => controller.onRemoteMessagesItemVisibilityChanged(
-              visibilityInfo: info,
-              itemIndex: index,
-              itemMessageId: message.messageId,
-              itemStatus: message.status),
-          child: messageBody);
-    }
+    return VisibilityDetector(
+        key: Key(message.messageId),
+        onVisibilityChanged: (info) => controller.onMessagesItemVisibilityChanged(
+            visibilityInfo: info,
+            itemIndex: index,
+            itemMessageId: message.messageId,
+            itemStatus: message.status,
+            isFromMe: message.isFromMe),
+        child: messageBody);
   }
 }

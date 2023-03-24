@@ -16,9 +16,11 @@ import 'recipient_reply_to_widget.dart';
 
 class MessageSelectionWrapper extends StatefulWidget {
   final MessageModel message;
+  final bool isMockMessage;
   const MessageSelectionWrapper({
     Key? key,
     required this.message,
+    this.isMockMessage = false,
   }) : super(key: key);
 
   @override
@@ -32,79 +34,84 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
     super.build(context);
 
     final message = widget.message;
+    final isMockMessage = widget.isMockMessage;
     final controller = Get.find<MessagesController>();
 
-    return Column(
-      children: [
-        if (message.replyTo != null)
-          Row(
-            textDirection: message.isFromMe ? TextDirection.rtl : TextDirection.ltr,
-            children: [
-              if (!message.isFromMe) SizedBox(width: 16.w + 20), // Left padding + profile size
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    Get.find<MessagesController>()
-                        .scrollToMessage(message.replyTo!.repliedToMessageId);
-                  },
-                  child: message.isFromMe
-                      ? SenderReplyToWidget(message: message)
-                      : RecipientReplyTo(
-                          message: message,
-                        ),
-                ),
-              ),
-            ],
-          ),
-        GestureDetector(
-          key: Key(message.messageId),
-          onLongPress: () => controller.toggleMessageSelection(message.messageId),
-          onTap: controller.selectedMessages.isEmpty
-              ? null
-              : () => controller.toggleMessageSelection(message.messageId),
-          child: Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.center,
-            children: [
-              // Material is used because if container is given color, it will
-              // hide the reaction widget borders
-              Material(
-                color: message.isSelected ? COLORS.kGreenLighterColor : Colors.transparent,
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 4.h),
-                  child: MessageWidget(
-                    message: message,
-                    // showTimeAndProfile: index == controller.messages.length - 1 ||
-                    //     controller.messages[index + 1].senderName != message.senderName,
+    return Obx(() {
+      return Column(
+        children: [
+          if (message.replyTo != null)
+            Row(
+              textDirection: message.isFromMe ? TextDirection.rtl : TextDirection.ltr,
+              children: [
+                if (!message.isFromMe) SizedBox(width: 16.w + 20), // Left padding + profile size
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      controller.scrollToMessage(
+                        messageId: message.replyTo!.repliedToMessageId,
+                      );
+                    },
+                    child: message.isFromMe
+                        ? SenderReplyToWidget(message: message)
+                        : RecipientReplyTo(
+                            message: message,
+                          ),
                   ),
                 ),
-              ),
-              // Todo: optimize if necessary
-              Positioned(
-                top: -4.h,
-                child: AnimatedScale(
-                  scale: message.isSelected && controller.selectedMessages.length == 1 ? 1 : 0,
-                  duration: const Duration(milliseconds: 200),
-                  child: ReactionBox(
-                    message: message,
-                  ),
-                ),
-              ),
-              if (message.isSelected)
-                Positioned(
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
+              ],
+            ),
+          GestureDetector(
+            key: Key(message.messageId),
+            onLongPress: () => controller.toggleMessageSelection(message.messageId),
+            onTap: controller.selectedMessages.isEmpty
+                ? null
+                : () => controller.toggleMessageSelection(message.messageId),
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: [
+                // Material is used because if container is given color, it will
+                // hide the reaction widget borders
+                Material(
+                  color: message.isSelected ? COLORS.kGreenLighterColor : Colors.transparent,
                   child: Container(
-                    color: COLORS.kGreenMainColor,
-                    width: 3,
+                    padding: EdgeInsets.symmetric(vertical: 4.h),
+                    child: MessageWidget(
+                      message: message,
+                      isMockMessage: isMockMessage,
+                      // showTimeAndProfile: index == controller.messages.length - 1 ||
+                      //     controller.messages[index + 1].senderName != message.senderName,
+                    ),
                   ),
-                )
-            ],
+                ),
+                // Todo: optimize if necessary
+                Positioned(
+                  top: -4.h,
+                  child: AnimatedScale(
+                    scale: message.isSelected && controller.selectedMessages.length == 1 ? 1 : 0,
+                    duration: const Duration(milliseconds: 200),
+                    child: ReactionBox(
+                      message: message,
+                    ),
+                  ),
+                ),
+                if (message.isSelected)
+                  Positioned(
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    child: Container(
+                      color: COLORS.kGreenMainColor,
+                      width: 3,
+                    ),
+                  )
+              ],
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 
   @override

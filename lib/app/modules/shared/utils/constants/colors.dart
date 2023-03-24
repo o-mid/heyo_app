@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+
 /// => The Color Name On Figma
 class COLORS {
   ///Heyo Brand/Green
@@ -112,4 +114,10 @@ class COLORS {
 
   /// Primary/Chat Stroke
   static const Color kChatStroke = Color(0xffE6E2F0);
+
+  /// Shimmer base color [shade300]
+  static Color kShimmerBase = Colors.grey.shade300;
+
+  /// Shimmer highlight color [shade100]
+  static Color kShimmerHighlight = Colors.grey.shade100;
 }

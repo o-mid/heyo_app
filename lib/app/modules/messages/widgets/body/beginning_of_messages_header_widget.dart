@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
+import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
 
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -11,9 +12,9 @@ import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-class BeginningOfMessagesHeader extends StatelessWidget {
+class BeginningOfMessagesHeaderWidget extends StatelessWidget {
   final ChatModel chat;
-  const BeginningOfMessagesHeader({
+  const BeginningOfMessagesHeaderWidget({
     Key? key,
     required this.chat,
   }) : super(key: key);
