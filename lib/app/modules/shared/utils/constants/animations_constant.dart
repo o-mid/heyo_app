@@ -19,5 +19,5 @@ class ANIMATIONS {
   static const closeRecordModeDurtion = Duration(milliseconds: 150);
   static const closeRecordModeCurve = Curves.linear;
 
-  static const closeMessagesLoadingShimmerDurtion = Duration(milliseconds: 300);
+  static const closeMessagesLoadingShimmerDurtion = Duration(milliseconds: 200);
 }
