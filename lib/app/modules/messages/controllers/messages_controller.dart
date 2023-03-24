@@ -890,13 +890,16 @@ class MessagesController extends GetxController {
       // await scrollToMessage(messageId: userPreferences!.scrollPosition);
       await jumpToMessage(messageId: userPreferences!.scrollPosition);
     } else {
-      await _addMockMessages();
-      WidgetsBinding.instance.scheduleFrameCallback((_) {
-        animateToBottom(
-          duration: ANIMATIONS.getAllMsgsDurtion,
-          curve: ANIMATIONS.getAllMsgscurve,
-        );
-      });
+      // uncomment the following lines if you want to add mock Messages
+      // and animate To the Bottom of list
+
+      // await _addMockMessages();
+      // WidgetsBinding.instance.scheduleFrameCallback((_) {
+      //   animateToBottom(
+      //     duration: ANIMATIONS.getAllMsgsDurtion,
+      //     curve: ANIMATIONS.getAllMsgscurve,
+      //   );
+      // });
       isListLoaded.value = true;
     }
   }
