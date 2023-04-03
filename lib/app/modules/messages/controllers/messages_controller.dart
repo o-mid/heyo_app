@@ -437,6 +437,7 @@ class MessagesController extends GetxController {
   }
 
   void _postMessageSendOperations() {
+    clearReplyTo();
     messages.refresh();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
