@@ -1,6 +1,8 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:flutter/animation.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/routes/transitions_type.dart';
 
 class TRANSITIONS {
   static const messagingPage_receiveMsgDurtion = Duration(milliseconds: 150);
@@ -22,4 +24,13 @@ class TRANSITIONS {
   static const messagingPage_closeRecordModeCurve = Curves.linear;
 
   static const messagingPage_closeMessagesLoadingShimmerDurtion = Duration(milliseconds: 200);
+
+  /// Transition.fade
+  static const navigation_generalPageTransition = Transition.fade;
+
+  /// Duration(milliseconds: 150)
+  static const navigation_generalPageTransitionDurtion = Duration(milliseconds: 150);
+
+  /// Curves.linear
+  static const navigation_generalPageTransitionCurve = Curves.linear;
 }
