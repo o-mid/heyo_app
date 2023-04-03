@@ -41,10 +41,10 @@ class MessagesFooter extends StatelessWidget {
               sizeFactor: animation,
               child: child,
             ),
-            switchInCurve: TRANSITIONS.openRecordModeCurve,
-            switchOutCurve: TRANSITIONS.closeRecordModeCurve,
-            reverseDuration: TRANSITIONS.closeRecordModeDurtion,
-            duration: TRANSITIONS.openRecordModeDurtion,
+            switchInCurve: TRANSITIONS.messagingPage_openRecordModeCurve,
+            switchOutCurve: TRANSITIONS.messagingPage_closeRecordModeCurve,
+            reverseDuration: TRANSITIONS.messagingPage_closeRecordModeDurtion,
+            duration: TRANSITIONS.messagingPage_openRecordModeDurtion,
             child: controller.isInRecordMode.isTrue
                 ? const VoiceRecorderWidget()
                 : const MessagesActiveBoxWidget(),

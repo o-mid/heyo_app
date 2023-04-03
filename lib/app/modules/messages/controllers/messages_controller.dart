@@ -134,8 +134,8 @@ class MessagesController extends GetxController {
       // WidgetsBinding.instance.addPostFrameCallback(
       //   (_) {
       //     animateToBottom(
-      //       duration: TRANSITIONS.receiveMsgDurtion,
-      //       curve: TRANSITIONS.getAllMsgscurve,
+      //       duration: TRANSITIONS.messagingPage_receiveMsgDurtion,
+      //       curve: TRANSITIONS.messagingPage_getAllMsgscurve,
       //     );
       //   },
       // );
@@ -280,7 +280,7 @@ class MessagesController extends GetxController {
             )
             .then((value) => {
                   // Todo: remove this delay
-                  Future.delayed(TRANSITIONS.closeMessagesLoadingShimmerDurtion, () {
+                  Future.delayed(TRANSITIONS.messagingPage_closeMessagesLoadingShimmerDurtion, () {
                     isListLoaded.value = true;
                   })
                 });
@@ -300,8 +300,8 @@ class MessagesController extends GetxController {
   }) {
     scrollController.animateTo(
       scrollController.position.minScrollExtent,
-      curve: curve ?? TRANSITIONS.generalMsgTransitioncurve,
-      duration: duration ?? TRANSITIONS.generalMsgTransitionDurtion,
+      curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
+      duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
     );
   }
 
@@ -312,8 +312,8 @@ class MessagesController extends GetxController {
   }) {
     scrollController.animateTo(
       offset,
-      curve: curve ?? TRANSITIONS.generalMsgTransitioncurve,
-      duration: duration ?? TRANSITIONS.generalMsgTransitionDurtion,
+      curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
+      duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
     );
   }
 
@@ -431,8 +431,8 @@ class MessagesController extends GetxController {
   }) {
     scrollController.animateTo(
       scrollController.position.maxScrollExtent,
-      curve: curve ?? TRANSITIONS.generalMsgTransitioncurve,
-      duration: duration ?? TRANSITIONS.generalMsgTransitionDurtion,
+      curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
+      duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
     );
   }
 
@@ -441,8 +441,8 @@ class MessagesController extends GetxController {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       animateToBottom(
-        duration: TRANSITIONS.sendMsgDurtion,
-        curve: TRANSITIONS.sendMsgcurve,
+        duration: TRANSITIONS.messagingPage_sendMsgDurtion,
+        curve: TRANSITIONS.messagingPage_sendMsgcurve,
       );
     });
   }
@@ -896,8 +896,8 @@ class MessagesController extends GetxController {
       // await _addMockMessages();
       // WidgetsBinding.instance.scheduleFrameCallback((_) {
       //   animateToBottom(
-      //     duration: TRANSITIONS.getAllMsgsDurtion,
-      //     curve: TRANSITIONS.getAllMsgscurve,
+      //     duration: TRANSITIONS.messagingPage_getAllMsgsDurtion,
+      //     curve: TRANSITIONS.messagingPage_getAllMsgscurve,
       //   );
       // });
       isListLoaded.value = true;
