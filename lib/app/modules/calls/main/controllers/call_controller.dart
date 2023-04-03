@@ -10,7 +10,6 @@ import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.da
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:wakelock/wakelock.dart';
 
 enum CallViewType {
@@ -53,12 +52,11 @@ class CallController extends GetxController {
 
   final recordState = RecordState.notRecording.obs;
   final CallConnectionController callConnectionController;
-  final P2PState p2pState;
   late Session session;
   final Stopwatch stopwatch = Stopwatch();
   Timer? calltimer;
 
-  CallController({required this.callConnectionController, required this.p2pState});
+  CallController({required this.callConnectionController});
 
   final RTCVideoRenderer _localRenderer = RTCVideoRenderer();
   final RTCVideoRenderer _remoteRenderer = RTCVideoRenderer();
