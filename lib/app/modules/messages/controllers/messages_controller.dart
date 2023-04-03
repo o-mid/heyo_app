@@ -175,8 +175,8 @@ class MessagesController extends GetxController {
             double scrollOffset = scrollController.offset;
             animateToPosition(
               offset: scrollOffset + _keyboardHeight,
-              duration: const Duration(milliseconds: 150),
-              curve: Curves.ease,
+              duration: TRANSITIONS.messagingPage_KeyboardVisibilityDurtion,
+              curve: TRANSITIONS.messagingPage_KeyboardVisibilityCurve,
             );
           }
         });
@@ -188,8 +188,8 @@ class MessagesController extends GetxController {
             double scrollOffset = scrollController.offset;
             animateToPosition(
               offset: scrollOffset - _keyboardHeight,
-              duration: const Duration(milliseconds: 150),
-              curve: Curves.ease,
+              duration: TRANSITIONS.messagingPage_KeyboardVisibilityDurtion,
+              curve: TRANSITIONS.messagingPage_KeyboardVisibilityCurve,
             );
           }
         });
