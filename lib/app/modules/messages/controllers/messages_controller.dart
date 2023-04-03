@@ -52,7 +52,7 @@ import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/messaging_session.dart';
 import '../../share_files/models/file_model.dart';
 import '../../shared/data/models/user_preferences.dart';
-import '../../shared/utils/constants/animations_constant.dart';
+import '../../shared/utils/constants/transitions_constant.dart';
 import '../../shared/utils/scroll_to_index.dart';
 import '../data/usecases/delete_message_usecase.dart';
 import '../data/usecases/update_message_usecase.dart';
@@ -134,8 +134,8 @@ class MessagesController extends GetxController {
       // WidgetsBinding.instance.addPostFrameCallback(
       //   (_) {
       //     animateToBottom(
-      //       duration: ANIMATIONS.receiveMsgDurtion,
-      //       curve: ANIMATIONS.getAllMsgscurve,
+      //       duration: TRANSITIONS.receiveMsgDurtion,
+      //       curve: TRANSITIONS.getAllMsgscurve,
       //     );
       //   },
       // );
@@ -280,7 +280,7 @@ class MessagesController extends GetxController {
             )
             .then((value) => {
                   // Todo: remove this delay
-                  Future.delayed(ANIMATIONS.closeMessagesLoadingShimmerDurtion, () {
+                  Future.delayed(TRANSITIONS.closeMessagesLoadingShimmerDurtion, () {
                     isListLoaded.value = true;
                   })
                 });
@@ -300,8 +300,8 @@ class MessagesController extends GetxController {
   }) {
     scrollController.animateTo(
       scrollController.position.minScrollExtent,
-      curve: curve ?? ANIMATIONS.generalMsgTransitioncurve,
-      duration: duration ?? ANIMATIONS.generalMsgTransitionDurtion,
+      curve: curve ?? TRANSITIONS.generalMsgTransitioncurve,
+      duration: duration ?? TRANSITIONS.generalMsgTransitionDurtion,
     );
   }
 
@@ -312,8 +312,8 @@ class MessagesController extends GetxController {
   }) {
     scrollController.animateTo(
       offset,
-      curve: curve ?? ANIMATIONS.generalMsgTransitioncurve,
-      duration: duration ?? ANIMATIONS.generalMsgTransitionDurtion,
+      curve: curve ?? TRANSITIONS.generalMsgTransitioncurve,
+      duration: duration ?? TRANSITIONS.generalMsgTransitionDurtion,
     );
   }
 
@@ -431,8 +431,8 @@ class MessagesController extends GetxController {
   }) {
     scrollController.animateTo(
       scrollController.position.maxScrollExtent,
-      curve: curve ?? ANIMATIONS.generalMsgTransitioncurve,
-      duration: duration ?? ANIMATIONS.generalMsgTransitionDurtion,
+      curve: curve ?? TRANSITIONS.generalMsgTransitioncurve,
+      duration: duration ?? TRANSITIONS.generalMsgTransitionDurtion,
     );
   }
 
@@ -441,8 +441,8 @@ class MessagesController extends GetxController {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       animateToBottom(
-        duration: ANIMATIONS.sendMsgDurtion,
-        curve: ANIMATIONS.sendMsgcurve,
+        duration: TRANSITIONS.sendMsgDurtion,
+        curve: TRANSITIONS.sendMsgcurve,
       );
     });
   }
@@ -896,8 +896,8 @@ class MessagesController extends GetxController {
       // await _addMockMessages();
       // WidgetsBinding.instance.scheduleFrameCallback((_) {
       //   animateToBottom(
-      //     duration: ANIMATIONS.getAllMsgsDurtion,
-      //     curve: ANIMATIONS.getAllMsgscurve,
+      //     duration: TRANSITIONS.getAllMsgsDurtion,
+      //     curve: TRANSITIONS.getAllMsgscurve,
       //   );
       // });
       isListLoaded.value = true;

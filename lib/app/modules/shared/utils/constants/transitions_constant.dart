@@ -1,6 +1,6 @@
 import 'package:flutter/animation.dart';
 
-class ANIMATIONS {
+class TRANSITIONS {
   static const receiveMsgDurtion = Duration(milliseconds: 150);
   static const receiveMsgcurve = Curves.easeOut;
 
