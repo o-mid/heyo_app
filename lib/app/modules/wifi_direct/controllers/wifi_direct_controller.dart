@@ -91,7 +91,7 @@ class WifiDirectController extends GetxController {
         // connectedPeer = event.message as Peer;
         wifiDirectConnectionController.eventHandler(event);
 
-        print('WifiDirectController: linked to ${(event.message as Peer).multiaddr}');
+        print('WifiDirectController: linked to ${(event.message as Peer).multiAddress}');
         break;
 
       case EventType.groupStopped:

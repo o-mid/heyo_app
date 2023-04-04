@@ -110,12 +110,12 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
     _initPlugin();
 
     // TODO implement binary sending
+    print('WifiDirectConnectionController(remoteId $remoteId): sendBinaryData() header ${sendingMessage.header.toString()}');
 
     _heyoWifiDirect!.sendBinaryData(
         receiver: remoteId!,
         header: sendingMessage.header,
         chunk: sendingMessage.chunk,
-        length: sendingMessage.chunk.length,
     );
 
   }
@@ -167,7 +167,7 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
 
 
   messageHandler(HeyoWifiDirectMessage message) {
-    print('WifiDirectConnectionController(remoteId $remoteId): WifiDirect message: ${message.body}, from ${message.senderId} to ${message.receiverId}');
+    print('WifiDirectConnectionController(remoteId $remoteId): binary: ${message.isBinary}, from ${message.senderId} to ${message.receiverId}');
 
     MessageSession session = MessageSession(sid: Constants.coreID, cid: remoteId!, pid: remoteId);
 

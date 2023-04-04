@@ -105,6 +105,9 @@ abstract class CommonMessagingConnectionController extends GetxController {
   Future<void> handleDataChannelBinary(
       {required Uint8List binaryData, required MessageSession session}) async {
     DataBinaryMessage message = DataBinaryMessage.parse(binaryData);
+    print('handleDataChannelBinary header ${message.header.toString()}');
+    print('handleDataChannelBinary chunk length ${message.chunk.length}');
+
     if (message.chunk.isNotEmpty) {
       if (currentState == null) {
         currentState = BinaryFileReceivingState(message.filename, message.meta);
