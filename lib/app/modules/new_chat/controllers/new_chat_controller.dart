@@ -20,6 +20,7 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
   late TextEditingController inputController;
   final ContactRepository contactRepository;
   final AccountInfo accountInfo;
+  final inputFocusNode = FocusNode();
 
   NewChatController({required this.contactRepository, required this.accountInfo});
 
