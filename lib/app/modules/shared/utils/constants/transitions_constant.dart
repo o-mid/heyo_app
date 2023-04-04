@@ -52,4 +52,12 @@ class TRANSITIONS {
   // ConnectionStatusWidget transitions
   static const connectionStatus_StatusSwitcherDurtion = Duration(milliseconds: 400);
   static const connectionStatus_StatusCurve = Curves.easeInOut;
+
+  // Chats screen transitions
+  static const chatsPage_EnterBottomSheetDuration = Duration(milliseconds: 200);
+  static const chatsPage_ExitBottomSheetDuration = Duration(milliseconds: 150);
+
+  // NewChat screen transitions
+  static const newChat_EnterBottomSheetDuration = Duration(milliseconds: 200);
+  static const newChat_ExitBottomSheetDuration = Duration(milliseconds: 150);
 }
