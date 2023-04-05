@@ -9,6 +9,7 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 import '../utils/constants/colors.dart';
+import '../utils/constants/transitions_constant.dart';
 import 'connection_status_body.dart';
 
 class ConnectionStatusWidget extends GetView<ConnectionController> {
@@ -54,10 +55,13 @@ class ConnectionStatusWidget extends GetView<ConnectionController> {
       }
 
       return AnimatedSwitcher(
-          duration: const Duration(milliseconds: 400),
+          duration: TRANSITIONS.connectionStatus_StatusSwitcherDurtion,
           transitionBuilder: (child, animation) => SlideTransition(
                 position: offsetAnimation.animate(
-                  CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+                  CurvedAnimation(
+                    parent: animation,
+                    curve: TRANSITIONS.connectionStatus_StatusCurve,
+                  ),
                 ),
                 child: child,
               ),

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/footer/send_location_box.dart';
-import 'package:heyo/app/modules/shared/utils/constants/animations_constant.dart';
+import 'package:heyo/app/modules/shared/utils/constants/transitions_constant.dart';
 
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
@@ -41,10 +41,10 @@ class MessagesFooter extends StatelessWidget {
               sizeFactor: animation,
               child: child,
             ),
-            switchInCurve: ANIMATIONS.openRecordModeCurve,
-            switchOutCurve: ANIMATIONS.closeRecordModeCurve,
-            reverseDuration: ANIMATIONS.closeRecordModeDurtion,
-            duration: ANIMATIONS.openRecordModeDurtion,
+            switchInCurve: TRANSITIONS.messagingPage_openRecordModeCurve,
+            switchOutCurve: TRANSITIONS.messagingPage_closeRecordModeCurve,
+            reverseDuration: TRANSITIONS.messagingPage_closeRecordModeDurtion,
+            duration: TRANSITIONS.messagingPage_openRecordModeDurtion,
             child: controller.isInRecordMode.isTrue
                 ? const VoiceRecorderWidget()
                 : const MessagesActiveBoxWidget(),

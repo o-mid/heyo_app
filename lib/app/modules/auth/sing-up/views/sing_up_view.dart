@@ -8,6 +8,7 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import '../../../../routes/app_pages.dart';
 import '../../../shared/utils/constants/textStyles.dart';
+import '../../../shared/utils/constants/transitions_constant.dart';
 import '../controllers/sing_up_controller.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -36,9 +37,10 @@ class SingUpView extends GetView<SingUpController> {
               count: _pages.length,
               controller: controller.pagecontroller,
               onDotClicked: (index) => controller.pagecontroller.animateToPage(
-                  index,
-                  duration: Duration(milliseconds: 350),
-                  curve: Curves.ease),
+                index,
+                duration: TRANSITIONS.singupPage_ChangePageIndicatorsDurtion,
+                curve: TRANSITIONS.singupPage_ChangePageIndicatorsCurve,
+              ),
               effect: WormEffect(
                   dotHeight: 8.w,
                   dotWidth: 8.w,
@@ -61,8 +63,7 @@ class SingUpView extends GetView<SingUpController> {
                 CustomButton.outline(
                   // TODO : Implement I already have CoreID
                   onTap: () {},
-                  title: LocaleKeys
-                      .registration_BenefitsPage_buttons_SkipCreate.tr,
+                  title: LocaleKeys.registration_BenefitsPage_buttons_SkipCreate.tr,
                 ),
                 CustomSizes.mediumSizedBoxHeight,
                 _footer()
@@ -88,8 +89,7 @@ class SingUpView extends GetView<SingUpController> {
               children: [
                 Text(
                   LocaleKeys.registration_BenefitsPage_buttons_Whatis.tr,
-                  style: TEXTSTYLES.kButtonBasic
-                      .copyWith(color: COLORS.kGreenMainColor),
+                  style: TEXTSTYLES.kButtonBasic.copyWith(color: COLORS.kGreenMainColor),
                 ),
                 Icon(
                   Icons.arrow_forward_ios,
