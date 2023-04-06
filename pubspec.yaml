@@ -76,6 +76,7 @@ dependencies:
   tuple: ^2.0.1
   visibility_detector: ^0.3.3
   shimmer: ^2.0.0
+  shared_preferences: ^2.1.0
 
 dev_dependencies:
   build_runner:
