@@ -6,6 +6,10 @@ import 'package:heyo/generated/locales.g.dart';
 
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 
+import '../../../routes/app_pages.dart';
+import '../../new_chat/data/models/new_chat_view_arguments_model.dart';
+import '../../shared/utils/screen-utils/buttons/custom_button.dart';
+
 class EmptyChatsWidget extends StatelessWidget {
   const EmptyChatsWidget({Key? key}) : super(key: key);
 
@@ -29,22 +33,17 @@ class EmptyChatsWidget extends StatelessWidget {
               style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
             ),
             const SizedBox(height: 30),
-            ElevatedButton(
+            CustomButton.primarySmall(
               // Todo
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                primary: COLORS.kGreenLighterColor,
-              ),
-              child: Container(
-                alignment: Alignment.center,
-                width: 80,
-                child: Text(
-                  LocaleKeys.HomePage_Chats_emptyState_invite.tr,
-                  style: const TextStyle(
-                    color: COLORS.kGreenMainColor,
-                  ),
+              onTap: () => Get.toNamed(
+                Routes.NEW_CHAT,
+                arguments: NewChatArgumentsModel(
+                  openInviteBottomSheet: true,
                 ),
               ),
+              color: COLORS.kGreenLighterColor,
+              title: LocaleKeys.HomePage_Chats_emptyState_invite.tr,
+              style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kGreenMainColor),
             ),
             const SizedBox(height: 30),
           ],

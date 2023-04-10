@@ -8,9 +8,10 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/locales.g.dart';
 
+import '../../new_chat/controllers/new_chat_controller.dart';
 import 'list_header_widget.dart';
 
-class ContactListWithHeader extends StatelessWidget {
+class ContactListWithHeader extends GetView<NewChatController> {
   final List<UserModel> contacts;
   final bool searchMode;
   final bool showAudioCallButton;
@@ -60,6 +61,7 @@ class ContactListWithHeader extends StatelessWidget {
                 InkWell(
                   borderRadius: BorderRadius.circular(8),
                   onTap: () {
+                    controller.inputFocusNode.unfocus();
                     openUserPreviewBottomSheet(contacts[index]);
                   },
                   child: UserWidget(

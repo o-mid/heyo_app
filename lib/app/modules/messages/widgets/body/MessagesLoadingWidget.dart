@@ -21,6 +21,7 @@ class MessagesLoadingWidget extends StatelessWidget {
       highlightColor: COLORS.kShimmerHighlight,
       // this will return a list of mock messages for the loading state of the messaging screen
       child: ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return MessageSelectionWrapper(
             isMockMessage: true,

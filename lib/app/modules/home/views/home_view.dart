@@ -17,8 +17,8 @@ class HomeView extends GetView<HomeController> {
     const ChatsView(),
     const CallsView(),
     WalletView(),
-    SearchNearbyView(),
-    AccountView(),
+    const SearchNearbyView(),
+    const AccountView(),
   ];
 
   final _pageFab = [
