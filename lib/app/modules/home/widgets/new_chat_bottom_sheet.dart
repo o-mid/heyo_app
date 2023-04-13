@@ -9,6 +9,7 @@ import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
+import '../../shared/utils/constants/transitions_constant.dart';
 import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 
 void openNewChatBottomSheet() {
@@ -23,6 +24,8 @@ void openNewChatBottomSheet() {
         topRight: Radius.circular(20),
       ),
     ),
+    enterBottomSheetDuration: TRANSITIONS.chatsPage_EnterBottomSheetDuration,
+    exitBottomSheetDuration: TRANSITIONS.chatsPage_ExitBottomSheetDuration,
     Padding(
       padding: CustomSizes.mainContentPadding,
       child: Column(
@@ -36,6 +39,7 @@ void openNewChatBottomSheet() {
                 child: TextButton(
                   //Todo: Start new chat onPressed
                   onPressed: () {
+                    Get.back();
                     Get.toNamed(Routes.NEW_CHAT);
                   },
                   child: Row(
@@ -64,12 +68,15 @@ void openNewChatBottomSheet() {
                 ),
               ),
               IconButton(
-                onPressed: () => Get.toNamed(
-                  Routes.NEW_CHAT,
-                  arguments: NewChatArgumentsModel(
-                    openQrScanner: true,
-                  ),
-                ),
+                onPressed: () {
+                  Get.back();
+                  Get.toNamed(
+                    Routes.NEW_CHAT,
+                    arguments: NewChatArgumentsModel(
+                      openQrScanner: true,
+                    ),
+                  );
+                },
                 alignment: Alignment.center,
                 iconSize: 21.w,
                 icon: const Icon(
@@ -104,12 +111,15 @@ void openNewChatBottomSheet() {
             ),
           ),
           TextButton(
-            onPressed: () => Get.toNamed(
-              Routes.NEW_CHAT,
-              arguments: NewChatArgumentsModel(
-                openInviteBottomSheet: true,
-              ),
-            ),
+            onPressed: () {
+              Get.back();
+              Get.toNamed(
+                Routes.NEW_CHAT,
+                arguments: NewChatArgumentsModel(
+                  openInviteBottomSheet: true,
+                ),
+              );
+            },
             child: Row(
               children: [
                 Container(

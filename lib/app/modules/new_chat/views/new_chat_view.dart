@@ -321,6 +321,7 @@ class _Contacts extends StatelessWidget {
               child: FocusScope(
                 child: Focus(
                   onFocusChange: (focus) => controller.isTextInputFocused.value = focus,
+                  focusNode: controller.inputFocusNode,
                   child: CUSTOMTEXTFIELD(
                     textController: controller.inputController,
                     labelText: LocaleKeys.newChat_usernameInput.tr,

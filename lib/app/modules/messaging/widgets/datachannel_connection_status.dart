@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/constants/transitions_constant.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 import '../../shared/utils/constants/colors.dart';
@@ -57,10 +58,13 @@ class ConnectionStatusWidget extends GetView<CommonMessagingConnectionController
       }
 
       return AnimatedSwitcher(
-          duration: const Duration(milliseconds: 400),
+          duration: TRANSITIONS.messagingPage_DatachannelConnectionStatusDurtion,
           transitionBuilder: (child, animation) => SlideTransition(
                 position: offsetAnimation.animate(
-                  CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+                  CurvedAnimation(
+                    parent: animation,
+                    curve: TRANSITIONS.messagingPage_DatachannelConnectionStatusCurve,
+                  ),
                 ),
                 child: child,
               ),

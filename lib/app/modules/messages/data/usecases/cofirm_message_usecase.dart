@@ -21,9 +21,11 @@ class ConfirmMessage {
     switch (confirmMessageType.runtimeType) {
       case ConfirmReceivedText:
         final String messageId = (confirmMessageType as ConfirmReceivedText).messageId;
+        final ConfirmMessageStatus status = (confirmMessageType).status;
 
         Map<String, dynamic> confirmmessageJson = ConfirmMessageModel(
           messageId: messageId,
+          status: status,
         ).toJson();
 
         SendDataChannelMessage(messagingConnection: messagingConnection).execute(
@@ -42,13 +44,16 @@ class ConfirmMessageType {
   factory ConfirmMessageType.confirmReceivedText({
     required String chatId,
     required String messageId,
+    required ConfirmMessageStatus status,
   }) = ConfirmReceivedText;
 }
 
 class ConfirmReceivedText extends ConfirmMessageType {
   final String messageId;
+  final ConfirmMessageStatus status;
   ConfirmReceivedText({
     required this.messageId,
     required super.chatId,
+    required this.status,
   });
 }

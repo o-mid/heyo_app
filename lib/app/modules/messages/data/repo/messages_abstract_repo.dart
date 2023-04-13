@@ -23,4 +23,7 @@ abstract class MessagesAbstractRepo {
 
   /// returns a message of a certain chat with id of [chatId] and returns it if the [messageId] is available
   Future<MessageModel?> getMessageById({required String messageId, required String chatId});
+
+  /// returns unread messages of a certain chat with id of [chatId]
+  Future<List<MessageModel?>> getUnReadMessages(String chatId);
 }

@@ -9,6 +9,8 @@ import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.da
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/messages/utils/open_camera_for_sending_media_message.dart';
+import 'package:heyo/app/modules/shared/providers/database/dao/user_preferences/user_preferences_abstract_provider.dart';
+import 'package:heyo/app/modules/shared/providers/database/repos/user_preferences/user_preferences_abstract_repo.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
@@ -42,20 +44,30 @@ import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
+
+import 'package:tuple/tuple.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../messaging/controllers/common_messaging_controller.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../../messaging/messaging_session.dart';
 import '../../share_files/models/file_model.dart';
-import '../../shared/utils/constants/animations_constant.dart';
+import '../../shared/data/models/user_preferences.dart';
+import '../../shared/utils/constants/transitions_constant.dart';
+import '../../shared/utils/scroll_to_index.dart';
 import '../data/usecases/delete_message_usecase.dart';
 import '../data/usecases/update_message_usecase.dart';
 
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
+  final UserPreferencesAbstractRepo userPreferencesRepo;
+  final MessagingConnectionController messagingConnection;
 
+  MessagesController(
+      {required this.messagesRepo,
+      required this.messagingConnection,
+      required this.userPreferencesRepo});
   late final CommonMessagingConnectionController messagingConnection;
 
   MessagesController({required this.messagesRepo,});
@@ -91,9 +103,25 @@ class MessagesController extends GetxController {
 
   final replyingTo = Rxn<ReplyToModel>();
 
+  RxInt currentRemoteMessagesIndex = 0.obs;
+
+  RxInt lastReadRemoteMessagesIndex = 0.obs;
+  RxString lastReadRemoteMessagesId = "".obs;
+  RxString scrollPositionMessagesId = "".obs;
+
   final locationMessage = Rxn<LocationMessageModel>();
+  late MessagesViewArgumentsModel args;
+  late StreamSubscription _messagesStreamSubscription;
+
+  late String sessionId;
+  late KeyboardVisibilityController keyboardController;
+
+  late UserPreferences? userPreferences;
 
   final FocusNode textFocusNode = FocusNode();
+
+  final isListLoaded = false.obs;
+
 
   @override
   Future<void> onInit() async {
@@ -139,6 +167,9 @@ class MessagesController extends GetxController {
     _globalMessageController.reset();
     textController = _globalMessageController.textController;
     scrollController = _globalMessageController.scrollController;
+    // initialize the messageing Connection
+    await _initDataChannel();
+    // get the messages from the database and scroll to the bottom or the last read message
   }
 
   _initMessagesRepo() {
@@ -177,29 +208,54 @@ class MessagesController extends GetxController {
     _messagesStreamSubscription =
         (await messagesRepo.getMessagesStream(chatId)).listen((newMessages) {
       messages.value = newMessages;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        animateToBottom(
-          duration: ANIMATIONS.receiveMsgDurtion,
-          curve: ANIMATIONS.getAllMsgscurve,
-        );
-      });
+      // uncomment this if you want to scroll to the bottom after every new message is received
+
+      // WidgetsBinding.instance.addPostFrameCallback(
+      //   (_) {
+      //     animateToBottom(
+      //       duration: TRANSITIONS.messagingPage_receiveMsgDurtion,
+      //       curve: TRANSITIONS.messagingPage_getAllMsgscurve,
+      //     );
+      //   },
+      // );
     });
   }
 
+  @override
+  void onReady() {
+    super.onReady();
+  }
+
+  @override
+  Future<void> onClose() async {
+    await _saveUserPreferences();
+
+    // Todo: remove this when a global player is implemented
+    Get.find<AudioMessageController>().player.stop();
+
+    Get.find<VideoMessageController>().stopAndClearPreviousVideo();
+    _messagesStreamSubscription.cancel();
+    super.onClose();
+  }
+
   void _handleKeyboardVisibilityChanges() {
-    // Close emoji picker when keyboard opens
     _globalMessageController.streamSubscriptions
-        .add(keyboardController.onChange.listen((bool visible) {
-      if (visible) {
+        .add(keyboardController.onChange.listen((bool keyboardVisible) {
+      if (keyboardVisible) {
+        // Close emoji picker when keyboard opens
         showEmojiPicker.value = false;
 
+        _keyboardHeight = Get.mediaQuery.viewInsets.bottom;
+        // when keyboard opens scroll in the amount of keyboard height so that
+        // the same part of the messages as before remains visible
+
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          _keyboardHeight = Get.mediaQuery.viewInsets.bottom;
           if (scrollController.hasClients) {
-            scrollController.animateTo(
-              scrollController.offset + _keyboardHeight,
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.ease,
+            double scrollOffset = scrollController.offset;
+            animateToPosition(
+              offset: scrollOffset + _keyboardHeight,
+              duration: TRANSITIONS.messagingPage_KeyboardVisibilityDurtion,
+              curve: TRANSITIONS.messagingPage_KeyboardVisibilityCurve,
             );
           }
         });
@@ -208,10 +264,11 @@ class MessagesController extends GetxController {
         // the same part of the messages as before remains visible
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (scrollController.hasClients) {
-            scrollController.animateTo(
-              scrollController.offset - _keyboardHeight,
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.ease,
+            double scrollOffset = scrollController.offset;
+            animateToPosition(
+              offset: scrollOffset - _keyboardHeight,
+              duration: TRANSITIONS.messagingPage_KeyboardVisibilityDurtion,
+              curve: TRANSITIONS.messagingPage_KeyboardVisibilityCurve,
             );
           }
         });
@@ -269,15 +326,44 @@ class MessagesController extends GetxController {
     );
   }
 
-  void scrollToMessage(String id) {
-    final index = messages.indexWhere((m) => m.messageId == id);
-    if (index >= 0) {
-      scrollController.scrollToIndex(
-        index,
-        duration: const Duration(milliseconds: 500),
-      );
+  void scrollToMessage({required String messageId}) {
+    final index = messages.lastIndexWhere((m) => m.messageId == messageId);
+    if (index != -1) {
+      WidgetsBinding.instance.scheduleFrameCallback((_) {
+        scrollController.scrollToIndex(
+          // check if index +1 is avialble
+
+          //index + 1 != 0 ? index - 1 : index,
+          index,
+          duration: const Duration(milliseconds: 200),
+          preferPosition: AutoScrollPosition.end,
+        );
+      });
     } else {
       // Todo: implement loading replied message and scrolling to it
+    }
+  }
+
+  jumpToMessage({required String messageId}) async {
+    final index = messages.lastIndexWhere((m) => m.messageId == messageId);
+    if (index != -1) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await scrollController
+            .scrollToIndex(
+              // check if index +1 is avialble
+
+              //index + 1 != 0 ? index - 1 : index,
+              index,
+              duration: const Duration(milliseconds: 1),
+              preferPosition: AutoScrollPosition.end,
+            )
+            .then((value) => {
+                  // Todo: remove this delay
+                  Future.delayed(TRANSITIONS.messagingPage_closeMessagesLoadingShimmerDurtion, () {
+                    isListLoaded.value = true;
+                  })
+                });
+      });
     }
   }
 
@@ -292,9 +378,21 @@ class MessagesController extends GetxController {
     Curve? curve,
   }) {
     scrollController.animateTo(
-      scrollController.position.maxScrollExtent,
-      curve: curve ?? ANIMATIONS.generalMsgTransitioncurve,
-      duration: duration ?? ANIMATIONS.generalMsgTransitionDurtion,
+      scrollController.position.minScrollExtent,
+      curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
+      duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+    );
+  }
+
+  void animateToPosition({
+    required double offset,
+    Duration? duration,
+    Curve? curve,
+  }) {
+    scrollController.animateTo(
+      offset,
+      curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
+      duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
     );
   }
 
@@ -305,6 +403,10 @@ class MessagesController extends GetxController {
       emoji: emoji,
       chatId: chatId,
     ));
+  }
+
+  void toogleMessageReadStatus({required String messageId}) async {
+    await messagingConnection.confirmReadMessages(messageId: messageId);
   }
 
   void toggleMessageSelection(String id) {
@@ -402,13 +504,25 @@ class MessagesController extends GetxController {
     // Get.find<LiveLocationController>().startSharing(message.messageId, duration);
   }
 
+  void animateToTop({
+    Duration? duration,
+    Curve? curve,
+  }) {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
+      duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+    );
+  }
+
   void _postMessageSendOperations() {
+    clearReplyTo();
     messages.refresh();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       animateToBottom(
-        duration: ANIMATIONS.sendMsgDurtion,
-        curve: ANIMATIONS.sendMsgcurve,
+        duration: TRANSITIONS.messagingPage_sendMsgDurtion,
+        curve: TRANSITIONS.messagingPage_sendMsgcurve,
       );
     });
   }
@@ -839,6 +953,35 @@ class MessagesController extends GetxController {
     isMediaGlassmorphicOpen.value = false;
   }
 
+  Future<void> _getMessages() async {
+    await userPreferencesRepo.getUserPreferencesById(chatId).then((value) async => {
+          userPreferences = value,
+          await messagesRepo.getMessages(chatId).then((value) => {
+                messages.value = value,
+              })
+        });
+
+    // of userPreferences is null, scroll to bottom
+    // eles scroll to last position
+
+    if (userPreferences != null) {
+      lastReadRemoteMessagesId.value = userPreferences!.lastReadMessageId;
+      scrollPositionMessagesId.value = userPreferences!.scrollPosition;
+      // await scrollToMessage(messageId: userPreferences!.scrollPosition);
+      await jumpToMessage(messageId: userPreferences!.scrollPosition);
+    } else {
+      // uncomment the following lines if you want to add mock Messages
+      // and animate To the Bottom of list
+
+      // await _addMockMessages();
+      // WidgetsBinding.instance.scheduleFrameCallback((_) {
+      //   animateToBottom(
+      //     duration: TRANSITIONS.messagingPage_getAllMsgsDurtion,
+      //     curve: TRANSITIONS.messagingPage_getAllMsgscurve,
+      //   );
+      // });
+      isListLoaded.value = true;
+    }
   void _getMessages() async {
     // await _addMockData();
     messages.value = await messagesRepo.getMessages(chatId);
@@ -852,7 +995,7 @@ class MessagesController extends GetxController {
   }
 
 //TODO remove?
-  Future<void> _addMockData() async {
+  Future<void> _addMockMessages() async {
     var index = 0;
 
     final ms = [
@@ -1054,94 +1197,7 @@ class MessagesController extends GetxController {
         isFromMe: true,
         status: MessageStatus.sending,
       ),
-      // ImageMessageModel(
-      //   messageId: "${index++}",
-      //   intlist: await rootBundle
-      //       .load(
-      //           "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80")
-      //       .then((value) => value.buffer.asUint8List().toList()),
-      //   isLocal: false,
-      //   url:
-      //       "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-      //   metadata: ImageMetadata(width: 687, height: 1030),
-      //   timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 50)),
-      //   senderName: args.user.chatModel.name,
-      //   senderAvatar: args.user.chatModel.icon,
-      //   replyTo: ReplyToModel(
-      //     repliedToMessageId: "0",
-      //     repliedToMessage:
-      //         "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-      //     repliedToName: args.user.chatModel.name,
-      //   ),
-      // ),
-      // ImageMessageModel(
-      //   messageId: "${index++}",
-      //   isLocal: false,
-      //   intlist: await rootBundle
-      //       .load(
-      //           "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80")
-      //       .then((value) => value.buffer.asUint8List().toList()),
-      //   url:
-      //       "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
-      //   metadata: ImageMetadata(width: 2142, height: 806),
-      //   timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-      //   senderName: "",
-      //   senderAvatar: "",
-      //   isFromMe: true,
-      //   status: MessageStatus.read,
-      //   reactions: {
-      //     "🤗": ReactionModel(
-      //       users: List.generate(1, (index) => ""),
-      //     ),
-      //     "😘": ReactionModel(
-      //       users: List.generate(2, (index) => ""),
-      //       isReactedByMe: true,
-      //     ),
-      //   },
-      // ),
-      VideoMessageModel(
-        messageId: "${index++}",
-        url:
-            "https://assets.mixkit.co/videos/preview/mixkit-daytime-city-traffic-aerial-view-56-large.mp4",
-        metadata: VideoMetadata(
-          durationInSeconds: 120,
-          isLocal: false,
-          thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb2.png",
-          width: 656,
-          height: 368,
-        ),
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
-        senderName: "",
-        senderAvatar: "",
-        isFromMe: true,
-        status: MessageStatus.read,
-        reactions: {
-          "🤗": ReactionModel(
-            users: List.generate(1, (index) => ""),
-          ),
-          "😘": ReactionModel(
-            users: List.generate(2, (index) => ""),
-            isReactedByMe: true,
-          ),
-        },
-      ),
-      VideoMessageModel(
-        messageId: "${index++}",
-        url:
-            "https://assets.mixkit.co/videos/download/mixkit-microchip-technology-close-up-1140.mp4",
-        metadata: VideoMetadata(
-          isLocal: false,
-          durationInSeconds: 120,
-          thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
-          width: 656,
-          height: 368,
-        ),
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
-        senderName: "",
-        senderAvatar: "",
-        isFromMe: true,
-        status: MessageStatus.read,
-      ),
+
       AudioMessageModel(
         messageId: "${index++}",
         metadata: AudioMetadata(durationInSeconds: 100),
@@ -1169,6 +1225,158 @@ class MessagesController extends GetxController {
         senderName: args.user.chatModel.name,
         senderAvatar: args.user.chatModel.icon,
       ),
+
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 5)),
+        senderName: args.user.chatModel.name,
+        senderAvatar: args.user.chatModel.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text:
+            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 4)),
+        senderName: args.user.chatModel.name,
+        senderAvatar: args.user.chatModel.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: " Nihil, incidunt!",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 3)),
+        senderName: args.user.chatModel.name,
+        senderAvatar: args.user.chatModel.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text:
+            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 5, minutes: 58)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+
+      //
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 5)),
+        senderName: args.user.chatModel.name,
+        senderAvatar: args.user.chatModel.icon,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text:
+            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 4)),
+        senderName: args.user.chatModel.name,
+        senderAvatar: args.user.chatModel.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: " Nihil, incidunt!",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 3)),
+        senderName: args.user.chatModel.name,
+        senderAvatar: args.user.chatModel.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 1, minutes: 58)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+
+      //
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 5)),
+        senderName: args.user.chatModel.name,
+        senderAvatar: args.user.chatModel.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text:
+            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 4)),
+        senderName: args.user.chatModel.name,
+        senderAvatar: args.user.chatModel.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: " Nihil, incidunt!",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 3)),
+        senderName: args.user.chatModel.name,
+        senderAvatar: args.user.chatModel.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 58)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Sure thing. Just let me know when sth happens",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 56)),
+        senderName: args.user.chatModel.name,
+        senderAvatar: args.user.chatModel.icon,
+        reactions: {
+          "🎉": ReactionModel(
+            users: List.generate(12, (index) => ""),
+          ),
+          "🤘": ReactionModel(
+            users: List.generate(3, (index) => ""),
+            isReactedByMe: true,
+          ),
+          "🔥": ReactionModel(
+            users: List.generate(5, (index) => ""),
+          ),
+          "👍": ReactionModel(
+            users: List.generate(2, (index) => ""),
+          ),
+          "😎": ReactionModel(
+            users: List.generate(1, (index) => ""),
+          ),
+        },
+      ),
       LiveLocationMessageModel(
         messageId: "${index++}",
         latitude: 35.65031,
@@ -1178,79 +1386,7 @@ class MessagesController extends GetxController {
         senderName: args.user.chatModel.name,
         senderAvatar: args.user.chatModel.icon,
       ),
-      MultiMediaMessageModel(
-        messageId: "${index++}",
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
-        senderName: args.user.chatModel.name,
-        senderAvatar: args.user.chatModel.icon,
-        type: MessageContentType.multiMedia,
-        isFromMe: false,
-        status: MessageStatus.read,
-        mediaList: [
-          // ImageMessageModel(
-          //   messageId: "${index++}",
-          //   isLocal: false,
-          //   type: MessageContentType.image,
-          //   url:
-          //       "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
-          //   metadata: ImageMetadata(width: 0, height: 0),
-          //   timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
-          //   senderName: "",
-          //   senderAvatar: "",
-          //   isFromMe: false,
-          //   status: MessageStatus.read,
-          // ),
-          // ImageMessageModel(
-          //   messageId: "${index++}",
-          //   isLocal: false,
-          //   unit8list:
-          //   await rootBundle
-          //       .load(
-          //           "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80")
-          //       .then((value) => value.buffer.asUint8List()),
-          //   url:
-          //       "https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2142&q=80",
-          //   metadata: ImageMetadata(width: 0, height: 0),
-          //   timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
-          //   senderName: "",
-          //   senderAvatar: "",
-          //   isFromMe: false,
-          //   type: MessageContentType.image,
-          //   status: MessageStatus.read,
-          // ),
-          // ImageMessageModel(
-          //   messageId: "${index++}",
-          //   isLocal: false,
-          //   url:
-          //       "https://images.unsplash.com/photo-1623128358746-bf4c6cf92bc3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-          //   metadata: ImageMetadata(width: 687, height: 1030),
-          //   timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
-          //   senderName: "",
-          //   senderAvatar: "",
-          //   isFromMe: false,
-          //   type: MessageContentType.image,
-          //   status: MessageStatus.read,
-          // ),
-          VideoMessageModel(
-            messageId: "${index++}",
-            url:
-                "https://assets.mixkit.co/videos/download/mixkit-microchip-technology-close-up-1140.mp4",
-            metadata: VideoMetadata(
-              isLocal: false,
-              durationInSeconds: 120,
-              thumbnailBytes: null,
-              thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
-              width: 656,
-              height: 368,
-            ),
-            timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 47)),
-            senderName: "",
-            senderAvatar: "",
-            isFromMe: false,
-            status: MessageStatus.read,
-          ),
-        ],
-      ),
+
       CallMessageModel(
         messageId: "${index++}",
         callStatus: CallMessageStatus.declined,
@@ -1267,6 +1403,22 @@ class MessagesController extends GetxController {
         senderName: args.user.chatModel.name,
         senderAvatar: args.user.chatModel.icon,
       ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: " Nihil, incidunt!",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 3)),
+        senderName: args.user.chatModel.name,
+        senderAvatar: args.user.chatModel.icon,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
     ];
 
     for (int i = 0; i < ms.length; i++) {
@@ -1277,5 +1429,50 @@ class MessagesController extends GetxController {
   Future<List<int>> pathToUint8List(String path) async {
     var data = await rootBundle.load(path);
     return data.buffer.asUint8List().toList();
+  }
+
+  void onMessagesItemVisibilityChanged({
+    required VisibilityInfo visibilityInfo,
+    required int itemIndex,
+    required String itemMessageId,
+    required MessageStatus itemStatus,
+    required bool isFromMe,
+  }) async {
+    // checks for Messages if the item is fully visible (visibleFraction = 1)
+    //and if its index is bigger than the last index that was visible
+    if (visibilityInfo.visibleFraction == 1) {
+      // saves the current item index in the scrollPositionMessagesIndex
+      scrollPositionMessagesId.value = itemMessageId;
+      // if the message is not from the current user it will check if its read or not
+      // and if its not read it will toogleMessageReadStatus
+      if (!isFromMe) {
+        currentRemoteMessagesIndex.value = itemIndex;
+
+        // print("currentItemIndex.value: ${currentRemoteMessagesIndex.value}");
+        // print("lastReadRemoteMessagesIndex.value: ${lastReadRemoteMessagesIndex.value}");
+
+        if (currentRemoteMessagesIndex.value > lastReadRemoteMessagesIndex.value) {
+          // print("lastReadRemoteMessagesKey.value ${lastReadRemoteMessagesId.value}");
+
+          //  checks if its status is read or not
+          // if its not read, it will toogleMessageReadStatus
+
+          if (itemStatus != MessageStatus.read) {
+            lastReadRemoteMessagesIndex.value = currentRemoteMessagesIndex.value;
+            lastReadRemoteMessagesId.value = itemMessageId;
+            toogleMessageReadStatus(messageId: itemMessageId);
+          }
+        }
+      }
+    }
+  }
+
+  Future<void> _saveUserPreferences() async {
+    // saves the last read message index in the user preferences repo
+    await userPreferencesRepo.createOrUpdateUserPreferences(UserPreferences(
+      chatId: chatId,
+      lastReadMessageId: lastReadRemoteMessagesId.value,
+      scrollPosition: scrollPositionMessagesId.value,
+    ));
   }
 }

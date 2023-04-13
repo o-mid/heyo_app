@@ -14,7 +14,11 @@ enum CallState {
 }
 
 class Session {
-  Session({required this.sid, required this.cid, required this.pid, this.isAudioCall = false});
+  Session(
+      {required this.sid,
+      required this.cid,
+      required this.pid,
+      this.isAudioCall = false});
 
   final String cid;
   final String sid;
@@ -41,10 +45,12 @@ class Signaling {
   Function(MediaStream stream)? onLocalStream;
   Function(Session session, MediaStream stream)? onAddRemoteStream;
   Function(Session session, MediaStream stream)? onRemoveRemoteStream;
-  Function(Session session, RTCDataChannel dc, RTCDataChannelMessage data)? onDataChannelMessage;
+  Function(Session session, RTCDataChannel dc, RTCDataChannelMessage data)?
+      onDataChannelMessage;
   Function(Session session, RTCDataChannel dc)? onDataChannel;
 
-  String get sdpSemantics => WebRTC.platformIsWindows ? 'plan-b' : 'unified-plan';
+  String get sdpSemantics =>
+      WebRTC.platformIsWindows ? 'plan-b' : 'unified-plan';
 
   final Map<String, dynamic> _iceServers = {
     'iceServers': [
@@ -95,9 +101,10 @@ class Signaling {
     }
   }
 
-  Future<Session> invite(
-      String coreId, String media, bool useScreen, String selfId, bool isAudioCall) async {
-    final sessionId = '$selfId-$coreId-${DateTime.now().millisecondsSinceEpoch}';
+  Future<Session> invite(String coreId, String media, bool useScreen,
+      String selfId, bool isAudioCall) async {
+    final sessionId =
+        '$selfId-$coreId-${DateTime.now().millisecondsSinceEpoch}';
 
     Session session = await _createSession(null,
         coreId: coreId,
@@ -181,7 +188,8 @@ class Signaling {
     bye(session);
   }
 
-  void onMessage(Map<String, dynamic> mapData, String remoteCoreId, String remotePeerId) async {
+  void onMessage(Map<String, dynamic> mapData, String remoteCoreId,
+      String remotePeerId) async {
     var data = mapData['data'];
     print("onMessage, type: ${mapData['type']}");
 
@@ -236,8 +244,8 @@ class Signaling {
           var candidateMap = data['candidate'];
           var sessionId = data['session_id'];
           var session = _sessions[sessionId];
-          RTCIceCandidate candidate = RTCIceCandidate(
-              candidateMap['candidate'], candidateMap['sdpMid'], candidateMap['sdpMLineIndex']);
+          RTCIceCandidate candidate = RTCIceCandidate(candidateMap['candidate'],
+              candidateMap['sdpMid'], candidateMap['sdpMLineIndex']);
 
           if (session != null) {
             if (session.pc != null) {
@@ -308,7 +316,8 @@ class Signaling {
           ? true
           : {
               'mandatory': {
-                'minWidth': '640', // Provide your own width, height and frame rate here
+                'minWidth': '640',
+                // Provide your own width, height and frame rate here
                 'minHeight': '480',
                 'minFrameRate': '30',
               },
@@ -331,9 +340,11 @@ class Signaling {
       required String media,
       required bool screenSharing,
       required bool isAudioCall}) async {
-    var newSession =
-        session ?? Session(sid: sessionId, cid: coreId, pid: peerId, isAudioCall: isAudioCall);
-    if (media != 'data') _localStream = await createStream(media, screenSharing);
+    var newSession = session ??
+        Session(
+            sid: sessionId, cid: coreId, pid: peerId, isAudioCall: isAudioCall);
+    if (media != 'data')
+      _localStream = await createStream(media, screenSharing);
     print(_iceServers);
     RTCPeerConnection pc = await createPeerConnection({
       ..._iceServers,
@@ -457,9 +468,12 @@ class Signaling {
     onDataChannel?.call(session, channel);
   }
 
-  Future<void> _createDataChannel(Session session, {label: 'fileTransfer'}) async {
-    RTCDataChannelInit dataChannelDict = RTCDataChannelInit()..maxRetransmits = 30;
-    RTCDataChannel channel = await session.pc!.createDataChannel(label, dataChannelDict);
+  Future<void> _createDataChannel(Session session,
+      {label: 'fileTransfer'}) async {
+    RTCDataChannelInit dataChannelDict = RTCDataChannelInit()
+      ..maxRetransmits = 30;
+    RTCDataChannel channel =
+        await session.pc!.createDataChannel(label, dataChannelDict);
     _addDataChannel(session, channel);
   }
 
@@ -508,7 +522,8 @@ class Signaling {
     request["type"] = event;
     request["data"] = data;
     request["command"] = "call";
-    p2pCommunicator.sendSDP(_encoder.convert(request), remoteCoreId, remotePeerId);
+    p2pCommunicator.sendSDP(
+        _encoder.convert(request), remoteCoreId, remotePeerId);
   }
 
   Future<void> _cleanSessions() async {
@@ -518,6 +533,7 @@ class Signaling {
       });
       await _localStream!.dispose();
       _localStream = null;
+      onLocalStream = null;
     }
     _sessions.forEach((key, sess) async {
       await sess.pc?.close();
@@ -545,6 +561,7 @@ class Signaling {
     });
     await _localStream?.dispose();
     _localStream = null;
+    onLocalStream = null;
 
     await session.pc?.close();
     await session.dc?.close();

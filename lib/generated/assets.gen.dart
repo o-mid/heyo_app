@@ -209,6 +209,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/emoji_icon.svg
   SvgGenImage get emojiIcon => const SvgGenImage('assets/svg/emoji_icon.svg');
 
+  /// File path: assets/svg/failed_Icon.svg
+  SvgGenImage get failedIcon => const SvgGenImage('assets/svg/failed_Icon.svg');
+
   /// File path: assets/svg/fileIcon.svg
   SvgGenImage get fileIcon => const SvgGenImage('assets/svg/fileIcon.svg');
 

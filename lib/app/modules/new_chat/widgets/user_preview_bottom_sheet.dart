@@ -14,14 +14,18 @@ import 'package:heyo/generated/locales.g.dart';
 import '../../../routes/app_pages.dart';
 import '../../shared/data/models/add_contacts_view_arguments_model.dart';
 import '../../shared/utils/constants/textStyles.dart';
+import '../../shared/utils/constants/transitions_constant.dart';
 import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../shared/widgets/curtom_circle_avatar.dart';
+import '../controllers/new_chat_controller.dart';
 
 void openUserPreviewBottomSheet({
   required UserModel user,
   bool isWifiDirect = false,
 }) {
   Get.bottomSheet(
+    enterBottomSheetDuration: TRANSITIONS.newChat_EnterBottomSheetDuration,
+    exitBottomSheetDuration: TRANSITIONS.newChat_ExitBottomSheetDuration,
     SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -57,6 +61,25 @@ void openUserPreviewBottomSheet({
                 onPressed: () {
                   if (user.chatModel == null) {
                     return;
+                  } else {
+                    Get.back();
+
+                    Get.toNamed(
+                      Routes.MESSAGES,
+                      arguments: MessagesViewArgumentsModel(
+                          user: user.copyWith(
+                        chatModel: user.chatModel.copyWith(
+                          id: user.walletAddress,
+                          icon: user.icon,
+                          isOnline: true,
+                          isVerified: true,
+                          timestamp: DateTime.now(),
+                          name:
+                              "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}",
+                        ),
+                      )),
+                    );
+                  }
                   }
                   Get.toNamed(
                     Routes.MESSAGES,
@@ -85,6 +108,17 @@ void openUserPreviewBottomSheet({
               CustomSizes.largeSizedBoxWidth,
               CircleIconButton(
                 onPressed: () {
+                  Get.back();
+
+                  Get.toNamed(
+                    Routes.CALL,
+                    arguments: CallViewArgumentsModel(
+                        session: null,
+                        callId: null,
+                        user: user,
+                        enableVideo: false,
+                        isAudioCall: true),
+                  );
                   if (!isWifiDirect) {
                     Get.toNamed(
                       Routes.CALL,
@@ -107,6 +141,17 @@ void openUserPreviewBottomSheet({
               CustomSizes.largeSizedBoxWidth,
               CircleIconButton(
                 onPressed: () {
+                  Get.back();
+
+                  Get.toNamed(
+                    Routes.CALL,
+                    arguments: CallViewArgumentsModel(
+                        session: null,
+                        callId: null,
+                        user: user,
+                        enableVideo: true,
+                        isAudioCall: false),
+                  );
                   if (!isWifiDirect) {
                     Get.toNamed(
                       Routes.CALL,
@@ -151,6 +196,8 @@ void openUserPreviewBottomSheet({
                 if (!user.isContact)
                   _buildIconTextButton(
                     onPressed: () {
+                      Get.back();
+
                       Get.toNamed(
                         Routes.ADD_CONTACTS,
                         arguments: AddContactsViewArgumentsModel(user: user),

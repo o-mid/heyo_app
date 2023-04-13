@@ -5,21 +5,25 @@ import 'package:heyo/app/modules/messaging/controllers/common_messaging_controll
 
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
+import '../../shared/providers/database/dao/user_preferences/user_preferences_provider.dart';
+import '../../shared/providers/database/repos/user_preferences/user_preferences_repo.dart';
 import '../controllers/messages_controller.dart';
 
 class MessagesBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<MessagesController>(
-      () => MessagesController(
+    Get.lazyPut<MessagesController>(() => MessagesController(
           messagesRepo: MessagesRepo(
             messagesProvider: MessagesProvider(
               appDatabaseProvider: Get.find(),
             ),
           ),
-          // messagingConnection: Get.find<CommonMessagingController>(tag: "internet"),
-          // wifiDirectConnection: Get.find<WifiDirectConnectionController>()
-      ),
-    );
+          messagingConnection: Get.find<MessagingConnectionController>(),
+          userPreferencesRepo: UserPreferencesRepo(
+            userPreferencesProvider: UserPreferencesProvider(
+              appDatabaseProvider: Get.find(),
+            ),
+          ),
+        ));
   }
 }

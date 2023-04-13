@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/calls/main/widgets/draggable_video.dart';
 
+import '../../../shared/utils/constants/transitions_constant.dart';
+
 class CallViewTypeStackWidget extends StatelessWidget {
   CallViewTypeStackWidget({
     Key? key,
@@ -32,7 +34,7 @@ class CallViewTypeStackWidget extends StatelessWidget {
             DraggableVideo(
               child: AnimatedSize(
                 clipBehavior: Clip.hardEdge,
-                curve: Curves.easeInOut,
+                curve: TRANSITIONS.callPage_DraggableVideoAnimatedSizeCurve,
                 alignment: Alignment.bottomLeft,
                 duration: controller.callerScaleDuration,
                 reverseDuration: controller.callerScaleReverseDuration,
