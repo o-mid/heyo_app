@@ -42,8 +42,16 @@ class P2PCommunicator {
   }
 
   Future<bool> sendSDP(String sdp, String remoteCoreId, String? remotePeerId) async {
+    // seding sdp to remote peer prosess
+    // 1. get local core id
+    // 2. get the sep hex
+    // 3. send connection request if remote peer id is not null and wait for connection response
+    // 4. create p2p login model
+    // 5. send login request and track the Request
+
     final localCoreId = await accountInfo.getCoreId();
     if (localCoreId == null) throw 'Core id is null!!';
+
     String hexSDP = sdp.getHex();
 
     var connected = false;
@@ -51,16 +59,21 @@ class P2PCommunicator {
       print("ADDRESS IS : ${p2pState.address.value}");
       connected = await _connect(P2PAddrModel(id: remotePeerId, addrs: p2pState.address.value));
     }
-    final _loginModel = P2PLoginBodyModel(
+
+    final loginModel = P2PLoginBodyModel(
+      // if connected is true then we need to send the remote peer id as well
       info: connected
           ? P2PTransferModel(
-              localCoreID: localCoreId, remotePeerID: remotePeerId, remoteCoreID: remoteCoreId)
+              localCoreID: localCoreId,
+              remotePeerID: remotePeerId,
+              remoteCoreID: remoteCoreId,
+            )
           : P2PTransferModel(
               localCoreID: localCoreId,
               remoteCoreID: remoteCoreId,
             ),
       payload: P2PLoginPayloadModel(session: hexSDP),
     );
-    return await _sendingData(_loginModel);
+    return await _sendingData(loginModel);
   }
 }

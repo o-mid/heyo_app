@@ -20,6 +20,7 @@ class P2PNodeRequestStream {
   P2PNodeRequestStream({required this.p2pState, required this.signaling, required this.messaging});
 
   void setUp() {
+    // listen to the events from the node side
     _setUpRequestStream();
   }
 
@@ -38,6 +39,10 @@ class P2PNodeRequestStream {
   }
 
   _onNewRequestEvent(P2PReqResNodeModel event) async {
+    // 1. prints the event info
+    // 2. check if the event is login and if so send a login response
+    // 3. check if the event has session and if so convert the incoming request
+
     debugPrint("_onNewRequestEvent: eventId is: ${event.id}");
 
     debugPrint("_onNewRequestEvent: eventName is: ${event.name}");
@@ -55,16 +60,17 @@ class P2PNodeRequestStream {
 
       if ((event.body!['payload'])['session'] != null) {
         String request = (event.body!['payload'])['session'];
-
+        // if session is not null then we have a request
         onRequestReceived(request.convertHexToString(), remoteCoreId, remotePeerId);
 
         //signaling.onMessage(session.convertHexToString(), remoteCoreId, remotePeerId);
-
       }
     }
   }
 
   void onRequestReceived(String request, String remoteCoreId, String remotePeerId) {
+    // checks the type of the request and sends it to signalling or messaging accordingly
+
     Map<String, dynamic> mapData = _decoder.convert(request);
 
     if (mapData['command'] == "call") {
