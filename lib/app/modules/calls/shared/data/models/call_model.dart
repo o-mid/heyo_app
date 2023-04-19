@@ -1,5 +1,18 @@
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 
+/// [CallModel] document structure :
+///
+/// |      Variable        |    Data Type  |                         Description                        | Default Value ((N/A) = required)|
+/// |----------------------|---------------|----------------------------------------------------------|--------------|
+/// | id                   | String        | Unique identifier for the call.                            | N/A          |
+/// | type                 |[CallType]     | The type of call (audio or video).                         | N/A          |
+/// | status               |[CallStatus]   | The status of the call (incoming, outgoing, missed , ...)  | N/A          |
+/// | date                 | DateTime      | The date and time of the call.                             | N/A          |
+/// | user                 |[UserModel]    | The user associated with the call.                         | N/A          |
+/// | duration             | Duration      | The duration of the call.                                  | Duration.zero|
+/// | dataUsageMB          | double        | The amount of data used during the call in megabytes.      | 0.0          |
+/// |----------------------|---------------|----------------------------------------------------------|--------------|
+
 enum CallType {
   audio,
   video,

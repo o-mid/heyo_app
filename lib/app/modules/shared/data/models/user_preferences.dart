@@ -1,3 +1,11 @@
+///  [UserPreferences] document structure :
+
+/// Variable          | Data Type | Description                                                 | Required | Default Value
+/// ----------------- | --------- | ----------------------------------------------------------- | -------- | -------------
+/// chatId            | String    | The ID of the chat for which the preferences are being set. | Yes      | N/A
+/// scrollPosition    | String    | The scroll position of the chat.                            | Yes      | N/A
+/// lastReadMessageId | String    | The ID of the last message read in the chat.                | Yes      | N/A
+
 class UserPreferences {
   static const scrollPositionSerializedName = "scrollPosition";
   static const chatIdSerializedName = 'chatId';

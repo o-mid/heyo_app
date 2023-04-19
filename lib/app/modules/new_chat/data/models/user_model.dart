@@ -1,4 +1,19 @@
+
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
+
+/// [UserModel] document structure :
+
+/// |      Variable        |    Data Type  |                         Description                        | Default Value ((N/A) = required)|
+/// |----------------------|---------------|----------------------------------------------------------|--------------|
+/// | name                 | String        | Name of the user.                                          | N/A          |
+/// | icon                 | String        | Icon URL for the user.                                     | N/A          |
+/// | walletAddress        | String        | The wallet address associated with the user.               | N/A          |
+/// | nickname             | String        | The nickname for the user.                                 | ""           |
+/// | isOnline             | bool          | Indicates if the user is currently online.                 | false        |
+/// | isVerified           | bool          | Indicates if the user is verified.                         | false        |
+/// | chatModel            |[ChatModel]    | The chat model associated with the user.                   | N/A          |
+/// | isContact            | bool          | Indicates if the user is a contact.                        | false        |
+/// |----------------------|---------------|----------------------------------------------------------|--------------|
 
 class UserModel {
   static const nameSerializedName = 'name';
@@ -36,7 +51,7 @@ class UserModel {
         nickname: json[nicknameSerializedName],
         isVerified: json[isVerifiedSerializedName],
         isContact: json[isContactSerializedName],
-        chatModel: json[chatModelSerializedName],
+        chatModel: ChatModel.fromJson(json[chatModelSerializedName]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -46,7 +61,7 @@ class UserModel {
         nicknameSerializedName: nickname,
         isVerifiedSerializedName: isVerified,
         isContactSerializedName: isContact,
-        chatModelSerializedName: chatModel,
+        chatModelSerializedName: chatModel.toJson(),
       };
 
   UserModel copyWith({

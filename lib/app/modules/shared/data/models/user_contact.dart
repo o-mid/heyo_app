@@ -1,3 +1,11 @@
+///  [UserContact] document structure :
+
+///  Variable  | Data Type | Description                            | Required | Default Value ((N/A) = required)
+///  --------- | --------- | -------------------------------------- | -------- | -------------
+///  coreId    | String    | The core ID of the user contact.        | Yes      | N/A
+///  nickname  | String    | The nickname of the user contact.       | Yes      | N/A
+///  icon      | String    | The icon representing the user contact. | Yes      | N/A
+
 class UserContact {
   static const coreIdSerializedName = "coreId";
   static const nicknameSerializedName = "nickname";

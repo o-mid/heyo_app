@@ -1,3 +1,17 @@
+/// [ChatModel] document structure :
+
+/// |      Variable        |    Data Type  |                         Description                        | Default Value ((N/A) = required)|
+/// |----------------------|---------------|----------------------------------------------------------|--------------|
+/// | id                   | String        | Unique identifier for the chat.                            | N/A          |
+/// | name                 | String        | Name of the chat.                                          | N/A          |
+/// | icon                 | String        | Icon URL for the chat.                                     | N/A          |
+/// | lastMessage          | String        | The last message in the chat.                              | N/A          |
+/// | timestamp            | DateTime      | The timestamp of the last message.                         | N/A          |
+/// | isOnline             | bool          | Indicates if the user is currently online.                 | false        |
+/// | isVerified           | bool          | Indicates if the user is verified.                         | false        |
+/// | notificationCount    | int           | The number of unread messages in the chat.                 | 0            |
+/// |----------------------|---------------|----------------------------------------------------------|--------------|
+
 class ChatModel {
   static const idSerializedName = 'id';
   static const nameSerializedName = 'name';
