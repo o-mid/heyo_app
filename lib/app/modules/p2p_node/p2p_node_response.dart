@@ -34,6 +34,9 @@ class P2PNodeResponseStream {
   }
 
   _onNewResponseEvent(P2PReqResNodeModel event) async {
+    // 1. prints the event info
+    // 2. check for advertised and if so send a advertise response
+
     p2pState.status[event.id]?.value = (event.error == null);
 
     print("_onNewResponseEvent ${event.name} : ${event.id} : ${p2pState.status[event.id]?.value}");
@@ -45,15 +48,19 @@ class P2PNodeResponseStream {
     print("_onNewResponseEvent : error is: ${event.error.toString()}");
 
     if (event.name == P2PReqResNodeNames.connect && event.error == null && !advertised) {
-      final _info = P2PReqResNodeModel(name: P2PReqResNodeNames.advertise);
+      final info = P2PReqResNodeModel(name: P2PReqResNodeNames.advertise);
+
       advertised = true;
+
       p2pState.advertise.value = true;
-      final _id = await FlutterP2pCommunicator.sendRequest(info: _info);
+
+      final id = await FlutterP2pCommunicator.sendRequest(info: info);
       /* -------------------------------------------------------------------------- */
       /*                                  get addrs                                 */
       /* -------------------------------------------------------------------------- */
       await FlutterP2pCommunicator.sendRequest(
           info: P2PReqResNodeModel(name: P2PReqResNodeNames.peerID));
+
       await FlutterP2pCommunicator.sendRequest(
           info: P2PReqResNodeModel(name: P2PReqResNodeNames.addrs));
     } else if (event.name == P2PReqResNodeNames.advertise && event.error == null) {

@@ -38,7 +38,9 @@ class AccountRepo implements AccountInfo {
   }
 
   Future<_CreateAccountResult> _createAccount(_) async {
+    // generate the mnemonic from the cryptographyKeyGenerator
     final phrases = cryptographyKeyGenerator.generate_mnemonic();
+    // generate the private key from the cryptographyKeyGenerator using the mnemonic and a password
     final privateKey =
         await cryptographyKeyGenerator.generatePrivateKeysFromMneomonic(phrases, "198491");
 

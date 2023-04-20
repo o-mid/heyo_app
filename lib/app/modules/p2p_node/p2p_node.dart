@@ -31,11 +31,27 @@ class P2PNode {
   });
 
   _setUpP2PNode() async {
+    // setup the p2p ResponseStream and RequestStream and listen to them
     _listenToStreams();
+
+    // start the p2p node prosses
     _startP2PNode();
   }
 
   _startP2PNode() async {
+    // start P2P node Prosses
+
+    // 1. check if account is created and if not create it and save it in storage
+
+    // 2. check if peerSeed is created and if not create the generatedMnemonic and hex it and save it in storage
+
+    // 3. find the network id and start the node by using web3client
+
+    // 4. start the node by passing the peerSeed and networkId to the FlutterP2pCommunicator.startNode
+
+    // 5. get the privateKey and send it to the FlutterP2pCommunicator.sendRequest
+
+    // 6. send the P2P_Nodes to the FlutterP2pCommunicator.sendRequest
     // checks if Platform isIOS and if it's the first run of the app clears the Keychain
     if (Platform.isIOS) {
       // remove secure storage data on IOS manually,
@@ -80,6 +96,8 @@ class P2PNode {
     p2pNodeRequestStream.setUp();
   }
 
+// stop P2P node Prosses by reseting the streams and the state and stoping the node
+// by using FlutterP2pCommunicator.stopNode
   void stop() {
     _stopP2PNode();
     p2pState.reset();

@@ -265,8 +265,10 @@ class MessagesController extends GetxController {
     }
   }
 
-  jumpToMessage({required String messageId}) async {
+  Future<void> jumpToMessage({required String messageId}) async {
+    // finding the index of the message
     final index = messages.lastIndexWhere((m) => m.messageId == messageId);
+    // if the message found
     if (index != -1) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await scrollController
@@ -278,14 +280,20 @@ class MessagesController extends GetxController {
               duration: const Duration(milliseconds: 1),
               preferPosition: AutoScrollPosition.end,
             )
-            .then((value) => {
-                  // Todo: remove this delay
-                  Future.delayed(TRANSITIONS.messagingPage_closeMessagesLoadingShimmerDurtion, () {
-                    isListLoaded.value = true;
-                  })
-                });
+            .then((value) async => await _finishMessagesLoading());
       });
     }
+    // in case of the message not found
+    else {
+      await _finishMessagesLoading();
+    }
+  }
+
+  Future<void> _finishMessagesLoading() async {
+    // Todo: remove this delay if needed
+    await Future.delayed(TRANSITIONS.messagingPage_closeMessagesLoadingShimmerDurtion, () {
+      isListLoaded.value = true;
+    });
   }
 
   void jumpToBottom() {
@@ -890,6 +898,7 @@ class MessagesController extends GetxController {
       scrollPositionMessagesId.value = userPreferences!.scrollPosition;
       // await scrollToMessage(messageId: userPreferences!.scrollPosition);
       await jumpToMessage(messageId: userPreferences!.scrollPosition);
+      //isListLoaded.value = true;
     } else {
       // uncomment the following lines if you want to add mock Messages
       // and animate To the Bottom of list
