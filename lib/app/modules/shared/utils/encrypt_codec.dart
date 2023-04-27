@@ -59,8 +59,13 @@ class _EncryptDecoder extends Converter<String, Object?> {
     // Extract the real input
     input = input.substring(12);
 
+    //
+    var encrypter = Encrypter(salsa20);
+
+    var decrypted = encrypter.decrypt64(input, iv: IV(iv));
+
     // Decode the input
-    var decoded = json.decode(Encrypter(salsa20).decrypt64(input, iv: IV(iv)));
+    var decoded = json.decode(decrypted);
     if (decoded is Map) {
       return decoded.cast<String, Object?>();
     }

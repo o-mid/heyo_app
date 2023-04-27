@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_abstract_provider.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
 
-class CallHistoryProvider implements CallHistoryAbstractProvider {
+import '../../../../../new_chat/data/models/user_model.dart';
 
+class CallHistoryProvider implements CallHistoryAbstractProvider {
   final AppDatabaseProvider appDatabaseProvider;
   CallHistoryProvider({required this.appDatabaseProvider});
   static const String callHistoryStoreName = 'call_history';
