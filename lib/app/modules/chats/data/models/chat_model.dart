@@ -14,6 +14,7 @@
 
 class ChatModel {
   static const idSerializedName = 'id';
+  static const coreIdSerializedName = 'coreId';
   static const nameSerializedName = 'name';
   static const iconSerializedName = 'icon';
   static const lastMessageSerializedName = 'lastMessage';
@@ -21,8 +22,12 @@ class ChatModel {
   static const isOnlineSerializedName = 'isOnline';
   static const isVerifiedSerializedName = 'isVerified';
   static const notificationCountSerializedName = 'notificationCount';
+  static const lastReadMessageIdSerializedName = 'lastReadMessageId';
+  static const scrollPositionSerializedName = "scrollPosition";
 
   final String id;
+  final String coreId;
+
   final String name;
   final String icon;
   final String lastMessage;
@@ -30,9 +35,12 @@ class ChatModel {
   final bool isOnline;
   final bool isVerified;
   final int notificationCount;
+  final String scrollPosition;
+  final String lastReadMessageId;
 
   ChatModel({
     required this.id,
+    this.coreId = "",
     required this.name,
     required this.icon,
     required this.lastMessage,
@@ -40,10 +48,14 @@ class ChatModel {
     this.isOnline = false,
     this.isVerified = false,
     this.notificationCount = 0,
+    // should be required after implementing the feature and refactoring
+    this.scrollPosition = '',
+    this.lastReadMessageId = '',
   });
 
   factory ChatModel.fromJson(Map<String, dynamic> json) => ChatModel(
         id: json[idSerializedName],
+        coreId: json[coreIdSerializedName],
         name: json[nameSerializedName],
         icon: json[iconSerializedName],
         lastMessage: json[lastMessageSerializedName],
@@ -51,10 +63,13 @@ class ChatModel {
         isOnline: json[isOnlineSerializedName],
         isVerified: json[isVerifiedSerializedName],
         notificationCount: json[notificationCountSerializedName],
+        lastReadMessageId: json[lastReadMessageIdSerializedName],
+        scrollPosition: json[scrollPositionSerializedName],
       );
 
   Map<String, dynamic> toJson() => {
         idSerializedName: id,
+        coreIdSerializedName: coreId,
         nameSerializedName: name,
         iconSerializedName: icon,
         lastMessageSerializedName: lastMessage,
@@ -62,10 +77,13 @@ class ChatModel {
         isOnlineSerializedName: isOnline,
         isVerifiedSerializedName: isVerified,
         notificationCountSerializedName: notificationCount,
+        lastReadMessageIdSerializedName: lastReadMessageId,
+        scrollPositionSerializedName: scrollPosition,
       };
 
   ChatModel copyWith({
     String? id,
+    String? coreId,
     String? name,
     String? icon,
     String? lastMessage,
@@ -73,9 +91,12 @@ class ChatModel {
     bool? isOnline,
     bool? isVerified,
     int? notificationCount,
+    String? scrollPosition,
+    String? lastReadMessageId,
   }) {
     return ChatModel(
       id: id ?? this.id,
+      coreId: coreId ?? this.coreId,
       name: name ?? this.name,
       icon: icon ?? this.icon,
       lastMessage: lastMessage ?? this.lastMessage,
@@ -83,6 +104,8 @@ class ChatModel {
       isOnline: isOnline ?? this.isOnline,
       isVerified: isVerified ?? this.isVerified,
       notificationCount: notificationCount ?? this.notificationCount,
+      scrollPosition: scrollPosition ?? this.scrollPosition,
+      lastReadMessageId: lastReadMessageId ?? this.lastReadMessageId,
     );
   }
 }
