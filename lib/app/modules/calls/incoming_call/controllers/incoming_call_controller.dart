@@ -22,9 +22,10 @@ class IncomingCallController extends GetxController {
     //TODO name should be get from contacts
     caller = UserModel(
         name: "Unknown",
-        icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
+        iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
         isVerified: true,
         walletAddress: args.remoteCoreId,
+        coreId: args.remoteCoreId,
         chatModel: ChatModel(
             name: "Unknown",
             icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
@@ -68,9 +69,10 @@ class IncomingCallController extends GetxController {
           enableVideo: args.session.isAudioCall ? false : true,
           user: UserModel(
               name: "Unknown",
-              icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
+              iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
               isVerified: true,
               walletAddress: args.remoteCoreId,
+              coreId: args.remoteCoreId,
               chatModel: ChatModel(
                   name: "Unknown",
                   icon: "https://avatars.githubusercontent.com/u/6645136?v=4",

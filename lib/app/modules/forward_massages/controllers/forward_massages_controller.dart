@@ -44,8 +44,9 @@ class ForwardMassagesController extends GetxController {
     UserModel(
       name: "Crapps Wallbanger",
       walletAddress: 'CB92...969A',
-      icon: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+      iconUrl: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
       nickname: "Nickname",
+      coreId: 'CB92...969A',
       chatModel: ChatModel(
         id: "1",
         name: "Crapps Wallbanger",
@@ -57,7 +58,8 @@ class ForwardMassagesController extends GetxController {
     UserModel(
       name: "Fancy Potato",
       walletAddress: 'CB21...C325',
-      icon: "https://avatars.githubusercontent.com/u/6634136?v=4",
+      coreId: 'CB21...C325',
+      iconUrl: "https://avatars.githubusercontent.com/u/6634136?v=4",
       isOnline: true,
       isVerified: true,
       chatModel: ChatModel(
@@ -74,7 +76,8 @@ class ForwardMassagesController extends GetxController {
     UserModel(
       name: "manly Cupholder",
       walletAddress: 'CB42...324E',
-      icon: "https://avatars.githubusercontent.com/u/9801359?v=4",
+      coreId: 'CB42...324E',
+      iconUrl: "https://avatars.githubusercontent.com/u/9801359?v=4",
       isOnline: true,
       chatModel: ChatModel(
         id: "3",

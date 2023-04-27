@@ -384,9 +384,10 @@ class MessagingConnectionController extends GetxController {
         arguments: MessagesViewArgumentsModel(
           session: session,
           user: UserModel(
-            icon: userChatModel!.icon,
+            iconUrl: userChatModel!.icon,
             name: userChatModel!.name,
             walletAddress: session.cid,
+            coreId: session.cid,
             isOnline: userChatModel!.isOnline,
             chatModel: userChatModel!,
           ),

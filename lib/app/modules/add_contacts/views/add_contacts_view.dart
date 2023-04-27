@@ -50,7 +50,7 @@ class AddContactsView extends GetView<AddContactsController> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CustomSizes.largeSizedBoxHeight,
-                      CustomCircleAvatar(url: user.icon, size: 64),
+                      CustomCircleAvatar(url: user.iconUrl, size: 64),
                       CustomSizes.mediumSizedBoxHeight,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

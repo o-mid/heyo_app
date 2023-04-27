@@ -26,6 +26,6 @@ class AddContactsController extends GetxController {
 
   void addContact() {
     contactRepository.addContact(UserContact(
-        coreId: args.user.walletAddress, nickname: nickname.value, icon: args.user.icon));
+        coreId: args.user.walletAddress, nickname: nickname.value, icon: args.user.iconUrl));
   }
 }

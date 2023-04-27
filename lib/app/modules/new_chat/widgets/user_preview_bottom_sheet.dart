@@ -29,7 +29,7 @@ void openUserPreviewBottomSheet(UserModel user) {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomSizes.largeSizedBoxHeight,
-          CustomCircleAvatar(url: user.icon, size: 64),
+          CustomCircleAvatar(url: user.iconUrl, size: 64),
           CustomSizes.mediumSizedBoxHeight,
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -67,7 +67,7 @@ void openUserPreviewBottomSheet(UserModel user) {
                           user: user.copyWith(
                         chatModel: user.chatModel.copyWith(
                           id: user.walletAddress,
-                          icon: user.icon,
+                          icon: user.iconUrl,
                           isOnline: true,
                           isVerified: true,
                           timestamp: DateTime.now(),

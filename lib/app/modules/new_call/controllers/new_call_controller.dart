@@ -48,8 +48,9 @@ class NewCallController extends GetxController {
     List<UserModel> searchedItems = (await contactRepository.search(query))
         .map((userContact) => UserModel(
             name: userContact.nickname,
-            icon: userContact.icon,
+            iconUrl: userContact.icon,
             walletAddress: userContact.coreId,
+            coreId: userContact.coreId,
             isContact: true,
             chatModel: ChatModel(
               name: userContact.nickname,
@@ -68,8 +69,9 @@ class NewCallController extends GetxController {
         searchSuggestions.value = [
           UserModel(
               name: 'unknown',
-              icon: getMockIconUrl(),
+              iconUrl: getMockIconUrl(),
               walletAddress: query,
+              coreId: query,
               chatModel: ChatModel(
                 icon: getMockIconUrl(),
                 id: query,

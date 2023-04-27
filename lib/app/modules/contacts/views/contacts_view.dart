@@ -70,8 +70,9 @@ class ContactsView extends GetView<ContactsController> {
         openUserPreviewBottomSheet(
           UserModel(
             name: contact.nickname,
-            icon: contact.icon,
+            iconUrl: contact.icon,
             walletAddress: contact.coreId,
+            coreId: contact.coreId,
             isContact: true,
             chatModel: ChatModel(
               name: contact.nickname,

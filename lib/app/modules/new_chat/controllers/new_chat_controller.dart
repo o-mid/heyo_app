@@ -90,7 +90,8 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
     UserModel(
       name: "Crapps Wallbanger",
       walletAddress: 'CB92...969A',
-      icon: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+      coreId: 'CB92...969A',
+      iconUrl: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
       nickname: "Nickname",
       chatModel: ChatModel(
         id: "1",
@@ -103,7 +104,8 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
     UserModel(
       name: "Fancy Potato",
       walletAddress: 'CB21...C325',
-      icon: "https://avatars.githubusercontent.com/u/6634136?v=4",
+      coreId: 'CB21...C325',
+      iconUrl: "https://avatars.githubusercontent.com/u/6634136?v=4",
       isOnline: true,
       isVerified: true,
       chatModel: ChatModel(
@@ -120,7 +122,8 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
     UserModel(
       name: "manly Cupholder",
       walletAddress: 'CB42...324E',
-      icon: "https://avatars.githubusercontent.com/u/9801359?v=4",
+      coreId: 'CB42...324E',
+      iconUrl: "https://avatars.githubusercontent.com/u/9801359?v=4",
       isOnline: true,
       chatModel: ChatModel(
         id: "3",
@@ -161,8 +164,9 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
     List<UserModel> searchedItems = (await contactRepository.search(query))
         .map((userContact) => UserModel(
             name: userContact.nickname,
-            icon: userContact.icon,
+            iconUrl: userContact.icon,
             walletAddress: userContact.coreId,
+            coreId: userContact.coreId,
             isContact: true,
             chatModel: (nearbyUsers..shuffle()).first.chatModel))
         .toList();
@@ -175,8 +179,9 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
         searchSuggestions.value = [
           UserModel(
               name: 'unknown',
-              icon: (nearbyUsers..shuffle()).first.icon,
+              iconUrl: (nearbyUsers..shuffle()).first.iconUrl,
               walletAddress: query,
+              coreId: query,
               chatModel: (nearbyUsers..shuffle()).first.chatModel)
         ];
       } else {

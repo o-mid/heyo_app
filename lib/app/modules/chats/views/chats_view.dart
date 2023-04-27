@@ -58,8 +58,9 @@ class ChatsView extends GetView<ChatsController> {
                     arguments: MessagesViewArgumentsModel(
                       user: UserModel(
                           name: chats[index].name,
-                          icon: chats[index].icon,
+                          iconUrl: chats[index].icon,
                           walletAddress: chats[index].id,
+                          coreId: chats[index].id,
                           chatModel: chats[index]),
                     ),
                   );
