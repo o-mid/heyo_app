@@ -95,10 +95,12 @@ class CallsController extends GetxController {
       coreId: "CB11${List.generate(11, (index) => index).join()}14AB",
       chatModel: ChatModel(
         name: "Boiled Dealmaker",
+        coreId: "CB11${List.generate(11, (index) => index).join()}14AB",
         icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
         isVerified: true,
         id: "CB11${List.generate(11, (index) => index).join()}14AB",
         lastMessage: "",
+        lastReadMessageId: "",
         timestamp: DateTime.now(),
       ),
     );
@@ -109,9 +111,11 @@ class CallsController extends GetxController {
       coreId: "CB11${List.generate(11, (index) => index).join()}49BB",
       chatModel: ChatModel(
         name: "Crapps Wallbanger",
+        coreId: "CB11${List.generate(11, (index) => index).join()}49BB",
         icon: "https://avatars.githubusercontent.com/u/2345136?v=4",
         id: "CB11${List.generate(11, (index) => index).join()}49BB",
         lastMessage: "",
+        lastReadMessageId: "",
         timestamp: DateTime.now(),
       ),
     );
@@ -122,9 +126,11 @@ class CallsController extends GetxController {
         coreId: "CB11${List.generate(11, (index) => index).join()}11FE",
         chatModel: ChatModel(
           name: "Fancy Potato",
+          coreId: "CB11${List.generate(11, (index) => index).join()}11FE",
           icon: "https://avatars.githubusercontent.com/u/6644146?v=4",
           id: "CB11${List.generate(11, (index) => index).join()}11FE",
           lastMessage: "",
+          lastReadMessageId: "",
           timestamp: DateTime.now(),
         ));
     final uOckerito = UserModel(
@@ -137,8 +143,10 @@ class CallsController extends GetxController {
           name: "Ockerito Fazola",
           icon: "https://avatars.githubusercontent.com/u/7844146?v=4",
           id: "CB11${List.generate(11, (index) => index).join()}5A5D",
+          coreId: "CB11${List.generate(11, (index) => index).join()}5A5D",
           isVerified: true,
           lastMessage: "",
+          lastReadMessageId: "",
           timestamp: DateTime.now(),
         ));
     final uUnchained = UserModel(
@@ -150,7 +158,9 @@ class CallsController extends GetxController {
           name: "Unchained Banana",
           icon: "https://avatars.githubusercontent.com/u/7847725?v=4",
           id: "CB11${List.generate(11, (index) => index).join()}44AC",
+          coreId: "CB11${List.generate(11, (index) => index).join()}44AC",
           lastMessage: "",
+          lastReadMessageId: "",
           timestamp: DateTime.now(),
         ));
     final uSwagger = UserModel(
@@ -162,6 +172,8 @@ class CallsController extends GetxController {
           name: "Swagger Uncut",
           icon: "https://avatars.githubusercontent.com/u/9947725?v=4",
           id: "CB11${List.generate(11, (index) => index).join()}532A",
+          coreId: "CB11${List.generate(11, (index) => index).join()}532A",
+          lastReadMessageId: "",
           lastMessage: "",
           timestamp: DateTime.now(),
         ));

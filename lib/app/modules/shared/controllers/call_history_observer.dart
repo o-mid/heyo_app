@@ -182,7 +182,9 @@ class CallHistoryObserver extends GetxController {
         chatModel: ChatModel(
           icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
           id: coreId,
+          coreId: coreId,
           lastMessage: '',
+          lastReadMessageId: "",
           name: 'unknown',
           timestamp: DateTime.now(),
         ));

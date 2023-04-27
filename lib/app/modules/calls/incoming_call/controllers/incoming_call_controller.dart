@@ -31,7 +31,9 @@ class IncomingCallController extends GetxController {
             icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
             isVerified: true,
             id: args.remoteCoreId,
+            coreId: args.remoteCoreId,
             lastMessage: "",
+            lastReadMessageId: "",
             timestamp: DateTime.now()));
     _playRingtone();
   }
@@ -78,7 +80,9 @@ class IncomingCallController extends GetxController {
                   icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
                   isVerified: true,
                   id: args.remoteCoreId,
+                  coreId: args.remoteCoreId,
                   lastMessage: "",
+                  lastReadMessageId: "",
                   timestamp: DateTime.now())),
           isAudioCall: args.session.isAudioCall),
     );

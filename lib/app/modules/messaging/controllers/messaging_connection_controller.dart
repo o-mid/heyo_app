@@ -299,11 +299,13 @@ class MessagingConnectionController extends GetxController {
   createUserChatModel({required String sessioncid}) async {
     ChatModel userChatModel = ChatModel(
         id: sessioncid,
+        coreId: sessioncid,
         isOnline: true,
         name:
             "${sessioncid.characters.take(4).string}...${sessioncid.characters.takeLast(4).string}",
         icon: getMockIconUrl(),
         lastMessage: "",
+        lastReadMessageId: "",
         isVerified: true,
         timestamp: DateTime.now());
     final isChatAvailable = await chatHistoryRepo.getChat(userChatModel.id);

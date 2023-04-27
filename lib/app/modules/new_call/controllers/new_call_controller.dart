@@ -56,7 +56,9 @@ class NewCallController extends GetxController {
               name: userContact.nickname,
               icon: userContact.icon,
               id: userContact.coreId,
+              coreId: userContact.coreId,
               lastMessage: "",
+              lastReadMessageId: "",
               timestamp: DateTime.now(),
             )))
         .toList();
@@ -75,7 +77,9 @@ class NewCallController extends GetxController {
               chatModel: ChatModel(
                 icon: getMockIconUrl(),
                 id: query,
+                coreId: query,
                 lastMessage: '',
+                lastReadMessageId: "",
                 name: 'unknown',
                 timestamp: DateTime.now(),
               ))

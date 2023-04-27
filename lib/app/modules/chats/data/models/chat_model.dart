@@ -40,7 +40,7 @@ class ChatModel {
 
   ChatModel({
     required this.id,
-    this.coreId = "",
+    required this.coreId,
     required this.name,
     required this.icon,
     required this.lastMessage,
@@ -50,7 +50,7 @@ class ChatModel {
     this.notificationCount = 0,
     // should be required after implementing the feature and refactoring
     this.scrollPosition = '',
-    this.lastReadMessageId = '',
+    required this.lastReadMessageId,
   });
 
   factory ChatModel.fromJson(Map<String, dynamic> json) => ChatModel(
