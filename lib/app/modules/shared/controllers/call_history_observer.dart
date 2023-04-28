@@ -135,6 +135,7 @@ class CallHistoryObserver extends GetxController {
       status: CallStatus.incomingMissed,
       date: DateTime.now(),
       id: callId,
+      coreId: user.coreId,
       type: type,
     );
 
@@ -148,6 +149,7 @@ class CallHistoryObserver extends GetxController {
       status: CallStatus.outgoingNotAnswered,
       date: DateTime.now(),
       id: callId,
+      coreId: user.coreId,
       type: type,
     );
 

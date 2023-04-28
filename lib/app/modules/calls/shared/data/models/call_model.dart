@@ -30,6 +30,7 @@ enum CallStatus {
 
 class CallModel {
   static const idSerializedName = 'id';
+  static const coreIdSerializedName = 'coreId';
   static const typeSerializedName = 'type';
   static const statusSerializedName = 'status';
   static const dateSerializedName = 'date';
@@ -38,6 +39,8 @@ class CallModel {
   static const dataUsageMBSerializedName = 'dataUsageMB';
 
   final String id;
+  final String coreId;
+
   final CallType type;
   final CallStatus status;
   final DateTime date;
@@ -47,6 +50,7 @@ class CallModel {
 
   CallModel({
     required this.id,
+    required this.coreId,
     required this.type,
     required this.status,
     required this.date,
@@ -57,6 +61,7 @@ class CallModel {
 
   factory CallModel.fromJson(Map<String, dynamic> json) => CallModel(
         id: json[idSerializedName],
+        coreId: json[coreIdSerializedName],
         type: CallType.values.byName(json[typeSerializedName]),
         status: CallStatus.values.byName(json[statusSerializedName]),
         date: DateTime.parse(json[dateSerializedName]),
@@ -67,6 +72,7 @@ class CallModel {
 
   Map<String, dynamic> toJson() => {
         idSerializedName: id,
+        coreIdSerializedName: coreId,
         typeSerializedName: type.name,
         statusSerializedName: status.name,
         dateSerializedName: date.toIso8601String(),
@@ -77,6 +83,7 @@ class CallModel {
 
   CallModel copyWith({
     String? id,
+    String? coreId,
     CallType? type,
     CallStatus? status,
     DateTime? date,
@@ -86,6 +93,7 @@ class CallModel {
   }) {
     return CallModel(
       id: id ?? this.id,
+      coreId: coreId ?? this.coreId,
       type: type ?? this.type,
       status: status ?? this.status,
       date: date ?? this.date,

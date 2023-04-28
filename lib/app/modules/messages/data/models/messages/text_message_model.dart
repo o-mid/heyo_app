@@ -13,6 +13,7 @@ class TextMessageModel extends MessageModel {
   TextMessageModel({
     required this.text,
     required super.messageId,
+    required super.chatId,
     required super.timestamp,
     required super.senderName,
     required super.senderAvatar,
@@ -29,6 +30,7 @@ class TextMessageModel extends MessageModel {
   TextMessageModel copyWith({
     String? text,
     String? messageId,
+    String? chatId,
     MessageStatus? status,
     MessageContentType? type,
     DateTime? timestamp,
@@ -41,6 +43,7 @@ class TextMessageModel extends MessageModel {
     return TextMessageModel(
       text: text ?? this.text,
       messageId: messageId ?? this.messageId,
+      chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
       senderAvatar: senderAvatar,
@@ -58,6 +61,7 @@ class TextMessageModel extends MessageModel {
         text: json[textSerializedName],
         // parent props:
         messageId: json[MessageModel.messageIdSerializedName],
+        chatId: json[MessageModel.chatIdSerializedName],
         timestamp: DateTime.parse(json[MessageModel.timestampSerializedName]),
         senderName: json[MessageModel.senderNameSerializedName],
         senderAvatar: json[MessageModel.senderAvatarSerializedName],
@@ -80,6 +84,7 @@ class TextMessageModel extends MessageModel {
         textSerializedName: text,
         //parent props:
         MessageModel.messageIdSerializedName: messageId,
+        MessageModel.chatIdSerializedName: chatId,
         MessageModel.timestampSerializedName: timestamp.toIso8601String(),
         MessageModel.senderNameSerializedName: senderName,
         MessageModel.senderAvatarSerializedName: senderAvatar,

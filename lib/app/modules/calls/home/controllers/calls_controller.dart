@@ -185,6 +185,7 @@ class CallsController extends GetxController {
         status: CallStatus.outgoingCanceled,
         date: DateTime.now().subtract(const Duration(minutes: 37)),
         user: uBoiled,
+        coreId: uBoiled.coreId,
       ),
       CallModel(
         id: "${index++}",
@@ -192,6 +193,7 @@ class CallsController extends GetxController {
         status: CallStatus.incomingMissed,
         date: DateTime.utc(2022, DateTime.march, 30, 20, 32),
         user: uCrapps,
+        coreId: uCrapps.coreId,
       ),
       CallModel(
         id: "${index++}",
@@ -199,6 +201,7 @@ class CallsController extends GetxController {
         status: CallStatus.outgoingNotAnswered,
         date: DateTime.utc(2022, DateTime.march, 30, 17, 44),
         user: uFancy,
+        coreId: uFancy.coreId,
       ),
       CallModel(
         id: "${index++}",
@@ -206,6 +209,7 @@ class CallsController extends GetxController {
         status: CallStatus.outgoingNotAnswered,
         date: DateTime.utc(2022, DateTime.march, 29, 21, 17),
         user: uOckerito,
+        coreId: uOckerito.coreId,
       ),
       CallModel(
         id: "${index++}",
@@ -213,6 +217,7 @@ class CallsController extends GetxController {
         status: CallStatus.incomingMissed,
         date: DateTime.utc(2022, DateTime.march, 28, 20, 48),
         user: uUnchained,
+        coreId: uUnchained.coreId,
       ),
       CallModel(
         id: "${index++}",
@@ -220,6 +225,7 @@ class CallsController extends GetxController {
         status: CallStatus.incomingAnswered,
         date: DateTime.utc(2022, DateTime.february, 16, 20, 59),
         user: uUnchained,
+        coreId: uUnchained.coreId,
       ),
       CallModel(
         id: "${index++}",
@@ -227,6 +233,7 @@ class CallsController extends GetxController {
         status: CallStatus.incomingAnswered,
         date: DateTime.utc(2022, DateTime.february, 15, 9, 2),
         user: uSwagger,
+        coreId: uSwagger.coreId,
       ),
     ];
 
