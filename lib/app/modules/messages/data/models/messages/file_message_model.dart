@@ -14,6 +14,7 @@ class FileMessageModel extends MessageModel {
   FileMessageModel({
     required this.metadata,
     required super.messageId,
+    required super.chatId,
     required super.timestamp,
     required super.senderName,
     required super.senderAvatar,
@@ -29,6 +30,7 @@ class FileMessageModel extends MessageModel {
   @override
   FileMessageModel copyWith({
     String? messageId,
+    String? chatId,
     MessageStatus? status,
     FileMetaData? metadata,
     bool? isLocal,
@@ -43,6 +45,7 @@ class FileMessageModel extends MessageModel {
     return FileMessageModel(
       metadata: metadata ?? this.metadata,
       messageId: messageId ?? this.messageId,
+      chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
       senderAvatar: senderAvatar,
@@ -60,6 +63,7 @@ class FileMessageModel extends MessageModel {
         metadata: FileMetaData.fromJson(json[metadataSerializedName]),
         // parent props:
         messageId: json[MessageModel.messageIdSerializedName],
+        chatId: json[MessageModel.chatIdSerializedName],
         timestamp: DateTime.parse(json[MessageModel.timestampSerializedName]),
         senderName: json[MessageModel.senderNameSerializedName],
         senderAvatar: json[MessageModel.senderAvatarSerializedName],
@@ -79,6 +83,7 @@ class FileMessageModel extends MessageModel {
         metadataSerializedName: metadata.toJson(),
         // parent props:
         MessageModel.messageIdSerializedName: messageId,
+        MessageModel.chatIdSerializedName: chatId,
         MessageModel.timestampSerializedName: timestamp.toIso8601String(),
         MessageModel.senderNameSerializedName: senderName,
         MessageModel.senderAvatarSerializedName: senderAvatar,

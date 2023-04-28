@@ -25,6 +25,7 @@ abstract class MessageModel {
   static const statusSerializedName = "status";
   static const typeSerializedName = "type";
   static const messageIdSerializedName = "messageId";
+  static const chatIdSerializedName = "chatId";
   static const timestampSerializedName = "timestamp";
   static const replyToSerializedName = "replyTo";
   static const reactionsSerializedName = "reactions";
@@ -36,6 +37,7 @@ abstract class MessageModel {
   final MessageStatus status;
   final MessageContentType type;
   final String messageId;
+  final String chatId;
   final DateTime timestamp;
   final ReplyToModel? replyTo;
   final Map<String, ReactionModel> reactions;
@@ -47,6 +49,7 @@ abstract class MessageModel {
 
   MessageModel({
     required this.messageId,
+    required this.chatId,
     required this.timestamp,
     required this.senderName,
     required this.senderAvatar,
@@ -61,6 +64,7 @@ abstract class MessageModel {
 
   MessageModel copyWith({
     String? messageId,
+    String? chatId,
     MessageStatus? status,
     DateTime? timestamp,
     MessageContentType? type,

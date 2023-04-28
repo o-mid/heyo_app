@@ -19,6 +19,7 @@ class LiveLocationMessageModel extends MessageModel {
     required this.longitude,
     required this.endTime,
     required super.messageId,
+    required super.chatId,
     required super.timestamp,
     required super.senderName,
     required super.senderAvatar,
@@ -35,6 +36,7 @@ class LiveLocationMessageModel extends MessageModel {
   MessageModel copyWith({
     DateTime? endTime,
     String? messageId,
+    String? chatId,
     MessageStatus? status,
     MessageContentType? type,
     DateTime? timestamp,
@@ -49,6 +51,7 @@ class LiveLocationMessageModel extends MessageModel {
       longitude: longitude,
       endTime: endTime ?? this.endTime,
       messageId: messageId ?? this.messageId,
+      chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
       senderAvatar: senderAvatar,
@@ -68,6 +71,7 @@ class LiveLocationMessageModel extends MessageModel {
         endTime: DateTime.parse(json[endTimeSerializedName]),
         // parent props:
         messageId: json[MessageModel.messageIdSerializedName],
+        chatId: json[MessageModel.chatIdSerializedName],
         timestamp: DateTime.parse(json[MessageModel.timestampSerializedName]),
         senderName: json[MessageModel.senderNameSerializedName],
         senderAvatar: json[MessageModel.senderAvatarSerializedName],
@@ -89,6 +93,7 @@ class LiveLocationMessageModel extends MessageModel {
         endTimeSerializedName: endTime.toIso8601String(),
         // parent props:
         MessageModel.messageIdSerializedName: messageId,
+        MessageModel.chatIdSerializedName: chatId,
         MessageModel.timestampSerializedName: timestamp.toIso8601String(),
         MessageModel.senderNameSerializedName: senderName,
         MessageModel.senderAvatarSerializedName: senderAvatar,

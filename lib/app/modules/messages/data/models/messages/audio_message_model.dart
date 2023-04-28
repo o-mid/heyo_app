@@ -20,6 +20,7 @@ class AudioMessageModel extends MessageModel {
     this.localUrl,
     required this.metadata,
     required super.messageId,
+    required super.chatId,
     required super.timestamp,
     required super.senderName,
     required super.senderAvatar,
@@ -36,6 +37,7 @@ class AudioMessageModel extends MessageModel {
   AudioMessageModel copyWith({
     String? localUrl,
     String? messageId,
+    String? chatId,
     MessageStatus? status,
     MessageContentType? type,
     DateTime? timestamp,
@@ -51,6 +53,7 @@ class AudioMessageModel extends MessageModel {
       metadata: metadata,
       // parent props:
       messageId: messageId ?? this.messageId,
+      chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
       senderAvatar: senderAvatar,
@@ -70,6 +73,7 @@ class AudioMessageModel extends MessageModel {
         metadata: AudioMetadata.fromJson(json[metadataSerializedName]),
         // parent props
         messageId: json[MessageModel.messageIdSerializedName],
+        chatId: json[MessageModel.chatIdSerializedName],
         timestamp: DateTime.parse(json[MessageModel.timestampSerializedName]),
         senderName: json[MessageModel.senderNameSerializedName],
         senderAvatar: json[MessageModel.senderAvatarSerializedName],
@@ -91,6 +95,7 @@ class AudioMessageModel extends MessageModel {
         metadataSerializedName: metadata.toJson(),
         // parent props
         MessageModel.messageIdSerializedName: messageId,
+        MessageModel.chatIdSerializedName: chatId,
         MessageModel.timestampSerializedName: timestamp.toIso8601String(),
         MessageModel.senderNameSerializedName: senderName,
         MessageModel.senderAvatarSerializedName: senderAvatar,

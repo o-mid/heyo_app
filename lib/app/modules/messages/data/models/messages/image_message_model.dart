@@ -21,6 +21,7 @@ class ImageMessageModel extends MessageModel {
     required this.isLocal,
     required this.metadata,
     required super.messageId,
+    required super.chatId,
     required super.timestamp,
     required super.senderName,
     required super.senderAvatar,
@@ -38,6 +39,7 @@ class ImageMessageModel extends MessageModel {
     String? url,
     bool? isLocal,
     String? messageId,
+    String? chatId,
     MessageStatus? status,
     DateTime? timestamp,
     MessageContentType? type,
@@ -52,6 +54,7 @@ class ImageMessageModel extends MessageModel {
       isLocal: isLocal ?? this.isLocal,
       metadata: metadata,
       messageId: messageId ?? this.messageId,
+      chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
       senderAvatar: senderAvatar,
@@ -71,6 +74,7 @@ class ImageMessageModel extends MessageModel {
         isLocal: json[isLocalSerializedName],
         // parent props:
         messageId: json[MessageModel.messageIdSerializedName],
+        chatId: json[MessageModel.chatIdSerializedName],
         timestamp: DateTime.parse(json[MessageModel.timestampSerializedName]),
         senderName: json[MessageModel.senderNameSerializedName],
         senderAvatar: json[MessageModel.senderAvatarSerializedName],
@@ -93,6 +97,7 @@ class ImageMessageModel extends MessageModel {
 
         // parent props:
         MessageModel.messageIdSerializedName: messageId,
+        MessageModel.chatIdSerializedName: chatId,
         MessageModel.timestampSerializedName: timestamp.toIso8601String(),
         MessageModel.senderNameSerializedName: senderName,
         MessageModel.senderAvatarSerializedName: senderAvatar,

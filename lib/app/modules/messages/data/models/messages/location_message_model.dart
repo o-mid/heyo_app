@@ -19,6 +19,7 @@ class LocationMessageModel extends MessageModel {
     required this.longitude,
     required this.address,
     required super.messageId,
+    required super.chatId,
     required super.timestamp,
     required super.senderName,
     required super.senderAvatar,
@@ -34,6 +35,7 @@ class LocationMessageModel extends MessageModel {
   @override
   MessageModel copyWith({
     String? messageId,
+    String? chatId,
     MessageStatus? status,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
@@ -48,6 +50,7 @@ class LocationMessageModel extends MessageModel {
       latitude: latitude,
       longitude: longitude,
       messageId: messageId ?? this.messageId,
+      chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
       senderAvatar: senderAvatar,
@@ -67,6 +70,7 @@ class LocationMessageModel extends MessageModel {
         address: json[addressSerializedName],
         // parent props:
         messageId: json[MessageModel.messageIdSerializedName],
+        chatId: json[MessageModel.chatIdSerializedName],
         timestamp: DateTime.parse(json[MessageModel.timestampSerializedName]),
         senderName: json[MessageModel.senderNameSerializedName],
         senderAvatar: json[MessageModel.senderAvatarSerializedName],
@@ -88,6 +92,7 @@ class LocationMessageModel extends MessageModel {
         addressSerializedName: address,
         // parent props:
         MessageModel.messageIdSerializedName: messageId,
+        MessageModel.chatIdSerializedName: chatId,
         MessageModel.timestampSerializedName: timestamp.toIso8601String(),
         MessageModel.senderNameSerializedName: senderName,
         MessageModel.senderAvatarSerializedName: senderAvatar,
