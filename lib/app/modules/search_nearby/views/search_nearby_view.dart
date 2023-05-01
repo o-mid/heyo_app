@@ -26,16 +26,16 @@ class SearchNearbyView extends GetView<SearchNearbyController> {
       ),
       body: Center(
           child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          EmptyContactsBody(
-            infoText: LocaleKeys.newChat_emptyStateTitleNearbyUsers.tr,
-            buttonText: "Share Info",
-            onInvite: () => Get.toNamed(Routes.SHREABLE_QR),
-          ),
-          const SizedBox(height: 30),
-        ],
-      )),
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              EmptyContactsBody(
+                infoText: LocaleKeys.newChat_emptyStateTitleNearbyUsers.tr,
+                buttonText: "Share Info",
+                onInvite: () => Get.toNamed(Routes.SHREABLE_QR),
+              ),
+              const SizedBox(height: 30),
+            ],
+          )),
     );
   }
 }

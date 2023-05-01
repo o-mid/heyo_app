@@ -63,12 +63,12 @@ class ContactsView extends GetView<ContactsController> {
   }
 
   Widget _buildContact(
-    UserContact contact,
-  ) {
+      UserContact contact,
+      ) {
     return InkWell(
       onTap: () {
         openUserPreviewBottomSheet(
-          user: UserModel(
+          UserModel(
             name: contact.nickname,
             icon: contact.icon,
             walletAddress: contact.coreId,

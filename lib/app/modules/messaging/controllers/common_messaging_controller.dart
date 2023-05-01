@@ -22,10 +22,13 @@ import '../usecases/handle_received_binary_data_usecase.dart';
 import '../utils/binary_file_receiving_state.dart';
 import '../utils/data_binary_message.dart';
 
-enum ConnectivityStatus { connectionLost, connecting, justConnected, online }
+enum DataChannelConnectivityStatus { connectionLost, connecting, justConnected, online }
 
 /// Declares common entities for using in specific implementations of Internet or Wi-Fi Direct
 /// messaging algorithms.
+///
+/// There are two classes inherited from it, MessagingConnectionController and WifiDirectConnectionController.
+/// An instance of one or another class-heir will be used in messaging depending on the connection method, Internet or Wi-Fi Direct.
 abstract class CommonMessagingConnectionController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
@@ -37,8 +40,9 @@ abstract class CommonMessagingConnectionController extends GetxController {
   // MessageSession? currentSession;
 
   /// Represents current status of used data channel.
-  Rx<ConnectivityStatus> connectivityStatus = ConnectivityStatus.connecting.obs;
-
+  Rx<DataChannelConnectivityStatus> connectivityStatus = DataChannelConnectivityStatus.connecting.obs;
+  Rx<DataChannelConnectivityStatus> dataChannelStatus =
+      DataChannelConnectivityStatus.connecting.obs;
   //
   CommonMessagingConnectionController(
       {required this.accountInfo, required this.messagesRepo, required this.chatHistoryRepo});
@@ -64,17 +68,17 @@ abstract class CommonMessagingConnectionController extends GetxController {
 
   /// Public method, used by MessagesController for initiate messaging connection.
   ///
-  /// Should be implemented in the derived class.
+  /// Should be implemented by override in the derived class.
   Future<void> initMessagingConnection({required String remoteId});
 
   /// Sends text message
   ///
-  /// Should be overridden in the derived class.
+  /// Should be implemented by override in the derived class.
   Future<void> sendTextMessage({required String text});
 
   /// Sends binary message
   ///
-  /// Should be overridden in the derived class.
+  /// Should be implemented by override in the derived class.
   Future<void> sendBinaryMessage({required Uint8List binary});
 
   // Public methods, that are used by derived classes independently of connection type,
@@ -82,14 +86,15 @@ abstract class CommonMessagingConnectionController extends GetxController {
 
   Future<void> setConnectivityOnline() async {
     await Future.delayed(const Duration(seconds: 2), () {
-      connectivityStatus.value = ConnectivityStatus.online;
+      connectivityStatus.value = DataChannelConnectivityStatus.online;
     });
   }
 
   /// Confirms received message by it's Id, using sendTextMessage() method,
   /// defined by the appropriate derived class.
-  confirmReceivedMessageById({required String messageId}) {
-    Map<String, dynamic> confirmMessageJson = ConfirmMessageModel(messageId: messageId).toJson();
+  confirmMessageById({required String messageId, required ConfirmMessageStatus status}) async {
+    Map<String, dynamic> confirmMessageJson =
+    ConfirmMessageModel(messageId: messageId, status: status).toJson();
 
     DataChannelMessageModel dataChannelMessage = DataChannelMessageModel(
       message: confirmMessageJson,
@@ -154,17 +159,17 @@ abstract class CommonMessagingConnectionController extends GetxController {
   Future<void> saveReceivedMessage(
       {required Map<String, dynamic> receivedMessageJson, required String chatId}) async {
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
-
     await messagesRepo.createMessage(
         message: receivedMessage.copyWith(
           isFromMe: false,
+          status: MessageStatus.delivered,
         ),
         chatId: chatId);
 
-    // after saving the message we confirm it and send a text to sender side with the message id
-    // to confirm delivery
-    confirmReceivedMessageById(messageId: receivedMessage.messageId);
+    confirmMessageById(
+        messageId: receivedMessage.messageId, status: ConfirmMessageStatus.delivered);
   }
+
 
   Future<void> deleteReceivedMessage(
       {required Map<String, dynamic> receivedDeleteJson, required String chatId}) async {
@@ -212,6 +217,11 @@ abstract class CommonMessagingConnectionController extends GetxController {
           message: currentMessage.copyWith(status: MessageStatus.read), chatId: chatId);
     }
   }
+
+  confirmReadMessages({required String messageId}) async {
+    await confirmMessageById(messageId: messageId, status: ConfirmMessageStatus.read);
+  }
+
 
   // creates a ChatModel and saves it to the chat history if it is not available
   // or updates the available chat

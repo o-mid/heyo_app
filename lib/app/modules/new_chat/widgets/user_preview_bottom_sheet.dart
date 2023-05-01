@@ -19,10 +19,7 @@ import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../shared/widgets/curtom_circle_avatar.dart';
 import '../controllers/new_chat_controller.dart';
 
-void openUserPreviewBottomSheet({
-  required UserModel user,
-  bool isWifiDirect = false,
-}) {
+void openUserPreviewBottomSheet(UserModel user, {bool isWifiDirect = false}) {
   Get.bottomSheet(
     enterBottomSheetDuration: TRANSITIONS.newChat_EnterBottomSheetDuration,
     exitBottomSheetDuration: TRANSITIONS.newChat_ExitBottomSheetDuration,
@@ -44,7 +41,7 @@ void openUserPreviewBottomSheet({
               CustomSizes.smallSizedBoxWidth,
               user.isVerified
                   ? Assets.svg.verifiedWithBluePadding
-                      .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
+                  .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
                   : const SizedBox(),
             ],
           ),
@@ -68,37 +65,22 @@ void openUserPreviewBottomSheet({
                       Routes.MESSAGES,
                       arguments: MessagesViewArgumentsModel(
                           user: user.copyWith(
-                        chatModel: user.chatModel.copyWith(
-                          id: user.walletAddress,
-                          icon: user.icon,
-                          isOnline: true,
-                          isVerified: true,
-                          timestamp: DateTime.now(),
-                          name:
+                            chatModel: user.chatModel.copyWith(
+                              id: user.walletAddress,
+                              icon: user.icon,
+                              isOnline: true,
+                              isVerified: true,
+                              timestamp: DateTime.now(),
+                              name:
                               "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}",
-                        ),
-                      )),
+                            ),
+                          ),
+                          connectionType:isWifiDirect
+                              ? MessagingConnectionType.wifiDirect
+                              : MessagingConnectionType.internet
+                      ),
                     );
                   }
-                  }
-                  Get.toNamed(
-                    Routes.MESSAGES,
-                    arguments: MessagesViewArgumentsModel(
-                        user: user.copyWith(
-                          chatModel: user.chatModel.copyWith(
-                            id: user.walletAddress,
-                            icon: user.icon,
-                            isOnline: true,
-                            isVerified: true,
-                            timestamp: DateTime.now(),
-                            name:
-                                "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}",
-                          ),
-                        ),
-                        connectionType: isWifiDirect
-                            ? MessagingConnectionType.wifiDirect
-                            : MessagingConnectionType.internet),
-                  );
                 },
                 backgroundColor: COLORS.kBrightBlueColor,
                 icon: Assets.svg.chatOutlined.svg(
@@ -110,15 +92,6 @@ void openUserPreviewBottomSheet({
                 onPressed: () {
                   Get.back();
 
-                  Get.toNamed(
-                    Routes.CALL,
-                    arguments: CallViewArgumentsModel(
-                        session: null,
-                        callId: null,
-                        user: user,
-                        enableVideo: false,
-                        isAudioCall: true),
-                  );
                   if (!isWifiDirect) {
                     Get.toNamed(
                       Routes.CALL,
@@ -132,6 +105,7 @@ void openUserPreviewBottomSheet({
                   } else {
                     Get.snackbar("Wifi Direct", "Calling over wifi direct are not supported yet");
                   }
+
                 },
                 backgroundColor: COLORS.kBrightBlueColor,
                 icon: Assets.svg.audioCallIcon.svg(
@@ -143,15 +117,6 @@ void openUserPreviewBottomSheet({
                 onPressed: () {
                   Get.back();
 
-                  Get.toNamed(
-                    Routes.CALL,
-                    arguments: CallViewArgumentsModel(
-                        session: null,
-                        callId: null,
-                        user: user,
-                        enableVideo: true,
-                        isAudioCall: false),
-                  );
                   if (!isWifiDirect) {
                     Get.toNamed(
                       Routes.CALL,
@@ -165,6 +130,7 @@ void openUserPreviewBottomSheet({
                   } else {
                     Get.snackbar("Wifi Direct", "Calling over wifi direct are not supported yet");
                   }
+
                 },
                 backgroundColor: COLORS.kBrightBlueColor,
                 icon: Assets.svg.videoCallIcon.svg(

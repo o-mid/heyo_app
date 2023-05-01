@@ -18,7 +18,8 @@ class MessagesBinding extends Bindings {
               appDatabaseProvider: Get.find(),
             ),
           ),
-          messagingConnection: Get.find<MessagingConnectionController>(),
+          // messagingConnection instance now late initialized depends on connection type
+          // messagingConnection: Get.find<MessagingConnectionController>(),
           userPreferencesRepo: UserPreferencesRepo(
             userPreferencesProvider: UserPreferencesProvider(
               appDatabaseProvider: Get.find(),
