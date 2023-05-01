@@ -36,7 +36,7 @@ class UserModel {
         nickname: json[nicknameSerializedName],
         isVerified: json[isVerifiedSerializedName],
         isContact: json[isContactSerializedName],
-        chatModel: json[chatModelSerializedName],
+        chatModel: ChatModel.fromJson(json[chatModelSerializedName]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -46,7 +46,7 @@ class UserModel {
         nicknameSerializedName: nickname,
         isVerifiedSerializedName: isVerified,
         isContactSerializedName: isContact,
-        chatModelSerializedName: chatModel,
+        chatModelSerializedName: chatModel.toJson(),
       };
 
   UserModel copyWith({

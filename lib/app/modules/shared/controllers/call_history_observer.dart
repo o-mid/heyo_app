@@ -130,7 +130,7 @@ class CallHistoryObserver extends GetxController {
   }
 
   Future<void> _createMissedCallRecord(UserModel user, String callId, CallType type) async {
-    final call = CallModel(
+    final CallModel _call = CallModel(
       user: user,
       status: CallStatus.incomingMissed,
       date: DateTime.now(),
@@ -138,12 +138,12 @@ class CallHistoryObserver extends GetxController {
       type: type,
     );
 
-    await callHistoryRepo.addCallToHistory(call);
+    await callHistoryRepo.addCallToHistory(_call);
   }
 
   Future<void> _createOutgoingNotAnsweredRecord(
       UserModel user, String callId, CallType type) async {
-    final call = CallModel(
+    final CallModel _call = CallModel(
       user: user,
       status: CallStatus.outgoingNotAnswered,
       date: DateTime.now(),
@@ -151,7 +151,7 @@ class CallHistoryObserver extends GetxController {
       type: type,
     );
 
-    await callHistoryRepo.addCallToHistory(call);
+    await callHistoryRepo.addCallToHistory(_call);
   }
 
   Future<void> _updateCallStatusAndDuration({

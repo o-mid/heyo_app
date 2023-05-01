@@ -8,12 +8,16 @@ class P2PState extends GetxController {
   List<P2PReqResNodeModel> responses = [];
   Map<String, Rxn<bool>> status = {};
 
+// track the Requests and return true if the request was successful
+
   Future<bool> trackRequest(String id) async {
     print("P2PCommunicator: $id start tracking request");
     status[id] ??= Rxn();
     var requestSucceeded = false;
     int trackingTimer = 60;
     int timer = 0;
+
+    // every second check status[id] if the request was successful or not and return true or false accordingly
 
     await Future.doWhile(() async {
       await Future.delayed(const Duration(seconds: 1));

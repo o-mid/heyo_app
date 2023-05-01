@@ -36,28 +36,44 @@ import '../../messages/data/provider/messages_provider.dart';
 import '../../messages/data/repo/messages_repo.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
+import '../utils/constants/web3client_constant.dart';
 
 class GlobalBindings extends Bindings {
+  // accountInfo
+  static AccountInfo accountInfo = AccountRepo(
+    localProvider: SecureStorageProvider(),
+    cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
+  );
+
+  // p2p related bindings
   static P2PState p2pState = P2PState();
-  static Signaling signaling = Signaling(p2pCommunicator: p2pCommunicator);
-  static Messaging messaging = Messaging(p2pCommunicator: p2pCommunicator);
-  static P2PNodeResponseStream p2pNodeResponseStream = P2PNodeResponseStream(p2pState: p2pState);
   final P2PNodeRequestStream p2pNodeRequestStream =
       P2PNodeRequestStream(p2pState: p2pState, signaling: signaling, messaging: messaging);
   static Web3Client web3Client = Web3Client('https://xcbapi.corecoin.cc', http.Client(), '', '');
 
-  static AccountInfo accountInfo = AccountRepo(
-    localProvider: SecureStorageProvider(),
-    cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
+  static P2PNodeResponseStream p2pNodeResponseStream = P2PNodeResponseStream(p2pState: p2pState);
+
+  static Web3Client web3Client = Web3Client(
+    WEB3CLIENT.url,
+    http.Client(),
+    WEB3CLIENT.username,
+    WEB3CLIENT.password,
   );
   static P2PCommunicator p2pCommunicator = P2PCommunicator(
     p2pState: p2pState,
     accountInfo: accountInfo,
   );
+
+// call related bindings
+  static Signaling signaling = Signaling(p2pCommunicator: p2pCommunicator);
   static CallConnectionController callConnectionController = CallConnectionController(
     accountInfo: accountInfo,
     signaling: signaling,
   );
+
+// messaging related bindings
+  static Messaging messaging = Messaging(p2pCommunicator: p2pCommunicator);
+
   static MessagingConnectionController messagingConnectionController =
       MessagingConnectionController(
         accountInfo: accountInfo,
@@ -76,7 +92,24 @@ class GlobalBindings extends Bindings {
 
   @override
   void dependencies() {
+    // data base provider dependencies
     Get.put(AppDatabaseProvider(accountInfo: accountInfo), permanent: true);
+
+    // p2p related dependencies
+    Get.put<P2PNodeController>(
+      P2PNodeController(
+        p2pNode: P2PNode(
+          accountInfo: accountInfo,
+          p2pNodeRequestStream: p2pNodeRequestStream,
+          p2pNodeResponseStream: p2pNodeResponseStream,
+          p2pState: p2pState,
+          web3client: web3Client,
+        ),
+      ),
+      permanent: true,
+    );
+
+    // call related dependencies
     Get.put(
       CallHistoryObserver(
         callHistoryRepo: CallHistoryRepo(
@@ -86,14 +119,9 @@ class GlobalBindings extends Bindings {
         callConnectionController: callConnectionController,
       ),
     );
+
     Get.put(callConnectionController, permanent: true);
-    Get.put(ChatsController(
-      chatHistoryRepo: ChatHistoryLocalRepo(
-        chatHistoryProvider:
-            ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-      ),
-    ));
-    //also this
+
     Get.put(
       CallsController(
         callHistoryRepo: CallHistoryRepo(
@@ -103,6 +131,16 @@ class GlobalBindings extends Bindings {
         ),
       ),
     );
+
+    // messaging related dependencies
+
+    Get.put(ChatsController(
+      chatHistoryRepo: ChatHistoryLocalRepo(
+        chatHistoryProvider:
+            ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+      ),
+    ));
+
     Get.put(AccountController(accountInfo: accountInfo));
     Get.put(GlobalMessageController());
     Get.put(AudioMessageController());
