@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/file_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
@@ -48,6 +49,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:tuple/tuple.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
+import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/messaging_session.dart';
 import '../../share_files/models/file_model.dart';
@@ -61,10 +63,12 @@ class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
   final UserPreferencesAbstractRepo userPreferencesRepo;
   final MessagingConnectionController messagingConnection;
+  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
 
   MessagesController(
       {required this.messagesRepo,
       required this.messagingConnection,
+      required this.chatHistoryRepo,
       required this.userPreferencesRepo});
 
   final _globalMessageController = Get.find<GlobalMessageController>();
@@ -93,7 +97,8 @@ class MessagesController extends GetxController {
   late String sessionId;
   late KeyboardVisibilityController keyboardController;
 
-  late UserPreferences? userPreferences;
+  //late UserPreferences? userPreferences;
+  late ChatModel? chatModel;
   final FocusNode textFocusNode = FocusNode();
 
   final isListLoaded = false.obs;
@@ -103,6 +108,7 @@ class MessagesController extends GetxController {
     super.onInit();
     args = Get.arguments as MessagesViewArgumentsModel;
     chatId = args.user.chatModel.id;
+
     keyboardController = KeyboardVisibilityController();
 
     _globalMessageController.reset();
@@ -890,21 +896,30 @@ class MessagesController extends GetxController {
   }
 
   Future<void> _getMessages() async {
-    await userPreferencesRepo.getUserPreferencesById(chatId).then((value) async => {
-          userPreferences = value,
+    await chatHistoryRepo.getChat(chatId).then((value) async => {
+          chatModel = value,
           await messagesRepo.getMessages(chatId).then((value) => {
                 messages.value = value,
               })
         });
 
+    // await userPreferencesRepo.getUserPreferencesById(chatId).then((value) async => {
+    //       userPreferences = value,
+    //       await messagesRepo.getMessages(chatId).then((value) => {
+    //             messages.value = value,
+    //           })
+    //     });
+
     // of userPreferences is null, scroll to bottom
     // eles scroll to last position
 
-    if (userPreferences != null) {
-      lastReadRemoteMessagesId.value = userPreferences!.lastReadMessageId;
-      scrollPositionMessagesId.value = userPreferences!.scrollPosition;
+    if (chatModel != null) {
+      print("scrolling to last position");
+      print("lastReadRemoteMessagesId.value ${chatModel!.scrollPosition.toString()}");
+      lastReadRemoteMessagesId.value = chatModel!.lastReadMessageId;
+      scrollPositionMessagesId.value = chatModel!.scrollPosition;
       // await scrollToMessage(messageId: userPreferences!.scrollPosition);
-      await jumpToMessage(messageId: userPreferences!.scrollPosition);
+      await jumpToMessage(messageId: chatModel!.scrollPosition);
       //isListLoaded.value = true;
     } else {
       // uncomment the following lines if you want to add mock Messages
@@ -919,6 +934,26 @@ class MessagesController extends GetxController {
       // });
       isListLoaded.value = true;
     }
+
+    // if (userPreferences != null) {
+    //   lastReadRemoteMessagesId.value = userPreferences!.lastReadMessageId;
+    //   scrollPositionMessagesId.value = userPreferences!.scrollPosition;
+    //   // await scrollToMessage(messageId: userPreferences!.scrollPosition);
+    //   await jumpToMessage(messageId: userPreferences!.scrollPosition);
+    //   //isListLoaded.value = true;
+    // } else {
+    //   // uncomment the following lines if you want to add mock Messages
+    //   // and animate To the Bottom of list
+
+    //   // await _addMockMessages();
+    //   // WidgetsBinding.instance.scheduleFrameCallback((_) {
+    //   //   animateToBottom(
+    //   //     duration: TRANSITIONS.messagingPage_getAllMsgsDurtion,
+    //   //     curve: TRANSITIONS.messagingPage_getAllMsgscurve,
+    //   //   );
+    //   // });
+    //   isListLoaded.value = true;
+    // }
   }
 
 //TODO remove?
@@ -1439,10 +1474,18 @@ class MessagesController extends GetxController {
 
   Future<void> _saveUserPreferences() async {
     // saves the last read message index in the user preferences repo
-    await userPreferencesRepo.createOrUpdateUserPreferences(UserPreferences(
-      chatId: chatId,
+    print("lastReadRemoteMessagesId.value: ${lastReadRemoteMessagesId.value}");
+    print("scrollPositionMessagesId.value: ${scrollPositionMessagesId.value}");
+
+    await chatHistoryRepo.updateChat(chatModel!.copyWith(
       lastReadMessageId: lastReadRemoteMessagesId.value,
       scrollPosition: scrollPositionMessagesId.value,
     ));
+
+    // await userPreferencesRepo.createOrUpdateUserPreferences(UserPreferences(
+    //   chatId: chatId,
+    //   lastReadMessageId: lastReadRemoteMessagesId.value,
+    //   scrollPosition: scrollPositionMessagesId.value,
+    // ));
   }
 }
