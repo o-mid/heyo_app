@@ -61,15 +61,14 @@ import '../data/usecases/update_message_usecase.dart';
 
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
-  final UserPreferencesAbstractRepo userPreferencesRepo;
   final MessagingConnectionController messagingConnection;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
 
-  MessagesController(
-      {required this.messagesRepo,
-      required this.messagingConnection,
-      required this.chatHistoryRepo,
-      required this.userPreferencesRepo});
+  MessagesController({
+    required this.messagesRepo,
+    required this.messagingConnection,
+    required this.chatHistoryRepo,
+  });
 
   final _globalMessageController = Get.find<GlobalMessageController>();
   double _keyboardHeight = 0;
@@ -97,7 +96,6 @@ class MessagesController extends GetxController {
   late String sessionId;
   late KeyboardVisibilityController keyboardController;
 
-  //late UserPreferences? userPreferences;
   late ChatModel? chatModel;
   final FocusNode textFocusNode = FocusNode();
 
@@ -155,7 +153,7 @@ class MessagesController extends GetxController {
 
   @override
   Future<void> onClose() async {
-    await _saveUserPreferences();
+    await _saveUserStates();
 
     // Todo: remove this when a global player is implemented
     Get.find<AudioMessageController>().player.stop();
@@ -903,22 +901,15 @@ class MessagesController extends GetxController {
               })
         });
 
-    // await userPreferencesRepo.getUserPreferencesById(chatId).then((value) async => {
-    //       userPreferences = value,
-    //       await messagesRepo.getMessages(chatId).then((value) => {
-    //             messages.value = value,
-    //           })
-    //     });
-
-    // of userPreferences is null, scroll to bottom
+    // of chatModel is null, scroll to bottom
     // eles scroll to last position
 
     if (chatModel != null) {
       print("scrolling to last position");
-      print("lastReadRemoteMessagesId.value ${chatModel!.scrollPosition.toString()}");
+
       lastReadRemoteMessagesId.value = chatModel!.lastReadMessageId;
       scrollPositionMessagesId.value = chatModel!.scrollPosition;
-      // await scrollToMessage(messageId: userPreferences!.scrollPosition);
+      // await scrollToMessage(messageId: chatModel!.scrollPosition);
       await jumpToMessage(messageId: chatModel!.scrollPosition);
       //isListLoaded.value = true;
     } else {
@@ -934,26 +925,6 @@ class MessagesController extends GetxController {
       // });
       isListLoaded.value = true;
     }
-
-    // if (userPreferences != null) {
-    //   lastReadRemoteMessagesId.value = userPreferences!.lastReadMessageId;
-    //   scrollPositionMessagesId.value = userPreferences!.scrollPosition;
-    //   // await scrollToMessage(messageId: userPreferences!.scrollPosition);
-    //   await jumpToMessage(messageId: userPreferences!.scrollPosition);
-    //   //isListLoaded.value = true;
-    // } else {
-    //   // uncomment the following lines if you want to add mock Messages
-    //   // and animate To the Bottom of list
-
-    //   // await _addMockMessages();
-    //   // WidgetsBinding.instance.scheduleFrameCallback((_) {
-    //   //   animateToBottom(
-    //   //     duration: TRANSITIONS.messagingPage_getAllMsgsDurtion,
-    //   //     curve: TRANSITIONS.messagingPage_getAllMsgscurve,
-    //   //   );
-    //   // });
-    //   isListLoaded.value = true;
-    // }
   }
 
 //TODO remove?
@@ -1472,20 +1443,14 @@ class MessagesController extends GetxController {
     }
   }
 
-  Future<void> _saveUserPreferences() async {
+  Future<void> _saveUserStates() async {
     // saves the last read message index in the user preferences repo
-    print("lastReadRemoteMessagesId.value: ${lastReadRemoteMessagesId.value}");
-    print("scrollPositionMessagesId.value: ${scrollPositionMessagesId.value}");
+    print("saving lastReadRemoteMessagesId.value: ${lastReadRemoteMessagesId.value}");
+    print("saving scrollPositionMessagesId.value: ${scrollPositionMessagesId.value}");
 
     await chatHistoryRepo.updateChat(chatModel!.copyWith(
       lastReadMessageId: lastReadRemoteMessagesId.value,
       scrollPosition: scrollPositionMessagesId.value,
     ));
-
-    // await userPreferencesRepo.createOrUpdateUserPreferences(UserPreferences(
-    //   chatId: chatId,
-    //   lastReadMessageId: lastReadRemoteMessagesId.value,
-    //   scrollPosition: scrollPositionMessagesId.value,
-    // ));
   }
 }
