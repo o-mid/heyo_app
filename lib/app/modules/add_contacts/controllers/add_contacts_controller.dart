@@ -3,6 +3,8 @@ import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_
 import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 
+import '../../new_chat/data/models/user_model.dart';
+
 class AddContactsController extends GetxController {
   late AddContactsViewArgumentsModel args;
   late RxString nickname;
@@ -25,7 +27,13 @@ class AddContactsController extends GetxController {
   }
 
   void addContact() {
-    contactRepository.addContact(UserContact(
-        coreId: args.user.walletAddress, nickname: nickname.value, icon: args.user.iconUrl));
+    contactRepository.addContact(UserModel(
+        coreId: args.user.walletAddress,
+        nickname: nickname.value,
+        iconUrl: args.user.iconUrl,
+        name: '',
+        walletAddress: args.user.walletAddress,
+        isContact: true,
+        chatModel: args.user.chatModel));
   }
 }

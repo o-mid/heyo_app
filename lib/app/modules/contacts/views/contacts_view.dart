@@ -63,28 +63,13 @@ class ContactsView extends GetView<ContactsController> {
   }
 
   Widget _buildContact(
-    UserContact contact,
+    UserModel contact,
   ) {
     return InkWell(
       onTap: () {
-        openUserPreviewBottomSheet(
-          UserModel(
-            name: contact.nickname,
-            iconUrl: contact.icon,
-            walletAddress: contact.coreId,
-            coreId: contact.coreId,
-            isContact: true,
-            chatModel: ChatModel(
-              name: contact.nickname,
-              icon: contact.icon,
-              id: contact.coreId,
-              coreId: contact.coreId,
-              lastMessage: "",
-              lastReadMessageId: "",
-              timestamp: DateTime.now(),
-            ),
-          ),
-        );
+        openUserPreviewBottomSheet(contact.copyWith(
+          isContact: true,
+        ));
       },
       borderRadius: BorderRadius.circular(8.r),
       child: Container(
@@ -92,7 +77,7 @@ class ContactsView extends GetView<ContactsController> {
         margin: EdgeInsets.symmetric(horizontal: 10.w),
         child: Row(
           children: [
-            CustomCircleAvatar(url: contact.icon, size: 40),
+            CustomCircleAvatar(url: contact.iconUrl, size: 40),
             CustomSizes.mediumSizedBoxWidth,
             Expanded(
               child: Column(

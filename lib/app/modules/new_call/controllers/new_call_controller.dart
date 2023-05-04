@@ -45,23 +45,7 @@ class NewCallController extends GetxController {
 
   void searchUsers(String query) async {
     //TODO icon and chatmodel should be filled with correct data
-    List<UserModel> searchedItems = (await contactRepository.search(query))
-        .map((userContact) => UserModel(
-            name: userContact.nickname,
-            iconUrl: userContact.icon,
-            walletAddress: userContact.coreId,
-            coreId: userContact.coreId,
-            isContact: true,
-            chatModel: ChatModel(
-              name: userContact.nickname,
-              icon: userContact.icon,
-              id: userContact.coreId,
-              coreId: userContact.coreId,
-              lastMessage: "",
-              lastReadMessageId: "",
-              timestamp: DateTime.now(),
-            )))
-        .toList();
+    List<UserModel> searchedItems = (await contactRepository.search(query)).toList();
 
     if (searchedItems.isEmpty) {
       String? currentUserCoreId = await accountInfo.getCoreId();

@@ -167,15 +167,7 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
 
   void searchUsers(String query) async {
     //TODO icon and chatmodel should be filled with correct data
-    List<UserModel> searchedItems = (await contactRepository.search(query))
-        .map((userContact) => UserModel(
-            name: userContact.nickname,
-            iconUrl: userContact.icon,
-            walletAddress: userContact.coreId,
-            coreId: userContact.coreId,
-            isContact: true,
-            chatModel: (nearbyUsers..shuffle()).first.chatModel))
-        .toList();
+    List<UserModel> searchedItems = (await contactRepository.search(query)).toList();
 
     if (searchedItems.isEmpty) {
       String? currentUserCoreId = await accountInfo.getCoreId();
