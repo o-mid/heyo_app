@@ -16,6 +16,7 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:get/get.dart';
 
 import '../../../../routes/app_pages.dart';
+import '../../../new_chat/widgets/user_preview_bottom_sheet.dart';
 
 class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MessagingAppBar({
@@ -94,64 +95,67 @@ class _DefaultAppBar extends StatelessWidget {
         ),
         CustomCircleAvatar(url: chat.icon, size: 32, isOnline: chat.isOnline),
         CustomSizes.smallSizedBoxWidth,
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  Text(
-                    chat.name,
-                    style: TEXTSTYLES.kButtonBasic.copyWith(
-                      color: COLORS.kWhiteColor,
-                      height: 1,
+        GestureDetector(
+          onTap: () => openUserPreviewBottomSheet(user: user),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    Text(
+                      chat.name,
+                      style: TEXTSTYLES.kButtonBasic.copyWith(
+                        color: COLORS.kWhiteColor,
+                        height: 1,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 5.w),
-                  if (chat.isVerified)
-                    Assets.svg.verified.svg(
-                      width: 12.w,
-                      height: 12.w,
-                      color: COLORS.kWhiteColor,
-                    ),
-                ],
-              ),
-            ),
-            if (chat.isOnline)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    LocaleKeys.MessagesPage_onlineVia.tr,
-                    style: TEXTSTYLES.kBodyTag.copyWith(
-                      color: COLORS.kWhiteColor,
-                      fontWeight: FONTS.Regular,
-                    ),
-                  ),
-                  SizedBox(width: 4.w),
-
-                  // Todo: show connection method correctly
-                  Icon(
-                    Icons.wifi,
-                    size: 12.w,
-                    color: COLORS.kWhiteColor,
-                  ),
-                  SizedBox(width: 4.w),
-                  Assets.svg.lunaConnection.svg(
-                    width: 10.w,
-                    height: 10.w,
-                  ),
-                ],
-              ),
-            if (!chat.isOnline)
-              Text(
-                LocaleKeys.offline.tr,
-                style: TEXTSTYLES.kBodyTag.copyWith(
-                  color: COLORS.kWhiteColor,
-                  fontWeight: FONTS.Regular,
+                    SizedBox(width: 5.w),
+                    if (chat.isVerified)
+                      Assets.svg.verified.svg(
+                        width: 12.w,
+                        height: 12.w,
+                        color: COLORS.kWhiteColor,
+                      ),
+                  ],
                 ),
               ),
-          ],
+              if (chat.isOnline)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      LocaleKeys.MessagesPage_onlineVia.tr,
+                      style: TEXTSTYLES.kBodyTag.copyWith(
+                        color: COLORS.kWhiteColor,
+                        fontWeight: FONTS.Regular,
+                      ),
+                    ),
+                    SizedBox(width: 4.w),
+
+                    // Todo: show connection method correctly
+                    Icon(
+                      Icons.wifi,
+                      size: 12.w,
+                      color: COLORS.kWhiteColor,
+                    ),
+                    SizedBox(width: 4.w),
+                    Assets.svg.lunaConnection.svg(
+                      width: 10.w,
+                      height: 10.w,
+                    ),
+                  ],
+                ),
+              if (!chat.isOnline)
+                Text(
+                  LocaleKeys.offline.tr,
+                  style: TEXTSTYLES.kBodyTag.copyWith(
+                    color: COLORS.kWhiteColor,
+                    fontWeight: FONTS.Regular,
+                  ),
+                ),
+            ],
+          ),
         ),
         const Spacer(),
         Row(

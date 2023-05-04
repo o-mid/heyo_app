@@ -19,7 +19,7 @@ import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../shared/widgets/curtom_circle_avatar.dart';
 import '../controllers/new_chat_controller.dart';
 
-void openUserPreviewBottomSheet(UserModel user) {
+void openUserPreviewBottomSheet({required UserModel user}) {
   Get.bottomSheet(
     enterBottomSheetDuration: TRANSITIONS.newChat_EnterBottomSheetDuration,
     exitBottomSheetDuration: TRANSITIONS.newChat_ExitBottomSheetDuration,
