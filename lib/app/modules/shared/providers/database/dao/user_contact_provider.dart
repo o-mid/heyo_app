@@ -2,6 +2,8 @@ import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
 import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
 
+import '../../../../new_chat/data/models/user_model.dart';
+
 class UserContactProvider {
   final AppDatabaseProvider appDatabaseProvider;
   UserContactProvider({required this.appDatabaseProvider});
@@ -15,11 +17,17 @@ class UserContactProvider {
   // singleton instance of an opened database.
   Future<Database> get _db async => await appDatabaseProvider.database;
 
-  Future insert(UserContact user) async {
-    await _userStore.add(await _db, user.toJson());
+  Future insert(UserModel user) async {
+    await _userStore.add(
+        await _db,
+        user
+            .copyWith(
+              isContact: true,
+            )
+            .toJson());
   }
 
-  Future update(UserContact user) async {
+  Future update(UserModel user) async {
     // For filtering by key (ID), RegEx, greater than, and many other criteria,
     // we use a Finder.
     final finder = Finder(filter: Filter.byKey(user.coreId));
@@ -30,7 +38,7 @@ class UserContactProvider {
     );
   }
 
-  Future delete(UserContact user) async {
+  Future delete(UserModel user) async {
     final finder = Finder(filter: Filter.byKey(user.coreId));
     await _userStore.delete(
       await _db,
@@ -38,10 +46,10 @@ class UserContactProvider {
     );
   }
 
-  Future<List<UserContact>> getAllSortedByName() async {
+  Future<List<UserModel>> getAllSortedByName() async {
     // Finder object can also sort data.
     final finder = Finder(sortOrders: [
-      SortOrder(UserContact.nicknameSerializedName),
+      SortOrder(UserModel.nicknameSerializedName),
     ]);
 
     final records = await _userStore.find(
@@ -50,6 +58,6 @@ class UserContactProvider {
     );
 
     // Making a List<User> out of List<RecordSnapshot>
-    return records.map((e) => UserContact.fromJson(e.value)).toList();
+    return records.map((e) => UserModel.fromJson(e.value)).toList();
   }
 }
