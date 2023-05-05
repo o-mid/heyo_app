@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
-import 'package:heyo/app/modules/new_chat/data/models/profile_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
@@ -40,8 +39,7 @@ class NewCallController extends GetxController {
 
   RxList<UserModel> searchSuggestions = <UserModel>[].obs;
 
-  final profile = ProfileModel(
-      name: "Sample", link: "https://heyo.core/m6ljkB4KJ", walletAddress: "CB75...684A");
+  final profileLink = "https://heyo.core/m6ljkB4KJ";
 
   void searchUsers(String query) async {
     //TODO icon and chatmodel should be filled with correct data
@@ -85,7 +83,7 @@ class NewCallController extends GetxController {
   }
 
   inviteBottomSheet() {
-    openInviteBottomSheet(profile);
+    openInviteBottomSheet(profileLink: profileLink);
   }
 
   handleScannedValue(String? barcodeValue) {

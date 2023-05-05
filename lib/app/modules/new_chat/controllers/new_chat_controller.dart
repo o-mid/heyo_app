@@ -10,7 +10,6 @@ import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../data/models/filter_model.dart';
-import '../data/models/profile_model.dart';
 import '../data/models/user_model.dart';
 import '../widgets/invite_bttom_sheet.dart';
 
@@ -69,7 +68,8 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
       //open the invite bottom sheet right after initializing
 
       if (args.openInviteBottomSheet) {
-        openInviteBottomSheet(profile);
+        // TODO: ADD correct profile Invite Links
+        openInviteBottomSheet(profileLink: profileLink);
       }
     }
     super.onReady();
@@ -81,10 +81,7 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
     inputController.dispose();
   }
 
-// Mock data for user profile
-  final profile = ProfileModel(
-      name: "Sample", link: "https://heyo.core/m6ljkB4KJ", walletAddress: "CB75...684A");
-
+  final String profileLink = "https://heyo.core/m6ljkB4KJ";
 // Mock data for the users
   final nearbyUsers = <UserModel>[
     UserModel(
