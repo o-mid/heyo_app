@@ -67,7 +67,11 @@ class MessagesController extends GetxController {
 
   MessagesController(
       {required this.messagesRepo,
-      required this.userPreferencesRepo});
+      required this.userPreferencesRepo}) {
+    _initMessagesArguments();
+    _initUiControllers();
+    _initMessagingConnection();
+  }
 
   late MessagingConnectionType connectionType;
 
@@ -106,12 +110,12 @@ class MessagesController extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
-    _initMessagesArguments();
-    _initUiControllers();
-
-    // Initialize messagingConnection instance of CommonMessagingController-inherited class depends on connection type
-    // Also included previous functionality of _initDataChannel()
-    _initMessagingConnection();
+    // _initMessagesArguments();
+    // _initUiControllers();
+    //
+    // // Initialize messagingConnection instance of CommonMessagingController-inherited class depends on connection type
+    // // Also included previous functionality of _initDataChannel()
+    // _initMessagingConnection();
 
     _getMessages();
     _initMessagesStream();
