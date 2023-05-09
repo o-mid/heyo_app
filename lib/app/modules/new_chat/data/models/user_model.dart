@@ -33,7 +33,7 @@ class UserModel {
   bool isOnline;
   bool isVerified;
   bool isBlocked;
-  ChatModel chatModel;
+  // ChatModel chatModel;
   bool isContact;
   String coreId;
 
@@ -46,7 +46,7 @@ class UserModel {
     this.isVerified = false,
     this.isBlocked = false,
     this.nickname = "",
-    required this.chatModel,
+    //   required this.chatModel,
     required this.coreId,
   });
 
@@ -57,7 +57,7 @@ class UserModel {
         nickname: json[nicknameSerializedName],
         isVerified: json[isVerifiedSerializedName],
         isContact: json[isContactSerializedName],
-        chatModel: ChatModel.fromJson(json[chatModelSerializedName]),
+//chatModel: ChatModel.fromJson(json[chatModelSerializedName]),
         isBlocked: json[isBlockedSerializedName],
         isOnline: json[isOnlineSerializedName],
         coreId: json[coreIdSerializedName],
@@ -70,7 +70,7 @@ class UserModel {
         nicknameSerializedName: nickname,
         isVerifiedSerializedName: isVerified,
         isContactSerializedName: isContact,
-        chatModelSerializedName: chatModel.toJson(),
+        //    chatModelSerializedName: chatModel.toJson(),
         isBlockedSerializedName: isBlocked,
         isOnlineSerializedName: isOnline,
         coreIdSerializedName: coreId,
@@ -83,7 +83,7 @@ class UserModel {
     String? nickname,
     bool? isOnline,
     bool? isVerified,
-    ChatModel? chatModel,
+    //  ChatModel? chatModel,
     bool? isContact,
     bool? isBlocked,
     String? coreId,
@@ -96,7 +96,7 @@ class UserModel {
       nickname: nickname ?? this.nickname,
       isOnline: isOnline ?? this.isOnline,
       isVerified: isVerified ?? this.isVerified,
-      chatModel: chatModel ?? this.chatModel,
+      //   chatModel: chatModel ?? this.chatModel,
       isContact: isContact ?? this.isContact,
       isBlocked: isBlocked ?? this.isBlocked,
       coreId: coreId ?? this.coreId,
