@@ -93,90 +93,38 @@ class CallsController extends GetxController {
       isVerified: true,
       walletAddress: "CB11${List.generate(11, (index) => index).join()}14AB",
       coreId: "CB11${List.generate(11, (index) => index).join()}14AB",
-      chatModel: ChatModel(
-        name: "Boiled Dealmaker",
-        coreId: "CB11${List.generate(11, (index) => index).join()}14AB",
-        icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
-        isVerified: true,
-        id: "CB11${List.generate(11, (index) => index).join()}14AB",
-        lastMessage: "",
-        lastReadMessageId: "",
-        timestamp: DateTime.now(),
-      ),
     );
     final uCrapps = UserModel(
       name: "Crapps Wallbanger",
       iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
       walletAddress: "CB11${List.generate(11, (index) => index).join()}49BB",
       coreId: "CB11${List.generate(11, (index) => index).join()}49BB",
-      chatModel: ChatModel(
-        name: "Crapps Wallbanger",
-        coreId: "CB11${List.generate(11, (index) => index).join()}49BB",
-        icon: "https://avatars.githubusercontent.com/u/2345136?v=4",
-        id: "CB11${List.generate(11, (index) => index).join()}49BB",
-        lastMessage: "",
-        lastReadMessageId: "",
-        timestamp: DateTime.now(),
-      ),
     );
     final uFancy = UserModel(
-        name: "Fancy Potato",
-        iconUrl: "https://avatars.githubusercontent.com/u/6644146?v=4",
-        walletAddress: "CB11${List.generate(11, (index) => index).join()}11FE",
-        coreId: "CB11${List.generate(11, (index) => index).join()}11FE",
-        chatModel: ChatModel(
-          name: "Fancy Potato",
-          coreId: "CB11${List.generate(11, (index) => index).join()}11FE",
-          icon: "https://avatars.githubusercontent.com/u/6644146?v=4",
-          id: "CB11${List.generate(11, (index) => index).join()}11FE",
-          lastMessage: "",
-          lastReadMessageId: "",
-          timestamp: DateTime.now(),
-        ));
+      name: "Fancy Potato",
+      iconUrl: "https://avatars.githubusercontent.com/u/6644146?v=4",
+      walletAddress: "CB11${List.generate(11, (index) => index).join()}11FE",
+      coreId: "CB11${List.generate(11, (index) => index).join()}11FE",
+    );
     final uOckerito = UserModel(
-        name: "Ockerito Fazola",
-        isVerified: true,
-        iconUrl: "https://avatars.githubusercontent.com/u/7844146?v=4",
-        walletAddress: "CB11${List.generate(11, (index) => index).join()}5A5D",
-        coreId: "CB11${List.generate(11, (index) => index).join()}5A5D",
-        chatModel: ChatModel(
-          name: "Ockerito Fazola",
-          icon: "https://avatars.githubusercontent.com/u/7844146?v=4",
-          id: "CB11${List.generate(11, (index) => index).join()}5A5D",
-          coreId: "CB11${List.generate(11, (index) => index).join()}5A5D",
-          isVerified: true,
-          lastMessage: "",
-          lastReadMessageId: "",
-          timestamp: DateTime.now(),
-        ));
+      name: "Ockerito Fazola",
+      isVerified: true,
+      iconUrl: "https://avatars.githubusercontent.com/u/7844146?v=4",
+      walletAddress: "CB11${List.generate(11, (index) => index).join()}5A5D",
+      coreId: "CB11${List.generate(11, (index) => index).join()}5A5D",
+    );
     final uUnchained = UserModel(
-        name: "Unchained Banana",
-        iconUrl: "https://avatars.githubusercontent.com/u/7847725?v=4",
-        walletAddress: "CB11${List.generate(11, (index) => index).join()}44AC",
-        coreId: "CB11${List.generate(11, (index) => index).join()}44AC",
-        chatModel: ChatModel(
-          name: "Unchained Banana",
-          icon: "https://avatars.githubusercontent.com/u/7847725?v=4",
-          id: "CB11${List.generate(11, (index) => index).join()}44AC",
-          coreId: "CB11${List.generate(11, (index) => index).join()}44AC",
-          lastMessage: "",
-          lastReadMessageId: "",
-          timestamp: DateTime.now(),
-        ));
+      name: "Unchained Banana",
+      iconUrl: "https://avatars.githubusercontent.com/u/7847725?v=4",
+      walletAddress: "CB11${List.generate(11, (index) => index).join()}44AC",
+      coreId: "CB11${List.generate(11, (index) => index).join()}44AC",
+    );
     final uSwagger = UserModel(
-        name: "Swagger Uncut",
-        iconUrl: "https://avatars.githubusercontent.com/u/9947725?v=4",
-        walletAddress: "CB11${List.generate(11, (index) => index).join()}532A",
-        coreId: "CB11${List.generate(11, (index) => index).join()}532A",
-        chatModel: ChatModel(
-          name: "Swagger Uncut",
-          icon: "https://avatars.githubusercontent.com/u/9947725?v=4",
-          id: "CB11${List.generate(11, (index) => index).join()}532A",
-          coreId: "CB11${List.generate(11, (index) => index).join()}532A",
-          lastReadMessageId: "",
-          lastMessage: "",
-          timestamp: DateTime.now(),
-        ));
+      name: "Swagger Uncut",
+      iconUrl: "https://avatars.githubusercontent.com/u/9947725?v=4",
+      walletAddress: "CB11${List.generate(11, (index) => index).join()}532A",
+      coreId: "CB11${List.generate(11, (index) => index).join()}532A",
+    );
     var index = 0;
     final calls = [
       CallModel(

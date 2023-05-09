@@ -176,19 +176,11 @@ class CallHistoryObserver extends GetxController {
 
   UserModel _getUserFromCoreId(String coreId) {
     return UserModel(
-        name: "Unknown",
-        iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
-        isVerified: true,
-        walletAddress: coreId,
-        coreId: coreId,
-        chatModel: ChatModel(
-          icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
-          id: coreId,
-          coreId: coreId,
-          lastMessage: '',
-          lastReadMessageId: "",
-          name: 'unknown',
-          timestamp: DateTime.now(),
-        ));
+      name: "Unknown",
+      iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
+      isVerified: true,
+      walletAddress: coreId,
+      coreId: coreId,
+    );
   }
 }

@@ -52,19 +52,11 @@ class NewCallController extends GetxController {
         //TODO update fields based on correct data
         searchSuggestions.value = [
           UserModel(
-              name: 'unknown',
-              iconUrl: getMockIconUrl(),
-              walletAddress: query,
-              coreId: query,
-              chatModel: ChatModel(
-                icon: getMockIconUrl(),
-                id: query,
-                coreId: query,
-                lastMessage: '',
-                lastReadMessageId: "",
-                name: 'unknown',
-                timestamp: DateTime.now(),
-              ))
+            name: 'unknown',
+            iconUrl: getMockIconUrl(),
+            walletAddress: query,
+            coreId: query,
+          )
         ];
       } else {
         searchSuggestions.value = [];

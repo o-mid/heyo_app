@@ -82,7 +82,6 @@ class _DefaultAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ChatModel chat = user.chatModel;
     return Row(
       children: [
         CircleIconButton(
@@ -93,7 +92,7 @@ class _DefaultAppBar extends StatelessWidget {
             color: COLORS.kWhiteColor,
           ),
         ),
-        CustomCircleAvatar(url: chat.icon, size: 32, isOnline: chat.isOnline),
+        CustomCircleAvatar(url: user.iconUrl, size: 32, isOnline: user.isOnline),
         CustomSizes.smallSizedBoxWidth,
         GestureDetector(
           onTap: () => openUserPreviewBottomSheet(user: user),
@@ -104,14 +103,14 @@ class _DefaultAppBar extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      chat.name,
+                      user.name,
                       style: TEXTSTYLES.kButtonBasic.copyWith(
                         color: COLORS.kWhiteColor,
                         height: 1,
                       ),
                     ),
                     SizedBox(width: 5.w),
-                    if (chat.isVerified)
+                    if (user.isVerified)
                       Assets.svg.verified.svg(
                         width: 12.w,
                         height: 12.w,
@@ -120,7 +119,7 @@ class _DefaultAppBar extends StatelessWidget {
                   ],
                 ),
               ),
-              if (chat.isOnline)
+              if (user.isOnline)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -146,7 +145,7 @@ class _DefaultAppBar extends StatelessWidget {
                     ),
                   ],
                 ),
-              if (!chat.isOnline)
+              if (!user.isOnline)
                 Text(
                   LocaleKeys.offline.tr,
                   style: TEXTSTYLES.kBodyTag.copyWith(
