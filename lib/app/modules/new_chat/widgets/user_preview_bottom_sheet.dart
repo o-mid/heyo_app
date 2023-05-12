@@ -56,7 +56,7 @@ void openUserPreviewBottomSheet({required UserModel user}) {
             children: [
               CircleIconButton(
                 onPressed: () {
-                  if (user.chatModel == null) {
+                  if (user.coreId.isEmpty) {
                     return;
                   } else {
                     Get.back();
@@ -65,15 +65,11 @@ void openUserPreviewBottomSheet({required UserModel user}) {
                       Routes.MESSAGES,
                       arguments: MessagesViewArgumentsModel(
                           user: user.copyWith(
-                        chatModel: user.chatModel.copyWith(
-                          id: user.walletAddress,
-                          icon: user.iconUrl,
-                          isOnline: true,
-                          isVerified: true,
-                          timestamp: DateTime.now(),
-                          name:
-                              "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}",
-                        ),
+                        isOnline: true,
+                        isVerified: true,
+                        name:
+                            "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}",
+                        coreId: user.walletAddress,
                       )),
                     );
                   }

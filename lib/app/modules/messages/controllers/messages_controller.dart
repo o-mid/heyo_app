@@ -923,6 +923,17 @@ class MessagesController extends GetxController {
       //     curve: TRANSITIONS.messagingPage_getAllMsgscurve,
       //   );
       // });
+      chatModel = ChatModel(
+        id: args.user.coreId,
+        coreId: args.user.coreId,
+        name: args.user.name,
+        icon: args.user.iconUrl,
+        lastMessage: messages.last.toString(),
+        timestamp: DateTime.now(),
+        isOnline: true,
+        isVerified: true,
+        lastReadMessageId: lastReadRemoteMessagesId.value,
+      );
       isListLoaded.value = true;
     }
   }
@@ -1448,9 +1459,15 @@ class MessagesController extends GetxController {
     print("saving lastReadRemoteMessagesId.value: ${lastReadRemoteMessagesId.value}");
     print("saving scrollPositionMessagesId.value: ${scrollPositionMessagesId.value}");
 
-    await chatHistoryRepo.updateChat(chatModel!.copyWith(
-      lastReadMessageId: lastReadRemoteMessagesId.value,
-      scrollPosition: scrollPositionMessagesId.value,
-    ));
+    await chatHistoryRepo.updateChat(
+      chatModel!.copyWith(
+          icon: args.user.iconUrl,
+          name: args.user.name,
+          lastReadMessageId: lastReadRemoteMessagesId.value,
+          scrollPosition: scrollPositionMessagesId.value,
+          lastMessage: messages.last.type == MessageContentType.text
+              ? (messages.last as TextMessageModel).text
+              : messages.last.type.name),
+    );
   }
 }

@@ -391,7 +391,6 @@ class MessagingConnectionController extends GetxController {
             walletAddress: session.cid,
             coreId: session.cid,
             isOnline: userChatModel!.isOnline,
-            chatModel: userChatModel!,
           ),
         ),
       );
