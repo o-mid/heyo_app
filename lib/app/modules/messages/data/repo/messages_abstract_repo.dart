@@ -26,4 +26,11 @@ abstract class MessagesAbstractRepo {
 
   /// returns unread messages of a certain chat with id of [chatId]
   Future<List<MessageModel?>> getUnReadMessages(String chatId);
+
+  /// returns unread messages count of a certain chat with id of [chatId]
+  Future<int> getUnReadMessagesCount(String chatId);
+
+  /// marks messages as read
+
+  Future<void> markMessagesAsRead({required String lastReadmessageId, required String chatId});
 }
