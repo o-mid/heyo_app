@@ -1,0 +1,89 @@
+import 'dart:convert';
+
+import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:heyo/app/modules/messaging/models.dart';
+import 'package:heyo/app/modules/messaging/web_rtc_connection_manager.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
+
+const MEDIA_TYPE = 'data';
+
+const COMMAND = 'multiple_connection';
+const DATA = 'data';
+
+const CANDIDATE_EVENT_TYPE = 'candidate';
+const connectionRequestEvent = 'offer';
+const ANSWER_EVENT_TYPE = 'answer';
+const DATA_DESCRIPTION = 'description';
+
+class SingleWebRTCConnection {
+  final P2PCommunicator p2pCommunicator;
+  final WebRTCConnectionManager webRTCConnectionManager;
+  final JsonEncoder _encoder = const JsonEncoder();
+  final JsonDecoder _decoder = const JsonDecoder();
+
+  SingleWebRTCConnection(
+      {required this.p2pCommunicator, required this.webRTCConnectionManager});
+
+  Future<RTCSession> _createRTCSession(String remoteCoreId, String? remotePeerId) async {
+    //SendWEBRTC
+    RTCPeerConnection peerConnection =
+        await webRTCConnectionManager.createRTCPeerConnection();
+    RTCSession rtcSession = RTCSession(
+        remotePeer: RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: remotePeerId));
+    rtcSession.pc = peerConnection;
+
+    webRTCConnectionManager.setListeners(null, rtcSession.pc!,
+        onIceCandidate: (candidate) => _sendCandidate(candidate, rtcSession),
+        onAddDataChannel: (dataChannel) => {rtcSession.dc = dataChannel});
+    return rtcSession;
+  }
+
+  Future<RTCSession> createSession(String remoteCoreId, String? remotePeerId) async {
+    return await _createRTCSession(remoteCoreId,remotePeerId);
+  }
+
+  Future<bool> startSession(RTCSession rtcSession) async {
+    RTCSessionDescription rtcSessionDescription =
+        await webRTCConnectionManager.setupUpOffer(rtcSession.pc!, MEDIA_TYPE);
+
+    return await _send(
+      connectionRequestEvent,
+      {
+        DATA_DESCRIPTION: {
+          'sdp': rtcSessionDescription.sdp,
+          'type': rtcSessionDescription.type
+        },
+        'media': MEDIA_TYPE,
+      },
+      rtcSession.remotePeer.remoteCoreId,
+      rtcSession.remotePeer.remotePeerId,
+    );
+  }
+
+  onRequestAccepted(){
+
+  }
+
+
+
+
+  Future<bool> _sendCandidate(
+      RTCIceCandidate candidate, RTCSession rtcSession) async {
+    return true;
+  }
+
+  Future<bool> _send(eventType, data, remoteCoreId, remotePeerId) async {
+    var request = {};
+    request["type"] = eventType;
+    request["data"] = data;
+    request["command"] = COMMAND;
+    print("P2PCommunicator: sendingSDP $remoteCoreId : $eventType");
+    bool requestSucceeded = await p2pCommunicator.sendSDP(
+        _encoder.convert(request), remoteCoreId, remotePeerId);
+    print(
+        "P2PCommunicator: sendingSDP $remoteCoreId : $eventType : $requestSucceeded");
+
+    return requestSucceeded;
+    //TODO could be implemented a logic for failed request
+  }
+}

@@ -12,6 +12,9 @@ import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abst
 import 'package:heyo/app/modules/messages/data/models/messages/confirm_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/delete_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/update_message_model.dart';
+import 'package:heyo/app/modules/messaging/models.dart';
+import 'package:heyo/app/modules/messaging/multiple_connections.dart';
+import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 import 'package:heyo/app/modules/messaging/usecases/send_data_channel_message_usecase.dart';
 import 'package:heyo/app/modules/messaging/messaging.dart';
 import 'package:heyo/app/modules/messaging/messaging_session.dart';
@@ -36,10 +39,15 @@ import '../usecases/handle_received_binary_data_usecase.dart';
 import '../utils/binary_file_receiving_state.dart';
 import '../utils/data_binary_message.dart';
 
-enum DataChannelConnectivityStatus { connectionLost, connecting, justConnected, online }
+enum DataChannelConnectivityStatus {
+  connectionLost,
+  connecting,
+  justConnected,
+  online
+}
 
 class MessagingConnectionController extends GetxController {
-  final Messaging messaging;
+  //final Messaging messaging;
   final MessagesAbstractRepo messagesRepo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final AccountInfo accountInfo;
@@ -47,16 +55,19 @@ class MessagingConnectionController extends GetxController {
 
   final JsonDecoder _decoder = const JsonDecoder();
 
+  final MultipleConnectionHandler multipleConnectionHandler;
   MessageSession? currentSession;
   Rx<ConnectionStatus?> connectionStatus = Rxn<ConnectionStatus>();
   Function(double progress, int totalSize)? statusUpdateCallback;
   Rx<DataChannelConnectivityStatus> dataChannelStatus =
       DataChannelConnectivityStatus.connecting.obs;
+
   MessagingConnectionController(
-      {required this.messaging,
+      {required this.multipleConnectionHandler,
       required this.accountInfo,
       required this.messagesRepo,
       required this.chatHistoryRepo});
+
   late RTCDataChannel _dataChannel;
 
   @override
@@ -65,9 +76,10 @@ class MessagingConnectionController extends GetxController {
 
     setDataChannel();
 
-    observeMessagingStatus();
+    //observeMessagingStatus();
   }
 
+/*
   void observeMessagingStatus() {
     messaging.onMessageStateChange = (session, status) async {
       connectionStatus.value = status;
@@ -104,16 +116,18 @@ class MessagingConnectionController extends GetxController {
       applyConnectivityStatus(status);
     };
   }
-
+*/
+/*
   channelMessageListener() {
     messaging.onDataChannelMessage = (session, dc, RTCDataChannelMessage data) async {
       data.isBinary
           ? handleDataChannelBinary(binaryData: data.binary, session: session)
           : handleDataChannelText(receivedjson: _decoder.convert(data.text), session: session);
     };
-  }
+  }*/
 
-  handleDataChannelBinary({required Uint8List binaryData, required MessageSession session}) async {
+  handleDataChannelBinary(
+      {required Uint8List binaryData, required MessageSession session}) async {
     var message = DataBinaryMessage.parse(binaryData);
     if (message.chunk.isNotEmpty) {
       if (currentState == null) {
@@ -121,7 +135,8 @@ class MessagingConnectionController extends GetxController {
         print('RECEIVER: New file transfer and State started');
       }
       currentState!.pendingMessages[message.chunkStart] = message;
-      await HandleReceivedBinaryData(messagesRepo: messagesRepo, chatId: session.cid)
+      await HandleReceivedBinaryData(
+              messagesRepo: messagesRepo, chatId: session.cid)
           .execute(state: currentState!);
     } else {
       // handle the acknowledge
@@ -132,12 +147,15 @@ class MessagingConnectionController extends GetxController {
   }
 
   handleDataChannelText(
-      {required Map<String, dynamic> receivedjson, required MessageSession session}) async {
-    DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(receivedjson);
+      {required Map<String, dynamic> receivedjson,
+      required MessageSession session}) async {
+    DataChannelMessageModel channelMessage =
+        DataChannelMessageModel.fromJson(receivedjson);
 
     switch (channelMessage.dataChannelMessagetype) {
       case DataChannelMessageType.message:
-        await saveReceivedMessage(receivedMessageJson: channelMessage.message, chatId: session.cid);
+        await saveReceivedMessage(
+            receivedMessageJson: channelMessage.message, chatId: session.cid);
         break;
 
       case DataChannelMessageType.delete:
@@ -159,7 +177,8 @@ class MessagingConnectionController extends GetxController {
   }
 
   Future<void> saveReceivedMessage(
-      {required Map<String, dynamic> receivedMessageJson, required String chatId}) async {
+      {required Map<String, dynamic> receivedMessageJson,
+      required String chatId}) async {
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
     await messagesRepo.createMessage(
         message: receivedMessage.copyWith(
@@ -169,19 +188,25 @@ class MessagingConnectionController extends GetxController {
         chatId: chatId);
 
     confirmMessageById(
-        messageId: receivedMessage.messageId, status: ConfirmMessageStatus.delivered);
+        messageId: receivedMessage.messageId,
+        status: ConfirmMessageStatus.delivered);
   }
 
   Future<void> deleteReceivedMessage(
-      {required Map<String, dynamic> receivedDeleteJson, required String chatId}) async {
-    DeleteMessageModel deleteMessage = DeleteMessageModel.fromJson(receivedDeleteJson);
+      {required Map<String, dynamic> receivedDeleteJson,
+      required String chatId}) async {
+    DeleteMessageModel deleteMessage =
+        DeleteMessageModel.fromJson(receivedDeleteJson);
 
-    await messagesRepo.deleteMessages(messageIds: deleteMessage.messageIds, chatId: chatId);
+    await messagesRepo.deleteMessages(
+        messageIds: deleteMessage.messageIds, chatId: chatId);
   }
 
   Future<void> updateReceivedMessage(
-      {required Map<String, dynamic> receivedUpdateJson, required String chatId}) async {
-    UpdateMessageModel updateMessage = UpdateMessageModel.fromJson(receivedUpdateJson);
+      {required Map<String, dynamic> receivedUpdateJson,
+      required String chatId}) async {
+    UpdateMessageModel updateMessage =
+        UpdateMessageModel.fromJson(receivedUpdateJson);
     // this will get the current Message form repo and if message Id is found it will be updated
     MessageModel? currentMessage = await messagesRepo.getMessageById(
         messageId: updateMessage.message.messageId, chatId: chatId);
@@ -205,25 +230,30 @@ class MessagingConnectionController extends GetxController {
   }
 
   Future<void> confirmReceivedMessage(
-      {required Map<String, dynamic> receivedconfirmJson, required String chatId}) async {
-    ConfirmMessageModel confirmMessage = ConfirmMessageModel.fromJson(receivedconfirmJson);
+      {required Map<String, dynamic> receivedconfirmJson,
+      required String chatId}) async {
+    ConfirmMessageModel confirmMessage =
+        ConfirmMessageModel.fromJson(receivedconfirmJson);
 
     final String messageId = confirmMessage.messageId;
 
     if (confirmMessage.status == ConfirmMessageStatus.delivered) {
-      MessageModel? currentMessage =
-          await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
+      MessageModel? currentMessage = await messagesRepo.getMessageById(
+          messageId: messageId, chatId: chatId);
 
       // check if message is found and update the Message status
       if (currentMessage != null) {
         if (currentMessage.status != MessageStatus.read) {
           await messagesRepo.updateMessage(
-              message: currentMessage.copyWith(status: MessageStatus.delivered), chatId: chatId);
+              message: currentMessage.copyWith(status: MessageStatus.delivered),
+              chatId: chatId);
         }
       }
     } else {
-      final List<MessageModel> messages = await messagesRepo.getMessages(chatId);
-      final index = messages.lastIndexWhere((element) => element.messageId == messageId);
+      final List<MessageModel> messages =
+          await messagesRepo.getMessages(chatId);
+      final index =
+          messages.lastIndexWhere((element) => element.messageId == messageId);
       // print(index);
       // if the message is found create a sublist of messages
       // that the status is not read and are from me
@@ -239,7 +269,8 @@ class MessagingConnectionController extends GetxController {
         // update the status of the messages that need to be update to read
         for (var item in messagesToUpdate) {
           await messagesRepo.updateMessage(
-              message: item.copyWith(status: MessageStatus.read), chatId: chatId);
+              message: item.copyWith(status: MessageStatus.read),
+              chatId: chatId);
         }
       }
     }
@@ -251,11 +282,11 @@ class MessagingConnectionController extends GetxController {
     // make the webrtc connection and set the session to current session
     String? selfCoreId = await accountInfo.getCoreId();
 
-    MessageSession session =
+    /*MessageSession session =
         await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
     currentSession = session;
 
-    await createUserChatModel(sessioncid: session.cid);
+    await createUserChatModel(sessioncid: session.cid);*/
   }
 
   void sendTextMessage({required String text}) async {
@@ -267,12 +298,13 @@ class MessagingConnectionController extends GetxController {
   }
 
   Future acceptMessageConnection(MessageSession session) async {
-    await messaging.accept(
+    /* await messaging.accept(
       session.sid,
-    );
+    );*/
   }
 
-  confirmMessageById({required String messageId, required ConfirmMessageStatus status}) async {
+  confirmMessageById(
+      {required String messageId, required ConfirmMessageStatus status}) async {
     Map<String, dynamic> confirmMessageJson =
         ConfirmMessageModel(messageId: messageId, status: status).toJson();
 
@@ -287,13 +319,14 @@ class MessagingConnectionController extends GetxController {
   }
 
   confirmReadMessages({required String messageId}) async {
-    await confirmMessageById(messageId: messageId, status: ConfirmMessageStatus.read);
+    await confirmMessageById(
+        messageId: messageId, status: ConfirmMessageStatus.read);
   }
 
   void setDataChannel() {
-    messaging.onDataChannel = (_, channel) {
+    /*  messaging.onDataChannel = (_, channel) {
       _dataChannel = channel;
-    };
+    };*/
   }
 
   createUserChatModel({required String sessioncid}) async {
@@ -315,20 +348,24 @@ class MessagingConnectionController extends GetxController {
   }
 
   initMessagingConnection({required String remoteId}) async {
+    multipleConnectionHandler.initiateSession(
+        await multipleConnectionHandler.getConnection(remoteId, null));
+
     //checks to see if we have the current session and if we are connected
-    bool isConnectionAvailable = connectionStatus.value == ConnectionStatus.CONNECTED ||
-        connectionStatus.value == ConnectionStatus.RINGING;
+    bool isConnectionAvailable =
+        connectionStatus.value == ConnectionStatus.CONNECTED ||
+            connectionStatus.value == ConnectionStatus.RINGING;
 
     if (currentSession?.cid != remoteId || isConnectionAvailable == false) {
       await startDataChannelMessaging(remoteId: remoteId);
     } else {
-      channelMessageListener();
+      //channelMessageListener();
     }
   }
 
   Future<void> messageReceiverSetup({required MessageSession session}) async {
     // await acceptMessageConnection(session);
-    channelMessageListener();
+    //channelMessageListener();
   }
 
   Future<void> startDataChannelMessaging({required String remoteId}) async {

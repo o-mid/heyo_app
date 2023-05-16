@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
+import 'package:heyo/app/modules/messaging/multiple_connections.dart';
+import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
@@ -14,10 +16,10 @@ class P2PNodeRequestStream {
   StreamSubscription<P2PReqResNodeModel?>? _nodeRequestSubscription;
   final P2PState p2pState;
   final Signaling signaling;
-  final Messaging messaging;
+  final MultipleConnectionHandler multipleConnectionHandler;
   final JsonDecoder _decoder = const JsonDecoder();
 
-  P2PNodeRequestStream({required this.p2pState, required this.signaling, required this.messaging});
+  P2PNodeRequestStream({required this.p2pState, required this.signaling, required this.multipleConnectionHandler});
 
   void setUp() {
     // listen to the events from the node side
@@ -75,8 +77,11 @@ class P2PNodeRequestStream {
 
     if (mapData['command'] == "call") {
       signaling.onMessage(mapData, remoteCoreId, remotePeerId);
-    } else {
-      messaging.onMessage(mapData, remoteCoreId, remotePeerId);
+    }if(mapData['command']=="multiple_connection") {
+
+    }
+    else {
+      multipleConnectionHandler.onRequestReceived(mapData, remoteCoreId, remotePeerId);
     }
   }
 }
