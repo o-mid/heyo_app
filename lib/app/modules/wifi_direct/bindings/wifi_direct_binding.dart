@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../../p2p_node/data/account/account_repo.dart';
 import '../../p2p_node/data/key/web3_keys.dart';
 import '../../shared/bindings/global_bindings.dart';
@@ -16,7 +17,7 @@ class WifiDirectBinding extends Bindings {
           cryptographyKeyGenerator: Web3Keys(web3client: GlobalBindings.web3Client),
         ),
         heyoWifiDirect: GlobalBindings.heyoWifiDirect,
-        wifiDirectConnectionController: GlobalBindings.wifiDirectConnectionController,
+        wifiDirectConnectionController: Get.find<WifiDirectConnectionController>(),
       ),
     );
   }
