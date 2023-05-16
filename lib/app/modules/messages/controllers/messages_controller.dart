@@ -340,6 +340,8 @@ class MessagesController extends GetxController {
 
   void toogleMessageReadStatus({required String messageId}) async {
     await messagingConnection.confirmReadMessages(messageId: messageId);
+
+    await messagesRepo.markMessagesAsRead(lastReadmessageId: messageId, chatId: chatId);
   }
 
   void toggleMessageSelection(String id) {
@@ -1458,7 +1460,7 @@ class MessagesController extends GetxController {
     // saves the last read message index in the user preferences repo
     print("saving lastReadRemoteMessagesId.value: ${lastReadRemoteMessagesId.value}");
     print("saving scrollPositionMessagesId.value: ${scrollPositionMessagesId.value}");
-
+    int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
     await chatHistoryRepo.updateChat(
       chatModel!.copyWith(
           icon: args.user.iconUrl,
@@ -1467,7 +1469,8 @@ class MessagesController extends GetxController {
           scrollPosition: scrollPositionMessagesId.value,
           lastMessage: messages.last.type == MessageContentType.text
               ? (messages.last as TextMessageModel).text
-              : messages.last.type.name),
+              : messages.last.type.name,
+          notificationCount: unReadMessagesCount),
     );
   }
 }

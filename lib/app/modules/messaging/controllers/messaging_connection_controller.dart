@@ -23,6 +23,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../chats/data/models/chat_model.dart';
 import '../../messages/data/models/messages/image_message_model.dart';
 import '../../messages/data/models/messages/message_model.dart';
+import '../../messages/data/models/messages/text_message_model.dart';
 import '../../messages/data/models/messages/video_message_model.dart';
 import '../../messages/data/models/reaction_model.dart';
 import '../../messages/data/repo/messages_abstract_repo.dart';
@@ -44,6 +45,7 @@ class MessagingConnectionController extends GetxController {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final AccountInfo accountInfo;
   BinaryFileReceivingState? currentState;
+  ChatModel? userChatmodel;
 
   final JsonDecoder _decoder = const JsonDecoder();
 
@@ -167,9 +169,27 @@ class MessagingConnectionController extends GetxController {
           status: MessageStatus.delivered,
         ),
         chatId: chatId);
-
     confirmMessageById(
         messageId: receivedMessage.messageId, status: ConfirmMessageStatus.delivered);
+    await updateChatRepo(receivedMessage: receivedMessage, chatId: chatId);
+  }
+
+  Future<void> updateChatRepo(
+      {required MessageModel receivedMessage, required String chatId}) async {
+    userChatmodel ??= await chatHistoryRepo.getChat(chatId);
+
+    int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
+
+    userChatmodel = userChatmodel?.copyWith(
+      lastMessage: receivedMessage.type == MessageContentType.text
+          ? (receivedMessage as TextMessageModel).text
+          : receivedMessage.type.name,
+      notificationCount: unReadMessagesCount,
+    );
+
+    if (userChatmodel != null) {
+      await chatHistoryRepo.updateChat(userChatmodel!);
+    }
   }
 
   Future<void> deleteReceivedMessage(
