@@ -10,11 +10,13 @@ class RemotePeer {
 class RTCSession {
   RTCSession({
     required this.remotePeer,
+    required this.onRenegotiationNeeded
   });
 
   RemotePeer remotePeer;
   MediaStream? stream;
   RTCPeerConnection? _pc;
+  Function() onRenegotiationNeeded;
 
   set pc(RTCPeerConnection? value) {
     _pc = value;
@@ -32,6 +34,9 @@ class RTCSession {
       if (isConnectionStable()) {
         _setPeerCandidates();
       }
+    };
+    pc!.onRenegotiationNeeded=(){
+      onRenegotiationNeeded();
     };
   }
 

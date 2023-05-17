@@ -6,6 +6,8 @@ import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_h
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
 import 'package:heyo/app/modules/messaging/messaging.dart';
+import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
+import 'package:heyo/app/modules/messaging/web_rtc_connection_manager.dart';
 import 'package:heyo/app/modules/shared/controllers/call_history_observer.dart';
 import 'package:heyo/app/modules/shared/controllers/connection_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
@@ -33,6 +35,7 @@ import '../../messages/data/provider/messages_provider.dart';
 import '../../messages/data/repo/messages_repo.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../utils/constants/web3client_constant.dart';
+import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 
 class GlobalBindings extends Bindings {
   // accountInfo
@@ -43,10 +46,16 @@ class GlobalBindings extends Bindings {
 
   // p2p related bindings
   static P2PState p2pState = P2PState();
+  static MultipleConnectionHandler multipleConnectionHandler = MultipleConnectionHandler(
+      singleWebRTCConnection: SingleWebRTCConnection(
+          p2pCommunicator: p2pCommunicator,
+          webRTCConnectionManager: WebRTCConnectionManager()));
   final P2PNodeRequestStream p2pNodeRequestStream =
-      P2PNodeRequestStream(p2pState: p2pState, signaling: signaling, messaging: messaging);
+  P2PNodeRequestStream(
+      p2pState: p2pState, signaling: signaling, multipleConnectionHandler: multipleConnectionHandler);
 
-  static P2PNodeResponseStream p2pNodeResponseStream = P2PNodeResponseStream(p2pState: p2pState);
+  static P2PNodeResponseStream p2pNodeResponseStream = P2PNodeResponseStream(
+      p2pState: p2pState);
 
   static Web3Client web3Client = Web3Client(
     WEB3CLIENT.url,
@@ -69,16 +78,19 @@ class GlobalBindings extends Bindings {
 // messaging related bindings
   static Messaging messaging = Messaging(p2pCommunicator: p2pCommunicator);
 
+
+
   static MessagingConnectionController messagingConnectionController =
-      MessagingConnectionController(
+  MessagingConnectionController(
     accountInfo: accountInfo,
-    messaging: messaging,
+    multipleConnectionHandler: multipleConnectionHandler,
     messagesRepo: MessagesRepo(
-      messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+      messagesProvider: MessagesProvider(
+          appDatabaseProvider: Get.find<AppDatabaseProvider>()),
     ),
     chatHistoryRepo: ChatHistoryLocalRepo(
       chatHistoryProvider:
-          ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+      ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
     ),
   );
 
@@ -106,7 +118,8 @@ class GlobalBindings extends Bindings {
       CallHistoryObserver(
         callHistoryRepo: CallHistoryRepo(
           callHistoryProvider:
-              CallHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          CallHistoryProvider(
+              appDatabaseProvider: Get.find<AppDatabaseProvider>()),
         ),
         callConnectionController: callConnectionController,
       ),
@@ -129,7 +142,8 @@ class GlobalBindings extends Bindings {
     Get.put(ChatsController(
       chatHistoryRepo: ChatHistoryLocalRepo(
         chatHistoryProvider:
-            ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+        ChatHistoryProvider(
+            appDatabaseProvider: Get.find<AppDatabaseProvider>()),
       ),
     ));
 

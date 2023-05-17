@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:get/get.dart';
 import 'package:heyo/app/modules/messaging/models.dart';
 import 'package:heyo/app/modules/messaging/web_rtc_connection_manager.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
@@ -10,9 +11,9 @@ const MEDIA_TYPE = 'data';
 const COMMAND = 'multiple_connection';
 const DATA = 'data';
 
-const CANDIDATE_EVENT_TYPE = 'candidate';
-const connectionRequestEvent = 'offer';
-const ANSWER_EVENT_TYPE = 'answer';
+const candidate = 'candidate';
+const offer = 'offer';
+const answer = 'answer';
 const DATA_DESCRIPTION = 'description';
 
 class SingleWebRTCConnection {
@@ -24,12 +25,17 @@ class SingleWebRTCConnection {
   SingleWebRTCConnection(
       {required this.p2pCommunicator, required this.webRTCConnectionManager});
 
-  Future<RTCSession> _createRTCSession(String remoteCoreId, String? remotePeerId) async {
+  Future<RTCSession> _createRTCSession(
+      String remoteCoreId, String? remotePeerId) async {
     //SendWEBRTC
     RTCPeerConnection peerConnection =
         await webRTCConnectionManager.createRTCPeerConnection();
     RTCSession rtcSession = RTCSession(
-        remotePeer: RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: remotePeerId));
+        remotePeer:
+            RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: remotePeerId),
+        onRenegotiationNeeded: () {
+          print("OnReneogtttionnn neeeded");
+        });
     rtcSession.pc = peerConnection;
 
     webRTCConnectionManager.setListeners(null, rtcSession.pc!,
@@ -38,8 +44,9 @@ class SingleWebRTCConnection {
     return rtcSession;
   }
 
-  Future<RTCSession> createSession(String remoteCoreId, String? remotePeerId) async {
-    return await _createRTCSession(remoteCoreId,remotePeerId);
+  Future<RTCSession> createSession(
+      String remoteCoreId, String? remotePeerId) async {
+    return await _createRTCSession(remoteCoreId, remotePeerId);
   }
 
   Future<bool> startSession(RTCSession rtcSession) async {
@@ -47,7 +54,7 @@ class SingleWebRTCConnection {
         await webRTCConnectionManager.setupUpOffer(rtcSession.pc!, MEDIA_TYPE);
 
     return await _send(
-      connectionRequestEvent,
+      offer,
       {
         DATA_DESCRIPTION: {
           'sdp': rtcSessionDescription.sdp,
@@ -60,15 +67,46 @@ class SingleWebRTCConnection {
     );
   }
 
-  onRequestAccepted(){
+  void onOfferReceived(RTCSession rtcSession, description) async {
+    await rtcSession.pc!.setRemoteDescription(
+        RTCSessionDescription(description['sdp'], description['type']));
+    RTCSessionDescription sessionDescription =
+        await webRTCConnectionManager.setupAnswer(rtcSession.pc!, MEDIA_TYPE);
 
+    var completed = await _send(
+        answer,
+        {
+          'description': {
+            'sdp': sessionDescription.sdp,
+            'type': sessionDescription.type
+          },
+        },
+        rtcSession.remotePeer.remoteCoreId,
+        rtcSession.remotePeer.remotePeerId);
   }
 
-
-
+  void onAnswerReceived(RTCSession rtcSession, description) async {
+    await rtcSession.pc!.setRemoteDescription(
+      RTCSessionDescription(
+        description['sdp'],
+        description['type'],
+      ),
+    );
+  }
 
   Future<bool> _sendCandidate(
       RTCIceCandidate candidate, RTCSession rtcSession) async {
+    _send(
+        candidate,
+        {
+          candidate: {
+            'sdpMLineIndex': candidate.sdpMLineIndex,
+            'sdpMid': candidate.sdpMid,
+            'candidate': candidate.candidate,
+          },
+        },
+        rtcSession.remotePeer.remoteCoreId,
+        rtcSession.remotePeer.remotePeerId);
     return true;
   }
 
@@ -84,6 +122,18 @@ class SingleWebRTCConnection {
         "P2PCommunicator: sendingSDP $remoteCoreId : $eventType : $requestSucceeded");
 
     return requestSucceeded;
-    //TODO could be implemented a logic for failed request
+  }
+
+  void onCandidateReceived(RTCSession rtcSession, candidateMap) async {
+    RTCIceCandidate candidate = RTCIceCandidate(
+      candidateMap['candidate'],
+      candidateMap['sdpMid'],
+      candidateMap['sdpMLineIndex'],
+    );
+    if (rtcSession.isConnectionStable()) {
+      await rtcSession.pc!.addCandidate(candidate);
+    } else {
+      rtcSession.remoteCandidates.add(candidate);
+    }
   }
 }

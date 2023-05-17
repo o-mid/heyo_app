@@ -78,10 +78,10 @@ class P2PNodeRequestStream {
     if (mapData['command'] == "call") {
       signaling.onMessage(mapData, remoteCoreId, remotePeerId);
     }if(mapData['command']=="multiple_connection") {
+      multipleConnectionHandler.onRequestReceived(mapData, remoteCoreId, remotePeerId);
 
     }
     else {
-      multipleConnectionHandler.onRequestReceived(mapData, remoteCoreId, remotePeerId);
     }
   }
 }
