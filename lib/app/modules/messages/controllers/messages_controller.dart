@@ -53,7 +53,6 @@ import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/messaging_session.dart';
 import '../../share_files/models/file_model.dart';
-import '../../shared/data/models/user_preferences.dart';
 import '../../shared/utils/constants/transitions_constant.dart';
 import '../../shared/utils/scroll_to_index.dart';
 import '../data/usecases/delete_message_usecase.dart';
@@ -1466,10 +1465,9 @@ class MessagesController extends GetxController {
           icon: args.user.iconUrl,
           name: args.user.name,
           lastReadMessageId: lastReadRemoteMessagesId.value,
+          isOnline: true,
           scrollPosition: scrollPositionMessagesId.value,
-          lastMessage: messages.last.type == MessageContentType.text
-              ? (messages.last as TextMessageModel).text
-              : messages.last.type.name,
+          lastMessage: messages.last.getMessagePreview(),
           notificationCount: unReadMessagesCount),
     );
   }

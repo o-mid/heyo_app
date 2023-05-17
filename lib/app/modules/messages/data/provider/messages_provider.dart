@@ -146,16 +146,26 @@ class MessagesProvider implements MessagesAbstractProvider {
   @override
   Future<void> markMessagesAsRead(
       {required String lastReadmessageId, required String chatId}) async {
+    // gets the index of the last read message in the list
+
     int lastReadmessageIdIndex =
         await _getMessageIndexById(messageId: lastReadmessageId, chatId: chatId);
+
+    // gets the list of all the messages that are currently unread
     List<MessageModel?> unReadMessages = await getUnReadMessages(chatId);
 
     if (unReadMessages.isNotEmpty) {
+      // checks for each unread message in the list
+      // if the index is before the last read message sets the status to read
       for (var element in unReadMessages) {
         if (await _getMessageIndexById(messageId: element!.messageId, chatId: chatId) <=
             lastReadmessageIdIndex) {
+          // sets the status to read
           await updateMessage(
-              message: element.copyWith(status: MessageStatus.read), chatId: chatId);
+              message: element.copyWith(
+                status: element.status.readStatus(),
+              ),
+              chatId: chatId);
         }
       }
     }

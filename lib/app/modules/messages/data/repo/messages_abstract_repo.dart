@@ -30,7 +30,6 @@ abstract class MessagesAbstractRepo {
   /// returns unread messages count of a certain chat with id of [chatId]
   Future<int> getUnReadMessagesCount(String chatId);
 
-  /// marks messages as read
-
+  /// update messages status before the specified last read message id to read
   Future<void> markMessagesAsRead({required String lastReadmessageId, required String chatId});
 }

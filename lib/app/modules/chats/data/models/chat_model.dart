@@ -27,7 +27,6 @@ class ChatModel {
 
   final String id;
   final String coreId;
-
   final String name;
   final String icon;
   final String lastMessage;

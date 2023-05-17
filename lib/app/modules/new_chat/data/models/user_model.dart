@@ -10,7 +10,6 @@ import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 /// | nickname             | String        | The nickname for the user.                                 | ""           |
 /// | isOnline             | bool          | Indicates if the user is currently online.                 | false        |
 /// | isVerified           | bool          | Indicates if the user is verified.                         | false        |
-/// | chatModel            |[ChatModel]    | The chat model associated with the user.                   | N/A          |
 /// | isContact            | bool          | Indicates if the user is a contact.                        | false        |
 /// |----------------------|---------------|----------------------------------------------------------|--------------|
 
@@ -33,7 +32,6 @@ class UserModel {
   bool isOnline;
   bool isVerified;
   bool isBlocked;
-  // ChatModel chatModel;
   bool isContact;
   String coreId;
 
@@ -46,7 +44,6 @@ class UserModel {
     this.isVerified = false,
     this.isBlocked = false,
     this.nickname = "",
-    //   required this.chatModel,
     required this.coreId,
   });
 
@@ -57,7 +54,6 @@ class UserModel {
         nickname: json[nicknameSerializedName],
         isVerified: json[isVerifiedSerializedName],
         isContact: json[isContactSerializedName],
-//chatModel: ChatModel.fromJson(json[chatModelSerializedName]),
         isBlocked: json[isBlockedSerializedName],
         isOnline: json[isOnlineSerializedName],
         coreId: json[coreIdSerializedName],
@@ -70,7 +66,6 @@ class UserModel {
         nicknameSerializedName: nickname,
         isVerifiedSerializedName: isVerified,
         isContactSerializedName: isContact,
-        //    chatModelSerializedName: chatModel.toJson(),
         isBlockedSerializedName: isBlocked,
         isOnlineSerializedName: isOnline,
         coreIdSerializedName: coreId,
@@ -83,7 +78,6 @@ class UserModel {
     String? nickname,
     bool? isOnline,
     bool? isVerified,
-    //  ChatModel? chatModel,
     bool? isContact,
     bool? isBlocked,
     String? coreId,
@@ -96,7 +90,6 @@ class UserModel {
       nickname: nickname ?? this.nickname,
       isOnline: isOnline ?? this.isOnline,
       isVerified: isVerified ?? this.isVerified,
-      //   chatModel: chatModel ?? this.chatModel,
       isContact: isContact ?? this.isContact,
       isBlocked: isBlocked ?? this.isBlocked,
       coreId: coreId ?? this.coreId,

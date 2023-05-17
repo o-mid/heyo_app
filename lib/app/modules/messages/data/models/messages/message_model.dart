@@ -1,3 +1,7 @@
+import "package:get/get.dart";
+import "package:heyo/app/modules/messages/data/models/messages/text_message_model.dart";
+import "package:heyo/app/modules/shared/utils/extensions/string.extension.dart";
+
 import "../reaction_model.dart";
 import "../reply_to_model.dart";
 
@@ -76,4 +80,22 @@ abstract class MessageModel {
   });
 
   Map<String, dynamic> toJson();
+}
+
+extension PreviewHelper on MessageModel {
+  String getMessagePreview() {
+    return type == MessageContentType.text
+        ? (this as TextMessageModel).text
+        : type.name.stringCapitalize();
+  }
+}
+
+extension UpdateStatus on MessageStatus {
+  MessageStatus readStatus() {
+    return MessageStatus.read;
+  }
+
+  MessageStatus deliveredStatus() {
+    return MessageStatus.delivered;
+  }
 }

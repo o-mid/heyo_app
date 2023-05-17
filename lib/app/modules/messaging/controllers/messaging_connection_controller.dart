@@ -139,7 +139,8 @@ class MessagingConnectionController extends GetxController {
 
     switch (channelMessage.dataChannelMessagetype) {
       case DataChannelMessageType.message:
-        await saveReceivedMessage(receivedMessageJson: channelMessage.message, chatId: session.cid);
+        await saveAndConfirmReceivedMessage(
+            receivedMessageJson: channelMessage.message, chatId: session.cid);
         break;
 
       case DataChannelMessageType.delete:
@@ -160,31 +161,40 @@ class MessagingConnectionController extends GetxController {
     }
   }
 
-  Future<void> saveReceivedMessage(
+  Future<void> saveAndConfirmReceivedMessage(
       {required Map<String, dynamic> receivedMessageJson, required String chatId}) async {
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
     await messagesRepo.createMessage(
         message: receivedMessage.copyWith(
           isFromMe: false,
-          status: MessageStatus.delivered,
+          status: receivedMessage.status.deliveredStatus(),
         ),
         chatId: chatId);
+
     confirmMessageById(
-        messageId: receivedMessage.messageId, status: ConfirmMessageStatus.delivered);
-    await updateChatRepo(receivedMessage: receivedMessage, chatId: chatId);
+      messageId: receivedMessage.messageId,
+      status: ConfirmMessageStatus.delivered,
+    );
+
+    await updateChatRepo(
+      receivedMessage: receivedMessage,
+      chatId: chatId,
+    );
   }
 
-  Future<void> updateChatRepo(
-      {required MessageModel receivedMessage, required String chatId}) async {
+  Future<void> updateChatRepo({
+    required MessageModel receivedMessage,
+    required String chatId,
+  }) async {
+    // checks if userChatmodel is null
     userChatmodel ??= await chatHistoryRepo.getChat(chatId);
 
     int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
 
     userChatmodel = userChatmodel?.copyWith(
-      lastMessage: receivedMessage.type == MessageContentType.text
-          ? (receivedMessage as TextMessageModel).text
-          : receivedMessage.type.name,
+      lastMessage: receivedMessage.getMessagePreview(),
       notificationCount: unReadMessagesCount,
+      isOnline: true,
     );
 
     if (userChatmodel != null) {
@@ -328,11 +338,17 @@ class MessagingConnectionController extends GetxController {
         lastReadMessageId: "",
         isVerified: true,
         timestamp: DateTime.now());
-    final isChatAvailable = await chatHistoryRepo.getChat(userChatModel.id);
-    if (isChatAvailable == null) {
+    final currentChatModel = await chatHistoryRepo.getChat(userChatModel.id);
+
+    if (currentChatModel == null) {
       await chatHistoryRepo.addChatToHistory(userChatModel);
     } else {
-      await chatHistoryRepo.updateChat(userChatModel);
+      await chatHistoryRepo.updateChat(userChatModel.copyWith(
+        lastMessage: currentChatModel.lastMessage,
+        lastReadMessageId: currentChatModel.lastReadMessageId,
+        notificationCount: currentChatModel.notificationCount,
+        isOnline: true,
+      ));
     }
   }
 
@@ -410,7 +426,7 @@ class MessagingConnectionController extends GetxController {
             name: userChatModel!.name,
             walletAddress: session.cid,
             coreId: session.cid,
-            isOnline: userChatModel!.isOnline,
+            isOnline: true,
           ),
         ),
       );
