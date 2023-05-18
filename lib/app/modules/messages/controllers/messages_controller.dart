@@ -52,6 +52,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/messaging_session.dart';
+import '../../new_chat/data/models/user_model.dart';
 import '../../share_files/models/file_model.dart';
 import '../../shared/utils/constants/transitions_constant.dart';
 import '../../shared/utils/scroll_to_index.dart';
@@ -96,6 +97,7 @@ class MessagesController extends GetxController {
   late KeyboardVisibilityController keyboardController;
 
   late ChatModel? chatModel;
+  late UserModel selfUserModel;
   final FocusNode textFocusNode = FocusNode();
 
   final isListLoaded = false.obs;
@@ -104,8 +106,9 @@ class MessagesController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
     args = Get.arguments as MessagesViewArgumentsModel;
-    //chatId = args.user.chatModel.id;
-    chatId = args.user.coreId;
+    selfUserModel = args.user;
+    //chatId = selfUserModel.chatModel.id;
+    chatId = selfUserModel.coreId;
     keyboardController = KeyboardVisibilityController();
 
     _globalMessageController.reset();
@@ -125,7 +128,7 @@ class MessagesController extends GetxController {
   }
 
   _initDataChannel() async {
-    await messagingConnection.initMessagingConnection(remoteId: args.user.walletAddress);
+    await messagingConnection.initMessagingConnection(remoteId: selfUserModel.walletAddress);
   }
 
   void initMessagesStream() async {
@@ -340,7 +343,17 @@ class MessagesController extends GetxController {
   void toogleMessageReadStatus({required String messageId}) async {
     await messagingConnection.confirmReadMessages(messageId: messageId);
 
-    await messagesRepo.markMessagesAsRead(lastReadmessageId: messageId, chatId: chatId);
+    await markMessagesAsReadById(
+      lastReadmessageId: messageId,
+    );
+  }
+
+  Future<void> markMessagesAsReadById({required String lastReadmessageId}) async {
+    await messagesRepo.markMessagesAsRead(lastReadmessageId: lastReadmessageId, chatId: chatId);
+  }
+
+  Future<void> markAllMessagesAsRead() async {
+    await messagesRepo.markAllMessagesAsRead(chatId: chatId);
   }
 
   void toggleMessageSelection(String id) {
@@ -635,7 +648,7 @@ class MessagesController extends GetxController {
     try {
       await openCameraForSendingMediaMessage(
         context,
-        receiverName: args.user.name,
+        receiverName: selfUserModel.name,
         onEntitySaving: (CameraPickerViewType viewType, File file) async {
           AssetEntity? entity;
 
@@ -925,10 +938,10 @@ class MessagesController extends GetxController {
       //   );
       // });
       chatModel = ChatModel(
-        id: args.user.coreId,
-        coreId: args.user.coreId,
-        name: args.user.name,
-        icon: args.user.iconUrl,
+        id: selfUserModel.coreId,
+        coreId: selfUserModel.coreId,
+        name: selfUserModel.name,
+        icon: selfUserModel.iconUrl,
         lastMessage: messages.last.toString(),
         timestamp: DateTime.now(),
         isOnline: true,
@@ -948,8 +961,8 @@ class MessagesController extends GetxController {
         messageId: "${index++}",
         text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
         timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 5)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
         chatId: "${index++}",
       ),
       TextMessageModel(
@@ -957,8 +970,8 @@ class MessagesController extends GetxController {
         text:
             "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
         timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 4)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
         chatId: "${index++}",
       ),
       TextMessageModel(
@@ -966,8 +979,8 @@ class MessagesController extends GetxController {
         text: " Nihil, incidunt!",
         chatId: "${index++}",
         timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 3)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       TextMessageModel(
         messageId: "${index++}",
@@ -997,8 +1010,8 @@ class MessagesController extends GetxController {
         chatId: "${index++}",
         text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
         timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 5)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
         status: MessageStatus.read,
       ),
       TextMessageModel(
@@ -1007,16 +1020,16 @@ class MessagesController extends GetxController {
         text:
             "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
         timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 4)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       TextMessageModel(
         messageId: "${index++}",
         chatId: "${index++}",
         text: " Nihil, incidunt!",
         timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 3)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       TextMessageModel(
         messageId: "${index++}",
@@ -1045,8 +1058,8 @@ class MessagesController extends GetxController {
         chatId: "${index++}",
         text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
         timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 5)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       TextMessageModel(
         messageId: "${index++}",
@@ -1054,16 +1067,16 @@ class MessagesController extends GetxController {
         text:
             "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
         timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 4)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       TextMessageModel(
         messageId: "${index++}",
         chatId: "${index++}",
         text: " Nihil, incidunt!",
         timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 3)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       TextMessageModel(
         messageId: "${index++}",
@@ -1090,8 +1103,8 @@ class MessagesController extends GetxController {
         chatId: "${index++}",
         text: "Sure thing. Just let me know when sth happens",
         timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 56)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
         reactions: {
           "🎉": ReactionModel(
             users: List.generate(12, (index) => ""),
@@ -1121,7 +1134,7 @@ class MessagesController extends GetxController {
         replyTo: ReplyToModel(
           repliedToMessageId: "${index - 2}",
           repliedToMessage: "Sure thing. Just let me know when sth happens",
-          repliedToName: args.user.name,
+          repliedToName: selfUserModel.name,
         ),
         isFromMe: true,
         status: MessageStatus.read,
@@ -1146,7 +1159,7 @@ class MessagesController extends GetxController {
           repliedToMessageId: "0",
           repliedToMessage:
               "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-          repliedToName: args.user.name,
+          repliedToName: selfUserModel.name,
         ),
         isFromMe: true,
         status: MessageStatus.read,
@@ -1179,8 +1192,8 @@ class MessagesController extends GetxController {
         metadata: AudioMetadata(durationInSeconds: 19),
         url: "https://download.samplelib.com/mp3/sample-15s.mp3",
         timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       LocationMessageModel(
         messageId: "${index++}",
@@ -1189,8 +1202,8 @@ class MessagesController extends GetxController {
         longitude: 17.129925,
         address: "Kocelova 11-11, 821 08, Bratislava",
         timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 44)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
 
       TextMessageModel(
@@ -1198,8 +1211,8 @@ class MessagesController extends GetxController {
         chatId: "${index++}",
         text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
         timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 5)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       TextMessageModel(
         messageId: "${index++}",
@@ -1207,16 +1220,16 @@ class MessagesController extends GetxController {
         text:
             "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
         timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 4)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       TextMessageModel(
         messageId: "${index++}",
         chatId: "${index++}",
         text: " Nihil, incidunt!",
         timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 3)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       TextMessageModel(
         messageId: "${index++}",
@@ -1246,8 +1259,8 @@ class MessagesController extends GetxController {
         chatId: "${index++}",
         text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
         timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 5)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
         status: MessageStatus.read,
       ),
       TextMessageModel(
@@ -1256,16 +1269,16 @@ class MessagesController extends GetxController {
         text:
             "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
         timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 4)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       TextMessageModel(
         messageId: "${index++}",
         chatId: "${index++}",
         text: " Nihil, incidunt!",
         timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 3)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       TextMessageModel(
         messageId: "${index++}",
@@ -1294,8 +1307,8 @@ class MessagesController extends GetxController {
         chatId: "${index++}",
         text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
         timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 5)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       TextMessageModel(
         messageId: "${index++}",
@@ -1303,16 +1316,16 @@ class MessagesController extends GetxController {
         text:
             "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
         timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 4)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       TextMessageModel(
         messageId: "${index++}",
         chatId: "${index++}",
         text: " Nihil, incidunt!",
         timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 3)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       TextMessageModel(
         messageId: "${index++}",
@@ -1339,8 +1352,8 @@ class MessagesController extends GetxController {
         chatId: "${index++}",
         text: "Sure thing. Just let me know when sth happens",
         timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 56)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
         reactions: {
           "🎉": ReactionModel(
             users: List.generate(12, (index) => ""),
@@ -1367,8 +1380,8 @@ class MessagesController extends GetxController {
         longitude: 51.2925217,
         endTime: DateTime.now().subtract(const Duration(minutes: 40)),
         timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 42)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
 
       CallMessageModel(
@@ -1377,8 +1390,8 @@ class MessagesController extends GetxController {
         callStatus: CallMessageStatus.declined,
         callType: CallMessageType.video,
         timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       CallMessageModel(
         messageId: "${index++}",
@@ -1386,16 +1399,16 @@ class MessagesController extends GetxController {
         callStatus: CallMessageStatus.missed,
         callType: CallMessageType.audio,
         timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       TextMessageModel(
         messageId: "${index++}",
         chatId: "${index++}",
         text: " Nihil, incidunt!",
         timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 3)),
-        senderName: args.user.name,
-        senderAvatar: args.user.iconUrl,
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
       ),
       TextMessageModel(
         messageId: "${index++}",
@@ -1462,8 +1475,8 @@ class MessagesController extends GetxController {
     int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
     await chatHistoryRepo.updateChat(
       chatModel!.copyWith(
-          icon: args.user.iconUrl,
-          name: args.user.name,
+          icon: selfUserModel.iconUrl,
+          name: selfUserModel.name,
           lastReadMessageId: lastReadRemoteMessagesId.value,
           isOnline: true,
           scrollPosition: scrollPositionMessagesId.value,

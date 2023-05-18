@@ -61,6 +61,7 @@ class ChatsView extends GetView<ChatsController> {
                         iconUrl: chats[index].icon,
                         walletAddress: chats[index].id,
                         coreId: chats[index].id,
+                        isOnline: true,
                       ),
                     ),
                   );

@@ -57,4 +57,9 @@ class MessagesRepo implements MessagesAbstractRepo {
     return messagesProvider.markMessagesAsRead(
         lastReadmessageId: lastReadmessageId, chatId: chatId);
   }
+
+  @override
+  Future<void> markAllMessagesAsRead({required String chatId}) {
+    return messagesProvider.markAllMessagesAsRead(chatId: chatId);
+  }
 }

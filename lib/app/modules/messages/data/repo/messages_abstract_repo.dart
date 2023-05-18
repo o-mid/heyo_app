@@ -32,4 +32,7 @@ abstract class MessagesAbstractRepo {
 
   /// update messages status before the specified last read message id to read
   Future<void> markMessagesAsRead({required String lastReadmessageId, required String chatId});
+
+  /// update all messages status to read
+  Future<void> markAllMessagesAsRead({required String chatId});
 }
