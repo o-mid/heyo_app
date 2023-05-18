@@ -63,8 +63,8 @@ class ContactsView extends GetView<ContactsController> {
   }
 
   Widget _buildContact(
-    UserContact contact,
-  ) {
+      UserContact contact,
+      ) {
     return InkWell(
       onTap: () {
         openUserPreviewBottomSheet(

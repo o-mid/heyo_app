@@ -16,6 +16,7 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:get/get.dart';
 
 import '../../../../routes/app_pages.dart';
+import '../../../shared/data/models/messages_view_arguments_model.dart';
 
 class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MessagingAppBar({
@@ -81,6 +82,8 @@ class _DefaultAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<MessagesController>();
+
     final ChatModel chat = user.chatModel;
     return Row(
       children: [
@@ -120,6 +123,7 @@ class _DefaultAppBar extends StatelessWidget {
             if (chat.isOnline)
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     LocaleKeys.MessagesPage_onlineVia.tr,
@@ -129,18 +133,18 @@ class _DefaultAppBar extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 4.w),
-
-                  // Todo: show connection method correctly
-                  Icon(
-                    Icons.wifi,
-                    size: 12.w,
-                    color: COLORS.kWhiteColor,
-                  ),
-                  SizedBox(width: 4.w),
-                  Assets.svg.lunaConnection.svg(
-                    width: 10.w,
-                    height: 10.w,
-                  ),
+                  controller.connectionType == MessagingConnectionType.internet
+                      ? Icon(
+                          Icons.wifi,
+                          size: 12.w,
+                          color: COLORS.kWhiteColor,
+                        )
+                      : Assets.svg.wifiDirectIcon.svg(
+                          height: 10.w,
+                          fit: BoxFit.contain,
+                          alignment: Alignment.center,
+                          color: COLORS.kWhiteColor,
+                        ),
                 ],
               ),
             if (!chat.isOnline)

@@ -420,6 +420,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/wallet.svg
   SvgGenImage get wallet => const SvgGenImage('assets/svg/wallet.svg');
 
+  /// File path: assets/svg/wifi_direct_icon.svg
+  SvgGenImage get wifiDirectIcon =>
+      const SvgGenImage('assets/svg/wifi_direct_icon.svg');
+
   /// List of all assets
   List<SvgGenImage> get values => [
         account,
@@ -452,7 +456,6 @@ class $AssetsSvgGen {
         doubleTickIcon,
         editIcon,
         emojiIcon,
-        failedIcon,
         fileIcon,
         filterIcon,
         folderIcon,
@@ -510,7 +513,8 @@ class $AssetsSvgGen {
         videoCallIcon,
         videoDisabled,
         volumeUp,
-        wallet
+        wallet,
+        wifiDirectIcon
       ];
 }
 

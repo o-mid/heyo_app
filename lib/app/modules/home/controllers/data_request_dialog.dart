@@ -12,6 +12,12 @@ void dataRequestDialog(BuildContext context) {
       children: [
         ListTile(
           onTap: () {
+            Get.toNamed(Routes.WIFI_DIRECT);
+          },
+          title: const Text("Wifi Direct"),
+        ),
+        ListTile(
+          onTap: () {
             Get.toNamed(Routes.SHREABLE_QR);
           },
           title: const Text("Share Info"),

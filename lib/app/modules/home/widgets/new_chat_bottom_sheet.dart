@@ -140,6 +140,37 @@ void openNewChatBottomSheet() {
               ],
             ),
           ),
+          TextButton(
+            onPressed: () => Get.toNamed(
+              Routes.WIFI_DIRECT,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: COLORS.kBrightBlueColor,
+                  ),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    child: Assets.svg.wifiDirectIcon.svg(
+                      width: 20.w,
+                      fit: BoxFit.fitWidth,
+                      color: COLORS.kDarkBlueColor,
+                    ),
+                  ),
+                ),
+                CustomSizes.mediumSizedBoxWidth,
+                Text(
+                  LocaleKeys.HomePage_bottomSheet_wifiDirect.tr,
+                  style: TEXTSTYLES.kBodyBasic.copyWith(
+                    color: COLORS.kDarkBlueColor,
+                  ),
+                )
+              ],
+            ),
+          ),
         ],
       ),
     ),

@@ -15,13 +15,14 @@ import '../../messages/data/models/messages/video_message_model.dart';
 import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/data/usecases/cofirm_message_usecase.dart';
 import '../../messages/utils/message_from_json.dart';
+import '../controllers/common_messaging_controller.dart';
 import '../controllers/messaging_connection_controller.dart';
 import '../utils/binary_file_receiving_state.dart';
 
 class HandleReceivedBinaryData {
   final MessagesAbstractRepo messagesRepo;
-  final MessagingConnectionController messagingConnection =
-      Get.find<MessagingConnectionController>();
+  final CommonMessagingConnectionController messagingConnection =
+      Get.find<CommonMessagingConnectionController>();
 
   final String chatId;
 
