@@ -32,44 +32,12 @@ class WebRTCConnectionManager{
 
   WebRTCConnectionManager();
 
-  void addListeners(
-      RTCPeerConnection pc,
-      String media, {
-        Function(RTCDataChannel dataChannel)? onAddDataChannelStage,
-        Function(MediaStream mediaStream)? onAddRemoteStreamStage,
-        Function(RTCPeerConnection peerConnection)? onAddTrackStage,
-        Function(RTCPeerConnectionState connectionState)?
-        onConnectionStateChangeStage,
-        Future Function(RTCIceCandidate candidate)? onIceCandidate,
-      }) {
-    if (media != 'data') {
-      onAddTrackStage?.call(pc);
-    }
-    // if (!initiator) {
-    if (media != 'data') {
-      pc.onTrack = (event) {
-        if (event.track.kind == 'video') {
-          onAddRemoteStreamStage?.call(event.streams[0]);
-        }
-      };
-    }
-    pc.onIceCandidate = (candidate) => onIceCandidate?.call(candidate);
-    pc.onDataChannel = (channel) {
-      onAddDataChannelStage?.call(channel);
-    };
-    pc.onConnectionState = (state) => onConnectionStateChangeStage?.call(state);
-    pc.onIceGatheringState = (RTCIceGatheringState state) {
-      print("On ICE gathering state changed => ${state}");
-    };
-    pc.onIceConnectionState = (RTCIceConnectionState state) {
-      print("On ICE connection state changed => ${state}");
-    };
-  }
+
 
   void setListeners(
-      MediaStream? localStream,
+    //  MediaStream? localStream,
       RTCPeerConnection pc, {
-        Function(RTCDataChannel dataChannel)? onAddDataChannel,
+       // Function(RTCDataChannel dataChannel)? onAddDataChannel,
      //   Function(MediaStream mediaStream)? onAddRemoteStream,
       //  Function(RTCPeerConnectionState connectionState)?,
         //onConnectionStateChangeStage,
@@ -87,15 +55,15 @@ class WebRTCConnectionManager{
         print("DEBUG race : Muted ${event.track.kind} --- ${event.track.id}");
       };
     };*/
-    localStream?.getTracks().forEach((track) {
+   /* localStream?.getTracks().forEach((track) {
       print("DEBUG race : Add track to localStream $track : ${track.id} : ${track.kind}");
       pc.addTrack(track, localStream);
-    });
+    });*/
 
     pc.onIceCandidate = (candidate) => onIceCandidate?.call(candidate);
-    pc.onDataChannel = (channel) {
+   /* pc.onDataChannel = (channel) {
       onAddDataChannel?.call(channel);
-    };
+    };*/
  //   pc.onConnectionState = (state) => onConnectionStateChangeStage?.call(state);
     pc.onIceGatheringState = (RTCIceGatheringState state) {
       print("On ICE gathering state changed => ${state}");

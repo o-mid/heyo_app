@@ -348,8 +348,11 @@ class MessagingConnectionController extends GetxController {
   }
 
   initMessagingConnection({required String remoteId}) async {
-    multipleConnectionHandler.initiateSession(
-        await multipleConnectionHandler.getConnection(remoteId, null));
+    RTCSession rtcSession =
+        await multipleConnectionHandler.getConnection(remoteId, null);
+    if (!rtcSession.isDataChannelConnectionAvailable) {
+      multipleConnectionHandler.initiateSession(rtcSession);
+    }
 
     //checks to see if we have the current session and if we are connected
     bool isConnectionAvailable =

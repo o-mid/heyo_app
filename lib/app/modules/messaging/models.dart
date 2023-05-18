@@ -8,12 +8,13 @@ class RemotePeer {
 }
 
 class RTCSession {
-  RTCSession({
-    required this.remotePeer});
+  RTCSession({required this.remotePeer});
 
   RemotePeer remotePeer;
   MediaStream? stream;
   RTCPeerConnection? _pc;
+  bool isDataChannelConnectionAvailable = false;
+
   //Function() onRenegotiationNeeded;
 
   set pc(RTCPeerConnection? value) {
@@ -33,11 +34,18 @@ class RTCSession {
         _setPeerCandidates();
       }
     };
-    pc!.onRenegotiationNeeded=(){
-     // onRenegotiationNeeded();
+    pc!.onRenegotiationNeeded = () {
+      // onRenegotiationNeeded();
     };
-    pc!.onSignalingState=(state){
+    pc!.onSignalingState = (state) {
       print("state for ${remotePeer.remoteCoreId} : $state");
+    };
+    pc!.onDataChannel = (channel) {
+      dc = channel;
+    };
+    dc?.onDataChannelState = (state) {
+      isDataChannelConnectionAvailable =
+          (state == RTCDataChannelState.RTCDataChannelOpen);
     };
   }
 

@@ -35,9 +35,8 @@ class SingleWebRTCConnection {
             RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: remotePeerId));
     rtcSession.pc = peerConnection;
 
-    webRTCConnectionManager.setListeners(null, rtcSession.pc!,
-        onIceCandidate: (candidate) => _sendCandidate(candidate, rtcSession),
-        onAddDataChannel: (dataChannel) => {rtcSession.dc = dataChannel});
+    webRTCConnectionManager.setListeners( rtcSession.pc!,
+        onIceCandidate: (candidate) => _sendCandidate(candidate, rtcSession));
     return rtcSession;
   }
 
