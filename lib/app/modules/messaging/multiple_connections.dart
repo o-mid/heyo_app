@@ -14,6 +14,7 @@ class MultipleConnectionHandler {
     if (connections[remoteCoreId] == null) {
       return await _createSession(remoteCoreId, null);
     } else {
+
       (connections[remoteCoreId]!.remotePeer.remotePeerId == null)
           ? connections[remoteCoreId]!.remotePeer.remotePeerId = remotePeerId
           : {};
@@ -50,7 +51,7 @@ class MultipleConnectionHandler {
       case answer:
         {
           RTCSession rtcSession =
-              await getConnection(remotePeerId, remotePeerId);
+              await getConnection(remoteCoreId, remotePeerId);
           var description = data[DATA_DESCRIPTION];
           singleWebRTCConnection.onAnswerReceived(rtcSession, description);
         }

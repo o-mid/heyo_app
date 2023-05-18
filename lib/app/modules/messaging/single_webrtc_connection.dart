@@ -32,10 +32,7 @@ class SingleWebRTCConnection {
         await webRTCConnectionManager.createRTCPeerConnection();
     RTCSession rtcSession = RTCSession(
         remotePeer:
-            RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: remotePeerId),
-        onRenegotiationNeeded: () {
-          print("OnReneogtttionnn neeeded");
-        });
+            RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: remotePeerId));
     rtcSession.pc = peerConnection;
 
     webRTCConnectionManager.setListeners(null, rtcSession.pc!,
@@ -94,9 +91,9 @@ class SingleWebRTCConnection {
     );
   }
 
-  Future<bool> _sendCandidate(
-      RTCIceCandidate candidate, RTCSession rtcSession) async {
-    _send(
+   _sendCandidate(
+      RTCIceCandidate candidate, RTCSession rtcSession)  {
+     _send(
         candidate,
         {
           candidate: {
@@ -107,7 +104,6 @@ class SingleWebRTCConnection {
         },
         rtcSession.remotePeer.remoteCoreId,
         rtcSession.remotePeer.remotePeerId);
-    return true;
   }
 
   Future<bool> _send(eventType, data, remoteCoreId, remotePeerId) async {

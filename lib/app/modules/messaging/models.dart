@@ -9,14 +9,12 @@ class RemotePeer {
 
 class RTCSession {
   RTCSession({
-    required this.remotePeer,
-    required this.onRenegotiationNeeded
-  });
+    required this.remotePeer});
 
   RemotePeer remotePeer;
   MediaStream? stream;
   RTCPeerConnection? _pc;
-  Function() onRenegotiationNeeded;
+  //Function() onRenegotiationNeeded;
 
   set pc(RTCPeerConnection? value) {
     _pc = value;
@@ -36,7 +34,10 @@ class RTCSession {
       }
     };
     pc!.onRenegotiationNeeded=(){
-      onRenegotiationNeeded();
+     // onRenegotiationNeeded();
+    };
+    pc!.onSignalingState=(state){
+      print("state for ${remotePeer.remoteCoreId} : $state");
     };
   }
 
