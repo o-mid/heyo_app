@@ -6,6 +6,7 @@ import 'package:heyo/app/modules/messages/data/models/metadatas/image_metadata.d
 import 'package:heyo/app/modules/messages/data/models/metadatas/video_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
+import 'package:heyo/app/modules/messaging/controllers/common_messaging_controller.dart';
 import 'package:tuple/tuple.dart';
 import '../../../messaging/controllers/messaging_connection_controller.dart';
 import '../../../messaging/usecases/send_data_channel_message_usecase.dart';
@@ -20,8 +21,8 @@ class SendMessage {
       appDatabaseProvider: Get.find(),
     ),
   );
-  final MessagingConnectionController messagingConnection =
-      Get.find<MessagingConnectionController>();
+  final CommonMessagingConnectionController messagingConnection =
+      Get.find<CommonMessagingConnectionController>();
 
   execute({
     required SendMessageType sendMessageType,

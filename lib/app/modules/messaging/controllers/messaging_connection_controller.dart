@@ -12,9 +12,6 @@ import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abst
 import 'package:heyo/app/modules/messages/data/models/messages/confirm_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/delete_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/update_message_model.dart';
-import 'package:heyo/app/modules/messaging/models.dart';
-import 'package:heyo/app/modules/messaging/multiple_connections.dart';
-import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 import 'package:heyo/app/modules/messaging/usecases/send_data_channel_message_usecase.dart';
 import 'package:heyo/app/modules/messaging/messaging.dart';
 import 'package:heyo/app/modules/messaging/messaging_session.dart';
@@ -38,351 +35,187 @@ import '../models/data_channel_message_model.dart';
 import '../usecases/handle_received_binary_data_usecase.dart';
 import '../utils/binary_file_receiving_state.dart';
 import '../utils/data_binary_message.dart';
+import 'common_messaging_controller.dart';
 
-enum DataChannelConnectivityStatus {
-  connectionLost,
-  connecting,
-  justConnected,
-  online
-}
+/// Provides connection establishing and messaging interface for internet connection.
+/// This class, like WifiDirectConnectionController, inherits from the CommonMessagingConnectionController.
+/// Connection and messaging methods are implemented separately for different connection way,
+/// and when messaging initiated, we'll use MessagingConnectionController class instance for regular Internet connection.
 
-class MessagingConnectionController extends GetxController {
-  //final Messaging messaging;
-  final MessagesAbstractRepo messagesRepo;
-  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
-  final AccountInfo accountInfo;
-  BinaryFileReceivingState? currentState;
+class MessagingConnectionController extends CommonMessagingConnectionController {
+  final Messaging messaging;
+
 
   final JsonDecoder _decoder = const JsonDecoder();
 
-  final MultipleConnectionHandler multipleConnectionHandler;
   MessageSession? currentSession;
   Rx<ConnectionStatus?> connectionStatus = Rxn<ConnectionStatus>();
   Function(double progress, int totalSize)? statusUpdateCallback;
-  Rx<DataChannelConnectivityStatus> dataChannelStatus =
-      DataChannelConnectivityStatus.connecting.obs;
-
-  MessagingConnectionController(
-      {required this.multipleConnectionHandler,
-      required this.accountInfo,
-      required this.messagesRepo,
-      required this.chatHistoryRepo});
 
   late RTCDataChannel _dataChannel;
 
+  MessagingConnectionController({
+    required this.messaging,
+    required super.accountInfo,
+    required super.messagesRepo,
+    required super.chatHistoryRepo,
+  });
+
+  //+ remains from previous version
   @override
   void onInit() {
     super.onInit();
 
-    setDataChannel();
+    // set the value _dataChannel from messaging.dataChannel instance
+    _setDataChannel();
 
-    //observeMessagingStatus();
+    // observe the messaging status and set the connectionStatus value and currentSession
+    // value base on the changes on messaging.onMessageState
+    _observeMessagingStatus();
   }
 
-/*
-  void observeMessagingStatus() {
+  //+ This method remains from previous version, it's declared in the parent CommonMessagingConnectionController, implemented here.
+  @override
+  Future<void> initMessagingConnection({required String remoteId}) async {
+    //checks to see if we have the current session and if we are connected
+    bool isConnectionAvailable = connectionStatus.value == ConnectionStatus.CONNECTED ||
+        connectionStatus.value == ConnectionStatus.RINGING;
+
+    // if we dont have the current session with the remote id or the connection is not available
+    // we start a new connection
+    if (currentSession?.cid != remoteId || isConnectionAvailable == false) {
+      await _startDataChannelMessaging(remoteId: remoteId);
+    } else {
+      _channelMessageListener();
+    }
+  }
+
+  //+ This method remains from previous version, it's declared in the parent CommonMessagingConnectionController, implemented here.
+  @override
+  Future<void> sendTextMessage({required String text}) async {
+    await _dataChannel.send(RTCDataChannelMessage(text));
+  }
+
+  //+ This method remains from previous version, it's declared in the parent CommonMessagingConnectionController, implemented here.
+  @override
+  Future<void> sendBinaryMessage({required Uint8List binary}) async {
+    await _dataChannel.send(RTCDataChannelMessage.fromBinary(binary));
+  }
+
+  //+ remains from previous version, but changed to private
+  void _setDataChannel() {
+    messaging.onDataChannel = (_, channel) {
+      _dataChannel = channel;
+    };
+  }
+
+  // remains from previous version, but changed to private
+  /// Defines observer callback of connection's status, that status should be
+  /// mapping to dataChannelStatus.
+  ///
+  /// Since connection status depends on specific connection way and callback's
+  /// declaration made in corresponding instance, this method implemented as private.
+  void _observeMessagingStatus() {
     messaging.onMessageStateChange = (session, status) async {
+      print("Message Status changed, state is: $status");
+
       connectionStatus.value = status;
       currentSession = session;
 
-      print("Connection Status changed, state is: $status");
-
       switch (status) {
         case ConnectionStatus.RINGING:
-          await handleConnectionRinging(session: session);
-
+          // accept Messaging Connection and navigate to Messaging screen
+          await _handleConnectionRinging(session: session);
           break;
 
         case ConnectionStatus.CONNECTED:
-          print("Connection Status state is: ${status.name}");
+          _channelMessageListener();
+          break;
 
-          channelMessageListener();
-          break;
         case ConnectionStatus.BYE:
-          if (Get.currentRoute == Routes.MESSAGES) {
-            Get.until((route) => Get.currentRoute != Routes.MESSAGES);
-          }
+          // closes the connection and navigate to Chats screen
+          handleConnectionClose();
           break;
+
         case ConnectionStatus.CONNECTING:
           // TODO: Handle this case.
           break;
+
         case ConnectionStatus.NEW:
           // TODO: Handle this case.
           break;
+
         case ConnectionStatus.INVITE:
           // TODO: Handle this case.
           break;
       }
-      applyConnectivityStatus(status);
+      _applyDataChannelConnectivityStatus(status);
     };
   }
-*/
-/*
-  channelMessageListener() {
+
+  // remains from previous version, but changed to private
+  /// Defines callback method for incoming message.
+  ///
+  /// Since the declaration of callback made in specific instance of corresponding connection way,
+  /// this method implemented as private.
+  void _channelMessageListener() {
     messaging.onDataChannelMessage = (session, dc, RTCDataChannelMessage data) async {
       data.isBinary
           ? handleDataChannelBinary(binaryData: data.binary, session: session)
-          : handleDataChannelText(receivedjson: _decoder.convert(data.text), session: session);
+          : handleDataChannelText(receivedJson: _decoder.convert(data.text), session: session);
     };
-  }*/
-
-  handleDataChannelBinary(
-      {required Uint8List binaryData, required MessageSession session}) async {
-    var message = DataBinaryMessage.parse(binaryData);
-    if (message.chunk.isNotEmpty) {
-      if (currentState == null) {
-        currentState = BinaryFileReceivingState(message.filename, message.meta);
-        print('RECEIVER: New file transfer and State started');
-      }
-      currentState!.pendingMessages[message.chunkStart] = message;
-      await HandleReceivedBinaryData(
-              messagesRepo: messagesRepo, chatId: session.cid)
-          .execute(state: currentState!);
-    } else {
-      // handle the acknowledge
-      print(message.header);
-
-      return;
-    }
   }
 
-  handleDataChannelText(
-      {required Map<String, dynamic> receivedjson,
-      required MessageSession session}) async {
-    DataChannelMessageModel channelMessage =
-        DataChannelMessageModel.fromJson(receivedjson);
 
-    switch (channelMessage.dataChannelMessagetype) {
-      case DataChannelMessageType.message:
-        await saveReceivedMessage(
-            receivedMessageJson: channelMessage.message, chatId: session.cid);
-        break;
+  // Moved to the parent class CommonMessagingConnectionController
+  // handleDataChannelBinary()
+  // handleDataChannelText()
+  // Future<void> saveReceivedMessage()
+  // Future<void> deleteReceivedMessage()
+  // Future<void> updateReceivedMessage()
+  // Future<void> confirmReceivedMessage()
+  // createUserChatModel()
+  // confirmMessageById()
+  // confirmReadMessages
 
-      case DataChannelMessageType.delete:
-        await deleteReceivedMessage(
-            receivedDeleteJson: channelMessage.message, chatId: session.cid);
-        break;
-
-      case DataChannelMessageType.update:
-        await updateReceivedMessage(
-            receivedUpdateJson: channelMessage.message, chatId: session.cid);
-
-        break;
-      case DataChannelMessageType.confirm:
-        await confirmReceivedMessage(
-            receivedconfirmJson: channelMessage.message, chatId: session.cid);
-
-        break;
-    }
-  }
-
-  Future<void> saveReceivedMessage(
-      {required Map<String, dynamic> receivedMessageJson,
-      required String chatId}) async {
-    MessageModel receivedMessage = messageFromJson(receivedMessageJson);
-    await messagesRepo.createMessage(
-        message: receivedMessage.copyWith(
-          isFromMe: false,
-          status: MessageStatus.delivered,
-        ),
-        chatId: chatId);
-
-    confirmMessageById(
-        messageId: receivedMessage.messageId,
-        status: ConfirmMessageStatus.delivered);
-  }
-
-  Future<void> deleteReceivedMessage(
-      {required Map<String, dynamic> receivedDeleteJson,
-      required String chatId}) async {
-    DeleteMessageModel deleteMessage =
-        DeleteMessageModel.fromJson(receivedDeleteJson);
-
-    await messagesRepo.deleteMessages(
-        messageIds: deleteMessage.messageIds, chatId: chatId);
-  }
-
-  Future<void> updateReceivedMessage(
-      {required Map<String, dynamic> receivedUpdateJson,
-      required String chatId}) async {
-    UpdateMessageModel updateMessage =
-        UpdateMessageModel.fromJson(receivedUpdateJson);
-    // this will get the current Message form repo and if message Id is found it will be updated
-    MessageModel? currentMessage = await messagesRepo.getMessageById(
-        messageId: updateMessage.message.messageId, chatId: chatId);
-
-    if (currentMessage != null) {
-      // get the new reactions and check if user is alredy reacted to the message or not
-      Map<String, ReactionModel> recivedreactions =
-          updateMessage.message.reactions.map((key, value) {
-        ReactionModel newValue = value.copyWith(
-          isReactedByMe: currentMessage.reactions[key]?.isReactedByMe ?? false,
-        );
-        return MapEntry(key, newValue);
-      });
-
-      await messagesRepo.updateMessage(
-          message: currentMessage.copyWith(
-            reactions: recivedreactions,
-          ),
-          chatId: chatId);
-    }
-  }
-
-  Future<void> confirmReceivedMessage(
-      {required Map<String, dynamic> receivedconfirmJson,
-      required String chatId}) async {
-    ConfirmMessageModel confirmMessage =
-        ConfirmMessageModel.fromJson(receivedconfirmJson);
-
-    final String messageId = confirmMessage.messageId;
-
-    if (confirmMessage.status == ConfirmMessageStatus.delivered) {
-      MessageModel? currentMessage = await messagesRepo.getMessageById(
-          messageId: messageId, chatId: chatId);
-
-      // check if message is found and update the Message status
-      if (currentMessage != null) {
-        if (currentMessage.status != MessageStatus.read) {
-          await messagesRepo.updateMessage(
-              message: currentMessage.copyWith(status: MessageStatus.delivered),
-              chatId: chatId);
-        }
-      }
-    } else {
-      final List<MessageModel> messages =
-          await messagesRepo.getMessages(chatId);
-      final index =
-          messages.lastIndexWhere((element) => element.messageId == messageId);
-      // print(index);
-      // if the message is found create a sublist of messages
-      // that the status is not read and are from me
-
-      if (index != -1) {
-        final List<MessageModel> messagesToUpdate = messages
-            .sublist(0, index + 1)
-            .where((element) =>
-                element.isFromMe == true &&
-                (element.status == MessageStatus.delivered ||
-                    element.status == MessageStatus.sending))
-            .toList();
-        // update the status of the messages that need to be update to read
-        for (var item in messagesToUpdate) {
-          await messagesRepo.updateMessage(
-              message: item.copyWith(status: MessageStatus.read),
-              chatId: chatId);
-        }
-      }
-    }
-  }
-
-  Future<void> startMessaging({
-    required String remoteId,
-  }) async {
+  // remains from previous version, but changed to private
+  Future<void> _startMessaging({required String remoteId}) async {
     // make the webrtc connection and set the session to current session
     String? selfCoreId = await accountInfo.getCoreId();
 
-    /*MessageSession session =
-        await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
+    MessageSession session =
+    await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
     currentSession = session;
 
-    await createUserChatModel(sessioncid: session.cid);*/
+    await createUserChatModel(sessionCid: session.cid);
   }
 
-  void sendTextMessage({required String text}) async {
-    await _dataChannel.send(RTCDataChannelMessage(text));
-  }
-
-  void sendBinaryMessage({required Uint8List binary}) async {
-    await _dataChannel.send(RTCDataChannelMessage.fromBinary(binary));
-  }
-
-  Future acceptMessageConnection(MessageSession session) async {
-    /* await messaging.accept(
+  Future<void> _acceptMessageConnection(MessageSession session) async {
+    await messaging.accept(
       session.sid,
-    );*/
-  }
-
-  confirmMessageById(
-      {required String messageId, required ConfirmMessageStatus status}) async {
-    Map<String, dynamic> confirmMessageJson =
-        ConfirmMessageModel(messageId: messageId, status: status).toJson();
-
-    DataChannelMessageModel dataChannelMessage = DataChannelMessageModel(
-      message: confirmMessageJson,
-      dataChannelMessagetype: DataChannelMessageType.confirm,
     );
-
-    Map<String, dynamic> dataChannelMessageJson = dataChannelMessage.toJson();
-
-    sendTextMessage(text: jsonEncode(dataChannelMessageJson));
   }
 
-  confirmReadMessages({required String messageId}) async {
-    await confirmMessageById(
-        messageId: messageId, status: ConfirmMessageStatus.read);
-  }
-
-  void setDataChannel() {
-    /*  messaging.onDataChannel = (_, channel) {
-      _dataChannel = channel;
-    };*/
-  }
-
-  createUserChatModel({required String sessioncid}) async {
-    ChatModel userChatModel = ChatModel(
-        id: sessioncid,
-        isOnline: true,
-        name:
-            "${sessioncid.characters.take(4).string}...${sessioncid.characters.takeLast(4).string}",
-        icon: getMockIconUrl(),
-        lastMessage: "",
-        isVerified: true,
-        timestamp: DateTime.now());
-    final isChatAvailable = await chatHistoryRepo.getChat(userChatModel.id);
-    if (isChatAvailable == null) {
-      await chatHistoryRepo.addChatToHistory(userChatModel);
-    } else {
-      await chatHistoryRepo.updateChat(userChatModel);
-    }
-  }
-
-  initMessagingConnection({required String remoteId}) async {
-    RTCSession rtcSession =
-        await multipleConnectionHandler.getConnection(remoteId, null);
-    if (!rtcSession.isDataChannelConnectionAvailable) {
-      multipleConnectionHandler.initiateSession(rtcSession);
-    }
-
-    //checks to see if we have the current session and if we are connected
-    bool isConnectionAvailable =
-        connectionStatus.value == ConnectionStatus.CONNECTED ||
-            connectionStatus.value == ConnectionStatus.RINGING;
-
-    if (currentSession?.cid != remoteId || isConnectionAvailable == false) {
-      await startDataChannelMessaging(remoteId: remoteId);
-    } else {
-      //channelMessageListener();
-    }
-  }
-
+  // TODO Don't know how it should be used
   Future<void> messageReceiverSetup({required MessageSession session}) async {
     // await acceptMessageConnection(session);
-    //channelMessageListener();
+    _channelMessageListener();
   }
 
-  Future<void> startDataChannelMessaging({required String remoteId}) async {
+  Future<void> _startDataChannelMessaging({required String remoteId}) async {
     if (remoteId != "") {
-      await startMessaging(
+      await _startMessaging(
         remoteId: remoteId,
       );
     }
   }
 
-  void applyConnectivityStatus(ConnectionStatus status) async {
+
+  Future<void> _applyDataChannelConnectivityStatus(ConnectionStatus status) async {
     switch (status) {
       case ConnectionStatus.CONNECTED:
         dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
+        // add a delay to show the just connected status for 2 seconds
         setConnectivityOnline();
         break;
 
@@ -397,14 +230,9 @@ class MessagingConnectionController extends GetxController {
     }
   }
 
-  setConnectivityOnline() async {
-    await Future.delayed(const Duration(seconds: 2), () {
-      dataChannelStatus.value = DataChannelConnectivityStatus.online;
-    });
-  }
 
-  handleConnectionRinging({required MessageSession session}) async {
-    await createUserChatModel(sessioncid: session.cid);
+  Future<void> _handleConnectionRinging({required MessageSession session}) async {
+    await createUserChatModel(sessionCid: session.cid);
 
     ChatModel? userChatModel;
 
@@ -412,11 +240,11 @@ class MessagingConnectionController extends GetxController {
       userChatModel = value;
     });
 
-    await acceptMessageConnection(session);
+    await _acceptMessageConnection(session);
 
     connectionStatus.value = ConnectionStatus.CONNECTED;
 
-    applyConnectivityStatus(ConnectionStatus.CONNECTED);
+    _applyDataChannelConnectivityStatus(ConnectionStatus.CONNECTED);
 
     if (userChatModel != null) {
       Get.toNamed(
@@ -434,4 +262,5 @@ class MessagingConnectionController extends GetxController {
       );
     }
   }
+
 }

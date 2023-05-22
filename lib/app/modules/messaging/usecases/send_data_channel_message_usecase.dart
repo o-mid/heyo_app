@@ -5,13 +5,14 @@ import 'dart:io';
 import 'package:heyo/app/modules/messaging/usecases/send_binary_data_usecase.dart';
 import 'package:tuple/tuple.dart';
 
+import '../controllers/common_messaging_controller.dart';
 import '../controllers/messaging_connection_controller.dart';
 import '../models/data_channel_message_model.dart';
 import '../utils/binary_file_sending_state.dart';
 import '../utils/channel_message_from_type.dart';
 
 class SendDataChannelMessage {
-  MessagingConnectionController messagingConnection;
+  CommonMessagingConnectionController messagingConnection;
 
   SendDataChannelMessage({
     required this.messagingConnection,
