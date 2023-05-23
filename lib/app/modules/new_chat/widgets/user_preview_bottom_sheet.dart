@@ -19,7 +19,7 @@ import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../shared/widgets/curtom_circle_avatar.dart';
 import '../controllers/new_chat_controller.dart';
 
-void openUserPreviewBottomSheet({required UserModel user}) {
+void openUserPreviewBottomSheet(UserModel user, {bool isWifiDirect = false}) {
   Get.bottomSheet(
     enterBottomSheetDuration: TRANSITIONS.newChat_EnterBottomSheetDuration,
     exitBottomSheetDuration: TRANSITIONS.newChat_ExitBottomSheetDuration,
@@ -65,12 +65,15 @@ void openUserPreviewBottomSheet({required UserModel user}) {
                       Routes.MESSAGES,
                       arguments: MessagesViewArgumentsModel(
                           user: user.copyWith(
-                        isOnline: true,
-                        isVerified: true,
-                        name:
-                            "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}",
-                        coreId: user.walletAddress,
-                      )),
+                            isOnline: true,
+                            isVerified: true,
+                            name:
+                                "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}",
+                            coreId: user.walletAddress,
+                          ),
+                          connectionType: isWifiDirect
+                              ? MessagingConnectionType.wifiDirect
+                              : MessagingConnectionType.internet),
                     );
                   }
                 },
@@ -84,15 +87,19 @@ void openUserPreviewBottomSheet({required UserModel user}) {
                 onPressed: () {
                   Get.back();
 
-                  Get.toNamed(
-                    Routes.CALL,
-                    arguments: CallViewArgumentsModel(
-                        session: null,
-                        callId: null,
-                        user: user,
-                        enableVideo: false,
-                        isAudioCall: true),
-                  );
+                  if (!isWifiDirect) {
+                    Get.toNamed(
+                      Routes.CALL,
+                      arguments: CallViewArgumentsModel(
+                          session: null,
+                          callId: null,
+                          user: user,
+                          enableVideo: false,
+                          isAudioCall: true),
+                    );
+                  } else {
+                    Get.snackbar("Wifi Direct", "Calling over wifi direct are not supported yet");
+                  }
                 },
                 backgroundColor: COLORS.kBrightBlueColor,
                 icon: Assets.svg.audioCallIcon.svg(
@@ -104,15 +111,19 @@ void openUserPreviewBottomSheet({required UserModel user}) {
                 onPressed: () {
                   Get.back();
 
-                  Get.toNamed(
-                    Routes.CALL,
-                    arguments: CallViewArgumentsModel(
-                        session: null,
-                        callId: null,
-                        user: user,
-                        enableVideo: true,
-                        isAudioCall: false),
-                  );
+                  if (!isWifiDirect) {
+                    Get.toNamed(
+                      Routes.CALL,
+                      arguments: CallViewArgumentsModel(
+                          session: null,
+                          callId: null,
+                          user: user,
+                          enableVideo: true,
+                          isAudioCall: false),
+                    );
+                  } else {
+                    Get.snackbar("Wifi Direct", "Calling over wifi direct are not supported yet");
+                  }
                 },
                 backgroundColor: COLORS.kBrightBlueColor,
                 icon: Assets.svg.videoCallIcon.svg(

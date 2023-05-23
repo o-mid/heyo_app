@@ -17,6 +17,7 @@ import 'package:get/get.dart';
 
 import '../../../../routes/app_pages.dart';
 import '../../../new_chat/widgets/user_preview_bottom_sheet.dart';
+import '../../../shared/data/models/messages_view_arguments_model.dart';
 
 class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MessagingAppBar({
@@ -109,14 +110,50 @@ class _DefaultAppBar extends StatelessWidget {
                         height: 1,
                       ),
                     ),
-                    SizedBox(width: 5.w),
-                    if (user.isVerified)
-                      Assets.svg.verified.svg(
-                        width: 12.w,
-                        height: 12.w,
-                        color: COLORS.kWhiteColor,
-                      ),
-                  ],
+                  ),
+                  SizedBox(width: 5.w),
+                  if (chat.isVerified)
+                    Assets.svg.verified.svg(
+                      width: 12.w,
+                      height: 12.w,
+                      color: COLORS.kWhiteColor,
+                    ),
+                ],
+              ),
+            ),
+            if (chat.isOnline)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    LocaleKeys.MessagesPage_onlineVia.tr,
+                    style: TEXTSTYLES.kBodyTag.copyWith(
+                      color: COLORS.kWhiteColor,
+                      fontWeight: FONTS.Regular,
+                    ),
+                  ),
+                  SizedBox(width: 4.w),
+                  controller.connectionType == MessagingConnectionType.internet
+                      ? Icon(
+                          Icons.wifi,
+                          size: 12.w,
+                          color: COLORS.kWhiteColor,
+                        )
+                      : Assets.svg.wifiDirectIcon.svg(
+                          height: 10.w,
+                          fit: BoxFit.contain,
+                          alignment: Alignment.center,
+                          color: COLORS.kWhiteColor,
+                        ),
+                ],
+              ),
+            if (!chat.isOnline)
+              Text(
+                LocaleKeys.offline.tr,
+                style: TEXTSTYLES.kBodyTag.copyWith(
+                  color: COLORS.kWhiteColor,
+                  fontWeight: FONTS.Regular,
                 ),
               ),
               if (user.isOnline)

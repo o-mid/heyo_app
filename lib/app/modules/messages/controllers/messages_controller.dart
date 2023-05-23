@@ -50,7 +50,9 @@ import 'package:tuple/tuple.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import '../../messaging/controllers/common_messaging_controller.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
+import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../../messaging/messaging_session.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../share_files/models/file_model.dart';
@@ -61,14 +63,22 @@ import '../data/usecases/update_message_usecase.dart';
 
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
-  final MessagingConnectionController messagingConnection;
+
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
 
   MessagesController({
     required this.messagesRepo,
     required this.messagingConnection,
     required this.chatHistoryRepo,
-  });
+  }) {
+    _initMessagesArguments();
+    _initUiControllers();
+    _initMessagingConnection();
+  }
+
+  late final CommonMessagingConnectionController messagingConnection;
+
+  late MessagingConnectionType connectionType;
 
   final _globalMessageController = Get.find<GlobalMessageController>();
   double _keyboardHeight = 0;
@@ -110,16 +120,15 @@ class MessagesController extends GetxController {
     //chatId = selfUserModel.chatModel.id;
     chatId = selfUserModel.coreId;
     keyboardController = KeyboardVisibilityController();
+    // _initMessagesArguments();
+    // _initUiControllers();
+    //
+    // // Initialize messagingConnection instance of CommonMessagingController-inherited class depends on connection type
+    // // Also included previous functionality of _initDataChannel()
+    // _initMessagingConnection();
 
-    _globalMessageController.reset();
-    textController = _globalMessageController.textController;
-    scrollController = _globalMessageController.scrollController;
-    // initialize the messageing Connection
-    await _initDataChannel();
-    // get the messages from the database and scroll to the bottom or the last read message
     _getMessages();
-
-    initMessagesStream();
+    _initMessagesStream();
 
     _sendForwardedMessages();
 
@@ -131,7 +140,59 @@ class MessagesController extends GetxController {
     await messagingConnection.initMessagingConnection(remoteId: selfUserModel.walletAddress);
   }
 
-  void initMessagesStream() async {
+  @override
+  void onReady() {
+    super.onReady();
+    animateToBottom();
+  }
+
+  _closeMediaPlayers() {
+    // Todo: remove this when a global player is implemented
+    Get.find<AudioMessageController>().player.stop();
+
+    Get.find<VideoMessageController>().stopAndClearPreviousVideo();
+  }
+
+  _initMessagesArguments() {
+    args = Get.arguments as MessagesViewArgumentsModel;
+    chatId = args.user.chatModel.id;
+    connectionType = args.connectionType;
+  }
+
+  _initUiControllers() {
+    keyboardController = KeyboardVisibilityController();
+    _globalMessageController.reset();
+    textController = _globalMessageController.textController;
+    scrollController = _globalMessageController.scrollController;
+  }
+
+  _initMessagingConnection() {
+    switch (connectionType) {
+      case MessagingConnectionType.internet:
+        // TODO remove debug print
+        print('switch to the internet connection messaging');
+        messagingConnection = Get.find<MessagingConnectionController>();
+        break;
+      case MessagingConnectionType.wifiDirect:
+        // TODO remove debug print
+        print('switch to the wifi-direct connection messaging');
+        messagingConnection = Get.find<WifiDirectConnectionController>();
+        break;
+      default:
+        // TODO replace this value to correct if connectionType is unknown (if it possible)
+        print('switch to the unknown connection type messaging (internet by default)');
+        messagingConnection = Get.find<MessagingConnectionController>();
+        break;
+    }
+
+    // TODO this is debug test of put instance as CommonMessagingConnectionController
+    // Put current actual CommonMessagingConnectionController instance to use it in messaging process flow.
+    Get.put(messagingConnection);
+
+    messagingConnection.initMessagingConnection(remoteId: args.user.walletAddress);
+  }
+
+  void _initMessagesStream() async {
     _messagesStreamSubscription =
         (await messagesRepo.getMessagesStream(chatId)).listen((newMessages) {
       messages.value = newMessages;
@@ -146,11 +207,6 @@ class MessagesController extends GetxController {
       //   },
       // );
     });
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
   }
 
   @override
@@ -340,7 +396,7 @@ class MessagesController extends GetxController {
     ));
   }
 
-  void toogleMessageReadStatus({required String messageId}) async {
+  void toggleMessageReadStatus({required String messageId}) async {
     await messagingConnection.confirmReadMessages(messageId: messageId);
 
     await markMessagesAsReadById(
@@ -606,8 +662,9 @@ class MessagesController extends GetxController {
     clearSelected();
   }
 
+  //TODO probably this variable initialization can be moved to top
   RxBool isMediaGlassmorphicOpen = false.obs;
-  mediaGlassmorphicChangeState() {
+  void mediaGlassmorphicChangeState() {
     isMediaGlassmorphicOpen.value = !isMediaGlassmorphicOpen.value;
   }
 
@@ -1461,7 +1518,7 @@ class MessagesController extends GetxController {
           if (itemStatus != MessageStatus.read) {
             lastReadRemoteMessagesIndex.value = currentRemoteMessagesIndex.value;
             lastReadRemoteMessagesId.value = itemMessageId;
-            toogleMessageReadStatus(messageId: itemMessageId);
+            toggleMessageReadStatus(messageId: itemMessageId);
           }
         }
       }

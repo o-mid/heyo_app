@@ -24,14 +24,18 @@ import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
 import 'package:core_web3dart/web3dart.dart';
+import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_controller.dart';
 import 'package:http/http.dart' as http;
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
+
+import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
 import '../../chats/data/repos/chat_history/chat_history_repo.dart';
 import '../../messages/data/provider/messages_provider.dart';
 import '../../messages/data/repo/messages_repo.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
+import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../utils/constants/web3client_constant.dart';
 
 class GlobalBindings extends Bindings {
@@ -71,16 +75,19 @@ class GlobalBindings extends Bindings {
 
   static MessagingConnectionController messagingConnectionController =
       MessagingConnectionController(
-    accountInfo: accountInfo,
-    messaging: messaging,
-    messagesRepo: MessagesRepo(
-      messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-    ),
-    chatHistoryRepo: ChatHistoryLocalRepo(
-      chatHistoryProvider:
-          ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-    ),
-  );
+        accountInfo: accountInfo,
+        messaging: messaging,
+        messagesRepo: MessagesRepo(messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),),
+        chatHistoryRepo: ChatHistoryLocalRepo(chatHistoryProvider: ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),),
+      );
+
+  static HeyoWifiDirect? heyoWifiDirect;
+  static WifiDirectConnectionController wifiDirectConnectionController =
+      WifiDirectConnectionController(
+        accountInfo: accountInfo,
+        messagesRepo: MessagesRepo(messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),),
+        chatHistoryRepo: ChatHistoryLocalRepo(chatHistoryProvider: ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),),
+      );
 
   @override
   void dependencies() {
@@ -141,6 +148,23 @@ class GlobalBindings extends Bindings {
     Get.put(ConnectionController(p2pState: p2pState));
     Get.put(
       messagingConnectionController,
+      permanent: true,
+    );
+    Get.put(
+      wifiDirectConnectionController,
+      permanent: true,
+    );
+
+    Get.put<P2PNodeController>(
+      P2PNodeController(
+        p2pNode: P2PNode(
+          accountInfo: accountInfo,
+          p2pNodeRequestStream: p2pNodeRequestStream,
+          p2pNodeResponseStream: p2pNodeResponseStream,
+          p2pState: p2pState,
+          web3client: web3Client,
+        ),
+      ),
       permanent: true,
     );
   }

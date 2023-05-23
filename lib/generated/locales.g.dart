@@ -120,6 +120,8 @@ class LocaleKeys {
   static const HomePage_bottomSheet_newChat = 'HomePage_bottomSheet_newChat';
   static const HomePage_bottomSheet_newGroup = 'HomePage_bottomSheet_newGroup';
   static const HomePage_bottomSheet_invite = 'HomePage_bottomSheet_invite';
+  static const HomePage_bottomSheet_wifiDirect =
+      'HomePage_bottomSheet_wifiDirect';
   static const CallHistory_appbar = 'CallHistory_appbar';
   static const CallHistory_missedCall = 'CallHistory_missedCall';
   static const CallHistory_outgoing = 'CallHistory_outgoing';
@@ -291,6 +293,8 @@ class LocaleKeys {
   static const Permissions_capturePhotos = 'Permissions_capturePhotos';
   static const Permissions_camera = 'Permissions_camera';
   static const Permissions_location = 'Permissions_location';
+  static const Permissions_wifiDirectLocation =
+      'Permissions_wifiDirectLocation';
   static const Permissions_buttons_continue = 'Permissions_buttons_continue';
   static const Permissions_buttons_notNow = 'Permissions_buttons_notNow';
   static const shareFilePage_appbarTitle = 'shareFilePage_appbarTitle';
@@ -310,6 +314,9 @@ class LocaleKeys {
   static const DataChannelStatus_connected = 'DataChannelStatus_connected';
   static const DataChannelStatus_ConnectionLost =
       'DataChannelStatus_ConnectionLost';
+  static const wifiDirect_wifiDirectAppbar = 'wifiDirect_wifiDirectAppbar';
+  static const wifiDirect_emptyPeersTitle = 'wifiDirect_emptyPeersTitle';
+  static const wifiDirect_availablePeers = 'wifiDirect_availablePeers';
 }
 
 class Locales {
@@ -396,6 +403,7 @@ class Locales {
     'HomePage_bottomSheet_newChat': 'Start new chat',
     'HomePage_bottomSheet_newGroup': 'Start new group',
     'HomePage_bottomSheet_invite': 'Invite',
+    'HomePage_bottomSheet_wifiDirect': 'Wifi Direct',
     'CallHistory_appbar': 'Call history',
     'CallHistory_missedCall': 'Missed call',
     'CallHistory_outgoing': 'Outgoing',
@@ -526,6 +534,8 @@ class Locales {
         'To capture photos and videos, you need to \n allow Heyo access to your camera.',
     'Permissions_location':
         'To share location, you need to allow Heyo access to your device\'s location.',
+    'Permissions_wifiDirectLocation':
+        'To use Wi-Fi Direct, you need to allow Heyo access to your device\'s location.',
     'Permissions_buttons_continue': 'Continue',
     'Permissions_buttons_notNow': 'Not now',
     'shareFilePage_appbarTitle': 'Send files',
@@ -543,5 +553,9 @@ class Locales {
     'DataChannelStatus_connecting': 'Connecting...',
     'DataChannelStatus_connected': 'Connected',
     'DataChannelStatus_ConnectionLost': 'Connection Lost',
+    'wifiDirect_wifiDirectAppbar': 'Wifi Direct',
+    'wifiDirect_emptyPeersTitle':
+        'There is no online peer! \n Searching for available peers ...',
+    'wifiDirect_availablePeers': 'Available Peers',
   };
 }

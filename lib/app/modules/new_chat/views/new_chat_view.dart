@@ -7,7 +7,7 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/contact_list_with_header.dart';
-import 'package:heyo/app/modules/shared/widgets/empty_contacts_body.dart';
+import 'package:heyo/app/modules/shared/widgets/empty_users_body.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import '../../shared/utils/constants/fonts.dart';
@@ -339,7 +339,7 @@ class _Contacts extends StatelessWidget {
               ),
             ),
             controller.searchSuggestions.isEmpty
-                ? EmptyContactsBody(
+                ? EmptyUsersBody(
                     infoText: LocaleKeys.newChat_emptyStateTitleContacts.tr,
                     buttonText: LocaleKeys.newChat_buttons_invite.tr,
                     onInvite: () => openInviteBottomSheet(

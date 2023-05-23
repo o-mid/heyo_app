@@ -47,6 +47,8 @@ import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 import '../modules/wallet/bindings/wallet_binding.dart';
 import '../modules/wallet/views/wallet_view.dart';
+import '../modules/wifi_direct/bindings/wifi_direct_binding.dart';
+import '../modules/wifi_direct/views/wifi_direct_view.dart';
 
 part 'app_routes.dart';
 
@@ -246,6 +248,11 @@ class AppPages {
       transition: TRANSITIONS.navigation_generalPageTransition,
       transitionDuration: TRANSITIONS.navigation_generalPageTransitionDurtion,
       curve: TRANSITIONS.navigation_generalPageTransitionCurve,
+    ),
+    GetPage(
+      name: _Paths.WIFI_DIRECT,
+      page: () => const WifiDirectView(),
+      binding: WifiDirectBinding(),
     ),
   ];
 }

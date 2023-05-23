@@ -109,7 +109,8 @@
     "bottomSheet": {
       "newChat": "Start new chat",
       "newGroup": "Start new group",
-      "invite": "Invite"
+      "invite": "Invite",
+      "wifiDirect": "Wifi Direct"
     }
   },
   "CallHistory": {
@@ -272,6 +273,7 @@
     "capturePhotos": "To capture photos and videos, you need to allow Heyo access to \n your device’s photos, \n media and files.",
     "camera": "To capture photos and videos, you need to \n allow Heyo access to your camera.",
     "location": "To share location, you need to allow Heyo access to your device's location.",
+    "wifiDirectLocation": "To use Wi-Fi Direct, you need to allow Heyo access to your device's location.",
     "buttons": {
       "continue": "Continue",
       "notNow": "Not now"
@@ -302,5 +304,10 @@
     "connecting": "Connecting...",
     "connected": "Connected",
     "ConnectionLost": "Connection Lost"
+  },
+  "wifiDirect": {
+    "wifiDirectAppbar": "Wifi Direct",
+    "emptyPeersTitle": "There is no online peer! \n Searching for available peers ...",
+    "availablePeers": "Available Peers"
   }
 }
