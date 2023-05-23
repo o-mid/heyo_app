@@ -68,7 +68,6 @@ class MessagesController extends GetxController {
 
   MessagesController({
     required this.messagesRepo,
-    required this.messagingConnection,
     required this.chatHistoryRepo,
   }) {
     _initMessagesArguments();
@@ -134,10 +133,6 @@ class MessagesController extends GetxController {
 
     // Close emoji picker when keyboard opens
     _handleKeyboardVisibilityChanges();
-  }
-
-  _initDataChannel() async {
-    await messagingConnection.initMessagingConnection(remoteId: selfUserModel.walletAddress);
   }
 
   @override

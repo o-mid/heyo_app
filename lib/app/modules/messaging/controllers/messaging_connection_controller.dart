@@ -186,7 +186,7 @@ class MessagingConnectionController extends CommonMessagingConnectionController 
         await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
     currentSession = session;
 
-    await createUserChatModel(sessionCid: session.cid);
+    await createUserChatModel(sessioncid: session.cid);
   }
 
   Future<void> _acceptMessageConnection(MessageSession session) async {
@@ -229,7 +229,7 @@ class MessagingConnectionController extends CommonMessagingConnectionController 
   }
 
   Future<void> _handleConnectionRinging({required MessageSession session}) async {
-    await createUserChatModel(sessionCid: session.cid);
+    await createUserChatModel(sessioncid: session.cid);
 
     ChatModel? userChatModel;
 
