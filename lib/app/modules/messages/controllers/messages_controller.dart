@@ -155,7 +155,7 @@ class MessagesController extends GetxController {
 
   _initMessagesArguments() {
     args = Get.arguments as MessagesViewArgumentsModel;
-    chatId = args.user.chatModel.id;
+    chatId = args.user.coreId;
     connectionType = args.connectionType;
   }
 

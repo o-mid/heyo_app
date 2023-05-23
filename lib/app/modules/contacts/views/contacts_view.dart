@@ -67,8 +67,7 @@ class ContactsView extends GetView<ContactsController> {
   ) {
     return InkWell(
       onTap: () {
-        openUserPreviewBottomSheet(
-            user: contact.copyWith(
+        openUserPreviewBottomSheet(contact.copyWith(
           isContact: true,
         ));
       },

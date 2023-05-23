@@ -40,7 +40,8 @@ abstract class CommonMessagingConnectionController extends GetxController {
   // MessageSession? currentSession;
 
   /// Represents current status of used data channel.
-  Rx<DataChannelConnectivityStatus> connectivityStatus = DataChannelConnectivityStatus.connecting.obs;
+  Rx<DataChannelConnectivityStatus> connectivityStatus =
+      DataChannelConnectivityStatus.connecting.obs;
   Rx<DataChannelConnectivityStatus> dataChannelStatus =
       DataChannelConnectivityStatus.connecting.obs;
   //
@@ -94,7 +95,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
   /// defined by the appropriate derived class.
   confirmMessageById({required String messageId, required ConfirmMessageStatus status}) async {
     Map<String, dynamic> confirmMessageJson =
-    ConfirmMessageModel(messageId: messageId, status: status).toJson();
+        ConfirmMessageModel(messageId: messageId, status: status).toJson();
 
     DataChannelMessageModel dataChannelMessage = DataChannelMessageModel(
       message: confirmMessageJson,
@@ -170,7 +171,6 @@ abstract class CommonMessagingConnectionController extends GetxController {
         messageId: receivedMessage.messageId, status: ConfirmMessageStatus.delivered);
   }
 
-
   Future<void> deleteReceivedMessage(
       {required Map<String, dynamic> receivedDeleteJson, required String chatId}) async {
     DeleteMessageModel deleteMessage = DeleteMessageModel.fromJson(receivedDeleteJson);
@@ -221,7 +221,6 @@ abstract class CommonMessagingConnectionController extends GetxController {
   confirmReadMessages({required String messageId}) async {
     await confirmMessageById(messageId: messageId, status: ConfirmMessageStatus.read);
   }
-
 
   // creates a ChatModel and saves it to the chat history if it is not available
   // or updates the available chat

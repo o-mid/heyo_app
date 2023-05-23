@@ -83,6 +83,7 @@ class _DefaultAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<MessagesController>();
     return Row(
       children: [
         CircleIconButton(
@@ -96,7 +97,7 @@ class _DefaultAppBar extends StatelessWidget {
         CustomCircleAvatar(url: user.iconUrl, size: 32, isOnline: user.isOnline),
         CustomSizes.smallSizedBoxWidth,
         GestureDetector(
-          onTap: () => openUserPreviewBottomSheet(user: user),
+          onTap: () => openUserPreviewBottomSheet(user),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -110,52 +111,51 @@ class _DefaultAppBar extends StatelessWidget {
                         height: 1,
                       ),
                     ),
-                  ),
-                  SizedBox(width: 5.w),
-                  if (chat.isVerified)
-                    Assets.svg.verified.svg(
-                      width: 12.w,
-                      height: 12.w,
-                      color: COLORS.kWhiteColor,
-                    ),
-                ],
-              ),
-            ),
-            if (chat.isOnline)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    LocaleKeys.MessagesPage_onlineVia.tr,
-                    style: TEXTSTYLES.kBodyTag.copyWith(
-                      color: COLORS.kWhiteColor,
-                      fontWeight: FONTS.Regular,
-                    ),
-                  ),
-                  SizedBox(width: 4.w),
-                  controller.connectionType == MessagingConnectionType.internet
-                      ? Icon(
-                          Icons.wifi,
-                          size: 12.w,
-                          color: COLORS.kWhiteColor,
-                        )
-                      : Assets.svg.wifiDirectIcon.svg(
-                          height: 10.w,
-                          fit: BoxFit.contain,
-                          alignment: Alignment.center,
-                          color: COLORS.kWhiteColor,
-                        ),
-                ],
-              ),
-            if (!chat.isOnline)
-              Text(
-                LocaleKeys.offline.tr,
-                style: TEXTSTYLES.kBodyTag.copyWith(
-                  color: COLORS.kWhiteColor,
-                  fontWeight: FONTS.Regular,
+                    SizedBox(width: 5.w),
+                    if (user.isVerified)
+                      Assets.svg.verified.svg(
+                        width: 12.w,
+                        height: 12.w,
+                        color: COLORS.kWhiteColor,
+                      ),
+                  ],
                 ),
               ),
+              if (user.isOnline)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      LocaleKeys.MessagesPage_onlineVia.tr,
+                      style: TEXTSTYLES.kBodyTag.copyWith(
+                        color: COLORS.kWhiteColor,
+                        fontWeight: FONTS.Regular,
+                      ),
+                    ),
+                    SizedBox(width: 4.w),
+                    controller.connectionType == MessagingConnectionType.internet
+                        ? Icon(
+                            Icons.wifi,
+                            size: 12.w,
+                            color: COLORS.kWhiteColor,
+                          )
+                        : Assets.svg.wifiDirectIcon.svg(
+                            height: 10.w,
+                            fit: BoxFit.contain,
+                            alignment: Alignment.center,
+                            color: COLORS.kWhiteColor,
+                          ),
+                  ],
+                ),
+              if (!user.isOnline)
+                Text(
+                  LocaleKeys.offline.tr,
+                  style: TEXTSTYLES.kBodyTag.copyWith(
+                    color: COLORS.kWhiteColor,
+                    fontWeight: FONTS.Regular,
+                  ),
+                ),
               if (user.isOnline)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
