@@ -113,7 +113,6 @@ class MessagesController extends GetxController {
 
   @override
   Future<void> onInit() async {
-    super.onInit();
     args = Get.arguments as MessagesViewArgumentsModel;
     selfUserModel = args.user;
     //chatId = selfUserModel.chatModel.id;
@@ -133,6 +132,7 @@ class MessagesController extends GetxController {
 
     // Close emoji picker when keyboard opens
     _handleKeyboardVisibilityChanges();
+    super.onInit();
   }
 
   @override
@@ -989,6 +989,7 @@ class MessagesController extends GetxController {
       //     curve: TRANSITIONS.messagingPage_getAllMsgscurve,
       //   );
       // });
+      isListLoaded.value = true;
       chatModel = ChatModel(
         id: selfUserModel.coreId,
         coreId: selfUserModel.coreId,
@@ -1000,7 +1001,6 @@ class MessagesController extends GetxController {
         isVerified: true,
         lastReadMessageId: lastReadRemoteMessagesId.value,
       );
-      isListLoaded.value = true;
     }
   }
 
