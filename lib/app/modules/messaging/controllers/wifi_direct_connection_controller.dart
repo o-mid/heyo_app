@@ -89,7 +89,7 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
   }
 
   @override
-  Future<void> sendTextMessage({required String text}) async {
+  Future<void> sendTextMessage({required String text,required String remoteCoreId}) async {
     // TODO remove debug output
     print('WifiDirectConnectionController(remoteId $remoteId): sendTextMessage($text)');
 
@@ -101,7 +101,7 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
   }
 
   @override
-  Future<void> sendBinaryMessage({required Uint8List binary}) async {
+  Future<void> sendBinaryMessage({required Uint8List binary,required String remoteCoreId}) async {
     // TODO remove debug output
 
     DataBinaryMessage sendingMessage = DataBinaryMessage.parse(binary);
@@ -172,7 +172,7 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
     MessageSession session = MessageSession(sid: Constants.coreID, cid: remoteId!, pid: remoteId);
 
     message.isBinary
-        ? handleDataChannelBinary(binaryData: message.body, session: session)
-        : handleDataChannelText(receivedJson: const JsonDecoder().convert(message.body), session: session);
+        ? handleDataChannelBinary(binaryData: message.body, remoteCoreId: remoteId!)
+        : handleDataChannelText(receivedJson: const JsonDecoder().convert(message.body), remoteCoreId: remoteId!);
   }
 }

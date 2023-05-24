@@ -86,8 +86,8 @@ class GlobalBindings extends Bindings {
 
   static MessagingConnectionController messagingConnectionController =
       MessagingConnectionController(
+        multipleConnectionHandler: multipleConnectionHandler,
         accountInfo: accountInfo,
-        messaging: messaging,
         messagesRepo: MessagesRepo(messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),),
         chatHistoryRepo: ChatHistoryLocalRepo(chatHistoryProvider: ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),),
       );

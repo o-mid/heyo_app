@@ -82,23 +82,25 @@ class SingleWebRTCConnection {
   }
 
   void onAnswerReceived(RTCSession rtcSession, description) async {
-    await rtcSession.pc!.setRemoteDescription(
-      RTCSessionDescription(
-        description['sdp'],
-        description['type'],
-      ),
-    );
+      await rtcSession.pc!.setRemoteDescription(
+        RTCSessionDescription(
+          description['sdp'],
+          description['type'],
+        ),
+      );
+
+
   }
 
    _sendCandidate(
-      RTCIceCandidate candidate, RTCSession rtcSession)  {
+      RTCIceCandidate iceCandidate, RTCSession rtcSession)  {
      _send(
         candidate,
         {
           candidate: {
-            'sdpMLineIndex': candidate.sdpMLineIndex,
-            'sdpMid': candidate.sdpMid,
-            'candidate': candidate.candidate,
+            'sdpMLineIndex': iceCandidate.sdpMLineIndex,
+            'sdpMid': iceCandidate.sdpMid,
+            'candidate': iceCandidate.candidate,
           },
         },
         rtcSession.remotePeer.remoteCoreId,

@@ -17,7 +17,7 @@ class ConfirmMessage {
   final CommonMessagingConnectionController messagingConnection =
       Get.find<CommonMessagingConnectionController>();
 
-  execute({required ConfirmMessageType confirmMessageType}) async {
+  execute({required ConfirmMessageType confirmMessageType,required String remoteCoreId}) async {
     switch (confirmMessageType.runtimeType) {
       case ConfirmReceivedText:
         final String messageId = (confirmMessageType as ConfirmReceivedText).messageId;
@@ -30,6 +30,7 @@ class ConfirmMessage {
 
         SendDataChannelMessage(messagingConnection: messagingConnection).execute(
           channelMessageType: ChannelMessageType.confirm(message: confirmmessageJson),
+          remoteCoreId: remoteCoreId
         );
         break;
     }

@@ -221,8 +221,7 @@ class Signaling {
             }
             newSession.remoteCandidates.clear();
           }
-          print("feafesfse beffo $sessionId");
-          print("feafesfse beffo ${newSession.sid}");
+
 
           onCallStateChange?.call(newSession, CallState.callStateNew);
 
@@ -363,7 +362,6 @@ class Signaling {
           // Unified-Plan
           pc.onTrack = (event) {
             if (event.track.kind == 'video') {
-              print("dsadac siggg");
               onAddRemoteStream?.call(newSession, event.streams[0]);
             }
           };

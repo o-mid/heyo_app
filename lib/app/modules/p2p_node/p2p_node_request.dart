@@ -19,7 +19,10 @@ class P2PNodeRequestStream {
   final MultipleConnectionHandler multipleConnectionHandler;
   final JsonDecoder _decoder = const JsonDecoder();
 
-  P2PNodeRequestStream({required this.p2pState, required this.signaling, required this.multipleConnectionHandler});
+  P2PNodeRequestStream(
+      {required this.p2pState,
+      required this.signaling,
+      required this.multipleConnectionHandler});
 
   void setUp() {
     // listen to the events from the node side
@@ -51,9 +54,12 @@ class P2PNodeRequestStream {
     debugPrint("_onNewRequestEvent: body is: ${event.body}");
     debugPrint("_onNewRequestEvent: error is: ${event.error}");
 
-    if (event.name == P2PReqResNodeNames.login && event.error == null && event.body != null) {
+    if (event.name == P2PReqResNodeNames.login &&
+        event.error == null &&
+        event.body != null) {
       await FlutterP2pCommunicator.sendResponse(
-          info: P2PReqResNodeModel(name: P2PReqResNodeNames.login, body: {}, id: event.id));
+          info: P2PReqResNodeModel(
+              name: P2PReqResNodeNames.login, body: {}, id: event.id));
 
       //
       // MARK: here we are telling the sending party that everything is ok and the req was received
@@ -63,25 +69,29 @@ class P2PNodeRequestStream {
       if ((event.body!['payload'])['session'] != null) {
         String request = (event.body!['payload'])['session'];
         // if session is not null then we have a request
-        onRequestReceived(request.convertHexToString(), remoteCoreId, remotePeerId);
+        onRequestReceived(
+            request.convertHexToString(), remoteCoreId, remotePeerId);
 
         //signaling.onMessage(session.convertHexToString(), remoteCoreId, remotePeerId);
       }
     }
   }
 
-  void onRequestReceived(String request, String remoteCoreId, String remotePeerId) {
+  void onRequestReceived(
+      String request, String remoteCoreId, String remotePeerId) {
     // checks the type of the request and sends it to signalling or messaging accordingly
 
     Map<String, dynamic> mapData = _decoder.convert(request);
+    print("dadadasdada $mapData : ${mapData['command']} : $remoteCoreId");
 
     if (mapData['command'] == "call") {
       signaling.onMessage(mapData, remoteCoreId, remotePeerId);
-    }if(mapData['command']=="multiple_connection") {
-      multipleConnectionHandler.onRequestReceived(mapData, remoteCoreId, remotePeerId);
-
     }
-    else {
+    if (mapData['command'] == "multiple_connection") {
+      multipleConnectionHandler.onRequestReceived(
+          mapData, remoteCoreId, remotePeerId);
+    } else {
+
     }
   }
 }

@@ -66,8 +66,7 @@ class MessagesController extends GetxController {
   late final CommonMessagingConnectionController messagingConnection;
 
   MessagesController(
-      {required this.messagesRepo,
-      required this.userPreferencesRepo}) {
+      {required this.messagesRepo, required this.userPreferencesRepo}) {
     _initMessagesArguments();
     _initUiControllers();
     _initMessagingConnection();
@@ -105,7 +104,6 @@ class MessagesController extends GetxController {
   final FocusNode textFocusNode = FocusNode();
 
   final isListLoaded = false.obs;
-
 
   @override
   Future<void> onInit() async {
@@ -167,18 +165,19 @@ class MessagesController extends GetxController {
   _initMessagingConnection() {
     switch (connectionType) {
       case MessagingConnectionType.internet:
-      // TODO remove debug print
+        // TODO remove debug print
         print('switch to the internet connection messaging');
         messagingConnection = Get.find<MessagingConnectionController>();
         break;
       case MessagingConnectionType.wifiDirect:
-      // TODO remove debug print
+        // TODO remove debug print
         print('switch to the wifi-direct connection messaging');
         messagingConnection = Get.find<WifiDirectConnectionController>();
         break;
       default:
         // TODO replace this value to correct if connectionType is unknown (if it possible)
-        print('switch to the unknown connection type messaging (internet by default)');
+        print(
+            'switch to the unknown connection type messaging (internet by default)');
         messagingConnection = Get.find<MessagingConnectionController>();
         break;
     }
@@ -187,8 +186,8 @@ class MessagesController extends GetxController {
     // Put current actual CommonMessagingConnectionController instance to use it in messaging process flow.
     Get.put(messagingConnection);
 
-    messagingConnection.initMessagingConnection(remoteId: args.user.walletAddress);
-
+    messagingConnection.initMessagingConnection(
+        remoteId: args.user.walletAddress);
   }
 
   void _initMessagesStream() async {
@@ -207,8 +206,6 @@ class MessagesController extends GetxController {
       // );
     });
   }
-
-
 
   void _handleKeyboardVisibilityChanges() {
     _globalMessageController.streamSubscriptions
@@ -278,8 +275,9 @@ class MessagesController extends GetxController {
         str +
         textController.text.substring(currentPos);
 
-    textController.selection = textController.selection
-        .copyWith(baseOffset: currentPos + str.length, extentOffset: currentPos + str.length);
+    textController.selection = textController.selection.copyWith(
+        baseOffset: currentPos + str.length,
+        extentOffset: currentPos + str.length);
 
     newMessage.value = textController.text;
   }
@@ -288,7 +286,11 @@ class MessagesController extends GetxController {
   // the character before cursor is removed and cursor moves to the correct place.
   void removeCharacterBeforeCursorPosition() {
     final currentPos = textController.selection.base.offset;
-    final prefix = textController.text.substring(0, currentPos).characters.skipLast(1).toString();
+    final prefix = textController.text
+        .substring(0, currentPos)
+        .characters
+        .skipLast(1)
+        .toString();
     final suffix = textController.text.substring(currentPos);
 
     textController.text = prefix + suffix;
@@ -342,7 +344,8 @@ class MessagesController extends GetxController {
 
   Future<void> _finishMessagesLoading() async {
     // Todo: remove this delay if needed
-    await Future.delayed(TRANSITIONS.messagingPage_closeMessagesLoadingShimmerDurtion, () {
+    await Future.delayed(
+        TRANSITIONS.messagingPage_closeMessagesLoadingShimmerDurtion, () {
       isListLoaded.value = true;
     });
   }
@@ -360,7 +363,8 @@ class MessagesController extends GetxController {
     scrollController.animateTo(
       scrollController.position.minScrollExtent,
       curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
-      duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+      duration:
+          duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
     );
   }
 
@@ -372,21 +376,24 @@ class MessagesController extends GetxController {
     scrollController.animateTo(
       offset,
       curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
-      duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+      duration:
+          duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
     );
   }
 
   void toggleReaction(MessageModel msg, String emoji) {
     UpdateMessage().execute(
+        remoteCoreId: args.user.walletAddress,
         updateMessageType: UpdateMessageType.updateReactions(
-      selectedMessage: msg,
-      emoji: emoji,
-      chatId: chatId,
-    ));
+          selectedMessage: msg,
+          emoji: emoji,
+          chatId: chatId,
+        ));
   }
 
   void toggleMessageReadStatus({required String messageId}) async {
-    await messagingConnection.confirmReadMessages(messageId: messageId);
+    await messagingConnection.confirmReadMessages(
+        messageId: messageId, remoteCoreId: args.user.walletAddress);
   }
 
   void toggleMessageSelection(String id) {
@@ -413,12 +420,12 @@ class MessagesController extends GetxController {
 
   void sendTextMessage() async {
     SendMessage().execute(
-      sendMessageType: SendMessageType.text(
-        text: newMessage.value,
-        replyTo: replyingTo.value,
-        chatId: chatId,
-      ),
-    );
+        sendMessageType: SendMessageType.text(
+          text: newMessage.value,
+          replyTo: replyingTo.value,
+          chatId: chatId,
+        ),
+        remoteCoreId: args.user.walletAddress);
 
     textController.clear();
     newMessage.value = "";
@@ -429,13 +436,13 @@ class MessagesController extends GetxController {
 //TODO
   void sendAudioMessage(String path, int duration) {
     SendMessage().execute(
-      sendMessageType: SendMessageType.audio(
-        path: path,
-        metadata: AudioMetadata(durationInSeconds: duration),
-        replyTo: replyingTo.value,
-        chatId: chatId,
-      ),
-    );
+        sendMessageType: SendMessageType.audio(
+          path: path,
+          metadata: AudioMetadata(durationInSeconds: duration),
+          replyTo: replyingTo.value,
+          chatId: chatId,
+        ),
+        remoteCoreId: args.user.walletAddress);
 
     _postMessageSendOperations();
   }
@@ -448,14 +455,14 @@ class MessagesController extends GetxController {
     }
 
     SendMessage().execute(
-      sendMessageType: SendMessageType.location(
-        lat: message.latitude,
-        long: message.longitude,
-        address: message.address,
-        replyTo: replyingTo.value,
-        chatId: chatId,
-      ),
-    );
+        sendMessageType: SendMessageType.location(
+          lat: message.latitude,
+          long: message.longitude,
+          address: message.address,
+          replyTo: replyingTo.value,
+          chatId: chatId,
+        ),
+        remoteCoreId: args.user.walletAddress);
 
     locationMessage.value = null;
 
@@ -469,14 +476,14 @@ class MessagesController extends GetxController {
     required double startLong,
   }) {
     SendMessage().execute(
-      sendMessageType: SendMessageType.liveLocation(
-        startLat: startLat,
-        startLong: startLong,
-        duration: duration,
-        replyTo: replyingTo.value,
-        chatId: chatId,
-      ),
-    );
+        sendMessageType: SendMessageType.liveLocation(
+          startLat: startLat,
+          startLong: startLong,
+          duration: duration,
+          replyTo: replyingTo.value,
+          chatId: chatId,
+        ),
+        remoteCoreId: args.user.walletAddress);
 
     _postMessageSendOperations();
 
@@ -491,7 +498,8 @@ class MessagesController extends GetxController {
     scrollController.animateTo(
       scrollController.position.maxScrollExtent,
       curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
-      duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+      duration:
+          duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
     );
   }
 
@@ -527,7 +535,8 @@ class MessagesController extends GetxController {
   }
 
   stopSharingLiveLocation(LiveLocationMessageModel message) {
-    Get.find<LiveLocationController>().removeIdFromSharingList(message.messageId);
+    Get.find<LiveLocationController>()
+        .removeIdFromSharingList(message.messageId);
 
     final index = messages.indexWhere((m) => m.messageId == message.messageId);
 
@@ -598,26 +607,29 @@ class MessagesController extends GetxController {
 
   void deleteSelectedForEveryone() {
     DeleteMessage().execute(
+        remoteCoreId: args.user.walletAddress,
         deleteMessageType: DeleteMessageType.forEveryone(
-      chatId: chatId,
-      selectedMessages: selectedMessages,
-    ));
+          chatId: chatId,
+          selectedMessages: selectedMessages,
+        ));
     clearSelected();
   }
 
   void deleteSelectedForMe() {
     DeleteMessage().execute(
+        remoteCoreId: args.user.walletAddress,
         deleteMessageType: DeleteMessageType.forMe(
-      chatId: chatId,
-      selectedMessages: selectedMessages,
-    ));
+          chatId: chatId,
+          selectedMessages: selectedMessages,
+        ));
     clearSelected();
   }
 
   void copySelectedToClipboard() {
     var text = "";
 
-    if (selectedMessages.length == 1 && selectedMessages.first is TextMessageModel) {
+    if (selectedMessages.length == 1 &&
+        selectedMessages.first is TextMessageModel) {
       text = (selectedMessages.first as TextMessageModel).text;
     } else {
       for (var message in selectedMessages) {
@@ -625,7 +637,8 @@ class MessagesController extends GetxController {
           continue;
         }
 
-        text += "[${message.senderName} - ${message.timestamp.dateInAmPmFormat()}]\n";
+        text +=
+            "[${message.senderName} - ${message.timestamp.dateInAmPmFormat()}]\n";
         text += message.text;
         text += "\n\n";
       }
@@ -640,6 +653,7 @@ class MessagesController extends GetxController {
 
   //TODO probably this variable initialization can be moved to top
   RxBool isMediaGlassmorphicOpen = false.obs;
+
   void mediaGlassmorphicChangeState() {
     isMediaGlassmorphicOpen.value = !isMediaGlassmorphicOpen.value;
   }
@@ -697,16 +711,16 @@ class MessagesController extends GetxController {
                 break;
               }
               await SendMessage().execute(
-                sendMessageType: SendMessageType.image(
-                  path: file.path,
-                  metadata: ImageMetadata(
-                    height: entity.height.toDouble(),
-                    width: entity.width.toDouble(),
+                  sendMessageType: SendMessageType.image(
+                    path: file.path,
+                    metadata: ImageMetadata(
+                      height: entity.height.toDouble(),
+                      width: entity.width.toDouble(),
+                    ),
+                    replyTo: replyingTo.value,
+                    chatId: chatId,
                   ),
-                  replyTo: replyingTo.value,
-                  chatId: chatId,
-                ),
-              );
+                  remoteCoreId: args.user.walletAddress);
 
               break;
             case CameraPickerViewType.video:
@@ -720,20 +734,21 @@ class MessagesController extends GetxController {
               }
 
               await SendMessage().execute(
-                sendMessageType: SendMessageType.video(
-                  path: file.path,
-                  metadata: VideoMetadata(
-                    durationInSeconds: entity.videoDuration.inSeconds,
-                    height: entity.height.toDouble(),
-                    width: entity.width.toDouble(),
-                    isLocal: true,
-                    thumbnailBytes: await entity.thumbnailData,
-                    thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+                  sendMessageType: SendMessageType.video(
+                    path: file.path,
+                    metadata: VideoMetadata(
+                      durationInSeconds: entity.videoDuration.inSeconds,
+                      height: entity.height.toDouble(),
+                      width: entity.width.toDouble(),
+                      isLocal: true,
+                      thumbnailBytes: await entity.thumbnailData,
+                      thumbnailUrl:
+                          "https://mixkit.imgix.net/static/home/video-thumb3.png",
+                    ),
+                    replyTo: replyingTo.value,
+                    chatId: chatId,
                   ),
-                  replyTo: replyingTo.value,
-                  chatId: chatId,
-                ),
-              );
+                  remoteCoreId: args.user.walletAddress);
 
               break;
           }
@@ -789,7 +804,8 @@ class MessagesController extends GetxController {
           senderName: '',
           isFromMe: true,
           status: MessageStatus.sending,
-          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+          timestamp:
+              DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
           url: element["path"],
         ));
       } else if (element["type"] == "video") {
@@ -802,10 +818,12 @@ class MessagesController extends GetxController {
             width: double.parse(element["width"].toString()),
             isLocal: true,
             thumbnailBytes: thumbnailBytes,
-            thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+            thumbnailUrl:
+                "https://mixkit.imgix.net/static/home/video-thumb3.png",
           ),
           url: element["path"],
-          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+          timestamp:
+              DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
           senderName: '',
           senderAvatar: '',
           isFromMe: true,
@@ -822,7 +840,8 @@ class MessagesController extends GetxController {
         senderName: '',
         isFromMe: true,
         status: MessageStatus.sending,
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
       ));
     } else {
       result.forEach((asset) async {
@@ -841,7 +860,8 @@ class MessagesController extends GetxController {
                     senderName: '',
                     isFromMe: true,
                     status: MessageStatus.sending,
-                    timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+                    timestamp: DateTime.now()
+                        .subtract(const Duration(hours: 1, minutes: 49)),
                     url: asset["path"]),
               );
             }
@@ -861,7 +881,8 @@ class MessagesController extends GetxController {
                     thumbnailUrl: '',
                   ),
                   url: asset["path"],
-                  timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+                  timestamp: DateTime.now()
+                      .subtract(const Duration(hours: 1, minutes: 49)),
                   senderName: '',
                   senderAvatar: '',
                   isFromMe: true,
@@ -876,7 +897,8 @@ class MessagesController extends GetxController {
                 TextMessageModel(
                   messageId: "${messages.lastIndexOf(messages.last) + 1}",
                   text: asset["value"],
-                  timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+                  timestamp: DateTime.now()
+                      .subtract(const Duration(hours: 1, minutes: 49)),
                   senderName: '',
                   senderAvatar: '',
                   isFromMe: true,
@@ -907,19 +929,19 @@ class MessagesController extends GetxController {
       result as RxList<FileModel>;
       for (var asset in result) {
         await SendMessage().execute(
-          sendMessageType: SendMessageType.file(
-            metadata: FileMetaData(
-              extension: asset.extension,
-              name: asset.name,
-              path: asset.path,
-              size: asset.size,
-              timestamp: asset.timestamp,
-              isImage: asset.isImage,
+            sendMessageType: SendMessageType.file(
+              metadata: FileMetaData(
+                extension: asset.extension,
+                name: asset.name,
+                path: asset.path,
+                size: asset.size,
+                timestamp: asset.timestamp,
+                isImage: asset.isImage,
+              ),
+              replyTo: replyingTo.value,
+              chatId: chatId,
             ),
-            replyTo: replyingTo.value,
-            chatId: chatId,
-          ),
-        );
+            remoteCoreId: args.user.walletAddress);
       }
       mediaGlassmorphicChangeState();
       messages.refresh();
@@ -935,15 +957,14 @@ class MessagesController extends GetxController {
   }
 
   Future<void> _getMessages() async {
-    await userPreferencesRepo.getUserPreferencesById(chatId).then((
-        value) async =>
-    {
-      userPreferences = value,
-      await messagesRepo.getMessages(chatId).then((value) =>
-      {
-        messages.value = value,
-      })
-    });
+    await userPreferencesRepo
+        .getUserPreferencesById(chatId)
+        .then((value) async => {
+              userPreferences = value,
+              await messagesRepo.getMessages(chatId).then((value) => {
+                    messages.value = value,
+                  })
+            });
 
     // of userPreferences is null, scroll to bottom
     // eles scroll to last position
@@ -1426,14 +1447,16 @@ class MessagesController extends GetxController {
         // print("currentItemIndex.value: ${currentRemoteMessagesIndex.value}");
         // print("lastReadRemoteMessagesIndex.value: ${lastReadRemoteMessagesIndex.value}");
 
-        if (currentRemoteMessagesIndex.value > lastReadRemoteMessagesIndex.value) {
+        if (currentRemoteMessagesIndex.value >
+            lastReadRemoteMessagesIndex.value) {
           // print("lastReadRemoteMessagesKey.value ${lastReadRemoteMessagesId.value}");
 
           //  checks if its status is read or not
           // if its not read, it will toogleMessageReadStatus
 
           if (itemStatus != MessageStatus.read) {
-            lastReadRemoteMessagesIndex.value = currentRemoteMessagesIndex.value;
+            lastReadRemoteMessagesIndex.value =
+                currentRemoteMessagesIndex.value;
             lastReadRemoteMessagesId.value = itemMessageId;
             toggleMessageReadStatus(messageId: itemMessageId);
           }
