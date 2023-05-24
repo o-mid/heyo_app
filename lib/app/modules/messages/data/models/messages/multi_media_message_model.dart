@@ -15,6 +15,7 @@ class MultiMediaMessageModel extends MessageModel {
   MultiMediaMessageModel({
     required this.mediaList,
     required super.messageId,
+    required super.chatId,
     required super.timestamp,
     required super.isFromMe,
     required super.senderName,
@@ -32,6 +33,7 @@ class MultiMediaMessageModel extends MessageModel {
   MultiMediaMessageModel copyWith({
     List<ImageMessageModel>? mediaList,
     String? messageId,
+    String? chatId,
     MessageStatus? status,
     MessageContentType? type,
     DateTime? timestamp,
@@ -44,6 +46,7 @@ class MultiMediaMessageModel extends MessageModel {
     return MultiMediaMessageModel(
         mediaList: mediaList ?? this.mediaList,
         messageId: messageId ?? this.messageId,
+        chatId: chatId ?? this.chatId,
         timestamp: timestamp ?? this.timestamp,
         senderName: senderName,
         senderAvatar: senderAvatar,
@@ -60,6 +63,7 @@ class MultiMediaMessageModel extends MessageModel {
         mediaList: List<dynamic>.from(json[mediaListSerializedName].map((x) => messageFromJson(x))),
         // parent props:
         messageId: json[MessageModel.messageIdSerializedName],
+        chatId: json[MessageModel.chatIdSerializedName],
         timestamp: DateTime.parse(json[MessageModel.timestampSerializedName]),
         senderName: json[MessageModel.senderNameSerializedName],
         senderAvatar: json[MessageModel.senderAvatarSerializedName],
@@ -79,6 +83,7 @@ class MultiMediaMessageModel extends MessageModel {
         mediaListSerializedName: List<dynamic>.from(mediaList.map((x) => x.toJson())),
         // parent props:
         MessageModel.messageIdSerializedName: messageId,
+        MessageModel.chatIdSerializedName: chatId,
         MessageModel.timestampSerializedName: timestamp.toIso8601String(),
         MessageModel.senderNameSerializedName: senderName,
         MessageModel.senderAvatarSerializedName: senderAvatar,

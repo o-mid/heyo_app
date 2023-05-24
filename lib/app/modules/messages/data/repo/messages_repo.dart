@@ -46,4 +46,20 @@ class MessagesRepo implements MessagesAbstractRepo {
   Future<List<MessageModel?>> getUnReadMessages(String chatId) {
     return messagesProvider.getUnReadMessages(chatId);
   }
+
+  @override
+  Future<int> getUnReadMessagesCount(String chatId) {
+    return messagesProvider.getUnReadMessagesCount(chatId);
+  }
+
+  @override
+  Future<void> markMessagesAsRead({required String lastReadmessageId, required String chatId}) {
+    return messagesProvider.markMessagesAsRead(
+        lastReadmessageId: lastReadmessageId, chatId: chatId);
+  }
+
+  @override
+  Future<void> markAllMessagesAsRead({required String chatId}) {
+    return messagesProvider.markAllMessagesAsRead(chatId: chatId);
+  }
 }

@@ -89,76 +89,42 @@ class CallsController extends GetxController {
   void _addMockData() {
     final uBoiled = UserModel(
       name: "Boiled Dealmaker",
-      icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
+      iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
       isVerified: true,
       walletAddress: "CB11${List.generate(11, (index) => index).join()}14AB",
-      chatModel: ChatModel(
-        name: "Boiled Dealmaker",
-        icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
-        isVerified: true,
-        id: "CB11${List.generate(11, (index) => index).join()}14AB",
-        lastMessage: "",
-        timestamp: DateTime.now(),
-      ),
+      coreId: "CB11${List.generate(11, (index) => index).join()}14AB",
     );
     final uCrapps = UserModel(
       name: "Crapps Wallbanger",
-      icon: "https://avatars.githubusercontent.com/u/2345136?v=4",
+      iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
       walletAddress: "CB11${List.generate(11, (index) => index).join()}49BB",
-      chatModel: ChatModel(
-        name: "Crapps Wallbanger",
-        icon: "https://avatars.githubusercontent.com/u/2345136?v=4",
-        id: "CB11${List.generate(11, (index) => index).join()}49BB",
-        lastMessage: "",
-        timestamp: DateTime.now(),
-      ),
+      coreId: "CB11${List.generate(11, (index) => index).join()}49BB",
     );
     final uFancy = UserModel(
-        name: "Fancy Potato",
-        icon: "https://avatars.githubusercontent.com/u/6644146?v=4",
-        walletAddress: "CB11${List.generate(11, (index) => index).join()}11FE",
-        chatModel: ChatModel(
-          name: "Fancy Potato",
-          icon: "https://avatars.githubusercontent.com/u/6644146?v=4",
-          id: "CB11${List.generate(11, (index) => index).join()}11FE",
-          lastMessage: "",
-          timestamp: DateTime.now(),
-        ));
+      name: "Fancy Potato",
+      iconUrl: "https://avatars.githubusercontent.com/u/6644146?v=4",
+      walletAddress: "CB11${List.generate(11, (index) => index).join()}11FE",
+      coreId: "CB11${List.generate(11, (index) => index).join()}11FE",
+    );
     final uOckerito = UserModel(
-        name: "Ockerito Fazola",
-        isVerified: true,
-        icon: "https://avatars.githubusercontent.com/u/7844146?v=4",
-        walletAddress: "CB11${List.generate(11, (index) => index).join()}5A5D",
-        chatModel: ChatModel(
-          name: "Ockerito Fazola",
-          icon: "https://avatars.githubusercontent.com/u/7844146?v=4",
-          id: "CB11${List.generate(11, (index) => index).join()}5A5D",
-          isVerified: true,
-          lastMessage: "",
-          timestamp: DateTime.now(),
-        ));
+      name: "Ockerito Fazola",
+      isVerified: true,
+      iconUrl: "https://avatars.githubusercontent.com/u/7844146?v=4",
+      walletAddress: "CB11${List.generate(11, (index) => index).join()}5A5D",
+      coreId: "CB11${List.generate(11, (index) => index).join()}5A5D",
+    );
     final uUnchained = UserModel(
-        name: "Unchained Banana",
-        icon: "https://avatars.githubusercontent.com/u/7847725?v=4",
-        walletAddress: "CB11${List.generate(11, (index) => index).join()}44AC",
-        chatModel: ChatModel(
-          name: "Unchained Banana",
-          icon: "https://avatars.githubusercontent.com/u/7847725?v=4",
-          id: "CB11${List.generate(11, (index) => index).join()}44AC",
-          lastMessage: "",
-          timestamp: DateTime.now(),
-        ));
+      name: "Unchained Banana",
+      iconUrl: "https://avatars.githubusercontent.com/u/7847725?v=4",
+      walletAddress: "CB11${List.generate(11, (index) => index).join()}44AC",
+      coreId: "CB11${List.generate(11, (index) => index).join()}44AC",
+    );
     final uSwagger = UserModel(
-        name: "Swagger Uncut",
-        icon: "https://avatars.githubusercontent.com/u/9947725?v=4",
-        walletAddress: "CB11${List.generate(11, (index) => index).join()}532A",
-        chatModel: ChatModel(
-          name: "Swagger Uncut",
-          icon: "https://avatars.githubusercontent.com/u/9947725?v=4",
-          id: "CB11${List.generate(11, (index) => index).join()}532A",
-          lastMessage: "",
-          timestamp: DateTime.now(),
-        ));
+      name: "Swagger Uncut",
+      iconUrl: "https://avatars.githubusercontent.com/u/9947725?v=4",
+      walletAddress: "CB11${List.generate(11, (index) => index).join()}532A",
+      coreId: "CB11${List.generate(11, (index) => index).join()}532A",
+    );
     var index = 0;
     final calls = [
       CallModel(
@@ -167,6 +133,7 @@ class CallsController extends GetxController {
         status: CallStatus.outgoingCanceled,
         date: DateTime.now().subtract(const Duration(minutes: 37)),
         user: uBoiled,
+        coreId: uBoiled.coreId,
       ),
       CallModel(
         id: "${index++}",
@@ -174,6 +141,7 @@ class CallsController extends GetxController {
         status: CallStatus.incomingMissed,
         date: DateTime.utc(2022, DateTime.march, 30, 20, 32),
         user: uCrapps,
+        coreId: uCrapps.coreId,
       ),
       CallModel(
         id: "${index++}",
@@ -181,6 +149,7 @@ class CallsController extends GetxController {
         status: CallStatus.outgoingNotAnswered,
         date: DateTime.utc(2022, DateTime.march, 30, 17, 44),
         user: uFancy,
+        coreId: uFancy.coreId,
       ),
       CallModel(
         id: "${index++}",
@@ -188,6 +157,7 @@ class CallsController extends GetxController {
         status: CallStatus.outgoingNotAnswered,
         date: DateTime.utc(2022, DateTime.march, 29, 21, 17),
         user: uOckerito,
+        coreId: uOckerito.coreId,
       ),
       CallModel(
         id: "${index++}",
@@ -195,6 +165,7 @@ class CallsController extends GetxController {
         status: CallStatus.incomingMissed,
         date: DateTime.utc(2022, DateTime.march, 28, 20, 48),
         user: uUnchained,
+        coreId: uUnchained.coreId,
       ),
       CallModel(
         id: "${index++}",
@@ -202,6 +173,7 @@ class CallsController extends GetxController {
         status: CallStatus.incomingAnswered,
         date: DateTime.utc(2022, DateTime.february, 16, 20, 59),
         user: uUnchained,
+        coreId: uUnchained.coreId,
       ),
       CallModel(
         id: "${index++}",
@@ -209,6 +181,7 @@ class CallsController extends GetxController {
         status: CallStatus.incomingAnswered,
         date: DateTime.utc(2022, DateTime.february, 15, 9, 2),
         user: uSwagger,
+        coreId: uSwagger.coreId,
       ),
     ];
 

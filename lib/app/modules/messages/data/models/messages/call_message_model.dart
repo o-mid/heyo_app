@@ -25,6 +25,7 @@ class CallMessageModel extends MessageModel {
     required this.callStatus,
     this.callType = CallMessageType.audio,
     required super.messageId,
+    required super.chatId,
     required super.timestamp,
     required super.senderName,
     required super.senderAvatar,
@@ -40,6 +41,7 @@ class CallMessageModel extends MessageModel {
   @override
   CallMessageModel copyWith({
     String? messageId,
+    String? chatId,
     MessageStatus? status,
     DateTime? timestamp,
     Map<String, ReactionModel>? reactions,
@@ -53,6 +55,7 @@ class CallMessageModel extends MessageModel {
       callStatus: callStatus,
       callType: callType,
       messageId: messageId ?? this.messageId,
+      chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
       senderAvatar: senderAvatar,
@@ -71,6 +74,7 @@ class CallMessageModel extends MessageModel {
         callType: CallMessageType.values.byName(json[callTypeSerializedName]),
         // parent props:
         messageId: json[MessageModel.messageIdSerializedName],
+        chatId: json[MessageModel.chatIdSerializedName],
         timestamp: DateTime.parse(json[MessageModel.timestampSerializedName]),
         senderName: json[MessageModel.senderNameSerializedName],
         senderAvatar: json[MessageModel.senderAvatarSerializedName],
@@ -91,6 +95,7 @@ class CallMessageModel extends MessageModel {
         callTypeSerializedName: callType.name,
         // parent props:
         MessageModel.messageIdSerializedName: messageId,
+        MessageModel.chatIdSerializedName: chatId,
         MessageModel.timestampSerializedName: timestamp.toIso8601String(),
         MessageModel.senderNameSerializedName: senderName,
         MessageModel.senderAvatarSerializedName: senderAvatar,

@@ -16,4 +16,10 @@ abstract class MessagesAbstractProvider {
   Future<MessageModel?> getMessageById({required String messageId, required String chatId});
 
   Future<List<MessageModel?>> getUnReadMessages(String chatId);
+
+  Future<int> getUnReadMessagesCount(String chatId);
+
+  Future<void> markMessagesAsRead({required String lastReadmessageId, required String chatId});
+
+  Future<void> markAllMessagesAsRead({required String chatId});
 }

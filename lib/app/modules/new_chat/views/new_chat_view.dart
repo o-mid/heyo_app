@@ -69,7 +69,9 @@ class NewChatView extends GetView<NewChatController> {
           icon: Assets.svg.filterIcon.svg(),
         ),
         IconButton(
-          onPressed: () => openAppBarActionBottomSheet(controller.profile),
+          onPressed: () => openAppBarActionBottomSheet(
+            profileLink: controller.profileLink,
+          ),
           icon: Assets.svg.dotColumn.svg(
             width: 5,
           ),
@@ -340,7 +342,9 @@ class _Contacts extends StatelessWidget {
                 ? EmptyUsersBody(
                     infoText: LocaleKeys.newChat_emptyStateTitleContacts.tr,
                     buttonText: LocaleKeys.newChat_buttons_invite.tr,
-                    onInvite: () => openInviteBottomSheet(controller.profile),
+                    onInvite: () => openInviteBottomSheet(
+                      profileLink: controller.profileLink,
+                    ),
                   )
                 : _SearchInContactsBody(controller: controller),
           ],

@@ -40,7 +40,8 @@ abstract class CommonMessagingConnectionController extends GetxController {
   // MessageSession? currentSession;
 
   /// Represents current status of used data channel.
-  Rx<DataChannelConnectivityStatus> connectivityStatus = DataChannelConnectivityStatus.connecting.obs;
+  Rx<DataChannelConnectivityStatus> connectivityStatus =
+      DataChannelConnectivityStatus.connecting.obs;
   Rx<DataChannelConnectivityStatus> dataChannelStatus =
       DataChannelConnectivityStatus.connecting.obs;
   //
@@ -94,7 +95,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
   /// defined by the appropriate derived class.
   confirmMessageById({required String messageId, required ConfirmMessageStatus status}) async {
     Map<String, dynamic> confirmMessageJson =
-    ConfirmMessageModel(messageId: messageId, status: status).toJson();
+        ConfirmMessageModel(messageId: messageId, status: status).toJson();
 
     DataChannelMessageModel dataChannelMessage = DataChannelMessageModel(
       message: confirmMessageJson,
@@ -170,7 +171,6 @@ abstract class CommonMessagingConnectionController extends GetxController {
         messageId: receivedMessage.messageId, status: ConfirmMessageStatus.delivered);
   }
 
-
   Future<void> deleteReceivedMessage(
       {required Map<String, dynamic> receivedDeleteJson, required String chatId}) async {
     DeleteMessageModel deleteMessage = DeleteMessageModel.fromJson(receivedDeleteJson);
@@ -222,24 +222,32 @@ abstract class CommonMessagingConnectionController extends GetxController {
     await confirmMessageById(messageId: messageId, status: ConfirmMessageStatus.read);
   }
 
-
   // creates a ChatModel and saves it to the chat history if it is not available
   // or updates the available chat
-  Future<void> createUserChatModel({required String sessionCid}) async {
+
+  createUserChatModel({required String sessioncid}) async {
     ChatModel userChatModel = ChatModel(
-        id: sessionCid,
+        id: sessioncid,
+        coreId: sessioncid,
         isOnline: true,
         name:
-            "${sessionCid.characters.take(4).string}...${sessionCid.characters.takeLast(4).string}",
+            "${sessioncid.characters.take(4).string}...${sessioncid.characters.takeLast(4).string}",
         icon: getMockIconUrl(),
         lastMessage: "",
+        lastReadMessageId: "",
         isVerified: true,
         timestamp: DateTime.now());
-    final isChatAvailable = await chatHistoryRepo.getChat(userChatModel.id);
-    if (isChatAvailable == null) {
+    final currentChatModel = await chatHistoryRepo.getChat(userChatModel.id);
+
+    if (currentChatModel == null) {
       await chatHistoryRepo.addChatToHistory(userChatModel);
     } else {
-      await chatHistoryRepo.updateChat(userChatModel);
+      await chatHistoryRepo.updateChat(userChatModel.copyWith(
+        lastMessage: currentChatModel.lastMessage,
+        lastReadMessageId: currentChatModel.lastReadMessageId,
+        notificationCount: currentChatModel.notificationCount,
+        isOnline: true,
+      ));
     }
   }
 

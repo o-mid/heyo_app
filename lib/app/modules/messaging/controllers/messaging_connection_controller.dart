@@ -23,6 +23,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../chats/data/models/chat_model.dart';
 import '../../messages/data/models/messages/image_message_model.dart';
 import '../../messages/data/models/messages/message_model.dart';
+import '../../messages/data/models/messages/text_message_model.dart';
 import '../../messages/data/models/messages/video_message_model.dart';
 import '../../messages/data/models/reaction_model.dart';
 import '../../messages/data/repo/messages_abstract_repo.dart';
@@ -44,7 +45,6 @@ import 'common_messaging_controller.dart';
 
 class MessagingConnectionController extends CommonMessagingConnectionController {
   final Messaging messaging;
-
 
   final JsonDecoder _decoder = const JsonDecoder();
 
@@ -166,7 +166,6 @@ class MessagingConnectionController extends CommonMessagingConnectionController 
     };
   }
 
-
   // Moved to the parent class CommonMessagingConnectionController
   // handleDataChannelBinary()
   // handleDataChannelText()
@@ -184,10 +183,10 @@ class MessagingConnectionController extends CommonMessagingConnectionController 
     String? selfCoreId = await accountInfo.getCoreId();
 
     MessageSession session =
-    await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
+        await messaging.connectionRequest(remoteId, 'data', false, selfCoreId!);
     currentSession = session;
 
-    await createUserChatModel(sessionCid: session.cid);
+    await createUserChatModel(sessioncid: session.cid);
   }
 
   Future<void> _acceptMessageConnection(MessageSession session) async {
@@ -210,7 +209,6 @@ class MessagingConnectionController extends CommonMessagingConnectionController 
     }
   }
 
-
   Future<void> _applyDataChannelConnectivityStatus(ConnectionStatus status) async {
     switch (status) {
       case ConnectionStatus.CONNECTED:
@@ -230,9 +228,8 @@ class MessagingConnectionController extends CommonMessagingConnectionController 
     }
   }
 
-
   Future<void> _handleConnectionRinging({required MessageSession session}) async {
-    await createUserChatModel(sessionCid: session.cid);
+    await createUserChatModel(sessioncid: session.cid);
 
     ChatModel? userChatModel;
 
@@ -252,15 +249,14 @@ class MessagingConnectionController extends CommonMessagingConnectionController 
         arguments: MessagesViewArgumentsModel(
           session: session,
           user: UserModel(
-            icon: userChatModel!.icon,
+            iconUrl: userChatModel!.icon,
             name: userChatModel!.name,
             walletAddress: session.cid,
-            isOnline: userChatModel!.isOnline,
-            chatModel: userChatModel!,
+            coreId: session.cid,
+            isOnline: true,
           ),
         ),
       );
     }
   }
-
 }

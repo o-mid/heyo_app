@@ -27,6 +27,7 @@ class MessagesLoadingWidget extends StatelessWidget {
             isMockMessage: true,
             message: TextMessageModel(
               messageId: "",
+              chatId: "",
               text: "                            ",
               timestamp: DateTime.now(),
               isFromMe: index % 2 == 0 ? true : false,

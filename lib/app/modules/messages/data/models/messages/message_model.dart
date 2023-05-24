@@ -1,3 +1,7 @@
+import "package:get/get.dart";
+import "package:heyo/app/modules/messages/data/models/messages/text_message_model.dart";
+import "package:heyo/app/modules/shared/utils/extensions/string.extension.dart";
+
 import "../reaction_model.dart";
 import "../reply_to_model.dart";
 
@@ -25,6 +29,7 @@ abstract class MessageModel {
   static const statusSerializedName = "status";
   static const typeSerializedName = "type";
   static const messageIdSerializedName = "messageId";
+  static const chatIdSerializedName = "chatId";
   static const timestampSerializedName = "timestamp";
   static const replyToSerializedName = "replyTo";
   static const reactionsSerializedName = "reactions";
@@ -36,6 +41,7 @@ abstract class MessageModel {
   final MessageStatus status;
   final MessageContentType type;
   final String messageId;
+  final String chatId;
   final DateTime timestamp;
   final ReplyToModel? replyTo;
   final Map<String, ReactionModel> reactions;
@@ -47,6 +53,7 @@ abstract class MessageModel {
 
   MessageModel({
     required this.messageId,
+    required this.chatId,
     required this.timestamp,
     required this.senderName,
     required this.senderAvatar,
@@ -61,6 +68,7 @@ abstract class MessageModel {
 
   MessageModel copyWith({
     String? messageId,
+    String? chatId,
     MessageStatus? status,
     DateTime? timestamp,
     MessageContentType? type,
@@ -72,4 +80,22 @@ abstract class MessageModel {
   });
 
   Map<String, dynamic> toJson();
+}
+
+extension PreviewHelper on MessageModel {
+  String getMessagePreview() {
+    return type == MessageContentType.text
+        ? (this as TextMessageModel).text
+        : type.name.stringCapitalize();
+  }
+}
+
+extension UpdateStatus on MessageStatus {
+  MessageStatus readStatus() {
+    return MessageStatus.read;
+  }
+
+  MessageStatus deliveredStatus() {
+    return MessageStatus.delivered;
+  }
 }

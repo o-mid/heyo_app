@@ -57,10 +57,12 @@ class ChatsView extends GetView<ChatsController> {
                     Routes.MESSAGES,
                     arguments: MessagesViewArgumentsModel(
                       user: UserModel(
-                          name: chats[index].name,
-                          icon: chats[index].icon,
-                          walletAddress: chats[index].id,
-                          chatModel: chats[index]),
+                        name: chats[index].name,
+                        iconUrl: chats[index].icon,
+                        walletAddress: chats[index].id,
+                        coreId: chats[index].id,
+                        isOnline: true,
+                      ),
                     ),
                   );
                 },

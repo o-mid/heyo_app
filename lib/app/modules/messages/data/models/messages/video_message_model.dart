@@ -17,6 +17,7 @@ class VideoMessageModel extends MessageModel {
     required this.url,
     required this.metadata,
     required super.messageId,
+    required super.chatId,
     required super.timestamp,
     required super.senderName,
     required super.senderAvatar,
@@ -32,6 +33,7 @@ class VideoMessageModel extends MessageModel {
   @override
   VideoMessageModel copyWith({
     String? messageId,
+    String? chatId,
     String? url,
     MessageStatus? status,
     bool? isLocal,
@@ -47,6 +49,7 @@ class VideoMessageModel extends MessageModel {
       url: url ?? this.url,
       metadata: metadata,
       messageId: messageId ?? this.messageId,
+      chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
       senderAvatar: senderAvatar,
@@ -65,6 +68,7 @@ class VideoMessageModel extends MessageModel {
         metadata: VideoMetadata.fromJson(json[metadataSerializedName]),
         // parent props:
         messageId: json[MessageModel.messageIdSerializedName],
+        chatId: json[MessageModel.chatIdSerializedName],
         timestamp: DateTime.parse(json[MessageModel.timestampSerializedName]),
         senderName: json[MessageModel.senderNameSerializedName],
         senderAvatar: json[MessageModel.senderAvatarSerializedName],
@@ -85,6 +89,7 @@ class VideoMessageModel extends MessageModel {
         metadataSerializedName: metadata.toJson(),
         // parent props:
         MessageModel.messageIdSerializedName: messageId,
+        MessageModel.chatIdSerializedName: chatId,
         MessageModel.timestampSerializedName: timestamp.toIso8601String(),
         MessageModel.senderNameSerializedName: senderName,
         MessageModel.senderAvatarSerializedName: senderAvatar,

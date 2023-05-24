@@ -12,11 +12,13 @@ import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
+import '../../../new_chat/data/models/user_model.dart';
+
 class BeginningOfMessagesHeaderWidget extends StatelessWidget {
-  final ChatModel chat;
+  final UserModel user;
   const BeginningOfMessagesHeaderWidget({
     Key? key,
-    required this.chat,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -34,13 +36,13 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
-          CustomCircleAvatar(url: chat.icon, size: 64),
+          CustomCircleAvatar(url: user.iconUrl, size: 64),
           CustomSizes.mediumSizedBoxHeight,
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                chat.name,
+                user.name,
                 style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
               ),
               CustomSizes.smallSizedBoxWidth,
@@ -65,7 +67,7 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
           CustomSizes.mediumSizedBoxHeight,
           Text(
             LocaleKeys.MessagesPage_endToEndEncryptedMessaging.trParams(
-              {"name": chat.name},
+              {"name": user.name},
             ),
             style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
           ),

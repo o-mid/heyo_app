@@ -24,3 +24,9 @@ extension Hex on String {
     return utf8.decode(hexToBytes(this));
   }
 }
+
+extension StringExtension on String {
+  String stringCapitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1).toLowerCase()}";
+  }
+}

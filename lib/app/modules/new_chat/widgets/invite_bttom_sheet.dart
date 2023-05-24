@@ -1,7 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../shared/utils/screen-utils/buttons/custom_button.dart';
-import '../data/models/profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -10,7 +9,9 @@ import 'package:heyo/generated/locales.g.dart';
 import '../../shared/utils/constants/textStyles.dart';
 import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 
-void openInviteBottomSheet(ProfileModel profile) {
+void openInviteBottomSheet({
+  required String profileLink,
+}) {
   Get.bottomSheet(
     Container(
       padding: CustomSizes.mainContentPadding,
@@ -31,7 +32,7 @@ void openInviteBottomSheet(ProfileModel profile) {
           TextButton(
               onPressed: () {
                 Clipboard.setData(ClipboardData(
-                  text: profile.link,
+                  text: profileLink,
                 )).then((result) {
                   // show toast or snackbar after successfully save
 
@@ -39,8 +40,7 @@ void openInviteBottomSheet(ProfileModel profile) {
                     messageText: Center(
                       child: Text(
                         "Link copied to clipboard",
-                        style: TEXTSTYLES.kBodySmall
-                            .copyWith(color: COLORS.kDarkBlueColor),
+                        style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kDarkBlueColor),
                       ),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 14),
@@ -53,8 +53,7 @@ void openInviteBottomSheet(ProfileModel profile) {
                 });
               },
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(COLORS.kBrightBlueColor),
+                backgroundColor: MaterialStateProperty.all<Color>(COLORS.kBrightBlueColor),
                 padding: MaterialStateProperty.all(
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 14.0),
                 ),
@@ -69,7 +68,7 @@ void openInviteBottomSheet(ProfileModel profile) {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    profile.link,
+                    profileLink,
                     style: TEXTSTYLES.kLinkBig.copyWith(
                       color: COLORS.kTextBlueColor,
                     ),
@@ -81,7 +80,7 @@ void openInviteBottomSheet(ProfileModel profile) {
           CustomButton.primary(
             // share the link
             onTap: () {
-              Share.share(profile.link);
+              Share.share(profileLink);
             },
             color: COLORS.kGreenLighterColor,
             titleWidget: Text(
@@ -99,7 +98,7 @@ void openInviteBottomSheet(ProfileModel profile) {
     isDismissible: true,
     enableDrag: true,
     shape: const RoundedRectangleBorder(
-        borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        borderRadius:
+            const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
   );
 }

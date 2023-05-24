@@ -3,14 +3,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/file_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/messages/utils/open_camera_for_sending_media_message.dart';
-import 'package:heyo/app/modules/shared/providers/database/dao/user_preferences/user_preferences_abstract_provider.dart';
-import 'package:heyo/app/modules/shared/providers/database/repos/user_preferences/user_preferences_abstract_repo.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
@@ -48,12 +47,13 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:tuple/tuple.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
+import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import '../../messaging/controllers/common_messaging_controller.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../../messaging/messaging_session.dart';
+import '../../new_chat/data/models/user_model.dart';
 import '../../share_files/models/file_model.dart';
-import '../../shared/data/models/user_preferences.dart';
 import '../../shared/utils/constants/transitions_constant.dart';
 import '../../shared/utils/scroll_to_index.dart';
 import '../data/usecases/delete_message_usecase.dart';
@@ -61,17 +61,19 @@ import '../data/usecases/update_message_usecase.dart';
 
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
-  final UserPreferencesAbstractRepo userPreferencesRepo;
 
-  late final CommonMessagingConnectionController messagingConnection;
+  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
 
-  MessagesController(
-      {required this.messagesRepo,
-      required this.userPreferencesRepo}) {
+  MessagesController({
+    required this.messagesRepo,
+    required this.chatHistoryRepo,
+  }) {
     _initMessagesArguments();
     _initUiControllers();
     _initMessagingConnection();
   }
+
+  late final CommonMessagingConnectionController messagingConnection;
 
   late MessagingConnectionType connectionType;
 
@@ -101,15 +103,19 @@ class MessagesController extends GetxController {
   late String sessionId;
   late KeyboardVisibilityController keyboardController;
 
-  late UserPreferences? userPreferences;
+  late ChatModel? chatModel;
+  late UserModel selfUserModel;
   final FocusNode textFocusNode = FocusNode();
 
   final isListLoaded = false.obs;
 
-
   @override
   Future<void> onInit() async {
-    super.onInit();
+    args = Get.arguments as MessagesViewArgumentsModel;
+    selfUserModel = args.user;
+    //chatId = selfUserModel.chatModel.id;
+    chatId = selfUserModel.coreId;
+    keyboardController = KeyboardVisibilityController();
     // _initMessagesArguments();
     // _initUiControllers();
     //
@@ -124,24 +130,13 @@ class MessagesController extends GetxController {
 
     // Close emoji picker when keyboard opens
     _handleKeyboardVisibilityChanges();
+    super.onInit();
   }
 
   @override
   void onReady() {
     super.onReady();
     animateToBottom();
-  }
-
-  @override
-  Future<void> onClose() async {
-    await _saveUserPreferences();
-
-    // Todo: remove this when a global player is implemented
-    Get.find<AudioMessageController>().player.stop();
-
-    Get.find<VideoMessageController>().stopAndClearPreviousVideo();
-    _messagesStreamSubscription.cancel();
-    super.onClose();
   }
 
   _closeMediaPlayers() {
@@ -153,7 +148,7 @@ class MessagesController extends GetxController {
 
   _initMessagesArguments() {
     args = Get.arguments as MessagesViewArgumentsModel;
-    chatId = args.user.chatModel.id;
+    chatId = args.user.coreId;
     connectionType = args.connectionType;
   }
 
@@ -167,12 +162,12 @@ class MessagesController extends GetxController {
   _initMessagingConnection() {
     switch (connectionType) {
       case MessagingConnectionType.internet:
-      // TODO remove debug print
+        // TODO remove debug print
         print('switch to the internet connection messaging');
         messagingConnection = Get.find<MessagingConnectionController>();
         break;
       case MessagingConnectionType.wifiDirect:
-      // TODO remove debug print
+        // TODO remove debug print
         print('switch to the wifi-direct connection messaging');
         messagingConnection = Get.find<WifiDirectConnectionController>();
         break;
@@ -188,7 +183,6 @@ class MessagesController extends GetxController {
     Get.put(messagingConnection);
 
     messagingConnection.initMessagingConnection(remoteId: args.user.walletAddress);
-
   }
 
   void _initMessagesStream() async {
@@ -208,7 +202,17 @@ class MessagesController extends GetxController {
     });
   }
 
+  @override
+  Future<void> onClose() async {
+    await _saveUserStates();
 
+    // Todo: remove this when a global player is implemented
+    Get.find<AudioMessageController>().player.stop();
+
+    Get.find<VideoMessageController>().stopAndClearPreviousVideo();
+    _messagesStreamSubscription.cancel();
+    super.onClose();
+  }
 
   void _handleKeyboardVisibilityChanges() {
     _globalMessageController.streamSubscriptions
@@ -387,6 +391,18 @@ class MessagesController extends GetxController {
 
   void toggleMessageReadStatus({required String messageId}) async {
     await messagingConnection.confirmReadMessages(messageId: messageId);
+
+    await markMessagesAsReadById(
+      lastReadmessageId: messageId,
+    );
+  }
+
+  Future<void> markMessagesAsReadById({required String lastReadmessageId}) async {
+    await messagesRepo.markMessagesAsRead(lastReadmessageId: lastReadmessageId, chatId: chatId);
+  }
+
+  Future<void> markAllMessagesAsRead() async {
+    await messagesRepo.markAllMessagesAsRead(chatId: chatId);
   }
 
   void toggleMessageSelection(String id) {
@@ -523,6 +539,7 @@ class MessagesController extends GetxController {
       senderName: "",
       senderAvatar: "",
       isFromMe: true,
+      chatId: chatId,
     );
   }
 
@@ -681,7 +698,7 @@ class MessagesController extends GetxController {
     try {
       await openCameraForSendingMediaMessage(
         context,
-        receiverName: args.user.chatModel.name,
+        receiverName: selfUserModel.name,
         onEntitySaving: (CameraPickerViewType viewType, File file) async {
           AssetEntity? entity;
 
@@ -789,6 +806,7 @@ class MessagesController extends GetxController {
           senderName: '',
           isFromMe: true,
           status: MessageStatus.sending,
+          chatId: chatId,
           timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
           url: element["path"],
         ));
@@ -796,6 +814,7 @@ class MessagesController extends GetxController {
         Uint8List thumbnailBytes = await element["thumbnail"];
         tempImages.add(VideoMessageModel(
           messageId: "${messages.lastIndexOf(messages.last) + 1}",
+          chatId: chatId,
           metadata: VideoMetadata(
             durationInSeconds: element["videoDuration"].inSeconds,
             height: double.parse(element["height"].toString()),
@@ -818,6 +837,7 @@ class MessagesController extends GetxController {
       messages.add(MultiMediaMessageModel(
         mediaList: tempImages,
         messageId: "${messages.lastIndexOf(messages.last) + 1}",
+        chatId: chatId,
         senderAvatar: '',
         senderName: '',
         isFromMe: true,
@@ -832,6 +852,7 @@ class MessagesController extends GetxController {
               messages.add(
                 ImageMessageModel(
                     messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                    chatId: chatId,
                     isLocal: true,
                     metadata: ImageMetadata(
                       height: double.parse(asset["height"].toString()),
@@ -852,6 +873,7 @@ class MessagesController extends GetxController {
               messages.add(
                 VideoMessageModel(
                   messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                  chatId: chatId,
                   metadata: VideoMetadata(
                     durationInSeconds: asset["videoDuration"].inSeconds,
                     height: double.parse(asset["height"].toString()),
@@ -875,6 +897,7 @@ class MessagesController extends GetxController {
               messages.add(
                 TextMessageModel(
                   messageId: "${messages.lastIndexOf(messages.last) + 1}",
+                  chatId: chatId,
                   text: asset["value"],
                   timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
                   senderName: '',
@@ -935,24 +958,23 @@ class MessagesController extends GetxController {
   }
 
   Future<void> _getMessages() async {
-    await userPreferencesRepo.getUserPreferencesById(chatId).then((
-        value) async =>
-    {
-      userPreferences = value,
-      await messagesRepo.getMessages(chatId).then((value) =>
-      {
-        messages.value = value,
-      })
-    });
+    await chatHistoryRepo.getChat(chatId).then((value) async => {
+          chatModel = value,
+          await messagesRepo.getMessages(chatId).then((value) => {
+                messages.value = value,
+              })
+        });
 
-    // of userPreferences is null, scroll to bottom
+    // of chatModel is null, scroll to bottom
     // eles scroll to last position
 
-    if (userPreferences != null) {
-      lastReadRemoteMessagesId.value = userPreferences!.lastReadMessageId;
-      scrollPositionMessagesId.value = userPreferences!.scrollPosition;
-      // await scrollToMessage(messageId: userPreferences!.scrollPosition);
-      await jumpToMessage(messageId: userPreferences!.scrollPosition);
+    if (chatModel != null) {
+      print("scrolling to last position");
+
+      lastReadRemoteMessagesId.value = chatModel!.lastReadMessageId;
+      scrollPositionMessagesId.value = chatModel!.scrollPosition;
+      // await scrollToMessage(messageId: chatModel!.scrollPosition);
+      await jumpToMessage(messageId: chatModel!.scrollPosition);
       //isListLoaded.value = true;
     } else {
       // uncomment the following lines if you want to add mock Messages
@@ -966,445 +988,499 @@ class MessagesController extends GetxController {
       //   );
       // });
       isListLoaded.value = true;
+      chatModel = ChatModel(
+        id: selfUserModel.coreId,
+        coreId: selfUserModel.coreId,
+        name: selfUserModel.name,
+        icon: selfUserModel.iconUrl,
+        lastMessage: messages.last.toString(),
+        timestamp: DateTime.now(),
+        isOnline: true,
+        isVerified: true,
+        lastReadMessageId: lastReadRemoteMessagesId.value,
+      );
     }
   }
 
 //TODO remove?
-//     Future<void> _addMockMessages() async {
-//       var index = 0;
-//
-//       final ms = [
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-//           timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 5)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text:
-//           "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-//           timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 4)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: " Nihil, incidunt!",
-//           timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 3)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit.",
-//           timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6)),
-//           senderName: "",
-//           senderAvatar: "",
-//           isFromMe: true,
-//           status: MessageStatus.read,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text:
-//           "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-//           timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 5, minutes: 58)),
-//           senderName: "",
-//           senderAvatar: "",
-//           isFromMe: true,
-//           status: MessageStatus.read,
-//         ),
-//
-//         //
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-//           timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 5)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//           status: MessageStatus.read,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text:
-//           "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-//           timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 4)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: " Nihil, incidunt!",
-//           timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 3)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit.",
-//           timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2)),
-//           senderName: "",
-//           senderAvatar: "",
-//           isFromMe: true,
-//           status: MessageStatus.read,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit.",
-//           timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 1, minutes: 58)),
-//           senderName: "",
-//           senderAvatar: "",
-//           isFromMe: true,
-//           status: MessageStatus.read,
-//         ),
-//
-//         //
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 5)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text:
-//           "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 4)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: " Nihil, incidunt!",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 3)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit.",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 2)),
-//           senderName: "",
-//           senderAvatar: "",
-//           isFromMe: true,
-//           status: MessageStatus.read,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit.",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 58)),
-//           senderName: "",
-//           senderAvatar: "",
-//           isFromMe: true,
-//           status: MessageStatus.read,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Sure thing. Just let me know when sth happens",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 56)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//           reactions: {
-//             "🎉": ReactionModel(
-//               users: List.generate(12, (index) => ""),
-//             ),
-//             "🤘": ReactionModel(
-//               users: List.generate(3, (index) => ""),
-//               isReactedByMe: true,
-//             ),
-//             "🔥": ReactionModel(
-//               users: List.generate(5, (index) => ""),
-//             ),
-//             "👍": ReactionModel(
-//               users: List.generate(2, (index) => ""),
-//             ),
-//             "😎": ReactionModel(
-//               users: List.generate(1, (index) => ""),
-//             ),
-//           },
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Very nice!",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 55)),
-//           senderName: "",
-//           senderAvatar: "",
-//           replyTo: ReplyToModel(
-//             repliedToMessageId: "${index - 2}",
-//             repliedToMessage: "Sure thing. Just let me know when sth happens",
-//             repliedToName: args.user.chatModel.name,
-//           ),
-//           isFromMe: true,
-//           status: MessageStatus.read,
-//           reactions: {
-//             "🤗": ReactionModel(
-//               users: List.generate(1, (index) => ""),
-//             ),
-//             "😘": ReactionModel(
-//               users: List.generate(2, (index) => ""),
-//               isReactedByMe: true,
-//             ),
-//           },
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Very nice!",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 54)),
-//           senderName: "",
-//           senderAvatar: "",
-//           replyTo: ReplyToModel(
-//             repliedToMessageId: "0",
-//             repliedToMessage:
-//             "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-//             repliedToName: args.user.chatModel.name,
-//           ),
-//           isFromMe: true,
-//           status: MessageStatus.read,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit.",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 52)),
-//           senderName: "",
-//           senderAvatar: "",
-//           isFromMe: true,
-//           status: MessageStatus.sending,
-//         ),
-//
-//         AudioMessageModel(
-//           messageId: "${index++}",
-//           metadata: AudioMetadata(durationInSeconds: 100),
-//           url: "https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 46)),
-//           senderName: "",
-//           senderAvatar: "",
-//           isFromMe: true,
-//           status: MessageStatus.read,
-//         ),
-//         AudioMessageModel(
-//           messageId: "${index++}",
-//           metadata: AudioMetadata(durationInSeconds: 19),
-//           url: "https://download.samplelib.com/mp3/sample-15s.mp3",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         LocationMessageModel(
-//           messageId: "${index++}",
-//           latitude: 48.153445,
-//           longitude: 17.129925,
-//           address: "Kocelova 11-11, 821 08, Bratislava",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 44)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-//           timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 5)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text:
-//           "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-//           timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 4)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: " Nihil, incidunt!",
-//           timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 3)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit.",
-//           timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6)),
-//           senderName: "",
-//           senderAvatar: "",
-//           isFromMe: true,
-//           status: MessageStatus.read,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text:
-//           "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-//           timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 5, minutes: 58)),
-//           senderName: "",
-//           senderAvatar: "",
-//           isFromMe: true,
-//           status: MessageStatus.read,
-//         ),
-//
-//         //
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-//           timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 5)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//           status: MessageStatus.read,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text:
-//           "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-//           timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 4)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: " Nihil, incidunt!",
-//           timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 3)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit.",
-//           timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2)),
-//           senderName: "",
-//           senderAvatar: "",
-//           isFromMe: true,
-//           status: MessageStatus.read,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit.",
-//           timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 1, minutes: 58)),
-//           senderName: "",
-//           senderAvatar: "",
-//           isFromMe: true,
-//           status: MessageStatus.read,
-//         ),
-//
-//         //
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 5)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text:
-//           "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 4)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: " Nihil, incidunt!",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 3)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit.",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 2)),
-//           senderName: "",
-//           senderAvatar: "",
-//           isFromMe: true,
-//           status: MessageStatus.read,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit.",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 58)),
-//           senderName: "",
-//           senderAvatar: "",
-//           isFromMe: true,
-//           status: MessageStatus.read,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Sure thing. Just let me know when sth happens",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 56)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//           reactions: {
-//             "🎉": ReactionModel(
-//               users: List.generate(12, (index) => ""),
-//             ),
-//             "🤘": ReactionModel(
-//               users: List.generate(3, (index) => ""),
-//               isReactedByMe: true,
-//             ),
-//             "🔥": ReactionModel(
-//               users: List.generate(5, (index) => ""),
-//             ),
-//             "👍": ReactionModel(
-//               users: List.generate(2, (index) => ""),
-//             ),
-//             "😎": ReactionModel(
-//               users: List.generate(1, (index) => ""),
-//             ),
-//           },
-//         ),
-//         LiveLocationMessageModel(
-//           messageId: "${index++}",
-//           latitude: 35.65031,
-//           longitude: 51.2925217,
-//           endTime: DateTime.now().subtract(const Duration(minutes: 40)),
-//           timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 42)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//
-//         CallMessageModel(
-//           messageId: "${index++}",
-//           callStatus: CallMessageStatus.declined,
-//           callType: CallMessageType.video,
-//           timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         CallMessageModel(
-//           messageId: "${index++}",
-//           callStatus: CallMessageStatus.missed,
-//           callType: CallMessageType.audio,
-//           timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: " Nihil, incidunt!",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 3)),
-//           senderName: args.user.chatModel.name,
-//           senderAvatar: args.user.chatModel.icon,
-//         ),
-//         TextMessageModel(
-//           messageId: "${index++}",
-//           text: "Lorem ipsum dolor sit.",
-//           timestamp: DateTime.now().subtract(const Duration(hours: 2)),
-//           senderName: "",
-//           senderAvatar: "",
-//           isFromMe: true,
-//           status: MessageStatus.read,
-//         ),
-//       ];
-//
-//       for (int i = 0; i < ms.length; i++) {
-//         await messagesRepo.createMessage(message: ms[i], chatId: chatId);
-//       }
-//     }
-//
-//   Future<List<int>> pathToUint8List(String path) async {
-//     var data = await rootBundle.load(path);
-//     return data.buffer.asUint8List().toList();
-//   }
+  Future<void> _addMockMessages() async {
+    var index = 0;
+
+    final ms = [
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 5)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+        chatId: "${index++}",
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text:
+            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 4)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+        chatId: "${index++}",
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: " Nihil, incidunt!",
+        chatId: "${index++}",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 3)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        chatId: "${index++}",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text:
+            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 5, minutes: 58)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+
+      //
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 5)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text:
+            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 4)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: " Nihil, incidunt!",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 3)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 1, minutes: 58)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+
+      //
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 5)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text:
+            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 4)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: " Nihil, incidunt!",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 3)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 58)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Sure thing. Just let me know when sth happens",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 56)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+        reactions: {
+          "🎉": ReactionModel(
+            users: List.generate(12, (index) => ""),
+          ),
+          "🤘": ReactionModel(
+            users: List.generate(3, (index) => ""),
+            isReactedByMe: true,
+          ),
+          "🔥": ReactionModel(
+            users: List.generate(5, (index) => ""),
+          ),
+          "👍": ReactionModel(
+            users: List.generate(2, (index) => ""),
+          ),
+          "😎": ReactionModel(
+            users: List.generate(1, (index) => ""),
+          ),
+        },
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Very nice!",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 55)),
+        senderName: "",
+        senderAvatar: "",
+        replyTo: ReplyToModel(
+          repliedToMessageId: "${index - 2}",
+          repliedToMessage: "Sure thing. Just let me know when sth happens",
+          repliedToName: selfUserModel.name,
+        ),
+        isFromMe: true,
+        status: MessageStatus.read,
+        reactions: {
+          "🤗": ReactionModel(
+            users: List.generate(1, (index) => ""),
+          ),
+          "😘": ReactionModel(
+            users: List.generate(2, (index) => ""),
+            isReactedByMe: true,
+          ),
+        },
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Very nice!",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 54)),
+        senderName: "",
+        senderAvatar: "",
+        replyTo: ReplyToModel(
+          repliedToMessageId: "0",
+          repliedToMessage:
+              "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+          repliedToName: selfUserModel.name,
+        ),
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 52)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.sending,
+      ),
+
+      AudioMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        metadata: AudioMetadata(durationInSeconds: 100),
+        url: "https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 46)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      AudioMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        metadata: AudioMetadata(durationInSeconds: 19),
+        url: "https://download.samplelib.com/mp3/sample-15s.mp3",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      LocationMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        latitude: 48.153445,
+        longitude: 17.129925,
+        address: "Kocelova 11-11, 821 08, Bratislava",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 44)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 5)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text:
+            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 4)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: " Nihil, incidunt!",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6, minutes: 3)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 6)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text:
+            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 3, hours: 5, minutes: 58)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+
+      //
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 5)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text:
+            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 4)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: " Nihil, incidunt!",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 3)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 1, minutes: 58)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+
+      //
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto, perferendis!",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 5)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text:
+            "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 4)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: " Nihil, incidunt!",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 3)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 58)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Sure thing. Just let me know when sth happens",
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 56)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+        reactions: {
+          "🎉": ReactionModel(
+            users: List.generate(12, (index) => ""),
+          ),
+          "🤘": ReactionModel(
+            users: List.generate(3, (index) => ""),
+            isReactedByMe: true,
+          ),
+          "🔥": ReactionModel(
+            users: List.generate(5, (index) => ""),
+          ),
+          "👍": ReactionModel(
+            users: List.generate(2, (index) => ""),
+          ),
+          "😎": ReactionModel(
+            users: List.generate(1, (index) => ""),
+          ),
+        },
+      ),
+      LiveLocationMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        latitude: 35.65031,
+        longitude: 51.2925217,
+        endTime: DateTime.now().subtract(const Duration(minutes: 40)),
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 42)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+
+      CallMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        callStatus: CallMessageStatus.declined,
+        callType: CallMessageType.video,
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 41)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      CallMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        callStatus: CallMessageStatus.missed,
+        callType: CallMessageType.audio,
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 40)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: " Nihil, incidunt!",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 3)),
+        senderName: selfUserModel.name,
+        senderAvatar: selfUserModel.iconUrl,
+      ),
+      TextMessageModel(
+        messageId: "${index++}",
+        chatId: "${index++}",
+        text: "Lorem ipsum dolor sit.",
+        timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+        senderName: "",
+        senderAvatar: "",
+        isFromMe: true,
+        status: MessageStatus.read,
+      ),
+    ];
+
+    for (int i = 0; i < ms.length; i++) {
+      await messagesRepo.createMessage(message: ms[i], chatId: chatId);
+    }
+  }
+
+  Future<List<int>> pathToUint8List(String path) async {
+    var data = await rootBundle.load(path);
+    return data.buffer.asUint8List().toList();
+  }
 
   void onMessagesItemVisibilityChanged({
     required VisibilityInfo visibilityInfo,
@@ -1442,12 +1518,20 @@ class MessagesController extends GetxController {
     }
   }
 
-  Future<void> _saveUserPreferences() async {
+  Future<void> _saveUserStates() async {
     // saves the last read message index in the user preferences repo
-    await userPreferencesRepo.createOrUpdateUserPreferences(UserPreferences(
-      chatId: chatId,
-      lastReadMessageId: lastReadRemoteMessagesId.value,
-      scrollPosition: scrollPositionMessagesId.value,
-    ));
+    print("saving lastReadRemoteMessagesId.value: ${lastReadRemoteMessagesId.value}");
+    print("saving scrollPositionMessagesId.value: ${scrollPositionMessagesId.value}");
+    int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
+    await chatHistoryRepo.updateChat(
+      chatModel!.copyWith(
+          icon: selfUserModel.iconUrl,
+          name: selfUserModel.name,
+          lastReadMessageId: lastReadRemoteMessagesId.value,
+          isOnline: true,
+          scrollPosition: scrollPositionMessagesId.value,
+          lastMessage: messages.last.getMessagePreview(),
+          notificationCount: unReadMessagesCount),
+    );
   }
 }
