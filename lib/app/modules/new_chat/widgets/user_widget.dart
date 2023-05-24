@@ -28,7 +28,7 @@ class UserWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         CustomCircleAvatar(
-          url: user.icon,
+          url: user.iconUrl,
           size: 48,
           isOnline: user.isOnline,
         ),

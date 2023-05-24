@@ -1,19 +1,20 @@
-import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
 import 'package:heyo/app/modules/shared/data/repository/db/cache_contractor.dart';
-import 'package:heyo/app/modules/shared/providers/database/dao/user_contact_provider.dart';
+import 'package:heyo/app/modules/shared/providers/database/dao/user_provider.dart';
+
+import '../../../../new_chat/data/models/user_model.dart';
 
 class CacheRepository extends CacheContractor {
-  final UserContactProvider userContact;
+  final UserProvider userContact;
 
   CacheRepository({required this.userContact});
 
   @override
-  Future<List<UserContact>> getUserContacts() {
+  Future<List<UserModel>> getUserContacts() {
     return userContact.getAllSortedByName();
   }
 
   @override
-  Future addUserContact(UserContact user) {
+  Future addUserContact(UserModel user) {
     return userContact.insert(user);
   }
 }

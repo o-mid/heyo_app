@@ -6,9 +6,10 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import '../../shared/utils/constants/textStyles.dart';
-import '../data/models/profile_model.dart';
 
-void openAppBarActionBottomSheet(ProfileModel profile) {
+void openAppBarActionBottomSheet({
+  required String profileLink,
+}) {
   Get.bottomSheet(
       Padding(
         padding: CustomSizes.iconListPadding,
@@ -18,7 +19,7 @@ void openAppBarActionBottomSheet(ProfileModel profile) {
             TextButton(
                 onPressed: () {
                   Get.back();
-                  openInviteBottomSheet(profile);
+                  openInviteBottomSheet(profileLink: profileLink);
                 },
                 child: Row(
                   children: [
@@ -52,6 +53,6 @@ void openAppBarActionBottomSheet(ProfileModel profile) {
       isDismissible: true,
       enableDrag: true,
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20), topRight: Radius.circular(20))));
+          borderRadius:
+              BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))));
 }

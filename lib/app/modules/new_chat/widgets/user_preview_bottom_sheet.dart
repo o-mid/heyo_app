@@ -29,7 +29,7 @@ void openUserPreviewBottomSheet(UserModel user, {bool isWifiDirect = false}) {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomSizes.largeSizedBoxHeight,
-          CustomCircleAvatar(url: user.icon, size: 64),
+          CustomCircleAvatar(url: user.iconUrl, size: 64),
           CustomSizes.mediumSizedBoxHeight,
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -41,7 +41,7 @@ void openUserPreviewBottomSheet(UserModel user, {bool isWifiDirect = false}) {
               CustomSizes.smallSizedBoxWidth,
               user.isVerified
                   ? Assets.svg.verifiedWithBluePadding
-                  .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
+                      .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
                   : const SizedBox(),
             ],
           ),
@@ -56,7 +56,7 @@ void openUserPreviewBottomSheet(UserModel user, {bool isWifiDirect = false}) {
             children: [
               CircleIconButton(
                 onPressed: () {
-                  if (user.chatModel == null) {
+                  if (user.coreId.isEmpty) {
                     return;
                   } else {
                     Get.back();
@@ -65,20 +65,15 @@ void openUserPreviewBottomSheet(UserModel user, {bool isWifiDirect = false}) {
                       Routes.MESSAGES,
                       arguments: MessagesViewArgumentsModel(
                           user: user.copyWith(
-                            chatModel: user.chatModel.copyWith(
-                              id: user.walletAddress,
-                              icon: user.icon,
-                              isOnline: true,
-                              isVerified: true,
-                              timestamp: DateTime.now(),
-                              name:
-                              "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}",
-                            ),
+                            isOnline: true,
+                            isVerified: true,
+                            name:
+                                "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}",
+                            coreId: user.walletAddress,
                           ),
-                          connectionType:isWifiDirect
+                          connectionType: isWifiDirect
                               ? MessagingConnectionType.wifiDirect
-                              : MessagingConnectionType.internet
-                      ),
+                              : MessagingConnectionType.internet),
                     );
                   }
                 },
@@ -105,7 +100,6 @@ void openUserPreviewBottomSheet(UserModel user, {bool isWifiDirect = false}) {
                   } else {
                     Get.snackbar("Wifi Direct", "Calling over wifi direct are not supported yet");
                   }
-
                 },
                 backgroundColor: COLORS.kBrightBlueColor,
                 icon: Assets.svg.audioCallIcon.svg(
@@ -130,7 +124,6 @@ void openUserPreviewBottomSheet(UserModel user, {bool isWifiDirect = false}) {
                   } else {
                     Get.snackbar("Wifi Direct", "Calling over wifi direct are not supported yet");
                   }
-
                 },
                 backgroundColor: COLORS.kBrightBlueColor,
                 icon: Assets.svg.videoCallIcon.svg(

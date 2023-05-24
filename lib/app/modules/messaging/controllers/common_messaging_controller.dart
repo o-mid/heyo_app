@@ -261,21 +261,30 @@ abstract class CommonMessagingConnectionController extends GetxController {
 
   // creates a ChatModel and saves it to the chat history if it is not available
   // or updates the available chat
-  Future<void> createUserChatModel({required String sessionCid}) async {
+
+  createUserChatModel({required String sessioncid}) async {
     ChatModel userChatModel = ChatModel(
-        id: sessionCid,
+        id: sessioncid,
+        coreId: sessioncid,
         isOnline: true,
         name:
-            "${sessionCid.characters.take(4).string}...${sessionCid.characters.takeLast(4).string}",
+            "${sessioncid.characters.take(4).string}...${sessioncid.characters.takeLast(4).string}",
         icon: getMockIconUrl(),
         lastMessage: "",
+        lastReadMessageId: "",
         isVerified: true,
         timestamp: DateTime.now());
-    final isChatAvailable = await chatHistoryRepo.getChat(userChatModel.id);
-    if (isChatAvailable == null) {
+    final currentChatModel = await chatHistoryRepo.getChat(userChatModel.id);
+
+    if (currentChatModel == null) {
       await chatHistoryRepo.addChatToHistory(userChatModel);
     } else {
-      await chatHistoryRepo.updateChat(userChatModel);
+      await chatHistoryRepo.updateChat(userChatModel.copyWith(
+        lastMessage: currentChatModel.lastMessage,
+        lastReadMessageId: currentChatModel.lastReadMessageId,
+        notificationCount: currentChatModel.notificationCount,
+        isOnline: true,
+      ));
     }
   }
 

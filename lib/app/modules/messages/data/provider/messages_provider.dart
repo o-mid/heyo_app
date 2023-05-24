@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/provider/messages_abstract_provider.dart';
+import 'package:heyo/app/modules/messages/data/usecases/update_message_usecase.dart';
 import 'package:heyo/app/modules/messages/utils/message_from_json.dart';
 import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
@@ -97,6 +99,16 @@ class MessagesProvider implements MessagesAbstractProvider {
     await _store.record(chatId).put(await _db, messages.map((m) => m.toJson()).toList());
   }
 
+  // returns Count of Messages where isFromMe is false and status is delivered (not read)
+  @override
+  Future<int> getUnReadMessagesCount(String chatId) async {
+    final messages = await getMessages(chatId);
+    return messages
+        .where((element) => element.isFromMe == false && element.status == MessageStatus.delivered)
+        .toList()
+        .length;
+  }
+
   @override
   Future<Stream<List<MessageModel>>> getMessagesStream(String chatId) async {
     return _store.record(chatId).onSnapshot(await _db).transform(
@@ -123,5 +135,60 @@ class MessagesProvider implements MessagesAbstractProvider {
     return messages
         .where((element) => element.isFromMe == false && element.status == MessageStatus.delivered)
         .toList();
+  }
+
+  Future<int> _getMessageIndexById({required String messageId, required String chatId}) async {
+    final messages = await getMessages(chatId);
+    final index = messages.indexWhere((m) => m.messageId == messageId);
+    return index;
+  }
+
+  @override
+  Future<void> markMessagesAsRead(
+      {required String lastReadmessageId, required String chatId}) async {
+    // gets the index of the last read message in the list
+
+    int lastReadmessageIdIndex =
+        await _getMessageIndexById(messageId: lastReadmessageId, chatId: chatId);
+
+    // gets the list of all the messages that are currently unread
+    List<MessageModel?> unReadMessages = await getUnReadMessages(chatId);
+
+    if (unReadMessages.isNotEmpty) {
+      // checks for each unread message in the list
+      // if the index is before the last read message sets the status to read
+      for (var element in unReadMessages) {
+        if (await _getMessageIndexById(messageId: element!.messageId, chatId: chatId) <=
+            lastReadmessageIdIndex) {
+          // sets the status to read
+          await updateMessage(
+              message: element.copyWith(
+                status: element.status.readStatus(),
+              ),
+              chatId: chatId);
+        }
+      }
+    }
+  }
+
+  @override
+  Future<void> markAllMessagesAsRead({required String chatId}) async {
+    // gets the list of all the messages that are currently unread
+    List<MessageModel?> unReadMessages = await getUnReadMessages(chatId);
+
+    if (unReadMessages.isNotEmpty) {
+      // checks for each unread message in the list
+      // if the index is before the last read message sets the status to read
+      for (var item in unReadMessages) {
+        if (item != null) {
+          // sets the status to read
+          updateMessage(
+              message: item.copyWith(
+                status: item.status.readStatus(),
+              ),
+              chatId: chatId);
+        }
+      }
+    }
   }
 }

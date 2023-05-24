@@ -22,7 +22,10 @@ class WifiDirectController extends GetxController {
 
   WifiDirectConnectionController wifiDirectConnectionController;
 
-  WifiDirectController({required this.accountInfo, required HeyoWifiDirect? heyoWifiDirect, required this.wifiDirectConnectionController})
+  WifiDirectController(
+      {required this.accountInfo,
+      required HeyoWifiDirect? heyoWifiDirect,
+      required this.wifiDirectConnectionController})
       : _heyoWifiDirect = heyoWifiDirect;
   final coreId = "".obs;
   final visibleName = "".obs;
@@ -106,12 +109,10 @@ class WifiDirectController extends GetxController {
       default:
         break;
     }
-
   }
 
   _messageHandler(HeyoWifiDirectMessage message) {
     wifiDirectConnectionController.messageHandler(message);
-
   }
 
   Future<bool> connectPeer(String coreId, {bool encrypt = true}) async {
@@ -166,16 +167,11 @@ class WifiDirectController extends GetxController {
     availableDirectUsers.value = [];
     peersAvailable.values.forEach((peer) {
       final user = UserModel(
-          name: peer.name,
-          icon: "https://avatars.githubusercontent.com/u/7847725?v=4",
-          walletAddress: peer.coreID,
-          chatModel: ChatModel(
-            name: peer.name,
-            icon: "https://avatars.githubusercontent.com/u/7847725?v=4",
-            id: peer.coreID,
-            lastMessage: "",
-            timestamp: DateTime.now(),
-          ));
+        name: peer.name,
+        iconUrl: "https://avatars.githubusercontent.com/u/7847725?v=4",
+        walletAddress: peer.coreID,
+        coreId: peer.coreID,
+      );
       availableDirectUsers.add(user);
     });
   }
@@ -185,65 +181,36 @@ class WifiDirectController extends GetxController {
     var mockUsers = [
       UserModel(
         name: "Boiled Dealmaker",
-        icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
+        iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
         isVerified: true,
         walletAddress: "CB11${List.generate(11, (index) => index).join()}14AB",
-        chatModel: ChatModel(
-          name: "Boiled Dealmaker",
-          icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
-          isVerified: true,
-          id: "CB11${List.generate(11, (index) => index).join()}14AB",
-          lastMessage: "",
-          timestamp: DateTime.now(),
-        ),
+        coreId: "CB11${List.generate(11, (index) => index).join()}14AB",
       ),
       UserModel(
         name: "Crapps Wallbanger",
-        icon: "https://avatars.githubusercontent.com/u/2345136?v=4",
+        iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
         walletAddress: "CB11${List.generate(11, (index) => index).join()}49BB",
-        chatModel: ChatModel(
-          name: "Crapps Wallbanger",
-          icon: "https://avatars.githubusercontent.com/u/2345136?v=4",
-          id: "CB11${List.generate(11, (index) => index).join()}49BB",
-          lastMessage: "",
-          timestamp: DateTime.now(),
-        ),
+        coreId: "CB11${List.generate(11, (index) => index).join()}49BB",
       ),
       UserModel(
-          name: "Fancy Potato",
-          icon: "https://avatars.githubusercontent.com/u/6644146?v=4",
-          walletAddress: "CB11${List.generate(11, (index) => index).join()}11FE",
-          chatModel: ChatModel(
-            name: "Fancy Potato",
-            icon: "https://avatars.githubusercontent.com/u/6644146?v=4",
-            id: "CB11${List.generate(11, (index) => index).join()}11FE",
-            lastMessage: "",
-            timestamp: DateTime.now(),
-          )),
+        name: "Fancy Potato",
+        iconUrl: "https://avatars.githubusercontent.com/u/6644146?v=4",
+        walletAddress: "CB11${List.generate(11, (index) => index).join()}11FE",
+        coreId: "CB11${List.generate(11, (index) => index).join()}11FE",
+      ),
       UserModel(
-          name: "Ockerito Fazola",
-          isVerified: true,
-          icon: "https://avatars.githubusercontent.com/u/7844146?v=4",
-          walletAddress: "CB11${List.generate(11, (index) => index).join()}5A5D",
-          chatModel: ChatModel(
-            name: "Ockerito Fazola",
-            icon: "https://avatars.githubusercontent.com/u/7844146?v=4",
-            id: "CB11${List.generate(11, (index) => index).join()}5A5D",
-            isVerified: true,
-            lastMessage: "",
-            timestamp: DateTime.now(),
-          )),
+        name: "Ockerito Fazola",
+        isVerified: true,
+        iconUrl: "https://avatars.githubusercontent.com/u/7844146?v=4",
+        walletAddress: "CB11${List.generate(11, (index) => index).join()}5A5D",
+        coreId: "CB11${List.generate(11, (index) => index).join()}5A5D",
+      ),
       UserModel(
-          name: "Unchained Banana",
-          icon: "https://avatars.githubusercontent.com/u/7847725?v=4",
-          walletAddress: "CB11${List.generate(11, (index) => index).join()}44AC",
-          chatModel: ChatModel(
-            name: "Unchained Banana",
-            icon: "https://avatars.githubusercontent.com/u/7847725?v=4",
-            id: "CB11${List.generate(11, (index) => index).join()}44AC",
-            lastMessage: "",
-            timestamp: DateTime.now(),
-          )),
+        name: "Unchained Banana",
+        iconUrl: "https://avatars.githubusercontent.com/u/7847725?v=4",
+        walletAddress: "CB11${List.generate(11, (index) => index).join()}44AC",
+        coreId: "CB11${List.generate(11, (index) => index).join()}44AC",
+      ),
     ];
     for (int i = 0; i < mockUsers.length; i++) {
       await Future.delayed(duration, () {

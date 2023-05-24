@@ -91,7 +91,7 @@ class CallBottomSheetExpandedBody extends StatelessWidget {
                   return Row(
                     children: [
                       CustomCircleAvatar(
-                        url: controller.participants[index].user.icon,
+                        url: controller.participants[index].user.iconUrl,
                         size: 40,
                       ),
                       CustomSizes.mediumSizedBoxWidth,

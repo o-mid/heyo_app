@@ -21,17 +21,12 @@ class IncomingCallController extends GetxController {
     args = Get.arguments as IncomingCallViewArguments;
     //TODO name should be get from contacts
     caller = UserModel(
-        name: "Unknown",
-        icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
-        isVerified: true,
-        walletAddress: args.remoteCoreId,
-        chatModel: ChatModel(
-            name: "Unknown",
-            icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
-            isVerified: true,
-            id: args.remoteCoreId,
-            lastMessage: "",
-            timestamp: DateTime.now()));
+      name: "Unknown",
+      iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
+      isVerified: true,
+      walletAddress: args.remoteCoreId,
+      coreId: args.remoteCoreId,
+    );
     _playRingtone();
   }
 
@@ -67,17 +62,12 @@ class IncomingCallController extends GetxController {
           callId: args.callId,
           enableVideo: args.session.isAudioCall ? false : true,
           user: UserModel(
-              name: "Unknown",
-              icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
-              isVerified: true,
-              walletAddress: args.remoteCoreId,
-              chatModel: ChatModel(
-                  name: "Unknown",
-                  icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
-                  isVerified: true,
-                  id: args.remoteCoreId,
-                  lastMessage: "",
-                  timestamp: DateTime.now())),
+            name: "Unknown",
+            iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
+            isVerified: true,
+            walletAddress: args.remoteCoreId,
+            coreId: args.remoteCoreId,
+          ),
           isAudioCall: args.session.isAudioCall),
     );
   }

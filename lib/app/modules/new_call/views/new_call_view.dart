@@ -29,7 +29,9 @@ class NewCallView extends GetView<NewCallController> {
         ),
         actions: [
           IconButton(
-            onPressed: () => openAppBarActionBottomSheet(controller.profile),
+            onPressed: () => openAppBarActionBottomSheet(
+              profileLink: controller.profileLink,
+            ),
             icon: Assets.svg.dotColumn.svg(
               width: 5,
             ),

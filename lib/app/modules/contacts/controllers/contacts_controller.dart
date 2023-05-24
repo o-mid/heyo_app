@@ -2,8 +2,10 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 
+import '../../new_chat/data/models/user_model.dart';
+
 class ContactsController extends GetxController {
-  final contacts = <UserContact>[].obs;
+  final contacts = <UserModel>[].obs;
 
   final ContactRepository contactRepo;
 

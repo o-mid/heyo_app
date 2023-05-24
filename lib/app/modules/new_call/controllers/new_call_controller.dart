@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
-import 'package:heyo/app/modules/new_chat/data/models/profile_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
@@ -40,25 +39,11 @@ class NewCallController extends GetxController {
 
   RxList<UserModel> searchSuggestions = <UserModel>[].obs;
 
-  final profile = ProfileModel(
-      name: "Sample", link: "https://heyo.core/m6ljkB4KJ", walletAddress: "CB75...684A");
+  final profileLink = "https://heyo.core/m6ljkB4KJ";
 
   void searchUsers(String query) async {
     //TODO icon and chatmodel should be filled with correct data
-    List<UserModel> searchedItems = (await contactRepository.search(query))
-        .map((userContact) => UserModel(
-            name: userContact.nickname,
-            icon: userContact.icon,
-            walletAddress: userContact.coreId,
-            isContact: true,
-            chatModel: ChatModel(
-              name: userContact.nickname,
-              icon: userContact.icon,
-              id: userContact.coreId,
-              lastMessage: "",
-              timestamp: DateTime.now(),
-            )))
-        .toList();
+    List<UserModel> searchedItems = (await contactRepository.search(query)).toList();
 
     if (searchedItems.isEmpty) {
       String? currentUserCoreId = await accountInfo.getCoreId();
@@ -67,16 +52,11 @@ class NewCallController extends GetxController {
         //TODO update fields based on correct data
         searchSuggestions.value = [
           UserModel(
-              name: 'unknown',
-              icon: getMockIconUrl(),
-              walletAddress: query,
-              chatModel: ChatModel(
-                icon: getMockIconUrl(),
-                id: query,
-                lastMessage: '',
-                name: 'unknown',
-                timestamp: DateTime.now(),
-              ))
+            name: 'unknown',
+            iconUrl: getMockIconUrl(),
+            walletAddress: query,
+            coreId: query,
+          )
         ];
       } else {
         searchSuggestions.value = [];
@@ -95,7 +75,7 @@ class NewCallController extends GetxController {
   }
 
   inviteBottomSheet() {
-    openInviteBottomSheet(profile);
+    openInviteBottomSheet(profileLink: profileLink);
   }
 
   handleScannedValue(String? barcodeValue) {

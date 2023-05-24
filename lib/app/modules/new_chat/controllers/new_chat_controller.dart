@@ -10,7 +10,6 @@ import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../data/models/filter_model.dart';
-import '../data/models/profile_model.dart';
 import '../data/models/user_model.dart';
 import '../widgets/invite_bttom_sheet.dart';
 
@@ -69,7 +68,8 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
       //open the invite bottom sheet right after initializing
 
       if (args.openInviteBottomSheet) {
-        openInviteBottomSheet(profile);
+        // TODO: ADD correct profile Invite Links
+        openInviteBottomSheet(profileLink: profileLink);
       }
     }
     super.onReady();
@@ -81,56 +81,30 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
     inputController.dispose();
   }
 
-// Mock data for user profile
-  final profile = ProfileModel(
-      name: "Sample", link: "https://heyo.core/m6ljkB4KJ", walletAddress: "CB75...684A");
-
+  final String profileLink = "https://heyo.core/m6ljkB4KJ";
 // Mock data for the users
   final nearbyUsers = <UserModel>[
     UserModel(
       name: "Crapps Wallbanger",
       walletAddress: 'CB92...969A',
-      icon: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+      coreId: 'CB92...969A',
+      iconUrl: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
       nickname: "Nickname",
-      chatModel: ChatModel(
-        id: "1",
-        name: "Crapps Wallbanger",
-        icon: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
-        lastMessage: "I'm still waiting for the reply. I'll let you know once they get back to me.",
-        timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 5)),
-      ),
     ),
     UserModel(
       name: "Fancy Potato",
       walletAddress: 'CB21...C325',
-      icon: "https://avatars.githubusercontent.com/u/6634136?v=4",
+      coreId: 'CB21...C325',
+      iconUrl: "https://avatars.githubusercontent.com/u/6634136?v=4",
       isOnline: true,
       isVerified: true,
-      chatModel: ChatModel(
-        id: "2",
-        name: "Fancy Potato",
-        icon: "https://avatars.githubusercontent.com/u/6634136?v=4",
-        lastMessage: "I can arrange the meeting with her tomorrow if you're ok with that.",
-        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 5)),
-        isOnline: true,
-        isVerified: true,
-        notificationCount: 4,
-      ),
     ),
     UserModel(
       name: "manly Cupholder",
       walletAddress: 'CB42...324E',
-      icon: "https://avatars.githubusercontent.com/u/9801359?v=4",
+      coreId: 'CB42...324E',
+      iconUrl: "https://avatars.githubusercontent.com/u/9801359?v=4",
       isOnline: true,
-      chatModel: ChatModel(
-        id: "3",
-        name: "Manly Cupholder",
-        icon: "https://avatars.githubusercontent.com/u/9801359?v=4",
-        lastMessage: "That's nice!",
-        timestamp: DateTime.now().subtract(const Duration(days: 10, hours: 2, minutes: 5)),
-        isOnline: true,
-        notificationCount: 11,
-      ),
     ),
   ].obs;
 
@@ -158,14 +132,7 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
 
   void searchUsers(String query) async {
     //TODO icon and chatmodel should be filled with correct data
-    List<UserModel> searchedItems = (await contactRepository.search(query))
-        .map((userContact) => UserModel(
-            name: userContact.nickname,
-            icon: userContact.icon,
-            walletAddress: userContact.coreId,
-            isContact: true,
-            chatModel: (nearbyUsers..shuffle()).first.chatModel))
-        .toList();
+    List<UserModel> searchedItems = (await contactRepository.search(query)).toList();
 
     if (searchedItems.isEmpty) {
       String? currentUserCoreId = await accountInfo.getCoreId();
@@ -174,10 +141,11 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
         //TODO update fields based on correct data
         searchSuggestions.value = [
           UserModel(
-              name: 'unknown',
-              icon: (nearbyUsers..shuffle()).first.icon,
-              walletAddress: query,
-              chatModel: (nearbyUsers..shuffle()).first.chatModel)
+            name: 'unknown',
+            iconUrl: (nearbyUsers..shuffle()).first.iconUrl,
+            walletAddress: query,
+            coreId: query,
+          )
         ];
       } else {
         searchSuggestions.value = [];

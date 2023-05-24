@@ -50,7 +50,7 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
             return Column(
               children: [
                 SizedBox(height: 40.h),
-                CustomCircleAvatar(url: controller.args.user.icon, size: 64),
+                CustomCircleAvatar(url: controller.args.user.iconUrl, size: 64),
                 CustomSizes.mediumSizedBoxHeight,
                 Text(
                   controller.args.user.name,

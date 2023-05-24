@@ -135,6 +135,7 @@ class CallHistoryObserver extends GetxController {
       status: CallStatus.incomingMissed,
       date: DateTime.now(),
       id: callId,
+      coreId: user.coreId,
       type: type,
     );
 
@@ -148,6 +149,7 @@ class CallHistoryObserver extends GetxController {
       status: CallStatus.outgoingNotAnswered,
       date: DateTime.now(),
       id: callId,
+      coreId: user.coreId,
       type: type,
     );
 
@@ -174,16 +176,11 @@ class CallHistoryObserver extends GetxController {
 
   UserModel _getUserFromCoreId(String coreId) {
     return UserModel(
-        name: "Unknown",
-        icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
-        isVerified: true,
-        walletAddress: coreId,
-        chatModel: ChatModel(
-          icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
-          id: coreId,
-          lastMessage: '',
-          name: 'unknown',
-          timestamp: DateTime.now(),
-        ));
+      name: "Unknown",
+      iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
+      isVerified: true,
+      walletAddress: coreId,
+      coreId: coreId,
+    );
   }
 }
