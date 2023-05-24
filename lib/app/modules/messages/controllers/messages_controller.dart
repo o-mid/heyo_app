@@ -10,8 +10,6 @@ import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.da
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/messages/utils/open_camera_for_sending_media_message.dart';
-import 'package:heyo/app/modules/shared/providers/database/dao/user_preferences/user_preferences_abstract_provider.dart';
-import 'package:heyo/app/modules/shared/providers/database/repos/user_preferences/user_preferences_abstract_repo.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
