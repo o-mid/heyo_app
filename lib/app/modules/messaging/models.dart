@@ -7,6 +7,8 @@ class RemotePeer {
   RemotePeer({required this.remoteCoreId, required this.remotePeerId});
 }
 
+enum RTCSessionStatus { none, connecting, failed, connected }
+
 class RTCSession {
   RTCSession({required this.remotePeer});
 
@@ -14,8 +16,6 @@ class RTCSession {
   MediaStream? stream;
   RTCPeerConnection? _pc;
   bool isDataChannelConnectionAvailable = false;
-
-  Function() onRenegotiationNeeded=(){};
 
   set pc(RTCPeerConnection? value) {
     _pc = value;
@@ -27,13 +27,15 @@ class RTCSession {
   RTCDataChannel? dc;
   final bool isAudioCall = false;
   final List<RTCIceCandidate> remoteCandidates = [];
+  RTCSessionStatus rtcSessionStatus = RTCSessionStatus.none;
+  Function(RTCSessionStatus)? onNewRTCSessionStatus;
 
   void init() {
     pc!.onIceConnectionState = (RTCIceConnectionState state) {
       print("On ICE connection state changed => ${state}");
-
     };
-    pc!.onConnectionState=(state){
+    pc!.onConnectionState = (state) {
+      _applyConnectionStateChanged(state);
       print("onConnectionState for ${remotePeer.remoteCoreId} is: $state");
     };
     pc!.onSignalingState = (RTCSignalingState state) {
@@ -47,12 +49,25 @@ class RTCSession {
       print("state for add data channel ${remotePeer.remoteCoreId} ");
       dc = channel;
     };
-
-
   }
 
-  Future<void> createDataChannel(
-      {label = 'fileTransfer'}) async {
+  void _applyConnectionStateChanged(RTCPeerConnectionState state) {
+    if (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected) {
+      rtcSessionStatus = RTCSessionStatus.connected;
+    } else if (state ==
+        RTCPeerConnectionState.RTCPeerConnectionStateConnecting) {
+      rtcSessionStatus = RTCSessionStatus.connecting;
+    } else if (state == RTCPeerConnectionState.RTCPeerConnectionStateFailed) {
+      rtcSessionStatus = RTCSessionStatus.failed;
+    }
+
+    isDataChannelConnectionAvailable =
+        (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected);
+
+    onNewRTCSessionStatus?.call(rtcSessionStatus);
+  }
+
+  Future<void> createDataChannel({label = 'fileTransfer'}) async {
     RTCDataChannelInit dataChannelDict = RTCDataChannelInit()
       ..maxRetransmits = 30;
     RTCDataChannel channel =
@@ -62,11 +77,9 @@ class RTCSession {
       print("state for data channel ${remotePeer.remoteCoreId} : $state");
 
       isDataChannelConnectionAvailable =
-      (state == RTCDataChannelState.RTCDataChannelOpen);
+          (state == RTCDataChannelState.RTCDataChannelOpen);
     };
-
   }
-
 
   bool isConnectionStable() =>
       (pc?.signalingState == RTCSignalingState.RTCSignalingStateStable);
