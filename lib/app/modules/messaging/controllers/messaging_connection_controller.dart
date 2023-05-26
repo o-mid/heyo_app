@@ -247,15 +247,15 @@ class MessagingConnectionController extends CommonMessagingConnectionController 
       Get.toNamed(
         Routes.MESSAGES,
         arguments: MessagesViewArgumentsModel(
-          session: session,
-          user: UserModel(
-            iconUrl: userChatModel!.icon,
-            name: userChatModel!.name,
-            walletAddress: session.cid,
-            coreId: session.cid,
-            isOnline: true,
-          ),
-        ),
+            session: session,
+            user: UserModel(
+              iconUrl: userChatModel!.icon,
+              name: userChatModel!.name,
+              walletAddress: session.cid,
+              coreId: session.cid,
+              isOnline: true,
+            ),
+            connectionType: MessagingConnectionType.internet),
       );
     }
   }

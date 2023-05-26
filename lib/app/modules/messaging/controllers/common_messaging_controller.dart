@@ -10,6 +10,7 @@ import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import '../../messages/data/models/messages/confirm_message_model.dart';
 import '../../messages/data/models/messages/delete_message_model.dart';
 import '../../messages/data/models/messages/message_model.dart';
+import '../../messages/data/models/messages/text_message_model.dart';
 import '../../messages/data/models/messages/update_message_model.dart';
 import '../../messages/data/models/reaction_model.dart';
 import '../../messages/data/repo/messages_abstract_repo.dart';
@@ -44,7 +45,11 @@ abstract class CommonMessagingConnectionController extends GetxController {
       DataChannelConnectivityStatus.connecting.obs;
   Rx<DataChannelConnectivityStatus> dataChannelStatus =
       DataChannelConnectivityStatus.connecting.obs;
+
   //
+
+  ChatModel? userChatmodel;
+
   CommonMessagingConnectionController(
       {required this.accountInfo, required this.messagesRepo, required this.chatHistoryRepo});
 
@@ -137,7 +142,8 @@ abstract class CommonMessagingConnectionController extends GetxController {
 
     switch (channelMessage.dataChannelMessagetype) {
       case DataChannelMessageType.message:
-        await saveReceivedMessage(receivedMessageJson: channelMessage.message, chatId: session.cid);
+        await saveAndConfirmReceivedMessage(
+            receivedMessageJson: channelMessage.message, chatId: session.cid);
         break;
 
       case DataChannelMessageType.delete:
@@ -152,23 +158,48 @@ abstract class CommonMessagingConnectionController extends GetxController {
 
       case DataChannelMessageType.confirm:
         await confirmReceivedMessage(
-            receivedConfirmJson: channelMessage.message, chatId: session.cid);
+            receivedconfirmJson: channelMessage.message, chatId: session.cid);
         break;
     }
   }
 
-  Future<void> saveReceivedMessage(
+  Future<void> saveAndConfirmReceivedMessage(
       {required Map<String, dynamic> receivedMessageJson, required String chatId}) async {
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
     await messagesRepo.createMessage(
         message: receivedMessage.copyWith(
           isFromMe: false,
-          status: MessageStatus.delivered,
+          status: receivedMessage.status.deliveredStatus(),
         ),
         chatId: chatId);
 
     confirmMessageById(
-        messageId: receivedMessage.messageId, status: ConfirmMessageStatus.delivered);
+      messageId: receivedMessage.messageId,
+      status: ConfirmMessageStatus.delivered,
+    );
+
+    await updateChatRepo(
+      receivedMessage: receivedMessage,
+      chatId: chatId,
+    );
+  }
+
+  Future<void> updateChatRepo(
+      {required MessageModel receivedMessage, required String chatId}) async {
+    userChatmodel ??= await chatHistoryRepo.getChat(chatId);
+
+    int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
+
+    userChatmodel = userChatmodel?.copyWith(
+      lastMessage: receivedMessage.type == MessageContentType.text
+          ? (receivedMessage as TextMessageModel).text
+          : receivedMessage.type.name,
+      notificationCount: unReadMessagesCount,
+    );
+
+    if (userChatmodel != null) {
+      await chatHistoryRepo.updateChat(userChatmodel!);
+    }
   }
 
   Future<void> deleteReceivedMessage(
@@ -204,17 +235,43 @@ abstract class CommonMessagingConnectionController extends GetxController {
   }
 
   Future<void> confirmReceivedMessage(
-      {required Map<String, dynamic> receivedConfirmJson, required String chatId}) async {
-    ConfirmMessageModel confirmMessage = ConfirmMessageModel.fromJson(receivedConfirmJson);
+      {required Map<String, dynamic> receivedconfirmJson, required String chatId}) async {
+    ConfirmMessageModel confirmMessage = ConfirmMessageModel.fromJson(receivedconfirmJson);
 
     final String messageId = confirmMessage.messageId;
 
-    MessageModel? currentMessage =
-        await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
-    // check if message is found and update the Message status
-    if (currentMessage != null) {
-      await messagesRepo.updateMessage(
-          message: currentMessage.copyWith(status: MessageStatus.read), chatId: chatId);
+    if (confirmMessage.status == ConfirmMessageStatus.delivered) {
+      MessageModel? currentMessage =
+          await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
+
+      // check if message is found and update the Message status
+      if (currentMessage != null) {
+        if (currentMessage.status != MessageStatus.read) {
+          await messagesRepo.updateMessage(
+              message: currentMessage.copyWith(status: MessageStatus.delivered), chatId: chatId);
+        }
+      }
+    } else {
+      final List<MessageModel> messages = await messagesRepo.getMessages(chatId);
+      final index = messages.lastIndexWhere((element) => element.messageId == messageId);
+      // print(index);
+      // if the message is found create a sublist of messages
+      // that the status is not read and are from me
+
+      if (index != -1) {
+        final List<MessageModel> messagesToUpdate = messages
+            .sublist(0, index + 1)
+            .where((element) =>
+                element.isFromMe == true &&
+                (element.status == MessageStatus.delivered ||
+                    element.status == MessageStatus.sending))
+            .toList();
+        // update the status of the messages that need to be update to read
+        for (var item in messagesToUpdate) {
+          await messagesRepo.updateMessage(
+              message: item.copyWith(status: MessageStatus.read), chatId: chatId);
+        }
+      }
     }
   }
 
@@ -224,7 +281,6 @@ abstract class CommonMessagingConnectionController extends GetxController {
 
   // creates a ChatModel and saves it to the chat history if it is not available
   // or updates the available chat
-
   createUserChatModel({required String sessioncid}) async {
     ChatModel userChatModel = ChatModel(
         id: sessioncid,
