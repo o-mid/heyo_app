@@ -138,5 +138,41 @@ class MessagingConnectionController
           break;
       }
     };
+      default:
+        dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
+        break;
+    }
+  }
+
+  Future<void> _handleConnectionRinging({required MessageSession session}) async {
+    await createUserChatModel(sessioncid: session.cid);
+
+    ChatModel? userChatModel;
+
+    await chatHistoryRepo.getChat(session.cid).then((value) {
+      userChatModel = value;
+    });
+
+    await _acceptMessageConnection(session);
+
+    connectionStatus.value = ConnectionStatus.CONNECTED;
+
+    _applyDataChannelConnectivityStatus(ConnectionStatus.CONNECTED);
+
+    if (userChatModel != null) {
+      Get.toNamed(
+        Routes.MESSAGES,
+        arguments: MessagesViewArgumentsModel(
+            session: session,
+            user: UserModel(
+              iconUrl: userChatModel!.icon,
+              name: userChatModel!.name,
+              walletAddress: session.cid,
+              coreId: session.cid,
+              isOnline: true,
+            ),
+            connectionType: MessagingConnectionType.internet),
+      );
+    }
   }
 }
