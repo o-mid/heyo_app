@@ -212,18 +212,18 @@ class MessagingConnectionController extends CommonMessagingConnectionController 
   Future<void> _applyDataChannelConnectivityStatus(ConnectionStatus status) async {
     switch (status) {
       case ConnectionStatus.CONNECTED:
-        dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
+        connectivityStatus.value = DataChannelConnectivityStatus.justConnected;
         // add a delay to show the just connected status for 2 seconds
         setConnectivityOnline();
         break;
 
       case ConnectionStatus.BYE:
-        dataChannelStatus.value = DataChannelConnectivityStatus.connectionLost;
+        connectivityStatus.value = DataChannelConnectivityStatus.connectionLost;
 
         break;
 
       default:
-        dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
+        connectivityStatus.value = DataChannelConnectivityStatus.connecting;
         break;
     }
   }
