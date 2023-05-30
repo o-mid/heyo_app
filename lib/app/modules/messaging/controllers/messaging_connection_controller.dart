@@ -8,9 +8,7 @@ import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/messaging/models.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
-import 'package:heyo/app/modules/messaging/usecases/send_data_channel_message_usecase.dart';
 import 'package:heyo/app/modules/messaging/messaging.dart';
-import 'package:heyo/app/modules/messaging/messaging_session.dart';
 
 import 'common_messaging_controller.dart';
 
@@ -41,11 +39,12 @@ class MessagingConnectionController
     super.onInit();
 
     multipleConnectionHandler.onNewRTCSessionCreated = (rtcSession) {
+      createUserChatModel(sessioncid: rtcSession.remotePeer.remoteCoreId);
+
       _observeMessagingStatus(rtcSession);
 
-
       rtcSession.dc?.onMessage = (data) async {
-        print("onMessageRe : $data");
+        print("onMessageReceived : $data");
         data.isBinary
             ? handleDataChannelBinary(
                 binaryData: data.binary,
@@ -65,7 +64,7 @@ class MessagingConnectionController
   Future<void> initMessagingConnection({required String remoteId}) async {
     RTCSession rtcSession =
         await multipleConnectionHandler.getConnection(remoteId, null);
-    print("debuuuugggg : ${(!rtcSession.isDataChannelConnectionAvailable)}");
+    print("initMessagingConnection : ${(!rtcSession.isDataChannelConnectionAvailable)}");
     if (!rtcSession.isDataChannelConnectionAvailable) {
       bool result = await multipleConnectionHandler.initiateSession(rtcSession);
     }
@@ -77,11 +76,11 @@ class MessagingConnectionController
       {required String text, required String remoteCoreId}) async {
     RTCSession rtcSession =
         await multipleConnectionHandler.getConnection(remoteCoreId, null);
-    print("debuuuugggg send : ${(!rtcSession.isDataChannelConnectionAvailable) } : ${rtcSession.dc?.state}");
+    print(
+        "sendTextMessage : ${(!rtcSession.isDataChannelConnectionAvailable)} : ${rtcSession.dc?.state}");
 
     if (!rtcSession.isDataChannelConnectionAvailable) {
-       multipleConnectionHandler.initiateSession(rtcSession);
-
+      multipleConnectionHandler.initiateSession(rtcSession);
     }
     await (rtcSession).dc?.send(RTCDataChannelMessage(text));
   }
@@ -91,8 +90,9 @@ class MessagingConnectionController
   Future<void> sendBinaryMessage(
       {required Uint8List binary, required String remoteCoreId}) async {
     RTCSession rtcSession =
-    await multipleConnectionHandler.getConnection(remoteCoreId, null);
-    print("debuuuugggg sendB : ${(!rtcSession.isDataChannelConnectionAvailable) } : ${rtcSession.dc?.state}");
+        await multipleConnectionHandler.getConnection(remoteCoreId, null);
+    print(
+        "sendTextMessage : ${(!rtcSession.isDataChannelConnectionAvailable)} : ${rtcSession.dc?.state}");
 
     if (!rtcSession.isDataChannelConnectionAvailable) {
       multipleConnectionHandler.initiateSession(rtcSession);
@@ -110,13 +110,14 @@ class MessagingConnectionController
   /// Since connection status depends on specific connection way and callback's
   /// declaration made in corresponding instance, this method implemented as private.
   void _observeMessagingStatus(RTCSession rtcSession) {
-
+    print("onConnectionState for observe ${rtcSession.rtcSessionStatus}");
     rtcSession.onNewRTCSessionStatus = (status) {
       switch (status) {
         case RTCSessionStatus.connected:
           {
             dataChannelStatus.value =
                 DataChannelConnectivityStatus.justConnected;
+
             setConnectivityOnline();
           }
           break;
@@ -125,7 +126,6 @@ class MessagingConnectionController
           break;
         case RTCSessionStatus.connecting:
           {
-            createUserChatModel(sessioncid: rtcSession.remotePeer.remoteCoreId);
 
             dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
           }
@@ -138,41 +138,5 @@ class MessagingConnectionController
           break;
       }
     };
-      default:
-        dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
-        break;
-    }
-  }
-
-  Future<void> _handleConnectionRinging({required MessageSession session}) async {
-    await createUserChatModel(sessioncid: session.cid);
-
-    ChatModel? userChatModel;
-
-    await chatHistoryRepo.getChat(session.cid).then((value) {
-      userChatModel = value;
-    });
-
-    await _acceptMessageConnection(session);
-
-    connectionStatus.value = ConnectionStatus.CONNECTED;
-
-    _applyDataChannelConnectivityStatus(ConnectionStatus.CONNECTED);
-
-    if (userChatModel != null) {
-      Get.toNamed(
-        Routes.MESSAGES,
-        arguments: MessagesViewArgumentsModel(
-            session: session,
-            user: UserModel(
-              iconUrl: userChatModel!.icon,
-              name: userChatModel!.name,
-              walletAddress: session.cid,
-              coreId: session.cid,
-              isOnline: true,
-            ),
-            connectionType: MessagingConnectionType.internet),
-      );
-    }
   }
 }

@@ -11,9 +11,8 @@ class SendBinaryData {
   final BinaryFileSendingState sendingState;
   int maximumMessageSize = 100000;
   SingleCompleter<bool>? messageTimeoutCompleter;
-  SendBinaryData({required this.sendingState});
-  final CommonMessagingConnectionController messagingConnection =
-      Get.find<CommonMessagingConnectionController>();
+  SendBinaryData({required this.sendingState,required this.messagingConnection});
+  final CommonMessagingConnectionController messagingConnection ;
 
   execute(String remoteCoreId) async {
     print('SENDER: Sending first chunk...');

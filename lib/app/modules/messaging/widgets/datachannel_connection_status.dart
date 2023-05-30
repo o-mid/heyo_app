@@ -79,16 +79,4 @@ class DatachannelConnectionStatusWidget extends GetView<CommonMessagingConnectio
     });
   }
 
-// change the dataChannel Status randomly base on the frequency and delay given for testing
-  void randomStatus({
-    required int frequency,
-    required int delayInSeconds,
-  }) async {
-    for (var i = 0; i < frequency; i++) {
-      await Future.delayed(Duration(seconds: delayInSeconds), () {
-        controller.dataChannelStatus.value = DataChannelConnectivityStatus
-            .values[Random().nextInt(DataChannelConnectivityStatus.values.length)];
-      });
-    }
-  }
 }

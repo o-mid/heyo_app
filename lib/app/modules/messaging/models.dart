@@ -61,6 +61,8 @@ class RTCSession {
       rtcSessionStatus = RTCSessionStatus.failed;
     }
 
+    print("onConnectionState for_applyConnectionStateChanged $state : $rtcSessionStatus");
+
     isDataChannelConnectionAvailable =
         (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected);
 

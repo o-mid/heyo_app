@@ -37,7 +37,7 @@ class SendDataChannelMessage {
         file: File(messageLocalPath),
         meta: msg.message,
       );
-      await SendBinaryData(sendingState: sendingState).execute(remoteCoreId);
+      await SendBinaryData(sendingState: sendingState, messagingConnection: messagingConnection).execute(remoteCoreId);
     } else {
       messagingConnection.sendTextMessage(text: jsonEncode(message),remoteCoreId: remoteCoreId);
     }

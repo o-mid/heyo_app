@@ -160,7 +160,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
     switch (channelMessage.dataChannelMessagetype) {
       case DataChannelMessageType.message:
         await saveAndConfirmReceivedMessage(
-            receivedMessageJson: channelMessage.message, chatId: session.cid);
+            receivedMessageJson: channelMessage.message, chatId: remoteCoreId);
         break;
 
       case DataChannelMessageType.delete:
@@ -175,7 +175,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
 
       case DataChannelMessageType.confirm:
         await confirmReceivedMessage(
-            receivedconfirmJson: channelMessage.message, chatId: session.cid);
+            receivedconfirmJson: channelMessage.message, chatId: remoteCoreId);
         break;
     }
   }
@@ -193,6 +193,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
     confirmMessageById(
       messageId: receivedMessage.messageId,
       status: ConfirmMessageStatus.delivered,
+      remoteCoreId: chatId
     );
 
     await updateChatRepo(
