@@ -24,7 +24,6 @@ class MessagingConnectionController
   final JsonDecoder _decoder = const JsonDecoder();
 
   Rx<ConnectionStatus?> connectionStatus = Rxn<ConnectionStatus>();
-  Function(double progress, int totalSize)? statusUpdateCallback;
 
   MessagingConnectionController({
     required this.multipleConnectionHandler,
