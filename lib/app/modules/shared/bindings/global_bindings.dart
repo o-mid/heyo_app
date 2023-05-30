@@ -5,7 +5,6 @@ import 'package:heyo/app/modules/calls/home/controllers/calls_controller.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
-import 'package:heyo/app/modules/messaging/messaging.dart';
 import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 import 'package:heyo/app/modules/messaging/web_rtc_connection_manager.dart';
 import 'package:heyo/app/modules/shared/controllers/call_history_observer.dart';
@@ -50,16 +49,11 @@ class GlobalBindings extends Bindings {
 
   // p2p related bindings
   static P2PState p2pState = P2PState();
-  static MultipleConnectionHandler multipleConnectionHandler = MultipleConnectionHandler(
-      singleWebRTCConnection: SingleWebRTCConnection(
-          p2pCommunicator: p2pCommunicator,
-          webRTCConnectionManager: WebRTCConnectionManager()));
-  final P2PNodeRequestStream p2pNodeRequestStream =
-  P2PNodeRequestStream(
-      p2pState: p2pState, signaling: signaling, multipleConnectionHandler: multipleConnectionHandler);
 
-  static P2PNodeResponseStream p2pNodeResponseStream = P2PNodeResponseStream(
-      p2pState: p2pState);
+  //MultipleConnectionHandler multipleConnectionHandler =
+
+  static P2PNodeResponseStream p2pNodeResponseStream =
+      P2PNodeResponseStream(p2pState: p2pState);
 
   static Web3Client web3Client = Web3Client(
     WEB3CLIENT.url,
@@ -74,34 +68,41 @@ class GlobalBindings extends Bindings {
 
 // call related bindings
   static Signaling signaling = Signaling(p2pCommunicator: p2pCommunicator);
-  static CallConnectionController callConnectionController = CallConnectionController(
+  static CallConnectionController callConnectionController =
+      CallConnectionController(
     accountInfo: accountInfo,
     signaling: signaling,
   );
 
-// messaging related bindings
-  static Messaging messaging = Messaging(p2pCommunicator: p2pCommunicator);
-
-
-
-  static MessagingConnectionController messagingConnectionController =
-      MessagingConnectionController(
-        multipleConnectionHandler: multipleConnectionHandler,
-        accountInfo: accountInfo,
-        messagesRepo: MessagesRepo(messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),),
-        chatHistoryRepo: ChatHistoryLocalRepo(chatHistoryProvider: ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),),
-      );
-
   static HeyoWifiDirect? heyoWifiDirect;
   static WifiDirectConnectionController wifiDirectConnectionController =
       WifiDirectConnectionController(
-        accountInfo: accountInfo,
-        messagesRepo: MessagesRepo(messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),),
-        chatHistoryRepo: ChatHistoryLocalRepo(chatHistoryProvider: ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),),
-      );
+    accountInfo: accountInfo,
+    messagesRepo: MessagesRepo(
+      messagesProvider: MessagesProvider(
+          appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+    ),
+    chatHistoryRepo: ChatHistoryLocalRepo(
+      chatHistoryProvider: ChatHistoryProvider(
+          appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+    ),
+  );
 
   @override
   void dependencies() {
+    Get.put(
+        MultipleConnectionHandler(
+            singleWebRTCConnection: SingleWebRTCConnection(
+                p2pCommunicator: p2pCommunicator,
+                webRTCConnectionManager: WebRTCConnectionManager())),
+        permanent: true);
+
+    Get.put(
+        P2PNodeRequestStream(
+            p2pState: p2pState,
+            signaling: signaling,
+            multipleConnectionHandler: Get.find()),
+        permanent: true);
     // data base provider dependencies
     Get.put(AppDatabaseProvider(accountInfo: accountInfo), permanent: true);
 
@@ -110,7 +111,7 @@ class GlobalBindings extends Bindings {
       P2PNodeController(
         p2pNode: P2PNode(
           accountInfo: accountInfo,
-          p2pNodeRequestStream: p2pNodeRequestStream,
+          p2pNodeRequestStream: Get.find(),
           p2pNodeResponseStream: p2pNodeResponseStream,
           p2pState: p2pState,
           web3client: web3Client,
@@ -123,8 +124,7 @@ class GlobalBindings extends Bindings {
     Get.put(
       CallHistoryObserver(
         callHistoryRepo: CallHistoryRepo(
-          callHistoryProvider:
-          CallHistoryProvider(
+          callHistoryProvider: CallHistoryProvider(
               appDatabaseProvider: Get.find<AppDatabaseProvider>()),
         ),
         callConnectionController: callConnectionController,
@@ -147,8 +147,7 @@ class GlobalBindings extends Bindings {
 
     Get.put(ChatsController(
       chatHistoryRepo: ChatHistoryLocalRepo(
-        chatHistoryProvider:
-        ChatHistoryProvider(
+        chatHistoryProvider: ChatHistoryProvider(
             appDatabaseProvider: Get.find<AppDatabaseProvider>()),
       ),
     ));
@@ -160,7 +159,18 @@ class GlobalBindings extends Bindings {
     Get.put(LiveLocationController());
     Get.put(ConnectionController(p2pState: p2pState));
     Get.put(
-      messagingConnectionController,
+      MessagingConnectionController(
+        multipleConnectionHandler: Get.find(),
+        accountInfo: accountInfo,
+        messagesRepo: MessagesRepo(
+          messagesProvider: MessagesProvider(
+              appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+        ),
+        chatHistoryRepo: ChatHistoryLocalRepo(
+          chatHistoryProvider: ChatHistoryProvider(
+              appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+        ),
+      ),
       permanent: true,
     );
     Get.put(
@@ -172,7 +182,7 @@ class GlobalBindings extends Bindings {
       P2PNodeController(
         p2pNode: P2PNode(
           accountInfo: accountInfo,
-          p2pNodeRequestStream: p2pNodeRequestStream,
+          p2pNodeRequestStream: Get.find(),
           p2pNodeResponseStream: p2pNodeResponseStream,
           p2pState: p2pState,
           web3client: web3Client,

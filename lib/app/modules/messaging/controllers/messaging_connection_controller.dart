@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/messaging/models.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
-import 'package:heyo/app/modules/messaging/messaging.dart';
 
 import 'common_messaging_controller.dart';
 
@@ -23,7 +22,6 @@ class MessagingConnectionController
 
   final JsonDecoder _decoder = const JsonDecoder();
 
-  Rx<ConnectionStatus?> connectionStatus = Rxn<ConnectionStatus>();
 
   MessagingConnectionController({
     required this.multipleConnectionHandler,

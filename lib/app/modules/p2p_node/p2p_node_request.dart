@@ -5,12 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
-import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 
-import '../messaging/messaging.dart';
 
 class P2PNodeRequestStream {
   StreamSubscription<P2PReqResNodeModel?>? _nodeRequestSubscription;
