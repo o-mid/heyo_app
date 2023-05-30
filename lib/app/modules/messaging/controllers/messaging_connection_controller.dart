@@ -39,12 +39,13 @@ class MessagingConnectionController
     super.onInit();
 
     multipleConnectionHandler.onNewRTCSessionCreated = (rtcSession) {
-      createUserChatModel(sessioncid: rtcSession.remotePeer.remoteCoreId);
-
       _observeMessagingStatus(rtcSession);
 
       rtcSession.dc?.onMessage = (data) async {
         print("onMessageReceived : $data");
+        await createUserChatModel(
+            sessioncid: rtcSession.remotePeer.remoteCoreId);
+
         data.isBinary
             ? handleDataChannelBinary(
                 binaryData: data.binary,
@@ -64,7 +65,8 @@ class MessagingConnectionController
   Future<void> initMessagingConnection({required String remoteId}) async {
     RTCSession rtcSession =
         await multipleConnectionHandler.getConnection(remoteId, null);
-    print("initMessagingConnection : ${(!rtcSession.isDataChannelConnectionAvailable)}");
+    print(
+        "initMessagingConnection : ${(!rtcSession.isDataChannelConnectionAvailable)}");
     if (!rtcSession.isDataChannelConnectionAvailable) {
       bool result = await multipleConnectionHandler.initiateSession(rtcSession);
     }
@@ -82,6 +84,8 @@ class MessagingConnectionController
     if (!rtcSession.isDataChannelConnectionAvailable) {
       multipleConnectionHandler.initiateSession(rtcSession);
     }
+    await createUserChatModel(sessioncid: rtcSession.remotePeer.remoteCoreId);
+
     await (rtcSession).dc?.send(RTCDataChannelMessage(text));
   }
 
@@ -93,6 +97,7 @@ class MessagingConnectionController
         await multipleConnectionHandler.getConnection(remoteCoreId, null);
     print(
         "sendTextMessage : ${(!rtcSession.isDataChannelConnectionAvailable)} : ${rtcSession.dc?.state}");
+   await createUserChatModel(sessioncid: rtcSession.remotePeer.remoteCoreId);
 
     if (!rtcSession.isDataChannelConnectionAvailable) {
       multipleConnectionHandler.initiateSession(rtcSession);
@@ -126,7 +131,6 @@ class MessagingConnectionController
           break;
         case RTCSessionStatus.connecting:
           {
-
             dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
           }
           break;
