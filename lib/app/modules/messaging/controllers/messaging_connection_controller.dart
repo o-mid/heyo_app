@@ -55,11 +55,9 @@ class MessagingConnectionController
                 remoteCoreId: rtcSession.remotePeer.remoteCoreId);
       };
     };
-    // observe the messaging status and set the connectionStatus value and currentSession
-    // value base on the changes on messaging.onMessageState
+
   }
 
-  //+ This method remains from previous version, it's declared in the parent CommonMessagingConnectionController, implemented here.
 
   @override
   Future<void> initMessagingConnection({required String remoteId}) async {
@@ -72,7 +70,6 @@ class MessagingConnectionController
     }
   }
 
-  //+ This method remains from previous version, it's declared in the parent CommonMessagingConnectionController, implemented here.
   @override
   Future<void> sendTextMessage(
       {required String text, required String remoteCoreId}) async {
@@ -89,7 +86,6 @@ class MessagingConnectionController
     await (rtcSession).dc?.send(RTCDataChannelMessage(text));
   }
 
-  //+ This method remains from previous version, it's declared in the parent CommonMessagingConnectionController, implemented here.
   @override
   Future<void> sendBinaryMessage(
       {required Uint8List binary, required String remoteCoreId}) async {
@@ -108,12 +104,6 @@ class MessagingConnectionController
         ?.send(RTCDataChannelMessage.fromBinary(binary));
   }
 
-  // remains from previous version, but changed to private
-  /// Defines observer callback of connection's status, that status should be
-  /// mapping to dataChannelStatus.
-  ///
-  /// Since connection status depends on specific connection way and callback's
-  /// declaration made in corresponding instance, this method implemented as private.
   void _observeMessagingStatus(RTCSession rtcSession) {
     print("onConnectionState for observe ${rtcSession.rtcSessionStatus}");
     rtcSession.onNewRTCSessionStatus = (status) {
