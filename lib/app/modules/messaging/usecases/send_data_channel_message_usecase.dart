@@ -18,9 +18,9 @@ class SendDataChannelMessage {
     required this.messagingConnection,
   });
 
-  execute({
-    required ChannelMessageType channelMessageType,
-  }) async {
+  execute(
+      {required ChannelMessageType channelMessageType,
+      required String remoteCoreId}) async {
     Tuple3<DataChannelMessageModel?, bool, String> channelMessageObject =
         channelmessageFromType(channelMessageType: channelMessageType);
     DataChannelMessageModel? msg = channelMessageObject.item1;
@@ -37,9 +37,9 @@ class SendDataChannelMessage {
         file: File(messageLocalPath),
         meta: msg.message,
       );
-      await SendBinaryData(sendingState: sendingState).execute();
+      await SendBinaryData(sendingState: sendingState, messagingConnection: messagingConnection).execute(remoteCoreId);
     } else {
-      messagingConnection.sendTextMessage(text: jsonEncode(message));
+      messagingConnection.sendTextMessage(text: jsonEncode(message),remoteCoreId: remoteCoreId);
     }
   }
 }
@@ -57,6 +57,7 @@ class ChannelMessageType {
   factory ChannelMessageType.update({
     required Map<String, dynamic> message,
   }) = UpdateMessage;
+
   factory ChannelMessageType.confirm({
     required Map<String, dynamic> message,
   }) = UpdateMessage;

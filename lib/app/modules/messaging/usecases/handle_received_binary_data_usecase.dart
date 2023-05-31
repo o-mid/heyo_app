@@ -27,7 +27,10 @@ class HandleReceivedBinaryData {
   final String chatId;
 
   HandleReceivedBinaryData({required this.messagesRepo, required this.chatId});
-  execute({required BinaryFileReceivingState? state}) async {
+
+  execute(
+      {required BinaryFileReceivingState? state,
+      required String remoteCoreId}) async {
     Function(double progress, int totalSize)? statusUpdateCallback;
     if (state!.processingMessage) {
       print('RECEIVER: Skipping, already processing message');
@@ -75,9 +78,11 @@ class HandleReceivedBinaryData {
     builder.add(askheader);
 
     Uint8List askbytes = builder.toBytes();
-    messagingConnection.sendBinaryMessage(binary: askbytes);
+    messagingConnection.sendBinaryMessage(
+        binary: askbytes, remoteCoreId: remoteCoreId);
 
-    statusUpdateCallback?.call(writtenLength / message.fileSize, message.fileSize);
+    statusUpdateCallback?.call(
+        writtenLength / message.fileSize, message.fileSize);
     state.pendingMessages.remove(nextChunk);
 
     state.lastHandledMessage = message;
@@ -88,6 +93,7 @@ class HandleReceivedBinaryData {
 
       state.tmpFile().then((file) async {
         await saveReceivedMessage(
+            remoteCoreId: remoteCoreId,
             receivedMessageJson: message.meta,
             chatId: chatId,
             filePath: file.path,
@@ -98,6 +104,7 @@ class HandleReceivedBinaryData {
   }
 
   Future<void> saveReceivedMessage({
+    required String remoteCoreId,
     required Map<String, dynamic> receivedMessageJson,
     required String chatId,
     required String filePath,
@@ -150,11 +157,12 @@ class HandleReceivedBinaryData {
         chatId: chatId);
 
     await ConfirmMessage().execute(
+        remoteCoreId: remoteCoreId,
         confirmMessageType: ConfirmMessageType.confirmReceivedText(
-      chatId: chatId,
-      messageId: receivedMessage.messageId,
-      status: ConfirmMessageStatus.delivered,
-    ));
+          chatId: chatId,
+          messageId: receivedMessage.messageId,
+          status: ConfirmMessageStatus.delivered,
+        ));
 
     print('RECEIVER: Message saved path: ${newfile.path}');
   }

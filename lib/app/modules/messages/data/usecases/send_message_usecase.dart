@@ -26,6 +26,7 @@ class SendMessage {
 
   execute({
     required SendMessageType sendMessageType,
+    required String remoteCoreId
   }) async {
     Tuple3<MessageModel?, bool, String> messageObject =
         messageFromType(messageType: sendMessageType);
@@ -44,6 +45,7 @@ class SendMessage {
     SendDataChannelMessage(messagingConnection: messagingConnection).execute(
       channelMessageType: ChannelMessageType.message(
           message: messageJson, isDataBinary: isDataBinary, messageLocalPath: messageLocalPath),
+      remoteCoreId: remoteCoreId,
     );
   }
 }

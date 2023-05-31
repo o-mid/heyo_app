@@ -11,18 +11,17 @@ class SendBinaryData {
   final BinaryFileSendingState sendingState;
   int maximumMessageSize = 100000;
   SingleCompleter<bool>? messageTimeoutCompleter;
-  SendBinaryData({required this.sendingState});
-  final CommonMessagingConnectionController messagingConnection =
-      Get.find<CommonMessagingConnectionController>();
+  SendBinaryData({required this.sendingState,required this.messagingConnection});
+  final CommonMessagingConnectionController messagingConnection ;
 
-  execute() async {
+  execute(String remoteCoreId) async {
     print('SENDER: Sending first chunk...');
-    sendNext();
+    sendNext(remoteCoreId);
 
     await sendingState.completer.future;
   }
 
-  Future sendNext() async {
+  Future sendNext(String remoteCoreId) async {
     if (sendingState.completer.isCompleted) {
       print('SENDER: Cancelled sending chunk due to completed');
       return;
@@ -42,11 +41,11 @@ class SendBinaryData {
       }
       state.sendChunkLock = true;
 
-      await sendChunk();
+      await sendChunk(remoteCoreId);
 
       state.sendChunkLock = false;
       if (!state.fileSendingComplete) {
-        sendNext();
+        sendNext(remoteCoreId);
       }
       messageTimeoutCompleter?.complete(true);
       messageTimeoutCompleter = SingleCompleter();
@@ -55,7 +54,7 @@ class SendBinaryData {
     }
   }
 
-  Future sendChunk() async {
+  Future sendChunk(String remoteCoreId) async {
     var state = sendingState;
     var startByte = await state.raFile.position();
     print("SENDER: Sending chunk: $startByte");
@@ -79,7 +78,7 @@ class SendBinaryData {
     builder.add(chunk);
     var bytes = builder.toBytes();
 
-    messagingConnection.sendBinaryMessage(binary: bytes);
+    messagingConnection.sendBinaryMessage(binary: bytes,remoteCoreId: remoteCoreId);
     if (isFileRead) {
       print("SENDER: Last chunk sent");
       state.fileSendingComplete = true;

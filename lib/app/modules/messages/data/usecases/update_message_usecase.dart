@@ -19,22 +19,32 @@ class UpdateMessage {
   final CommonMessagingConnectionController messagingConnection =
       Get.find<CommonMessagingConnectionController>();
 
-  execute({required UpdateMessageType updateMessageType}) async {
+  execute(
+      {required UpdateMessageType updateMessageType,
+      required String remoteCoreId}) async {
     switch (updateMessageType.runtimeType) {
       case UpdateReactions:
         final message = (updateMessageType as UpdateReactions).selectedMessage;
 
         final emoji = (updateMessageType).emoji;
 
-        await updateReactions(message: message, chatId: updateMessageType.chatId, emoji: emoji);
+        await updateReactions(
+            message: message,
+            chatId: updateMessageType.chatId,
+            emoji: emoji,
+            remoteCoreId: remoteCoreId);
 
         break;
     }
   }
 
   Future<void> updateReactions(
-      {required MessageModel message, required String emoji, required String chatId}) async {
-    final String localCoreID = await messagingConnection.accountInfo.getCoreId() ?? "";
+      {required MessageModel message,
+      required String emoji,
+      required String chatId,
+      required String remoteCoreId}) async {
+    final String localCoreID =
+        await messagingConnection.accountInfo.getCoreId() ?? "";
     var reaction = message.reactions[emoji] ?? ReactionModel();
 
     if (reaction.isReactedByMe) {
@@ -57,12 +67,15 @@ class UpdateMessage {
     );
     await messagesRepo.updateMessage(message: updatedMessage, chatId: chatId);
 
-    Map<String, dynamic> updatedMessageJson =
-        UpdateMessageModel(message: updatedMessage.copyWith(reactions: updatedMessage.reactions))
-            .toJson();
+    Map<String, dynamic> updatedMessageJson = UpdateMessageModel(
+            message:
+                updatedMessage.copyWith(reactions: updatedMessage.reactions))
+        .toJson();
 
     SendDataChannelMessage(messagingConnection: messagingConnection).execute(
-      channelMessageType: ChannelMessageType.update(message: updatedMessageJson),
+      remoteCoreId: remoteCoreId,
+      channelMessageType:
+          ChannelMessageType.update(message: updatedMessageJson),
     );
   }
 }
@@ -82,6 +95,7 @@ class UpdateMessageType {
 class UpdateReactions extends UpdateMessageType {
   final MessageModel selectedMessage;
   final String emoji;
+
   UpdateReactions({
     required this.selectedMessage,
     required this.emoji,
