@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/messaging/models.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
@@ -44,10 +43,10 @@ class MessagingConnectionController
             sessioncid: rtcSession.remotePeer.remoteCoreId);
 
         data.isBinary
-            ? handleDataChannelBinary(
+            ? await handleDataChannelBinary(
                 binaryData: data.binary,
                 remoteCoreId: rtcSession.remotePeer.remoteCoreId)
-            : handleDataChannelText(
+            : await handleDataChannelText(
                 receivedJson: _decoder.convert(data.text),
                 remoteCoreId: rtcSession.remotePeer.remoteCoreId);
       };

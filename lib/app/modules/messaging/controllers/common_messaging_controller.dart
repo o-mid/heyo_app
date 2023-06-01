@@ -325,12 +325,12 @@ abstract class CommonMessagingConnectionController extends GetxController {
     if (currentChatModel == null) {
       await chatHistoryRepo.addChatToHistory(userChatModel);
     } else {
-      await chatHistoryRepo.updateChat(userChatModel.copyWith(
+   /*   await chatHistoryRepo.updateChat(userChatModel.copyWith(
         lastMessage: currentChatModel.lastMessage,
         lastReadMessageId: currentChatModel.lastReadMessageId,
         notificationCount: currentChatModel.notificationCount,
         isOnline: true,
-      ));
+      ));*/
     }
   }
 
