@@ -67,13 +67,9 @@ class MessagesController extends GetxController {
   MessagesController({
     required this.messagesRepo,
     required this.chatHistoryRepo,
-  }) {
-    _initMessagesArguments();
-    _initUiControllers();
-    _initMessagingConnection();
-  }
+  });
 
-  late final CommonMessagingConnectionController messagingConnection;
+  late CommonMessagingConnectionController messagingConnection;
 
   late MessagingConnectionType connectionType;
 
@@ -111,17 +107,15 @@ class MessagesController extends GetxController {
 
   @override
   Future<void> onInit() async {
-    args = Get.arguments as MessagesViewArgumentsModel;
-    selfUserModel = args.user;
-    //chatId = selfUserModel.chatModel.id;
-    chatId = selfUserModel.coreId;
-    keyboardController = KeyboardVisibilityController();
-    // _initMessagesArguments();
-    // _initUiControllers();
+    super.onInit();
+    _initMessagesArguments();
+
+    _initUiControllers();
+
     //
     // // Initialize messagingConnection instance of CommonMessagingController-inherited class depends on connection type
     // // Also included previous functionality of _initDataChannel()
-    // _initMessagingConnection();
+    await _initMessagingConnection();
 
     _getMessages();
     _initMessagesStream();
@@ -130,26 +124,19 @@ class MessagesController extends GetxController {
 
     // Close emoji picker when keyboard opens
     _handleKeyboardVisibilityChanges();
-    super.onInit();
+  }
+
+  _initMessagesArguments() {
+    args = Get.arguments as MessagesViewArgumentsModel;
+    selfUserModel = args.user;
+    chatId = args.user.coreId;
+    connectionType = args.connectionType;
   }
 
   @override
   void onReady() {
     super.onReady();
     animateToBottom();
-  }
-
-  _closeMediaPlayers() {
-    // Todo: remove this when a global player is implemented
-    Get.find<AudioMessageController>().player.stop();
-
-    Get.find<VideoMessageController>().stopAndClearPreviousVideo();
-  }
-
-  _initMessagesArguments() {
-    args = Get.arguments as MessagesViewArgumentsModel;
-    chatId = args.user.coreId;
-    connectionType = args.connectionType;
   }
 
   _initUiControllers() {
@@ -159,7 +146,7 @@ class MessagesController extends GetxController {
     scrollController = _globalMessageController.scrollController;
   }
 
-  _initMessagingConnection() {
+  _initMessagingConnection() async {
     switch (connectionType) {
       case MessagingConnectionType.internet:
         // TODO remove debug print
@@ -183,7 +170,7 @@ class MessagesController extends GetxController {
     // Put current actual CommonMessagingConnectionController instance to use it in messaging process flow.
     Get.put(messagingConnection);
 
-    messagingConnection.initMessagingConnection(remoteId: args.user.walletAddress);
+    await messagingConnection.initMessagingConnection(remoteId: args.user.coreId);
   }
 
   void _initMessagesStream() async {
@@ -207,12 +194,16 @@ class MessagesController extends GetxController {
   Future<void> onClose() async {
     await _saveUserStates();
 
+    _closeMediaPlayers();
+    _messagesStreamSubscription.cancel();
+    super.onClose();
+  }
+
+  _closeMediaPlayers() {
     // Todo: remove this when a global player is implemented
     Get.find<AudioMessageController>().player.stop();
 
     Get.find<VideoMessageController>().stopAndClearPreviousVideo();
-    _messagesStreamSubscription.cancel();
-    super.onClose();
   }
 
   void _handleKeyboardVisibilityChanges() {

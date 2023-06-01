@@ -19,7 +19,6 @@ class MessagesBinding extends Bindings {
               appDatabaseProvider: Get.find(),
             ),
           ),
-          //  messagingConnection: Get.find<MessagingConnectionController>(),
           chatHistoryRepo: ChatHistoryLocalRepo(
             chatHistoryProvider: ChatHistoryProvider(
               appDatabaseProvider: Get.find(),
