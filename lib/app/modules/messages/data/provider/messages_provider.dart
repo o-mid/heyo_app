@@ -24,7 +24,7 @@ class MessagesProvider implements MessagesAbstractProvider {
 
     messages = cloneList(messages);
 
-    messages.add(message.toJson());
+    messages.add(message.copyWith(timestamp: message.timestamp.toLocal()).toJson());
     await _store.record(chatId).put(await _db, messages);
   }
 
