@@ -30,7 +30,7 @@ class DatachannelConnectionStatusWidget extends GetView<CommonMessagingConnectio
       Color backgroundColor;
       String title;
       Color titleColor;
-      switch (controller.connectivityStatus.value) {
+      switch (controller.dataChannelStatus.value) {
         case DataChannelConnectivityStatus.connectionLost:
           title = LocaleKeys.DataChannelStatus_ConnectionLost.tr;
           backgroundColor = COLORS.kStatesLightErrorColor;
@@ -86,7 +86,7 @@ class DatachannelConnectionStatusWidget extends GetView<CommonMessagingConnectio
   }) async {
     for (var i = 0; i < frequency; i++) {
       await Future.delayed(Duration(seconds: delayInSeconds), () {
-        controller.connectivityStatus.value = DataChannelConnectivityStatus
+        controller.dataChannelStatus.value = DataChannelConnectivityStatus
             .values[Random().nextInt(DataChannelConnectivityStatus.values.length)];
       });
     }

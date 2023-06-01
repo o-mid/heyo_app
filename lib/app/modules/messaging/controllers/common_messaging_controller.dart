@@ -43,6 +43,8 @@ abstract class CommonMessagingConnectionController extends GetxController {
   /// Represents current status of used data channel.
   Rx<DataChannelConnectivityStatus> connectivityStatus =
       DataChannelConnectivityStatus.connecting.obs;
+  Rx<DataChannelConnectivityStatus> dataChannelStatus =
+      DataChannelConnectivityStatus.connecting.obs;
 
   //
 

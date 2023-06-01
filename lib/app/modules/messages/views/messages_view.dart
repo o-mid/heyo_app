@@ -15,6 +15,7 @@ class MessagesView extends GetView<MessagesController> {
 
   @override
   Widget build(BuildContext context) {
+
     // This call allows us to get an instance of the CommonMessagingConnectionController class here
     // before the call of DatachannelConnectionStatusWidget, to prevent a "CommonMessagingConnectionController" not found error.
     controller.onInit();

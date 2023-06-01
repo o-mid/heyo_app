@@ -69,15 +69,15 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
     this.remoteId = remoteId;
     _initPlugin();
 
-    connectivityStatus.value = DataChannelConnectivityStatus.connecting;
+    dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
     WifiDirectEvent connectionResult = await _heyoWifiDirect?.connectPeer(remoteId) ??
         WifiDirectEvent(type: EventType.failure, dateTime: DateTime.now());
 
     if (connectionResult.type == EventType.linkedPeer) {
-      connectivityStatus.value = DataChannelConnectivityStatus.justConnected;
+      dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
       setConnectivityOnline();
     } else {
-      connectivityStatus.value = DataChannelConnectivityStatus.connectionLost;
+      dataChannelStatus.value = DataChannelConnectivityStatus.connectionLost;
     }
 
     print('initMessagingConnection result: ${connectionResult.type.name}');
@@ -154,7 +154,7 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
         ),
       );
     }
-    connectivityStatus.value = DataChannelConnectivityStatus.justConnected;
+    dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
     setConnectivityOnline();
   }
 
