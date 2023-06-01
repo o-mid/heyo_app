@@ -24,10 +24,7 @@ class SendMessage {
   final CommonMessagingConnectionController messagingConnection =
       Get.find<CommonMessagingConnectionController>();
 
-  execute({
-    required SendMessageType sendMessageType,
-    required String remoteCoreId
-  }) async {
+  execute({required SendMessageType sendMessageType, required String remoteCoreId}) async {
     Tuple3<MessageModel?, bool, String> messageObject =
         messageFromType(messageType: sendMessageType);
     MessageModel? msg = messageObject.item1;

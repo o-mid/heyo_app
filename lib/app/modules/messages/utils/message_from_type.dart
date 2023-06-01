@@ -18,7 +18,8 @@ Tuple3<MessageModel?, bool, String> messageFromType({required SendMessageType me
   String messageLocalPath = "";
   var uuid = const Uuid();
   final id = uuid.v4();
-  final timestamp = DateTime.now();
+  // send messages with utc format timestamp to avoid timezone issues
+  final timestamp = DateTime.now().toUtc();
   const senderName = ""; // Todo: get sender name from user repo
   const senderAvatar = ""; // Todo: get sender avatar from user repo
   MessageModel? msg;

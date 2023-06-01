@@ -24,7 +24,8 @@ class MessagesProvider implements MessagesAbstractProvider {
 
     messages = cloneList(messages);
 
-    messages.add(message.toJson());
+// store the messages in db with local timestamp (not utc) to avoid issues with timezones
+    messages.add(message.copyWith(timestamp: message.timestamp.toLocal()).toJson());
     await _store.record(chatId).put(await _db, messages);
   }
 
