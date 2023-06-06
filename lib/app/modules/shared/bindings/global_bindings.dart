@@ -37,6 +37,7 @@ import '../../messages/data/provider/messages_provider.dart';
 import '../../messages/data/repo/messages_repo.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
+import '../../notifications/controllers/notifications_controller.dart';
 import '../utils/constants/web3client_constant.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 
@@ -52,8 +53,7 @@ class GlobalBindings extends Bindings {
 
   //MultipleConnectionHandler multipleConnectionHandler =
 
-  static P2PNodeResponseStream p2pNodeResponseStream =
-      P2PNodeResponseStream(p2pState: p2pState);
+  static P2PNodeResponseStream p2pNodeResponseStream = P2PNodeResponseStream(p2pState: p2pState);
 
   static Web3Client web3Client = Web3Client(
     WEB3CLIENT.url,
@@ -68,8 +68,7 @@ class GlobalBindings extends Bindings {
 
 // call related bindings
   static Signaling signaling = Signaling(p2pCommunicator: p2pCommunicator);
-  static CallConnectionController callConnectionController =
-      CallConnectionController(
+  static CallConnectionController callConnectionController = CallConnectionController(
     accountInfo: accountInfo,
     signaling: signaling,
   );
@@ -79,12 +78,11 @@ class GlobalBindings extends Bindings {
       WifiDirectConnectionController(
     accountInfo: accountInfo,
     messagesRepo: MessagesRepo(
-      messagesProvider: MessagesProvider(
-          appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+      messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
     ),
     chatHistoryRepo: ChatHistoryLocalRepo(
-      chatHistoryProvider: ChatHistoryProvider(
-          appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+      chatHistoryProvider:
+          ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
     ),
   );
 
@@ -99,9 +97,7 @@ class GlobalBindings extends Bindings {
 
     Get.put(
         P2PNodeRequestStream(
-            p2pState: p2pState,
-            signaling: signaling,
-            multipleConnectionHandler: Get.find()),
+            p2pState: p2pState, signaling: signaling, multipleConnectionHandler: Get.find()),
         permanent: true);
     // data base provider dependencies
     Get.put(AppDatabaseProvider(accountInfo: accountInfo), permanent: true);
@@ -124,8 +120,8 @@ class GlobalBindings extends Bindings {
     Get.put(
       CallHistoryObserver(
         callHistoryRepo: CallHistoryRepo(
-          callHistoryProvider: CallHistoryProvider(
-              appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          callHistoryProvider:
+              CallHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
         ),
         callConnectionController: callConnectionController,
       ),
@@ -147,8 +143,8 @@ class GlobalBindings extends Bindings {
 
     Get.put(ChatsController(
       chatHistoryRepo: ChatHistoryLocalRepo(
-        chatHistoryProvider: ChatHistoryProvider(
-            appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+        chatHistoryProvider:
+            ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
       ),
     ));
 
@@ -163,12 +159,11 @@ class GlobalBindings extends Bindings {
         multipleConnectionHandler: Get.find(),
         accountInfo: accountInfo,
         messagesRepo: MessagesRepo(
-          messagesProvider: MessagesProvider(
-              appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
         ),
         chatHistoryRepo: ChatHistoryLocalRepo(
-          chatHistoryProvider: ChatHistoryProvider(
-              appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          chatHistoryProvider:
+              ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
         ),
       ),
       permanent: true,
@@ -188,6 +183,11 @@ class GlobalBindings extends Bindings {
           web3client: web3Client,
         ),
       ),
+      permanent: true,
+    );
+
+    Get.put<NotificationsController>(
+      NotificationsController(),
       permanent: true,
     );
   }
