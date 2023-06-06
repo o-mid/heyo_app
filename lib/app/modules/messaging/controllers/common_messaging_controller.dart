@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +17,8 @@ import '../../messages/data/models/messages/update_message_model.dart';
 import '../../messages/data/models/reaction_model.dart';
 import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/utils/message_from_json.dart';
+
+import '../../notifications/controllers/notifications_controller.dart';
 import '../../p2p_node/data/account/account_info.dart';
 import '../../shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import '../messaging_session.dart';
@@ -170,6 +174,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
   Future<void> saveAndConfirmReceivedMessage(
       {required Map<String, dynamic> receivedMessageJson, required String chatId}) async {
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
+
     await messagesRepo.createMessage(
         message: receivedMessage.copyWith(
           isFromMe: false,
@@ -186,6 +191,25 @@ abstract class CommonMessagingConnectionController extends GetxController {
       receivedMessage: receivedMessage,
       chatId: chatId,
     );
+    await notifyReceivedMessage(
+      receivedMessage: receivedMessage,
+      chatId: chatId,
+    );
+  }
+
+  Future<void> notifyReceivedMessage({
+    required MessageModel receivedMessage,
+    required String chatId,
+  }) async {
+    await Get.find<NotificationsController>().receivedMessageNotify(
+        notificationContent: NotificationContent(
+      id: Random().nextInt(1000),
+      channelKey: "basic_channel",
+      title: "from ${chatId.characters.take(5).toString()}",
+      body: receivedMessage.type == MessageContentType.text
+          ? (receivedMessage as TextMessageModel).text
+          : receivedMessage.type.name,
+    ));
   }
 
   Future<void> updateChatRepo(
