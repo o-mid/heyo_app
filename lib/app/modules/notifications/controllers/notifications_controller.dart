@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:image_editor/image_editor.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../shared/utils/constants/notifications_constant.dart';
@@ -46,6 +47,7 @@ class NotificationsController extends GetxController {
         ],
         debug: true);
     await _checkNotificationPermission();
+    await initializeNotificationsEventListeners();
   }
 
   Future<void> instantNotify() async {
@@ -101,5 +103,61 @@ class NotificationsController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+  }
+
+  static Future<void> initializeNotificationsEventListeners() async {
+    // Only after at least the action method is set, the notification events are delivered
+    AwesomeNotifications().setListeners(
+        onActionReceivedMethod: NotificationsController.onActionReceivedMethod,
+        onNotificationCreatedMethod: NotificationsController.onNotificationCreatedMethod,
+        onNotificationDisplayedMethod: NotificationsController.onNotificationDisplayedMethod,
+        onDismissActionReceivedMethod: NotificationsController.onDismissActionReceivedMethod);
+  }
+
+  /// Use this method to detect when a new notification or a schedule is created
+  @pragma("vm:entry-point")
+  static Future<void> onNotificationCreatedMethod(ReceivedNotification receivedNotification) async {
+    //   Get.snackbar("Notification created", '${receivedNotification.createdLifeCycle!}');
+  }
+
+  /// Use this method to detect every time that a new notification is displayed
+  @pragma("vm:entry-point")
+  static Future<void> onNotificationDisplayedMethod(
+      ReceivedNotification receivedNotification) async {
+    //   Get.snackbar("Notification displayed", '${receivedNotification.createdLifeCycle!}');
+  }
+
+  /// Use this method to detect if the user dismissed a notification
+  @pragma("vm:entry-point")
+  static Future<void> onDismissActionReceivedMethod(ReceivedAction receivedAction) async {
+    Get.snackbar("Notification dismissed", '${receivedAction.dismissedLifeCycle!}');
+  }
+
+  /// Use this method to detect when the user taps on a notification or action button
+  @pragma("vm:entry-point")
+  static Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
+    // Always ensure that all plugins was initialized
+    WidgetsFlutterBinding.ensureInitialized();
+
+    bool isSilentAction = receivedAction.actionType == ActionType.SilentAction ||
+        receivedAction.actionType == ActionType.SilentBackgroundAction;
+
+    // SilentBackgroundAction runs on background thread and cannot show
+    // UI/visual elements
+    if (receivedAction.actionType != ActionType.SilentBackgroundAction) {
+      Get.snackbar(isSilentAction ? 'Silent action' : 'Action',
+          'received on ${(receivedAction.actionLifeCycle!)}');
+    }
+
+    switch (receivedAction.channelKey) {
+      case NOTIFICATIONS.messagesChannelKey:
+        break;
+
+      case NOTIFICATIONS.callsChannelKey:
+        break;
+
+      default:
+        break;
+    }
   }
 }
