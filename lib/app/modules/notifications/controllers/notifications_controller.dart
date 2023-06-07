@@ -9,11 +9,18 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:image_editor/image_editor.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../routes/app_pages.dart';
+import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import '../../new_chat/data/models/user_model.dart';
+import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../../shared/utils/constants/notifications_constant.dart';
 import '../../shared/utils/permission_flow.dart';
 
 class NotificationsController extends GetxController {
+  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   RxBool isNotificationGranted = false.obs;
+
+  NotificationsController({required this.chatHistoryRepo});
   @override
   void onInit() async {
     await initializeNotifications();
@@ -31,6 +38,7 @@ class NotificationsController extends GetxController {
             channelDescription: NOTIFICATIONS.messagesChannelDescription,
             defaultColor: NOTIFICATIONS.defaultColor,
             ledColor: NOTIFICATIONS.defaultColor,
+
             //icon: Assets.png.chain.path,
           ),
           NotificationChannel(
@@ -81,9 +89,22 @@ class NotificationsController extends GetxController {
     await _checkNotificationPermission();
     final AwesomeNotifications awesomeNotifications = AwesomeNotifications();
 
-    await awesomeNotifications.createNotification(
-      content: notificationContent,
-    );
+    await awesomeNotifications.createNotification(content: notificationContent, actionButtons: [
+      NotificationActionButton(
+          key: MessagesActionButtons.redirect.name,
+          label: MessagesActionButtons.redirect.name,
+          actionType: ActionType.Default),
+      NotificationActionButton(
+          key: MessagesActionButtons.reply.name,
+          label: 'Reply Message',
+          requireInputText: true,
+          actionType: ActionType.SilentAction),
+      NotificationActionButton(
+          key: MessagesActionButtons.dismiss.name,
+          label: MessagesActionButtons.dismiss.name,
+          actionType: ActionType.DismissAction,
+          isDangerousOption: true)
+    ]);
   }
 
   Future<void> sendMessageNotify({required NotificationContent notificationContent}) async {
@@ -105,13 +126,13 @@ class NotificationsController extends GetxController {
     super.onClose();
   }
 
-  static Future<void> initializeNotificationsEventListeners() async {
+  Future<void> initializeNotificationsEventListeners() async {
     // Only after at least the action method is set, the notification events are delivered
     AwesomeNotifications().setListeners(
-        onActionReceivedMethod: NotificationsController.onActionReceivedMethod,
-        onNotificationCreatedMethod: NotificationsController.onNotificationCreatedMethod,
-        onNotificationDisplayedMethod: NotificationsController.onNotificationDisplayedMethod,
-        onDismissActionReceivedMethod: NotificationsController.onDismissActionReceivedMethod);
+        onActionReceivedMethod: onActionReceivedMethod,
+        onNotificationCreatedMethod: onNotificationCreatedMethod,
+        onNotificationDisplayedMethod: onNotificationDisplayedMethod,
+        onDismissActionReceivedMethod: onDismissActionReceivedMethod);
   }
 
   /// Use this method to detect when a new notification or a schedule is created
@@ -135,7 +156,7 @@ class NotificationsController extends GetxController {
 
   /// Use this method to detect when the user taps on a notification or action button
   @pragma("vm:entry-point")
-  static Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
+  Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
     // Always ensure that all plugins was initialized
     WidgetsFlutterBinding.ensureInitialized();
 
@@ -151,6 +172,8 @@ class NotificationsController extends GetxController {
 
     switch (receivedAction.channelKey) {
       case NOTIFICATIONS.messagesChannelKey:
+        await receiveMessagesNotificationAction(receivedAction);
+
         break;
 
       case NOTIFICATIONS.callsChannelKey:
@@ -158,6 +181,49 @@ class NotificationsController extends GetxController {
 
       default:
         break;
+    }
+  }
+
+  Future<void> receiveMessagesNotificationAction(ReceivedAction receivedAction) async {
+    if (receivedAction.buttonKeyPressed == MessagesActionButtons.reply.name) {
+      // send the reply of the message received
+
+      // if (receivedAction.payload?["chatId"] != null) {
+      //   final user = await chatHistoryRepo.getChat(receivedAction.payload!["chatId"]!);
+      //   if (user != null) {
+      //     Get.toNamed(
+      //       Routes.MESSAGES,
+      //       arguments: MessagesViewArgumentsModel(
+      //         user: UserModel(
+      //           iconUrl: user.icon,
+      //           name: user.name,
+      //           walletAddress: user.coreId,
+      //           coreId: user.coreId,
+      //           isOnline: user.isOnline,
+      //         ),
+      //       ),
+      //     );
+      //   }
+      // }
+    } else {
+      // navigate to the Messages screen of user
+      if (receivedAction.payload?["chatId"] != null) {
+        final user = await chatHistoryRepo.getChat(receivedAction.payload!["chatId"]!);
+        if (user != null) {
+          Get.toNamed(
+            Routes.MESSAGES,
+            arguments: MessagesViewArgumentsModel(
+              user: UserModel(
+                iconUrl: user.icon,
+                name: user.name,
+                walletAddress: user.coreId,
+                coreId: user.coreId,
+                isOnline: user.isOnline,
+              ),
+            ),
+          );
+        }
+      }
     }
   }
 }

@@ -204,13 +204,13 @@ abstract class CommonMessagingConnectionController extends GetxController {
   }) async {
     await Get.find<NotificationsController>().receivedMessageNotify(
         notificationContent: NotificationContent(
-      id: Random().nextInt(1000),
-      channelKey: NOTIFICATIONS.messagesChannelKey,
-      title: "from ${chatId.characters.take(5).toString()}",
-      body: receivedMessage.type == MessageContentType.text
-          ? (receivedMessage as TextMessageModel).text
-          : receivedMessage.type.name,
-    ));
+            id: Random().nextInt(1000),
+            channelKey: NOTIFICATIONS.messagesChannelKey,
+            title: "from ${chatId.characters.take(5).toString()}",
+            body: receivedMessage.type == MessageContentType.text
+                ? (receivedMessage as TextMessageModel).text
+                : receivedMessage.type.name,
+            payload: {'chatId': chatId}));
   }
 
   Future<void> updateChatRepo(

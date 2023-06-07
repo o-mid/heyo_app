@@ -13,3 +13,10 @@ class NOTIFICATIONS {
   static const defaultIcon = 'resource://drawable/res_app_icon';
   static const defaultColor = COLORS.kGreenMainColor;
 }
+
+enum MessagesActionButtons {
+  reply,
+  read,
+  dismiss,
+  redirect,
+}
