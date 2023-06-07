@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/audio_metadata.dart';
@@ -10,7 +13,10 @@ import 'package:heyo/app/modules/messaging/controllers/common_messaging_controll
 import 'package:tuple/tuple.dart';
 import '../../../messaging/controllers/messaging_connection_controller.dart';
 import '../../../messaging/usecases/send_data_channel_message_usecase.dart';
+import '../../../notifications/controllers/notifications_controller.dart';
+import '../../../shared/utils/constants/notifications_constant.dart';
 import '../../utils/message_from_type.dart';
+import '../models/messages/text_message_model.dart';
 import '../models/reaction_model.dart';
 import '../provider/messages_provider.dart';
 import '../repo/messages_repo.dart';
@@ -37,6 +43,16 @@ class SendMessage {
 
     await messagesRepo.createMessage(
         message: msg.copyWith(status: MessageStatus.sending), chatId: sendMessageType.chatId);
+
+    //todo: remove this - only for testing
+    await Get.find<NotificationsController>().sendMessageNotify(
+        notificationContent: NotificationContent(
+      id: Random().nextInt(1000),
+      channelKey: NOTIFICATIONS.messagesChannelKey,
+      title: "msg sent",
+      icon: msg.senderAvatar,
+      body: msg.type == MessageContentType.text ? (msg as TextMessageModel).text : msg.type.name,
+    ));
 
     Map<String, dynamic> messageJson = msg.toJson();
     SendDataChannelMessage(messagingConnection: messagingConnection).execute(

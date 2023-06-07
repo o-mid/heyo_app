@@ -8,6 +8,7 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../shared/utils/constants/notifications_constant.dart';
 import '../../shared/utils/permission_flow.dart';
 
 class NotificationsController extends GetxController {
@@ -24,17 +25,24 @@ class NotificationsController extends GetxController {
         null,
         [
           NotificationChannel(
-              channelGroupKey: 'basic_channel_group',
-              channelKey: 'basic_channel',
-              channelName: 'Basic notifications',
-              channelDescription: 'Notification channel for basic tests',
-              defaultColor: Color(0xFF9D50DD),
-              ledColor: Colors.white)
+            channelKey: NOTIFICATIONS.messagesChannelKey,
+            channelName: NOTIFICATIONS.messagesChannelName,
+            channelDescription: NOTIFICATIONS.messagesChannelDescription,
+            defaultColor: NOTIFICATIONS.defaultColor,
+            ledColor: NOTIFICATIONS.defaultColor,
+            //icon: Assets.png.chain.path,
+          ),
+          NotificationChannel(
+              channelKey: NOTIFICATIONS.callsChannelKey,
+              channelName: NOTIFICATIONS.callsChannelName,
+              channelDescription: NOTIFICATIONS.callsChannelDescription,
+              defaultColor: NOTIFICATIONS.defaultColor,
+              ledColor: NOTIFICATIONS.defaultColor)
         ],
         // Channel groups are only visual and are not required
         channelGroups: [
-          NotificationChannelGroup(
-              channelGroupKey: 'basic_channel_group', channelGroupName: 'Basic group')
+          // NotificationChannelGroup(
+          //     channelGroupKey: 'basic_channel_group', channelGroupName: 'Basic group')
         ],
         debug: true);
     await _checkNotificationPermission();
@@ -50,7 +58,7 @@ class NotificationsController extends GetxController {
           id: Random().nextInt(100),
           title: "Instant Delivery",
           body: "Notification that delivers instantly on trigger.",
-          channelKey: 'basic_channel',
+          channelKey: NOTIFICATIONS.messagesChannelKey,
         ),
       );
     }
@@ -71,11 +79,18 @@ class NotificationsController extends GetxController {
     await _checkNotificationPermission();
     final AwesomeNotifications awesomeNotifications = AwesomeNotifications();
 
-    // if (isNotificationGranted.value) {
     await awesomeNotifications.createNotification(
       content: notificationContent,
     );
-    //  }
+  }
+
+  Future<void> sendMessageNotify({required NotificationContent notificationContent}) async {
+    await _checkNotificationPermission();
+    final AwesomeNotifications awesomeNotifications = AwesomeNotifications();
+
+    await awesomeNotifications.createNotification(
+      content: notificationContent,
+    );
   }
 
   @override

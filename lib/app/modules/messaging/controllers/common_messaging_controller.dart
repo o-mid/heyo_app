@@ -20,6 +20,7 @@ import '../../messages/utils/message_from_json.dart';
 
 import '../../notifications/controllers/notifications_controller.dart';
 import '../../p2p_node/data/account/account_info.dart';
+import '../../shared/utils/constants/notifications_constant.dart';
 import '../../shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import '../messaging_session.dart';
 import '../models/data_channel_message_model.dart';
@@ -204,7 +205,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
     await Get.find<NotificationsController>().receivedMessageNotify(
         notificationContent: NotificationContent(
       id: Random().nextInt(1000),
-      channelKey: "basic_channel",
+      channelKey: NOTIFICATIONS.messagesChannelKey,
       title: "from ${chatId.characters.take(5).toString()}",
       body: receivedMessage.type == MessageContentType.text
           ? (receivedMessage as TextMessageModel).text
