@@ -37,6 +37,7 @@ import '../../messages/data/provider/messages_provider.dart';
 import '../../messages/data/repo/messages_repo.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
+import '../../wifi_direct/controllers/wifi_direct_wrapper.dart';
 import '../utils/constants/web3client_constant.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 
@@ -74,9 +75,11 @@ class GlobalBindings extends Bindings {
     signaling: signaling,
   );
 
-  static HeyoWifiDirect? heyoWifiDirect;
+  static WifiDirectWrapper wifiDirectWrapper = WifiDirectWrapper();
+
   static WifiDirectConnectionController wifiDirectConnectionController =
       WifiDirectConnectionController(
+    wifiDirectWrapper: wifiDirectWrapper,
     accountInfo: accountInfo,
     messagesRepo: MessagesRepo(
       messagesProvider: MessagesProvider(
@@ -177,6 +180,7 @@ class GlobalBindings extends Bindings {
       wifiDirectConnectionController,
       permanent: true,
     );
+
 
     Get.put<P2PNodeController>(
       P2PNodeController(

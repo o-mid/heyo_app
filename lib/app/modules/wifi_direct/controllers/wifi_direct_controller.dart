@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
+import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../generated/assets.gen.dart';
@@ -24,9 +25,10 @@ class WifiDirectController extends GetxController {
 
   WifiDirectController(
       {required this.accountInfo,
-      required HeyoWifiDirect? heyoWifiDirect,
-      required this.wifiDirectConnectionController})
-      : _heyoWifiDirect = heyoWifiDirect;
+       required this.wifiDirectConnectionController}) {
+       _heyoWifiDirect = wifiDirectConnectionController.wifiDirectWrapper.pluginInstance;
+  }
+
   final coreId = "".obs;
   final visibleName = "".obs;
 
@@ -72,7 +74,8 @@ class WifiDirectController extends GetxController {
       _messageListener =
           _heyoWifiDirect!.tcpMessage.stream.listen((message) => _messageHandler(message));
       wifiDirectEnabled.value = await _heyoWifiDirect!.isWifiDirectEnabled();
-      GlobalBindings.heyoWifiDirect = _heyoWifiDirect;
+      wifiDirectConnectionController.wifiDirectWrapper.pluginInstance = _heyoWifiDirect;
+      Get.put(wifiDirectConnectionController);
     }
   }
 
