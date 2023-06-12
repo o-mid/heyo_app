@@ -19,6 +19,7 @@ import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/utils/message_from_json.dart';
 
 import '../../notifications/controllers/notifications_controller.dart';
+import '../../notifications/data/models/notifications_payload_model.dart';
 import '../../p2p_node/data/account/account_info.dart';
 import '../../shared/utils/constants/notifications_constant.dart';
 import '../../shared/utils/screen-utils/mocks/random_avatar_icon.dart';
@@ -210,7 +211,14 @@ abstract class CommonMessagingConnectionController extends GetxController {
             body: receivedMessage.type == MessageContentType.text
                 ? (receivedMessage as TextMessageModel).text
                 : receivedMessage.type.name,
-            payload: {'chatId': chatId}));
+            payload: NotificationsPayloadModel(
+              chatId: chatId,
+              messageId: receivedMessage.messageId,
+              senderName: receivedMessage.senderName,
+              replyMsg: receivedMessage.type == MessageContentType.text
+                  ? (receivedMessage as TextMessageModel).text
+                  : receivedMessage.type.name,
+            ).toJson()));
   }
 
   Future<void> updateChatRepo(

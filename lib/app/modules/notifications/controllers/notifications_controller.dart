@@ -23,6 +23,7 @@ import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../../shared/providers/database/app_database.dart';
 import '../../shared/utils/constants/notifications_constant.dart';
 import '../../shared/utils/permission_flow.dart';
+import '../data/models/notifications_payload_model.dart';
 
 class NotificationsController extends GetxController {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo = ChatHistoryLocalRepo(
@@ -199,31 +200,32 @@ class NotificationsController extends GetxController {
     if (receivedAction.buttonKeyPressed == MessagesActionButtons.reply.name) {
       String message = receivedAction.buttonKeyInput;
       // send the reply of the message received
-      if (receivedAction.payload?["chatId"] != null) {
-        final userChatModel = await NotificationsController()
-            .chatHistoryRepo
-            .getChat(receivedAction.payload!["chatId"]!);
+      if (receivedAction.payload != null) {
+        final payload =
+            NotificationsPayloadModel.fromJson(receivedAction.payload as Map<String, dynamic>);
+        final userChatModel =
+            await NotificationsController().chatHistoryRepo.getChat(payload.chatId);
         if (userChatModel != null) {
           // Get.find<MessagesController>().initMessagingConnection();
           SendMessage().execute(
               sendMessageType: SendMessageType.text(
                 text: message,
-                replyTo: null,
-                // replyTo: ReplyToModel(
-                //   repliedToMessageId: msg.messageId,
-                //   repliedToName: msg.senderName,
-                //   repliedToMessage: replyMsg,
-                // ),
-                chatId: receivedAction.payload!["chatId"]!,
+                replyTo: ReplyToModel(
+                  repliedToMessageId: payload.messageId,
+                  repliedToName: payload.senderName,
+                  repliedToMessage: payload.replyMsg,
+                ),
+                chatId: payload.chatId,
               ),
               remoteCoreId: userChatModel.coreId);
         }
       } else {
         // navigate to the Messages screen of user
-        if (receivedAction.payload?["chatId"] != null) {
-          final userChatModel = await NotificationsController()
-              .chatHistoryRepo
-              .getChat(receivedAction.payload!["chatId"]!);
+        if (receivedAction.payload != null) {
+          final payload =
+              NotificationsPayloadModel.fromJson(receivedAction.payload as Map<String, dynamic>);
+          final userChatModel =
+              await NotificationsController().chatHistoryRepo.getChat(payload.chatId);
           if (userChatModel != null) {
             Get.toNamed(
               Routes.MESSAGES,
