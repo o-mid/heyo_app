@@ -15,6 +15,9 @@ import '../../../routes/app_pages.dart';
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import '../../chats/data/repos/chat_history/chat_history_repo.dart';
+import '../../messages/controllers/messages_controller.dart';
+import '../../messages/data/models/reply_to_model.dart';
+import '../../messages/data/usecases/send_message_usecase.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../../shared/providers/database/app_database.dart';
@@ -194,44 +197,47 @@ class NotificationsController extends GetxController {
     ReceivedAction receivedAction,
   ) async {
     if (receivedAction.buttonKeyPressed == MessagesActionButtons.reply.name) {
+      String message = receivedAction.buttonKeyInput;
       // send the reply of the message received
-
-      // if (receivedAction.payload?["chatId"] != null) {
-      //   final user = await  .getChat(receivedAction.payload!["chatId"]!);
-      //   if (user != null) {
-      //     Get.toNamed(
-      //       Routes.MESSAGES,
-      //       arguments: MessagesViewArgumentsModel(
-      //         user: UserModel(
-      //           iconUrl: user.icon,
-      //           name: user.name,
-      //           walletAddress: user.coreId,
-      //           coreId: user.coreId,
-      //           isOnline: user.isOnline,
-      //         ),
-      //       ),
-      //     );
-      //   }
-      // }
-    } else {
-      // navigate to the Messages screen of user
       if (receivedAction.payload?["chatId"] != null) {
-        final user = await NotificationsController()
+        final userChatModel = await NotificationsController()
             .chatHistoryRepo
             .getChat(receivedAction.payload!["chatId"]!);
-        if (user != null) {
-          Get.toNamed(
-            Routes.MESSAGES,
-            arguments: MessagesViewArgumentsModel(
-              user: UserModel(
-                iconUrl: user.icon,
-                name: user.name,
-                walletAddress: user.coreId,
-                coreId: user.coreId,
-                isOnline: user.isOnline,
+        if (userChatModel != null) {
+          // Get.find<MessagesController>().initMessagingConnection();
+          SendMessage().execute(
+              sendMessageType: SendMessageType.text(
+                text: message,
+                replyTo: null,
+                // replyTo: ReplyToModel(
+                //   repliedToMessageId: msg.messageId,
+                //   repliedToName: msg.senderName,
+                //   repliedToMessage: replyMsg,
+                // ),
+                chatId: receivedAction.payload!["chatId"]!,
               ),
-            ),
-          );
+              remoteCoreId: userChatModel.coreId);
+        }
+      } else {
+        // navigate to the Messages screen of user
+        if (receivedAction.payload?["chatId"] != null) {
+          final userChatModel = await NotificationsController()
+              .chatHistoryRepo
+              .getChat(receivedAction.payload!["chatId"]!);
+          if (userChatModel != null) {
+            Get.toNamed(
+              Routes.MESSAGES,
+              arguments: MessagesViewArgumentsModel(
+                user: UserModel(
+                  iconUrl: userChatModel.icon,
+                  name: userChatModel.name,
+                  walletAddress: userChatModel.coreId,
+                  coreId: userChatModel.coreId,
+                  isOnline: userChatModel.isOnline,
+                ),
+              ),
+            );
+          }
         }
       }
     }

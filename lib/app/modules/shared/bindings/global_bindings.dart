@@ -35,6 +35,7 @@ import '../../chats/data/providers/chat_history/chat_history_provider.dart';
 import '../../chats/data/repos/chat_history/chat_history_repo.dart';
 import '../../messages/data/provider/messages_provider.dart';
 import '../../messages/data/repo/messages_repo.dart';
+import '../../messaging/controllers/common_messaging_controller.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../../notifications/controllers/notifications_controller.dart';
@@ -190,5 +191,6 @@ class GlobalBindings extends Bindings {
       NotificationsController(),
       permanent: true,
     );
+    Get.put<CommonMessagingConnectionController>(Get.find<MessagingConnectionController>());
   }
 }
