@@ -1,26 +1,32 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/generated/assets.gen.dart';
-import 'package:heyo/generated/locales.g.dart';
 import 'package:image_editor/image_editor.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:heyo/generated/assets.gen.dart';
+import 'package:heyo/generated/locales.g.dart';
+
 import '../../../routes/app_pages.dart';
+import '../../chats/data/providers/chat_history/chat_history_provider.dart';
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import '../../chats/data/repos/chat_history/chat_history_repo.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
+import '../../shared/providers/database/app_database.dart';
 import '../../shared/utils/constants/notifications_constant.dart';
 import '../../shared/utils/permission_flow.dart';
 
 class NotificationsController extends GetxController {
-  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
+  final ChatHistoryLocalAbstractRepo chatHistoryRepo = ChatHistoryLocalRepo(
+    chatHistoryProvider: ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+  );
   RxBool isNotificationGranted = false.obs;
 
-  NotificationsController({required this.chatHistoryRepo});
   @override
   void onInit() async {
     await initializeNotifications();
@@ -156,7 +162,7 @@ class NotificationsController extends GetxController {
 
   /// Use this method to detect when the user taps on a notification or action button
   @pragma("vm:entry-point")
-  Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
+  static Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
     // Always ensure that all plugins was initialized
     WidgetsFlutterBinding.ensureInitialized();
 
@@ -184,12 +190,14 @@ class NotificationsController extends GetxController {
     }
   }
 
-  Future<void> receiveMessagesNotificationAction(ReceivedAction receivedAction) async {
+  static Future<void> receiveMessagesNotificationAction(
+    ReceivedAction receivedAction,
+  ) async {
     if (receivedAction.buttonKeyPressed == MessagesActionButtons.reply.name) {
       // send the reply of the message received
 
       // if (receivedAction.payload?["chatId"] != null) {
-      //   final user = await chatHistoryRepo.getChat(receivedAction.payload!["chatId"]!);
+      //   final user = await  .getChat(receivedAction.payload!["chatId"]!);
       //   if (user != null) {
       //     Get.toNamed(
       //       Routes.MESSAGES,
@@ -208,7 +216,9 @@ class NotificationsController extends GetxController {
     } else {
       // navigate to the Messages screen of user
       if (receivedAction.payload?["chatId"] != null) {
-        final user = await chatHistoryRepo.getChat(receivedAction.payload!["chatId"]!);
+        final user = await NotificationsController()
+            .chatHistoryRepo
+            .getChat(receivedAction.payload!["chatId"]!);
         if (user != null) {
           Get.toNamed(
             Routes.MESSAGES,

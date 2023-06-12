@@ -187,12 +187,7 @@ class GlobalBindings extends Bindings {
     );
 
     Get.put<NotificationsController>(
-      NotificationsController(
-        chatHistoryRepo: ChatHistoryLocalRepo(
-          chatHistoryProvider:
-              ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-        ),
-      ),
+      NotificationsController(),
       permanent: true,
     );
   }
