@@ -17,7 +17,7 @@ class NOTIFICATIONS {
 enum MessagesActionButtons {
   reply,
   read,
-  dismiss,
+
   redirect,
 }
 

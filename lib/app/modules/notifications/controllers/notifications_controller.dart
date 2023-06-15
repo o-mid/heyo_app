@@ -18,6 +18,9 @@ import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import '../../chats/data/repos/chat_history/chat_history_repo.dart';
 import '../../messages/controllers/messages_controller.dart';
 import '../../messages/data/models/reply_to_model.dart';
+import '../../messages/data/provider/messages_provider.dart';
+import '../../messages/data/repo/messages_abstract_repo.dart';
+import '../../messages/data/repo/messages_repo.dart';
 import '../../messages/data/usecases/send_message_usecase.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
@@ -30,6 +33,11 @@ import '../data/models/notifications_payload_model.dart';
 class NotificationsController extends GetxController {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo = ChatHistoryLocalRepo(
     chatHistoryProvider: ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+  );
+  final MessagesAbstractRepo messagesRepo = MessagesRepo(
+    messagesProvider: MessagesProvider(
+      appDatabaseProvider: Get.find(),
+    ),
   );
   RxBool isNotificationGranted = false.obs;
 
@@ -50,8 +58,6 @@ class NotificationsController extends GetxController {
             channelDescription: NOTIFICATIONS.messagesChannelDescription,
             defaultColor: NOTIFICATIONS.defaultColor,
             ledColor: NOTIFICATIONS.defaultColor,
-
-            //icon: Assets.png.chain.path,
           ),
           NotificationChannel(
               channelKey: NOTIFICATIONS.callsChannelKey,
@@ -103,19 +109,14 @@ class NotificationsController extends GetxController {
 
     await awesomeNotifications.createNotification(content: notificationContent, actionButtons: [
       NotificationActionButton(
-          key: MessagesActionButtons.redirect.name,
-          label: MessagesActionButtons.redirect.name,
-          actionType: ActionType.Default),
-      NotificationActionButton(
           key: MessagesActionButtons.reply.name,
           label: 'Reply Message',
           requireInputText: true,
           actionType: ActionType.SilentAction),
       NotificationActionButton(
-          key: MessagesActionButtons.dismiss.name,
-          label: MessagesActionButtons.dismiss.name,
-          actionType: ActionType.DismissAction,
-          isDangerousOption: true)
+          key: MessagesActionButtons.read.name,
+          label: "Mark as Read",
+          actionType: ActionType.Default)
     ]);
   }
 
@@ -246,27 +247,37 @@ class NotificationsController extends GetxController {
               ),
               remoteCoreId: userChatModel.coreId);
         }
-      } else {
-        // navigate to the Messages screen of user
-        if (receivedAction.payload != null) {
-          final payload =
-              NotificationsPayloadModel.fromJson(receivedAction.payload as Map<String, dynamic>);
-          final userChatModel =
-              await NotificationsController().chatHistoryRepo.getChat(payload.chatId);
-          if (userChatModel != null) {
-            Get.toNamed(
-              Routes.MESSAGES,
-              arguments: MessagesViewArgumentsModel(
-                user: UserModel(
-                  iconUrl: userChatModel.icon,
-                  name: userChatModel.name,
-                  walletAddress: userChatModel.coreId,
-                  coreId: userChatModel.coreId,
-                  isOnline: userChatModel.isOnline,
-                ),
+      }
+    } else if (receivedAction.buttonKeyPressed == MessagesActionButtons.read.name) {
+      // mark the message as read
+      if (receivedAction.payload != null) {
+        final payload =
+            NotificationsPayloadModel.fromJson(receivedAction.payload as Map<String, dynamic>);
+
+        await NotificationsController()
+            .messagesRepo
+            .markMessagesAsRead(lastReadmessageId: payload.messageId, chatId: payload.chatId);
+      }
+    } else {
+      // navigate to the Messages screen of user
+      if (receivedAction.payload != null) {
+        final payload =
+            NotificationsPayloadModel.fromJson(receivedAction.payload as Map<String, dynamic>);
+        final userChatModel =
+            await NotificationsController().chatHistoryRepo.getChat(payload.chatId);
+        if (userChatModel != null) {
+          Get.toNamed(
+            Routes.MESSAGES,
+            arguments: MessagesViewArgumentsModel(
+              user: UserModel(
+                iconUrl: userChatModel.icon,
+                name: userChatModel.name,
+                walletAddress: userChatModel.coreId,
+                coreId: userChatModel.coreId,
+                isOnline: userChatModel.isOnline,
               ),
-            );
-          }
+            ),
+          );
         }
       }
     }
