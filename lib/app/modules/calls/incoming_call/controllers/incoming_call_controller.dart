@@ -27,6 +27,7 @@ class IncomingCallController extends GetxController {
       walletAddress: args.remoteCoreId,
       coreId: args.remoteCoreId,
     );
+
     _playRingtone();
   }
 

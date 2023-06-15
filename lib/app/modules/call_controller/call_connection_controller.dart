@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
@@ -5,6 +9,9 @@ import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+
+import '../notifications/controllers/notifications_controller.dart';
+import '../shared/utils/constants/notifications_constant.dart';
 
 class CallConnectionController extends GetxController {
   final Signaling signaling;
@@ -47,6 +54,7 @@ class CallConnectionController extends GetxController {
       print("Call State changed, state is: $state");
 
       if (state == CallState.callStateRinging) {
+        await notifyReceivedCall(callSession: session);
         Get.toNamed(
           Routes.INCOMING_CALL,
           arguments: IncomingCallViewArguments(
@@ -127,5 +135,17 @@ class CallConnectionController extends GetxController {
     signaling.reject(session);
     callHistoryState.value =
         CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.byeSent);
+  }
+
+  Future<void> notifyReceivedCall({
+    required Session callSession,
+  }) async {
+    await Get.find<NotificationsController>().receivedCallNotify(
+        notificationContent: NotificationContent(
+      id: Random().nextInt(1000),
+      channelKey: NOTIFICATIONS.callsChannelKey,
+      title: "Incoming call from ${callSession.cid.characters.take(5).toString()}",
+      body: "Incoming call",
+    ));
   }
 }

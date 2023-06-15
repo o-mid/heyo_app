@@ -12,6 +12,7 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 import '../../../routes/app_pages.dart';
+import '../../calls/incoming_call/controllers/incoming_call_controller.dart';
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import '../../chats/data/repos/chat_history/chat_history_repo.dart';
@@ -126,6 +127,28 @@ class NotificationsController extends GetxController {
     );
   }
 
+  Future<void> receivedCallNotify({required NotificationContent notificationContent}) async {
+    await _checkNotificationPermission();
+    final AwesomeNotifications awesomeNotifications = AwesomeNotifications();
+
+    await awesomeNotifications.createNotification(content: notificationContent, actionButtons: [
+      NotificationActionButton(
+          key: CallsActionButtons.redirect.name,
+          label: CallsActionButtons.redirect.name,
+          actionType: ActionType.Default),
+      NotificationActionButton(
+          key: CallsActionButtons.answer.name,
+          label: CallsActionButtons.answer.name,
+          requireInputText: false,
+          actionType: ActionType.Default),
+      NotificationActionButton(
+        key: CallsActionButtons.dismiss.name,
+        label: CallsActionButtons.dismiss.name,
+        actionType: ActionType.DismissAction,
+      )
+    ]);
+  }
+
   @override
   void onReady() {
     super.onReady();
@@ -187,6 +210,7 @@ class NotificationsController extends GetxController {
         break;
 
       case NOTIFICATIONS.callsChannelKey:
+        await receiveCallsNotificationAction(receivedAction);
         break;
 
       default:
@@ -242,6 +266,17 @@ class NotificationsController extends GetxController {
           }
         }
       }
+    }
+  }
+
+  static Future<void> receiveCallsNotificationAction(
+    ReceivedAction receivedAction,
+  ) async {
+    Get.find<IncomingCallController>().acceptCall();
+
+    if (receivedAction.buttonKeyPressed == CallsActionButtons.answer.name) {
+    } else if (receivedAction.buttonKeyPressed == CallsActionButtons.dismiss.name) {
+      Get.find<IncomingCallController>().declineCall();
     }
   }
 }

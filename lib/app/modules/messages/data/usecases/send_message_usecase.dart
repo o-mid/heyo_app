@@ -44,16 +44,6 @@ class SendMessage {
     await messagesRepo.createMessage(
         message: msg.copyWith(status: MessageStatus.sending), chatId: sendMessageType.chatId);
 
-    //todo: remove this - only for testing
-    await Get.find<NotificationsController>().sendMessageNotify(
-        notificationContent: NotificationContent(
-      id: Random().nextInt(1000),
-      channelKey: NOTIFICATIONS.messagesChannelKey,
-      title: "msg sent",
-      icon: msg.senderAvatar,
-      body: msg.type == MessageContentType.text ? (msg as TextMessageModel).text : msg.type.name,
-    ));
-
     Map<String, dynamic> messageJson = msg.toJson();
     SendDataChannelMessage(messagingConnection: messagingConnection).execute(
       channelMessageType: ChannelMessageType.message(

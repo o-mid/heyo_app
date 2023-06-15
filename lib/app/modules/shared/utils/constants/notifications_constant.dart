@@ -20,3 +20,9 @@ enum MessagesActionButtons {
   dismiss,
   redirect,
 }
+
+enum CallsActionButtons {
+  answer,
+  dismiss,
+  redirect,
+}
