@@ -22,6 +22,7 @@ import '../../messages/data/usecases/send_message_usecase.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../../shared/providers/database/app_database.dart';
+import '../../shared/utils/constants/colors.dart';
 import '../../shared/utils/constants/notifications_constant.dart';
 import '../../shared/utils/permission_flow.dart';
 import '../data/models/notifications_payload_model.dart';
@@ -127,25 +128,27 @@ class NotificationsController extends GetxController {
     );
   }
 
-  Future<void> receivedCallNotify({required NotificationContent notificationContent}) async {
+  Future<void> receivedCallNotify({
+    required NotificationContent notificationContent,
+  }) async {
     await _checkNotificationPermission();
     final AwesomeNotifications awesomeNotifications = AwesomeNotifications();
 
     await awesomeNotifications.createNotification(content: notificationContent, actionButtons: [
       NotificationActionButton(
-          key: CallsActionButtons.redirect.name,
-          label: CallsActionButtons.redirect.name,
-          actionType: ActionType.Default),
-      NotificationActionButton(
           key: CallsActionButtons.answer.name,
-          label: CallsActionButtons.answer.name,
+          label: CallsActionButtons.answer.name.camelCase.toString(),
           requireInputText: false,
+          color: Colors.green,
+          autoDismissible: true,
           actionType: ActionType.Default),
       NotificationActionButton(
-        key: CallsActionButtons.dismiss.name,
-        label: CallsActionButtons.dismiss.name,
-        actionType: ActionType.DismissAction,
-      )
+          key: CallsActionButtons.decline.name,
+          label: CallsActionButtons.decline.name.camelCase.toString(),
+          actionType: ActionType.DismissAction,
+          color: COLORS.kStatesErrorColor,
+          icon: Icons.call.toString(),
+          autoDismissible: true)
     ]);
   }
 
@@ -272,10 +275,9 @@ class NotificationsController extends GetxController {
   static Future<void> receiveCallsNotificationAction(
     ReceivedAction receivedAction,
   ) async {
-    Get.find<IncomingCallController>().acceptCall();
-
     if (receivedAction.buttonKeyPressed == CallsActionButtons.answer.name) {
-    } else if (receivedAction.buttonKeyPressed == CallsActionButtons.dismiss.name) {
+      Get.find<IncomingCallController>().acceptCall();
+    } else if (receivedAction.buttonKeyPressed == CallsActionButtons.decline.name) {
       Get.find<IncomingCallController>().declineCall();
     }
   }

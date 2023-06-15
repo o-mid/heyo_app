@@ -54,7 +54,7 @@ class CallConnectionController extends GetxController {
       print("Call State changed, state is: $state");
 
       if (state == CallState.callStateRinging) {
-        await notifyReceivedCall(callSession: session);
+        notifyReceivedCall(callSession: session);
         Get.toNamed(
           Routes.INCOMING_CALL,
           arguments: IncomingCallViewArguments(
@@ -141,11 +141,12 @@ class CallConnectionController extends GetxController {
     required Session callSession,
   }) async {
     await Get.find<NotificationsController>().receivedCallNotify(
-        notificationContent: NotificationContent(
-      id: Random().nextInt(1000),
-      channelKey: NOTIFICATIONS.callsChannelKey,
-      title: "Incoming call from ${callSession.cid.characters.take(5).toString()}",
-      body: "Incoming call",
-    ));
+      notificationContent: NotificationContent(
+        id: Random().nextInt(1000),
+        channelKey: NOTIFICATIONS.callsChannelKey,
+        title: "Incoming ${callSession.isAudioCall ? "Audio" : "Video"} Call",
+        body: "from ${callSession.cid.characters.take(5).toString()}",
+      ),
+    );
   }
 }
