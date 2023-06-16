@@ -11,6 +11,7 @@ import '../../chats/data/models/chat_model.dart';
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import '../../messages/data/models/messages/confirm_message_model.dart';
 import '../../messages/data/models/messages/delete_message_model.dart';
+import '../../messages/data/models/messages/image_message_model.dart';
 import '../../messages/data/models/messages/message_model.dart';
 import '../../messages/data/models/messages/text_message_model.dart';
 import '../../messages/data/models/messages/update_message_model.dart';
@@ -207,10 +208,16 @@ abstract class CommonMessagingConnectionController extends GetxController {
         notificationContent: NotificationContent(
             id: Random().nextInt(1000),
             channelKey: NOTIFICATIONS.messagesChannelKey,
-            title: "from ${chatId.characters.take(5).toString()}",
+            title:
+                "New Message from ${chatId.characters.take(4).string}...${chatId.characters.takeLast(4).string}",
             body: receivedMessage.type == MessageContentType.text
                 ? (receivedMessage as TextMessageModel).text
                 : receivedMessage.type.name,
+            bigPicture: receivedMessage.type == MessageContentType.image
+                ? (await messagesRepo.getMessageById(
+                        messageId: receivedMessage.messageId, chatId: chatId) as ImageMessageModel)
+                    .url
+                : null,
             payload: NotificationsPayloadModel(
               chatId: chatId,
               messageId: receivedMessage.messageId,

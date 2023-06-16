@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -54,17 +55,7 @@ class CallConnectionController extends GetxController {
       print("Call State changed, state is: $state");
 
       if (state == CallState.callStateRinging) {
-        notifyReceivedCall(callSession: session);
-        Get.toNamed(
-          Routes.INCOMING_CALL,
-          arguments: IncomingCallViewArguments(
-            session: session,
-            callId: "",
-            sdp: session.sid,
-            remoteCoreId: session.cid,
-            remotePeerId: session.pid!,
-          ),
-        );
+        await handleCallStateRinging(session: session);
       } else if (state == CallState.callStateBye) {
         if (Get.currentRoute == Routes.CALL) {
           Get.until((route) => Get.currentRoute != Routes.CALL);
@@ -137,6 +128,25 @@ class CallConnectionController extends GetxController {
         CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.byeSent);
   }
 
+  Future<void> handleCallStateRinging({required Session session}) async {
+    try {
+      await notifyReceivedCall(callSession: session);
+    } catch (e) {
+      print(e);
+    }
+
+    await Get.toNamed(
+      Routes.INCOMING_CALL,
+      arguments: IncomingCallViewArguments(
+        session: session,
+        callId: "",
+        sdp: session.sid,
+        remoteCoreId: session.cid,
+        remotePeerId: session.pid!,
+      ),
+    );
+  }
+
   Future<void> notifyReceivedCall({
     required Session callSession,
   }) async {
@@ -145,7 +155,8 @@ class CallConnectionController extends GetxController {
         id: Random().nextInt(1000),
         channelKey: NOTIFICATIONS.callsChannelKey,
         title: "Incoming ${callSession.isAudioCall ? "Audio" : "Video"} Call",
-        body: "from ${callSession.cid.characters.take(5).toString()}",
+        body:
+            "from ${callSession.cid.characters.take(4).string}...${callSession.cid.characters.takeLast(4).string}",
       ),
     );
   }

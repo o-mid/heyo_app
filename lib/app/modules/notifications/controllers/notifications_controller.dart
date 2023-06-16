@@ -58,13 +58,20 @@ class NotificationsController extends GetxController {
             channelDescription: NOTIFICATIONS.messagesChannelDescription,
             defaultColor: NOTIFICATIONS.defaultColor,
             ledColor: NOTIFICATIONS.defaultColor,
+            importance: NotificationImportance.Max,
+            groupSort: GroupSort.Asc,
+            groupAlertBehavior: GroupAlertBehavior.Children,
           ),
           NotificationChannel(
-              channelKey: NOTIFICATIONS.callsChannelKey,
-              channelName: NOTIFICATIONS.callsChannelName,
-              channelDescription: NOTIFICATIONS.callsChannelDescription,
-              defaultColor: NOTIFICATIONS.defaultColor,
-              ledColor: NOTIFICATIONS.defaultColor)
+            channelKey: NOTIFICATIONS.callsChannelKey,
+            channelName: NOTIFICATIONS.callsChannelName,
+            channelDescription: NOTIFICATIONS.callsChannelDescription,
+            defaultColor: NOTIFICATIONS.defaultColor,
+            importance: NotificationImportance.Max,
+            groupSort: GroupSort.Asc,
+            groupAlertBehavior: GroupAlertBehavior.Children,
+            ledColor: NOTIFICATIONS.defaultColor,
+          )
         ],
         // Channel groups are only visual and are not required
         channelGroups: [
@@ -109,14 +116,16 @@ class NotificationsController extends GetxController {
 
     await awesomeNotifications.createNotification(content: notificationContent, actionButtons: [
       NotificationActionButton(
-          key: MessagesActionButtons.reply.name,
-          label: 'Reply Message',
-          requireInputText: true,
-          actionType: ActionType.SilentAction),
+        key: MessagesActionButtons.reply.name,
+        label: 'Reply Message',
+        requireInputText: true,
+        actionType: ActionType.Default,
+      ),
       NotificationActionButton(
-          key: MessagesActionButtons.read.name,
-          label: "Mark as Read",
-          actionType: ActionType.Default)
+        key: MessagesActionButtons.read.name,
+        label: "Mark as Read",
+        actionType: ActionType.Default,
+      )
     ]);
   }
 
@@ -175,7 +184,7 @@ class NotificationsController extends GetxController {
   /// Use this method to detect when a new notification or a schedule is created
   @pragma("vm:entry-point")
   static Future<void> onNotificationCreatedMethod(ReceivedNotification receivedNotification) async {
-    //   Get.snackbar("Notification created", '${receivedNotification.createdLifeCycle!}');
+    Get.snackbar("Notification created", '${receivedNotification.createdLifeCycle!}');
   }
 
   /// Use this method to detect every time that a new notification is displayed
@@ -188,7 +197,7 @@ class NotificationsController extends GetxController {
   /// Use this method to detect if the user dismissed a notification
   @pragma("vm:entry-point")
   static Future<void> onDismissActionReceivedMethod(ReceivedAction receivedAction) async {
-    Get.snackbar("Notification dismissed", '${receivedAction.dismissedLifeCycle!}');
+    // Get.snackbar("Notification dismissed", '${receivedAction.dismissedLifeCycle!}');
   }
 
   /// Use this method to detect when the user taps on a notification or action button
