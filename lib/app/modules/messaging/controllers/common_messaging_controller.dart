@@ -194,6 +194,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
       receivedMessage: receivedMessage,
       chatId: chatId,
     );
+
     await notifyReceivedMessage(
       receivedMessage: receivedMessage,
       chatId: chatId,
@@ -205,6 +206,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
     required String chatId,
   }) async {
     await Get.find<NotificationsController>().receivedMessageNotify(
+        chatId: chatId,
         notificationContent: NotificationContent(
             id: Random().nextInt(1000),
             channelKey: NOTIFICATIONS.messagesChannelKey,

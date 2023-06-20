@@ -22,6 +22,7 @@ import '../../messages/data/provider/messages_provider.dart';
 import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/data/repo/messages_repo.dart';
 import '../../messages/data/usecases/send_message_usecase.dart';
+import '../../messaging/controllers/common_messaging_controller.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../../shared/providers/database/app_database.dart';
@@ -110,23 +111,31 @@ class NotificationsController extends GetxController {
     });
   }
 
-  Future<void> receivedMessageNotify({required NotificationContent notificationContent}) async {
-    await _checkNotificationPermission();
-    final AwesomeNotifications awesomeNotifications = AwesomeNotifications();
+  Future<void> receivedMessageNotify(
+      {required NotificationContent notificationContent, required String chatId}) async {
+// pushes the notification only if the the receiver user is not at the chat screen with the sender of the message
 
-    await awesomeNotifications.createNotification(content: notificationContent, actionButtons: [
-      NotificationActionButton(
-        key: MessagesActionButtons.reply.name,
-        label: 'Reply Message',
-        requireInputText: true,
-        actionType: ActionType.Default,
-      ),
-      NotificationActionButton(
-        key: MessagesActionButtons.read.name,
-        label: "Mark as Read",
-        actionType: ActionType.Default,
-      )
-    ]);
+    if (Get.currentRoute == Routes.MESSAGES && Get.find<MessagesController>().chatId == chatId) {
+      return;
+    } else {
+      await _checkNotificationPermission();
+      final AwesomeNotifications awesomeNotifications = AwesomeNotifications();
+      await awesomeNotifications.createNotification(content: notificationContent, actionButtons: [
+        NotificationActionButton(
+          key: MessagesActionButtons.reply.name,
+          label: 'Reply Message',
+          requireInputText: true,
+          actionType: ActionType.Default,
+          autoDismissible: true,
+        ),
+        NotificationActionButton(
+          key: MessagesActionButtons.read.name,
+          label: "Mark as Read",
+          actionType: ActionType.Default,
+          autoDismissible: true,
+        )
+      ]);
+    }
   }
 
   Future<void> sendMessageNotify({required NotificationContent notificationContent}) async {
@@ -184,7 +193,7 @@ class NotificationsController extends GetxController {
   /// Use this method to detect when a new notification or a schedule is created
   @pragma("vm:entry-point")
   static Future<void> onNotificationCreatedMethod(ReceivedNotification receivedNotification) async {
-    Get.snackbar("Notification created", '${receivedNotification.createdLifeCycle!}');
+    // Get.snackbar("Notification created", '${receivedNotification.createdLifeCycle!}');
   }
 
   /// Use this method to detect every time that a new notification is displayed
@@ -206,14 +215,14 @@ class NotificationsController extends GetxController {
     // Always ensure that all plugins was initialized
     WidgetsFlutterBinding.ensureInitialized();
 
-    bool isSilentAction = receivedAction.actionType == ActionType.SilentAction ||
-        receivedAction.actionType == ActionType.SilentBackgroundAction;
+    // bool isSilentAction = receivedAction.actionType == ActionType.SilentAction ||
+    //     receivedAction.actionType == ActionType.SilentBackgroundAction;
 
     // SilentBackgroundAction runs on background thread and cannot show
     // UI/visual elements
     if (receivedAction.actionType != ActionType.SilentBackgroundAction) {
-      Get.snackbar(isSilentAction ? 'Silent action' : 'Action',
-          'received on ${(receivedAction.actionLifeCycle!)}');
+      // Get.snackbar(isSilentAction ? 'Silent action' : 'Action',
+      //     'received on ${(receivedAction.actionLifeCycle!)}');
     }
 
     switch (receivedAction.channelKey) {
@@ -263,9 +272,23 @@ class NotificationsController extends GetxController {
         final payload =
             NotificationsPayloadModel.fromJson(receivedAction.payload as Map<String, dynamic>);
 
-        await NotificationsController()
-            .messagesRepo
-            .markMessagesAsRead(lastReadmessageId: payload.messageId, chatId: payload.chatId);
+        final userChatModel =
+            await NotificationsController().chatHistoryRepo.getChat(payload.chatId);
+
+        if (userChatModel != null) {
+          // sends the confirm message to the remote side
+          await Get.find<CommonMessagingConnectionController>().confirmReadMessages(
+              messageId: payload.messageId, remoteCoreId: userChatModel.coreId);
+          // mark the message as read in the local database
+          await NotificationsController()
+              .messagesRepo
+              .markMessagesAsRead(lastReadmessageId: payload.messageId, chatId: payload.chatId);
+          // update the chat history in the local database
+          await NotificationsController().chatHistoryRepo.updateChat(userChatModel.copyWith(
+                lastReadMessageId: payload.messageId,
+                notificationCount: 0,
+              ));
+        }
       }
     } else {
       // navigate to the Messages screen of user
