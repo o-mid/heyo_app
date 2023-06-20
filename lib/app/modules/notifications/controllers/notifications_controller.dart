@@ -51,7 +51,7 @@ class NotificationsController extends GetxController {
   initializeNotifications() async {
     await AwesomeNotifications().initialize(
         // set the icon to null if you want to use the default app icon
-        null,
+        'resource://drawable/icon',
         [
           NotificationChannel(
             channelKey: NOTIFICATIONS.messagesChannelKey,
@@ -62,6 +62,7 @@ class NotificationsController extends GetxController {
             importance: NotificationImportance.Max,
             groupSort: GroupSort.Asc,
             groupAlertBehavior: GroupAlertBehavior.Children,
+            icon: 'resource://drawable/message',
           ),
           NotificationChannel(
             channelKey: NOTIFICATIONS.callsChannelKey,
@@ -72,6 +73,7 @@ class NotificationsController extends GetxController {
             groupSort: GroupSort.Asc,
             groupAlertBehavior: GroupAlertBehavior.Children,
             ledColor: NOTIFICATIONS.defaultColor,
+            icon: 'resource://drawable/call',
           )
         ],
         // Channel groups are only visual and are not required

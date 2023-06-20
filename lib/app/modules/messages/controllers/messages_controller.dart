@@ -160,8 +160,7 @@ class MessagesController extends GetxController {
         break;
       default:
         // TODO replace this value to correct if connectionType is unknown (if it possible)
-        print(
-            'switch to the unknown connection type messaging (internet by default)');
+        print('switch to the unknown connection type messaging (internet by default)');
         messagingConnection = Get.find<MessagingConnectionController>();
         break;
     }
@@ -274,9 +273,8 @@ class MessagesController extends GetxController {
         str +
         textController.text.substring(currentPos);
 
-    textController.selection = textController.selection.copyWith(
-        baseOffset: currentPos + str.length,
-        extentOffset: currentPos + str.length);
+    textController.selection = textController.selection
+        .copyWith(baseOffset: currentPos + str.length, extentOffset: currentPos + str.length);
 
     newMessage.value = textController.text;
   }
@@ -285,11 +283,7 @@ class MessagesController extends GetxController {
   // the character before cursor is removed and cursor moves to the correct place.
   void removeCharacterBeforeCursorPosition() {
     final currentPos = textController.selection.base.offset;
-    final prefix = textController.text
-        .substring(0, currentPos)
-        .characters
-        .skipLast(1)
-        .toString();
+    final prefix = textController.text.substring(0, currentPos).characters.skipLast(1).toString();
     final suffix = textController.text.substring(currentPos);
 
     textController.text = prefix + suffix;
@@ -343,8 +337,7 @@ class MessagesController extends GetxController {
 
   Future<void> _finishMessagesLoading() async {
     // Todo: remove this delay if needed
-    await Future.delayed(
-        TRANSITIONS.messagingPage_closeMessagesLoadingShimmerDurtion, () {
+    await Future.delayed(TRANSITIONS.messagingPage_closeMessagesLoadingShimmerDurtion, () {
       isListLoaded.value = true;
     });
   }
@@ -362,8 +355,7 @@ class MessagesController extends GetxController {
     scrollController.animateTo(
       scrollController.position.minScrollExtent,
       curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
-      duration:
-          duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+      duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
     );
   }
 
@@ -375,8 +367,7 @@ class MessagesController extends GetxController {
     scrollController.animateTo(
       offset,
       curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
-      duration:
-          duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+      duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
     );
   }
 
@@ -391,8 +382,8 @@ class MessagesController extends GetxController {
   }
 
   void toggleMessageReadStatus({required String messageId}) async {
-    await messagingConnection.confirmReadMessages(messageId: messageId, remoteCoreId: args.user.walletAddress);
-
+    await messagingConnection.confirmReadMessages(
+        messageId: messageId, remoteCoreId: args.user.walletAddress);
 
     await markMessagesAsReadById(
       lastReadmessageId: messageId,
@@ -509,8 +500,7 @@ class MessagesController extends GetxController {
     scrollController.animateTo(
       scrollController.position.maxScrollExtent,
       curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
-      duration:
-          duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+      duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
     );
   }
 
@@ -547,8 +537,7 @@ class MessagesController extends GetxController {
   }
 
   stopSharingLiveLocation(LiveLocationMessageModel message) {
-    Get.find<LiveLocationController>()
-        .removeIdFromSharingList(message.messageId);
+    Get.find<LiveLocationController>().removeIdFromSharingList(message.messageId);
 
     final index = messages.indexWhere((m) => m.messageId == message.messageId);
 
@@ -640,8 +629,7 @@ class MessagesController extends GetxController {
   void copySelectedToClipboard() {
     var text = "";
 
-    if (selectedMessages.length == 1 &&
-        selectedMessages.first is TextMessageModel) {
+    if (selectedMessages.length == 1 && selectedMessages.first is TextMessageModel) {
       text = (selectedMessages.first as TextMessageModel).text;
     } else {
       for (var message in selectedMessages) {
@@ -649,8 +637,7 @@ class MessagesController extends GetxController {
           continue;
         }
 
-        text +=
-            "[${message.senderName} - ${message.timestamp.dateInAmPmFormat()}]\n";
+        text += "[${message.senderName} - ${message.timestamp.dateInAmPmFormat()}]\n";
         text += message.text;
         text += "\n\n";
       }
@@ -754,8 +741,7 @@ class MessagesController extends GetxController {
                       width: entity.width.toDouble(),
                       isLocal: true,
                       thumbnailBytes: await entity.thumbnailData,
-                      thumbnailUrl:
-                          "https://mixkit.imgix.net/static/home/video-thumb3.png",
+                      thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
                     ),
                     replyTo: replyingTo.value,
                     chatId: chatId,
@@ -831,12 +817,10 @@ class MessagesController extends GetxController {
             width: double.parse(element["width"].toString()),
             isLocal: true,
             thumbnailBytes: thumbnailBytes,
-            thumbnailUrl:
-                "https://mixkit.imgix.net/static/home/video-thumb3.png",
+            thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
           ),
           url: element["path"],
-          timestamp:
-              DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
           senderName: '',
           senderAvatar: '',
           isFromMe: true,
@@ -854,8 +838,7 @@ class MessagesController extends GetxController {
         senderName: '',
         isFromMe: true,
         status: MessageStatus.sending,
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
       ));
     } else {
       result.forEach((asset) async {
@@ -875,8 +858,7 @@ class MessagesController extends GetxController {
                     senderName: '',
                     isFromMe: true,
                     status: MessageStatus.sending,
-                    timestamp: DateTime.now()
-                        .subtract(const Duration(hours: 1, minutes: 49)),
+                    timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
                     url: asset["path"]),
               );
             }
@@ -897,8 +879,7 @@ class MessagesController extends GetxController {
                     thumbnailUrl: '',
                   ),
                   url: asset["path"],
-                  timestamp: DateTime.now()
-                      .subtract(const Duration(hours: 1, minutes: 49)),
+                  timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
                   senderName: '',
                   senderAvatar: '',
                   isFromMe: true,
@@ -914,8 +895,7 @@ class MessagesController extends GetxController {
                   messageId: "${messages.lastIndexOf(messages.last) + 1}",
                   chatId: chatId,
                   text: asset["value"],
-                  timestamp: DateTime.now()
-                      .subtract(const Duration(hours: 1, minutes: 49)),
+                  timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
                   senderName: '',
                   senderAvatar: '',
                   isFromMe: true,
@@ -1518,16 +1498,14 @@ class MessagesController extends GetxController {
         // print("currentItemIndex.value: ${currentRemoteMessagesIndex.value}");
         // print("lastReadRemoteMessagesIndex.value: ${lastReadRemoteMessagesIndex.value}");
 
-        if (currentRemoteMessagesIndex.value >
-            lastReadRemoteMessagesIndex.value) {
+        if (currentRemoteMessagesIndex.value > lastReadRemoteMessagesIndex.value) {
           // print("lastReadRemoteMessagesKey.value ${lastReadRemoteMessagesId.value}");
 
           //  checks if its status is read or not
           // if its not read, it will toogleMessageReadStatus
 
           if (itemStatus != MessageStatus.read) {
-            lastReadRemoteMessagesIndex.value =
-                currentRemoteMessagesIndex.value;
+            lastReadRemoteMessagesIndex.value = currentRemoteMessagesIndex.value;
             lastReadRemoteMessagesId.value = itemMessageId;
             toggleMessageReadStatus(messageId: itemMessageId);
           }

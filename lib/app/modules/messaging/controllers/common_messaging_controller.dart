@@ -210,6 +210,8 @@ abstract class CommonMessagingConnectionController extends GetxController {
         notificationContent: NotificationContent(
             id: Random().nextInt(1000),
             channelKey: NOTIFICATIONS.messagesChannelKey,
+
+            // largeIcon: 'resource://drawable/usericon',
             title:
                 "New Message from ${chatId.characters.take(4).string}...${chatId.characters.takeLast(4).string}",
             body: receivedMessage.type == MessageContentType.text
