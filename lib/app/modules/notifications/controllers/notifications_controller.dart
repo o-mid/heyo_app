@@ -31,7 +31,7 @@ import '../../shared/utils/constants/notifications_constant.dart';
 import '../../shared/utils/permission_flow.dart';
 import '../data/models/notifications_payload_model.dart';
 
-class NotificationsController extends GetxController {
+class NotificationsController extends GetxController with WidgetsBindingObserver {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo = ChatHistoryLocalRepo(
     chatHistoryProvider: ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
   );
@@ -40,11 +40,15 @@ class NotificationsController extends GetxController {
       appDatabaseProvider: Get.find(),
     ),
   );
+
   RxBool isNotificationGranted = false.obs;
+
+  RxBool isAppOnBackground = false.obs;
 
   @override
   void onInit() async {
     await initializeNotifications();
+    WidgetsBinding.instance.addObserver(this);
     super.onInit();
   }
 
@@ -117,7 +121,9 @@ class NotificationsController extends GetxController {
       {required NotificationContent notificationContent, required String chatId}) async {
 // pushes the notification only if the the receiver user is not at the chat screen with the sender of the message
 
-    if (Get.currentRoute == Routes.MESSAGES && Get.find<MessagesController>().chatId == chatId) {
+    if (Get.currentRoute == Routes.MESSAGES &&
+        Get.find<MessagesController>().chatId == chatId &&
+        !isAppOnBackground.value) {
       return;
     } else {
       await _checkNotificationPermission();
@@ -180,7 +186,25 @@ class NotificationsController extends GetxController {
 
   @override
   void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
     super.onClose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.inactive) {
+      // app is inactive
+      // Apps in this state should assume that they may be [paused] at any time.
+      isAppOnBackground.value = true;
+    } else if (state == AppLifecycleState.paused) {
+      isAppOnBackground.value = true;
+      print('app is in background');
+      // app is in background
+    } else if (state == AppLifecycleState.resumed) {
+      print('app is resumed');
+      isAppOnBackground.value = false;
+      // app is resumed
+    }
   }
 
   Future<void> initializeNotificationsEventListeners() async {
