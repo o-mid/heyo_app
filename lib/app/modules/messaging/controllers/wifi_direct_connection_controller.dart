@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messaging/utils/data_binary_message.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
+import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 
 import '../../../routes/app_pages.dart';
@@ -20,8 +21,10 @@ enum WifiDirectConnectivityStatus { connectionLost, connecting, justConnected, o
 class WifiDirectConnectionController extends CommonMessagingConnectionController {
   Rx<WifiDirectConnectivityStatus> wifiDirectStatus = WifiDirectConnectivityStatus.connecting.obs;
 
+  WifiDirectWrapper wifiDirectWrapper = WifiDirectWrapper();
+
   WifiDirectConnectionController(
-      {required super.accountInfo, required super.messagesRepo, required super.chatHistoryRepo});
+      {required wifiDirectWrapper, required super.accountInfo, required super.messagesRepo, required super.chatHistoryRepo});
 
   // TODO since working with HeyoWifiDirectPlugin instance requests usage of streams
   // TODO it is necessary to ensure closing this class instance with closing or
@@ -36,12 +39,16 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
     super.onInit();
 
     _initPlugin();
+
     // TODO remove debug output
     print('WifiDirectConnectionController(remoteId $remoteId): onInit()');
   }
 
   _initPlugin() {
-    _heyoWifiDirect ??= GlobalBindings.heyoWifiDirect;
+    _heyoWifiDirect = wifiDirectWrapper.pluginInstance;
+    if (_heyoWifiDirect == null) {
+      print("HeyoWifiDirect plugin not initialized! Wi-Fi Direct functionality may not be available");
+    }
   }
 
   /// Closes current wifi-direct connection when the active messaging closed.

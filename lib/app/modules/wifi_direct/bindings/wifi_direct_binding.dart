@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
 
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../../p2p_node/data/account/account_repo.dart';
@@ -16,7 +17,6 @@ class WifiDirectBinding extends Bindings {
           localProvider: SecureStorageProvider(),
           cryptographyKeyGenerator: Web3Keys(web3client: GlobalBindings.web3Client),
         ),
-        heyoWifiDirect: GlobalBindings.heyoWifiDirect,
         wifiDirectConnectionController: Get.find<WifiDirectConnectionController>(),
       ),
     );
