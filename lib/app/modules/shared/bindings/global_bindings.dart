@@ -7,6 +7,7 @@ import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_histo
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
 import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 import 'package:heyo/app/modules/messaging/web_rtc_connection_manager.dart';
+import 'package:heyo/app/modules/notifications/controllers/app_notifications.dart';
 import 'package:heyo/app/modules/shared/controllers/call_history_observer.dart';
 import 'package:heyo/app/modules/shared/controllers/connection_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
@@ -90,6 +91,7 @@ class GlobalBindings extends Bindings {
     ),
   );
 
+  static AppNotifications appNotifications = AppNotifications();
   @override
   void dependencies() {
     Get.put(
@@ -189,11 +191,18 @@ class GlobalBindings extends Bindings {
       ),
       permanent: true,
     );
+    // Get.put<AppNotifications>(
+    //   AppNotifications(),
+    //   permanent: true,
+    // );
 
     Get.put<NotificationsController>(
-      NotificationsController(),
+      NotificationsController(
+        appNotifications: appNotifications,
+      ),
       permanent: true,
     );
+
     Get.put<CommonMessagingConnectionController>(Get.find<MessagingConnectionController>());
   }
 }

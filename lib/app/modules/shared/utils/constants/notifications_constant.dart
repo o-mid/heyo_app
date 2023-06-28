@@ -26,3 +26,17 @@ enum CallsActionButtons {
   decline,
   redirect,
 }
+
+class ReceivedNotificationActionEvent {
+  String buttonKeyPressed;
+  String buttonKeyInput;
+  String? channelKey;
+  Map<String, String?>? payload;
+
+  ReceivedNotificationActionEvent({
+    required this.buttonKeyPressed,
+    required this.buttonKeyInput,
+    required this.channelKey,
+    required this.payload,
+  });
+}

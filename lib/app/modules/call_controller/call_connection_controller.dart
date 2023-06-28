@@ -1,7 +1,6 @@
 import 'dart:ffi';
 import 'dart:math';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
@@ -151,13 +150,10 @@ class CallConnectionController extends GetxController {
     required Session callSession,
   }) async {
     await Get.find<NotificationsController>().receivedCallNotify(
-      notificationContent: NotificationContent(
-        id: Random().nextInt(1000),
-        channelKey: NOTIFICATIONS.callsChannelKey,
-        title: "Incoming ${callSession.isAudioCall ? "Audio" : "Video"} Call",
-        body:
-            "from ${callSession.cid.characters.take(4).string}...${callSession.cid.characters.takeLast(4).string}",
-      ),
+      channelKey: NOTIFICATIONS.callsChannelKey,
+      title: "Incoming ${callSession.isAudioCall ? "Audio" : "Video"} Call",
+      body:
+          "from ${callSession.cid.characters.take(4).string}...${callSession.cid.characters.takeLast(4).string}",
     );
   }
 }

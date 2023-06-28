@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -207,29 +206,27 @@ abstract class CommonMessagingConnectionController extends GetxController {
   }) async {
     await Get.find<NotificationsController>().receivedMessageNotify(
         chatId: chatId,
-        notificationContent: NotificationContent(
-            id: Random().nextInt(1000),
-            channelKey: NOTIFICATIONS.messagesChannelKey,
+        channelKey: NOTIFICATIONS.messagesChannelKey,
 
-            // largeIcon: 'resource://drawable/usericon',
-            title:
-                "New Message from ${chatId.characters.take(4).string}...${chatId.characters.takeLast(4).string}",
-            body: receivedMessage.type == MessageContentType.text
-                ? (receivedMessage as TextMessageModel).text
-                : receivedMessage.type.name,
-            bigPicture: receivedMessage.type == MessageContentType.image
-                ? (await messagesRepo.getMessageById(
-                        messageId: receivedMessage.messageId, chatId: chatId) as ImageMessageModel)
-                    .url
-                : null,
-            payload: NotificationsPayloadModel(
-              chatId: chatId,
-              messageId: receivedMessage.messageId,
-              senderName: receivedMessage.senderName,
-              replyMsg: receivedMessage.type == MessageContentType.text
-                  ? (receivedMessage as TextMessageModel).text
-                  : receivedMessage.type.name,
-            ).toJson()));
+        // largeIcon: 'resource://drawable/usericon',
+        title:
+            "New Message from ${chatId.characters.take(4).string}...${chatId.characters.takeLast(4).string}",
+        body: receivedMessage.type == MessageContentType.text
+            ? (receivedMessage as TextMessageModel).text
+            : receivedMessage.type.name,
+        bigPicture: receivedMessage.type == MessageContentType.image
+            ? (await messagesRepo.getMessageById(
+                    messageId: receivedMessage.messageId, chatId: chatId) as ImageMessageModel)
+                .url
+            : null,
+        payload: NotificationsPayloadModel(
+          chatId: chatId,
+          messageId: receivedMessage.messageId,
+          senderName: receivedMessage.senderName,
+          replyMsg: receivedMessage.type == MessageContentType.text
+              ? (receivedMessage as TextMessageModel).text
+              : receivedMessage.type.name,
+        ).toJson());
   }
 
   Future<void> updateChatRepo(
