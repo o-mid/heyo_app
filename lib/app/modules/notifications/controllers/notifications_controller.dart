@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -58,9 +59,6 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
 
   initializeNotifications() async {
     await appNotifications.initialize();
-    appNotifications.receivedActionStream.stream.listen((receivedAction) async {
-      await onActionReceivedMethod(receivedAction);
-    });
   }
 
   Future<void> instantNotify({
@@ -177,6 +175,8 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
       if (receivedAction.payload != null) {
         final payload =
             NotificationsPayloadModel.fromJson(receivedAction.payload as Map<String, dynamic>);
+        print(payload);
+        print(payload);
         final userChatModel = await chatHistoryRepo.getChat(payload.chatId);
         if (userChatModel != null) {
           // Get.find<MessagesController>().initMessagingConnection();

@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/list_notifier.dart';
 
 import '../../shared/utils/constants/colors.dart';
 import '../../shared/utils/constants/notifications_constant.dart';
+import 'notifications_controller.dart';
 
 class AppNotifications extends GetxController {
   RxBool isAppOnBackground = false.obs;
@@ -15,9 +17,6 @@ class AppNotifications extends GetxController {
   void onInit() async {
     super.onInit();
   }
-
-  StreamController<ReceivedNotificationActionEvent> receivedActionStream =
-      StreamController<ReceivedNotificationActionEvent>.broadcast();
 
   initialize() async {
     await AwesomeNotifications().initialize(
@@ -112,11 +111,14 @@ class AppNotifications extends GetxController {
       // Get.snackbar(isSilentAction ? 'Silent action' : 'Action',
       //     'rec eived on ${(receivedAction.actionLifeCycle!)}');
     }
-    Get.find<AppNotifications>().receivedActionStream.add(ReceivedNotificationActionEvent(
-        buttonKeyInput: receivedAction.buttonKeyInput,
-        channelKey: receivedAction.channelKey,
-        buttonKeyPressed: receivedAction.buttonKeyPressed,
-        payload: receivedAction.payload));
+    final receivedActionPayload = receivedAction.payload;
+
+    await Get.find<NotificationsController>().onActionReceivedMethod(
+        ReceivedNotificationActionEvent(
+            buttonKeyInput: receivedAction.buttonKeyInput,
+            channelKey: receivedAction.channelKey,
+            buttonKeyPressed: receivedAction.buttonKeyPressed,
+            payload: receivedActionPayload));
   }
 
   Future<void> instantNotify({
