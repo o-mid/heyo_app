@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
@@ -9,13 +10,18 @@ import '../../chats/data/models/chat_model.dart';
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import '../../messages/data/models/messages/confirm_message_model.dart';
 import '../../messages/data/models/messages/delete_message_model.dart';
+import '../../messages/data/models/messages/image_message_model.dart';
 import '../../messages/data/models/messages/message_model.dart';
 import '../../messages/data/models/messages/text_message_model.dart';
 import '../../messages/data/models/messages/update_message_model.dart';
 import '../../messages/data/models/reaction_model.dart';
 import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/utils/message_from_json.dart';
+
+import '../../notifications/controllers/notifications_controller.dart';
+import '../../notifications/data/models/notifications_payload_model.dart';
 import '../../p2p_node/data/account/account_info.dart';
+import '../../shared/utils/constants/notifications_constant.dart';
 import '../../shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import '../messaging_session.dart';
 import '../models/data_channel_message_model.dart';
@@ -35,6 +41,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final AccountInfo accountInfo;
   BinaryFileReceivingState? currentState;
+  final NotificationsController notificationsController;
 
   //
   // final JsonDecoder _decoder = const JsonDecoder();
@@ -52,7 +59,10 @@ abstract class CommonMessagingConnectionController extends GetxController {
   ChatModel? userChatmodel;
 
   CommonMessagingConnectionController(
-      {required this.accountInfo, required this.messagesRepo, required this.chatHistoryRepo});
+      {required this.accountInfo,
+      required this.messagesRepo,
+      required this.chatHistoryRepo,
+      required this.notificationsController});
 
   @override
   void onInit() {
@@ -170,6 +180,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
   Future<void> saveAndConfirmReceivedMessage(
       {required Map<String, dynamic> receivedMessageJson, required String chatId}) async {
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
+
     await messagesRepo.createMessage(
         message: receivedMessage.copyWith(
           isFromMe: false,
@@ -186,6 +197,40 @@ abstract class CommonMessagingConnectionController extends GetxController {
       receivedMessage: receivedMessage,
       chatId: chatId,
     );
+
+    await notifyReceivedMessage(
+      receivedMessage: receivedMessage,
+      chatId: chatId,
+    );
+  }
+
+  Future<void> notifyReceivedMessage({
+    required MessageModel receivedMessage,
+    required String chatId,
+  }) async {
+    await notificationsController.receivedMessageNotify(
+        chatId: chatId,
+        channelKey: NOTIFICATIONS.messagesChannelKey,
+
+        // largeIcon: 'resource://drawable/usericon',
+        title:
+            "New Message from ${chatId.characters.take(4).string}...${chatId.characters.takeLast(4).string}",
+        body: receivedMessage.type == MessageContentType.text
+            ? (receivedMessage as TextMessageModel).text
+            : receivedMessage.type.name,
+        bigPicture: receivedMessage.type == MessageContentType.image
+            ? (await messagesRepo.getMessageById(
+                    messageId: receivedMessage.messageId, chatId: chatId) as ImageMessageModel)
+                .url
+            : null,
+        payload: NotificationsPayloadModel(
+          chatId: chatId,
+          messageId: receivedMessage.messageId,
+          senderName: receivedMessage.senderName,
+          replyMsg: receivedMessage.type == MessageContentType.text
+              ? (receivedMessage as TextMessageModel).text
+              : receivedMessage.type.name,
+        ).toJson());
   }
 
   Future<void> updateChatRepo(

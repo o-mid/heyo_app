@@ -80,6 +80,7 @@ dependencies:
   heyo_wifi_direct:
     git:
       url: git@git.energy:heyo/heyo_wifi_direct.git
+  awesome_notifications: ^0.7.4+1
 
 
 dev_dependencies:

@@ -7,6 +7,7 @@ import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_histo
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
 import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 import 'package:heyo/app/modules/messaging/web_rtc_connection_manager.dart';
+import 'package:heyo/app/modules/notifications/controllers/app_notifications.dart';
 import 'package:heyo/app/modules/shared/controllers/call_history_observer.dart';
 import 'package:heyo/app/modules/shared/controllers/connection_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
@@ -35,8 +36,10 @@ import '../../chats/data/providers/chat_history/chat_history_provider.dart';
 import '../../chats/data/repos/chat_history/chat_history_repo.dart';
 import '../../messages/data/provider/messages_provider.dart';
 import '../../messages/data/repo/messages_repo.dart';
+import '../../messaging/controllers/common_messaging_controller.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
+import '../../notifications/controllers/notifications_controller.dart';
 import '../../wifi_direct/controllers/wifi_direct_wrapper.dart';
 import '../utils/constants/web3client_constant.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
@@ -53,8 +56,7 @@ class GlobalBindings extends Bindings {
 
   //MultipleConnectionHandler multipleConnectionHandler =
 
-  static P2PNodeResponseStream p2pNodeResponseStream =
-      P2PNodeResponseStream(p2pState: p2pState);
+  static P2PNodeResponseStream p2pNodeResponseStream = P2PNodeResponseStream(p2pState: p2pState);
 
   static Web3Client web3Client = Web3Client(
     WEB3CLIENT.url,
@@ -69,10 +71,10 @@ class GlobalBindings extends Bindings {
 
 // call related bindings
   static Signaling signaling = Signaling(p2pCommunicator: p2pCommunicator);
-  static CallConnectionController callConnectionController =
-      CallConnectionController(
+  static CallConnectionController callConnectionController = CallConnectionController(
     accountInfo: accountInfo,
     signaling: signaling,
+    notificationsController: NotificationsController(appNotifications: appNotifications),
   );
 
   static WifiDirectWrapper wifiDirectWrapper = WifiDirectWrapper();
@@ -82,15 +84,16 @@ class GlobalBindings extends Bindings {
     wifiDirectWrapper: wifiDirectWrapper,
     accountInfo: accountInfo,
     messagesRepo: MessagesRepo(
-      messagesProvider: MessagesProvider(
-          appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+      messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
     ),
     chatHistoryRepo: ChatHistoryLocalRepo(
-      chatHistoryProvider: ChatHistoryProvider(
-          appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+      chatHistoryProvider:
+          ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
     ),
+    notificationsController: NotificationsController(appNotifications: appNotifications),
   );
 
+  static AppNotifications appNotifications = AppNotifications();
   @override
   void dependencies() {
     Get.put(
@@ -102,9 +105,7 @@ class GlobalBindings extends Bindings {
 
     Get.put(
         P2PNodeRequestStream(
-            p2pState: p2pState,
-            signaling: signaling,
-            multipleConnectionHandler: Get.find()),
+            p2pState: p2pState, signaling: signaling, multipleConnectionHandler: Get.find()),
         permanent: true);
     // data base provider dependencies
     Get.put(AppDatabaseProvider(accountInfo: accountInfo), permanent: true);
@@ -127,8 +128,8 @@ class GlobalBindings extends Bindings {
     Get.put(
       CallHistoryObserver(
         callHistoryRepo: CallHistoryRepo(
-          callHistoryProvider: CallHistoryProvider(
-              appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          callHistoryProvider:
+              CallHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
         ),
         callConnectionController: callConnectionController,
       ),
@@ -150,8 +151,8 @@ class GlobalBindings extends Bindings {
 
     Get.put(ChatsController(
       chatHistoryRepo: ChatHistoryLocalRepo(
-        chatHistoryProvider: ChatHistoryProvider(
-            appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+        chatHistoryProvider:
+            ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
       ),
     ));
 
@@ -166,13 +167,14 @@ class GlobalBindings extends Bindings {
         multipleConnectionHandler: Get.find(),
         accountInfo: accountInfo,
         messagesRepo: MessagesRepo(
-          messagesProvider: MessagesProvider(
-              appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
         ),
         chatHistoryRepo: ChatHistoryLocalRepo(
           chatHistoryProvider: ChatHistoryProvider(
-              appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+            appDatabaseProvider: Get.find<AppDatabaseProvider>(),
+          ),
         ),
+        notificationsController: NotificationsController(appNotifications: appNotifications),
       ),
       permanent: true,
     );
@@ -180,7 +182,6 @@ class GlobalBindings extends Bindings {
       wifiDirectConnectionController,
       permanent: true,
     );
-
 
     Get.put<P2PNodeController>(
       P2PNodeController(
@@ -194,5 +195,18 @@ class GlobalBindings extends Bindings {
       ),
       permanent: true,
     );
+    // Get.put<AppNotifications>(
+    //   AppNotifications(),
+    //   permanent: true,
+    // );
+
+    Get.put<NotificationsController>(
+      NotificationsController(
+        appNotifications: appNotifications,
+      ),
+      permanent: true,
+    );
+
+    Get.put<CommonMessagingConnectionController>(Get.find<MessagingConnectionController>());
   }
 }
