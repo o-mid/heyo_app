@@ -3,14 +3,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/notifications/controllers/app_notifications.dart';
-import 'package:image_editor/image_editor.dart';
-import 'package:permission_handler/permission_handler.dart';
-
-import 'package:heyo/generated/assets.gen.dart';
-import 'package:heyo/generated/locales.g.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../calls/incoming_call/controllers/incoming_call_controller.dart';
@@ -109,16 +104,18 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
   }
 
   Future<void> receivedCallNotify({
-    required String channelKey,
     String? title,
     String? body,
   }) async {
-    await appNotifications.pushReceivedCallNotify(
-      channelKey: channelKey,
-      id: Random().nextInt(1000),
-      title: title,
-      body: body,
-    );
+    if (Get.currentRoute == Routes.INCOMING_CALL || !isAppOnBackground.value) {
+      return;
+    } else {
+      await appNotifications.pushReceivedCallNotify(
+        id: Random().nextInt(1000),
+        title: title,
+        body: body,
+      );
+    }
   }
 
   @override

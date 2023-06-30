@@ -10,16 +10,12 @@ import '../../shared/utils/constants/notifications_constant.dart';
 import 'notifications_controller.dart';
 
 class AppNotifications extends GetxController {
-  RxBool isAppOnBackground = false.obs;
   RxBool isNotificationGranted = false.obs;
 
-  @override
-  void onInit() async {
-    super.onInit();
-  }
+  final AwesomeNotifications awesomeNotifications = AwesomeNotifications();
 
   initialize() async {
-    await AwesomeNotifications().initialize(
+    await awesomeNotifications.initialize(
         // set the icon to null if you want to use the default app icon
         'resource://drawable/icon',
         [
@@ -58,7 +54,7 @@ class AppNotifications extends GetxController {
 
   Future<void> initializeNotificationsEventListeners() async {
     // Only after at least the action method is set, the notification events are delivered
-    AwesomeNotifications().setListeners(
+    awesomeNotifications.setListeners(
         onActionReceivedMethod: onActionReceivedMethod,
         onNotificationCreatedMethod: onNotificationCreatedMethod,
         onNotificationDisplayedMethod: onNotificationDisplayedMethod,
@@ -66,10 +62,10 @@ class AppNotifications extends GetxController {
   }
 
   Future<void> _checkNotificationPermission() async {
-    await AwesomeNotifications().isNotificationAllowed().then((isAllowed) async {
+    await awesomeNotifications.isNotificationAllowed().then((isAllowed) async {
       if (!isAllowed) {
         isNotificationGranted.value =
-            await AwesomeNotifications().requestPermissionToSendNotifications();
+            await awesomeNotifications.requestPermissionToSendNotifications();
       } else {
         isNotificationGranted.value = true;
       }
@@ -128,8 +124,6 @@ class AppNotifications extends GetxController {
   }) async {
     await _checkNotificationPermission();
     if (isNotificationGranted.value) {
-      final AwesomeNotifications awesomeNotifications = AwesomeNotifications();
-
       await awesomeNotifications.createNotification(
         content: NotificationContent(
           id: id,
@@ -169,7 +163,6 @@ class AppNotifications extends GetxController {
       payload: payload,
     );
     await _checkNotificationPermission();
-    final AwesomeNotifications awesomeNotifications = AwesomeNotifications();
     await awesomeNotifications.createNotification(content: notificationContent, actionButtons: [
       NotificationActionButton(
         key: MessagesActionButtons.reply.name,
@@ -188,19 +181,18 @@ class AppNotifications extends GetxController {
   }
 
   Future<void> pushReceivedCallNotify({
-    required String channelKey,
     required int id,
     String? title,
     String? body,
   }) async {
+    await _checkNotificationPermission();
     NotificationContent notificationContent = NotificationContent(
       id: id,
-      channelKey: channelKey,
+      channelKey: NOTIFICATIONS.callsChannelKey,
       title: title,
       body: body,
     );
-    await _checkNotificationPermission();
-    final AwesomeNotifications awesomeNotifications = AwesomeNotifications();
+
     await awesomeNotifications.createNotification(content: notificationContent, actionButtons: [
       NotificationActionButton(
           key: CallsActionButtons.answer.name,
