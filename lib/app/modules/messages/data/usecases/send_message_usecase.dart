@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/audio_metadata.dart';

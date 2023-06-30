@@ -23,8 +23,13 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
 
   WifiDirectWrapper wifiDirectWrapper = WifiDirectWrapper();
 
-  WifiDirectConnectionController(
-      {required wifiDirectWrapper, required super.accountInfo, required super.messagesRepo, required super.chatHistoryRepo});
+  WifiDirectConnectionController({
+    required wifiDirectWrapper,
+    required super.accountInfo,
+    required super.messagesRepo,
+    required super.chatHistoryRepo,
+    required super.notificationsController,
+  });
 
   // TODO since working with HeyoWifiDirectPlugin instance requests usage of streams
   // TODO it is necessary to ensure closing this class instance with closing or
@@ -47,7 +52,8 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
   _initPlugin() {
     _heyoWifiDirect = wifiDirectWrapper.pluginInstance;
     if (_heyoWifiDirect == null) {
-      print("HeyoWifiDirect plugin not initialized! Wi-Fi Direct functionality may not be available");
+      print(
+          "HeyoWifiDirect plugin not initialized! Wi-Fi Direct functionality may not be available");
     }
   }
 
@@ -91,7 +97,7 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
   }
 
   @override
-  Future<void> sendTextMessage({required String text,required remoteCoreId}) async {
+  Future<void> sendTextMessage({required String text, required remoteCoreId}) async {
     // TODO remove debug output
     print('WifiDirectConnectionController(remoteId $remoteId): sendTextMessage($text)');
 

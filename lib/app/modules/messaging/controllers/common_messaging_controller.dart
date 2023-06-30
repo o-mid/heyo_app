@@ -41,6 +41,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final AccountInfo accountInfo;
   BinaryFileReceivingState? currentState;
+  final NotificationsController notificationsController;
 
   //
   // final JsonDecoder _decoder = const JsonDecoder();
@@ -58,7 +59,10 @@ abstract class CommonMessagingConnectionController extends GetxController {
   ChatModel? userChatmodel;
 
   CommonMessagingConnectionController(
-      {required this.accountInfo, required this.messagesRepo, required this.chatHistoryRepo});
+      {required this.accountInfo,
+      required this.messagesRepo,
+      required this.chatHistoryRepo,
+      required this.notificationsController});
 
   @override
   void onInit() {
@@ -204,7 +208,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
     required MessageModel receivedMessage,
     required String chatId,
   }) async {
-    await Get.find<NotificationsController>().receivedMessageNotify(
+    await notificationsController.receivedMessageNotify(
         chatId: chatId,
         channelKey: NOTIFICATIONS.messagesChannelKey,
 

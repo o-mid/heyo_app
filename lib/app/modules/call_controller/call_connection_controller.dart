@@ -16,6 +16,7 @@ import '../shared/utils/constants/notifications_constant.dart';
 class CallConnectionController extends GetxController {
   final Signaling signaling;
   final AccountInfo accountInfo;
+  final NotificationsController notificationsController;
 
   final callState = Rxn<CallState>();
   final callHistoryState = Rxn<CallHistoryState>();
@@ -71,7 +72,11 @@ class CallConnectionController extends GetxController {
     };
   }
 
-  CallConnectionController({required this.signaling, required this.accountInfo});
+  CallConnectionController({
+    required this.signaling,
+    required this.accountInfo,
+    required this.notificationsController,
+  });
 
   Future<Session> startCall(String remoteId, String callId, bool isAudioCall) async {
     String? selfCoreId = await accountInfo.getCoreId();
@@ -128,12 +133,6 @@ class CallConnectionController extends GetxController {
   }
 
   Future<void> handleCallStateRinging({required Session session}) async {
-    try {
-      await notifyReceivedCall(callSession: session);
-    } catch (e) {
-      print(e);
-    }
-
     await Get.toNamed(
       Routes.INCOMING_CALL,
       arguments: IncomingCallViewArguments(
@@ -149,8 +148,7 @@ class CallConnectionController extends GetxController {
   Future<void> notifyReceivedCall({
     required Session callSession,
   }) async {
-    await Get.find<NotificationsController>().receivedCallNotify(
-      channelKey: NOTIFICATIONS.callsChannelKey,
+    await notificationsController.receivedCallNotify(
       title: "Incoming ${callSession.isAudioCall ? "Audio" : "Video"} Call",
       body:
           "from ${callSession.cid.characters.take(4).string}...${callSession.cid.characters.takeLast(4).string}",

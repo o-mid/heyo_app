@@ -17,7 +17,6 @@ class IncomingCallController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();
     args = Get.arguments as IncomingCallViewArguments;
     //TODO name should be get from contacts
     caller = UserModel(
@@ -27,8 +26,11 @@ class IncomingCallController extends GetxController {
       walletAddress: args.remoteCoreId,
       coreId: args.remoteCoreId,
     );
-
     _playRingtone();
+    callConnectionController.notifyReceivedCall(
+      callSession: args.session,
+    );
+    super.onInit();
   }
 
   @override
