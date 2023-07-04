@@ -42,94 +42,85 @@ class AddContactsView extends GetView<AddContactsController> {
         body: Obx(() {
           return Padding(
             padding: CustomSizes.mainContentPadding,
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CustomSizes.largeSizedBoxHeight,
-                      CustomCircleAvatar(url: user.iconUrl, size: 64),
-                      CustomSizes.mediumSizedBoxHeight,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            user.name,
-                            style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
-                          ),
-                          CustomSizes.smallSizedBoxWidth,
-                          user.isVerified
-                              ? Assets.svg.verifiedWithBluePadding
-                                  .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
-                              : SizedBox(),
-                        ],
-                      ),
-                      CustomSizes.smallSizedBoxHeight,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            user.walletAddress.shortenCoreId,
-                            style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
-                          ),
-                          controller.nickname.value.isEmpty
-                              ? const SizedBox()
-                              : Row(
-                                  children: [
-                                    CustomSizes.smallSizedBoxWidth,
-                                    Assets.svg.dotIndicator.svg(),
-                                    CustomSizes.smallSizedBoxWidth,
-                                    Text(
-                                      controller.nickname.value,
-                                      style: TEXTSTYLES.kBodySmall
-                                          .copyWith(color: COLORS.kTextBlueColor),
-                                    )
-                                  ],
-                                )
-                        ],
-                      ),
-                      CustomSizes.smallSizedBoxHeight,
-                      SizedBox(
-                        height: 40.h,
-                      ),
-                      CUSTOMTEXTFIELD(
-                        labelText: LocaleKeys.AddContacts_addNickname.tr,
-                        onChanged: (String value) => controller.setNickname(value),
-                      ),
-                      CustomSizes.mediumSizedBoxHeight,
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          LocaleKeys.AddContacts_AddNicknameSubtitle.tr,
-                          style: TEXTSTYLES.kBodySmall,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CustomSizes.largeSizedBoxHeight,
+                    CustomCircleAvatar(url: user.iconUrl, size: 64),
+                    CustomSizes.mediumSizedBoxHeight,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          controller.nickname.value.isEmpty ? user.name : controller.nickname.value,
+                          style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
                         ),
+                        CustomSizes.smallSizedBoxWidth,
+                        user.isVerified
+                            ? Assets.svg.verifiedWithBluePadding
+                                .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
+                            : const SizedBox(),
+                      ],
+                    ),
+                    CustomSizes.smallSizedBoxHeight,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          user.walletAddress.shortenCoreId,
+                          style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
+                        ),
+                        Row(
+                          children: [
+                            CustomSizes.smallSizedBoxWidth,
+                            Assets.svg.dotIndicator.svg(),
+                            CustomSizes.smallSizedBoxWidth,
+                          ],
+                        )
+                      ],
+                    ),
+                    CustomSizes.smallSizedBoxHeight,
+                    SizedBox(
+                      height: 40.h,
+                    ),
+                    CUSTOMTEXTFIELD(
+                      labelText: LocaleKeys.AddContacts_addNickname.tr,
+                      onChanged: (String value) => controller.setNickname(value),
+                    ),
+                    CustomSizes.mediumSizedBoxHeight,
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        LocaleKeys.AddContacts_AddNicknameSubtitle.tr,
+                        style: TEXTSTYLES.kBodySmall,
                       ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      CustomButton.primary(
-                        // TODO : chatModel should be filled with correct data
-                        onTap: () {
-                          controller.addContact();
-                          Get.offNamedUntil(Routes.MESSAGES, ModalRoute.withName(Routes.HOME),
-                              arguments: MessagesViewArgumentsModel(user: user));
-                        },
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    CustomButton.primary(
+                      // TODO : chatModel should be filled with correct data
+                      onTap: () {
+                        controller.addContact();
+                        Get.offNamedUntil(Routes.MESSAGES, ModalRoute.withName(Routes.HOME),
+                            arguments: MessagesViewArgumentsModel(user: user));
+                      },
 
-                        titleWidget: Text(
-                          LocaleKeys.AddContacts_buttons_addToContacts.tr,
-                          style: TEXTSTYLES.kLinkBig.copyWith(
-                            color: COLORS.kWhiteColor,
-                          ),
+                      titleWidget: Text(
+                        LocaleKeys.AddContacts_buttons_addToContacts.tr,
+                        style: TEXTSTYLES.kLinkBig.copyWith(
+                          color: COLORS.kWhiteColor,
                         ),
                       ),
-                      CustomSizes.largeSizedBoxHeight,
-                    ],
-                  )
-                ],
-              ),
+                    ),
+                    CustomSizes.largeSizedBoxHeight,
+                  ],
+                )
+              ],
             ),
           );
         }));

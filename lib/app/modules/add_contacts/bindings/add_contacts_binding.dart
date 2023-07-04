@@ -4,6 +4,8 @@ import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart
 import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/providers/database/dao/user_provider.dart';
 
+import '../../chats/data/providers/chat_history/chat_history_provider.dart';
+import '../../chats/data/repos/chat_history/chat_history_repo.dart';
 import '../controllers/add_contacts_controller.dart';
 
 class AddContactsBinding extends Bindings {
@@ -14,6 +16,11 @@ class AddContactsBinding extends Bindings {
         contactRepository: ContactRepository(
           cacheContractor: CacheRepository(
               userContact: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
+        ),
+        chatHistoryRepo: ChatHistoryLocalRepo(
+          chatHistoryProvider: ChatHistoryProvider(
+            appDatabaseProvider: Get.find(),
+          ),
         ),
       ),
     );
