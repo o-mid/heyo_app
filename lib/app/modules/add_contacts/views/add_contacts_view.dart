@@ -104,10 +104,8 @@ class AddContactsView extends GetView<AddContactsController> {
                   children: [
                     CustomButton.primary(
                       // TODO : chatModel should be filled with correct data
-                      onTap: () {
-                        controller.addContact();
-                        Get.offNamedUntil(Routes.MESSAGES, ModalRoute.withName(Routes.HOME),
-                            arguments: MessagesViewArgumentsModel(user: user));
+                      onTap: () async {
+                        await controller.addContact();
                       },
 
                       titleWidget: Text(

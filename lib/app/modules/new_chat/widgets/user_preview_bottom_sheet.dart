@@ -67,8 +67,9 @@ void openUserPreviewBottomSheet(UserModel user, {bool isWifiDirect = false}) {
                           user: user.copyWith(
                             isOnline: true,
                             isVerified: true,
-                            name:
-                                "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}",
+                            name: user.name.isEmpty
+                                ? "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}"
+                                : user.name,
                             coreId: user.walletAddress,
                           ),
                           connectionType: isWifiDirect
