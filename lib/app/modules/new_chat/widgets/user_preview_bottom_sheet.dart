@@ -153,19 +153,24 @@ void openUserPreviewBottomSheet(UserModel user, {bool isWifiDirect = false}) {
                       ? LocaleKeys.newChat_userBottomSheet_contactInfo.tr
                       : LocaleKeys.newChat_userBottomSheet_userInfo.tr,
                 ),
-                if (!user.isContact)
-                  _buildIconTextButton(
-                    onPressed: () {
-                      Get.back();
+                !user.isContact
+                    ? _buildIconTextButton(
+                        onPressed: () {
+                          Get.back();
 
-                      Get.toNamed(
-                        Routes.ADD_CONTACTS,
-                        arguments: AddContactsViewArgumentsModel(user: user),
-                      );
-                    },
-                    icon: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
-                    title: LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
-                  ),
+                          Get.toNamed(
+                            Routes.ADD_CONTACTS,
+                            arguments: AddContactsViewArgumentsModel(user: user),
+                          );
+                        },
+                        icon: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
+                        title: LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
+                      )
+                    : _buildIconTextButton(
+                        onPressed: () {},
+                        icon: Assets.svg.removeContact.svg(width: 20, height: 20),
+                        title: LocaleKeys.newChat_userBottomSheet_RemoveFromContacts.tr,
+                      ),
                 _buildIconTextButton(
                   //Todo: Block onPressed
                   onPressed: () {},

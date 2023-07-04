@@ -182,6 +182,7 @@
     "userBottomSheet": {
       "chat": "Chat",
       "addToContacts": "Add to contacts",
+      "RemoveFromContacts": "Remove from contacts",
       "block": "Block",
       "userInfo": "User info",
       "contactInfo": "Contact info",
