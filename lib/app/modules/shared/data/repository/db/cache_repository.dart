@@ -17,4 +17,14 @@ class CacheRepository extends CacheContractor {
   Future addUserContact(UserModel user) {
     return userContact.insert(user);
   }
+
+  @override
+  Future deleteUserContact(UserModel user) {
+    return userContact.delete(user);
+  }
+
+  @override
+  Future updateUserContact(UserModel user) {
+    return userContact.update(user);
+  }
 }

@@ -26,4 +26,12 @@ class ContactRepository {
             element.coreId.startsWith(query))
         .toList();
   }
+
+  Future deleteUserContact(UserModel user) {
+    return cacheContractor.deleteUserContact(user);
+  }
+
+  Future updateUserContact(UserModel user) {
+    return cacheContractor.updateUserContact(user);
+  }
 }
