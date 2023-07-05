@@ -67,9 +67,11 @@ class ContactsView extends GetView<ContactsController> {
   ) {
     return InkWell(
       onTap: () {
-        openUserPreviewBottomSheet(contact.copyWith(
-          isContact: true,
-        ));
+        openUserPreviewBottomSheet(
+            contact.copyWith(
+              isContact: true,
+            ),
+            contactRepository: controller.contactRepo);
       },
       borderRadius: BorderRadius.circular(8.r),
       child: Container(

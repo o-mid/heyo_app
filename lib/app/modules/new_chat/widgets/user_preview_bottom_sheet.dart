@@ -13,13 +13,15 @@ import 'package:heyo/generated/locales.g.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../shared/data/models/add_contacts_view_arguments_model.dart';
+import '../../shared/data/repository/contact_repository.dart';
 import '../../shared/utils/constants/textStyles.dart';
 import '../../shared/utils/constants/transitions_constant.dart';
 import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../shared/widgets/curtom_circle_avatar.dart';
 import '../controllers/new_chat_controller.dart';
 
-void openUserPreviewBottomSheet(UserModel user, {bool isWifiDirect = false}) {
+void openUserPreviewBottomSheet(UserModel user,
+    {required ContactRepository contactRepository, bool isWifiDirect = false}) {
   Get.bottomSheet(
     enterBottomSheetDuration: TRANSITIONS.newChat_EnterBottomSheetDuration,
     exitBottomSheetDuration: TRANSITIONS.newChat_ExitBottomSheetDuration,
@@ -167,7 +169,13 @@ void openUserPreviewBottomSheet(UserModel user, {bool isWifiDirect = false}) {
                         title: LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
                       )
                     : _buildIconTextButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await contactRepository
+                              .updateUserContact(user.copyWith(isContact: false, name: ""));
+                          await contactRepository.deleteUserContact(user);
+
+                          Get.back();
+                        },
                         icon: Assets.svg.removeContact.svg(width: 20, height: 20),
                         title: LocaleKeys.newChat_userBottomSheet_RemoveFromContacts.tr,
                       ),

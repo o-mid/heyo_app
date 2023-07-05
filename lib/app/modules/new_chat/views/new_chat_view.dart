@@ -372,7 +372,7 @@ class _SearchInContactsBody extends StatelessWidget {
           Padding(
             padding: CustomSizes.mainContentPadding,
             child: ContactListWithHeader(
-              contacts: controller.searchSuggestions.toList(),
+              contacts: controller.searchSuggestions,
               searchMode: controller.inputController.text.isNotEmpty,
             ),
           ),
