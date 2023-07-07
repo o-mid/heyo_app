@@ -23,8 +23,9 @@ class RemoveContactsDialog extends StatelessWidget {
           color: COLORS.kDarkBlueColor,
         ),
         indicatorBackgroundColor: COLORS.kBrightBlueColor,
+        titleAlignment: TextAlign.center,
         title:
-            "${LocaleKeys.newChat_userBottomSheet_remove.tr} $userName ${LocaleKeys.newChat_userBottomSheet_RemoveFromContacts.tr}",
+            "${LocaleKeys.newChat_userBottomSheet_remove.tr} $userName ${LocaleKeys.newChat_userBottomSheet_fromContactsList.tr}",
         buttons: [
           CustomButton(
             onTap: () {
