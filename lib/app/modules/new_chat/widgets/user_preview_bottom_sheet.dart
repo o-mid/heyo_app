@@ -10,12 +10,15 @@ import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart'
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../routes/app_pages.dart';
+import '../../contacts/widgets/removeContactsDialog.dart';
 import '../../shared/data/models/add_contacts_view_arguments_model.dart';
 import '../../shared/data/repository/contact_repository.dart';
 import '../../shared/utils/constants/textStyles.dart';
 import '../../shared/utils/constants/transitions_constant.dart';
+import '../../shared/utils/permission_flow.dart';
 import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../shared/widgets/curtom_circle_avatar.dart';
 import '../controllers/new_chat_controller.dart';
@@ -170,11 +173,16 @@ void openUserPreviewBottomSheet(UserModel user,
                       )
                     : _buildIconTextButton(
                         onPressed: () async {
-                          await contactRepository
-                              .updateUserContact(user.copyWith(isContact: false, name: ""));
-                          await contactRepository.deleteUserContact(user);
-
                           Get.back();
+                          await Get.dialog(RemoveContactsDialog(
+                            userName: user.name,
+                          )).then((result) async {
+                            if (result is bool && result) {
+                              await contactRepository
+                                  .updateUserContact(user.copyWith(isContact: false, name: ""));
+                              await contactRepository.deleteUserContact(user);
+                            }
+                          });
                         },
                         icon: Assets.svg.removeContact.svg(width: 20, height: 20),
                         title: LocaleKeys.newChat_userBottomSheet_RemoveFromContacts.tr,

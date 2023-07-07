@@ -363,21 +363,19 @@ class _SearchInContactsBody extends StatelessWidget {
   final NewChatController controller;
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Column(
-        children: [
-          CustomSizes.smallSizedBoxHeight,
-          const Divider(thickness: 8, color: COLORS.kBrightBlueColor),
-          CustomSizes.largeSizedBoxHeight,
-          Padding(
-            padding: CustomSizes.mainContentPadding,
-            child: ContactListWithHeader(
-              contacts: controller.searchSuggestions,
-              searchMode: controller.inputController.text.isNotEmpty,
-            ),
+    return Column(
+      children: [
+        CustomSizes.smallSizedBoxHeight,
+        const Divider(thickness: 8, color: COLORS.kBrightBlueColor),
+        CustomSizes.largeSizedBoxHeight,
+        Padding(
+          padding: CustomSizes.mainContentPadding,
+          child: ContactListWithHeader(
+            contacts: controller.searchSuggestions,
+            searchMode: controller.inputController.text.isNotEmpty,
           ),
-        ],
-      );
-    });
+        ),
+      ],
+    );
   }
 }
