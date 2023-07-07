@@ -182,6 +182,14 @@ class LocaleKeys {
   static const newChat_userBottomSheet_chat = 'newChat_userBottomSheet_chat';
   static const newChat_userBottomSheet_addToContacts =
       'newChat_userBottomSheet_addToContacts';
+  static const newChat_userBottomSheet_RemoveFromContacts =
+      'newChat_userBottomSheet_RemoveFromContacts';
+  static const newChat_userBottomSheet_remove =
+      'newChat_userBottomSheet_remove';
+  static const newChat_userBottomSheet_fromContactsList =
+      'newChat_userBottomSheet_fromContactsList';
+  static const newChat_userBottomSheet_cancel =
+      'newChat_userBottomSheet_cancel';
   static const newChat_userBottomSheet_block = 'newChat_userBottomSheet_block';
   static const newChat_userBottomSheet_userInfo =
       'newChat_userBottomSheet_userInfo';
@@ -455,6 +463,10 @@ class Locales {
     'newChat_buttons_pullDownToRefresh': 'Pull down to refresh',
     'newChat_userBottomSheet_chat': 'Chat',
     'newChat_userBottomSheet_addToContacts': 'Add to contacts',
+    'newChat_userBottomSheet_RemoveFromContacts': 'Remove from contacts',
+    'newChat_userBottomSheet_remove': 'Remove',
+    'newChat_userBottomSheet_fromContactsList': 'From your contact list?',
+    'newChat_userBottomSheet_cancel': 'Cancel',
     'newChat_userBottomSheet_block': 'Block',
     'newChat_userBottomSheet_userInfo': 'User info',
     'newChat_userBottomSheet_contactInfo': 'Contact info',

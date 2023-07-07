@@ -17,6 +17,7 @@ import 'package:get/get.dart';
 
 import '../../../../routes/app_pages.dart';
 import '../../../new_chat/widgets/user_preview_bottom_sheet.dart';
+import '../../../shared/data/models/add_contacts_view_arguments_model.dart';
 import '../../../shared/data/models/messages_view_arguments_model.dart';
 
 class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -189,11 +190,66 @@ class _DefaultAppBar extends StatelessWidget {
               backgroundColor: Colors.transparent,
               icon: Assets.svg.audioCallIcon.svg(),
             ),
-            CustomSizes.smallSizedBoxWidth,
-            Assets.svg.verticalMenuIcon.svg(),
+            CircleIconButton(
+              backgroundColor: Colors.transparent,
+              padding: const EdgeInsets.all(0),
+              icon: Assets.svg.verticalMenuIcon.svg(),
+              size: 22,
+              onPressed: () {
+                _openAppBarActionBottomSheet(userModel: user);
+              },
+            ),
           ],
         ),
       ],
     );
   }
+}
+
+void _openAppBarActionBottomSheet({required UserModel userModel}) {
+  Get.bottomSheet(
+      Padding(
+        padding: CustomSizes.iconListPadding,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+
+                Get.toNamed(
+                  Routes.ADD_CONTACTS,
+                  arguments: AddContactsViewArgumentsModel(user: userModel),
+                );
+              },
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: COLORS.kBrightBlueColor,
+                    ),
+                    child: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
+                  ),
+                  CustomSizes.mediumSizedBoxWidth,
+                  Text(
+                    LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
+                    style: TEXTSTYLES.kLinkBig.copyWith(
+                      color: COLORS.kDarkBlueColor,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            CustomSizes.mediumSizedBoxHeight,
+          ],
+        ),
+      ),
+      backgroundColor: COLORS.kWhiteColor,
+      isDismissible: true,
+      enableDrag: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))));
 }

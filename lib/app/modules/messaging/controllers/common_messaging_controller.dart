@@ -193,12 +193,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
         status: ConfirmMessageStatus.delivered,
         remoteCoreId: chatId);
 
-    await updateChatRepo(
-      receivedMessage: receivedMessage,
-      chatId: chatId,
-    );
-
-    await notifyReceivedMessage(
+    await updateChatRepoAndNotify(
       receivedMessage: receivedMessage,
       chatId: chatId,
     );
@@ -207,14 +202,14 @@ abstract class CommonMessagingConnectionController extends GetxController {
   Future<void> notifyReceivedMessage({
     required MessageModel receivedMessage,
     required String chatId,
+    required String senderName,
   }) async {
     await notificationsController.receivedMessageNotify(
         chatId: chatId,
         channelKey: NOTIFICATIONS.messagesChannelKey,
 
         // largeIcon: 'resource://drawable/usericon',
-        title:
-            "New Message from ${chatId.characters.take(4).string}...${chatId.characters.takeLast(4).string}",
+        title: "New Message from $senderName",
         body: receivedMessage.type == MessageContentType.text
             ? (receivedMessage as TextMessageModel).text
             : receivedMessage.type.name,
@@ -233,7 +228,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
         ).toJson());
   }
 
-  Future<void> updateChatRepo(
+  Future<void> updateChatRepoAndNotify(
       {required MessageModel receivedMessage, required String chatId}) async {
     userChatmodel ??= await chatHistoryRepo.getChat(chatId);
 
@@ -251,6 +246,14 @@ abstract class CommonMessagingConnectionController extends GetxController {
     if (userChatmodel != null) {
       await chatHistoryRepo.updateChat(userChatmodel!);
     }
+
+    await notifyReceivedMessage(
+      receivedMessage: receivedMessage,
+      chatId: chatId,
+      senderName: userChatmodel!.name.isEmpty
+          ? "${chatId.characters.take(4).string}...${chatId.characters.takeLast(4).string}"
+          : userChatmodel!.name,
+    );
   }
 
   Future<void> deleteReceivedMessage(
