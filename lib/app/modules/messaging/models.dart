@@ -105,6 +105,5 @@ class RTCSession {
   void dispose() {
     onNewRTCSessionStatus = null;
     dc = null;
-    pc = null;
   }
 }
