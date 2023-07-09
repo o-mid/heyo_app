@@ -38,18 +38,19 @@ class AppDatabaseProvider {
     // Get a platform-specific directory where persistent app data can be stored
     final appDocumentDir = await getApplicationDocumentsDirectory();
     // Path with the form: /platform-specific-directory/demo.db
-    final dbPath = join(appDocumentDir.path, 'heyo.db');
 
     var password = await accountInfo.getPrivateKey();
     while (password == null) {
       Future.delayed(const Duration(milliseconds: 500));
       password = await accountInfo.getPrivateKey();
     }
+    final dbPath = join("${appDocumentDir.path}/${accountInfo.getCoreId()}", 'heyo.db');
 
     final database = await databaseFactoryIo.openDatabase(
       dbPath,
       codec: getEncryptSembastCodec(password: password),
     );
+
     // Any code awaiting the Completer's future will now start executing
     _dbOpenCompleter!.complete(database);
   }

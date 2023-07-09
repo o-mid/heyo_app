@@ -10,7 +10,9 @@ class RemotePeer {
 enum RTCSessionStatus { none, connecting, failed, connected }
 
 class RTCSession {
-  RTCSession({required this.remotePeer});
+  RTCSession({
+    required this.remotePeer,
+  });
 
   RemotePeer remotePeer;
   MediaStream? stream;
@@ -59,9 +61,13 @@ class RTCSession {
       rtcSessionStatus = RTCSessionStatus.connecting;
     } else if (state == RTCPeerConnectionState.RTCPeerConnectionStateFailed) {
       rtcSessionStatus = RTCSessionStatus.failed;
+    } else if (state ==
+        RTCPeerConnectionState.RTCPeerConnectionStateDisconnected) {
+      rtcSessionStatus = RTCSessionStatus.failed;
     }
 
-    print("onConnectionState for_applyConnectionStateChanged $state : $rtcSessionStatus");
+    print(
+        "onConnectionState for_applyConnectionStateChanged $state : $rtcSessionStatus");
 
     isDataChannelConnectionAvailable =
         (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected);
@@ -94,5 +100,11 @@ class RTCSession {
       }
       remoteCandidates.clear();
     }
+  }
+
+  void dispose() {
+    onNewRTCSessionStatus = null;
+    dc = null;
+    pc = null;
   }
 }

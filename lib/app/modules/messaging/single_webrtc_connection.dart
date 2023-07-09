@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:get/get.dart';
 import 'package:heyo/app/modules/messaging/models.dart';
 import 'package:heyo/app/modules/messaging/web_rtc_connection_manager.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
@@ -14,6 +13,7 @@ const DATA = 'data';
 const candidate = 'candidate';
 const offer = 'offer';
 const answer = 'answer';
+const initiate = 'initiate';
 const DATA_DESCRIPTION = 'description';
 
 class SingleWebRTCConnection {
@@ -35,7 +35,7 @@ class SingleWebRTCConnection {
             RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: remotePeerId));
     rtcSession.pc = peerConnection;
 
-    webRTCConnectionManager.setListeners( rtcSession.pc!,
+    webRTCConnectionManager.setListeners(rtcSession.pc!,
         onIceCandidate: (candidate) => _sendCandidate(candidate, rtcSession));
     return rtcSession;
   }
@@ -63,6 +63,15 @@ class SingleWebRTCConnection {
     );
   }
 
+  Future<bool> initiateSession(RTCSession rtcSession) async {
+    return await _send(
+      initiate,
+      {},
+      rtcSession.remotePeer.remoteCoreId,
+      rtcSession.remotePeer.remotePeerId,
+    );
+  }
+
   void onOfferReceived(RTCSession rtcSession, description) async {
     await rtcSession.pc!.setRemoteDescription(
         RTCSessionDescription(description['sdp'], description['type']));
@@ -82,19 +91,16 @@ class SingleWebRTCConnection {
   }
 
   void onAnswerReceived(RTCSession rtcSession, description) async {
-      await rtcSession.pc!.setRemoteDescription(
-        RTCSessionDescription(
-          description['sdp'],
-          description['type'],
-        ),
-      );
-
-
+    await rtcSession.pc!.setRemoteDescription(
+      RTCSessionDescription(
+        description['sdp'],
+        description['type'],
+      ),
+    );
   }
 
-   _sendCandidate(
-      RTCIceCandidate iceCandidate, RTCSession rtcSession)  {
-     _send(
+  _sendCandidate(RTCIceCandidate iceCandidate, RTCSession rtcSession) {
+    _send(
         candidate,
         {
           candidate: {
