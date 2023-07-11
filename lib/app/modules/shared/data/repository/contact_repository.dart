@@ -34,4 +34,12 @@ class ContactRepository {
   Future updateUserContact(UserModel user) {
     return cacheContractor.updateUserContact(user);
   }
+
+  Future<UserModel?> getContactById(String userCoreId) {
+    return cacheContractor.getContactById(userCoreId);
+  }
+
+  Future<List<UserModel>> getBlockedContacts() {
+    return cacheContractor.getBlockedContacts();
+  }
 }

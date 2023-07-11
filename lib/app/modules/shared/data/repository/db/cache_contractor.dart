@@ -10,4 +10,8 @@ abstract class CacheContractor {
   Future deleteUserContact(UserModel user);
 
   Future updateUserContact(UserModel user);
+
+  Future<UserModel?> getContactById(String userCoreId);
+
+  Future<List<UserModel>> getBlockedContacts();
 }

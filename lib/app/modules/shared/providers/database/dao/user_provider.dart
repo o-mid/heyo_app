@@ -60,4 +60,31 @@ class UserProvider {
     // Making a List<User> out of List<RecordSnapshot>
     return records.map((e) => UserModel.fromJson(e.value)).toList();
   }
+
+// get Blocked Contacts
+  Future<List<UserModel>> getBlocked() async {
+    final finder = Finder(filter: Filter.equals(UserModel.isBlockedSerializedName, true));
+
+    final records = await _userStore.find(
+      await _db,
+      finder: finder,
+    );
+
+    // Making a List<User> out of List<RecordSnapshot>
+    return records.map((e) => UserModel.fromJson(e.value)).toList();
+  }
+
+  Future<UserModel?> getContactById(String userCoreId) async {
+    final records = await _userStore.find(
+      await _db,
+      finder: Finder(filter: Filter.equals(UserModel.coreIdSerializedName, userCoreId)),
+    );
+
+    if (records.isEmpty) {
+      return null;
+    }
+
+    final userJson = records.first.value;
+    return UserModel.fromJson(userJson);
+  }
 }
