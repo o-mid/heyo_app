@@ -37,4 +37,9 @@ class CacheRepository extends CacheContractor {
   Future<UserModel?> getContactById(String userCoreId) {
     return userProvider.getContactById(userCoreId);
   }
+
+  @override
+  Future<Stream<List<UserModel>>> getContactsStream() async {
+    return userProvider.getContactsStream();
+  }
 }

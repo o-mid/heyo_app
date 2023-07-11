@@ -42,4 +42,8 @@ class ContactRepository {
   Future<List<UserModel>> getBlockedContacts() {
     return cacheContractor.getBlockedContacts();
   }
+
+  Future<Stream<List<UserModel>>> getContactsStream() async {
+    return cacheContractor.getContactsStream();
+  }
 }

@@ -14,4 +14,6 @@ abstract class CacheContractor {
   Future<UserModel?> getContactById(String userCoreId);
 
   Future<List<UserModel>> getBlockedContacts();
+
+  Future<Stream<List<UserModel>>> getContactsStream();
 }

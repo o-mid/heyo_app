@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
 import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
@@ -86,5 +88,19 @@ class UserProvider {
 
     final userJson = records.first.value;
     return UserModel.fromJson(userJson);
+  }
+
+  Future<Stream<List<UserModel>>> getContactsStream() async {
+    final query = _userStore.query(
+      finder: Finder(sortOrders: [SortOrder(UserModel.nameSerializedName, false)]),
+    );
+
+    return query.onSnapshots(await _db).transform(
+      StreamTransformer.fromHandlers(
+        handleData: (data, sink) {
+          sink.add(data.map((e) => UserModel.fromJson(e.value)).toList());
+        },
+      ),
+    );
   }
 }
