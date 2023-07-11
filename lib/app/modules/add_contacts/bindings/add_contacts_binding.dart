@@ -15,7 +15,7 @@ class AddContactsBinding extends Bindings {
       () => AddContactsController(
         contactRepository: ContactRepository(
           cacheContractor: CacheRepository(
-              userContact: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
+              userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
         ),
         chatHistoryRepo: ChatHistoryLocalRepo(
           chatHistoryProvider: ChatHistoryProvider(
