@@ -7,14 +7,33 @@ class RemotePeer {
   RemotePeer({required this.remoteCoreId, required this.remotePeerId});
 }
 
+ConnectionId generateConnectionId() {
+  return '${DateTime.now().millisecondsSinceEpoch}';
+}
+
+typedef ConnectionId = String;
+
+extension RTCInfo on ConnectionId {
+  int getTimeStamp() {
+    return int.parse(this);
+  }
+}
+
 enum RTCSessionStatus { none, connecting, failed, connected }
 
 class RTCSession {
-  RTCSession({
-    required this.remotePeer,
-  });
+  RTCSession(
+      {required this.connectionId,
+      required this.remotePeer,
+      required this.onConnectionFailed}) {
+    timeStamp = connectionId.getTimeStamp();
+  }
 
-  RemotePeer remotePeer;
+  late int timeStamp;
+  Function(ConnectionId, String) onConnectionFailed;
+
+  ConnectionId connectionId;
+  late RemotePeer remotePeer;
   MediaStream? stream;
   RTCPeerConnection? _pc;
   bool isDataChannelConnectionAvailable = false;
@@ -35,6 +54,11 @@ class RTCSession {
   void init() {
     pc!.onIceConnectionState = (RTCIceConnectionState state) {
       print("On ICE connection state changed => ${state}");
+      if (state == RTCIceConnectionState.RTCIceConnectionStateDisconnected) {
+        rtcSessionStatus = RTCSessionStatus.failed;
+        onConnectionFailed.call(connectionId, remotePeer.remoteCoreId);
+        onNewRTCSessionStatus?.call(rtcSessionStatus);
+      }
     };
     pc!.onConnectionState = (state) {
       _applyConnectionStateChanged(state);
@@ -61,9 +85,11 @@ class RTCSession {
       rtcSessionStatus = RTCSessionStatus.connecting;
     } else if (state == RTCPeerConnectionState.RTCPeerConnectionStateFailed) {
       rtcSessionStatus = RTCSessionStatus.failed;
+      onConnectionFailed.call(connectionId, remotePeer.remoteCoreId);
     } else if (state ==
         RTCPeerConnectionState.RTCPeerConnectionStateDisconnected) {
       rtcSessionStatus = RTCSessionStatus.failed;
+      onConnectionFailed.call(connectionId, remotePeer.remoteCoreId);
     }
 
     print(

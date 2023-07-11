@@ -1,57 +1,95 @@
-
 import 'package:heyo/app/modules/messaging/models.dart';
 import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 
 class MultipleConnectionHandler {
-  Map<String, RTCSession> connections = {};
+  Map<ConnectionId, RTCSession> connections = {};
   final SingleWebRTCConnection singleWebRTCConnection;
   Function(RTCSession)? onNewRTCSessionCreated;
 
   MultipleConnectionHandler({required this.singleWebRTCConnection});
 
-  Future<RTCSession> getConnection(
-      String remoteCoreId, String? remotePeerId) async {
-    if (connections[remoteCoreId] == null) {
-      RTCSession rtcSession = await _createSession(remoteCoreId, remotePeerId);
+  RTCSession? getConnection(String remoteCoreId, String selfCoreId) {
+    RTCSession? rtcSession;
+
+    List<RTCSession> items = connections.values
+        .where((element) => element.remotePeer.remoteCoreId == remoteCoreId)
+        .toList();
+
+    bool initiate = false;
+    if (items.isEmpty) {
+      initiateSession(remoteCoreId, selfCoreId);
+    } else {
+      for (var element in items) {
+        if (element.rtcSessionStatus != RTCSessionStatus.failed) {
+          rtcSession = element;
+        } else {
+          initiate = true;
+          connections[element.connectionId]?.dispose();
+          connections.remove(element.connectionId);
+        }
+      }
+    }
+    if (initiate) {
+      initiateSession(remoteCoreId, selfCoreId);
+    }
+
+    return rtcSession;
+  }
+
+  Future<RTCSession> _getConnection(
+    ConnectionId connectionId,
+    String remoteCoreId,
+    String? remotePeerId,
+  ) async {
+    print("_getConnection");
+    if (connections[connectionId] == null) {
+      RTCSession rtcSession =
+          await _createSession(connectionId, remoteCoreId, remotePeerId);
+      print("_getConnection new created");
+
       return rtcSession;
     } else {
-      RTCSession rtcSession = connections[remoteCoreId]!;
-      if (rtcSession.rtcSessionStatus == RTCSessionStatus.failed) {
+      RTCSession rtcSession = connections[connectionId]!;
+      print("_getConnection already is");
+
+      /*if (rtcSession.rtcSessionStatus == RTCSessionStatus.failed) {
         rtcSession.dispose();
         await _createSession(remoteCoreId, remotePeerId);
-      }
-      return connections[remoteCoreId]!;
+      }*/
+      return rtcSession;
     }
   }
 
-  void _setRemotePeerId(String remoteCoreId, String? remotePeerId) {
-    (connections[remoteCoreId]!.remotePeer.remotePeerId == null &&
+  void _setRemotePeerId(ConnectionId connectionId, String? remotePeerId) {
+    (connections[connectionId]!.remotePeer.remotePeerId == null &&
             remotePeerId != null)
-        ? connections[remoteCoreId]!.remotePeer.remotePeerId = remotePeerId
+        ? connections[connectionId]!.remotePeer.remotePeerId = remotePeerId
         : {};
   }
 
-  Future<RTCSession> _createSession(
+  Future<RTCSession> _createSession(ConnectionId connectionId,
       String remoteCoreId, String? remotePeerId) async {
-    RTCSession rtcSession =
-        await singleWebRTCConnection.createSession(remoteCoreId, remotePeerId);
-    connections[remoteCoreId] = rtcSession;
+    RTCSession rtcSession = await singleWebRTCConnection.createSession(
+        connectionId, remoteCoreId, remotePeerId);
+    connections[connectionId] = rtcSession;
 
     await rtcSession.createDataChannel();
-    connections[remoteCoreId] = rtcSession;
+    connections[connectionId] = rtcSession;
     onNewRTCSessionCreated?.call(rtcSession);
-    _setRemotePeerId(remoteCoreId, remotePeerId);
+    _setRemotePeerId(connectionId, remotePeerId);
     return rtcSession;
   }
 
   // for preventing exception, always who has bigger coreId initiates the offer or starts the session
-  Future<bool> initiateSession(RTCSession rtcSession, String selfCoreId) async {
+  Future<bool> initiateSession(String remoteCoreId, String selfCoreId) async {
     print(
-        "initiator is ${(selfCoreId.compareTo(rtcSession.remotePeer.remoteCoreId) > 0)}");
-    if (selfCoreId.compareTo(rtcSession.remotePeer.remoteCoreId) > 0) {
-      return await singleWebRTCConnection.startSession(rtcSession);
+        "initiateSession initiator is ${(selfCoreId.compareTo(remoteCoreId) > 0)}");
+
+    if (selfCoreId.compareTo(remoteCoreId) > 0) {
+      return await singleWebRTCConnection.startSession(
+          await _getConnection(generateConnectionId(), remoteCoreId, null));
     } else {
-      return await singleWebRTCConnection.initiateSession(rtcSession);
+      return await singleWebRTCConnection.initiateSession(remoteCoreId);
     }
   }
 
@@ -63,31 +101,36 @@ class MultipleConnectionHandler {
     switch (mapData['type']) {
       case initiate:
         {
-          RTCSession rtcSession =
-              await getConnection(remoteCoreId, remotePeerId);
+          RTCSession rtcSession = await _getConnection(
+              generateConnectionId(), remoteCoreId, remotePeerId);
           singleWebRTCConnection.startSession(rtcSession);
         }
         break;
       case offer:
         {
+          String connectionId = mapData[CONNECTION_ID];
           RTCSession rtcSession =
-              await getConnection(remoteCoreId, remotePeerId);
+              await _getConnection(connectionId, remoteCoreId, remotePeerId);
           var description = data[DATA_DESCRIPTION];
+
           singleWebRTCConnection.onOfferReceived(rtcSession, description);
         }
         break;
       case answer:
         {
+          String connectionId = mapData[CONNECTION_ID];
           RTCSession rtcSession =
-              await getConnection(remoteCoreId, remotePeerId);
+              await _getConnection(connectionId, remoteCoreId, remotePeerId);
           var description = data[DATA_DESCRIPTION];
           singleWebRTCConnection.onAnswerReceived(rtcSession, description);
         }
         break;
       case candidate:
         {
+          String connectionId = mapData[CONNECTION_ID];
+
           RTCSession rtcSession =
-              await getConnection(remoteCoreId, remotePeerId);
+              await _getConnection(connectionId, remoteCoreId, remotePeerId);
           var candidateMap = data[candidate];
           singleWebRTCConnection.onCandidateReceived(rtcSession, candidateMap);
         }
