@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
@@ -12,7 +13,8 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-import '../../chats/data/models/chat_model.dart';
+import '../../../../generated/assets.gen.dart';
+import '../../shared/widgets/item_section_widget.dart';
 import '../controllers/contacts_controller.dart';
 
 class ContactsView extends GetView<ContactsController> {
@@ -41,7 +43,18 @@ class ContactsView extends GetView<ContactsController> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 24.h),
+              CustomSizes.largeSizedBoxHeight,
+              ItemSectionWidget(
+                icon: Assets.svg.blockedUser.svg(
+                  theme: const SvgTheme(currentColor: COLORS.kStatesErrorColor),
+                ),
+                iconBackgroundColor: COLORS.kBrightBlueColor,
+                title: LocaleKeys.BlockUserPage_BlockedContacts.tr,
+                trailing: Text(controller.blockedContacts.length.toString()),
+                onTap: () {},
+              ),
+              const Divider(thickness: 8, color: COLORS.kBrightBlueColor),
+              CustomSizes.largeSizedBoxHeight,
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: Text(

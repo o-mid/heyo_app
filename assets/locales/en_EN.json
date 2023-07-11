@@ -298,6 +298,17 @@
       "save": "Save to device"
     }
   },
+  "BlockUserPage": {
+    "appbarTitle": "Block User",
+    "blockUser": "Block User",
+    "blockUserSubtitle": "You won’t receive messages or calls from this user.",
+    "block": "Block",
+    "unblock": "Unblock",
+    "BlockedContacts": "Blocked contacts",
+    "blockUserDescription": "You won’t be able to send messages and make calls to each other. After blocking, your conversation will stay in your chats until you delete it.",
+    "Cancel": "Cancel",
+    "wasBlocked": "was blocked"
+  },
   "ConnectionStatus": {
     "waiting": "Waiting for connection ...",
     "updating": "Updating chats",

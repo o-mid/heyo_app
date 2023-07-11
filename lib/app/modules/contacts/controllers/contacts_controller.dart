@@ -6,7 +6,7 @@ import '../../new_chat/data/models/user_model.dart';
 
 class ContactsController extends GetxController {
   final contacts = <UserModel>[].obs;
-
+  final blockedContacts = <UserModel>[].obs;
   final ContactRepository contactRepo;
 
   ContactsController({required this.contactRepo});
@@ -19,5 +19,6 @@ class ContactsController extends GetxController {
 
   getContacts() async {
     contacts.value = await contactRepo.getContacts();
+    //blockedContacts.value = await contactRepo.getContacts();
   }
 }

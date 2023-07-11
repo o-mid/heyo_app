@@ -315,6 +315,17 @@ class LocaleKeys {
   static const mediaView_bottomSheet_delete = 'mediaView_bottomSheet_delete';
   static const mediaView_bottomSheet_share = 'mediaView_bottomSheet_share';
   static const mediaView_bottomSheet_save = 'mediaView_bottomSheet_save';
+  static const BlockUserPage_appbarTitle = 'BlockUserPage_appbarTitle';
+  static const BlockUserPage_blockUser = 'BlockUserPage_blockUser';
+  static const BlockUserPage_blockUserSubtitle =
+      'BlockUserPage_blockUserSubtitle';
+  static const BlockUserPage_block = 'BlockUserPage_block';
+  static const BlockUserPage_unblock = 'BlockUserPage_unblock';
+  static const BlockUserPage_BlockedContacts = 'BlockUserPage_BlockedContacts';
+  static const BlockUserPage_blockUserDescription =
+      'BlockUserPage_blockUserDescription';
+  static const BlockUserPage_Cancel = 'BlockUserPage_Cancel';
+  static const BlockUserPage_wasBlocked = 'BlockUserPage_wasBlocked';
   static const ConnectionStatus_waiting = 'ConnectionStatus_waiting';
   static const ConnectionStatus_updating = 'ConnectionStatus_updating';
   static const ConnectionStatus_backOnline = 'ConnectionStatus_backOnline';
@@ -559,6 +570,17 @@ class Locales {
     'mediaView_bottomSheet_delete': 'Delete',
     'mediaView_bottomSheet_share': 'Share',
     'mediaView_bottomSheet_save': 'Save to device',
+    'BlockUserPage_appbarTitle': 'Block User',
+    'BlockUserPage_blockUser': 'Block User',
+    'BlockUserPage_blockUserSubtitle':
+        'You won’t receive messages or calls from this user.',
+    'BlockUserPage_block': 'Block',
+    'BlockUserPage_unblock': 'Unblock',
+    'BlockUserPage_BlockedContacts': 'Blocked contacts',
+    'BlockUserPage_blockUserDescription':
+        'You won’t be able to send messages and make calls to each other. After blocking, your conversation will stay in your chats until you delete it.',
+    'BlockUserPage_Cancel': 'Cancel',
+    'BlockUserPage_wasBlocked': 'was blocked',
     'ConnectionStatus_waiting': 'Waiting for connection ...',
     'ConnectionStatus_updating': 'Updating chats',
     'ConnectionStatus_backOnline': 'Back online',
