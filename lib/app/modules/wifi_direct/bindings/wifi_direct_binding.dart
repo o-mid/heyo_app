@@ -24,7 +24,7 @@ class WifiDirectBinding extends Bindings {
         wifiDirectConnectionController: Get.find<WifiDirectConnectionController>(),
         contactRepository: ContactRepository(
           cacheContractor: CacheRepository(
-              userContact: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
+              userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
         ),
       ),
     );

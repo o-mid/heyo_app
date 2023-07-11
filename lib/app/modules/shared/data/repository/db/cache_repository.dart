@@ -4,27 +4,37 @@ import 'package:heyo/app/modules/shared/providers/database/dao/user_provider.dar
 import '../../../../new_chat/data/models/user_model.dart';
 
 class CacheRepository extends CacheContractor {
-  final UserProvider userContact;
+  final UserProvider userProvider;
 
-  CacheRepository({required this.userContact});
+  CacheRepository({required this.userProvider});
 
   @override
   Future<List<UserModel>> getUserContacts() {
-    return userContact.getAllSortedByName();
+    return userProvider.getAllSortedByName();
   }
 
   @override
   Future addUserContact(UserModel user) {
-    return userContact.insert(user);
+    return userProvider.insert(user);
   }
 
   @override
   Future deleteUserContact(UserModel user) {
-    return userContact.delete(user);
+    return userProvider.delete(user);
   }
 
   @override
   Future updateUserContact(UserModel user) {
-    return userContact.update(user);
+    return userProvider.update(user);
+  }
+
+  @override
+  Future<List<UserModel>> getBlockedContacts() {
+    return userProvider.getBlocked();
+  }
+
+  @override
+  Future<UserModel?> getContactById(String userCoreId) {
+    return userProvider.getContactById(userCoreId);
   }
 }
