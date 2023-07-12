@@ -13,6 +13,7 @@ class P2PNodeController extends GetxController {
     Connectivity().onConnectivityChanged.listen((connectivityResult) async {
       debugPrint("onConnectivityChanged: $connectivityResult");
       if (connectivityResult == ConnectivityResult.none) {
+        _stopP2PNode();
         print("Device not connected to any network");
       } else {
         if (_latestConnectivityStatus != null) {

@@ -44,6 +44,7 @@ class P2PState extends GetxController {
   }
 
   void reset() {
+    advertise.value = false;
     address.value = [];
     peerId.value = "";
   }

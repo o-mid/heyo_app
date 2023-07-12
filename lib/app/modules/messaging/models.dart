@@ -50,6 +50,7 @@ class RTCSession {
   final List<RTCIceCandidate> remoteCandidates = [];
   RTCSessionStatus rtcSessionStatus = RTCSessionStatus.none;
   Function(RTCSessionStatus)? onNewRTCSessionStatus;
+  Function(RTCSession)? onRTCSessionConnected;
 
   void init() {
     pc!.onIceConnectionState = (RTCIceConnectionState state) {
@@ -80,6 +81,7 @@ class RTCSession {
   void _applyConnectionStateChanged(RTCPeerConnectionState state) {
     if (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected) {
       rtcSessionStatus = RTCSessionStatus.connected;
+      onRTCSessionConnected?.call(this);
     } else if (state ==
         RTCPeerConnectionState.RTCPeerConnectionStateConnecting) {
       rtcSessionStatus = RTCSessionStatus.connecting;

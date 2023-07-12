@@ -5,6 +5,7 @@ class MultipleConnectionHandler {
   Map<ConnectionId, RTCSession> connections = {};
   final SingleWebRTCConnection singleWebRTCConnection;
   Function(RTCSession)? onNewRTCSessionCreated;
+  Function(RTCSession)? onRTCSessionConnected;
 
   MultipleConnectionHandler({required this.singleWebRTCConnection});
 
@@ -74,6 +75,9 @@ class MultipleConnectionHandler {
     connections[connectionId] = rtcSession;
 
     await rtcSession.createDataChannel();
+    rtcSession.onRTCSessionConnected=(rtc){
+      onRTCSessionConnected?.call(rtc);
+    };
     connections[connectionId] = rtcSession;
     onNewRTCSessionCreated?.call(rtcSession);
     _setRemotePeerId(connectionId, remotePeerId);
