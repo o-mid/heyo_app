@@ -41,6 +41,20 @@ class WifiDirectController extends GetxController {
   Future<void> onInit() async {
     await _setCoreId();
     _heyoWifiDirect ?? _initializePlugin();
+
+    //TODO remove debug print
+    print ("WifiDirectController: onInit(). Is _heyoWifiDirect.consumerEventSource.hasListener -> ${_heyoWifiDirect?.consumerEventSource.hasListener}");
+
+    _eventListener =
+        _heyoWifiDirect!.consumerEventSource.stream.listen((event) => _eventHandler(event));
+    _messageListener =
+        _heyoWifiDirect!.tcpMessage.stream.listen((message) => _messageHandler(message));
+    await wifiDirectOn();
+    wifiDirectEnabled.value = await _heyoWifiDirect!.isWifiDirectEnabled();
+
+    //TODO remove debug print
+    print ("WifiDirectController: onInit() wifiDirectEnabled value $wifiDirectEnabled");
+
     super.onInit();
   }
 
@@ -55,10 +69,13 @@ class WifiDirectController extends GetxController {
   }
 
   @override
-  void onClose() {
+  Future<void> onClose() async {
+
+    await _eventListener.cancel();
+    await _messageListener.cancel();
+    await wifiDirectOff();
+
     super.onClose();
-    _eventListener.cancel();
-    _messageListener.cancel();
   }
 
   void _initializePlugin() async {
@@ -68,12 +85,7 @@ class WifiDirectController extends GetxController {
       visibleName.value = "name";
 
       _heyoWifiDirect = HeyoWifiDirect(coreID: coreId.value, name: 'name', debugOutputEnable: true);
-      await _heyoWifiDirect!.wifiDirectOn();
-      _eventListener =
-          _heyoWifiDirect!.consumerEventSource.stream.listen((event) => _eventHandler(event));
-      _messageListener =
-          _heyoWifiDirect!.tcpMessage.stream.listen((message) => _messageHandler(message));
-      wifiDirectEnabled.value = await _heyoWifiDirect!.isWifiDirectEnabled();
+      // await _heyoWifiDirect!.wifiDirectOn();
       wifiDirectConnectionController.wifiDirectWrapper.pluginInstance = _heyoWifiDirect;
       Get.put(wifiDirectConnectionController);
     }

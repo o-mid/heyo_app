@@ -79,20 +79,6 @@ class GlobalBindings extends Bindings {
 
   static WifiDirectWrapper wifiDirectWrapper = WifiDirectWrapper();
 
-  static WifiDirectConnectionController wifiDirectConnectionController =
-      WifiDirectConnectionController(
-    wifiDirectWrapper: wifiDirectWrapper,
-    accountInfo: accountInfo,
-    messagesRepo: MessagesRepo(
-      messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-    ),
-    chatHistoryRepo: ChatHistoryLocalRepo(
-      chatHistoryProvider:
-          ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-    ),
-    notificationsController: NotificationsController(appNotifications: appNotifications),
-  );
-
   static AppNotifications appNotifications = AppNotifications();
   @override
   void dependencies() {
@@ -179,7 +165,18 @@ class GlobalBindings extends Bindings {
       permanent: true,
     );
     Get.put(
-      wifiDirectConnectionController,
+      WifiDirectConnectionController(
+        wifiDirectWrapper: wifiDirectWrapper,
+        accountInfo: accountInfo,
+        messagesRepo: MessagesRepo(
+          messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+        ),
+        chatHistoryRepo: ChatHistoryLocalRepo(
+          chatHistoryProvider:
+          ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+        ),
+        notificationsController: NotificationsController(appNotifications: appNotifications),
+      ),
       permanent: true,
     );
 
