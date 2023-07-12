@@ -6,4 +6,8 @@ abstract class CacheContractor {
   Future<List<UserModel>> getUserContacts();
 
   Future addUserContact(UserModel user);
+
+  Future deleteUserContact(UserModel user);
+
+  Future updateUserContact(UserModel user);
 }

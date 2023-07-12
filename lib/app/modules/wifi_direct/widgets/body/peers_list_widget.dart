@@ -46,6 +46,7 @@ class PeersListWidget extends GetView<WifiDirectController> {
                               openUserPreviewBottomSheet(
                                 controller.availableDirectUsers[index],
                                 isWifiDirect: true,
+                                contactRepository: controller.contactRepository,
                               );
                             },
                             child: UserWidget(

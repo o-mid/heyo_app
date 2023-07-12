@@ -10,16 +10,21 @@ import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart'
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../routes/app_pages.dart';
+import '../../contacts/widgets/removeContactsDialog.dart';
 import '../../shared/data/models/add_contacts_view_arguments_model.dart';
+import '../../shared/data/repository/contact_repository.dart';
 import '../../shared/utils/constants/textStyles.dart';
 import '../../shared/utils/constants/transitions_constant.dart';
+import '../../shared/utils/permission_flow.dart';
 import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../shared/widgets/curtom_circle_avatar.dart';
 import '../controllers/new_chat_controller.dart';
 
-void openUserPreviewBottomSheet(UserModel user, {bool isWifiDirect = false}) {
+void openUserPreviewBottomSheet(UserModel user,
+    {required ContactRepository contactRepository, bool isWifiDirect = false}) {
   Get.bottomSheet(
     enterBottomSheetDuration: TRANSITIONS.newChat_EnterBottomSheetDuration,
     exitBottomSheetDuration: TRANSITIONS.newChat_ExitBottomSheetDuration,
@@ -67,8 +72,9 @@ void openUserPreviewBottomSheet(UserModel user, {bool isWifiDirect = false}) {
                           user: user.copyWith(
                             isOnline: true,
                             isVerified: true,
-                            name:
-                                "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}",
+                            name: user.name.isEmpty
+                                ? "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}"
+                                : user.name,
                             coreId: user.walletAddress,
                           ),
                           connectionType: isWifiDirect
@@ -152,19 +158,35 @@ void openUserPreviewBottomSheet(UserModel user, {bool isWifiDirect = false}) {
                       ? LocaleKeys.newChat_userBottomSheet_contactInfo.tr
                       : LocaleKeys.newChat_userBottomSheet_userInfo.tr,
                 ),
-                if (!user.isContact)
-                  _buildIconTextButton(
-                    onPressed: () {
-                      Get.back();
+                !user.isContact
+                    ? _buildIconTextButton(
+                        onPressed: () {
+                          Get.back();
 
-                      Get.toNamed(
-                        Routes.ADD_CONTACTS,
-                        arguments: AddContactsViewArgumentsModel(user: user),
-                      );
-                    },
-                    icon: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
-                    title: LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
-                  ),
+                          Get.toNamed(
+                            Routes.ADD_CONTACTS,
+                            arguments: AddContactsViewArgumentsModel(user: user),
+                          );
+                        },
+                        icon: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
+                        title: LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
+                      )
+                    : _buildIconTextButton(
+                        onPressed: () async {
+                          Get.back();
+                          await Get.dialog(RemoveContactsDialog(
+                            userName: user.name,
+                          )).then((result) async {
+                            if (result is bool && result) {
+                              await contactRepository
+                                  .updateUserContact(user.copyWith(isContact: false, name: ""));
+                              await contactRepository.deleteUserContact(user);
+                            }
+                          });
+                        },
+                        icon: Assets.svg.removeContact.svg(width: 20, height: 20),
+                        title: LocaleKeys.newChat_userBottomSheet_RemoveFromContacts.tr,
+                      ),
                 _buildIconTextButton(
                   //Todo: Block onPressed
                   onPressed: () {},

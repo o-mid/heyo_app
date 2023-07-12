@@ -42,10 +42,11 @@ class ModifiedAlertDialog extends StatelessWidget {
               Visibility(
                 visible: !hideCloseSign,
                 child: removeSign(onPressed: () {
-                  if (onClose != null)
+                  if (onClose != null) {
                     onClose!();
-                  else
+                  } else {
                     Get.back();
+                  }
                 }),
               ),
             ],
@@ -93,6 +94,7 @@ class DefaultAlertDialogContent extends StatelessWidget {
   final Widget indicatorIcon;
   final Color indicatorBackgroundColor;
   final String title;
+  final TextAlign? titleAlignment;
   final String? subtitle;
   final List<Widget> buttons;
   const DefaultAlertDialogContent({
@@ -101,6 +103,7 @@ class DefaultAlertDialogContent extends StatelessWidget {
     this.indicatorBackgroundColor = Colors.transparent,
     required this.title,
     this.subtitle,
+    this.titleAlignment,
     required this.buttons,
   }) : super(key: key);
 
@@ -123,8 +126,8 @@ class DefaultAlertDialogContent extends StatelessWidget {
           SizedBox(height: 24.w),
           Text(
             title,
-            style:
-                TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+            textAlign: titleAlignment,
+            style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
           ),
           CustomSizes.smallSizedBoxHeight,
           if (subtitle != null)
