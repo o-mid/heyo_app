@@ -35,4 +35,6 @@ abstract class MessagesAbstractRepo {
 
   /// update all messages status to read
   Future<void> markAllMessagesAsRead({required String chatId});
+
+  Future<List<MessageModel?>> getUnsentMessages(String chatId);
 }
