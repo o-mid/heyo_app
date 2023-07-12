@@ -178,9 +178,7 @@ void openUserPreviewBottomSheet(UserModel user,
                             userName: user.name,
                           )).then((result) async {
                             if (result is bool && result) {
-                              await contactRepository
-                                  .updateUserContact(user.copyWith(isContact: false, name: ""));
-                              await contactRepository.deleteUserContact(user);
+                              await contactRepository.deleteContactById(user.coreId);
                             }
                           });
                         },

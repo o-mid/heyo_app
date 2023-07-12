@@ -27,8 +27,12 @@ class ContactRepository {
         .toList();
   }
 
-  Future deleteUserContact(UserModel user) {
+  Future deleteUserContact(UserModel user) async {
     return cacheContractor.deleteUserContact(user);
+  }
+
+  Future deleteContactById(String userCoreId) {
+    return cacheContractor.deleteContactById(userCoreId);
   }
 
   Future updateUserContact(UserModel user) {

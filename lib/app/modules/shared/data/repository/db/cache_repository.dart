@@ -19,7 +19,7 @@ class CacheRepository extends CacheContractor {
   }
 
   @override
-  Future deleteUserContact(UserModel user) {
+  Future deleteUserContact(UserModel user) async {
     return userProvider.delete(user);
   }
 
@@ -41,5 +41,10 @@ class CacheRepository extends CacheContractor {
   @override
   Future<Stream<List<UserModel>>> getContactsStream() async {
     return userProvider.getContactsStream();
+  }
+
+  @override
+  Future deleteContactById(String userCoreId) {
+    return userProvider.deleteContactById(userCoreId);
   }
 }

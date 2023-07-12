@@ -48,6 +48,14 @@ class UserProvider {
     );
   }
 
+  Future deleteContactById(String userCoreId) async {
+    final finder = Finder(filter: Filter.byKey(userCoreId));
+    await _userStore.delete(
+      await _db,
+      finder: finder,
+    );
+  }
+
   Future<List<UserModel>> getAllSortedByName() async {
     // Finder object can also sort data.
     final finder = Finder(sortOrders: [
