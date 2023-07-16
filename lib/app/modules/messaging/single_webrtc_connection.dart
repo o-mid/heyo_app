@@ -51,7 +51,8 @@ class SingleWebRTCConnection {
   }
 
   Future<bool> startSession(RTCSession rtcSession) async {
-    print("onMessage startty");
+    print("startSession");
+    await rtcSession.createDataChannel();
     RTCSessionDescription rtcSessionDescription =
         await webRTCConnectionManager.setupUpOffer(rtcSession.pc!, MEDIA_TYPE);
     print("onMessage send");
@@ -70,8 +71,9 @@ class SingleWebRTCConnection {
         rtcSession.connectionId);
   }
 
-  Future<bool> initiateSession(String remoteCoreId) async {
-    return await _send(initiate, {}, remoteCoreId, null, null);
+  Future<bool> initiateSession(RTCSession rtcSession) async {
+    return await _send(initiate, {}, rtcSession.remotePeer.remoteCoreId,
+        rtcSession.remotePeer.remotePeerId, rtcSession.connectionId);
   }
 
   void onOfferReceived(RTCSession rtcSession, description) async {

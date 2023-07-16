@@ -144,7 +144,7 @@ class MessagesProvider implements MessagesAbstractProvider {
     final messages = await getMessages(chatId);
     return messages
         .where((element) =>
-            element.isFromMe == false && element.status == MessageStatus.sending ||
+            element.isFromMe && element.status == MessageStatus.sending ||
             element.status == MessageStatus.failed)
         .toList();
   }
