@@ -33,7 +33,7 @@ class RTCSession {
   Function(ConnectionId, String) onConnectionFailed;
 
   ConnectionId connectionId;
-  late RemotePeer remotePeer;
+  RemotePeer remotePeer;
   MediaStream? stream;
   RTCPeerConnection? _pc;
   bool isDataChannelConnectionAvailable = false;

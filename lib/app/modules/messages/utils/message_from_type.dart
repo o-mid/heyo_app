@@ -13,7 +13,8 @@ import '../data/models/messages/file_message_model.dart';
 
 import '../data/usecases/send_message_usecase.dart';
 
-Tuple3<MessageModel?, bool, String> messageFromType({required SendMessageType messageType}) {
+Tuple3<MessageModel?, bool, String> messageFromType(
+    {required SendMessageType messageType, MessageModel? messageModel = null}) {
   bool isDataBinary = false;
   String messageLocalPath = "";
   var uuid = const Uuid();
@@ -144,6 +145,8 @@ Tuple3<MessageModel?, bool, String> messageFromType({required SendMessageType me
       messageLocalPath = (messageType).metadata.path;
       break;
   }
-
+  if (messageModel != null) {
+    msg = messageModel;
+  }
   return Tuple3(msg, isDataBinary, messageLocalPath);
 }

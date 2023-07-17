@@ -26,9 +26,11 @@ class SendMessage {
   execute(
       {required SendMessageType sendMessageType,
       required String remoteCoreId,
-      bool isUpdate = false}) async {
+      bool isUpdate = false,
+      MessageModel? messageModel = null}) async {
+
     Tuple3<MessageModel?, bool, String> messageObject =
-        messageFromType(messageType: sendMessageType);
+        messageFromType(messageType: sendMessageType,messageModel: messageModel);
     MessageModel? msg = messageObject.item1;
     bool isDataBinary = messageObject.item2;
     String messageLocalPath = messageObject.item3;
@@ -37,35 +39,25 @@ class SendMessage {
       return;
     }
     if (isUpdate) {
-      // await messagesRepo.updateMessage(
-      //   message: msg.copyWith(status: MessageStatus.sending), chatId: sendMessageType.chatId);
+       await messagesRepo.updateMessage(
+        message: msg.copyWith(status: MessageStatus.sending), chatId: sendMessageType.chatId);
 
-      final currentmessage = await messagesRepo.getMessageById(
-          messageId: msg.messageId, chatId: sendMessageType.chatId);
-
-      if (currentmessage != null) {
-        print(" currentmessage: ${currentmessage.status}");
-        await messagesRepo.updateMessage(
-            message: currentmessage.copyWith(status: MessageStatus.sending),
-            chatId: sendMessageType.chatId);
-
-        print(" new status : ${currentmessage.status}");
-      }
     } else {
       await messagesRepo.createMessage(
-          message: msg.copyWith(status: MessageStatus.sending), chatId: sendMessageType.chatId);
+          message: msg.copyWith(status: MessageStatus.sending),
+          chatId: sendMessageType.chatId);
     }
 
     Map<String, dynamic> messageJson = msg.toJson();
-    await SendDataChannelMessage(messagingConnection: messagingConnection).execute(
+    await SendDataChannelMessage(messagingConnection: messagingConnection)
+        .execute(
       channelMessageType: ChannelMessageType.message(
-          message: messageJson, isDataBinary: isDataBinary, messageLocalPath: messageLocalPath),
+          message: messageJson,
+          isDataBinary: isDataBinary,
+          messageLocalPath: messageLocalPath),
       remoteCoreId: remoteCoreId,
     );
-    if (isUpdate) {
-      print("syncMessages: Message sent to data channel");
-    }
-    ;
+
   }
 }
 
@@ -78,6 +70,7 @@ class SendMessageType {
       {required this.replyTo,
       required this.chatId,
       this.reactions = const <String, ReactionModel>{}});
+
   factory SendMessageType.text({
     required String text,
     required ReplyToModel? replyTo,
