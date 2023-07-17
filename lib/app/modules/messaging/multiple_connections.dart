@@ -137,11 +137,11 @@ class MultipleConnectionHandler {
     RTCSession rtcSession =
         await _getConnection(generateConnectionId(), remoteCoreId, null);
 
-    if (selfCoreId.compareTo(remoteCoreId) > 0) {
+   // if (selfCoreId.compareTo(remoteCoreId) > 0) {
       singleWebRTCConnection.startSession(rtcSession);
-    } else {
-      singleWebRTCConnection.initiateSession(rtcSession);
-    }
+  ///  } else {
+   //   singleWebRTCConnection.initiateSession(rtcSession);
+   // }
 
     return rtcSession;
   }
