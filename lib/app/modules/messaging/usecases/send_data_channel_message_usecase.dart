@@ -18,9 +18,8 @@ class SendDataChannelMessage {
     required this.messagingConnection,
   });
 
-  execute(
-      {required ChannelMessageType channelMessageType,
-      required String remoteCoreId}) async {
+  Future<void> execute(
+      {required ChannelMessageType channelMessageType, required String remoteCoreId}) async {
     Tuple3<DataChannelMessageModel?, bool, String> channelMessageObject =
         channelmessageFromType(channelMessageType: channelMessageType);
     DataChannelMessageModel? msg = channelMessageObject.item1;
@@ -37,9 +36,10 @@ class SendDataChannelMessage {
         file: File(messageLocalPath),
         meta: msg.message,
       );
-      await SendBinaryData(sendingState: sendingState, messagingConnection: messagingConnection).execute(remoteCoreId);
+      await SendBinaryData(sendingState: sendingState, messagingConnection: messagingConnection)
+          .execute(remoteCoreId);
     } else {
-      messagingConnection.sendTextMessage(text: jsonEncode(message),remoteCoreId: remoteCoreId);
+      messagingConnection.sendTextMessage(text: jsonEncode(message), remoteCoreId: remoteCoreId);
     }
   }
 }

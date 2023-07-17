@@ -34,8 +34,8 @@ class SyncMessages {
   _sendUnsentMessages() {
     multipleConnectionHandler.onRTCSessionConnected = (rtcSession) async {
       print("syncMessages: onRTCSessionConnected: ${rtcSession.connectionId} ");
-      List<MessageModel?> unsentMessages = (await messagesRepo
-          .getUnsentMessages(rtcSession.remotePeer.remoteCoreId));
+      List<MessageModel?> unsentMessages =
+          (await messagesRepo.getUnsentMessages(rtcSession.remotePeer.remoteCoreId));
       print("syncMessages: size : ${unsentMessages.length} ");
 
       for (var message in unsentMessages) {
@@ -51,7 +51,9 @@ class SyncMessages {
 
             await sendMessage.execute(
                 sendMessageType: sendMessageType,
-                remoteCoreId: rtcSession.remotePeer.remoteCoreId,isUpdate: true);
+                remoteCoreId: rtcSession.remotePeer.remoteCoreId,
+                isUpdate: true);
+            print("syncMessages: Message sent ");
           }
         }
       }
