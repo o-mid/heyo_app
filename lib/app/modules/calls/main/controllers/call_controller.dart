@@ -40,7 +40,6 @@ class CallController extends GetxController {
 
   final callDurationSeconds = 0.obs;
 
-  var isCaller = false;
 
   // Todo: reset [callViewType] and [isVideoPositionsFlipped] when other user disables video
   final callViewType = CallViewType.stack.obs;
@@ -133,7 +132,6 @@ class CallController extends GetxController {
   }
 
   Future callerSetup() async {
-    isCaller = true;
     final callId = DateTime.now().millisecondsSinceEpoch.toString();
     session = (await callConnectionController.startCall(
         args.user.walletAddress, callId, args.isAudioCall));
@@ -178,6 +176,8 @@ class CallController extends GetxController {
       _remoteRenderer.srcObject = null;
     });
     callConnectionController.remoteStream.listen((stream) {
+      print("calll ${_remoteRenderer} : $stream");
+
       _remoteRenderer.srcObject = stream;
       updateCalleeVideoWidget();
     });
