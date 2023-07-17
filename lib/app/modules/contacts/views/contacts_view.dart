@@ -14,6 +14,7 @@ import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 import '../../../../generated/assets.gen.dart';
+import '../../shared/controllers/user_preview_controller.dart';
 import '../../shared/widgets/item_section_widget.dart';
 import '../controllers/contacts_controller.dart';
 
@@ -80,7 +81,8 @@ class ContactsView extends GetView<ContactsController> {
   ) {
     return InkWell(
       onTap: () {
-        openUserPreviewBottomSheet(contact, contactRepository: controller.contactRepo);
+        UserPreview(user: contact, contactRepository: controller.contactRepo)
+            .openUserPreviewBottomSheet();
       },
       borderRadius: BorderRadius.circular(8.r),
       child: Container(

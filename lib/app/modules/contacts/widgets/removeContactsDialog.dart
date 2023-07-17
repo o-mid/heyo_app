@@ -38,7 +38,7 @@ class RemoveContactsDialog extends StatelessWidget {
           CustomSizes.smallSizedBoxHeight,
           CustomButton(
             onTap: () => Get.back(result: false),
-            title: LocaleKeys.newChat_userBottomSheet_remove.tr,
+            title: LocaleKeys.newChat_userBottomSheet_cancel.tr,
             textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
           ),
         ],

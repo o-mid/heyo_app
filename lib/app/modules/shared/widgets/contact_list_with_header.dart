@@ -9,6 +9,7 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/generated/locales.g.dart';
 
 import '../../new_chat/controllers/new_chat_controller.dart';
+import '../controllers/user_preview_controller.dart';
 import 'list_header_widget.dart';
 
 class ContactListWithHeader extends GetView<NewChatController> {
@@ -62,8 +63,9 @@ class ContactListWithHeader extends GetView<NewChatController> {
                   borderRadius: BorderRadius.circular(8),
                   onTap: () {
                     controller.inputFocusNode.unfocus();
-                    openUserPreviewBottomSheet(contacts[index],
-                        contactRepository: controller.contactRepository);
+                    UserPreview(
+                            user: contacts[index], contactRepository: controller.contactRepository)
+                        .openUserPreviewBottomSheet();
                   },
                   child: UserWidget(
                     user: suggestedUser,
