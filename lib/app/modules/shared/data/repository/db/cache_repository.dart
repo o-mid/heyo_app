@@ -44,7 +44,7 @@ class CacheRepository extends CacheContractor {
   }
 
   @override
-  Future deleteContactById(String userCoreId) {
+  Future<void> deleteContactById(String userCoreId) {
     return userProvider.deleteContactById(userCoreId);
   }
 }

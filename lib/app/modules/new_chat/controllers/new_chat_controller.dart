@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
@@ -20,7 +22,8 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
   final ContactRepository contactRepository;
   final AccountInfo accountInfo;
   final inputFocusNode = FocusNode();
-
+  final inputText = "".obs;
+  late StreamSubscription _contactasStreamSubscription;
   NewChatController({required this.contactRepository, required this.accountInfo});
 
 // in nearby users Tab after 3 seconds the refresh button will be visible
@@ -33,7 +36,7 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
   }
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     // animation for refresh button
     animController = AnimationController(
       duration: const Duration(seconds: 3),
@@ -45,12 +48,7 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
     ).animate(animController);
 
     inputController = TextEditingController();
-
-    searchUsers('');
-    inputController.addListener(() {
-      searchUsers(inputController.text);
-    });
-    nearbyUsers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    await listenToContacts();
     super.onInit();
   }
 
@@ -79,6 +77,7 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
   void onClose() {
     animController.dispose();
     inputController.dispose();
+    _contactasStreamSubscription.cancel();
   }
 
   final String profileLink = "https://heyo.core/m6ljkB4KJ";
@@ -129,6 +128,24 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
   }
 
   RxList<UserModel> searchSuggestions = <UserModel>[].obs;
+
+  listenToContacts() async {
+    inputController.addListener(() {
+      inputText.value = inputController.text;
+      searchUsers(inputController.text);
+    });
+
+    _contactasStreamSubscription =
+        (await contactRepository.getContactsStream()).listen((newContacts) {
+      // remove the deleted contacts from the list
+
+      if (inputText.value == "") {
+        searchSuggestions.value = newContacts;
+      }
+    });
+    nearbyUsers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    super.onInit();
+  }
 
   void searchUsers(String query) async {
     //TODO icon and chatmodel should be filled with correct data

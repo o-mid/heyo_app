@@ -31,7 +31,7 @@ class UserPreview extends GetxController {
       final currentUser = await contactRepository.getContactById(user.coreId);
       if (currentUser != null) {
         user = currentUser;
-        print("user is contact with name ${user.name}");
+        print("currentUser is contact with name ${currentUser.name}");
       } else {
         print("user is not contact ");
       }
@@ -231,9 +231,11 @@ class UserPreview extends GetxController {
   }
 
   Future<void> _deleteContact() async {
-    await contactRepository.deleteContactById(
-      user.walletAddress,
-    );
+    await contactRepository
+        .deleteContactById(
+          user.walletAddress,
+        )
+        .then((value) => print("object deleted  $value "));
   }
 
   Widget _buildIconTextButton({

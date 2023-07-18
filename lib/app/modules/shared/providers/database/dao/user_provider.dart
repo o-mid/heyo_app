@@ -48,8 +48,9 @@ class UserProvider {
     );
   }
 
-  Future deleteContactById(String userCoreId) async {
-    final finder = Finder(filter: Filter.byKey(userCoreId));
+  Future<void> deleteContactById(String userCoreId) async {
+    final finder = Finder(filter: Filter.equals(UserModel.coreIdSerializedName, userCoreId));
+    print("finder delete contact id: " + finder.toString());
     await _userStore.delete(
       await _db,
       finder: finder,
