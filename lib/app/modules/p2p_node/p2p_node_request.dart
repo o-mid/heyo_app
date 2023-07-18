@@ -9,7 +9,6 @@ import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 
-
 class P2PNodeRequestStream {
   StreamSubscription<P2PReqResNodeModel?>? _nodeRequestSubscription;
   final P2PState p2pState;
@@ -67,7 +66,7 @@ class P2PNodeRequestStream {
       if ((event.body!['payload'])['session'] != null) {
         String request = (event.body!['payload'])['session'];
         // if session is not null then we have a request
-        onRequestReceived(
+        await onRequestReceived(
             request.convertHexToString(), remoteCoreId, remotePeerId);
 
         //signaling.onMessage(session.convertHexToString(), remoteCoreId, remotePeerId);
@@ -75,21 +74,19 @@ class P2PNodeRequestStream {
     }
   }
 
-  void onRequestReceived(
-      String request, String remoteCoreId, String remotePeerId) {
+  Future<void> onRequestReceived(
+      String request, String remoteCoreId, String remotePeerId) async {
     // checks the type of the request and sends it to signalling or messaging accordingly
 
     Map<String, dynamic> mapData = _decoder.convert(request);
-    print("dadadasdada $mapData : ${mapData['command']} : $remoteCoreId");
+    print("onRequestReceived $mapData : ${mapData['command']} : $remoteCoreId");
 
     if (mapData['command'] == "call") {
       signaling.onMessage(mapData, remoteCoreId, remotePeerId);
     }
     if (mapData['command'] == "multiple_connection") {
-      multipleConnectionHandler.onRequestReceived(
+      await multipleConnectionHandler.onRequestReceived(
           mapData, remoteCoreId, remotePeerId);
-    } else {
-
-    }
+    } else {}
   }
 }

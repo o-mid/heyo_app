@@ -61,7 +61,9 @@ class MessagesController extends GetxController {
   MessagesController({
     required this.messagesRepo,
     required this.chatHistoryRepo,
-  });
+  }) {
+    init();
+  }
 
   late CommonMessagingConnectionController messagingConnection;
 
@@ -125,11 +127,6 @@ class MessagesController extends GetxController {
     connectionType = args.connectionType;
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-    init();
-  }
   @override
   void onReady() {
     super.onReady();

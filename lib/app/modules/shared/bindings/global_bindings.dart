@@ -52,8 +52,6 @@ class GlobalBindings extends Bindings {
   // p2p related bindings
   static P2PState p2pState = P2PState();
 
-  //MultipleConnectionHandler multipleConnectionHandler =
-
   static P2PNodeResponseStream p2pNodeResponseStream =
       P2PNodeResponseStream(p2pState: p2pState);
 
@@ -119,15 +117,14 @@ class GlobalBindings extends Bindings {
     // p2p related dependencies
     Get.put<P2PNodeController>(
       P2PNodeController(
-        p2pNode: P2PNode(
-          accountInfo: accountInfo,
-          p2pNodeRequestStream: Get.find(),
-          p2pNodeResponseStream: p2pNodeResponseStream,
-          p2pState: p2pState,
-          web3client: web3Client,
-        ),
-        p2pState: p2pState
-      ),
+          p2pNode: P2PNode(
+            accountInfo: accountInfo,
+            p2pNodeRequestStream: Get.find(),
+            p2pNodeResponseStream: p2pNodeResponseStream,
+            p2pState: p2pState,
+            web3client: web3Client,
+          ),
+          p2pState: p2pState),
       permanent: true,
     );
 
@@ -194,16 +191,14 @@ class GlobalBindings extends Bindings {
 
     Get.put<P2PNodeController>(
       P2PNodeController(
-        p2pNode: P2PNode(
-          accountInfo: accountInfo,
-          p2pNodeRequestStream: Get.find(),
-          p2pNodeResponseStream: p2pNodeResponseStream,
-          p2pState: p2pState,
-          web3client: web3Client,
-        ),
-          p2pState:p2pState
-
-      ),
+          p2pNode: P2PNode(
+            accountInfo: accountInfo,
+            p2pNodeRequestStream: Get.find(),
+            p2pNodeResponseStream: p2pNodeResponseStream,
+            p2pState: p2pState,
+            web3client: web3Client,
+          ),
+          p2pState: p2pState),
       permanent: true,
     );
     // Get.put<AppNotifications>(

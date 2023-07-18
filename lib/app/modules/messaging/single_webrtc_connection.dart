@@ -13,7 +13,7 @@ const DATA = 'data';
 const candidate = 'candidate';
 const offer = 'offer';
 const answer = 'answer';
-const initiate = 'initiate';
+//const initiate = 'initiate';
 const DATA_DESCRIPTION = 'description';
 const CONNECTION_ID = 'connection_id';
 
@@ -71,19 +71,19 @@ class SingleWebRTCConnection {
         rtcSession.connectionId);
   }
 
-  Future<bool> initiateSession(RTCSession rtcSession) async {
+  /*Future<bool> initiateSession(RTCSession rtcSession) async {
     return await _send(initiate, {}, rtcSession.remotePeer.remoteCoreId,
         rtcSession.remotePeer.remotePeerId, rtcSession.connectionId);
-  }
+  }*/
 
-  void onOfferReceived(RTCSession rtcSession, description) async {
+  Future<void> onOfferReceived(RTCSession rtcSession, description) async {
     await rtcSession.pc!.setRemoteDescription(
         RTCSessionDescription(description['sdp'], description['type']));
     RTCSessionDescription sessionDescription =
         await webRTCConnectionManager.setupAnswer(rtcSession.pc!, MEDIA_TYPE);
     print("onMessage onOfferReceived Send");
 
-    var completed = await _send(
+    _send(
         answer,
         {
           'description': {
@@ -94,10 +94,9 @@ class SingleWebRTCConnection {
         rtcSession.remotePeer.remoteCoreId,
         rtcSession.remotePeer.remotePeerId,
         rtcSession.connectionId);
-    print("onMessage onOfferReceived Send result: $completed");
   }
 
-  void onAnswerReceived(RTCSession rtcSession, description) async {
+  Future<void> onAnswerReceived(RTCSession rtcSession, description) async {
     print("onMessage onAnswerReceived");
 
     await rtcSession.pc!.setRemoteDescription(
@@ -141,7 +140,7 @@ class SingleWebRTCConnection {
     return requestSucceeded;
   }
 
-  void onCandidateReceived(RTCSession rtcSession, candidateMap) async {
+  Future<void> onCandidateReceived(RTCSession rtcSession, candidateMap) async {
     RTCIceCandidate candidate = RTCIceCandidate(
       candidateMap['candidate'],
       candidateMap['sdpMid'],

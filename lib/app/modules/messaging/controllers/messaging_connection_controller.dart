@@ -79,7 +79,8 @@ class MessagingConnectionController
     RTCSession rtcSession =
         await multipleConnectionHandler.getConnection(remoteId, selfCoreId!);
     currentRemoteId = rtcSession.remotePeer.remoteCoreId;
-    print("RTCSession Status: ${rtcSession.rtcSessionStatus}");
+    print(
+        "initMessagingConnection RTCSession Status: ${rtcSession.rtcSessionStatus}");
     _observeMessagingStatus(rtcSession);
   }
 
@@ -105,10 +106,7 @@ class MessagingConnectionController
         "sendTextMessage : ${(rtcSession.isDataChannelConnectionAvailable)} : ${rtcSession.dc?.state} : ${rtcSession.rtcSessionStatus}");
     await createUserChatModel(sessioncid: remoteCoreId);
 
-    await (await multipleConnectionHandler.getConnection(
-            remoteCoreId, selfCoreId!))
-        .dc
-        ?.send(RTCDataChannelMessage.fromBinary(binary));
+    await rtcSession.dc?.send(RTCDataChannelMessage.fromBinary(binary));
   }
 
   void _applyConnectionStatus(RTCSessionStatus status, String remoteCoreId) {
