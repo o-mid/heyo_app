@@ -63,9 +63,10 @@ class ContactListWithHeader extends GetView<NewChatController> {
                   borderRadius: BorderRadius.circular(8),
                   onTap: () {
                     controller.inputFocusNode.unfocus();
-                    UserPreview(
-                            user: contacts[index], contactRepository: controller.contactRepository)
-                        .openUserPreviewBottomSheet();
+                    UserPreview(contactRepository: controller.contactRepository)
+                        .openUserPreviewBottomSheet(
+                      userModel: contacts[index],
+                    );
                   },
                   child: UserWidget(
                     user: suggestedUser,

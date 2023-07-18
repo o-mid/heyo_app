@@ -81,8 +81,9 @@ class ContactsView extends GetView<ContactsController> {
   ) {
     return InkWell(
       onTap: () {
-        UserPreview(user: contact, contactRepository: controller.contactRepo)
-            .openUserPreviewBottomSheet();
+        UserPreview(contactRepository: controller.contactRepo).openUserPreviewBottomSheet(
+          userModel: contact,
+        );
       },
       borderRadius: BorderRadius.circular(8.r),
       child: Container(

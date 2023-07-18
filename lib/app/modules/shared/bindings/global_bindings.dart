@@ -24,6 +24,7 @@ import 'package:heyo/app/modules/p2p_node/p2p_node_request.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
+import 'package:heyo/app/modules/shared/providers/database/dao/user_provider.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
 import 'package:core_web3dart/web3dart.dart';
 import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_controller.dart';
@@ -41,6 +42,10 @@ import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../../notifications/controllers/notifications_controller.dart';
 import '../../wifi_direct/controllers/wifi_direct_wrapper.dart';
+import '../controllers/user_preview_controller.dart';
+import '../data/repository/contact_repository.dart';
+import '../data/repository/db/cache_contractor.dart';
+import '../data/repository/db/cache_repository.dart';
 import '../utils/constants/web3client_constant.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 
@@ -208,5 +213,12 @@ class GlobalBindings extends Bindings {
     );
 
     Get.put<CommonMessagingConnectionController>(Get.find<MessagingConnectionController>());
+
+    Get.put(UserPreview(
+      contactRepository: ContactRepository(
+        cacheContractor: CacheRepository(
+            userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
+      ),
+    ));
   }
 }
