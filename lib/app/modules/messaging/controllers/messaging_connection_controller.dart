@@ -20,7 +20,7 @@ class MessagingConnectionController
   final MultipleConnectionHandler multipleConnectionHandler;
 
   final JsonDecoder _decoder = const JsonDecoder();
-  String? selfCoreId;
+  //String? selfCoreId;
 
   //RTCSession? currentRtcSession;
   String currentRemoteId = "";
@@ -32,15 +32,15 @@ class MessagingConnectionController
     required super.chatHistoryRepo,
     required super.notificationsController,
   }) {
-    setCoreId();
+    //setCoreId();
   }
 
-  void setCoreId() async {
+  /*void setCoreId() async {
     while ((await accountInfo.getCoreId()) == null) {
       Future.delayed(const Duration(seconds: 3));
     }
     selfCoreId = await accountInfo.getCoreId();
-  }
+  }*/
 
   //+ remains from previous version
   @override
@@ -77,7 +77,7 @@ class MessagingConnectionController
   @override
   Future<void> initMessagingConnection({required String remoteId}) async {
     RTCSession rtcSession =
-        await multipleConnectionHandler.getConnection(remoteId, selfCoreId!);
+        await multipleConnectionHandler.getConnection(remoteId);
     currentRemoteId = rtcSession.remotePeer.remoteCoreId;
     print(
         "initMessagingConnection RTCSession Status: ${rtcSession.rtcSessionStatus}");
@@ -88,7 +88,7 @@ class MessagingConnectionController
   Future<void> sendTextMessage(
       {required String text, required String remoteCoreId}) async {
     RTCSession rtcSession = await multipleConnectionHandler.getConnection(
-        remoteCoreId, selfCoreId!);
+        remoteCoreId);
 
     await createUserChatModel(sessioncid: remoteCoreId);
 
@@ -101,7 +101,7 @@ class MessagingConnectionController
   Future<void> sendBinaryMessage(
       {required Uint8List binary, required String remoteCoreId}) async {
     RTCSession rtcSession = await multipleConnectionHandler.getConnection(
-        remoteCoreId, selfCoreId!);
+        remoteCoreId);
     print(
         "sendTextMessage : ${(rtcSession.isDataChannelConnectionAvailable)} : ${rtcSession.dc?.state} : ${rtcSession.rtcSessionStatus}");
     await createUserChatModel(sessioncid: remoteCoreId);

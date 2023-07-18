@@ -10,7 +10,7 @@ class MultipleConnectionHandler {
   MultipleConnectionHandler({required this.singleWebRTCConnection});
 
   Future<RTCSession> getConnection(
-      String remoteCoreId, String selfCoreId) async {
+      String remoteCoreId) async {
     print("getConnection : $remoteCoreId");
     //TODO debug remove in production
     connections.forEach((key, value) {
@@ -29,17 +29,17 @@ class MultipleConnectionHandler {
               ((currentTime - rtcSession.timeStamp) > 10000))) {
         connections[rtcSession.connectionId]?.dispose();
         connections.remove(rtcSession.connectionId);
-        rtcSession = await _initiateSession(remoteCoreId, selfCoreId);
+        rtcSession = await _initiateSession(remoteCoreId);
       }
     } else {
-      rtcSession = await _initiateSession(remoteCoreId, selfCoreId);
+      rtcSession = await _initiateSession(remoteCoreId);
     }
 
     return rtcSession;
   }
 
   initiateConnections(String remoteCoreId, String selfCoreId) {
-    _initiateSession(remoteCoreId, selfCoreId);
+    _initiateSession(remoteCoreId);
   }
 
   reset() {
@@ -82,7 +82,7 @@ class MultipleConnectionHandler {
     for (var value in items) {
       print("getLatestRemoteConnections method ${value.timeStamp}");
     }
-    
+
     if (items.isEmpty) {
       return null;
     }
@@ -145,9 +145,8 @@ class MultipleConnectionHandler {
 
   // for preventing exception, always who has bigger coreId initiates the offer or starts the session
   Future<RTCSession> _initiateSession(
-      String remoteCoreId, String selfCoreId) async {
-    print(
-        "initiateSession initiator is ${(selfCoreId.compareTo(remoteCoreId) > 0)}");
+      String remoteCoreId/*, String selfCoreId*/) async {
+
     RTCSession rtcSession =
         await _getConnection(generateConnectionId(), remoteCoreId, null);
 
