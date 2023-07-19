@@ -138,6 +138,17 @@ class MessagesProvider implements MessagesAbstractProvider {
         .toList();
   }
 
+// returns a list of Messages where isFromMe is false and status is delivered (not read)
+  @override
+  Future<List<MessageModel?>> getUnsentMessages(String chatId) async {
+    final messages = await getMessages(chatId);
+    return messages
+        .where((element) =>
+            element.isFromMe && element.status == MessageStatus.sending ||
+            element.status == MessageStatus.failed)
+        .toList();
+  }
+
   Future<int> _getMessageIndexById({required String messageId, required String chatId}) async {
     final messages = await getMessages(chatId);
     final index = messages.indexWhere((m) => m.messageId == messageId);

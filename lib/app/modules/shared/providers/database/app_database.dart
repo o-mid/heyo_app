@@ -45,7 +45,7 @@ class AppDatabaseProvider {
       Future.delayed(const Duration(milliseconds: 500));
       password = await accountInfo.getPrivateKey();
     }*/
-    final dbPath = join("${appDocumentDir.path}/${accountInfo.getCoreId()}", 'heyo.db');
+    final dbPath = join("${appDocumentDir.path}/", 'heyo.db');
 
     final database = await databaseFactoryIo.openDatabase(
       dbPath,
