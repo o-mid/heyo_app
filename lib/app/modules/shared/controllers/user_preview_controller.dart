@@ -27,23 +27,7 @@ class UserPreview extends GetxController {
 
   UserPreview({required this.contactRepository});
 
-  // _getUser() async {
-  //   if (user != null) {
-  //     if (user.isContact == true) {
-  //       final currentUser = await contactRepository.getContactById(user!.coreId);
-  //       if (currentUser != null) {
-  //         user = currentUser;
-  //         print("currentUser is contact with name ${currentUser.name}");
-  //       } else {
-  //         print("user is not contact ");
-  //       }
-  //     }
-  //   } else {
-  //     return;
-  //   }
-  // }
-
-  Future<void> openUserPreviewBottomSheet({
+  Future<void> openUserPreview({
     bool isWifiDirect = false,
     required UserModel userModel,
   }) async {

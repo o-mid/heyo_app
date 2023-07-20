@@ -45,7 +45,7 @@ class PeersListWidget extends GetView<WifiDirectController> {
                             borderRadius: BorderRadius.circular(8),
                             onTap: () {
                               UserPreview(contactRepository: controller.contactRepository)
-                                  .openUserPreviewBottomSheet(
+                                  .openUserPreview(
                                 userModel: controller.availableDirectUsers[index],
                               );
                             },
