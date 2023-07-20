@@ -127,15 +127,17 @@ class GlobalBindings extends Bindings {
     );
 
     // call related dependencies
-    Get.put(
-      CallHistoryObserver(
-        callHistoryRepo: CallHistoryRepo(
-          callHistoryProvider:
-              CallHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-        ),
-        callConnectionController: callConnectionController,
+    Get.put(CallHistoryObserver(
+      callHistoryRepo: CallHistoryRepo(
+        callHistoryProvider:
+            CallHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
       ),
-    );
+      callConnectionController: callConnectionController,
+      contactRepository: ContactRepository(
+        cacheContractor: CacheRepository(
+            userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
+      ),
+    ));
 
     Get.put(callConnectionController, permanent: true);
 

@@ -7,11 +7,12 @@ import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_histo
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 
-import '../../chats/data/models/chat_model.dart';
+import '../data/repository/contact_repository.dart';
 
 class CallHistoryObserver extends GetxController {
   final CallHistoryAbstractRepo callHistoryRepo;
   final CallConnectionController callConnectionController;
+  final ContactRepository contactRepository;
 
   /// maps session id of a call to the time it started so that when it ends
   /// we can calculate the duration of call
@@ -22,6 +23,7 @@ class CallHistoryObserver extends GetxController {
   CallHistoryObserver({
     required this.callHistoryRepo,
     required this.callConnectionController,
+    required this.contactRepository,
   });
 
   @override
@@ -35,7 +37,7 @@ class CallHistoryObserver extends GetxController {
         case CallHistoryStatus.ringing:
           {
             await _createMissedCallRecord(
-              _getUserFromCoreId(state.session.cid),
+              await _getUserFromCoreId(state.session.cid),
               state.session.sid,
               state.session.isAudioCall ? CallType.audio : CallType.video,
             );
@@ -44,7 +46,7 @@ class CallHistoryObserver extends GetxController {
         case CallHistoryStatus.invite:
           {
             await _createOutgoingNotAnsweredRecord(
-              _getUserFromCoreId(state.session.cid),
+              await _getUserFromCoreId(state.session.cid),
               state.session.sid,
               state.session.isAudioCall ? CallType.audio : CallType.video,
             );
@@ -174,13 +176,17 @@ class CallHistoryObserver extends GetxController {
     );
   }
 
-  UserModel _getUserFromCoreId(String coreId) {
-    return UserModel(
-      name: "Unknown",
-      iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
-      isVerified: true,
-      walletAddress: coreId,
-      coreId: coreId,
-    );
+  Future<UserModel> _getUserFromCoreId(String coreId) async {
+    UserModel? user = await contactRepository.getContactById(coreId);
+    if (user == null) {
+      user = UserModel(
+        name: "Unknown",
+        iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
+        isVerified: true,
+        walletAddress: coreId,
+        coreId: coreId,
+      );
+    }
+    return user;
   }
 }
