@@ -6,7 +6,6 @@ import 'package:heyo/app/modules/shared/widgets/empty_users_body.dart';
 import '../../../shared/controllers/user_preview_controller.dart';
 
 import '../../../../../generated/locales.g.dart';
-import '../../../new_chat/widgets/user_preview_bottom_sheet.dart';
 import '../../../new_chat/widgets/user_widget.dart';
 import '../../../shared/utils/constants/colors.dart';
 import '../../../shared/utils/constants/textStyles.dart';
