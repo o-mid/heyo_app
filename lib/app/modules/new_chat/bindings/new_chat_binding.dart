@@ -20,7 +20,7 @@ class NewChatBinding extends Bindings {
               cryptographyKeyGenerator: Web3Keys(web3client: GlobalBindings.web3Client)),
           contactRepository: ContactRepository(
               cacheContractor: CacheRepository(
-                  userContact:
+                  userProvider:
                       UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())))),
     );
   }

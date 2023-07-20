@@ -13,7 +13,7 @@ class ContactsBinding extends Bindings {
       () => ContactsController(
         contactRepo: ContactRepository(
           cacheContractor: CacheRepository(
-              userContact: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
+              userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
         ),
       ),
     );

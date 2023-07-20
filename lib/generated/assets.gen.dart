@@ -116,6 +116,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/block_icon.svg
   SvgGenImage get blockIcon => const SvgGenImage('assets/svg/block_icon.svg');
 
+  /// File path: assets/svg/blocked_user.svg
+  SvgGenImage get blockedUser => const SvgGenImage('assets/svg/blocked_user.svg');
+
   /// File path: assets/svg/bottomsheet_handle.svg
   SvgGenImage get bottomsheetHandle => const SvgGenImage('assets/svg/bottomsheet_handle.svg');
 
@@ -382,6 +385,7 @@ class $AssetsSvgGen {
         arrowIcon,
         audioCallIcon,
         blockIcon,
+        blockedUser,
         bottomsheetHandle,
         call,
         callEnd,

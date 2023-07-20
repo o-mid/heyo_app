@@ -21,7 +21,7 @@ class NewCallBinding extends Bindings {
         ),
         contactRepository: ContactRepository(
           cacheContractor: CacheRepository(
-            userContact: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+            userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
         ),
       ),
