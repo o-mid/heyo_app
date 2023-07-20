@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/audio_metadata.dart';
@@ -10,12 +8,8 @@ import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messaging/controllers/common_messaging_controller.dart';
 import 'package:tuple/tuple.dart';
-import '../../../messaging/controllers/messaging_connection_controller.dart';
 import '../../../messaging/usecases/send_data_channel_message_usecase.dart';
-import '../../../notifications/controllers/notifications_controller.dart';
-import '../../../shared/utils/constants/notifications_constant.dart';
 import '../../utils/message_from_type.dart';
-import '../models/messages/text_message_model.dart';
 import '../models/reaction_model.dart';
 import '../provider/messages_provider.dart';
 import '../repo/messages_repo.dart';
@@ -29,9 +23,14 @@ class SendMessage {
   final CommonMessagingConnectionController messagingConnection =
       Get.find<CommonMessagingConnectionController>();
 
-  execute({required SendMessageType sendMessageType, required String remoteCoreId}) async {
+  execute(
+      {required SendMessageType sendMessageType,
+      required String remoteCoreId,
+      bool isUpdate = false,
+      MessageModel? messageModel = null}) async {
+
     Tuple3<MessageModel?, bool, String> messageObject =
-        messageFromType(messageType: sendMessageType);
+        messageFromType(messageType: sendMessageType,messageModel: messageModel);
     MessageModel? msg = messageObject.item1;
     bool isDataBinary = messageObject.item2;
     String messageLocalPath = messageObject.item3;
@@ -39,16 +38,26 @@ class SendMessage {
     if (msg == null) {
       return;
     }
-
-    await messagesRepo.createMessage(
+    if (isUpdate) {
+       await messagesRepo.updateMessage(
         message: msg.copyWith(status: MessageStatus.sending), chatId: sendMessageType.chatId);
 
+    } else {
+      await messagesRepo.createMessage(
+          message: msg.copyWith(status: MessageStatus.sending),
+          chatId: sendMessageType.chatId);
+    }
+
     Map<String, dynamic> messageJson = msg.toJson();
-    SendDataChannelMessage(messagingConnection: messagingConnection).execute(
+    await SendDataChannelMessage(messagingConnection: messagingConnection)
+        .execute(
       channelMessageType: ChannelMessageType.message(
-          message: messageJson, isDataBinary: isDataBinary, messageLocalPath: messageLocalPath),
+          message: messageJson,
+          isDataBinary: isDataBinary,
+          messageLocalPath: messageLocalPath),
       remoteCoreId: remoteCoreId,
     );
+
   }
 }
 
@@ -61,6 +70,7 @@ class SendMessageType {
       {required this.replyTo,
       required this.chatId,
       this.reactions = const <String, ReactionModel>{}});
+
   factory SendMessageType.text({
     required String text,
     required ReplyToModel? replyTo,
