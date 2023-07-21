@@ -16,7 +16,6 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:get/get.dart';
 
 import '../../../../routes/app_pages.dart';
-import '../../../new_chat/widgets/user_preview_bottom_sheet.dart';
 import '../../../shared/data/models/add_contacts_view_arguments_model.dart';
 import '../../../shared/data/models/messages_view_arguments_model.dart';
 

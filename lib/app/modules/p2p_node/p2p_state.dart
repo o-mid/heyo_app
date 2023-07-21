@@ -27,7 +27,7 @@ class P2PState extends GetxController {
       }
 
       if (status[id]?.value == null) {
-        print("P2PCommunicator: $id : tracking request : no response");
+        //print("P2PCommunicator: $id : tracking request : no response");
         return true;
       }
       if (status[id]!.value == true) {
@@ -44,6 +44,7 @@ class P2PState extends GetxController {
   }
 
   void reset() {
+    advertise.value = false;
     address.value = [];
     peerId.value = "";
   }

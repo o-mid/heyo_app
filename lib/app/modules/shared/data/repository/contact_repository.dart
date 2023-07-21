@@ -27,11 +27,27 @@ class ContactRepository {
         .toList();
   }
 
-  Future deleteUserContact(UserModel user) {
+  Future deleteUserContact(UserModel user) async {
     return cacheContractor.deleteUserContact(user);
+  }
+
+  Future deleteContactById(String userCoreId) {
+    return cacheContractor.deleteContactById(userCoreId);
   }
 
   Future updateUserContact(UserModel user) {
     return cacheContractor.updateUserContact(user);
+  }
+
+  Future<UserModel?> getContactById(String userCoreId) {
+    return cacheContractor.getContactById(userCoreId);
+  }
+
+  Future<List<UserModel>> getBlockedContacts() {
+    return cacheContractor.getBlockedContacts();
+  }
+
+  Future<Stream<List<UserModel>>> getContactsStream() async {
+    return cacheContractor.getContactsStream();
   }
 }
