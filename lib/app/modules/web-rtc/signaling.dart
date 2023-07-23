@@ -78,7 +78,7 @@ class Signaling {
     'optional': [],
   };
 
-  close() async {
+  Future<void> close() async {
     await _cleanSessions();
   }
 
@@ -342,8 +342,9 @@ class Signaling {
     var newSession = session ??
         Session(
             sid: sessionId, cid: coreId, pid: peerId, isAudioCall: isAudioCall);
-    if (media != 'data')
+    if (media != 'data') {
       _localStream = await createStream(media, screenSharing);
+    }
     print(_iceServers);
     RTCPeerConnection pc = await createPeerConnection({
       ..._iceServers,
@@ -488,7 +489,6 @@ class Signaling {
       });
       await _localStream!.dispose();
       _localStream = null;
-      onLocalStream = null;
     }
     _sessions.forEach((key, sess) async {
       await sess.pc?.close();
@@ -516,7 +516,6 @@ class Signaling {
     });
     await _localStream?.dispose();
     _localStream = null;
-    onLocalStream = null;
 
     await session.pc?.close();
     await session.dc?.close();
