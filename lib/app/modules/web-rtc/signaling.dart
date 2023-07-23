@@ -78,7 +78,7 @@ class Signaling {
     'optional': [],
   };
 
-  close() async {
+  Future<void> close() async {
     await _cleanSessions();
   }
 
@@ -342,8 +342,9 @@ class Signaling {
     var newSession = session ??
         Session(
             sid: sessionId, cid: coreId, pid: peerId, isAudioCall: isAudioCall);
-    if (media != 'data')
+    if (media != 'data') {
       _localStream = await createStream(media, screenSharing);
+    }
     print(_iceServers);
     RTCPeerConnection pc = await createPeerConnection({
       ..._iceServers,
@@ -371,49 +372,6 @@ class Signaling {
           break;
       }
 
-      // Unified-Plan: Simuclast
-      /*
-      await pc.addTransceiver(
-        track: _localStream.getAudioTracks()[0],
-        init: RTCRtpTransceiverInit(
-            direction: TransceiverDirection.SendOnly, streams: [_localStream]),
-      );
-
-      await pc.addTransceiver(
-        track: _localStream.getVideoTracks()[0],
-        init: RTCRtpTransceiverInit(
-            direction: TransceiverDirection.SendOnly,
-            streams: [
-              _localStream
-            ],
-            sendEncodings: [
-              RTCRtpEncoding(rid: 'f', active: true),
-              RTCRtpEncoding(
-                rid: 'h',
-                active: true,
-                scaleResolutionDownBy: 2.0,
-                maxBitrate: 150000,
-              ),
-              RTCRtpEncoding(
-                rid: 'q',
-                active: true,
-                scaleResolutionDownBy: 4.0,
-                maxBitrate: 100000,
-              ),
-            ]),
-      );*/
-      /*
-        var sender = pc.getSenders().find(s => s.track.kind == "video");
-        var parameters = sender.getParameters();
-        if(!parameters)
-          parameters = {};
-        parameters.encodings = [
-          { rid: "h", active: true, maxBitrate: 900000 },
-          { rid: "m", active: true, maxBitrate: 300000, scaleResolutionDownBy: 2 },
-          { rid: "l", active: true, maxBitrate: 100000, scaleResolutionDownBy: 4 }
-        ];
-        sender.setParameters(parameters);
-      */
     }
     pc.onIceCandidate = (candidate) async {
       if (candidate == null) {
@@ -531,7 +489,6 @@ class Signaling {
       });
       await _localStream!.dispose();
       _localStream = null;
-      onLocalStream = null;
     }
     _sessions.forEach((key, sess) async {
       await sess.pc?.close();
@@ -559,7 +516,6 @@ class Signaling {
     });
     await _localStream?.dispose();
     _localStream = null;
-    onLocalStream = null;
 
     await session.pc?.close();
     await session.dc?.close();

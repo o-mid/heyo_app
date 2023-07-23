@@ -40,15 +40,16 @@ class CallController extends GetxController {
 
   final callDurationSeconds = 0.obs;
 
-  var isCaller = false;
-
   // Todo: reset [callViewType] and [isVideoPositionsFlipped] when other user disables video
   final callViewType = CallViewType.stack.obs;
 
   final isVideoPositionsFlipped = false.obs;
 
   bool get isGroupCall =>
-      participants.where((p) => p.status == CallParticipantStatus.inCall).length > 1;
+      participants
+          .where((p) => p.status == CallParticipantStatus.inCall)
+          .length >
+      1;
 
   final recordState = RecordState.notRecording.obs;
   final CallConnectionController callConnectionController;
@@ -106,7 +107,7 @@ class CallController extends GetxController {
 
     observeSignalingStreams();
 
-    callConnectionController.localStream.listen((stream) {
+    callConnectionController.onLocalStream = ((stream) {
       _localRenderer.srcObject = stream;
 
       updateCallerVideoWidget();
@@ -133,7 +134,6 @@ class CallController extends GetxController {
   }
 
   Future callerSetup() async {
-    isCaller = true;
     final callId = DateTime.now().millisecondsSinceEpoch.toString();
     session = (await callConnectionController.startCall(
         args.user.walletAddress, callId, args.isAudioCall));
@@ -160,8 +160,8 @@ class CallController extends GetxController {
         _stopWatingBeep();
         startCallTimer();
       } else if (state == CallState.callStateBye) {
-        _localRenderer.dispose();
-        _remoteRenderer.dispose();
+        print("call_state : callStateBYE ");
+
         _stopWatingBeep();
       } else if (state == CallState.callStateOpendCamera) {
         calleeVideoEnabled.value = true;
@@ -177,7 +177,9 @@ class CallController extends GetxController {
     callConnectionController.removeStream.listen((p0) {
       _remoteRenderer.srcObject = null;
     });
-    callConnectionController.remoteStream.listen((stream) {
+    callConnectionController.onAddRemoteStream = ((stream) {
+      print("calll ${_remoteRenderer} : $stream");
+
       _remoteRenderer.srcObject = stream;
       updateCalleeVideoWidget();
     });
@@ -238,7 +240,8 @@ class CallController extends GetxController {
   // Todo
   void toggleVideo() {
     callerVideoEnabled.value = !callerVideoEnabled.value;
-    callConnectionController.showLocalVideoStream(callerVideoEnabled.value, session.sid, true);
+    callConnectionController.showLocalVideoStream(
+        callerVideoEnabled.value, session.sid, true);
   }
 
   void switchCamera() {
@@ -251,14 +254,16 @@ class CallController extends GetxController {
 
   void updateCallViewType(CallViewType type) => callViewType.value = type;
 
-  void flipVideoPositions() => isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
+  void flipVideoPositions() =>
+      isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   @override
   void onClose() async {
     stopCallTimer();
-    _localRenderer.dispose();
-    _remoteRenderer.dispose();
-    callConnectionController.close();
+
+    await callConnectionController.close();
+    await _localRenderer.dispose();
+    await _remoteRenderer.dispose();
     _stopWatingBeep();
     disableWakeScreenLock();
     await _screenRecorder.stopRecord();
@@ -271,6 +276,7 @@ class CallController extends GetxController {
 
   final String calleeVideoWidgetId = "callee";
   final String callerVideoWidgetId = "caller";
+
   void updateCalleeVideoWidget() {
     update([calleeVideoWidgetId]);
   }
@@ -280,6 +286,7 @@ class CallController extends GetxController {
   }
 
   RxBool showCallerOptions = false.obs;
+
   void changeCallerOptions() {
     showCallerOptions.value = !showCallerOptions.value;
     updateCallerVideoWidget();
