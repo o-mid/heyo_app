@@ -14,4 +14,6 @@ abstract class CallHistoryAbstractRepo {
   Future<void> deleteOneCall(String callId);
 
   Future<Stream<List<CallModel>>> getCallsStream();
+
+  Future<void> updateCall(CallModel call);
 }

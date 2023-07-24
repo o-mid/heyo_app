@@ -1,34 +1,36 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
-import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
-import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-import 'package:permission_handler/permission_handler.dart';
 
+import '../../../../generated/assets.gen.dart';
 import '../../../routes/app_pages.dart';
 import '../../contacts/widgets/removeContactsDialog.dart';
 import '../../shared/data/models/add_contacts_view_arguments_model.dart';
-import '../../shared/data/repository/contact_repository.dart';
 import '../../shared/utils/constants/textStyles.dart';
-import '../../shared/utils/constants/transitions_constant.dart';
-import '../../shared/utils/permission_flow.dart';
-import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
-import '../../shared/widgets/curtom_circle_avatar.dart';
-import '../controllers/new_chat_controller.dart';
+import '../controllers/user_preview_controller.dart';
+import '../utils/constants/colors.dart';
+import '../utils/screen-utils/sizing/custom_sizes.dart';
+import 'curtom_circle_avatar.dart';
 
-void openUserPreviewBottomSheet(UserModel user,
-    {required ContactRepository contactRepository, bool isWifiDirect = false}) {
-  Get.bottomSheet(
-    enterBottomSheetDuration: TRANSITIONS.newChat_EnterBottomSheetDuration,
-    exitBottomSheetDuration: TRANSITIONS.newChat_ExitBottomSheetDuration,
-    SingleChildScrollView(
+class UserPreviewWidget extends GetView<UserPreview> {
+  final UserModel user;
+  const UserPreviewWidget({
+    super.key,
+    required this.user,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isWifiDirect = controller.isWifiDirectConnection.value;
+    return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -177,10 +179,10 @@ void openUserPreviewBottomSheet(UserModel user,
                           await Get.dialog(RemoveContactsDialog(
                             userName: user.name,
                           )).then((result) async {
-                            if (result is bool && result) {
-                              await contactRepository
-                                  .updateUserContact(user.copyWith(isContact: false, name: ""));
-                              await contactRepository.deleteUserContact(user);
+                            if (result is bool && result == true) {
+                              print("result   $result");
+
+                              await controller.deleteContact(user.walletAddress);
                             }
                           });
                         },
@@ -200,18 +202,8 @@ void openUserPreviewBottomSheet(UserModel user,
           ),
         ],
       ),
-    ),
-    backgroundColor: COLORS.kWhiteColor,
-    isDismissible: true,
-    isScrollControlled: true,
-    enableDrag: true,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(20),
-        topRight: Radius.circular(20),
-      ),
-    ),
-  );
+    );
+  }
 }
 
 Widget _buildIconTextButton({

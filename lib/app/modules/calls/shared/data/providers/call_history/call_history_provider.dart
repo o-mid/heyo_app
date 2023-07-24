@@ -91,4 +91,15 @@ class CallHistoryProvider implements CallHistoryAbstractProvider {
       ),
     );
   }
+
+  @override
+  Future<void> updateCall(CallModel call) async {
+    await _store.update(
+      await _db,
+      call.toJson(),
+      finder: Finder(
+        filter: Filter.equals(CallModel.idSerializedName, call.id),
+      ),
+    );
+  }
 }
