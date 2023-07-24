@@ -10,14 +10,11 @@ class AppTranslation {
 
 class LocaleKeys {
   LocaleKeys._();
-  static const registration_WelcomePage_title =
-      'registration_WelcomePage_title';
-  static const registration_WelcomePage_subtitle =
-      'registration_WelcomePage_subtitle';
+  static const registration_WelcomePage_title = 'registration_WelcomePage_title';
+  static const registration_WelcomePage_subtitle = 'registration_WelcomePage_subtitle';
   static const registration_WelcomePage_buttons_Continue =
       'registration_WelcomePage_buttons_Continue';
-  static const registration_WelcomePage_buttons_Terms =
-      'registration_WelcomePage_buttons_Terms';
+  static const registration_WelcomePage_buttons_Terms = 'registration_WelcomePage_buttons_Terms';
   static const registration_BenefitsPage_sliders_title001 =
       'registration_BenefitsPage_sliders_title001';
   static const registration_BenefitsPage_sliders_subtitle001 =
@@ -34,42 +31,32 @@ class LocaleKeys {
       'registration_BenefitsPage_sliders_title004';
   static const registration_BenefitsPage_sliders_subtitle004 =
       'registration_BenefitsPage_sliders_subtitle004';
-  static const registration_BenefitsPage_divider =
-      'registration_BenefitsPage_divider';
-  static const registration_BenefitsPage_footer =
-      'registration_BenefitsPage_footer';
+  static const registration_BenefitsPage_divider = 'registration_BenefitsPage_divider';
+  static const registration_BenefitsPage_footer = 'registration_BenefitsPage_footer';
   static const registration_BenefitsPage_buttons_Create =
       'registration_BenefitsPage_buttons_Create';
   static const registration_BenefitsPage_buttons_SkipCreate =
       'registration_BenefitsPage_buttons_SkipCreate';
   static const registration_BenefitsPage_buttons_Whatis =
       'registration_BenefitsPage_buttons_Whatis';
-  static const registration_PINcodePage_title =
-      'registration_PINcodePage_title';
-  static const registration_PINcodePage_subtitle =
-      'registration_PINcodePage_subtitle';
-  static const registration_PINcodePage_pinType =
-      'registration_PINcodePage_pinType';
-  static const registration_PINcodePage_pinRepeat =
-      'registration_PINcodePage_pinRepeat';
-  static const registration_PINcodePage_dialogTitle =
-      'registration_PINcodePage_dialogTitle';
+  static const registration_PINcodePage_title = 'registration_PINcodePage_title';
+  static const registration_PINcodePage_subtitle = 'registration_PINcodePage_subtitle';
+  static const registration_PINcodePage_pinType = 'registration_PINcodePage_pinType';
+  static const registration_PINcodePage_pinRepeat = 'registration_PINcodePage_pinRepeat';
+  static const registration_PINcodePage_dialogTitle = 'registration_PINcodePage_dialogTitle';
   static const registration_PINcodePage_buttons_AddBiometric =
       'registration_PINcodePage_buttons_AddBiometric';
   static const registration_PINcodePage_buttons_SkipBiometric =
       'registration_PINcodePage_buttons_SkipBiometric';
-  static const registration_PrivateKeysPage_Generating =
-      'registration_PrivateKeysPage_Generating';
-  static const registration_PersonalizationPage_title =
-      'registration_PersonalizationPage_title';
+  static const registration_PrivateKeysPage_Generating = 'registration_PrivateKeysPage_Generating';
+  static const registration_PersonalizationPage_title = 'registration_PersonalizationPage_title';
   static const registration_PersonalizationPage_subtitle =
       'registration_PersonalizationPage_subtitle';
   static const registration_PersonalizationPage_buttons_Generate =
       'registration_PersonalizationPage_buttons_Generate';
   static const registration_PersonalizationPage_buttons_Continue =
       'registration_PersonalizationPage_buttons_Continue';
-  static const registration_RecoveryMethodPage_title =
-      'registration_RecoveryMethodPage_title';
+  static const registration_RecoveryMethodPage_title = 'registration_RecoveryMethodPage_title';
   static const registration_RecoveryMethodPage_firstOption_title =
       'registration_RecoveryMethodPage_firstOption_title';
   static const registration_RecoveryMethodPage_firstOption_subtitle =
@@ -88,27 +75,19 @@ class LocaleKeys {
   static const HomePage_navbarItems_wallet = 'HomePage_navbarItems_wallet';
   static const HomePage_navbarItems_search = 'HomePage_navbarItems_search';
   static const HomePage_navbarItems_account = 'HomePage_navbarItems_account';
-  static const HomePage_Chats_emptyState_title =
-      'HomePage_Chats_emptyState_title';
-  static const HomePage_Chats_emptyState_subtitle =
-      'HomePage_Chats_emptyState_subtitle';
-  static const HomePage_Chats_emptyState_invite =
-      'HomePage_Chats_emptyState_invite';
-  static const HomePage_Calls_emptyState_title =
-      'HomePage_Calls_emptyState_title';
-  static const HomePage_Calls_emptyState_subtitle =
-      'HomePage_Calls_emptyState_subtitle';
+  static const HomePage_Chats_emptyState_title = 'HomePage_Chats_emptyState_title';
+  static const HomePage_Chats_emptyState_subtitle = 'HomePage_Chats_emptyState_subtitle';
+  static const HomePage_Chats_emptyState_invite = 'HomePage_Chats_emptyState_invite';
+  static const HomePage_Calls_emptyState_title = 'HomePage_Calls_emptyState_title';
+  static const HomePage_Calls_emptyState_subtitle = 'HomePage_Calls_emptyState_subtitle';
   static const HomePage_Calls_hour = 'HomePage_Calls_hour';
   static const HomePage_Calls_hours = 'HomePage_Calls_hours';
   static const HomePage_Calls_minute = 'HomePage_Calls_minute';
   static const HomePage_Calls_minutes = 'HomePage_Calls_minutes';
   static const HomePage_Calls_durationAgo = 'HomePage_Calls_durationAgo';
-  static const HomePage_Calls_deleteCallDialog_title =
-      'HomePage_Calls_deleteCallDialog_title';
-  static const HomePage_Calls_deleteCallDialog_delete =
-      'HomePage_Calls_deleteCallDialog_delete';
-  static const HomePage_Calls_deleteCallDialog_cancel =
-      'HomePage_Calls_deleteCallDialog_cancel';
+  static const HomePage_Calls_deleteCallDialog_title = 'HomePage_Calls_deleteCallDialog_title';
+  static const HomePage_Calls_deleteCallDialog_delete = 'HomePage_Calls_deleteCallDialog_delete';
+  static const HomePage_Calls_deleteCallDialog_cancel = 'HomePage_Calls_deleteCallDialog_cancel';
   static const HomePage_Calls_deleteAllCallsDialog_title =
       'HomePage_Calls_deleteAllCallsDialog_title';
   static const HomePage_Calls_deleteAllCallsDialog_delete =
@@ -120,8 +99,7 @@ class LocaleKeys {
   static const HomePage_bottomSheet_newChat = 'HomePage_bottomSheet_newChat';
   static const HomePage_bottomSheet_newGroup = 'HomePage_bottomSheet_newGroup';
   static const HomePage_bottomSheet_invite = 'HomePage_bottomSheet_invite';
-  static const HomePage_bottomSheet_wifiDirect =
-      'HomePage_bottomSheet_wifiDirect';
+  static const HomePage_bottomSheet_wifiDirect = 'HomePage_bottomSheet_wifiDirect';
   static const CallHistory_appbar = 'CallHistory_appbar';
   static const CallHistory_missedCall = 'CallHistory_missedCall';
   static const CallHistory_outgoing = 'CallHistory_outgoing';
@@ -139,110 +117,77 @@ class LocaleKeys {
   static const recordCallDialog_subtitle = 'recordCallDialog_subtitle';
   static const recordCallDialog_acceptButton = 'recordCallDialog_acceptButton';
   static const recordCallDialog_cancelButton = 'recordCallDialog_cancelButton';
-  static const IncomingCallPage_incomingVideoCall =
-      'IncomingCallPage_incomingVideoCall';
-  static const IncomingCallPage_incomingVoiceCall =
-      'IncomingCallPage_incomingVoiceCall';
+  static const IncomingCallPage_incomingVideoCall = 'IncomingCallPage_incomingVideoCall';
+  static const IncomingCallPage_incomingVoiceCall = 'IncomingCallPage_incomingVoiceCall';
   static const ShareableQrPage_appBarTitle = 'ShareableQrPage_appBarTitle';
   static const ShareableQrPage_scanQrTitle = 'ShareableQrPage_scanQrTitle';
-  static const ShareableQrPage_shareQrButtonTitle =
-      'ShareableQrPage_shareQrButtonTitle';
-  static const ShareableQrPage_textDividerTitle =
-      'ShareableQrPage_textDividerTitle';
-  static const ShareableQrPage_shareCoreIdTitle =
-      'ShareableQrPage_shareCoreIdTitle';
-  static const ShareableQrPage_shareCoreIdButtonTitle =
-      'ShareableQrPage_shareCoreIdButtonTitle';
-  static const ShareableQrPage_copiedToClipboardText =
-      'ShareableQrPage_copiedToClipboardText';
+  static const ShareableQrPage_shareQrButtonTitle = 'ShareableQrPage_shareQrButtonTitle';
+  static const ShareableQrPage_textDividerTitle = 'ShareableQrPage_textDividerTitle';
+  static const ShareableQrPage_shareCoreIdTitle = 'ShareableQrPage_shareCoreIdTitle';
+  static const ShareableQrPage_shareCoreIdButtonTitle = 'ShareableQrPage_shareCoreIdButtonTitle';
+  static const ShareableQrPage_copiedToClipboardText = 'ShareableQrPage_copiedToClipboardText';
   static const AccountPage_appBarTitle = 'AccountPage_appBarTitle';
   static const AccountPage_contacts = 'AccountPage_contacts';
   static const ContactsPage_appBarTitle = 'ContactsPage_appBarTitle';
-  static const ContactsPage_contactListHeader =
-      'ContactsPage_contactListHeader';
+  static const ContactsPage_contactListHeader = 'ContactsPage_contactListHeader';
   static const NewCallPage_appBarTitle = 'NewCallPage_appBarTitle';
   static const NewCallPage_contactListHeader = 'NewCallPage_contactListHeader';
-  static const NewCallPage_emptyStateContactsTitle =
-      'NewCallPage_emptyStateContactsTitle';
+  static const NewCallPage_emptyStateContactsTitle = 'NewCallPage_emptyStateContactsTitle';
   static const NewCallPage_invite = 'NewCallPage_invite';
   static const newChat_newChatAppBar = 'newChat_newChatAppBar';
   static const newChat_slider_contacts = 'newChat_slider_contacts';
   static const newChat_slider_nearbyUsers = 'newChat_slider_nearbyUsers';
   static const newChat_usernameInputFiled = 'newChat_usernameInputFiled';
-  static const newChat_emptyStateTitleContacts =
-      'newChat_emptyStateTitleContacts';
-  static const newChat_emptyStateTitleNearbyUsers =
-      'newChat_emptyStateTitleNearbyUsers';
+  static const newChat_emptyStateTitleContacts = 'newChat_emptyStateTitleContacts';
+  static const newChat_emptyStateTitleNearbyUsers = 'newChat_emptyStateTitleNearbyUsers';
   static const newChat_usernameInput = 'newChat_usernameInput';
   static const newChat_searchResults = 'newChat_searchResults';
   static const newChat_buttons_invite = 'newChat_buttons_invite';
   static const newChat_buttons_filter = 'newChat_buttons_filter';
-  static const newChat_buttons_pullDownToRefresh =
-      'newChat_buttons_pullDownToRefresh';
+  static const newChat_buttons_pullDownToRefresh = 'newChat_buttons_pullDownToRefresh';
   static const newChat_userBottomSheet_chat = 'newChat_userBottomSheet_chat';
-  static const newChat_userBottomSheet_addToContacts =
-      'newChat_userBottomSheet_addToContacts';
+  static const newChat_userBottomSheet_addToContacts = 'newChat_userBottomSheet_addToContacts';
   static const newChat_userBottomSheet_RemoveFromContacts =
       'newChat_userBottomSheet_RemoveFromContacts';
-  static const newChat_userBottomSheet_remove =
-      'newChat_userBottomSheet_remove';
+  static const newChat_userBottomSheet_remove = 'newChat_userBottomSheet_remove';
   static const newChat_userBottomSheet_fromContactsList =
       'newChat_userBottomSheet_fromContactsList';
-  static const newChat_userBottomSheet_cancel =
-      'newChat_userBottomSheet_cancel';
+  static const newChat_userBottomSheet_cancel = 'newChat_userBottomSheet_cancel';
   static const newChat_userBottomSheet_block = 'newChat_userBottomSheet_block';
-  static const newChat_userBottomSheet_userInfo =
-      'newChat_userBottomSheet_userInfo';
-  static const newChat_userBottomSheet_contactInfo =
-      'newChat_userBottomSheet_contactInfo';
-  static const newChat_userBottomSheet_callUser =
-      'newChat_userBottomSheet_callUser';
+  static const newChat_userBottomSheet_userInfo = 'newChat_userBottomSheet_userInfo';
+  static const newChat_userBottomSheet_contactInfo = 'newChat_userBottomSheet_contactInfo';
+  static const newChat_userBottomSheet_callUser = 'newChat_userBottomSheet_callUser';
   static const newChat_inviteBottomSheet_inviteYourFriend =
       'newChat_inviteBottomSheet_inviteYourFriend';
-  static const newChat_inviteBottomSheet_shareLink =
-      'newChat_inviteBottomSheet_shareLink';
+  static const newChat_inviteBottomSheet_shareLink = 'newChat_inviteBottomSheet_shareLink';
   static const MessagesPage_textFieldHint = 'MessagesPage_textFieldHint';
-  static const MessagesPage_endToEndEncryptedMessaging =
-      'MessagesPage_endToEndEncryptedMessaging';
+  static const MessagesPage_endToEndEncryptedMessaging = 'MessagesPage_endToEndEncryptedMessaging';
   static const MessagesPage_onlineVia = 'MessagesPage_onlineVia';
-  static const MessagesPage_countSelectedMessages =
-      'MessagesPage_countSelectedMessages';
+  static const MessagesPage_countSelectedMessages = 'MessagesPage_countSelectedMessages';
   static const MessagesPage_replyingTo = 'MessagesPage_replyingTo';
   static const MessagesPage_replyToImage = 'MessagesPage_replyToImage';
   static const MessagesPage_replyToVideo = 'MessagesPage_replyToVideo';
   static const MessagesPage_replyToAudio = 'MessagesPage_replyToAudio';
   static const MessagesPage_forwarded = 'MessagesPage_forwarded';
   static const MessagesPage_sharedLocation = 'MessagesPage_sharedLocation';
-  static const MessagesPage_sharingLiveLocation =
-      'MessagesPage_sharingLiveLocation';
-  static const MessagesPage_liveShareRemainingMinute =
-      'MessagesPage_liveShareRemainingMinute';
-  static const MessagesPage_liveShareRemainingMinutes =
-      'MessagesPage_liveShareRemainingMinutes';
-  static const MessagesPage_liveShareRemainingHour =
-      'MessagesPage_liveShareRemainingHour';
-  static const MessagesPage_liveShareRemainingHours =
-      'MessagesPage_liveShareRemainingHours';
-  static const MessagesPage_liveShareLessThanMinute =
-      'MessagesPage_liveShareLessThanMinute';
-  static const MessagesPage_liveShareRemainingTime =
-      'MessagesPage_liveShareRemainingTime';
-  static const MessagesPage_finishedLiveShareTitle =
-      'MessagesPage_finishedLiveShareTitle';
+  static const MessagesPage_sharingLiveLocation = 'MessagesPage_sharingLiveLocation';
+  static const MessagesPage_liveShareRemainingMinute = 'MessagesPage_liveShareRemainingMinute';
+  static const MessagesPage_liveShareRemainingMinutes = 'MessagesPage_liveShareRemainingMinutes';
+  static const MessagesPage_liveShareRemainingHour = 'MessagesPage_liveShareRemainingHour';
+  static const MessagesPage_liveShareRemainingHours = 'MessagesPage_liveShareRemainingHours';
+  static const MessagesPage_liveShareLessThanMinute = 'MessagesPage_liveShareLessThanMinute';
+  static const MessagesPage_liveShareRemainingTime = 'MessagesPage_liveShareRemainingTime';
+  static const MessagesPage_finishedLiveShareTitle = 'MessagesPage_finishedLiveShareTitle';
   static const MessagesPage_finishedLiveShareOtherTitle =
       'MessagesPage_finishedLiveShareOtherTitle';
-  static const MessagesPage_finishedLiveShareSubtitle =
-      'MessagesPage_finishedLiveShareSubtitle';
+  static const MessagesPage_finishedLiveShareSubtitle = 'MessagesPage_finishedLiveShareSubtitle';
   static const MessagesPage_stopSharing = 'MessagesPage_stopSharing';
   static const MessagesPage_callMessageTitle = 'MessagesPage_callMessageTitle';
-  static const MessagesPage_callMessageSubtitleMissed =
-      'MessagesPage_callMessageSubtitleMissed';
+  static const MessagesPage_callMessageSubtitleMissed = 'MessagesPage_callMessageSubtitleMissed';
   static const MessagesPage_callMessageSubtitleDeclined =
       'MessagesPage_callMessageSubtitleDeclined';
-  static const MessagesPage_callMessageActionButton =
-      'MessagesPage_callMessageActionButton';
-  static const MessagesPage_deleteMessagesDialog_title =
-      'MessagesPage_deleteMessagesDialog_title';
+  static const MessagesPage_callMessageActionButton = 'MessagesPage_callMessageActionButton';
+  static const MessagesPage_deleteMessagesDialog_title = 'MessagesPage_deleteMessagesDialog_title';
   static const MessagesPage_deleteMessagesDialog_titlePlural =
       'MessagesPage_deleteMessagesDialog_titlePlural';
   static const MessagesPage_deleteMessagesDialog_subtitle =
@@ -259,15 +204,11 @@ class LocaleKeys {
       'MessagesPage_deleteMessagesDialog_deleteForMe';
   static const forwardMassagesPage_appbar = 'forwardMassagesPage_appbar';
   static const forwardMassagesPage_textInput = 'forwardMassagesPage_textInput';
-  static const forwardMassagesPage_recentContacts =
-      'forwardMassagesPage_recentContacts';
-  static const forwardMassagesPage_OtherContacts =
-      'forwardMassagesPage_OtherContacts';
+  static const forwardMassagesPage_recentContacts = 'forwardMassagesPage_recentContacts';
+  static const forwardMassagesPage_OtherContacts = 'forwardMassagesPage_OtherContacts';
   static const forwardMassagesPage_contacts = 'forwardMassagesPage_contacts';
-  static const forwardMassagesPage_bottomBar_forwardTO =
-      'forwardMassagesPage_bottomBar_forwardTO';
-  static const forwardMassagesPage_bottomBar_messages =
-      'forwardMassagesPage_bottomBar_messages';
+  static const forwardMassagesPage_bottomBar_forwardTO = 'forwardMassagesPage_bottomBar_forwardTO';
+  static const forwardMassagesPage_bottomBar_messages = 'forwardMassagesPage_bottomBar_messages';
   static const shareLocationPage_appBar = 'shareLocationPage_appBar';
   static const shareLocationPage_bottomSheet_shareLiveLocation =
       'shareLocationPage_bottomSheet_shareLiveLocation';
@@ -293,16 +234,13 @@ class LocaleKeys {
   static const scanQrTitle = 'scanQrTitle';
   static const AddContacts_addToContacts = 'AddContacts_addToContacts';
   static const AddContacts_addNickname = 'AddContacts_addNickname';
-  static const AddContacts_AddNicknameSubtitle =
-      'AddContacts_AddNicknameSubtitle';
-  static const AddContacts_buttons_addToContacts =
-      'AddContacts_buttons_addToContacts';
+  static const AddContacts_AddNicknameSubtitle = 'AddContacts_AddNicknameSubtitle';
+  static const AddContacts_buttons_addToContacts = 'AddContacts_buttons_addToContacts';
   static const Permissions_AllowAccess = 'Permissions_AllowAccess';
   static const Permissions_capturePhotos = 'Permissions_capturePhotos';
   static const Permissions_camera = 'Permissions_camera';
   static const Permissions_location = 'Permissions_location';
-  static const Permissions_wifiDirectLocation =
-      'Permissions_wifiDirectLocation';
+  static const Permissions_wifiDirectLocation = 'Permissions_wifiDirectLocation';
   static const Permissions_buttons_continue = 'Permissions_buttons_continue';
   static const Permissions_buttons_notNow = 'Permissions_buttons_notNow';
   static const shareFilePage_appbarTitle = 'shareFilePage_appbarTitle';
@@ -310,20 +248,17 @@ class LocaleKeys {
   static const shareFilePage_searchResults = 'shareFilePage_searchResults';
   static const shareFilePage_mostRecent = 'shareFilePage_mostRecent';
   static const mediaView_bottomSheet_edit = 'mediaView_bottomSheet_edit';
-  static const mediaView_bottomSheet_mediafiles =
-      'mediaView_bottomSheet_mediafiles';
+  static const mediaView_bottomSheet_mediafiles = 'mediaView_bottomSheet_mediafiles';
   static const mediaView_bottomSheet_delete = 'mediaView_bottomSheet_delete';
   static const mediaView_bottomSheet_share = 'mediaView_bottomSheet_share';
   static const mediaView_bottomSheet_save = 'mediaView_bottomSheet_save';
   static const BlockUserPage_appbarTitle = 'BlockUserPage_appbarTitle';
   static const BlockUserPage_blockUser = 'BlockUserPage_blockUser';
-  static const BlockUserPage_blockUserSubtitle =
-      'BlockUserPage_blockUserSubtitle';
+  static const BlockUserPage_blockUserSubtitle = 'BlockUserPage_blockUserSubtitle';
   static const BlockUserPage_block = 'BlockUserPage_block';
   static const BlockUserPage_unblock = 'BlockUserPage_unblock';
   static const BlockUserPage_BlockedContacts = 'BlockUserPage_BlockedContacts';
-  static const BlockUserPage_blockUserDescription =
-      'BlockUserPage_blockUserDescription';
+  static const BlockUserPage_blockUserDescription = 'BlockUserPage_blockUserDescription';
   static const BlockUserPage_Cancel = 'BlockUserPage_Cancel';
   static const BlockUserPage_wasBlocked = 'BlockUserPage_wasBlocked';
   static const ConnectionStatus_waiting = 'ConnectionStatus_waiting';
@@ -331,8 +266,7 @@ class LocaleKeys {
   static const ConnectionStatus_backOnline = 'ConnectionStatus_backOnline';
   static const DataChannelStatus_connecting = 'DataChannelStatus_connecting';
   static const DataChannelStatus_connected = 'DataChannelStatus_connected';
-  static const DataChannelStatus_ConnectionLost =
-      'DataChannelStatus_ConnectionLost';
+  static const DataChannelStatus_ConnectionLost = 'DataChannelStatus_ConnectionLost';
   static const wifiDirect_wifiDirectAppbar = 'wifiDirect_wifiDirectAppbar';
   static const wifiDirect_emptyPeersTitle = 'wifiDirect_emptyPeersTitle';
   static const wifiDirect_availablePeers = 'wifiDirect_availablePeers';
@@ -345,19 +279,16 @@ class Locales {
         'A truly private messaging app built on a decentralized technology, secured by CorePass.',
     'registration_WelcomePage_buttons_Continue': 'Continue with CoreID',
     'registration_WelcomePage_buttons_Terms': 'Terms & Privacy Policy',
-    'registration_BenefitsPage_sliders_title001':
-        'One account \n for all your services',
+    'registration_BenefitsPage_sliders_title001': 'One account \n for all your services',
     'registration_BenefitsPage_sliders_subtitle001':
         'Keep your valuable data safely stored \n and quickly accesible from one place.',
-    'registration_BenefitsPage_sliders_title002':
-        'Assurance that you\'ve \n got the right person',
+    'registration_BenefitsPage_sliders_title002': 'Assurance that you\'ve \n got the right person',
     'registration_BenefitsPage_sliders_subtitle002':
         'Know the person you are connecting with \n and how your data is being used.',
     'registration_BenefitsPage_sliders_title003': 'Your data has value',
     'registration_BenefitsPage_sliders_subtitle003':
         'Each time your data gets requested, you \n earn an income. Your identity becomes \n your saving and spending tool.',
-    'registration_BenefitsPage_sliders_title004':
-        'Keep your earnings \n in a safe place',
+    'registration_BenefitsPage_sliders_title004': 'Keep your earnings \n in a safe place',
     'registration_BenefitsPage_sliders_subtitle004':
         'CorePass comes with an integrated \n cryptocurrency wallet to keep your \n savings safe and secure.',
     'registration_BenefitsPage_divider': 'OR',
@@ -366,29 +297,23 @@ class Locales {
     'registration_BenefitsPage_buttons_SkipCreate': 'I already have CoreID',
     'registration_BenefitsPage_buttons_Whatis': 'What is CoreID?',
     'registration_PINcodePage_title': 'Set PIN',
-    'registration_PINcodePage_subtitle':
-        'Set a 6 digit PIN code to protect your Heyo application',
+    'registration_PINcodePage_subtitle': 'Set a 6 digit PIN code to protect your Heyo application',
     'registration_PINcodePage_pinType': 'Type your PIN code',
     'registration_PINcodePage_pinRepeat': 'Repeat your PIN code',
-    'registration_PINcodePage_dialogTitle':
-        'Add an extra layer to your security',
+    'registration_PINcodePage_dialogTitle': 'Add an extra layer to your security',
     'registration_PINcodePage_buttons_AddBiometric': 'Add biometric log in',
-    'registration_PINcodePage_buttons_SkipBiometric':
-        'Continue without this option',
+    'registration_PINcodePage_buttons_SkipBiometric': 'Continue without this option',
     'registration_PrivateKeysPage_Generating': 'Generating private keys...',
     'registration_PersonalizationPage_title': 'Choose your chat name',
     'registration_PersonalizationPage_subtitle':
         'All users will see only your CoreID and a readable name that can’t be changed.',
     'registration_PersonalizationPage_buttons_Generate': 'Generate new names',
     'registration_PersonalizationPage_buttons_Continue': 'Continue',
-    'registration_RecoveryMethodPage_title':
-        'How do you want to back up your account?',
-    'registration_RecoveryMethodPage_firstOption_title':
-        'Offline, using recovery phrase',
+    'registration_RecoveryMethodPage_title': 'How do you want to back up your account?',
+    'registration_RecoveryMethodPage_firstOption_title': 'Offline, using recovery phrase',
     'registration_RecoveryMethodPage_firstOption_subtitle':
         'A 24 word phrase will be generated. We highly recommend you to write these words down on paper and store them in a safe offline place.',
-    'registration_RecoveryMethodPage_SecondOption_title':
-        'Digitally, using private key',
+    'registration_RecoveryMethodPage_SecondOption_title': 'Digitally, using private key',
     'registration_RecoveryMethodPage_SecondOption_subtitle':
         'Your CoreID account can be recovered with a private key which you will have to protect with a password and store.',
     'registration_RecoveryMethodPage_buttons_Skip': 'Skip for now',
@@ -400,8 +325,7 @@ class Locales {
     'HomePage_navbarItems_search': 'Search',
     'HomePage_navbarItems_account': 'Account',
     'HomePage_Chats_emptyState_title': 'It looks empty here',
-    'HomePage_Chats_emptyState_subtitle':
-        'Start with inviting your friends or start new chats',
+    'HomePage_Chats_emptyState_subtitle': 'Start with inviting your friends or start new chats',
     'HomePage_Chats_emptyState_invite': 'Invite',
     'HomePage_Calls_emptyState_title': 'You have no calls',
     'HomePage_Calls_emptyState_subtitle':
@@ -414,15 +338,14 @@ class Locales {
     'HomePage_Calls_deleteCallDialog_title': 'Delete this call from history?',
     'HomePage_Calls_deleteCallDialog_delete': 'Delete',
     'HomePage_Calls_deleteCallDialog_cancel': 'Cancel',
-    'HomePage_Calls_deleteAllCallsDialog_title':
-        'Delete all calls from history?',
+    'HomePage_Calls_deleteAllCallsDialog_title': 'Delete all calls from history?',
     'HomePage_Calls_deleteAllCallsDialog_delete': 'Delete',
     'HomePage_Calls_deleteAllCallsDialog_cancel': 'Cancel',
     'HomePage_Calls_bottomSheet_deleteAllCalls': 'Delete all calls',
     'HomePage_bottomSheet_newChat': 'Start new chat',
-    'HomePage_bottomSheet_newGroup': 'Start new group',
+    'HomePage_bottomSheet_newGroup': 'Start new group chat',
     'HomePage_bottomSheet_invite': 'Invite',
-    'HomePage_bottomSheet_wifiDirect': 'Wifi Direct',
+    'HomePage_bottomSheet_wifiDirect': 'Start Wifi-Direct chat',
     'CallHistory_appbar': 'Call history',
     'CallHistory_missedCall': 'Missed call',
     'CallHistory_outgoing': 'Outgoing',
@@ -513,12 +436,10 @@ class Locales {
     'MessagesPage_deleteMessagesDialog_title': 'Delete message?',
     'MessagesPage_deleteMessagesDialog_titlePlural': 'Delete @count messages?',
     'MessagesPage_deleteMessagesDialog_subtitle': 'Delete this message?',
-    'MessagesPage_deleteMessagesDialog_subtitlePlural':
-        'Delete these messages?',
+    'MessagesPage_deleteMessagesDialog_subtitlePlural': 'Delete these messages?',
     'MessagesPage_deleteMessagesDialog_cancel': 'Cancel',
     'MessagesPage_deleteMessagesDialog_delete': 'Delete',
-    'MessagesPage_deleteMessagesDialog_deleteForEveryone':
-        'Delete for everyone',
+    'MessagesPage_deleteMessagesDialog_deleteForEveryone': 'Delete for everyone',
     'MessagesPage_deleteMessagesDialog_deleteForMe': 'Delete only for me',
     'forwardMassagesPage_appbar': 'Forward to',
     'forwardMassagesPage_textInput': 'Search in contacts',
@@ -532,8 +453,7 @@ class Locales {
     'shareLocationPage_bottomSheet_sendPickerLocation': 'Send Picker Location',
     'shareLocationPage_bottomSheet_locationAccessDisclaimer':
         'We will access your location only for the duration you chosen and you can stop sharing it any time. We won’t use your location for any purpose other than sharing it in this chat.',
-    'shareLocationPage_bottomSheet_shareLiveLocationWith':
-        'Share my live location with @name for:',
+    'shareLocationPage_bottomSheet_shareLiveLocationWith': 'Share my live location with @name for:',
     'shareLocationPage_bottomSheet_shareDurationMinutes': '@count mins',
     'shareLocationPage_bottomSheet_shareDurationHour': '@count hour',
     'shareLocationPage_bottomSheet_shareDurationHours': '@count hours',
@@ -572,8 +492,7 @@ class Locales {
     'mediaView_bottomSheet_save': 'Save to device',
     'BlockUserPage_appbarTitle': 'Block User',
     'BlockUserPage_blockUser': 'Block User',
-    'BlockUserPage_blockUserSubtitle':
-        'You won’t receive messages or calls from this user.',
+    'BlockUserPage_blockUserSubtitle': 'You won’t receive messages or calls from this user.',
     'BlockUserPage_block': 'Block',
     'BlockUserPage_unblock': 'Unblock',
     'BlockUserPage_BlockedContacts': 'Blocked contacts',
@@ -588,8 +507,7 @@ class Locales {
     'DataChannelStatus_connected': 'Connected',
     'DataChannelStatus_ConnectionLost': 'Connection Lost',
     'wifiDirect_wifiDirectAppbar': 'Wifi Direct',
-    'wifiDirect_emptyPeersTitle':
-        'There is no online peer! \n Searching for available peers ...',
+    'wifiDirect_emptyPeersTitle': 'There is no online peer! \n Searching for available peers ...',
     'wifiDirect_availablePeers': 'Available Peers',
   };
 }

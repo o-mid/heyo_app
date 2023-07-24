@@ -5,6 +5,8 @@ import 'package:heyo/app/modules/shared/widgets/glassmorphic_container.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
 import '../../../../routes/app_pages.dart';
+import '../../../shared/utils/constants/colors.dart';
+import '../../../shared/utils/constants/textStyles.dart';
 import '../../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../../shared/widgets/circular_media_icon_button.dart';
 import '../../controllers/messages_controller.dart';
@@ -94,8 +96,31 @@ class MediaGlassmorphic extends StatelessWidget {
                             ),
                             CircularMediaIconButton(
                               backgroundColor: const Color(0xff00B4B5),
-                              // money onPressed:
-                              onPressed: () {},
+                              // TODO :money onPressed:
+                              onPressed: () {
+                                Get.rawSnackbar(
+                                  messageText: Text(
+                                    "Sending Money feature is in development phase",
+                                    style: TEXTSTYLES.kBodySmall
+                                        .copyWith(color: COLORS.kGreenMainColor),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
+                                  backgroundColor: COLORS.kAppBackground,
+                                  snackPosition: SnackPosition.TOP,
+                                  snackStyle: SnackStyle.FLOATING,
+                                  margin: const EdgeInsets.only(top: 20),
+                                  boxShadows: [
+                                    BoxShadow(
+                                      color: const Color(0xFF466087).withOpacity(0.1),
+                                      offset: const Offset(0, 3),
+                                      blurRadius: 10,
+                                    ),
+                                  ],
+                                  borderRadius: 8,
+                                );
+                                return;
+                              },
                               padding: 18,
                               child: Assets.svg.moneyIcon.svg(
                                 height: 20.w,
@@ -104,8 +129,31 @@ class MediaGlassmorphic extends StatelessWidget {
                             ),
                             CircularMediaIconButton(
                               backgroundColor: const Color(0xff003EB5),
-                              // person onPressed:
-                              onPressed: () {},
+                              // TODO : Person onPressed:
+                              onPressed: () {
+                                Get.rawSnackbar(
+                                  messageText: Text(
+                                    "Account Sharing is in development phase",
+                                    style: TEXTSTYLES.kBodySmall
+                                        .copyWith(color: COLORS.kGreenMainColor),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
+                                  backgroundColor: COLORS.kAppBackground,
+                                  snackPosition: SnackPosition.TOP,
+                                  snackStyle: SnackStyle.FLOATING,
+                                  margin: const EdgeInsets.only(top: 20),
+                                  boxShadows: [
+                                    BoxShadow(
+                                      color: const Color(0xFF466087).withOpacity(0.1),
+                                      offset: const Offset(0, 3),
+                                      blurRadius: 10,
+                                    ),
+                                  ],
+                                  borderRadius: 8,
+                                );
+                                return;
+                              },
                               padding: 18,
                               child: Assets.svg.personIcon.svg(
                                 height: 20.w,
