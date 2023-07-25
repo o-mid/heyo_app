@@ -80,6 +80,19 @@
         "title": "It looks empty here",
         "subtitle": "Start with inviting your friends or start new chats",
         "invite": "Invite"
+      },
+      "deleteChatDialog": {
+        "title": "Delete this chat from history?",
+        "delete": "Delete",
+        "cancel": "Cancel"
+      },
+      "deleteAllchatsDialog": {
+        "title": "Delete all chats from history?",
+        "delete": "Delete",
+        "cancel": "Cancel"
+      },
+      "bottomSheet": {
+        "deleteAllchats": "Delete all chats"
       }
     },
     "Calls": {
