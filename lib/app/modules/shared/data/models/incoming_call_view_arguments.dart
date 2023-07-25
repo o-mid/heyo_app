@@ -6,11 +6,13 @@ class IncomingCallViewArguments {
   final String remoteCoreId;
   final String callId;
   final Session session;
+  final String? name;
 
   IncomingCallViewArguments(
       {required this.session,
       required this.callId,
       required this.sdp,
       required this.remotePeerId,
-      required this.remoteCoreId});
+      required this.remoteCoreId,
+      required this.name});
 }

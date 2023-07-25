@@ -76,6 +76,10 @@ class GlobalBindings extends Bindings {
     accountInfo: accountInfo,
     signaling: signaling,
     notificationsController: NotificationsController(appNotifications: appNotifications),
+    contactRepository: ContactRepository(
+      cacheContractor: CacheRepository(
+          userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
+    )
   );
 
   static WifiDirectWrapper wifiDirectWrapper = WifiDirectWrapper();

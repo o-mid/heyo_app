@@ -18,9 +18,16 @@ class IncomingCallController extends GetxController {
   @override
   void onInit() {
     args = Get.arguments as IncomingCallViewArguments;
+    String name;
+
+    if (args.name == null) {
+      name = "Unknown";
+    } else {
+      name = args.name!;
+    }
     //TODO name should be get from contacts
     caller = UserModel(
-      name: "Unknown",
+      name: name,
       iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
       isVerified: true,
       walletAddress: args.remoteCoreId,

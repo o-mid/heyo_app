@@ -3,9 +3,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
+import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -17,7 +19,7 @@ class CallConnectionController extends GetxController {
   final Signaling signaling;
   final AccountInfo accountInfo;
   final NotificationsController notificationsController;
-
+  final ContactRepository contactRepository;
   final callState = Rxn<CallState>();
   final callHistoryState = Rxn<CallHistoryState>();
   final removeStream = Rxn<MediaStream>();
@@ -77,6 +79,7 @@ class CallConnectionController extends GetxController {
     required this.signaling,
     required this.accountInfo,
     required this.notificationsController,
+    required this.contactRepository
   });
 
   Future<Session> startCall(
@@ -137,6 +140,7 @@ class CallConnectionController extends GetxController {
   }
 
   Future<void> handleCallStateRinging({required Session session}) async {
+    UserModel? userModel=await contactRepository.getContactById(session.cid);
     await Get.toNamed(
       Routes.INCOMING_CALL,
       arguments: IncomingCallViewArguments(
@@ -145,6 +149,7 @@ class CallConnectionController extends GetxController {
         sdp: session.sid,
         remoteCoreId: session.cid,
         remotePeerId: session.pid!,
+        name: userModel?.name
       ),
     );
   }
