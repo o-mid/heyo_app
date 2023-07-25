@@ -7,10 +7,12 @@ import 'package:heyo/app/modules/call_controller/call_connection_controller.dart
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 
 enum CallViewType {
   stack,
@@ -77,6 +79,14 @@ class CallController extends GetxController {
 
   final _screenRecorder = EdScreenRecorder();
 
+  void message(){
+    Get.toNamed(
+      Routes.MESSAGES,
+      arguments: MessagesViewArgumentsModel(
+          user: args.user,
+          connectionType: MessagingConnectionType.internet),
+    );
+  }
   @override
   void onInit() {
     super.onInit();

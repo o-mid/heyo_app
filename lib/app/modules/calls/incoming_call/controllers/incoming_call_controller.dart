@@ -12,22 +12,22 @@ class IncomingCallController extends GetxController {
   final muted = false.obs;
   final CallConnectionController callConnectionController;
   late IncomingCallViewArguments args;
-
+  late String userName;
   IncomingCallController({required this.callConnectionController});
 
   @override
   void onInit() {
     args = Get.arguments as IncomingCallViewArguments;
-    String name;
+
 
     if (args.name == null) {
-      name = "Unknown";
+      userName = "Unknown";
     } else {
-      name = args.name!;
+      userName = args.name!;
     }
     //TODO name should be get from contacts
     caller = UserModel(
-      name: name,
+      name: userName,
       iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
       isVerified: true,
       walletAddress: args.remoteCoreId,
@@ -72,7 +72,7 @@ class IncomingCallController extends GetxController {
           callId: args.callId,
           enableVideo: args.session.isAudioCall ? false : true,
           user: UserModel(
-            name: "Unknown",
+            name: userName,
             iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
             isVerified: true,
             walletAddress: args.remoteCoreId,
