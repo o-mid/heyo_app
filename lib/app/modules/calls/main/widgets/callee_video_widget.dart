@@ -23,6 +23,7 @@ class CalleeVideoWidget extends StatelessWidget {
             onTap: controller.toggleImmersiveMode,
             onDoubleTap: controller.flipVideoPositions,
             child: RTCVideoView(remoteVideRenderer,
+                filterQuality: FilterQuality.high,
                 objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover),
           ),
         );
