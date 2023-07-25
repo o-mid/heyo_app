@@ -28,7 +28,9 @@ class CallerVideoWidget extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   decoration: const BoxDecoration(color: Colors.transparent),
                   child: RTCVideoView(localVideRenderer,
-                      objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover, mirror: true),
+                      filterQuality: FilterQuality.high,
+                      objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                      mirror: true),
                 ),
                 if (controller.showCallerOptions.value)
                   Positioned(
