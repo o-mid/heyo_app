@@ -220,7 +220,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
         channelKey: NOTIFICATIONS.messagesChannelKey,
 
         // largeIcon: 'resource://drawable/usericon',
-        title: "New Message from $senderName",
+        title: senderName,
         body: receivedMessage.type == MessageContentType.text
             ? (receivedMessage as TextMessageModel).text
             : receivedMessage.type.name,
