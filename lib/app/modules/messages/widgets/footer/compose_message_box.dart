@@ -3,6 +3,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
+import 'package:heyo/app/modules/messages/widgets/footer/record_button_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/footer/send_message_button.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
@@ -13,6 +14,8 @@ import 'package:heyo/generated/locales.g.dart';
 import '../../../shared/utils/constants/textStyles.dart';
 import '../../../shared/widgets/scale_animated_switcher.dart';
 import 'compose_text_field_widget.dart';
+import 'emoji_picker_button_widget.dart';
+import 'media_glassmorphic_button_widget.dart';
 
 class ComposeMessageBox extends StatelessWidget {
   const ComposeMessageBox({Key? key}) : super(key: key);
@@ -28,57 +31,33 @@ class ComposeMessageBox extends StatelessWidget {
         Expanded(
           child: Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 18),
-                child: GestureDetector(
-                  // Todo: implement add media button
-                  onTap: () {
-                    controller.mediaGlassmorphicChangeState();
-                  },
-                  child: Container(
-                    width: 20,
-                    height: 20,
-                    decoration: const BoxDecoration(
-                      color: COLORS.kGreenMainColor,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.add,
-                      color: COLORS.kWhiteColor,
-                      size: 16,
-                    ),
-                  ),
-                ),
+              MediaGlassmorphicButtonWidget(
+                onTap: () {
+                  controller.mediaGlassmorphicChangeState();
+                },
               ),
+
               CustomSizes.mediumSizedBoxWidth,
               const Expanded(
                 child: ComposeTextFieldWidget(),
               ),
-              CustomSizes.largeSizedBoxWidth,
+              //  CustomSizes.largeSizedBoxWidth,
               KeyboardDismissOnTap(
                 dismissOnCapturedTaps: true,
-                child: GestureDetector(
+                child: EmojiPickerButtonWidget(
                   onTap: controller.toggleEmojiPicker,
-                  child: Assets.svg.emojiIcon.svg(color: COLORS.kDarkBlueColor),
                 ),
               ),
-              CustomSizes.largeSizedBoxWidth,
+
               Obx(() {
                 return AnimatedSwitcher(
                   duration: const Duration(milliseconds: 100),
                   child: controller.newMessage.isNotEmpty
                       ? SendMessageButton(
                           onTap: () => controller.sendTextMessage(),
-                          padding: const EdgeInsets.only(
-                            right: 18,
-                            top: 10,
-                            bottom: 10,
-                          ))
-                      : GestureDetector(
+                        )
+                      : RecordButtonWidget(
                           onTap: () => controller.isInRecordMode.value = true,
-                          child: Container(
-                              padding: const EdgeInsets.only(right: 18),
-                              child: Assets.svg.recordIcon.svg(color: COLORS.kDarkBlueColor)),
                         ),
                 );
               }),

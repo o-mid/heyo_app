@@ -190,8 +190,30 @@ class UserPreviewWidget extends GetView<UserPreview> {
                         title: LocaleKeys.newChat_userBottomSheet_RemoveFromContacts.tr,
                       ),
                 _buildIconTextButton(
-                  //Todo: Block onPressed
-                  onPressed: () {},
+                  onPressed: () {
+                    //Todo:  Blocking Implimentation
+                    Get.rawSnackbar(
+                      messageText: Text(
+                        "Blocking feature is in development phase",
+                        style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kDarkBlueColor),
+                        textAlign: TextAlign.center,
+                      ),
+                      //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
+                      backgroundColor: COLORS.kAppBackground,
+                      snackPosition: SnackPosition.TOP,
+                      snackStyle: SnackStyle.FLOATING,
+                      margin: const EdgeInsets.only(top: 20),
+                      boxShadows: [
+                        BoxShadow(
+                          color: const Color(0xFF466087).withOpacity(0.1),
+                          offset: const Offset(0, 3),
+                          blurRadius: 10,
+                        ),
+                      ],
+                      borderRadius: 8,
+                    );
+                    return;
+                  },
                   iconBgColor: COLORS.kStatesErrorBackgroundColor,
                   icon: Assets.svg.blockIcon.svg(width: 20, height: 20),
                   title: LocaleKeys.newChat_userBottomSheet_block.tr,

@@ -36,6 +36,7 @@ void openNewChatBottomSheet() {
           Row(
             children: [
               Expanded(
+                // NEW CHAT BUTTON
                 child: TextButton(
                   //Todo: Start new chat onPressed
                   onPressed: () {
@@ -87,6 +88,39 @@ void openNewChatBottomSheet() {
               CustomSizes.smallSizedBoxWidth,
             ],
           ),
+          // WIFI_DIRECT BUTTON
+          TextButton(
+            onPressed: () => Get.toNamed(
+              Routes.WIFI_DIRECT,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: COLORS.kBrightBlueColor,
+                  ),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    child: Assets.svg.wifiDirectIcon.svg(
+                      width: 20.w,
+                      fit: BoxFit.fitWidth,
+                      color: COLORS.kDarkBlueColor,
+                    ),
+                  ),
+                ),
+                CustomSizes.mediumSizedBoxWidth,
+                Text(
+                  LocaleKeys.HomePage_bottomSheet_wifiDirect.tr,
+                  style: TEXTSTYLES.kBodyBasic.copyWith(
+                    color: COLORS.kDarkBlueColor,
+                  ),
+                )
+              ],
+            ),
+          ),
+          // NEW GROUP BUTTON
           TextButton(
             //Todo: Start new group onPressed
             onPressed: () {},
@@ -133,37 +167,6 @@ void openNewChatBottomSheet() {
                 CustomSizes.mediumSizedBoxWidth,
                 Text(
                   LocaleKeys.HomePage_bottomSheet_invite.tr,
-                  style: TEXTSTYLES.kBodyBasic.copyWith(
-                    color: COLORS.kDarkBlueColor,
-                  ),
-                )
-              ],
-            ),
-          ),
-          TextButton(
-            onPressed: () => Get.toNamed(
-              Routes.WIFI_DIRECT,
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: COLORS.kBrightBlueColor,
-                  ),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    child: Assets.svg.wifiDirectIcon.svg(
-                      width: 20.w,
-                      fit: BoxFit.fitWidth,
-                      color: COLORS.kDarkBlueColor,
-                    ),
-                  ),
-                ),
-                CustomSizes.mediumSizedBoxWidth,
-                Text(
-                  LocaleKeys.HomePage_bottomSheet_wifiDirect.tr,
                   style: TEXTSTYLES.kBodyBasic.copyWith(
                     color: COLORS.kDarkBlueColor,
                   ),

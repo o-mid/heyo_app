@@ -31,8 +31,6 @@ class UserPreview extends GetxController {
     bool isWifiDirect = false,
     required UserModel userModel,
   }) async {
-    userModel;
-
     isWifiDirectConnection.value = isWifiDirect;
     print("openUserPreviewBottomSheet");
 
