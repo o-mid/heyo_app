@@ -23,17 +23,17 @@ class CallerVideoWidget extends StatelessWidget {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Flexible(
-                    child: Container(
+                Container(
                   key: const Key('remote'),
                   margin: const EdgeInsets.all(5),
                   decoration: const BoxDecoration(color: Colors.transparent),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: RTCVideoView(localVideRenderer,
-                        objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover, mirror: true),
+                        objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitContain,
+                        mirror: true),
                   ),
-                )),
+                ),
                 if (controller.showCallerOptions.value)
                   Positioned(
                     bottom: 0,
