@@ -23,7 +23,7 @@ import '../widgets/user_preview_widget.dart';
 
 class UserPreview extends GetxController {
   final ContactRepository contactRepository;
-  final RxBool isWifiDirectConnection = false.obs;
+  // final RxBool isWifiDirectConnection = false.obs;
 
   UserPreview({required this.contactRepository});
 
@@ -33,13 +33,13 @@ class UserPreview extends GetxController {
   }) async {
     userModel;
 
-    isWifiDirectConnection.value = isWifiDirect;
+    // isWifiDirectConnection.value = isWifiDirect;
     print("openUserPreviewBottomSheet");
 
     Get.bottomSheet(
       enterBottomSheetDuration: TRANSITIONS.newChat_EnterBottomSheetDuration,
       exitBottomSheetDuration: TRANSITIONS.newChat_ExitBottomSheetDuration,
-      UserPreviewWidget(user: userModel),
+      UserPreviewWidget(user: userModel, isWifiDirect: isWifiDirect),
       backgroundColor: COLORS.kWhiteColor,
       isDismissible: true,
       isScrollControlled: true,

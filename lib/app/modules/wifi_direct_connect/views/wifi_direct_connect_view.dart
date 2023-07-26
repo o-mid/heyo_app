@@ -45,33 +45,38 @@ class WifiDirectConnectView extends GetView<WifiDirectConnectController> {
 
                       case PeerStatus.peerConnected:
                         print('WifiDirectConnectView peerTCPOpened ${controller.user.coreId}');
-                        Future.delayed(const Duration(milliseconds: 300));
-                        Get.back();
+                        Future.delayed(const Duration(milliseconds: 500),() {
+                          Get.back();
 
-                        Get.toNamed(
-                          Routes.MESSAGES,
-                          arguments: MessagesViewArgumentsModel(
-                            user: controller.user,
-                          ),
-                        );
+                          Get.toNamed(
+                            Routes.MESSAGES,
+                            arguments: MessagesViewArgumentsModel(
+                              user: controller.user,
+                              connectionType: MessagingConnectionType.wifiDirect,
+                            ),
+                          );
+
+                        });
                         break;
 
                       case PeerStatus.peerTCPOpened:
                         print('WifiDirectConnectView peerTCPOpened ${controller.user.coreId}');
-                        Future.delayed(const Duration(milliseconds: 300));
-                        Get.back();
+                        Future.delayed(const Duration(milliseconds: 500),() {
+                          Get.back();
 
-                        Get.toNamed(
-                          Routes.MESSAGES,
-                          arguments: MessagesViewArgumentsModel(
-                            user: controller.user,
-                          ),
-                        );
+                          Get.toNamed(
+                            Routes.MESSAGES,
+                            arguments: MessagesViewArgumentsModel(
+                              user: controller.user,
+                              connectionType: MessagingConnectionType.wifiDirect,
+                            ),
+                          );
+
+                        });
                         break;
 
                       case PeerStatus.peerUnavailable:
-                        Future.delayed(const Duration(milliseconds: 500));
-                        Get.back();
+                        Future.delayed(const Duration(milliseconds: 500), () => Get.back());
 
                         break;
 

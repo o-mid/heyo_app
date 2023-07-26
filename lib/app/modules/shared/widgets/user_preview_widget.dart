@@ -22,14 +22,15 @@ import 'curtom_circle_avatar.dart';
 
 class UserPreviewWidget extends GetView<UserPreview> {
   final UserModel user;
+  final bool isWifiDirect;
   const UserPreviewWidget({
     super.key,
     required this.user,
+    this.isWifiDirect = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isWifiDirect = controller.isWifiDirectConnection.value;
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -68,7 +69,7 @@ class UserPreviewWidget extends GetView<UserPreview> {
                   } else {
 
                     Get.back();
-
+                    print('UserPreviewWidget isWifiDirect $isWifiDirect');
                     isWifiDirect
                         ?  Get.toNamed(Routes.WIFI_DIRECT_CONNECT,
                             arguments: user)
