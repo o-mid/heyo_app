@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
@@ -20,7 +21,8 @@ class IncomingCallController extends GetxController {
     args = Get.arguments as IncomingCallViewArguments;
 
     if (args.name == null) {
-      userName = "Unknown";
+      userName =
+          "${args.remoteCoreId.characters.take(4).string}...${args.remoteCoreId.characters.takeLast(4).string}";
     } else {
       userName = args.name!;
     }

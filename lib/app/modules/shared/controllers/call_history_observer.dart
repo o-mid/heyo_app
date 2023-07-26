@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
@@ -178,15 +179,13 @@ class CallHistoryObserver extends GetxController {
 
   Future<UserModel> _getUserFromCoreId(String coreId) async {
     UserModel? user = await contactRepository.getContactById(coreId);
-    if (user == null) {
-      user = UserModel(
-        name: "Unknown",
-        iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
-        isVerified: true,
-        walletAddress: coreId,
-        coreId: coreId,
-      );
-    }
+    user ??= UserModel(
+      name: "${coreId.characters.take(4).string}...${coreId.characters.takeLast(4).string}",
+      iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
+      isVerified: true,
+      walletAddress: coreId,
+      coreId: coreId,
+    );
     return user;
   }
 }
