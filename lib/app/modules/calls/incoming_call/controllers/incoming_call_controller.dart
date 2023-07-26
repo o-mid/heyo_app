@@ -19,7 +19,6 @@ class IncomingCallController extends GetxController {
   void onInit() {
     args = Get.arguments as IncomingCallViewArguments;
 
-
     if (args.name == null) {
       userName = "Unknown";
     } else {
@@ -34,9 +33,7 @@ class IncomingCallController extends GetxController {
       coreId: args.remoteCoreId,
     );
     _playRingtone();
-    callConnectionController.notifyReceivedCall(
-      callSession: args.session,
-    );
+
     super.onInit();
   }
 
