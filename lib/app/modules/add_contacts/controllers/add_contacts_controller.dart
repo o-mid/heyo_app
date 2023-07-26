@@ -44,6 +44,7 @@ class AddContactsController extends GetxController {
       nickname: nickname.value,
       iconUrl: args.user.iconUrl,
       name: nickname.value,
+      isOnline: true,
       walletAddress: args.user.walletAddress,
       isContact: true,
     );
