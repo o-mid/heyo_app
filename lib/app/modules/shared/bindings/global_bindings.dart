@@ -73,14 +73,13 @@ class GlobalBindings extends Bindings {
 // call related bindings
   static Signaling signaling = Signaling(p2pCommunicator: p2pCommunicator);
   static CallConnectionController callConnectionController = CallConnectionController(
-    accountInfo: accountInfo,
-    signaling: signaling,
-    notificationsController: NotificationsController(appNotifications: appNotifications),
-    contactRepository: ContactRepository(
-      cacheContractor: CacheRepository(
-          userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
-    )
-  );
+      accountInfo: accountInfo,
+      signaling: signaling,
+      notificationsController: NotificationsController(appNotifications: appNotifications),
+      contactRepository: ContactRepository(
+        cacheContractor: CacheRepository(
+            userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
+      ));
 
   static WifiDirectWrapper wifiDirectWrapper = WifiDirectWrapper();
 
@@ -161,6 +160,9 @@ class GlobalBindings extends Bindings {
       chatHistoryRepo: ChatHistoryLocalRepo(
         chatHistoryProvider:
             ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+      ),
+      messagesRepo: MessagesRepo(
+        messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
       ),
     ));
 

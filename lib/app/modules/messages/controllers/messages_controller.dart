@@ -48,6 +48,8 @@ import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../share_files/models/file_model.dart';
+import '../../shared/utils/constants/colors.dart';
+import '../../shared/utils/constants/textStyles.dart';
 import '../../shared/utils/constants/transitions_constant.dart';
 import '../../shared/utils/scroll_to_index.dart';
 import '../data/usecases/delete_message_usecase.dart';
@@ -995,6 +997,34 @@ class MessagesController extends GetxController {
         lastReadMessageId: lastReadRemoteMessagesId.value,
       );
     }
+  }
+
+  Future<void> saveCoreIdToClipboard() async {
+    final remoteCoreId = args.user.walletAddress;
+    print("Core ID : $remoteCoreId");
+    await Clipboard.setData(ClipboardData(text: remoteCoreId));
+    Get.rawSnackbar(
+      messageText: Text(
+        LocaleKeys.ShareableQrPage_copiedToClipboardText.tr,
+        textAlign: TextAlign.center,
+        style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kDarkBlueColor),
+      ),
+      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 24.w),
+      backgroundColor: COLORS.kWhiteColor,
+      snackStyle: SnackStyle.FLOATING,
+      snackPosition: SnackPosition.TOP,
+      isDismissible: true,
+      maxWidth: 250.w,
+      margin: EdgeInsets.only(top: 60.h),
+      boxShadows: [
+        BoxShadow(
+          color: const Color(0xFF466087).withOpacity(0.1),
+          offset: const Offset(0, 3),
+          blurRadius: 10,
+        ),
+      ],
+      borderRadius: 8,
+    );
   }
 
 //TODO remove?

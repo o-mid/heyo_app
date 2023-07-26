@@ -203,4 +203,9 @@ class MessagesProvider implements MessagesAbstractProvider {
       }
     }
   }
+
+  @override
+  Future<void> deleteAllMessages(String chatId) async {
+    await _store.record(chatId).delete(await _db);
+  }
 }

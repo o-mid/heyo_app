@@ -1,7 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
+
+import '../../../../../generated/locales.g.dart';
+import '../../../shared/utils/constants/colors.dart';
+import '../../../shared/utils/constants/textStyles.dart';
 
 class UserCallHistoryController extends GetxController {
   final CallHistoryAbstractRepo callHistoryRepo;
@@ -28,6 +35,34 @@ class UserCallHistoryController extends GetxController {
 
   @override
   void onClose() {}
+
+  Future<void> saveCoreIdToClipboard() async {
+    final remoteCoreId = args.user.walletAddress;
+    print("Core ID : $remoteCoreId");
+    await Clipboard.setData(ClipboardData(text: remoteCoreId));
+    Get.rawSnackbar(
+      messageText: Text(
+        LocaleKeys.ShareableQrPage_copiedToClipboardText.tr,
+        style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kDarkBlueColor),
+        textAlign: TextAlign.center,
+      ),
+      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 24.w),
+      backgroundColor: COLORS.kWhiteColor,
+      snackStyle: SnackStyle.FLOATING,
+      snackPosition: SnackPosition.BOTTOM,
+      isDismissible: true,
+      maxWidth: 250.w,
+      margin: EdgeInsets.only(bottom: 60.h),
+      boxShadows: [
+        BoxShadow(
+          color: const Color(0xFF466087).withOpacity(0.1),
+          offset: const Offset(0, 3),
+          blurRadius: 10,
+        ),
+      ],
+      borderRadius: 8,
+    );
+  }
 
   // void _addMockData() {
   //   var index = 0;

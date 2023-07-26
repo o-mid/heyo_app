@@ -189,25 +189,27 @@ class AppNotifications extends GetxController {
     NotificationContent notificationContent = NotificationContent(
       id: id,
       channelKey: NOTIFICATIONS.callsChannelKey,
-      title: title,
-      body: body,
+      title: title ?? "Incoming Call",
+      body: body ?? " ",
     );
 
-    await awesomeNotifications.createNotification(content: notificationContent, actionButtons: [
-      NotificationActionButton(
-          key: CallsActionButtons.answer.name,
-          label: CallsActionButtons.answer.name.camelCase.toString(),
-          requireInputText: false,
-          color: Colors.green,
-          autoDismissible: true,
-          actionType: ActionType.Default),
-      NotificationActionButton(
-          key: CallsActionButtons.decline.name,
-          label: CallsActionButtons.decline.name.camelCase.toString(),
-          actionType: ActionType.DismissAction,
-          color: COLORS.kStatesErrorColor,
-          icon: Icons.call.toString(),
-          autoDismissible: true)
-    ]);
+    await awesomeNotifications.createNotification(
+      content: notificationContent,
+      actionButtons: [
+        NotificationActionButton(
+            key: CallsActionButtons.answer.name.toString(),
+            label: "Answer",
+            requireInputText: false,
+            color: Colors.green,
+            autoDismissible: true,
+            actionType: ActionType.Default),
+        NotificationActionButton(
+            key: CallsActionButtons.decline.name.toString(),
+            label: "Decline",
+            actionType: ActionType.Default,
+            color: COLORS.kStatesErrorColor,
+            autoDismissible: true)
+      ],
+    );
   }
 }

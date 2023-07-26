@@ -51,8 +51,7 @@ class CallConnectionController extends GetxController {
 
       callHistoryState.value = CallHistoryState(
         session: session,
-        callHistoryStatus:
-            CallHistoryState.mapCallStateToCallHistoryStatus(state),
+        callHistoryStatus: CallHistoryState.mapCallStateToCallHistoryStatus(state),
       );
 
       print("Call State changed, state is: $state");
@@ -75,21 +74,18 @@ class CallConnectionController extends GetxController {
     };
   }
 
-  CallConnectionController({
-    required this.signaling,
-    required this.accountInfo,
-    required this.notificationsController,
-    required this.contactRepository
-  });
+  CallConnectionController(
+      {required this.signaling,
+      required this.accountInfo,
+      required this.notificationsController,
+      required this.contactRepository});
 
-  Future<Session> startCall(
-      String remoteId, String callId, bool isAudioCall) async {
+  Future<Session> startCall(String remoteId, String callId, bool isAudioCall) async {
     String? selfCoreId = await accountInfo.getCoreId();
-    final session = await signaling.invite(
-        remoteId, 'video', false, selfCoreId!, isAudioCall);
+    final session = await signaling.invite(remoteId, 'video', false, selfCoreId!, isAudioCall);
 
-    callHistoryState.value = CallHistoryState(
-        session: session, callHistoryStatus: CallHistoryStatus.initial);
+    callHistoryState.value =
+        CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.initial);
     return session;
   }
 
@@ -98,8 +94,8 @@ class CallConnectionController extends GetxController {
       session.sid,
     );
 
-    callHistoryState.value = CallHistoryState(
-        session: session, callHistoryStatus: CallHistoryStatus.connected);
+    callHistoryState.value =
+        CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.connected);
   }
 
   void switchCamera() {
@@ -123,8 +119,8 @@ class CallConnectionController extends GetxController {
 
   void rejectCall(Session session) {
     signaling.reject(session);
-    callHistoryState.value = CallHistoryState(
-        session: session, callHistoryStatus: CallHistoryStatus.connected);
+    callHistoryState.value =
+        CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.connected);
   }
 
   Future<void> close() async {
@@ -135,22 +131,23 @@ class CallConnectionController extends GetxController {
 
   void endOrCancelCall(Session session) {
     signaling.reject(session);
-    callHistoryState.value = CallHistoryState(
-        session: session, callHistoryStatus: CallHistoryStatus.byeSent);
+    callHistoryState.value =
+        CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.byeSent);
   }
 
   Future<void> handleCallStateRinging({required Session session}) async {
-    UserModel? userModel=await contactRepository.getContactById(session.cid);
+    UserModel? userModel = await contactRepository.getContactById(session.cid);
+    await notifyReceivedCall(callSession: session);
+
     await Get.toNamed(
       Routes.INCOMING_CALL,
       arguments: IncomingCallViewArguments(
-        session: session,
-        callId: "",
-        sdp: session.sid,
-        remoteCoreId: session.cid,
-        remotePeerId: session.pid!,
-        name: userModel?.name
-      ),
+          session: session,
+          callId: "",
+          sdp: session.sid,
+          remoteCoreId: session.cid,
+          remotePeerId: session.pid!,
+          name: userModel?.name),
     );
   }
 
