@@ -77,23 +77,24 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
       return;
     }
 
-    // TODO remove debug output
-    print('WifiDirectConnectionController: initMessagingConnection($remoteId)');
-    this.remoteId = remoteId;
     _initPlugin();
 
-    dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
-    WifiDirectEvent connectionResult = await _heyoWifiDirect?.connectPeer(remoteId) ??
-        WifiDirectEvent(type: EventType.failure, dateTime: DateTime.now());
+    // TODO remove debug output
+    print('WifiDirectConnectionController: initMessagingConnection($remoteId), status ${_heyoWifiDirect!.peerList.peers[remoteId]!.status.name}');
+    this.remoteId = remoteId;
 
-    if (connectionResult.type == EventType.linkedPeer) {
-      dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
-      setConnectivityOnline();
-    } else {
-      dataChannelStatus.value = DataChannelConnectivityStatus.connectionLost;
+    switch (_heyoWifiDirect!.peerList.peers[remoteId]!.status) {
+      case PeerStatus.peerTCPOpened:
+        dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
+        break;
+      case PeerStatus.peerConnected:
+        dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
+        break;
+      default:
+        dataChannelStatus.value = DataChannelConnectivityStatus.connectionLost;
+        break;
     }
 
-    print('initMessagingConnection result: ${connectionResult.type.name}');
   }
 
   @override
@@ -151,22 +152,21 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
       userChatModel = value;
     });
 
-    if (userChatModel != null) {
-      Get.toNamed(
-        Routes.MESSAGES,
-        arguments: MessagesViewArgumentsModel(
-          // session: session,
-          user: UserModel(
-            iconUrl: userChatModel!.icon,
-            name: userChatModel!.name,
-            walletAddress: remoteId!,
-            coreId: remoteId!,
-            isOnline: userChatModel!.isOnline,
-          ),
-          connectionType: MessagingConnectionType.wifiDirect,
+    Get.toNamed(
+      Routes.MESSAGES,
+      arguments: MessagesViewArgumentsModel(
+        // session: session,
+        user: UserModel(
+          iconUrl: userChatModel?.icon ?? "https://avatars.githubusercontent.com/u/6645136?v=4",
+          name: userChatModel?.name ?? "Unknown Wi-Fi Direct",
+          walletAddress: remoteId!,
+          isVerified: false,
+          coreId: remoteId!,
+          isOnline: true,
         ),
-      );
-    }
+        connectionType: MessagingConnectionType.wifiDirect,
+       ),
+    );
     dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
     setConnectivityOnline();
   }
