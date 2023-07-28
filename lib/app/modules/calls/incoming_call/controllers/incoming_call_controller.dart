@@ -29,6 +29,7 @@ class IncomingCallController extends GetxController {
     //TODO name should be get from contacts
     caller = UserModel(
       name: userName,
+      isContact:(!(args.name == null)),
       iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
       isVerified: true,
       walletAddress: args.remoteCoreId,

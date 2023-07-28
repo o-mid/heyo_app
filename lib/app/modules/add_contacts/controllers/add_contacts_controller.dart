@@ -52,7 +52,13 @@ class AddContactsController extends GetxController {
   }
 
   Future<void> updateUserChatMode({required UserModel userModel}) async {
-    await contactRepository.addContact(userModel);
+    UserModel? user = await contactRepository.getContactById(userModel.coreId);
+    if (user == null) {
+      await contactRepository.addContact(userModel);
+    } else {
+      await contactRepository.deleteContactById(userModel.coreId);
+      await contactRepository.addContact(userModel);
+    }
     await _updateChatHistory(userModel: userModel);
     await _updateCallHistory(userModel: userModel);
 
@@ -71,16 +77,14 @@ class AddContactsController extends GetxController {
   }
 
   Future<void> _updateCallHistory({required UserModel userModel}) async {
-    await callHistoryRepo.getCallsFromUserId(userModel.coreId).then((calls) async {
+    await callHistoryRepo
+        .getCallsFromUserId(userModel.coreId)
+        .then((calls) async {
+      print("_updateCallHistory: ${calls.length}");
       for (var call in calls) {
-        await callHistoryRepo.updateCall(call.copyWith(
-          user: call.user.copyWith(
-            icon: userModel.iconUrl,
-            name: userModel.name,
-            nickname: userModel.nickname,
-            isContact: userModel.isContact,
-          ),
-        ));
+        print("_updateCallHistory: ${call.id} : ${call.user}");
+        await callHistoryRepo.deleteOneCall(call.id);
+        await callHistoryRepo.addCallToHistory(call.copyWith(user: userModel));
       }
     });
   }

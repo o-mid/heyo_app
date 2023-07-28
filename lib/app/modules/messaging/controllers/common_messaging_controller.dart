@@ -4,6 +4,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../chats/data/models/chat_model.dart';
@@ -23,7 +25,6 @@ import '../../notifications/data/models/notifications_payload_model.dart';
 import '../../p2p_node/data/account/account_info.dart';
 import '../../shared/utils/constants/notifications_constant.dart';
 import '../../shared/utils/screen-utils/mocks/random_avatar_icon.dart';
-import '../messaging_session.dart';
 import '../models/data_channel_message_model.dart';
 import '../usecases/handle_received_binary_data_usecase.dart';
 import '../utils/binary_file_receiving_state.dart';
@@ -47,6 +48,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
   final AccountInfo accountInfo;
   BinaryFileReceivingState? currentState;
   final NotificationsController notificationsController;
+  final ContactRepository contactRepository;
 
   //
   // final JsonDecoder _decoder = const JsonDecoder();
@@ -67,7 +69,8 @@ abstract class CommonMessagingConnectionController extends GetxController {
       {required this.accountInfo,
       required this.messagesRepo,
       required this.chatHistoryRepo,
-      required this.notificationsController});
+      required this.notificationsController,
+      required this.contactRepository});
 
   @override
   void onInit() {
@@ -362,12 +365,17 @@ abstract class CommonMessagingConnectionController extends GetxController {
   // creates a ChatModel and saves it to the chat history if it is not available
   // or updates the available chat
   createUserChatModel({required String sessioncid}) async {
+    UserModel? userModel =
+        await contactRepository.getContactById(sessioncid);
+
+
     ChatModel userChatModel = ChatModel(
         id: sessioncid,
         coreId: sessioncid,
         isOnline: true,
-        name:
-            "${sessioncid.characters.take(4).string}...${sessioncid.characters.takeLast(4).string}",
+        name: (userModel == null)
+            ? "${sessioncid.characters.take(4).string}...${sessioncid.characters.takeLast(4).string}"
+            : userModel.name,
         icon: getMockIconUrl(),
         lastMessage: "",
         lastReadMessageId: "",

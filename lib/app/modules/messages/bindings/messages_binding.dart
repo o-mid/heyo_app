@@ -14,16 +14,16 @@ class MessagesBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<MessagesController>(() => MessagesController(
-          messagesRepo: MessagesRepo(
-            messagesProvider: MessagesProvider(
-              appDatabaseProvider: Get.find(),
-            ),
+        messagesRepo: MessagesRepo(
+          messagesProvider: MessagesProvider(
+            appDatabaseProvider: Get.find(),
           ),
-          chatHistoryRepo: ChatHistoryLocalRepo(
-            chatHistoryProvider: ChatHistoryProvider(
-              appDatabaseProvider: Get.find(),
-            ),
+        ),
+        chatHistoryRepo: ChatHistoryLocalRepo(
+          chatHistoryProvider: ChatHistoryProvider(
+            appDatabaseProvider: Get.find(),
           ),
-        ));
+        ),
+        contactRepository: Get.find()));
   }
 }

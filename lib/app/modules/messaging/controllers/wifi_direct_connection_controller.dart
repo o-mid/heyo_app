@@ -29,6 +29,7 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
     required super.messagesRepo,
     required super.chatHistoryRepo,
     required super.notificationsController,
+    required super.contactRepository
   });
 
   // TODO since working with HeyoWifiDirectPlugin instance requests usage of streams
