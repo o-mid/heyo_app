@@ -3,12 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 
 class CalleeOrCallerInfoWidget extends StatelessWidget {
   final UserModel user;
+
   const CalleeOrCallerInfoWidget({
     Key? key,
     required this.user,
@@ -24,7 +24,7 @@ class CalleeOrCallerInfoWidget extends StatelessWidget {
         ),
         SizedBox(height: 24.h),
         Text(
-          user.name,
+          (user.isContact) ? user.name : user.coreId.shortenCoreId,
           style: TEXTSTYLES.kHeaderLarge.copyWith(
             color: COLORS.kWhiteColor,
           ),

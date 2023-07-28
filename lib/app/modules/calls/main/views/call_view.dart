@@ -10,6 +10,7 @@ import 'package:heyo/app/modules/calls/main/widgets/record_indicator_widget.dart
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
 import '../controllers/call_controller.dart';
@@ -27,7 +28,9 @@ class CallView extends GetView<CallController> {
             : AppBar(
                 backgroundColor: COLORS.kCallPageDarkBlue,
                 title: Text(
-                  controller.args.user.name,
+                  (controller.args.user.isContact)
+                      ? controller.args.user.name
+                      : controller.args.user.coreId.shortenCoreId,
                   style: TEXTSTYLES.kHeaderMedium.copyWith(
                     height: 1.21,
                     fontWeight: FONTS.SemiBold,
@@ -49,9 +52,12 @@ class CallView extends GetView<CallController> {
                 bottom: const RecordIndicatorWidget(),
               ),
         body: ExpandableBottomSheet(
-          background:
-              controller.isInCall.value ? const CallInProgressWidget() : const CallRingingWidget(),
-          persistentHeader: controller.isImmersiveMode.value ? null : const CallBottomSheetHeader(),
+          background: controller.isInCall.value
+              ? const CallInProgressWidget()
+              : const CallRingingWidget(),
+          persistentHeader: controller.isImmersiveMode.value
+              ? null
+              : const CallBottomSheetHeader(),
           expandableContent: controller.isImmersiveMode.value
               ? const SizedBox.shrink()
               : const CallBottomSheetExpandedBody(),

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
@@ -12,24 +13,30 @@ class IncomingCallController extends GetxController {
   final muted = false.obs;
   final CallConnectionController callConnectionController;
   late IncomingCallViewArguments args;
-
+  late String userName;
   IncomingCallController({required this.callConnectionController});
 
   @override
   void onInit() {
     args = Get.arguments as IncomingCallViewArguments;
+
+    if (args.name == null) {
+      userName =
+          "${args.remoteCoreId.characters.take(4).string}...${args.remoteCoreId.characters.takeLast(4).string}";
+    } else {
+      userName = args.name!;
+    }
     //TODO name should be get from contacts
     caller = UserModel(
-      name: "Unknown",
+      name: userName,
+      isContact:(!(args.name == null)),
       iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
       isVerified: true,
       walletAddress: args.remoteCoreId,
       coreId: args.remoteCoreId,
     );
     _playRingtone();
-    callConnectionController.notifyReceivedCall(
-      callSession: args.session,
-    );
+
     super.onInit();
   }
 
@@ -65,7 +72,7 @@ class IncomingCallController extends GetxController {
           callId: args.callId,
           enableVideo: args.session.isAudioCall ? false : true,
           user: UserModel(
-            name: "Unknown",
+            name: userName,
             iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
             isVerified: true,
             walletAddress: args.remoteCoreId,

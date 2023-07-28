@@ -5,9 +5,17 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 
+import '../../messages/data/repo/messages_abstract_repo.dart';
+import '../widgets/delete_all_chats_bottom_sheet.dart';
+import '../widgets/delete_chat_dialog.dart';
+
 class ChatsController extends GetxController {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
-  ChatsController({required this.chatHistoryRepo});
+  final MessagesAbstractRepo messagesRepo;
+  ChatsController({
+    required this.chatHistoryRepo,
+    required this.messagesRepo,
+  });
   final animatedListKey = GlobalKey<AnimatedListState>();
 
   late StreamSubscription _chatsStreamSubscription;
@@ -46,6 +54,30 @@ class ChatsController extends GetxController {
       chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
       chats.refresh();
     });
+  }
+
+  void showDeleteChatDialog(ChatModel chat) {
+    Get.dialog(
+      DeleteChatDialog(
+        deleteChat: () async {
+          await chatHistoryRepo.deleteChat(chat.id);
+          await messagesRepo.deleteAllMessages(chat.id);
+        },
+      ),
+    );
+  }
+
+  void showDeleteAllChatsBottomSheet() {
+    openDeleteAllChatsBottomSheet(
+      onDelete: () async {
+        for (var element in chats) {
+          await messagesRepo.deleteAllMessages(element.id);
+        }
+        await chatHistoryRepo.deleteAllChats();
+
+        chats.clear();
+      },
+    );
   }
 
 // add a single mock chats to the chat history with the given duration

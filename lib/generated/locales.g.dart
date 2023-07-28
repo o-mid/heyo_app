@@ -94,6 +94,20 @@ class LocaleKeys {
       'HomePage_Chats_emptyState_subtitle';
   static const HomePage_Chats_emptyState_invite =
       'HomePage_Chats_emptyState_invite';
+  static const HomePage_Chats_deleteChatDialog_title =
+      'HomePage_Chats_deleteChatDialog_title';
+  static const HomePage_Chats_deleteChatDialog_delete =
+      'HomePage_Chats_deleteChatDialog_delete';
+  static const HomePage_Chats_deleteChatDialog_cancel =
+      'HomePage_Chats_deleteChatDialog_cancel';
+  static const HomePage_Chats_deleteAllchatsDialog_title =
+      'HomePage_Chats_deleteAllchatsDialog_title';
+  static const HomePage_Chats_deleteAllchatsDialog_delete =
+      'HomePage_Chats_deleteAllchatsDialog_delete';
+  static const HomePage_Chats_deleteAllchatsDialog_cancel =
+      'HomePage_Chats_deleteAllchatsDialog_cancel';
+  static const HomePage_Chats_bottomSheet_deleteAllchats =
+      'HomePage_Chats_bottomSheet_deleteAllchats';
   static const HomePage_Calls_emptyState_title =
       'HomePage_Calls_emptyState_title';
   static const HomePage_Calls_emptyState_subtitle =
@@ -403,6 +417,14 @@ class Locales {
     'HomePage_Chats_emptyState_subtitle':
         'Start with inviting your friends or start new chats',
     'HomePage_Chats_emptyState_invite': 'Invite',
+    'HomePage_Chats_deleteChatDialog_title': 'Delete this chat from history?',
+    'HomePage_Chats_deleteChatDialog_delete': 'Delete',
+    'HomePage_Chats_deleteChatDialog_cancel': 'Cancel',
+    'HomePage_Chats_deleteAllchatsDialog_title':
+        'Delete all chats from history?',
+    'HomePage_Chats_deleteAllchatsDialog_delete': 'Delete',
+    'HomePage_Chats_deleteAllchatsDialog_cancel': 'Cancel',
+    'HomePage_Chats_bottomSheet_deleteAllchats': 'Delete all chats',
     'HomePage_Calls_emptyState_title': 'You have no calls',
     'HomePage_Calls_emptyState_subtitle':
         'Call someone from your contact list by hitting that + button',
@@ -420,9 +442,9 @@ class Locales {
     'HomePage_Calls_deleteAllCallsDialog_cancel': 'Cancel',
     'HomePage_Calls_bottomSheet_deleteAllCalls': 'Delete all calls',
     'HomePage_bottomSheet_newChat': 'Start new chat',
-    'HomePage_bottomSheet_newGroup': 'Start new group',
+    'HomePage_bottomSheet_newGroup': 'Start new group chat',
     'HomePage_bottomSheet_invite': 'Invite',
-    'HomePage_bottomSheet_wifiDirect': 'Wifi Direct',
+    'HomePage_bottomSheet_wifiDirect': 'Start Wifi-Direct chat',
     'CallHistory_appbar': 'Call history',
     'CallHistory_missedCall': 'Missed call',
     'CallHistory_outgoing': 'Outgoing',

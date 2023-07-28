@@ -67,4 +67,9 @@ class MessagesRepo implements MessagesAbstractRepo {
   Future<List<MessageModel?>> getUnsentMessages(String chatId) {
     return messagesProvider.getUnsentMessages(chatId);
   }
+
+  @override
+  Future<void> deleteAllMessages(String chatId) {
+    return messagesProvider.deleteAllMessages(chatId);
+  }
 }

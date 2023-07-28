@@ -51,7 +51,31 @@ class ContactsView extends GetView<ContactsController> {
                 iconBackgroundColor: COLORS.kBrightBlueColor,
                 title: LocaleKeys.BlockUserPage_BlockedContacts.tr,
                 trailing: Text(controller.blockedContacts.length.toString()),
-                onTap: () {},
+                // TODO :
+                onTap: () {
+                  //Todo:  Blocking Implimentation
+                  Get.rawSnackbar(
+                    messageText: Text(
+                      "Blocking Contacts feature is in development phase",
+                      style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kDarkBlueColor),
+                      textAlign: TextAlign.center,
+                    ),
+                    //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
+                    backgroundColor: COLORS.kAppBackground,
+                    snackPosition: SnackPosition.TOP,
+                    snackStyle: SnackStyle.FLOATING,
+                    margin: const EdgeInsets.only(top: 20),
+                    boxShadows: [
+                      BoxShadow(
+                        color: const Color(0xFF466087).withOpacity(0.1),
+                        offset: const Offset(0, 3),
+                        blurRadius: 10,
+                      ),
+                    ],
+                    borderRadius: 8,
+                  );
+                  return;
+                },
               ),
               const Divider(thickness: 8, color: COLORS.kBrightBlueColor),
               CustomSizes.largeSizedBoxHeight,
@@ -80,7 +104,7 @@ class ContactsView extends GetView<ContactsController> {
   ) {
     return InkWell(
       onTap: () {
-        UserPreview(contactRepository: controller.contactRepo).openUserPreview(
+        Get.find<UserPreview>().openUserPreview(
           userModel: contact,
         );
       },

@@ -107,15 +107,15 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
     String? title,
     String? body,
   }) async {
-    if (Get.currentRoute == Routes.INCOMING_CALL || !isAppOnBackground.value) {
-      return;
-    } else {
-      await appNotifications.pushReceivedCallNotify(
-        id: Random().nextInt(1000),
-        title: title,
-        body: body,
-      );
-    }
+    // if (Get.currentRoute == Routes.INCOMING_CALL || !isAppOnBackground.value) {
+    //   return;
+    // } else {
+    await appNotifications.pushReceivedCallNotify(
+      id: Random().nextInt(1000),
+      title: title,
+      body: body,
+    );
+    //}
   }
 
   @override

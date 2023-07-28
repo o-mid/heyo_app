@@ -48,20 +48,24 @@ import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../share_files/models/file_model.dart';
+import '../../shared/utils/constants/colors.dart';
+import '../../shared/utils/constants/textStyles.dart';
 import '../../shared/utils/constants/transitions_constant.dart';
 import '../../shared/utils/scroll_to_index.dart';
 import '../data/usecases/delete_message_usecase.dart';
 import '../data/usecases/update_message_usecase.dart';
+import '../../shared/data/repository/contact_repository.dart';
 
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
 
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
+  final ContactRepository contactRepository;
 
-  MessagesController({
-    required this.messagesRepo,
-    required this.chatHistoryRepo,
-  }) {
+  MessagesController(
+      {required this.messagesRepo,
+      required this.chatHistoryRepo,
+      required this.contactRepository}) {
     init();
   }
 
@@ -106,31 +110,43 @@ class MessagesController extends GetxController {
 
     _initUiControllers();
 
-    //
     // // Initialize messagingConnection instance of CommonMessagingController-inherited class depends on connection type
     // // Also included previous functionality of _initDataChannel()
     await _initMessagingConnection();
 
-    _getMessages();
-    _initMessagesStream();
-
     _sendForwardedMessages();
+    await _getMessages();
+
+    await _initMessagesStream();
 
     // Close emoji picker when keyboard opens
     _handleKeyboardVisibilityChanges();
+
+    super.onInit();
   }
 
-  _initMessagesArguments() {
+  _initMessagesArguments() async {
     args = Get.arguments as MessagesViewArgumentsModel;
     selfUserModel = args.user;
     chatId = args.user.coreId;
     connectionType = args.connectionType;
+
+    UserModel? userModel =
+        await contactRepository.getContactById(args.user.coreId);
+    _userModel = args.user.copyWith(isContact: (userModel != null));
+  }
+
+  late UserModel _userModel;
+
+  UserModel getUser() {
+    return _userModel;
   }
 
   @override
-  void onReady() {
-    super.onReady();
+  Future<void> onReady() async {
     animateToBottom();
+
+    super.onReady();
   }
 
   _initUiControllers() {
@@ -169,10 +185,13 @@ class MessagesController extends GetxController {
         remoteId: args.user.coreId);
   }
 
-  void _initMessagesStream() async {
-    _messagesStreamSubscription =
-        (await messagesRepo.getMessagesStream(chatId)).listen((newMessages) {
+  Future<void> _initMessagesStream() async {
+    Stream<List<MessageModel>> messagesStream =
+        await messagesRepo.getMessagesStream(args.user.coreId);
+
+    _messagesStreamSubscription = (messagesStream).listen((newMessages) {
       messages.value = newMessages;
+      messages.refresh();
       // uncomment this if you want to scroll to the bottom after every new message is received
 
       // WidgetsBinding.instance.addPostFrameCallback(
@@ -189,7 +208,6 @@ class MessagesController extends GetxController {
   @override
   Future<void> onClose() async {
     await _saveUserStates();
-
     _closeMediaPlayers();
     _messagesStreamSubscription.cancel();
     super.onClose();
@@ -973,11 +991,12 @@ class MessagesController extends GetxController {
   }
 
   Future<void> _getMessages() async {
+    await messagesRepo.getMessages(args.user.walletAddress).then((value) => {
+          messages.value = value,
+          messages.refresh(),
+        });
     await chatHistoryRepo.getChat(chatId).then((value) async => {
           chatModel = value,
-          await messagesRepo.getMessages(chatId).then((value) => {
-                messages.value = value,
-              })
         });
 
     // of chatModel is null, scroll to bottom
@@ -1008,13 +1027,41 @@ class MessagesController extends GetxController {
         coreId: selfUserModel.coreId,
         name: selfUserModel.name,
         icon: selfUserModel.iconUrl,
-        lastMessage: messages.last.toString(),
+        lastMessage: "",
         timestamp: DateTime.now(),
         isOnline: true,
         isVerified: true,
         lastReadMessageId: lastReadRemoteMessagesId.value,
       );
     }
+  }
+
+  Future<void> saveCoreIdToClipboard() async {
+    final remoteCoreId = args.user.walletAddress;
+    print("Core ID : $remoteCoreId");
+    await Clipboard.setData(ClipboardData(text: remoteCoreId));
+    Get.rawSnackbar(
+      messageText: Text(
+        LocaleKeys.ShareableQrPage_copiedToClipboardText.tr,
+        textAlign: TextAlign.center,
+        style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kDarkBlueColor),
+      ),
+      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 24.w),
+      backgroundColor: COLORS.kWhiteColor,
+      snackStyle: SnackStyle.FLOATING,
+      snackPosition: SnackPosition.TOP,
+      isDismissible: true,
+      maxWidth: 250.w,
+      margin: EdgeInsets.only(top: 60.h),
+      boxShadows: [
+        BoxShadow(
+          color: const Color(0xFF466087).withOpacity(0.1),
+          offset: const Offset(0, 3),
+          blurRadius: 10,
+        ),
+      ],
+      borderRadius: 8,
+    );
   }
 
 //TODO remove?
@@ -1585,15 +1632,33 @@ class MessagesController extends GetxController {
     print(
         "saving scrollPositionMessagesId.value: ${scrollPositionMessagesId.value}");
     int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
-    await chatHistoryRepo.updateChat(
-      chatModel!.copyWith(
-          icon: selfUserModel.iconUrl,
-          name: selfUserModel.name,
-          lastReadMessageId: lastReadRemoteMessagesId.value,
-          isOnline: true,
-          scrollPosition: scrollPositionMessagesId.value,
-          lastMessage: messages.last.getMessagePreview(),
-          notificationCount: unReadMessagesCount),
-    );
+
+    if (chatModel == null) {
+      ChatModel updatedChatModel = ChatModel(
+        coreId: args.user.walletAddress,
+        id: chatId,
+        icon: selfUserModel.iconUrl,
+        name: selfUserModel.name,
+        lastReadMessageId: lastReadRemoteMessagesId.value,
+        isOnline: true,
+        scrollPosition: scrollPositionMessagesId.value,
+        lastMessage: messages.last.getMessagePreview(),
+        notificationCount: unReadMessagesCount,
+        timestamp: messages.last.timestamp,
+      );
+      await chatHistoryRepo.updateChat(updatedChatModel);
+    } else {
+      print("messages ${messages.length}");
+      await chatHistoryRepo.updateChat(
+        chatModel!.copyWith(
+            icon: selfUserModel.iconUrl,
+            name: selfUserModel.name,
+            lastReadMessageId: lastReadRemoteMessagesId.value,
+            isOnline: true,
+            scrollPosition: scrollPositionMessagesId.value,
+            lastMessage: messages.last.getMessagePreview(),
+            notificationCount: unReadMessagesCount),
+      );
+    }
   }
 }

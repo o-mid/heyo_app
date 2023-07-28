@@ -43,7 +43,7 @@ class PeersListWidget extends GetView<WifiDirectController> {
                           InkWell(
                             borderRadius: BorderRadius.circular(8),
                             onTap: () {
-                              UserPreview(contactRepository: controller.contactRepository)
+                              Get.find<UserPreview>()
                                   .openUserPreview(
                                 userModel: controller.availableDirectUsers[index],
                                 isWifiDirect: true,

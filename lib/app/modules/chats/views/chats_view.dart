@@ -12,6 +12,7 @@ import 'package:heyo/app/modules/shared/widgets/connection_status.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/locales.g.dart';
 
+import '../../../../generated/assets.gen.dart';
 import '../controllers/chats_controller.dart';
 
 class ChatsView extends GetView<ChatsController> {
@@ -28,6 +29,18 @@ class ChatsView extends GetView<ChatsController> {
           style: TEXTSTYLES.kHeaderLarge,
         ),
         automaticallyImplyLeading: false,
+        actions: [
+          Obx(() {
+            if (controller.chats.isNotEmpty) {
+              return IconButton(
+                splashRadius: 18,
+                onPressed: controller.showDeleteAllChatsBottomSheet,
+                icon: Assets.svg.verticalMenuIcon.svg(),
+              );
+            }
+            return const SizedBox.shrink();
+          }),
+        ],
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,

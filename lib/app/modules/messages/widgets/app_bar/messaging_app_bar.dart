@@ -96,65 +96,68 @@ class _DefaultAppBar extends StatelessWidget {
         ),
         CustomCircleAvatar(url: user.iconUrl, size: 32, isOnline: user.isOnline),
         CustomSizes.smallSizedBoxWidth,
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  Text(
-                    user.name,
-                    style: TEXTSTYLES.kButtonBasic.copyWith(
-                      color: COLORS.kWhiteColor,
-                      height: 1,
+        GestureDetector(
+          onDoubleTap: controller.saveCoreIdToClipboard,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [ 
+              Expanded(
+                child: Row(
+                  children: [
+                    Text(
+                      user.name,
+                      style: TEXTSTYLES.kButtonBasic.copyWith(
+                        color: COLORS.kWhiteColor,
+                        height: 1,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 5.w),
-                  if (user.isVerified)
-                    Assets.svg.verified.svg(
-                      width: 12.w,
-                      height: 12.w,
-                      color: COLORS.kWhiteColor,
-                    ),
-                ],
-              ),
-            ),
-            if (user.isOnline)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    LocaleKeys.MessagesPage_onlineVia.tr,
-                    style: TEXTSTYLES.kBodyTag.copyWith(
-                      color: COLORS.kWhiteColor,
-                      fontWeight: FONTS.Regular,
-                    ),
-                  ),
-                  SizedBox(width: 4.w),
-                  controller.connectionType == MessagingConnectionType.internet
-                      ? Icon(
-                          Icons.wifi,
-                          size: 12.w,
-                          color: COLORS.kWhiteColor,
-                        )
-                      : Assets.svg.wifiDirectIcon.svg(
-                          height: 10.w,
-                          fit: BoxFit.contain,
-                          alignment: Alignment.center,
-                          color: COLORS.kWhiteColor,
-                        ),
-                ],
-              ),
-            if (!user.isOnline)
-              Text(
-                LocaleKeys.offline.tr,
-                style: TEXTSTYLES.kBodyTag.copyWith(
-                  color: COLORS.kWhiteColor,
-                  fontWeight: FONTS.Regular,
+                    SizedBox(width: 5.w),
+                    if (user.isVerified)
+                      Assets.svg.verified.svg(
+                        width: 12.w,
+                        height: 12.w,
+                        color: COLORS.kWhiteColor,
+                      ),
+                  ],
                 ),
               ),
-          ],
+              if (user.isOnline)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      LocaleKeys.MessagesPage_onlineVia.tr,
+                      style: TEXTSTYLES.kBodyTag.copyWith(
+                        color: COLORS.kWhiteColor,
+                        fontWeight: FONTS.Regular,
+                      ),
+                    ),
+                    SizedBox(width: 4.w),
+                    controller.connectionType == MessagingConnectionType.internet
+                        ? Icon(
+                            Icons.wifi,
+                            size: 12.w,
+                            color: COLORS.kWhiteColor,
+                          )
+                        : Assets.svg.wifiDirectIcon.svg(
+                            height: 10.w,
+                            fit: BoxFit.contain,
+                            alignment: Alignment.center,
+                            color: COLORS.kWhiteColor,
+                          ),
+                  ],
+                ),
+              if (!user.isOnline)
+                Text(
+                  LocaleKeys.offline.tr,
+                  style: TEXTSTYLES.kBodyTag.copyWith(
+                    color: COLORS.kWhiteColor,
+                    fontWeight: FONTS.Regular,
+                  ),
+                ),
+            ],
+          ),
         ),
         const Spacer(),
         Row(
@@ -166,7 +169,7 @@ class _DefaultAppBar extends StatelessWidget {
                   arguments: CallViewArgumentsModel(
                       session: null,
                       callId: null,
-                      user: user,
+                      user: controller.getUser(),
                       enableVideo: true,
                       isAudioCall: false),
                 );
@@ -181,7 +184,7 @@ class _DefaultAppBar extends StatelessWidget {
                   arguments: CallViewArgumentsModel(
                       session: null,
                       callId: null,
-                      user: user,
+                      user: controller.getUser(),
                       enableVideo: false,
                       isAudioCall: true),
                 );
@@ -195,7 +198,7 @@ class _DefaultAppBar extends StatelessWidget {
               icon: Assets.svg.verticalMenuIcon.svg(),
               size: 22,
               onPressed: () {
-                _openAppBarActionBottomSheet(userModel: user);
+                _openAppBarActionBottomSheet(userModel: controller.getUser());
               },
             ),
           ],

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -7,10 +8,12 @@ import 'package:heyo/app/modules/call_controller/call_connection_controller.dart
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 
 enum CallViewType {
   stack,
@@ -77,6 +80,21 @@ class CallController extends GetxController {
 
   final _screenRecorder = EdScreenRecorder();
 
+  void message(){
+    Get.toNamed(
+      Routes.MESSAGES,
+      arguments: MessagesViewArgumentsModel(
+          user: args.user.copyWith(
+            isOnline: true,
+            isVerified: true,
+            name: args.user.name.isEmpty
+                ? "${args.user.walletAddress.characters.take(4).string}...${args.user.walletAddress.characters.takeLast(4).string}"
+                : args.user.name,
+            coreId: args.user.walletAddress,
+          ),
+          connectionType: MessagingConnectionType.internet),
+    );
+  }
   @override
   void onInit() {
     super.onInit();

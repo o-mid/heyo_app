@@ -3,9 +3,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
+import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -17,7 +19,7 @@ class CallConnectionController extends GetxController {
   final Signaling signaling;
   final AccountInfo accountInfo;
   final NotificationsController notificationsController;
-
+  final ContactRepository contactRepository;
   final callState = Rxn<CallState>();
   final callHistoryState = Rxn<CallHistoryState>();
   final removeStream = Rxn<MediaStream>();
@@ -49,8 +51,7 @@ class CallConnectionController extends GetxController {
 
       callHistoryState.value = CallHistoryState(
         session: session,
-        callHistoryStatus:
-            CallHistoryState.mapCallStateToCallHistoryStatus(state),
+        callHistoryStatus: CallHistoryState.mapCallStateToCallHistoryStatus(state),
       );
 
       print("Call State changed, state is: $state");
@@ -73,20 +74,18 @@ class CallConnectionController extends GetxController {
     };
   }
 
-  CallConnectionController({
-    required this.signaling,
-    required this.accountInfo,
-    required this.notificationsController,
-  });
+  CallConnectionController(
+      {required this.signaling,
+      required this.accountInfo,
+      required this.notificationsController,
+      required this.contactRepository});
 
-  Future<Session> startCall(
-      String remoteId, String callId, bool isAudioCall) async {
+  Future<Session> startCall(String remoteId, String callId, bool isAudioCall) async {
     String? selfCoreId = await accountInfo.getCoreId();
-    final session = await signaling.invite(
-        remoteId, 'video', false, selfCoreId!, isAudioCall);
+    final session = await signaling.invite(remoteId, 'video', false, selfCoreId!, isAudioCall);
 
-    callHistoryState.value = CallHistoryState(
-        session: session, callHistoryStatus: CallHistoryStatus.initial);
+    callHistoryState.value =
+        CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.initial);
     return session;
   }
 
@@ -95,8 +94,8 @@ class CallConnectionController extends GetxController {
       session.sid,
     );
 
-    callHistoryState.value = CallHistoryState(
-        session: session, callHistoryStatus: CallHistoryStatus.connected);
+    callHistoryState.value =
+        CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.connected);
   }
 
   void switchCamera() {
@@ -120,8 +119,8 @@ class CallConnectionController extends GetxController {
 
   void rejectCall(Session session) {
     signaling.reject(session);
-    callHistoryState.value = CallHistoryState(
-        session: session, callHistoryStatus: CallHistoryStatus.connected);
+    callHistoryState.value =
+        CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.connected);
   }
 
   Future<void> close() async {
@@ -132,20 +131,23 @@ class CallConnectionController extends GetxController {
 
   void endOrCancelCall(Session session) {
     signaling.reject(session);
-    callHistoryState.value = CallHistoryState(
-        session: session, callHistoryStatus: CallHistoryStatus.byeSent);
+    callHistoryState.value =
+        CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.byeSent);
   }
 
   Future<void> handleCallStateRinging({required Session session}) async {
+    UserModel? userModel = await contactRepository.getContactById(session.cid);
+    await notifyReceivedCall(callSession: session);
+
     await Get.toNamed(
       Routes.INCOMING_CALL,
       arguments: IncomingCallViewArguments(
-        session: session,
-        callId: "",
-        sdp: session.sid,
-        remoteCoreId: session.cid,
-        remotePeerId: session.pid!,
-      ),
+          session: session,
+          callId: "",
+          sdp: session.sid,
+          remoteCoreId: session.cid,
+          remotePeerId: session.pid!,
+          name: userModel?.name),
     );
   }
 
