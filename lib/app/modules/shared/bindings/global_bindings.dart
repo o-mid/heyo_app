@@ -216,7 +216,7 @@ class GlobalBindings extends Bindings {
             userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
       ),
     ));
-    Get.put<CommonMessagingConnectionController>(Get.find<MessagingConnectionController>());
+    // Get.put<CommonMessagingConnectionController>(Get.find<MessagingConnectionController>());
 
     Get.put(SyncMessages(
         p2pState: p2pState,
