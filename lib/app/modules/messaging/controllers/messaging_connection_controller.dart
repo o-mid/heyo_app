@@ -31,6 +31,7 @@ class MessagingConnectionController
     required super.messagesRepo,
     required super.chatHistoryRepo,
     required super.notificationsController,
+    required super.contactRepository
   }) {
     //setCoreId();
   }

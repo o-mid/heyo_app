@@ -104,7 +104,7 @@ class ContactsView extends GetView<ContactsController> {
   ) {
     return InkWell(
       onTap: () {
-        UserPreview(contactRepository: controller.contactRepo).openUserPreview(
+        Get.find<UserPreview>().openUserPreview(
           userModel: contact,
         );
       },

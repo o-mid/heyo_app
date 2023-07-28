@@ -169,7 +169,7 @@ class _DefaultAppBar extends StatelessWidget {
                   arguments: CallViewArgumentsModel(
                       session: null,
                       callId: null,
-                      user: user,
+                      user: controller.getUser(),
                       enableVideo: true,
                       isAudioCall: false),
                 );
@@ -184,7 +184,7 @@ class _DefaultAppBar extends StatelessWidget {
                   arguments: CallViewArgumentsModel(
                       session: null,
                       callId: null,
-                      user: user,
+                      user: controller.getUser(),
                       enableVideo: false,
                       isAudioCall: true),
                 );
@@ -198,7 +198,7 @@ class _DefaultAppBar extends StatelessWidget {
               icon: Assets.svg.verticalMenuIcon.svg(),
               size: 22,
               onPressed: () {
-                _openAppBarActionBottomSheet(userModel: user);
+                _openAppBarActionBottomSheet(userModel: controller.getUser());
               },
             ),
           ],

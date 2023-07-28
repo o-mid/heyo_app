@@ -62,7 +62,7 @@ class ContactListWithHeader extends GetView<NewChatController> {
                   borderRadius: BorderRadius.circular(8),
                   onTap: () {
                     controller.inputFocusNode.unfocus();
-                    UserPreview(contactRepository: controller.contactRepository).openUserPreview(
+                    Get.find<UserPreview>().openUserPreview(
                       userModel: contacts[index],
                     );
                   },
