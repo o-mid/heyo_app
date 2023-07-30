@@ -56,9 +56,24 @@ class Signaling {
     'iceServers': [
       {'url': 'stun:stun.l.google.com:19302'},
       {
-        "url": 'turn:77.73.67.64:3478',
-        "username": 'turn-demo-server',
-        "credential": 'coiansliocuna89s7ca',
+        "url": 'turn:turn-ca.ting.tube',
+        "username": 'turn-server-ca',
+        "credential": 'OIUACOasiCBSucoiasu878',
+      },
+      {
+        "url": 'turn:turn-sg.ting.tube',
+        "username": 'turn-server-sg',
+        "credential": 'KIuybckIUASvycv78aSC',
+      },
+      {
+        "url": 'turn:turn-gr.ting.tube',
+        "username": 'turn-server-gr',
+        "credential": 'AUISBCoa8&VSC*ASBUIc',
+      },
+      {
+        "url": 'turn:turn-ir.ting.tube',
+        "username": 'turn-server-ir',
+        "credential": 'turn-server-ir',
       }
     ]
   };
