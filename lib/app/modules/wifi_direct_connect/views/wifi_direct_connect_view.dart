@@ -34,20 +34,23 @@ class WifiDirectConnectView extends GetView<WifiDirectConnectController> {
                     ),
                   ),
                   Obx(() {
-                    switch (controller.connectionStatus.value) {
-                      case PeerStatus.peerInvited:
+                    late String connectionStatus;
 
+                    switch (controller.connectionStatus.value) {
+
+                      case PeerStatus.peerInvited:
+                      connectionStatus = 'Invitation sent';
                         break;
 
                       case PeerStatus.peerAvailable:
-
+                        connectionStatus = 'Contact available';
                         break;
 
                       case PeerStatus.peerConnected:
                         print('WifiDirectConnectView peerTCPOpened ${controller.user.coreId}');
+                        connectionStatus = 'Connected';
                         Future.delayed(const Duration(milliseconds: 500),() {
                           Get.back();
-
                           Get.toNamed(
                             Routes.MESSAGES,
                             arguments: MessagesViewArgumentsModel(
@@ -55,15 +58,14 @@ class WifiDirectConnectView extends GetView<WifiDirectConnectController> {
                               connectionType: MessagingConnectionType.wifiDirect,
                             ),
                           );
-
                         });
                         break;
 
                       case PeerStatus.peerTCPOpened:
                         print('WifiDirectConnectView peerTCPOpened ${controller.user.coreId}');
+                        connectionStatus = 'TCP connection opened';
                         Future.delayed(const Duration(milliseconds: 500),() {
                           Get.back();
-
                           Get.toNamed(
                             Routes.MESSAGES,
                             arguments: MessagesViewArgumentsModel(
@@ -71,21 +73,20 @@ class WifiDirectConnectView extends GetView<WifiDirectConnectController> {
                               connectionType: MessagingConnectionType.wifiDirect,
                             ),
                           );
-
                         });
                         break;
 
                       case PeerStatus.peerUnavailable:
+                        connectionStatus = 'Contact unavailable';
                         Future.delayed(const Duration(milliseconds: 500), () => Get.back());
-
                         break;
 
                       default:
-
+                        connectionStatus = 'Status unknown';
                         break;
                     }
                     return Text(
-                      controller.connectionStatus.value.name,
+                      connectionStatus,
                       style: const TextStyle(fontSize: 14),
                     );
                   })
