@@ -97,7 +97,7 @@ class SingleWebRTCConnection {
   }
 
   Future<void> onAnswerReceived(RTCSession rtcSession, description) async {
-    print("onMessage onAnswerReceived");
+    print("onMessage onAnswerReceived  : ${rtcSession.pc?.signalingState}");
 
     await rtcSession.pc!.setRemoteDescription(
       RTCSessionDescription(
