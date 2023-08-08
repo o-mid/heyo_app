@@ -47,9 +47,31 @@ class MediaGlassmorphic extends StatelessWidget {
                           children: [
                             CircularMediaIconButton(
                               backgroundColor: const Color(0xffFFB500),
-                              // camera onPressed:
+                              // Todo : camera onPressed:
                               onPressed: () async {
-                                controller.pick(context);
+                                // Todo : remove this when the feature is ready
+                                Get.rawSnackbar(
+                                  messageText: Text(
+                                    "Sending Media feature is in development phase",
+                                    style: TEXTSTYLES.kBodySmall
+                                        .copyWith(color: COLORS.kGreenMainColor),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
+                                  backgroundColor: COLORS.kAppBackground,
+                                  snackPosition: SnackPosition.TOP,
+                                  snackStyle: SnackStyle.FLOATING,
+                                  margin: const EdgeInsets.only(top: 20),
+                                  boxShadows: [
+                                    BoxShadow(
+                                      color: const Color(0xFF466087).withOpacity(0.1),
+                                      offset: const Offset(0, 3),
+                                      blurRadius: 10,
+                                    ),
+                                  ],
+                                  borderRadius: 8,
+                                );
+                                // controller.pick(context);
                               },
                               padding: 18,
                               child: Assets.svg.cameraIcon.svg(
@@ -59,7 +81,31 @@ class MediaGlassmorphic extends StatelessWidget {
                             ),
                             CircularMediaIconButton(
                               backgroundColor: const Color(0xff16B4F2),
-                              onPressed: () => controller.openGallery(),
+                              onPressed: () {
+                                // Todo : remove this when the feature is ready
+                                Get.rawSnackbar(
+                                  messageText: Text(
+                                    "Sending Media feature is in development phase",
+                                    style: TEXTSTYLES.kBodySmall
+                                        .copyWith(color: COLORS.kGreenMainColor),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
+                                  backgroundColor: COLORS.kAppBackground,
+                                  snackPosition: SnackPosition.TOP,
+                                  snackStyle: SnackStyle.FLOATING,
+                                  margin: const EdgeInsets.only(top: 20),
+                                  boxShadows: [
+                                    BoxShadow(
+                                      color: const Color(0xFF466087).withOpacity(0.1),
+                                      offset: const Offset(0, 3),
+                                      blurRadius: 10,
+                                    ),
+                                  ],
+                                  borderRadius: 8,
+                                );
+                                //  controller.openGallery();
+                              },
                               padding: 18,
                               child: Assets.svg.galleryIcon.svg(
                                 height: 20.w,
@@ -85,8 +131,32 @@ class MediaGlassmorphic extends StatelessWidget {
                           children: [
                             CircularMediaIconButton(
                               backgroundColor: const Color(0xffF93C53),
-                              // file onPressed:
-                              onPressed: () => controller.openFiles(),
+                              //TODO  file onPressed:
+                              onPressed: () {
+                                // Todo : remove this when the feature is ready
+                                Get.rawSnackbar(
+                                  messageText: Text(
+                                    "Sending Files feature is in development phase",
+                                    style: TEXTSTYLES.kBodySmall
+                                        .copyWith(color: COLORS.kGreenMainColor),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
+                                  backgroundColor: COLORS.kAppBackground,
+                                  snackPosition: SnackPosition.TOP,
+                                  snackStyle: SnackStyle.FLOATING,
+                                  margin: const EdgeInsets.only(top: 20),
+                                  boxShadows: [
+                                    BoxShadow(
+                                      color: const Color(0xFF466087).withOpacity(0.1),
+                                      offset: const Offset(0, 3),
+                                      blurRadius: 10,
+                                    ),
+                                  ],
+                                  borderRadius: 8,
+                                );
+                                //  controller.openFiles();
+                              },
 
                               padding: 18,
                               child: Assets.svg.fileIcon.svg(
@@ -98,6 +168,7 @@ class MediaGlassmorphic extends StatelessWidget {
                               backgroundColor: const Color(0xff00B4B5),
                               // TODO :money onPressed:
                               onPressed: () {
+                                // Todo : remove this when the feature is ready
                                 Get.rawSnackbar(
                                   messageText: Text(
                                     "Sending Money feature is in development phase",
