@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 
+import '../../../routes/app_pages.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
+import '../../shared/data/models/messages_view_arguments_model.dart';
 
 class WifiDirectConnectController extends GetxController {
   //TODO: Implement WifiDirectConnectController
@@ -15,12 +17,15 @@ class WifiDirectConnectController extends GetxController {
   late StreamSubscription _eventListener;
   late UserModel user;
 
+
+
   WifiDirectConnectController({required this.wifiDirectConnectionController}) {
     _pluginInstance = wifiDirectConnectionController.wifiDirectWrapper.pluginInstance!;
   }
 
 
   Rx<PeerStatus> connectionStatus = PeerStatus.statusUnknown.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -41,7 +46,7 @@ class WifiDirectConnectController extends GetxController {
     return true;
   }
 
-  _eventHandler(WifiDirectEvent event) {
+  void _eventHandler(WifiDirectEvent event) {
     print('WifiDirectConnectController: WifiDirect event: ${event.type}, ${event.dateTime}');
 
     switch (event.type) {
@@ -58,6 +63,8 @@ class WifiDirectConnectController extends GetxController {
 
         print('WifiDirectConnectController: connectionStatus ${connectionStatus.value.name}');
 
+
+
         break;
 
       case EventType.linkedPeer:
@@ -67,6 +74,8 @@ class WifiDirectConnectController extends GetxController {
         connectionStatus.value = _pluginInstance.peerList.peers[user.coreId]!.status;
 
         print('WifiDirectConnectController: linked to ${(event.message as Peer).multiAddress}');
+
+
         break;
 
       case EventType.groupStopped:
@@ -81,6 +90,49 @@ class WifiDirectConnectController extends GetxController {
       default:
         break;
     }
+
+    //==========================================
+
+    switch (connectionStatus.value) {
+
+      case PeerStatus.peerConnected:
+        print('WifiDirectConnectView peer Connected ${user.coreId}');
+
+        Future.delayed(const Duration(milliseconds: 500),() {
+          Get..back()
+            ..toNamed(
+              Routes.MESSAGES,
+              arguments: MessagesViewArgumentsModel(
+                user: user,
+                connectionType: MessagingConnectionType.wifiDirect,
+              ),
+            );
+        });
+        break;
+
+      case PeerStatus.peerTCPOpened:
+        print('WifiDirectConnectView peer TCPOpened ${user.coreId}');
+
+        Future.delayed(const Duration(milliseconds: 500),() {
+          Get..back()
+            ..toNamed(
+              Routes.MESSAGES,
+              arguments: MessagesViewArgumentsModel(
+                user: user,
+                connectionType: MessagingConnectionType.wifiDirect,
+              ),
+            );
+        });
+        break;
+
+      case PeerStatus.peerUnavailable:
+        Future.delayed(const Duration(milliseconds: 500), Get.back);
+        break;
+
+      default:
+        break;
+    }
+    //==========================================
   }
 
   @override

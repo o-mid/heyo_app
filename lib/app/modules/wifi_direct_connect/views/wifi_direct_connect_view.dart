@@ -18,79 +18,28 @@ class WifiDirectConnectView extends GetView<WifiDirectConnectController> {
       appBar: wifiDirectAppBarWidget(),
       body: Center(
         child: Column(
-                children: [
-                  Text(
-                    controller.user.name,
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  Text(
-                    controller.user.coreId,
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 1.5,
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                  Obx(() {
-                    late String connectionStatus;
-
-                    switch (controller.connectionStatus.value) {
-
-                      case PeerStatus.peerInvited:
-                      connectionStatus = 'Invitation sent';
-                        break;
-
-                      case PeerStatus.peerAvailable:
-                        connectionStatus = 'Contact available';
-                        break;
-
-                      case PeerStatus.peerConnected:
-                        print('WifiDirectConnectView peerTCPOpened ${controller.user.coreId}');
-                        connectionStatus = 'Connected';
-                        Future.delayed(const Duration(milliseconds: 500),() {
-                          Get.back();
-                          Get.toNamed(
-                            Routes.MESSAGES,
-                            arguments: MessagesViewArgumentsModel(
-                              user: controller.user,
-                              connectionType: MessagingConnectionType.wifiDirect,
-                            ),
-                          );
-                        });
-                        break;
-
-                      case PeerStatus.peerTCPOpened:
-                        print('WifiDirectConnectView peerTCPOpened ${controller.user.coreId}');
-                        connectionStatus = 'TCP connection opened';
-                        Future.delayed(const Duration(milliseconds: 500),() {
-                          Get.back();
-                          Get.toNamed(
-                            Routes.MESSAGES,
-                            arguments: MessagesViewArgumentsModel(
-                              user: controller.user,
-                              connectionType: MessagingConnectionType.wifiDirect,
-                            ),
-                          );
-                        });
-                        break;
-
-                      case PeerStatus.peerUnavailable:
-                        connectionStatus = 'Contact unavailable';
-                        Future.delayed(const Duration(milliseconds: 500), () => Get.back());
-                        break;
-
-                      default:
-                        connectionStatus = 'Status unknown';
-                        break;
-                    }
-                    return Text(
-                      connectionStatus,
-                      style: const TextStyle(fontSize: 14),
-                    );
-                  })
-                ],
+          children: [
+            Text(
+              controller.user.name,
+              style: const TextStyle(fontSize: 20),
+            ),
+            Text(
+              controller.user.coreId,
+              style: const TextStyle(fontSize: 12),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 1.5,
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+            Obx(() {
+              return Text(
+                controller.connectionStatus.value.display,
+                style: const TextStyle(fontSize: 14),
+              );
+            })
+          ],
         ),
       ),
     );
