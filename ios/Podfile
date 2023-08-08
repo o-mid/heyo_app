@@ -1,6 +1,6 @@
 # package Better Player needs to be atleast 11.0
 # see https://jhomlala.github.io/betterplayer/#/install for more info
- platform :ios, '12.0'
+ platform :ios, '14.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
