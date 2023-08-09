@@ -92,6 +92,7 @@ class _MessageContent extends StatelessWidget {
           ),
           child: Text(
             (message as TextMessageModel).text,
+            textDirection: TextDirection.ltr,
             style: TEXTSTYLES.kChatText.copyWith(color: textColor),
           ),
         );

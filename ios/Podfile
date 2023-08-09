@@ -1,6 +1,6 @@
 # package Better Player needs to be atleast 11.0
 # see https://jhomlala.github.io/betterplayer/#/install for more info
- platform :ios, '12.0'
+ platform :ios, '14.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -43,9 +43,12 @@ post_install do |installer|
     target.build_configurations.each do |config|
 
 
-      config.build_settings['IPHONE_DEPLOYMENT_TARGET']='12.0'
+      config.build_settings['IPHONE_DEPLOYMENT_TARGET']='14.0'
       config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulators*]']='arm64'
       config.build_settings['ONLY_ACTIVE_ARCH']='NO'
+      config.build_settings['ENABLE_BITCODE'] = 'NO'
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
+      
       # You can enable the permissions needed here. For example to enable camera
       # permission, just remove the `#` character in front so it looks like this:
       #
@@ -101,5 +104,7 @@ post_install do |installer|
 
     end
     # End of the permission_handler configuration
+    
   end
+  
 end

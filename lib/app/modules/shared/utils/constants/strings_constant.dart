@@ -1,5 +1,5 @@
-String P2P_KEY_IN_STORE = "pSecretKey";
-String CRED_KEY_IN_STORE = "credentials";
+String P2P_KEY_IN_STORE = "P2P_KEY_IN_STORE";
+String CRED_KEY_IN_STORE = "CRED_KEY_IN_STORE";
 String CORE_ID_KEY_IN_STORE = "coreId";
 String PRIV_KEY_IN_STORE = "priv";
 String AES_KEY_IN_STORE = "AES";
