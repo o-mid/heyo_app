@@ -77,7 +77,7 @@ class UserPreviewWidget extends GetView<UserPreview> {
                                 user: user.copyWith(
                                   isOnline: true,
                                   isVerified: true,
-                                  name: user.name.isEmpty
+                                  name: user.name.isEmpty || user.name.toLowerCase()== 'unkonwn'
                                       ? "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}"
                                       : user.name,
                                   coreId: user.walletAddress,
