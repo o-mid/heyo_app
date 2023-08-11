@@ -1024,7 +1024,6 @@ class MessagesController extends GetxController {
       isListLoaded.value = true;
       chatModel = ChatModel(
         id: selfUserModel.coreId,
-        coreId: selfUserModel.coreId,
         name: selfUserModel.name,
         icon: selfUserModel.iconUrl,
         lastMessage: "",
@@ -1635,7 +1634,6 @@ class MessagesController extends GetxController {
 
     if (chatModel == null) {
       ChatModel updatedChatModel = ChatModel(
-        coreId: args.user.walletAddress,
         id: chatId,
         icon: selfUserModel.iconUrl,
         name: selfUserModel.name,

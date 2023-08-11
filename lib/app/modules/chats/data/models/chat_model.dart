@@ -26,7 +26,6 @@ class ChatModel {
   static const scrollPositionSerializedName = "scrollPosition";
 
   final String id;
-  final String coreId;
   final String name;
   final String icon;
   final String lastMessage;
@@ -39,7 +38,6 @@ class ChatModel {
 
   ChatModel({
     required this.id,
-    required this.coreId,
     required this.name,
     required this.icon,
     required this.lastMessage,
@@ -54,7 +52,6 @@ class ChatModel {
 
   factory ChatModel.fromJson(Map<String, dynamic> json) => ChatModel(
         id: json[idSerializedName],
-        coreId: json[coreIdSerializedName],
         name: json[nameSerializedName],
         icon: json[iconSerializedName],
         lastMessage: json[lastMessageSerializedName],
@@ -68,7 +65,6 @@ class ChatModel {
 
   Map<String, dynamic> toJson() => {
         idSerializedName: id,
-        coreIdSerializedName: coreId,
         nameSerializedName: name,
         iconSerializedName: icon,
         lastMessageSerializedName: lastMessage,
@@ -95,7 +91,6 @@ class ChatModel {
   }) {
     return ChatModel(
       id: id ?? this.id,
-      coreId: coreId ?? this.coreId,
       name: name ?? this.name,
       icon: icon ?? this.icon,
       lastMessage: lastMessage ?? this.lastMessage,
