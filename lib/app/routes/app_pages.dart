@@ -49,6 +49,8 @@ import '../modules/wallet/bindings/wallet_binding.dart';
 import '../modules/wallet/views/wallet_view.dart';
 import '../modules/wifi_direct/bindings/wifi_direct_binding.dart';
 import '../modules/wifi_direct/views/wifi_direct_view.dart';
+import '../modules/wifi_direct_connect/bindings/wifi_direct_connect_binding.dart';
+import '../modules/wifi_direct_connect/views/wifi_direct_connect_view.dart';
 
 part 'app_routes.dart';
 
@@ -253,6 +255,11 @@ class AppPages {
       name: _Paths.WIFI_DIRECT,
       page: () => const WifiDirectView(),
       binding: WifiDirectBinding(),
+    ),
+    GetPage(
+      name: _Paths.WIFI_DIRECT_CONNECT,
+      page: () => const WifiDirectConnectView(),
+      binding: WifiDirectConnectBinding(),
     ),
   ];
 }

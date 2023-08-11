@@ -67,22 +67,23 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     return;
                   } else {
                     Get.back();
-
-                    Get.toNamed(
-                      Routes.MESSAGES,
-                      arguments: MessagesViewArgumentsModel(
-                          user: user.copyWith(
-                            isOnline: true,
-                            isVerified: true,
-                            name: user.name.isEmpty || user.name.toLowerCase() == "unknown"
-                                ? "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}"
-                                : user.name,
-                            coreId: user.walletAddress,
-                          ),
-                          connectionType: isWifiDirect
-                              ? MessagingConnectionType.wifiDirect
-                              : MessagingConnectionType.internet),
-                    );
+                    print('UserPreviewWidget isWifiDirect $isWifiDirect');
+                    isWifiDirect
+                        ?  Get.toNamed(Routes.WIFI_DIRECT_CONNECT,
+                            arguments: user)
+                        :  Get.toNamed(
+                            Routes.MESSAGES,
+                            arguments: MessagesViewArgumentsModel(
+                                user: user.copyWith(
+                                  isOnline: true,
+                                  isVerified: true,
+                                  name: user.name.isEmpty || user.name.toLowerCase()== 'unkonwn'
+                                      ? "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}"
+                                      : user.name,
+                                  coreId: user.walletAddress,
+                                ),
+                                connectionType: MessagingConnectionType.internet),
+                          );
                   }
                 },
                 backgroundColor: COLORS.kBrightBlueColor,

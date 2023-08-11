@@ -178,7 +178,8 @@ class MessagesController extends GetxController {
 
     // TODO this is debug test of put instance as CommonMessagingConnectionController
     // Put current actual CommonMessagingConnectionController instance to use it in messaging process flow.
-    Get.put(messagingConnection);
+    Get.delete<CommonMessagingConnectionController>();
+    Get.put<CommonMessagingConnectionController>(messagingConnection);
 
     await messagingConnection.initMessagingConnection(
         remoteId: args.user.coreId);

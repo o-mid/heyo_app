@@ -31,7 +31,7 @@ class SendDataChannelMessage {
     }
 
     Map<String, dynamic> message = msg.toJson();
-    if (isDataBinary && messageLocalPath.isNotEmpty) {
+   if (isDataBinary && messageLocalPath.isNotEmpty) {
       BinaryFileSendingState sendingState = await BinaryFileSendingState.create(
         file: File(messageLocalPath),
         meta: msg.message,
