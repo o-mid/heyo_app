@@ -71,7 +71,7 @@ class SyncMessages {
           print("syncMessages : _initiateConnections : getConnection");
 
           multipleConnectionHandler.initiateConnections(
-              value.coreId, selfCoreId);
+              value.id, selfCoreId);
         }
       }
     });

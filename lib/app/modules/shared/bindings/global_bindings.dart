@@ -179,6 +179,7 @@ class GlobalBindings extends Bindings {
         messagesProvider: MessagesProvider(
             appDatabaseProvider: Get.find<AppDatabaseProvider>()),
       ),
+      contactRepository: Get.find<ContactRepository>()
     ));
 
     Get.put(AccountController(accountInfo: accountInfo));

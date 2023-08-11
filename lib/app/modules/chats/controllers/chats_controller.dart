@@ -4,6 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
 import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../widgets/delete_all_chats_bottom_sheet.dart';
@@ -12,15 +15,19 @@ import '../widgets/delete_chat_dialog.dart';
 class ChatsController extends GetxController {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final MessagesAbstractRepo messagesRepo;
-  ChatsController({
-    required this.chatHistoryRepo,
-    required this.messagesRepo,
-  });
+  final ContactRepository contactRepository;
+
+  ChatsController(
+      {required this.chatHistoryRepo,
+      required this.messagesRepo,
+      required this.contactRepository});
+
   final animatedListKey = GlobalKey<AnimatedListState>();
 
   late StreamSubscription _chatsStreamSubscription;
 
   final chats = <ChatModel>[].obs;
+
   @override
   void onInit() {
     init();
@@ -48,9 +55,23 @@ class ChatsController extends GetxController {
   }
 
   listenToChatsStream() async {
-    Stream<List<ChatModel>> chatsStream = await chatHistoryRepo.getChatsStream();
+    Stream<List<ChatModel>> chatsStream =
+        await chatHistoryRepo.getChatsStream();
     _chatsStreamSubscription = chatsStream.listen((newChats) {
-      chats.value = newChats;
+      List<ChatModel> chatModel = [];
+
+      newChats.forEach((element) async {
+        UserModel? userModel =
+            await contactRepository.getContactById(element.id);
+        var isContact = (userModel != null);
+        if (isContact) {
+          chatModel.add(element.copyWith(name: userModel.name));
+        } else {
+          chatModel.add(element.copyWith(name: element.id.shortenCoreId));
+        }
+      });
+
+      chats.value = chatModel;
       chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
       chats.refresh();
     });
@@ -85,7 +106,6 @@ class ChatsController extends GetxController {
     List<ChatModel> mockchats = [
       ChatModel(
         id: '1',
-        coreId: '1',
         isOnline: false,
         icon: "",
         name: "John ",
@@ -95,7 +115,6 @@ class ChatsController extends GetxController {
       ),
       ChatModel(
         id: '2',
-        coreId: '2',
         isOnline: true,
         icon: "",
         name: "emmy",
@@ -105,7 +124,6 @@ class ChatsController extends GetxController {
       ),
       ChatModel(
         id: '3',
-        coreId: '3',
         isOnline: false,
         icon: "",
         name: "dow",
@@ -116,7 +134,6 @@ class ChatsController extends GetxController {
       ),
       ChatModel(
         id: '4',
-        coreId: '4',
         isOnline: true,
         icon: "",
         name: "docs",
@@ -126,7 +143,6 @@ class ChatsController extends GetxController {
       ),
       ChatModel(
         id: '5',
-        coreId: '5',
         isOnline: false,
         icon: "",
         name: "joseef boran",

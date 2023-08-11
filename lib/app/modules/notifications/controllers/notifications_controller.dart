@@ -187,7 +187,7 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
                 ),
                 chatId: payload.chatId,
               ),
-              remoteCoreId: userChatModel.coreId);
+              remoteCoreId: userChatModel.id);
         }
       }
     } else if (receivedAction.buttonKeyPressed == MessagesActionButtons.read.name) {
@@ -201,7 +201,7 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
         if (userChatModel != null) {
           // sends the confirm message to the remote side
           await Get.find<CommonMessagingConnectionController>().confirmReadMessages(
-              messageId: payload.messageId, remoteCoreId: userChatModel.coreId);
+              messageId: payload.messageId, remoteCoreId: userChatModel.id);
           // mark the message as read in the local database
           await messagesRepo.markMessagesAsRead(
               lastReadmessageId: payload.messageId, chatId: payload.chatId);
@@ -225,8 +225,8 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
               user: UserModel(
                 iconUrl: userChatModel.icon,
                 name: userChatModel.name,
-                walletAddress: userChatModel.coreId,
-                coreId: userChatModel.coreId,
+                walletAddress: userChatModel.id,
+                coreId: userChatModel.id,
                 isOnline: userChatModel.isOnline,
               ),
             ),

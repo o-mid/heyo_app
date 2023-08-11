@@ -281,12 +281,15 @@ abstract class CommonMessagingConnectionController extends GetxController {
     }
 
     if (notify) {
+      print("notifyyyyy $chatId");
+      UserModel? userModel= await contactRepository.getContactById(chatId);
+
       await notifyReceivedMessage(
         receivedMessage: receivedMessage,
         chatId: chatId,
-        senderName: userChatmodel!.name.isEmpty
+        senderName: (userModel==null)
             ? "${chatId.characters.take(4).string}...${chatId.characters.takeLast(4).string}"
-            : userChatmodel!.name,
+            : userModel.name,
       );
     }
   }
@@ -375,7 +378,6 @@ abstract class CommonMessagingConnectionController extends GetxController {
 
     ChatModel userChatModel = ChatModel(
         id: sessioncid,
-        coreId: sessioncid,
         isOnline: true,
         name: (userModel == null)
             ? "${sessioncid.characters.take(4).string}...${sessioncid.characters.takeLast(4).string}"
