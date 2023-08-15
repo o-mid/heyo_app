@@ -36,7 +36,7 @@ class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: ScaleAnimatedSwitcher(
             child: controller.selectedMessages.isNotEmpty
                 ? const _SelectionModeAppBar()
-                : _DefaultAppBar(user: controller.args.user),
+                : const _DefaultAppBar(),
           ),
         ),
       ),
@@ -78,8 +78,9 @@ class _SelectionModeAppBar extends StatelessWidget {
 }
 
 class _DefaultAppBar extends StatelessWidget {
-  final UserModel user;
-  const _DefaultAppBar({Key? key, required this.user}) : super(key: key);
+  const _DefaultAppBar({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -94,25 +95,26 @@ class _DefaultAppBar extends StatelessWidget {
             color: COLORS.kWhiteColor,
           ),
         ),
-        CustomCircleAvatar(url: user.iconUrl, size: 32, isOnline: user.isOnline),
+        CustomCircleAvatar(
+            url: controller.user.iconUrl, size: 32, isOnline: controller.user.isOnline),
         CustomSizes.smallSizedBoxWidth,
         GestureDetector(
           onDoubleTap: controller.saveCoreIdToClipboard,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [ 
+            children: [
               Expanded(
                 child: Row(
                   children: [
                     Text(
-                      user.name,
+                      controller.user.name,
                       style: TEXTSTYLES.kButtonBasic.copyWith(
                         color: COLORS.kWhiteColor,
                         height: 1,
                       ),
                     ),
                     SizedBox(width: 5.w),
-                    if (user.isVerified)
+                    if (controller.user.isVerified)
                       Assets.svg.verified.svg(
                         width: 12.w,
                         height: 12.w,
@@ -121,7 +123,7 @@ class _DefaultAppBar extends StatelessWidget {
                   ],
                 ),
               ),
-              if (user.isOnline)
+              if (controller.user.isOnline)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -148,7 +150,7 @@ class _DefaultAppBar extends StatelessWidget {
                           ),
                   ],
                 ),
-              if (!user.isOnline)
+              if (controller.user.isOnline)
                 Text(
                   LocaleKeys.offline.tr,
                   style: TEXTSTYLES.kBodyTag.copyWith(

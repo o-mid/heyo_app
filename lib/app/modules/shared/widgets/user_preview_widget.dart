@@ -69,15 +69,14 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.back();
                     print('UserPreviewWidget isWifiDirect $isWifiDirect');
                     isWifiDirect
-                        ?  Get.toNamed(Routes.WIFI_DIRECT_CONNECT,
-                            arguments: user)
-                        :  Get.toNamed(
+                        ? Get.toNamed(Routes.WIFI_DIRECT_CONNECT, arguments: user)
+                        : Get.toNamed(
                             Routes.MESSAGES,
                             arguments: MessagesViewArgumentsModel(
                                 user: user.copyWith(
                                   isOnline: true,
                                   isVerified: true,
-                                  name: user.name.isEmpty || user.name.toLowerCase()== "unknown"
+                                  name: user.name.isEmpty || user.name.toLowerCase() == "unknown"
                                       ? "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}"
                                       : user.name,
                                   coreId: user.walletAddress,
