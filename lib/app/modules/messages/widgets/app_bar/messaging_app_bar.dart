@@ -96,7 +96,7 @@ class _DefaultAppBar extends StatelessWidget {
           ),
         ),
         CustomCircleAvatar(
-            url: controller.user.iconUrl, size: 32, isOnline: controller.user.isOnline),
+            url: controller.user.value.iconUrl, size: 32, isOnline: controller.user.value.isOnline),
         CustomSizes.smallSizedBoxWidth,
         GestureDetector(
           onDoubleTap: controller.saveCoreIdToClipboard,
@@ -107,14 +107,14 @@ class _DefaultAppBar extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      controller.user.name,
+                      controller.user.value.name,
                       style: TEXTSTYLES.kButtonBasic.copyWith(
                         color: COLORS.kWhiteColor,
                         height: 1,
                       ),
                     ),
                     SizedBox(width: 5.w),
-                    if (controller.user.isVerified)
+                    if (controller.user.value.isVerified)
                       Assets.svg.verified.svg(
                         width: 12.w,
                         height: 12.w,
@@ -123,7 +123,7 @@ class _DefaultAppBar extends StatelessWidget {
                   ],
                 ),
               ),
-              if (controller.user.isOnline)
+              if (controller.user.value.isOnline)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -150,7 +150,7 @@ class _DefaultAppBar extends StatelessWidget {
                           ),
                   ],
                 ),
-              if (controller.user.isOnline)
+              if (controller.user.value.isOnline)
                 Text(
                   LocaleKeys.offline.tr,
                   style: TEXTSTYLES.kBodyTag.copyWith(
