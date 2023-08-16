@@ -63,7 +63,10 @@ class AddContactsController extends GetxController {
     await _updateCallHistory(userModel: userModel);
 
     Get.offNamedUntil(Routes.MESSAGES, ModalRoute.withName(Routes.HOME),
-        arguments: MessagesViewArgumentsModel(user: userModel));
+        arguments: MessagesViewArgumentsModel(
+          coreId: userModel.coreId,
+          iconUrl: userModel.iconUrl,
+        ));
   }
 
   Future<void> _updateChatHistory({required UserModel userModel}) async {
@@ -77,9 +80,7 @@ class AddContactsController extends GetxController {
   }
 
   Future<void> _updateCallHistory({required UserModel userModel}) async {
-    await callHistoryRepo
-        .getCallsFromUserId(userModel.coreId)
-        .then((calls) async {
+    await callHistoryRepo.getCallsFromUserId(userModel.coreId).then((calls) async {
       print("_updateCallHistory: ${calls.length}");
       for (var call in calls) {
         print("_updateCallHistory: ${call.id} : ${call.user}");

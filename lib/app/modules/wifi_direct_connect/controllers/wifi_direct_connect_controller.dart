@@ -17,12 +17,9 @@ class WifiDirectConnectController extends GetxController {
   late StreamSubscription _eventListener;
   late UserModel user;
 
-
-
   WifiDirectConnectController({required this.wifiDirectConnectionController}) {
     _pluginInstance = wifiDirectConnectionController.wifiDirectWrapper.pluginInstance!;
   }
-
 
   Rx<PeerStatus> connectionStatus = PeerStatus.statusUnknown.obs;
 
@@ -30,11 +27,11 @@ class WifiDirectConnectController extends GetxController {
   void onInit() {
     super.onInit();
 
-    _eventListener =
-        wifiDirectConnectionController.wifiDirectWrapper.pluginInstance!.consumerEventSource.stream.listen((event) => _eventHandler(event));
+    _eventListener = wifiDirectConnectionController
+        .wifiDirectWrapper.pluginInstance!.consumerEventSource.stream
+        .listen((event) => _eventHandler(event));
     user = Get.arguments as UserModel;
   }
-
 
   Future<bool> startConnection() async {
     if (_pluginInstance.peerList.contains(user.coreId)) {
@@ -50,39 +47,35 @@ class WifiDirectConnectController extends GetxController {
     print('WifiDirectConnectController: WifiDirect event: ${event.type}, ${event.dateTime}');
 
     switch (event.type) {
-    // Refresh information about wifi-direct available peers
+      // Refresh information about wifi-direct available peers
       case EventType.peerListRefresh:
 
-      // PeerList peerList = signaling.wifiDirectPlugin.peerList;
+        // PeerList peerList = signaling.wifiDirectPlugin.peerList;
         if (_pluginInstance.peerList.contains(user.coreId)) {
           connectionStatus.value = _pluginInstance.peerList.peers[user.coreId]!.status;
         } else {
           connectionStatus.value = PeerStatus.peerUnavailable;
-
         }
 
         print('WifiDirectConnectController: connectionStatus ${connectionStatus.value.name}');
 
-
-
         break;
 
       case EventType.linkedPeer:
-      // incomingConnection = true.obs;
-      // connectedPeer = event.message as Peer;
-      //   wifiDirectConnectionController.eventHandler(event);
+        // incomingConnection = true.obs;
+        // connectedPeer = event.message as Peer;
+        //   wifiDirectConnectionController.eventHandler(event);
         connectionStatus.value = _pluginInstance.peerList.peers[user.coreId]!.status;
 
         print('WifiDirectConnectController: linked to ${(event.message as Peer).multiAddress}');
 
-
         break;
 
       case EventType.groupStopped:
-      // incomingConnection = false.obs;
-      // outgoingConnection = false.obs;
-      // connectedPeer = null;
-      //   wifiDirectConnectionController.eventHandler(event);
+        // incomingConnection = false.obs;
+        // outgoingConnection = false.obs;
+        // connectedPeer = null;
+        //   wifiDirectConnectionController.eventHandler(event);
 
         print('WifiDirectConnectController: Wifi-direct group stopped');
         break;
@@ -94,16 +87,18 @@ class WifiDirectConnectController extends GetxController {
     //==========================================
 
     switch (connectionStatus.value) {
-
       case PeerStatus.peerConnected:
         print('WifiDirectConnectView peer Connected ${user.coreId}');
 
-        Future.delayed(const Duration(milliseconds: 500),() {
-          Get..back()
+        Future.delayed(const Duration(milliseconds: 500), () {
+          Get
+            ..back()
             ..toNamed(
               Routes.MESSAGES,
               arguments: MessagesViewArgumentsModel(
-                user: user,
+                //  user: user,
+                coreId: user.coreId,
+                iconUrl: user.iconUrl,
                 connectionType: MessagingConnectionType.wifiDirect,
               ),
             );
@@ -113,12 +108,15 @@ class WifiDirectConnectController extends GetxController {
       case PeerStatus.peerTCPOpened:
         print('WifiDirectConnectView peer TCPOpened ${user.coreId}');
 
-        Future.delayed(const Duration(milliseconds: 500),() {
-          Get..back()
+        Future.delayed(const Duration(milliseconds: 500), () {
+          Get
+            ..back()
             ..toNamed(
               Routes.MESSAGES,
               arguments: MessagesViewArgumentsModel(
-                user: user,
+                //   user: user,
+                coreId: user.coreId,
+                iconUrl: user.iconUrl,
                 connectionType: MessagingConnectionType.wifiDirect,
               ),
             );
@@ -145,5 +143,4 @@ class WifiDirectConnectController extends GetxController {
     _eventListener.cancel();
     super.onClose();
   }
-
 }

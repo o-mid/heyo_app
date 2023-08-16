@@ -23,14 +23,13 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
 
   WifiDirectWrapper wifiDirectWrapper = WifiDirectWrapper();
 
-  WifiDirectConnectionController({
-    required wifiDirectWrapper,
-    required super.accountInfo,
-    required super.messagesRepo,
-    required super.chatHistoryRepo,
-    required super.notificationsController,
-    required super.contactRepository
-  });
+  WifiDirectConnectionController(
+      {required wifiDirectWrapper,
+      required super.accountInfo,
+      required super.messagesRepo,
+      required super.chatHistoryRepo,
+      required super.notificationsController,
+      required super.contactRepository});
 
   // TODO since working with HeyoWifiDirectPlugin instance requests usage of streams
   // TODO it is necessary to ensure closing this class instance with closing or
@@ -81,7 +80,8 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
     _initPlugin();
 
     // TODO remove debug output
-    print('WifiDirectConnectionController: initMessagingConnection($remoteId), status ${_heyoWifiDirect!.peerList.peers[remoteId]!.status.name}');
+    print(
+        'WifiDirectConnectionController: initMessagingConnection($remoteId), status ${_heyoWifiDirect!.peerList.peers[remoteId]!.status.name}');
     this.remoteId = remoteId;
 
     switch (_heyoWifiDirect!.peerList.peers[remoteId]!.status) {
@@ -95,7 +95,6 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
         dataChannelStatus.value = DataChannelConnectivityStatus.connectionLost;
         break;
     }
-
   }
 
   @override
@@ -159,16 +158,18 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
       Routes.MESSAGES,
       arguments: MessagesViewArgumentsModel(
         // session: session,
-        user: UserModel(
-          iconUrl: userChatModel?.icon ?? "https://avatars.githubusercontent.com/u/6645136?v=4",
-          name: userChatModel?.name ?? _heyoWifiDirect!.peerList.peers[remoteId]?.name ?? "Unknown Wi-Fi Direct",
-          walletAddress: remoteId!,
-          isVerified: false,
-          coreId: remoteId!,
-          isOnline: true,
-        ),
+        // user: UserModel(
+        //   iconUrl: userChatModel?.icon ?? "https://avatars.githubusercontent.com/u/6645136?v=4",
+        //   name: userChatModel?.name ?? _heyoWifiDirect!.peerList.peers[remoteId]?.name ?? "Unknown Wi-Fi Direct",
+        //   walletAddress: remoteId!,
+        //   isVerified: false,
+        //   coreId: remoteId!,
+        //   isOnline: true,
+        // ),
+        coreId: remoteId!,
+        iconUrl: userChatModel?.icon,
         connectionType: MessagingConnectionType.wifiDirect,
-       ),
+      ),
     );
     dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
     setConnectivityOnline();
