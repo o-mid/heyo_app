@@ -38,6 +38,9 @@ void openNewChatBottomSheet() {
               Expanded(
                 // NEW CHAT BUTTON
                 child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+                  ),
                   //Todo: Start new chat onPressed
                   onPressed: () {
                     Get.back();
@@ -93,6 +96,9 @@ void openNewChatBottomSheet() {
           ),
           // WIFI_DIRECT BUTTON
           TextButton(
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+            ),
             onPressed: () => Get.toNamed(
               Routes.WIFI_DIRECT,
             ),
@@ -126,6 +132,9 @@ void openNewChatBottomSheet() {
           ),
           // NEW GROUP BUTTON
           TextButton(
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+            ),
             //Todo: Start new group onPressed
             onPressed: () {},
             child: Row(
@@ -150,6 +159,9 @@ void openNewChatBottomSheet() {
             ),
           ),
           TextButton(
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+            ),
             onPressed: () {
               Get.back();
               Get.toNamed(

@@ -27,8 +27,13 @@ class EmojiPickerButtonWidget extends StatelessWidget {
         padding: EdgeInsets.zero,
       ),
       child: Container(
-        padding: padding ?? const EdgeInsets.all(12),
-        child: Assets.svg.emojiIcon.svg(color: COLORS.kDarkBlueColor, height: 22.h),
+        width: 40,
+        height: 40,
+        margin: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+        padding: const EdgeInsets.all(8),
+        child: Assets.svg.emojiIcon.svg(
+          color: COLORS.kDarkBlueColor,
+        ),
       ),
     );
   }

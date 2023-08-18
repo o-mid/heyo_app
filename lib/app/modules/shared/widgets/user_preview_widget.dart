@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -43,12 +45,13 @@ class UserPreviewWidget extends GetView<UserPreview> {
             children: [
               Text(
                 user.name,
-                style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+                style: TEXTSTYLES.kHeaderLarge
+                    .copyWith(color: COLORS.kDarkBlueColor),
               ),
               CustomSizes.smallSizedBoxWidth,
               user.isVerified
-                  ? Assets.svg.verifiedWithBluePadding
-                      .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
+                  ? Assets.svg.verifiedWithBluePadding.svg(
+                      alignment: Alignment.center, height: 24.w, width: 24.w)
                   : const SizedBox(),
             ],
           ),
@@ -69,20 +72,22 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.back();
                     print('UserPreviewWidget isWifiDirect $isWifiDirect');
                     isWifiDirect
-                        ?  Get.toNamed(Routes.WIFI_DIRECT_CONNECT,
+                        ? Get.toNamed(Routes.WIFI_DIRECT_CONNECT,
                             arguments: user)
-                        :  Get.toNamed(
+                        : Get.toNamed(
                             Routes.MESSAGES,
                             arguments: MessagesViewArgumentsModel(
                                 user: user.copyWith(
                                   isOnline: true,
                                   isVerified: true,
-                                  name: user.name.isEmpty || user.name.toLowerCase()== "unknown"
+                                  name: user.name.isEmpty ||
+                                          user.name.toLowerCase() == "unknown"
                                       ? "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}"
                                       : user.name,
                                   coreId: user.walletAddress,
                                 ),
-                                connectionType: MessagingConnectionType.internet),
+                                connectionType:
+                                    MessagingConnectionType.internet),
                           );
                   }
                 },
@@ -107,7 +112,8 @@ class UserPreviewWidget extends GetView<UserPreview> {
                           isAudioCall: true),
                     );
                   } else {
-                    Get.snackbar("Wifi Direct", "Calling over wifi direct are not supported yet");
+                    Get.snackbar("Wifi Direct",
+                        "Calling over wifi direct are not supported yet");
                   }
                 },
                 backgroundColor: COLORS.kBrightBlueColor,
@@ -124,14 +130,18 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.toNamed(
                       Routes.CALL,
                       arguments: CallViewArgumentsModel(
-                          session: null,
-                          callId: null,
-                          user: user,
-                          enableVideo: true,
-                          isAudioCall: false),
+                        session: null,
+                        callId: null,
+                        user: user,
+                        enableVideo: true,
+                        isAudioCall: false,
+                      ),
                     );
                   } else {
-                    Get.snackbar("Wifi Direct", "Calling over wifi direct are not supported yet");
+                    Get.snackbar(
+                      "Wifi Direct",
+                      "Calling over wifi direct are not supported yet",
+                    );
                   }
                 },
                 backgroundColor: COLORS.kBrightBlueColor,
@@ -145,8 +155,9 @@ class UserPreviewWidget extends GetView<UserPreview> {
           const Divider(
             color: COLORS.kBrightBlueColor,
             thickness: 1,
+            height: 1,
           ),
-          CustomSizes.mediumSizedBoxHeight,
+          CustomSizes.smallSizedBoxHeight,
           Padding(
             padding: CustomSizes.iconListPadding,
             child: Column(
@@ -168,11 +179,14 @@ class UserPreviewWidget extends GetView<UserPreview> {
 
                           Get.toNamed(
                             Routes.ADD_CONTACTS,
-                            arguments: AddContactsViewArgumentsModel(user: user),
+                            arguments:
+                                AddContactsViewArgumentsModel(user: user),
                           );
                         },
-                        icon: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
-                        title: LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
+                        icon: Assets.svg.addToContactsIcon
+                            .svg(width: 20, height: 20),
+                        title:
+                            LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
                       )
                     : _buildIconTextButton(
                         onPressed: () async {
@@ -183,12 +197,15 @@ class UserPreviewWidget extends GetView<UserPreview> {
                             if (result is bool && result == true) {
                               print("result   $result");
 
-                              await controller.deleteContact(user.walletAddress);
+                              await controller
+                                  .deleteContact(user.walletAddress);
                             }
                           });
                         },
-                        icon: Assets.svg.removeContact.svg(width: 20, height: 20),
-                        title: LocaleKeys.newChat_userBottomSheet_RemoveFromContacts.tr,
+                        icon:
+                            Assets.svg.removeContact.svg(width: 20, height: 20),
+                        title: LocaleKeys
+                            .newChat_userBottomSheet_RemoveFromContacts.tr,
                       ),
                 _buildIconTextButton(
                   onPressed: () {
@@ -196,7 +213,8 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.rawSnackbar(
                       messageText: Text(
                         "Blocking feature is in development phase",
-                        style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kDarkBlueColor),
+                        style: TEXTSTYLES.kBodySmall
+                            .copyWith(color: COLORS.kDarkBlueColor),
                         textAlign: TextAlign.center,
                       ),
                       //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
@@ -236,6 +254,9 @@ Widget _buildIconTextButton({
   Color iconBgColor = COLORS.kBrightBlueColor,
 }) {
   return TextButton(
+    style: TextButton.styleFrom(
+      padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+    ),
     onPressed: onPressed,
     child: Row(
       children: [
