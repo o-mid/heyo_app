@@ -62,6 +62,7 @@ void openNewChatBottomSheet() {
                         LocaleKeys.HomePage_bottomSheet_newChat.tr,
                         style: TEXTSTYLES.kBodyBasic.copyWith(
                           color: COLORS.kDarkBlueColor,
+                          fontSize: 16,
                         ),
                       )
                     ],
@@ -69,6 +70,7 @@ void openNewChatBottomSheet() {
                 ),
               ),
               IconButton(
+                padding: EdgeInsets.zero,
                 onPressed: () {
                   Get.back();
                   Get.toNamed(
@@ -80,12 +82,13 @@ void openNewChatBottomSheet() {
                 },
                 alignment: Alignment.center,
                 iconSize: 21.w,
-                icon: const Icon(
-                  Icons.qr_code_rounded,
+                icon: Assets.svg.qrCode.svg(
+                  width: 20.w,
+                  fit: BoxFit.fitWidth,
                   color: COLORS.kDarkBlueColor,
                 ),
               ),
-              CustomSizes.smallSizedBoxWidth,
+              //CustomSizes.smallSizedBoxWidth,
             ],
           ),
           // WIFI_DIRECT BUTTON
@@ -115,6 +118,7 @@ void openNewChatBottomSheet() {
                   LocaleKeys.HomePage_bottomSheet_wifiDirect.tr,
                   style: TEXTSTYLES.kBodyBasic.copyWith(
                     color: COLORS.kDarkBlueColor,
+                    fontSize: 16,
                   ),
                 )
               ],
@@ -139,6 +143,7 @@ void openNewChatBottomSheet() {
                   LocaleKeys.HomePage_bottomSheet_newGroup.tr,
                   style: TEXTSTYLES.kBodyBasic.copyWith(
                     color: COLORS.kDarkBlueColor,
+                    fontSize: 16,
                   ),
                 )
               ],
@@ -169,6 +174,7 @@ void openNewChatBottomSheet() {
                   LocaleKeys.HomePage_bottomSheet_invite.tr,
                   style: TEXTSTYLES.kBodyBasic.copyWith(
                     color: COLORS.kDarkBlueColor,
+                    fontSize: 16,
                   ),
                 )
               ],
