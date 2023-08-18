@@ -137,6 +137,7 @@ class MessagesController extends GetxController {
 
   _initMessagesArguments() async {
     args = Get.arguments as MessagesViewArgumentsModel;
+    connectionType = args.connectionType;
     await contactRepository.getContactById(args.coreId).then((value) async {
       if (value == null) {
         final createdUser = UserModel(
@@ -155,18 +156,16 @@ class MessagesController extends GetxController {
       user.refresh();
     });
 
-    chatId = args.coreId;
-    connectionType = args.connectionType;
+    chatId = user.value.coreId;
 
-    UserModel? userModel = await contactRepository.getContactById(user.value.coreId);
-    //Todo: check the following line
-    _userModel = user.value.copyWith(isContact: (userModel != null));
+    // UserModel? userModel = await contactRepository.getContactById(user.value.coreId);
+    // //Todo: check the following line
+    // _userModel = user.value.copyWith(isContact: (userModel != null));
   }
 
-  late UserModel _userModel;
-
+  // late UserModel _userModel;
   UserModel getUser() {
-    return _userModel;
+    return user.value;
   }
 
   @override
@@ -1025,6 +1024,8 @@ class MessagesController extends GetxController {
       //   );
       // });
       isListLoaded.value = true;
+      print("ListLoaded");
+
       chatModel = ChatModel(
         id: user.value.coreId,
         name: user.value.name,

@@ -222,13 +222,6 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
           Get.toNamed(
             Routes.MESSAGES,
             arguments: MessagesViewArgumentsModel(
-              // user: UserModel(
-              //   iconUrl: userChatModel.icon,
-              //   name: userChatModel.name,
-              //   walletAddress: userChatModel.id,
-              //   coreId: userChatModel.id,
-              //   isOnline: userChatModel.isOnline,
-              // ),
               coreId: userChatModel.id,
               iconUrl: userChatModel.icon,
             ),

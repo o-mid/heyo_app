@@ -158,14 +158,7 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
       Routes.MESSAGES,
       arguments: MessagesViewArgumentsModel(
         // session: session,
-        // user: UserModel(
-        //   iconUrl: userChatModel?.icon ?? "https://avatars.githubusercontent.com/u/6645136?v=4",
-        //   name: userChatModel?.name ?? _heyoWifiDirect!.peerList.peers[remoteId]?.name ?? "Unknown Wi-Fi Direct",
-        //   walletAddress: remoteId!,
-        //   isVerified: false,
-        //   coreId: remoteId!,
-        //   isOnline: true,
-        // ),
+
         coreId: remoteId!,
         iconUrl: userChatModel?.icon,
         connectionType: MessagingConnectionType.wifiDirect,

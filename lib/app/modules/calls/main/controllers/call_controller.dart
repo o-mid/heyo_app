@@ -81,14 +81,6 @@ class CallController extends GetxController {
     Get.toNamed(
       Routes.MESSAGES,
       arguments: MessagesViewArgumentsModel(
-          // user: args.user.copyWith(
-          //   isOnline: true,
-          //   isVerified: true,
-          //   name: args.user.name.isEmpty
-          //       ? "${args.user.walletAddress.characters.take(4).string}...${args.user.walletAddress.characters.takeLast(4).string}"
-          //       : args.user.name,
-          //   coreId: args.user.walletAddress,
-          // ),
           coreId: args.user.coreId,
           iconUrl: args.user.iconUrl,
           connectionType: MessagingConnectionType.internet),

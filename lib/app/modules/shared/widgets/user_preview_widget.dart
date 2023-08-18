@@ -73,14 +73,6 @@ class UserPreviewWidget extends GetView<UserPreview> {
                         : Get.toNamed(
                             Routes.MESSAGES,
                             arguments: MessagesViewArgumentsModel(
-                                // user: user.copyWith(
-                                //   isOnline: true,
-                                //   isVerified: true,
-                                //   name: user.name.isEmpty || user.name.toLowerCase() == "unknown"
-                                //       ? "${user.walletAddress.characters.take(4).string}...${user.walletAddress.characters.takeLast(4).string}"
-                                //       : user.name,
-                                //   coreId: user.walletAddress,
-                                // ),
                                 coreId: user.coreId,
                                 iconUrl: user.iconUrl,
                                 connectionType: MessagingConnectionType.internet),

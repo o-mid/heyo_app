@@ -69,13 +69,6 @@ class ChatsView extends GetView<ChatsController> {
                   Get.toNamed(
                     Routes.MESSAGES,
                     arguments: MessagesViewArgumentsModel(
-                      // user: UserModel(
-                      //   name: chats[index].name,
-                      //   iconUrl: chats[index].icon,
-                      //   walletAddress: chats[index].id,
-                      //   coreId: chats[index].id,
-                      //   isOnline: true,
-                      // ),
                       iconUrl: chats[index].icon,
                       coreId: chats[index].id,
                     ),
