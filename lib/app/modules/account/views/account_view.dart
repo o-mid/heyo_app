@@ -33,7 +33,10 @@ class AccountView extends GetView<AccountController> {
                   onTap: () {
                     Get.toNamed(Routes.SHREABLE_QR);
                   },
-                  child: const Icon(Icons.qr_code_rounded),
+                  child: Assets.svg.qrCode.svg(
+                    width: 20.w,
+                    fit: BoxFit.fitWidth,
+                  ),
                 ),
                 SizedBox(width: 23.w),
               ],
