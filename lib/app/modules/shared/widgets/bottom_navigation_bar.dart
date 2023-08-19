@@ -60,21 +60,26 @@ class BottomNavigationBarCustom extends StatelessWidget {
               items: <BottomNavigationBarItem>[
                 _buildNavItem(
                   Assets.svg.chat,
+                  Assets.svg.chatOutlined,
                   LocaleKeys.HomePage_navbarItems_chats.tr,
                 ),
                 _buildNavItem(
+                  Assets.svg.callFilled,
                   Assets.svg.call,
                   LocaleKeys.HomePage_navbarItems_calls.tr,
                 ),
                 _buildNavItem(
                   Assets.svg.wallet,
+                  Assets.svg.wallet,
                   LocaleKeys.HomePage_navbarItems_wallet.tr,
                 ),
                 _buildNavItem(
+                  Assets.svg.searchNearbyFilled,
                   Assets.svg.searchNearby,
                   LocaleKeys.HomePage_navbarItems_search.tr,
                 ),
                 _buildNavItem(
+                  Assets.svg.accountFilled,
                   Assets.svg.account,
                   LocaleKeys.HomePage_navbarItems_account.tr,
                 ),
@@ -86,17 +91,26 @@ class BottomNavigationBarCustom extends StatelessWidget {
     );
   }
 
-  BottomNavigationBarItem _buildNavItem(SvgGenImage icon, String label) {
+  BottomNavigationBarItem _buildNavItem(
+    SvgGenImage activeIcon,
+    SvgGenImage deActiveIcon,
+    String label,
+  ) {
     return BottomNavigationBarItem(
       activeIcon: _buildIconWithNotificationCounter(
-          icon: icon.svg(
-            width: 20.w,
-            height: 20.w,
-            color: COLORS.kGreenMainColor,
-          ),
-          notificationCount: 0),
+        icon: activeIcon.svg(
+          width: 20.w,
+          height: 20.w,
+          color: COLORS.kGreenMainColor,
+        ),
+        notificationCount: 0,
+      ),
       icon: _buildIconWithNotificationCounter(
-        icon: icon.svg(width: 20.w, height: 20.w),
+        icon: deActiveIcon.svg(
+          width: 20.w,
+          height: 20.w,
+          color: COLORS.kMessageSelectionOption,
+        ),
         notificationCount: 0,
       ),
       label: label,

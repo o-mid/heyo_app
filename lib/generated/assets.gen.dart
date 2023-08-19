@@ -85,6 +85,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/account.svg
   SvgGenImage get account => const SvgGenImage('assets/svg/account.svg');
 
+  /// File path: assets/svg/account_filled.svg
+  SvgGenImage get accountFilled =>
+      const SvgGenImage('assets/svg/account_filled.svg');
+
   /// File path: assets/svg/add_participant.svg
   SvgGenImage get addParticipant =>
       const SvgGenImage('assets/svg/add_participant.svg');
@@ -120,6 +124,9 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/call_end.svg
   SvgGenImage get callEnd => const SvgGenImage('assets/svg/call_end.svg');
+
+  /// File path: assets/svg/call_filled.svg
+  SvgGenImage get callFilled => const SvgGenImage('assets/svg/call_filled.svg');
 
   /// File path: assets/svg/call_incoming.svg
   SvgGenImage get callIncoming =>
@@ -361,6 +368,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/search_nearby.svg
   SvgGenImage get searchNearby =>
       const SvgGenImage('assets/svg/search_nearby.svg');
+
+  /// File path: assets/svg/search_nearby_filled.svg
+  SvgGenImage get searchNearbyFilled =>
+      const SvgGenImage('assets/svg/search_nearby_filled.svg');
 
   /// File path: assets/svg/sendImageIcon.svg
   SvgGenImage get sendImageIcon =>
