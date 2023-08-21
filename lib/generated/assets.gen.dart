@@ -82,6 +82,13 @@ class $AssetsPngGen {
 class $AssetsSvgGen {
   const $AssetsSvgGen();
 
+  /// File path: assets/svg/IncomingCall.svg
+  SvgGenImage get incomingCall =>
+      const SvgGenImage('assets/svg/IncomingCall.svg');
+
+  /// File path: assets/svg/MissedCall.svg
+  SvgGenImage get missedCall => const SvgGenImage('assets/svg/MissedCall.svg');
+
   /// File path: assets/svg/account.svg
   SvgGenImage get account => const SvgGenImage('assets/svg/account.svg');
 
@@ -299,6 +306,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/no_connection_wifi.svg
   SvgGenImage get noConnectionWifi =>
       const SvgGenImage('assets/svg/no_connection_wifi.svg');
+
+  /// File path: assets/svg/outgoingCall2.svg
+  SvgGenImage get outgoingCall2 =>
+      const SvgGenImage('assets/svg/outgoingCall2.svg');
 
   /// File path: assets/svg/outgoing_call.svg
   SvgGenImage get outgoingCall =>
