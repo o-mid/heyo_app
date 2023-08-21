@@ -43,7 +43,8 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
             children: [
               Text(
                 user.name,
-                style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+                style: TEXTSTYLES.kHeaderLarge
+                    .copyWith(color: COLORS.kDarkBlueColor),
               ),
               CustomSizes.smallSizedBoxWidth,
               Container(
@@ -70,6 +71,7 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
               {"name": user.name},
             ),
             style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
+            textAlign: TextAlign.center,
           ),
         ],
       ),

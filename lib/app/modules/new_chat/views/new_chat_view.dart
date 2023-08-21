@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
@@ -101,7 +102,8 @@ class NewChatView extends GetView<NewChatController> {
                   ),
                   label: Text(
                     LocaleKeys.newChat_buttons_filter.tr,
-                    style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+                    style: TEXTSTYLES.kHeaderLarge
+                        .copyWith(color: COLORS.kDarkBlueColor),
                   ),
                 ),
               ),
@@ -113,7 +115,8 @@ class NewChatView extends GetView<NewChatController> {
                     return CheckboxListTile(
                         title: Text(
                           controller.filters[index].title,
-                          style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
+                          style: TEXTSTYLES.kLinkBig
+                              .copyWith(color: COLORS.kDarkBlueColor),
                         ),
                         value: controller.filters[index].isActive.value,
                         onChanged: (Value) {
@@ -139,7 +142,11 @@ class NewChatView extends GetView<NewChatController> {
       backgroundColor: COLORS.kWhiteColor,
       isDismissible: true,
       enableDrag: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+      ),
     );
   }
 }
@@ -322,17 +329,20 @@ class _Contacts extends StatelessWidget {
               padding: CustomSizes.mainContentPadding,
               child: FocusScope(
                 child: Focus(
-                  onFocusChange: (focus) => controller.isTextInputFocused.value = focus,
+                  onFocusChange: (focus) =>
+                      controller.isTextInputFocused.value = focus,
                   focusNode: controller.inputFocusNode,
                   child: CUSTOMTEXTFIELD(
                     textController: controller.inputController,
                     labelText: LocaleKeys.newChat_usernameInput.tr,
                     rightWidget: IconButton(
-                      icon: const Icon(
-                        Icons.qr_code_rounded,
-                        color: COLORS.kDarkBlueColor,
+                      icon: Assets.svg.qrCode.svg(
+                        width: 20.w,
+                        fit: BoxFit.fitWidth,
                       ),
-                      onPressed: () => {openQrScannerBottomSheet(controller.handleScannedValue)},
+                      onPressed: () => {
+                        openQrScannerBottomSheet(controller.handleScannedValue)
+                      },
                     ),
                   ),
                 ),

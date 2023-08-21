@@ -86,7 +86,8 @@ class COLORS {
   static const Color kOnlineBadgeColor = Color(0xff37E028);
 
   /// Tab bar slider background #F8F7FF 80% opacity
-  static const Color kTabbarBackgroundColor = Color.fromARGB(204, 248, 247, 255);
+  static const Color kTabbarBackgroundColor =
+      Color.fromARGB(204, 248, 247, 255);
 
   /// message selection options color
   static const Color kMessageSelectionOption = Color(0xffA9AFC6);
@@ -120,4 +121,7 @@ class COLORS {
 
   /// Shimmer highlight color [shade100]
   static Color kShimmerHighlight = Colors.grey.shade100;
+
+  /// chat footer color
+  static const Color KChatFooterGrey = Color(0xfff7f6ff);
 }

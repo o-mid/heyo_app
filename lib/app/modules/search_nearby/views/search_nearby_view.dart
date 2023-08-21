@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/widgets/appbar_widget.dart';
 
 import '../../../../generated/locales.g.dart';
 import '../../../routes/app_pages.dart';
@@ -16,26 +17,19 @@ class SearchNearbyView extends GetView<SearchNearbyController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: COLORS.kAppBackground,
-      appBar: AppBar(
-        backgroundColor: COLORS.kGreenMainColor,
-        title: Text(
-          LocaleKeys.newChat_slider_nearbyUsers.tr,
-          style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kWhiteColor),
-        ),
-        centerTitle: false,
-      ),
+      appBar: AppBarWidget(title: LocaleKeys.newChat_slider_nearbyUsers.tr),
       body: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              EmptyContactsBody(
-                infoText: LocaleKeys.newChat_emptyStateTitleNearbyUsers.tr,
-                buttonText: "Share Info",
-                onInvite: () => Get.toNamed(Routes.SHREABLE_QR),
-              ),
-              const SizedBox(height: 30),
-            ],
-          )),
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          EmptyContactsBody(
+            infoText: LocaleKeys.newChat_emptyStateTitleNearbyUsers.tr,
+            buttonText: "Share Info",
+            onInvite: () => Get.toNamed(Routes.SHREABLE_QR),
+          ),
+          const SizedBox(height: 30),
+        ],
+      )),
     );
   }
 }
