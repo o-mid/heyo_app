@@ -93,6 +93,11 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
     }
   }
 
+  InputBorder inputBorder = const OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+    borderSide: BorderSide(color: Colors.transparent),
+  );
+
   switchBorders() {
     OutlineInputBorder focusedBorder = CustomInputBorder(
         gapPadding: 8,
@@ -153,42 +158,59 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
   }
 
   Widget textFieldSection() {
-    switchBorders();
+    //Removing borders for input design
+    //switchBorders();
     return Center(
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Expanded(
-            child: TextFormField(
-              validator: widget.validator,
-              focusNode: focusNode,
-              obscureText: widget.obscureText,
-              keyboardType: widget.keyboardType,
-              controller: controller,
-              style:
-                  TEXTSTYLES.kHeaderMedium.copyWith(color: COLORS.kBlackColor),
-              inputFormatters: widget.inputFormatters,
-              decoration: InputDecoration(
-                //errorText: widget.validator(controller.value.text),
-                suffixIcon: widget.rightWidget,
-                suffixIconColor: iconColor,
-                prefixIconColor: iconColor,
-                prefixIcon: widget.leftWidget,
-                hintText: widget.hintText ?? widget.labelText,
-                labelText: widget.labelText,
-                hintStyle: TEXTSTYLES.kBodyBasic
-                    .copyWith(color: COLORS.kTextSoftBlueColor, fontSize: 15),
-                labelStyle: TEXTSTYLES.kBodySmall.copyWith(
-                    color: COLORS.kBlackColor, height: 1, fontSize: 15),
-                border: border,
+            child: SizedBox(
+              height: 48,
+              child: TextFormField(
+                validator: widget.validator,
+                focusNode: focusNode,
+                obscureText: widget.obscureText,
+                keyboardType: widget.keyboardType,
+                controller: controller,
+                style: TEXTSTYLES.kHeaderMedium
+                    .copyWith(color: COLORS.kBlackColor),
+                inputFormatters: widget.inputFormatters,
+                decoration: InputDecoration(
+                  fillColor: COLORS.kBrightBlueColor,
+                  filled: true,
+                  //errorText: widget.validator(controller.value.text),
+                  suffixIcon: widget.rightWidget,
+                  suffixIconColor: iconColor,
+                  prefixIconColor: iconColor,
+                  prefixIcon: widget.leftWidget,
+                  hintText: widget.hintText ?? widget.labelText,
+                  //labelText: widget.labelText,
+                  hintStyle: TEXTSTYLES.kBodyBasic
+                      .copyWith(color: COLORS.kTextSoftBlueColor, fontSize: 15),
+                  labelStyle: TEXTSTYLES.kBodySmall.copyWith(
+                      color: COLORS.kBlackColor, height: 1, fontSize: 15),
+                  //border: border,
 
-                focusedBorder: border,
-                enabledBorder: border,
-                errorBorder: border,
-                disabledBorder: border,
-                contentPadding:
-                    EdgeInsets.only(left: 16, bottom: 15, top: 15, right: 16),
+                  //focusedBorder: border,
+                  //enabledBorder: InputBorder.none,
+                  //errorBorder: border,
+                  //disabledBorder: border,
+                  border: inputBorder,
+                  enabledBorder: inputBorder,
+                  focusedBorder: inputBorder,
+                  errorBorder: inputBorder,
+                  focusedErrorBorder: inputBorder,
+                  disabledBorder: inputBorder,
+
+                  contentPadding: const EdgeInsets.only(
+                    left: 16,
+                    bottom: 15,
+                    top: 15,
+                    right: 16,
+                  ),
+                ),
               ),
             ),
           ),
