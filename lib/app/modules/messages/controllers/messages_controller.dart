@@ -119,7 +119,7 @@ class MessagesController extends GetxController {
     _initMessagesArguments();
 
     _initUiControllers();
-
+    await _getUserContact();
     // // Initialize messagingConnection instance of CommonMessagingController-inherited class depends on connection type
     // // Also included previous functionality of _initDataChannel()
     await _initMessagingConnection();
@@ -137,30 +137,37 @@ class MessagesController extends GetxController {
 
   _initMessagesArguments() async {
     args = Get.arguments as MessagesViewArgumentsModel;
+
     connectionType = args.connectionType;
-    await contactRepository.getContactById(args.coreId).then((value) async {
-      if (value == null) {
-        final createdUser = UserModel(
-          coreId: args.coreId,
-          iconUrl: args.iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
-          name: args.coreId.shortenCoreId,
-          isOnline: true,
-          isContact: false,
-          walletAddress: args.coreId,
-        );
-        await contactRepository.addContact(createdUser);
-        user.value = createdUser;
-      } else {
-        user.value = value;
-      }
-      user.refresh();
-    });
 
     chatId = user.value.coreId;
 
     // UserModel? userModel = await contactRepository.getContactById(user.value.coreId);
     // //Todo: check the following line
     // _userModel = user.value.copyWith(isContact: (userModel != null));
+  }
+
+  _getUserContact() async {
+    // check if user is already in contact
+    UserModel? createdUser = await contactRepository.getContactById(args.coreId);
+
+    if (createdUser == null) {
+      createdUser = UserModel(
+        coreId: args.coreId,
+        iconUrl: args.iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
+        name: args.coreId.shortenCoreId,
+        isOnline: true,
+        isContact: false,
+        walletAddress: args.coreId,
+      );
+      // adds the new user to the repo and update the UserModel
+      await contactRepository.addContact(createdUser);
+      user.value = createdUser;
+    } else {
+      user.value = createdUser;
+    }
+    chatId = user.value.coreId;
+    user.refresh();
   }
 
   // late UserModel _userModel;
