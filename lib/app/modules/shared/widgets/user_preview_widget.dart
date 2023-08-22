@@ -161,7 +161,10 @@ class UserPreviewWidget extends GetView<UserPreview> {
 
                           Get.toNamed(
                             Routes.ADD_CONTACTS,
-                            arguments: AddContactsViewArgumentsModel(user: user),
+                            arguments: AddContactsViewArgumentsModel(
+                              coreID: user.coreId,
+                              iconUrl: user.iconUrl,
+                            ),
                           );
                         },
                         icon: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
