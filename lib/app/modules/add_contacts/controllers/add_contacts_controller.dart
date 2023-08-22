@@ -20,10 +20,10 @@ class AddContactsController extends GetxController {
   final CallHistoryAbstractRepo callHistoryRepo;
 
   Rx<UserModel> user = UserModel(
-    coreId: (Get.arguments as AddContactsViewArgumentsModel).coreID,
+    coreId: (Get.arguments as AddContactsViewArgumentsModel).coreId,
     iconUrl: (Get.arguments as AddContactsViewArgumentsModel).iconUrl ??
         "https://avatars.githubusercontent.com/u/2345136?v=4",
-    name: (Get.arguments as AddContactsViewArgumentsModel).coreID.shortenCoreId,
+    name: (Get.arguments as AddContactsViewArgumentsModel).coreId.shortenCoreId,
     walletAddress: (Get.arguments).coreId,
     isBlocked: false,
     isOnline: false,
@@ -65,22 +65,23 @@ class AddContactsController extends GetxController {
     await updateUserChatMode(
         userModel: user.value.copyWith(
       nickname: nickname.value,
+      name: nickname.value,
       isContact: true,
     ));
   }
 
   _getUserContact() async {
     // check if user is already in contact
-    UserModel? createdUser = await contactRepository.getContactById(args.coreID);
+    UserModel? createdUser = await contactRepository.getContactById(args.coreId);
 
     if (createdUser == null) {
       createdUser = UserModel(
-        coreId: args.coreID,
+        coreId: args.coreId,
         iconUrl: args.iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
-        name: args.coreID.shortenCoreId,
+        name: args.coreId.shortenCoreId,
         isOnline: true,
         isContact: false,
-        walletAddress: args.coreID,
+        walletAddress: args.coreId,
       );
       // adds the new user to the repo and update the UserModel
       await contactRepository.addContact(createdUser);

@@ -228,7 +228,7 @@ void _openAppBarActionBottomSheet({required UserModel userModel}) {
                   Routes.ADD_CONTACTS,
                   arguments: AddContactsViewArgumentsModel(
                     //  user: userModel,
-                    coreID: userModel.coreId,
+                    coreId: userModel.coreId,
                     iconUrl: userModel.iconUrl,
                   ),
                 );
