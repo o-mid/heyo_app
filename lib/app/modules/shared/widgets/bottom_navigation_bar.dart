@@ -14,8 +14,13 @@ class BottomNavigationBarCustom extends StatelessWidget {
   final bool show;
   final int duration;
 
-  const BottomNavigationBarCustom(
-      {required this.currentIndex, required this.onTap, this.show = true, this.duration = 250});
+  const BottomNavigationBarCustom({
+    super.key,
+    required this.currentIndex,
+    required this.onTap,
+    this.show = true,
+    this.duration = 250,
+  });
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -23,46 +28,100 @@ class BottomNavigationBarCustom extends StatelessWidget {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
       ),
-      child: BottomNavigationBar(
-        onTap: (index) {
-          print(index);
-          onTap(index);
-        },
-        currentIndex: currentIndex,
-        backgroundColor: COLORS.kWhiteColor,
-        type: BottomNavigationBarType.fixed,
-        selectedLabelStyle: TEXTSTYLES.kBodyTag.copyWith(fontWeight: FONTS.Bold),
-        unselectedLabelStyle: TEXTSTYLES.kBodyTag.copyWith(fontWeight: FONTS.Bold),
-        items: <BottomNavigationBarItem>[
-          _buildNavItem(Assets.svg.chat, LocaleKeys.HomePage_navbarItems_chats.tr),
-          _buildNavItem(Assets.svg.call, LocaleKeys.HomePage_navbarItems_calls.tr),
-          _buildNavItem(Assets.svg.wallet, LocaleKeys.HomePage_navbarItems_wallet.tr),
-          _buildNavItem(Assets.svg.searchNearby, LocaleKeys.HomePage_navbarItems_search.tr),
-          _buildNavItem(Assets.svg.account, LocaleKeys.HomePage_navbarItems_account.tr),
-        ],
+      child: Container(
+        decoration: BoxDecoration(
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              blurRadius: 1,
+            ),
+          ],
+          color: COLORS.kWhiteColor,
+        ),
+        child: SafeArea(
+          child: SizedBox(
+            height: 76,
+            child: BottomNavigationBar(
+              elevation: 0,
+              onTap: (index) {
+                print(index);
+                onTap(index);
+              },
+              currentIndex: currentIndex,
+              backgroundColor: COLORS.kWhiteColor,
+              type: BottomNavigationBarType.fixed,
+              selectedItemColor: COLORS.kGreenMainColor,
+              selectedLabelStyle: TEXTSTYLES.kBodyTag.copyWith(
+                fontWeight: FONTS.Bold,
+              ),
+              unselectedLabelStyle: TEXTSTYLES.kBodyTag.copyWith(
+                fontWeight: FONTS.Bold,
+              ),
+              items: <BottomNavigationBarItem>[
+                _buildNavItem(
+                  Assets.svg.chat,
+                  Assets.svg.chatOutlined,
+                  LocaleKeys.HomePage_navbarItems_chats.tr,
+                ),
+                _buildNavItem(
+                  Assets.svg.callFilled,
+                  Assets.svg.call,
+                  LocaleKeys.HomePage_navbarItems_calls.tr,
+                ),
+                _buildNavItem(
+                  Assets.svg.wallet,
+                  Assets.svg.wallet,
+                  LocaleKeys.HomePage_navbarItems_wallet.tr,
+                ),
+                _buildNavItem(
+                  Assets.svg.searchNearbyFilled,
+                  Assets.svg.searchNearby,
+                  LocaleKeys.HomePage_navbarItems_search.tr,
+                ),
+                _buildNavItem(
+                  Assets.svg.accountFilled,
+                  Assets.svg.account,
+                  LocaleKeys.HomePage_navbarItems_account.tr,
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  BottomNavigationBarItem _buildNavItem(SvgGenImage icon, String label) {
+  BottomNavigationBarItem _buildNavItem(
+    SvgGenImage activeIcon,
+    SvgGenImage deActiveIcon,
+    String label,
+  ) {
     return BottomNavigationBarItem(
       activeIcon: _buildIconWithNotificationCounter(
-          icon: icon.svg(
-            width: 20.w,
-            height: 20.w,
-            color: COLORS.kGreenMainColor,
-          ),
-          notificationCount: 0),
+        icon: activeIcon.svg(
+          width: 20.w,
+          height: 20.w,
+          color: COLORS.kGreenMainColor,
+        ),
+        notificationCount: 0,
+      ),
       icon: _buildIconWithNotificationCounter(
-        icon: icon.svg(width: 20.w, height: 20.w),
+        icon: deActiveIcon.svg(
+          width: 20.w,
+          height: 20.w,
+          color: COLORS.kMessageSelectionOption,
+        ),
         notificationCount: 0,
       ),
       label: label,
     );
   }
 
-  Widget _buildIconWithNotificationCounter({required Widget icon, required int notificationCount}) {
-    return Container(
+  Widget _buildIconWithNotificationCounter({
+    required Widget icon,
+    required int notificationCount,
+  }) {
+    return SizedBox(
       width: 35.w,
       child: Stack(
         alignment: Alignment.center,

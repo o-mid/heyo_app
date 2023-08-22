@@ -38,6 +38,9 @@ void openNewChatBottomSheet() {
               Expanded(
                 // NEW CHAT BUTTON
                 child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+                  ),
                   //Todo: Start new chat onPressed
                   onPressed: () {
                     Get.back();
@@ -62,6 +65,7 @@ void openNewChatBottomSheet() {
                         LocaleKeys.HomePage_bottomSheet_newChat.tr,
                         style: TEXTSTYLES.kBodyBasic.copyWith(
                           color: COLORS.kDarkBlueColor,
+                          fontSize: 16,
                         ),
                       )
                     ],
@@ -69,6 +73,7 @@ void openNewChatBottomSheet() {
                 ),
               ),
               IconButton(
+                padding: EdgeInsets.zero,
                 onPressed: () {
                   Get.back();
                   Get.toNamed(
@@ -80,16 +85,20 @@ void openNewChatBottomSheet() {
                 },
                 alignment: Alignment.center,
                 iconSize: 21.w,
-                icon: const Icon(
-                  Icons.qr_code_rounded,
+                icon: Assets.svg.qrCode.svg(
+                  width: 20.w,
+                  fit: BoxFit.fitWidth,
                   color: COLORS.kDarkBlueColor,
                 ),
               ),
-              CustomSizes.smallSizedBoxWidth,
+              //CustomSizes.smallSizedBoxWidth,
             ],
           ),
           // WIFI_DIRECT BUTTON
           TextButton(
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+            ),
             onPressed: () => Get.toNamed(
               Routes.WIFI_DIRECT,
             ),
@@ -115,6 +124,7 @@ void openNewChatBottomSheet() {
                   LocaleKeys.HomePage_bottomSheet_wifiDirect.tr,
                   style: TEXTSTYLES.kBodyBasic.copyWith(
                     color: COLORS.kDarkBlueColor,
+                    fontSize: 16,
                   ),
                 )
               ],
@@ -122,6 +132,9 @@ void openNewChatBottomSheet() {
           ),
           // NEW GROUP BUTTON
           TextButton(
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+            ),
             //Todo: Start new group onPressed
             onPressed: () {},
             child: Row(
@@ -139,12 +152,16 @@ void openNewChatBottomSheet() {
                   LocaleKeys.HomePage_bottomSheet_newGroup.tr,
                   style: TEXTSTYLES.kBodyBasic.copyWith(
                     color: COLORS.kDarkBlueColor,
+                    fontSize: 16,
                   ),
                 )
               ],
             ),
           ),
           TextButton(
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+            ),
             onPressed: () {
               Get.back();
               Get.toNamed(
@@ -169,6 +186,7 @@ void openNewChatBottomSheet() {
                   LocaleKeys.HomePage_bottomSheet_invite.tr,
                   style: TEXTSTYLES.kBodyBasic.copyWith(
                     color: COLORS.kDarkBlueColor,
+                    fontSize: 16,
                   ),
                 )
               ],

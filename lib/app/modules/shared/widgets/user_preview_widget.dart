@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -117,14 +119,18 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.toNamed(
                       Routes.CALL,
                       arguments: CallViewArgumentsModel(
-                          session: null,
-                          callId: null,
-                          user: user,
-                          enableVideo: true,
-                          isAudioCall: false),
+                        session: null,
+                        callId: null,
+                        user: user,
+                        enableVideo: true,
+                        isAudioCall: false,
+                      ),
                     );
                   } else {
-                    Get.snackbar("Wifi Direct", "Calling over wifi direct are not supported yet");
+                    Get.snackbar(
+                      "Wifi Direct",
+                      "Calling over wifi direct are not supported yet",
+                    );
                   }
                 },
                 backgroundColor: COLORS.kBrightBlueColor,
@@ -138,8 +144,9 @@ class UserPreviewWidget extends GetView<UserPreview> {
           const Divider(
             color: COLORS.kBrightBlueColor,
             thickness: 1,
+            height: 1,
           ),
-          CustomSizes.mediumSizedBoxHeight,
+          CustomSizes.smallSizedBoxHeight,
           Padding(
             padding: CustomSizes.iconListPadding,
             child: Column(
@@ -232,6 +239,9 @@ Widget _buildIconTextButton({
   Color iconBgColor = COLORS.kBrightBlueColor,
 }) {
   return TextButton(
+    style: TextButton.styleFrom(
+      padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+    ),
     onPressed: onPressed,
     child: Row(
       children: [

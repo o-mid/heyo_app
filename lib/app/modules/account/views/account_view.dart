@@ -6,6 +6,7 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/modules/shared/widgets/appbar_widget.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
@@ -20,14 +21,7 @@ class AccountView extends GetView<AccountController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: COLORS.kAppBackground,
-      appBar: AppBar(
-        backgroundColor: COLORS.kGreenMainColor,
-        title: Text(
-          LocaleKeys.AccountPage_appBarTitle.tr,
-          style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kWhiteColor),
-        ),
-        centerTitle: false,
-      ),
+      appBar: AppBarWidget(title: LocaleKeys.AccountPage_appBarTitle.tr),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -39,7 +33,10 @@ class AccountView extends GetView<AccountController> {
                   onTap: () {
                     Get.toNamed(Routes.SHREABLE_QR);
                   },
-                  child: const Icon(Icons.qr_code_rounded),
+                  child: Assets.svg.qrCode.svg(
+                    width: 20.w,
+                    fit: BoxFit.fitWidth,
+                  ),
                 ),
                 SizedBox(width: 23.w),
               ],
@@ -51,12 +48,14 @@ class AccountView extends GetView<AccountController> {
             CustomSizes.mediumSizedBoxHeight,
             Text(
               "Scrambled Gurgle",
-              style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+              style: TEXTSTYLES.kHeaderLarge
+                  .copyWith(color: COLORS.kDarkBlueColor),
             ),
             SizedBox(height: 4.h),
             Text(
               controller.coreId.value.shortenCoreId,
-              style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
+              style: TEXTSTYLES.kBodySmall
+                  .copyWith(color: COLORS.kTextSoftBlueColor),
             ),
             SizedBox(height: 60.h),
             const Divider(
@@ -113,12 +112,14 @@ class AccountView extends GetView<AccountController> {
                 children: [
                   Text(
                     title,
-                    style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
+                    style: TEXTSTYLES.kLinkBig
+                        .copyWith(color: COLORS.kDarkBlueColor),
                   ),
                   if (subtitle != null)
                     Text(
                       subtitle,
-                      style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
+                      style: TEXTSTYLES.kBodySmall
+                          .copyWith(color: COLORS.kTextSoftBlueColor),
                     ),
                 ],
               ),

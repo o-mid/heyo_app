@@ -21,7 +21,7 @@ class CallStatusIconAndDate extends StatelessWidget {
     return Row(
       children: [
         _buildCallStatus(),
-        SizedBox(width: 10.w),
+        SizedBox(width: 4.w),
         _buildCallDate(),
       ],
     );
@@ -33,18 +33,18 @@ class CallStatusIconAndDate extends StatelessWidget {
       case CallStatus.outgoingCanceled:
       case CallStatus.outgoingDeclined:
       case CallStatus.outgoingNotAnswered:
-        return Assets.svg.callOutgoing.svg();
+        return Assets.svg.outgoingCall2.svg(color: COLORS.kTextSoftBlueColor);
 
       case CallStatus.incomingAnswered:
       case CallStatus.incomingDeclined:
-        return Assets.svg.callIncoming.svg(color: COLORS.kStatesSuccessColor);
+        return Assets.svg.incomingCall.svg(color: COLORS.kTextSoftBlueColor);
       case CallStatus.incomingMissed:
-        return Assets.svg.callIncoming.svg(color: COLORS.kStatesErrorColor);
+        return Assets.svg.missedCall.svg(color: COLORS.kStatesErrorColor);
     }
   }
 
   Widget _buildCallDate() {
-    var textColor = COLORS.kTextBlueColor;
+    var textColor = COLORS.kTextSoftBlueColor;
     if (call.status == CallStatus.incomingMissed) {
       textColor = COLORS.kStatesErrorColor;
     }

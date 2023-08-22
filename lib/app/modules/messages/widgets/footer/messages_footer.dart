@@ -34,20 +34,23 @@ class MessagesFooter extends StatelessWidget {
             ),
 
           // Chat Text Field
-          AnimatedSwitcher(
-            transitionBuilder: (child, animation) => SizeTransition(
-              axis: Axis.vertical,
-              axisAlignment: 0,
-              sizeFactor: animation,
-              child: child,
+          Container(
+            color: COLORS.KChatFooterGrey,
+            child: AnimatedSwitcher(
+              transitionBuilder: (child, animation) => SizeTransition(
+                axis: Axis.vertical,
+                axisAlignment: 0,
+                sizeFactor: animation,
+                child: child,
+              ),
+              switchInCurve: TRANSITIONS.messagingPage_openRecordModeCurve,
+              switchOutCurve: TRANSITIONS.messagingPage_closeRecordModeCurve,
+              reverseDuration: TRANSITIONS.messagingPage_closeRecordModeDurtion,
+              duration: TRANSITIONS.messagingPage_openRecordModeDurtion,
+              child: controller.isInRecordMode.isTrue
+                  ? const VoiceRecorderWidget()
+                  : const MessagesActiveBoxWidget(),
             ),
-            switchInCurve: TRANSITIONS.messagingPage_openRecordModeCurve,
-            switchOutCurve: TRANSITIONS.messagingPage_closeRecordModeCurve,
-            reverseDuration: TRANSITIONS.messagingPage_closeRecordModeDurtion,
-            duration: TRANSITIONS.messagingPage_openRecordModeDurtion,
-            child: controller.isInRecordMode.isTrue
-                ? const VoiceRecorderWidget()
-                : const MessagesActiveBoxWidget(),
           ),
 
           // Emoji Picker (Hidden by default)
@@ -56,7 +59,8 @@ class MessagesFooter extends StatelessWidget {
             offstage: !controller.showEmojiPicker.value,
             child: WillPopScope(
               onWillPop: () async {
-                if (controller.showEmojiPicker.value || controller.isInRecordMode.isTrue) {
+                if (controller.showEmojiPicker.value ||
+                    controller.isInRecordMode.isTrue) {
                   controller.showEmojiPicker.value = false;
                   controller.isInRecordMode.value = false;
                   FocusScope.of(context).requestFocus(controller.textFocusNode);
@@ -70,7 +74,8 @@ class MessagesFooter extends StatelessWidget {
                 child: EmojiPicker(
                   onEmojiSelected: (_, Emoji emoji) =>
                       controller.appendAfterCursorPosition(emoji.emoji),
-                  onBackspacePressed: controller.removeCharacterBeforeCursorPosition,
+                  onBackspacePressed:
+                      controller.removeCharacterBeforeCursorPosition,
                 ),
               ),
             ),

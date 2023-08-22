@@ -73,6 +73,7 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
               {"name": userName},
             ),
             style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
+            textAlign: TextAlign.center,
           ),
         ],
       ),

@@ -37,7 +37,7 @@ class ComposeMessageBox extends StatelessWidget {
                 },
               ),
 
-              CustomSizes.mediumSizedBoxWidth,
+              CustomSizes.smallSizedBoxWidth,
               const Expanded(
                 child: ComposeTextFieldWidget(),
               ),

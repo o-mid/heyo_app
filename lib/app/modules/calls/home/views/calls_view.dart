@@ -6,6 +6,7 @@ import 'package:heyo/app/modules/calls/home/widgets/call_log_widget.dart';
 import 'package:heyo/app/modules/calls/home/widgets/empty_calls_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/widgets/appbar_widget.dart';
 import 'package:heyo/app/modules/shared/widgets/connection_status.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -19,13 +20,8 @@ class CallsView extends GetView<CallsController> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: COLORS.kAppBackground,
-        appBar: AppBar(
-          backgroundColor: COLORS.kGreenMainColor,
-          title: Text(
-            LocaleKeys.HomePage_navbarItems_calls.tr,
-            style: TEXTSTYLES.kHeaderLarge,
-          ),
-          automaticallyImplyLeading: false,
+        appBar: AppBarWidget(
+          title: LocaleKeys.HomePage_navbarItems_calls.tr,
           actions: [
             Obx(() {
               if (controller.calls.isNotEmpty) {
