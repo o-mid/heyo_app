@@ -4,6 +4,7 @@ import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_histo
 import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
@@ -18,6 +19,19 @@ class AddContactsController extends GetxController {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final CallHistoryAbstractRepo callHistoryRepo;
 
+  Rx<UserModel> user = UserModel(
+    coreId: (Get.arguments as AddContactsViewArgumentsModel).coreID,
+    iconUrl: (Get.arguments as AddContactsViewArgumentsModel).iconUrl ??
+        "https://avatars.githubusercontent.com/u/2345136?v=4",
+    name: (Get.arguments as AddContactsViewArgumentsModel).coreID.shortenCoreId,
+    walletAddress: (Get.arguments).coreId,
+    isBlocked: false,
+    isOnline: false,
+    isContact: false,
+    isVerified: false,
+    nickname: "",
+  ).obs;
+
   AddContactsController({
     required this.contactRepository,
     required this.chatHistoryRepo,
@@ -25,30 +39,56 @@ class AddContactsController extends GetxController {
   });
 
   @override
-  void onInit() {
+  void onInit() async {
     args = Get.arguments as AddContactsViewArgumentsModel;
 
-    nickname = args.user.nickname.obs;
-
+    nickname = "".obs;
+    await _getUserContact();
     super.onInit();
   }
 
   void setNickname(String name) {
-    args.user.nickname = name;
+    user.value.nickname = name;
     nickname.value = name;
   }
 
   Future<void> addContact() async {
-    UserModel user = UserModel(
-      coreId: args.user.walletAddress,
+    // UserModel user = UserModel(
+    //   coreId: args.user.walletAddress,
+    //   nickname: nickname.value,
+    //   iconUrl: args.user.iconUrl,
+    //   name: nickname.value,
+    //   isOnline: true,
+    //   walletAddress: args.user.walletAddress,
+    //   isContact: true,
+    // );
+    await updateUserChatMode(
+        userModel: user.value.copyWith(
       nickname: nickname.value,
-      iconUrl: args.user.iconUrl,
-      name: nickname.value,
-      isOnline: true,
-      walletAddress: args.user.walletAddress,
       isContact: true,
-    );
-    await updateUserChatMode(userModel: user);
+    ));
+  }
+
+  _getUserContact() async {
+    // check if user is already in contact
+    UserModel? createdUser = await contactRepository.getContactById(args.coreID);
+
+    if (createdUser == null) {
+      createdUser = UserModel(
+        coreId: args.coreID,
+        iconUrl: args.iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
+        name: args.coreID.shortenCoreId,
+        isOnline: true,
+        isContact: false,
+        walletAddress: args.coreID,
+      );
+      // adds the new user to the repo and update the UserModel
+      await contactRepository.addContact(createdUser);
+      user.value = createdUser;
+    } else {
+      user.value = createdUser;
+    }
+    user.refresh();
   }
 
   Future<void> updateUserChatMode({required UserModel userModel}) async {

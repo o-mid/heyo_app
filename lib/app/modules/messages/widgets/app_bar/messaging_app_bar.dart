@@ -226,7 +226,11 @@ void _openAppBarActionBottomSheet({required UserModel userModel}) {
 
                 Get.toNamed(
                   Routes.ADD_CONTACTS,
-                  arguments: AddContactsViewArgumentsModel(user: userModel),
+                  arguments: AddContactsViewArgumentsModel(
+                    //  user: userModel,
+                    coreID: userModel.coreId,
+                    iconUrl: userModel.iconUrl,
+                  ),
                 );
               },
               child: Row(

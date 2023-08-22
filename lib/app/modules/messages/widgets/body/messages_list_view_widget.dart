@@ -41,7 +41,8 @@ class MessagesListViewWidget extends StatelessWidget {
                 final reverseIndex = controller.messages.length - index;
                 if (reverseIndex == 0) {
                   return BeginningOfMessagesHeaderWidget(
-                    user: controller.user.value,
+                    iconUrl: controller.user.value.iconUrl,
+                    userName: controller.user.value.name,
                   );
                 } else {
                   return MessageItemWidget(index: reverseIndex - 1);
