@@ -5,27 +5,65 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
 import '../../../../../generated/locales.g.dart';
+import '../../../new_chat/data/models/user_model.dart';
+import '../../../shared/data/repository/contact_repository.dart';
 import '../../../shared/utils/constants/colors.dart';
 import '../../../shared/utils/constants/textStyles.dart';
 
 class UserCallHistoryController extends GetxController {
   final CallHistoryAbstractRepo callHistoryRepo;
-
-  UserCallHistoryController({required this.callHistoryRepo});
+  final ContactRepository contactRepository;
+  UserCallHistoryController({
+    required this.callHistoryRepo,
+    required this.contactRepository,
+  });
 
   late UserCallHistoryViewArgumentsModel args;
   final calls = <CallModel>[].obs;
+  Rx<UserModel> user = UserModel(
+    coreId: (Get.arguments as UserCallHistoryViewArgumentsModel).coreId,
+    iconUrl: (Get.arguments as UserCallHistoryViewArgumentsModel).iconUrl ??
+        "https://avatars.githubusercontent.com/u/2345136?v=4",
+    name: (Get.arguments as UserCallHistoryViewArgumentsModel).coreId.shortenCoreId,
+    walletAddress: (Get.arguments).coreId,
+    isBlocked: false,
+    isOnline: false,
+    isContact: false,
+    isVerified: false,
+    nickname: "",
+  ).obs;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     args = Get.arguments as UserCallHistoryViewArgumentsModel;
+    await _getUserContact();
+    await callHistoryRepo.getCallsFromUserId(args.coreId).then((value) => calls.value = value);
+  }
 
-    callHistoryRepo
-        .getCallsFromUserId(args.user.walletAddress)
-        .then((value) => calls.value = value);
+  _getUserContact() async {
+    // check if user is already in contact
+    UserModel? createdUser = await contactRepository.getContactById(args.coreId);
+
+    if (createdUser == null) {
+      createdUser = UserModel(
+        coreId: args.coreId,
+        iconUrl: args.iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
+        name: args.coreId.shortenCoreId,
+        isOnline: true,
+        isContact: false,
+        walletAddress: args.coreId,
+      );
+      // adds the new user to the repo and update the UserModel
+      await contactRepository.addContact(createdUser);
+      user.value = createdUser;
+    } else {
+      user.value = createdUser;
+    }
+    user.refresh();
   }
 
   @override
@@ -37,7 +75,7 @@ class UserCallHistoryController extends GetxController {
   void onClose() {}
 
   Future<void> saveCoreIdToClipboard() async {
-    final remoteCoreId = args.user.walletAddress;
+    final remoteCoreId = args.coreId;
     print("Core ID : $remoteCoreId");
     await Clipboard.setData(ClipboardData(text: remoteCoreId));
     Get.rawSnackbar(

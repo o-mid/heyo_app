@@ -51,12 +51,12 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
             return Column(
               children: [
                 SizedBox(height: 40.h),
-                CustomCircleAvatar(url: controller.args.user.iconUrl, size: 64),
+                CustomCircleAvatar(url: controller.user.value.iconUrl, size: 64),
                 CustomSizes.mediumSizedBoxHeight,
                 GestureDetector(
                   onTap: () => controller.saveCoreIdToClipboard(),
                   child: Text(
-                    controller.args.user.name,
+                    controller.user.value.name,
                     style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
                   ),
                 ),
@@ -64,7 +64,7 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                 GestureDetector(
                   onTap: () => controller.saveCoreIdToClipboard(),
                   child: Text(
-                    controller.args.user.walletAddress.shortenCoreId,
+                    controller.user.value.walletAddress.shortenCoreId,
                     style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
                   ),
                 ),
@@ -80,7 +80,7 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                         arguments: CallViewArgumentsModel(
                             session: null,
                             callId: null,
-                            user: controller.args.user,
+                            user: controller.user.value,
                             enableVideo: false,
                             isAudioCall: true),
                       ),
@@ -95,7 +95,7 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                         arguments: CallViewArgumentsModel(
                             session: null,
                             callId: null,
-                            user: controller.args.user,
+                            user: controller.user.value,
                             enableVideo: true,
                             isAudioCall: false),
                       ),
@@ -110,8 +110,8 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                         Get.toNamed(
                           Routes.MESSAGES,
                           arguments: MessagesViewArgumentsModel(
-                              coreId: controller.args.user.coreId,
-                              iconUrl: controller.args.user.iconUrl,
+                              coreId: controller.user.value.coreId,
+                              iconUrl: controller.user.value.iconUrl,
                               connectionType: MessagingConnectionType.internet),
                         );
                       },
