@@ -39,10 +39,6 @@ class CallConnectionsHandler {
     //sendCall request with an array of participants
   }
 
-  onMessage() {
-    //if gets a call request for this array
-    //notifies others and waits for accept
-  }
 
   accept(List<String> remotes, String callerId) {
     //send offer to remotes with this callId

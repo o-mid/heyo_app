@@ -8,6 +8,7 @@ import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/app/modules/web-rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -16,7 +17,7 @@ import '../notifications/controllers/notifications_controller.dart';
 import '../shared/utils/constants/notifications_constant.dart';
 
 class CallConnectionController extends GetxController {
-  final Signaling signaling;
+  final CallConnectionsHandler callConnectionsHandler;
   final AccountInfo accountInfo;
   final NotificationsController notificationsController;
   final ContactRepository contactRepository;
@@ -37,7 +38,7 @@ class CallConnectionController extends GetxController {
   MediaStream? getLocalStream() => _localStream;
 
   Future<void> init() async {
-    signaling.onLocalStream = ((stream) {
+    callConnectionsHandler.onLocalStream = ((stream) {
       _localStream = stream;
       onLocalStream?.call(stream);
     });
@@ -46,7 +47,7 @@ class CallConnectionController extends GetxController {
   }
 
   void observeCallStatus() {
-    signaling.onCallStateChange = (session, state) async {
+    callConnectionsHandler.onCallStateChange = (session, state) async {
       callState.value = state;
 
       callHistoryState.value = CallHistoryState(
@@ -66,23 +67,23 @@ class CallConnectionController extends GetxController {
         }
       }
     };
-    signaling.onAddRemoteStream = (session, stream) async {
+    callConnectionsHandler.onAddRemoteStream = (session, stream) async {
       onAddRemoteStream?.call(stream);
     };
-    signaling.onRemoveRemoteStream = (session, stream) async {
+    callConnectionsHandler.onRemoveRemoteStream = (session, stream) async {
       removeStream.value = stream;
     };
   }
 
   CallConnectionController(
-      {required this.signaling,
+      {required this.callConnectionsHandler,
       required this.accountInfo,
       required this.notificationsController,
       required this.contactRepository});
 
   Future<Session> startCall(String remoteId, String callId, bool isAudioCall) async {
     String? selfCoreId = await accountInfo.getCoreId();
-    final session = await signaling.invite(remoteId, 'video', false, selfCoreId!, isAudioCall);
+    final session = await callConnectionsHandler.invite(remoteId, 'video', false, selfCoreId!, isAudioCall);
 
     callHistoryState.value =
         CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.initial);
@@ -90,7 +91,7 @@ class CallConnectionController extends GetxController {
   }
 
   Future acceptCall(Session session) async {
-    signaling.accept(
+    callConnectionsHandler.accept(
       session.sid,
     );
 
@@ -99,38 +100,38 @@ class CallConnectionController extends GetxController {
   }
 
   void switchCamera() {
-    signaling.switchCamera();
+    callConnectionsHandler.switchCamera();
   }
 
   void muteMic() {
-    signaling.muteMic();
+    callConnectionsHandler.muteMic();
   }
 
   void showLocalVideoStream(bool value, String? sessionId, bool sendSignal) {
-    signaling.showLocalVideoStream(value);
+    callConnectionsHandler.showLocalVideoStream(value);
     if (sendSignal == true && sessionId != null) {
       if (value == true) {
-        signaling.peerOpendCamera(sessionId);
+        callConnectionsHandler.peerOpendCamera(sessionId);
       } else {
-        signaling.peerClosedCamera(sessionId);
+        callConnectionsHandler.peerClosedCamera(sessionId);
       }
     }
   }
 
   void rejectCall(Session session) {
-    signaling.reject(session);
+    callConnectionsHandler.reject(session);
     callHistoryState.value =
         CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.connected);
   }
 
   Future<void> close() async {
-    await signaling.close();
+    await callConnectionsHandler.close();
     onLocalStream = null;
     onAddRemoteStream = null;
   }
 
   void endOrCancelCall(Session session) {
-    signaling.reject(session);
+    callConnectionsHandler.reject(session);
     callHistoryState.value =
         CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.byeSent);
   }

@@ -8,17 +8,19 @@ import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
+import 'package:heyo/app/modules/web-rtc/multiple_call_connection_handler.dart';
 
 class P2PNodeRequestStream {
   StreamSubscription<P2PReqResNodeModel?>? _nodeRequestSubscription;
   final P2PState p2pState;
-  final Signaling signaling;
+  final CallConnectionsHandler callConnectionsHandler;
+
   final MultipleConnectionHandler multipleConnectionHandler;
   final JsonDecoder _decoder = const JsonDecoder();
 
   P2PNodeRequestStream(
       {required this.p2pState,
-      required this.signaling,
+      required this.callConnectionsHandler,
       required this.multipleConnectionHandler});
 
   void setUp() {
@@ -82,7 +84,7 @@ class P2PNodeRequestStream {
     print("onRequestReceived $mapData : ${mapData['command']} : $remoteCoreId");
 
     if (mapData['command'] == "call") {
-      signaling.onMessage(mapData, remoteCoreId, remotePeerId);
+      callConnectionsHandler.onRequestReceived(mapData, remoteCoreId, remotePeerId);
     }
     if (mapData['command'] == "multiple_connection") {
       await multipleConnectionHandler.onRequestReceived(
