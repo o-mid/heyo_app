@@ -19,36 +19,40 @@ class MessagesActiveBoxWidget extends StatelessWidget {
     final controller = Get.find<MessagesController>();
 
     Widget activeBoxWidget() {
-      return Obx(() {
-        if (controller.selectedMessages.isNotEmpty) {
-          return MessageSelectionOptions(
-            showReply: controller.selectedMessages.length == 1,
-            showCopy: !controller.selectedMessages.any((m) => m is! TextMessageModel),
-            selectedMessages: controller.selectedMessages,
-          );
-        } else if (controller.locationMessage.value != null) {
-          return const SendLocationBox();
-        } else {
-          return const ComposeMessageBox();
-        }
-        ;
-      });
+      return Obx(
+        () {
+          if (controller.selectedMessages.isNotEmpty) {
+            return MessageSelectionOptions(
+              showReply: controller.selectedMessages.length == 1,
+              showCopy: !controller.selectedMessages
+                  .any((m) => m is! TextMessageModel),
+              selectedMessages: controller.selectedMessages,
+            );
+          } else if (controller.locationMessage.value != null) {
+            return const SendLocationBox();
+          } else {
+            return const ComposeMessageBox();
+          }
+        },
+      );
     }
 
-    return Container(
-      height: 90.h,
-      // padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 0),
-      decoration: const BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            width: 1,
-            color: COLORS.kComposeMessageBorderColor,
+    return SafeArea(
+      child: Container(
+        height: 56,
+        // padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 0),
+        decoration: const BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              width: 1,
+              color: COLORS.kComposeMessageBorderColor,
+            ),
           ),
         ),
-      ),
-      child: ScaleAnimatedSwitcher(
-        duration: const Duration(milliseconds: 200),
-        child: activeBoxWidget(),
+        child: ScaleAnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child: activeBoxWidget(),
+        ),
       ),
     );
   }
