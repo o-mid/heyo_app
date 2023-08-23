@@ -30,17 +30,6 @@ class HomeView extends GetView<HomeController> {
     FloatingActionButton(
       onPressed: () {
         Get.toNamed(Routes.NEW_CALL);
-        /*Get.toNamed(
-          Routes.CALL,
-          arguments: CallViewArgumentsModel(
-            user: UserModel(
-              name: "Boiled Dancer",
-              icon: "https://avatars.githubusercontent.com/u/6645136?v=4",
-              isVerified: true,
-              walletAddress: "CB11${List.generate(10, (index) => index)}28BE",
-            ),
-          ),
-        );*/
       },
       backgroundColor: COLORS.kGreenMainColor,
       child: const Icon(Icons.add_circle_outline),

@@ -28,7 +28,10 @@ class CallLogWidget extends StatelessWidget {
       onTap: () {
         Get.toNamed(
           Routes.USER_CALL_HISTORY,
-          arguments: UserCallHistoryViewArgumentsModel(user: call.user),
+          arguments: UserCallHistoryViewArgumentsModel(
+            coreId: call.user.coreId,
+            iconUrl: call.user.iconUrl,
+          ),
         );
       },
       child: SwipeableTile.swipeToTrigger(

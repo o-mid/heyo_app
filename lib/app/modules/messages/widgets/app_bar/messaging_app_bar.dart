@@ -29,18 +29,17 @@ class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
     final controller = Get.find<MessagesController>();
     // Material is used here so that splash can be seen
     return Material(
-      color: COLORS.kGreenMainColor,
-      child: Container(
-        padding: EdgeInsets.only(top: 12.h, bottom: 12.h, right: 20.w),
-        child: SafeArea(
-          child: ScaleAnimatedSwitcher(
-            child: controller.selectedMessages.isNotEmpty
-                ? const _SelectionModeAppBar()
-                : _DefaultAppBar(user: controller.args.user),
+        color: COLORS.kGreenMainColor,
+        child: Container(
+          padding: EdgeInsets.only(top: 12.h, bottom: 12.h, right: 20.w),
+          child: SafeArea(
+            child: ScaleAnimatedSwitcher(
+              child: controller.selectedMessages.isNotEmpty
+                  ? const _SelectionModeAppBar()
+                  : const _DefaultAppBar(),
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   @override
@@ -78,133 +77,139 @@ class _SelectionModeAppBar extends StatelessWidget {
 }
 
 class _DefaultAppBar extends StatelessWidget {
-  final UserModel user;
-  const _DefaultAppBar({Key? key, required this.user}) : super(key: key);
+  const _DefaultAppBar({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MessagesController>();
-    return Row(
-      children: [
-        CircleIconButton(
-          backgroundColor: Colors.transparent,
-          onPressed: Get.back,
-          icon: const Icon(
-            Icons.arrow_back,
-            color: COLORS.kWhiteColor,
+    return Obx(() {
+      return Row(
+        children: [
+          CircleIconButton(
+            backgroundColor: Colors.transparent,
+            onPressed: Get.back,
+            icon: const Icon(
+              Icons.arrow_back,
+              color: COLORS.kWhiteColor,
+            ),
           ),
-        ),
-        CustomCircleAvatar(url: user.iconUrl, size: 32, isOnline: user.isOnline),
-        CustomSizes.smallSizedBoxWidth,
-        GestureDetector(
-          onDoubleTap: controller.saveCoreIdToClipboard,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [ 
-              Expanded(
-                child: Row(
-                  children: [
-                    Text(
-                      user.name,
-                      style: TEXTSTYLES.kButtonBasic.copyWith(
-                        color: COLORS.kWhiteColor,
-                        height: 1,
+          CustomCircleAvatar(
+              url: controller.user.value.iconUrl,
+              size: 32,
+              isOnline: controller.user.value.isOnline),
+          CustomSizes.smallSizedBoxWidth,
+          GestureDetector(
+            onDoubleTap: controller.saveCoreIdToClipboard,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Text(
+                        controller.user.value.name,
+                        style: TEXTSTYLES.kButtonBasic.copyWith(
+                          color: COLORS.kWhiteColor,
+                          height: 1,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 5.w),
-                    if (user.isVerified)
-                      Assets.svg.verified.svg(
-                        width: 12.w,
-                        height: 12.w,
-                        color: COLORS.kWhiteColor,
-                      ),
-                  ],
-                ),
-              ),
-              if (user.isOnline)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      LocaleKeys.MessagesPage_onlineVia.tr,
-                      style: TEXTSTYLES.kBodyTag.copyWith(
-                        color: COLORS.kWhiteColor,
-                        fontWeight: FONTS.Regular,
-                      ),
-                    ),
-                    SizedBox(width: 4.w),
-                    controller.connectionType == MessagingConnectionType.internet
-                        ? Icon(
-                            Icons.wifi,
-                            size: 12.w,
-                            color: COLORS.kWhiteColor,
-                          )
-                        : Assets.svg.wifiDirectIcon.svg(
-                            height: 10.w,
-                            fit: BoxFit.contain,
-                            alignment: Alignment.center,
-                            color: COLORS.kWhiteColor,
-                          ),
-                  ],
-                ),
-              if (!user.isOnline)
-                Text(
-                  LocaleKeys.offline.tr,
-                  style: TEXTSTYLES.kBodyTag.copyWith(
-                    color: COLORS.kWhiteColor,
-                    fontWeight: FONTS.Regular,
+                      SizedBox(width: 5.w),
+                      if (controller.user.value.isVerified)
+                        Assets.svg.verified.svg(
+                          width: 12.w,
+                          height: 12.w,
+                          color: COLORS.kWhiteColor,
+                        ),
+                    ],
                   ),
                 ),
+                if (controller.user.value.isOnline)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        LocaleKeys.MessagesPage_onlineVia.tr,
+                        style: TEXTSTYLES.kBodyTag.copyWith(
+                          color: COLORS.kWhiteColor,
+                          fontWeight: FONTS.Regular,
+                        ),
+                      ),
+                      SizedBox(width: 4.w),
+                      controller.connectionType == MessagingConnectionType.internet
+                          ? Icon(
+                              Icons.wifi,
+                              size: 12.w,
+                              color: COLORS.kWhiteColor,
+                            )
+                          : Assets.svg.wifiDirectIcon.svg(
+                              height: 10.w,
+                              fit: BoxFit.contain,
+                              alignment: Alignment.center,
+                              color: COLORS.kWhiteColor,
+                            ),
+                    ],
+                  ),
+                if (controller.user.value.isOnline == false)
+                  Text(
+                    LocaleKeys.offline.tr,
+                    style: TEXTSTYLES.kBodyTag.copyWith(
+                      color: COLORS.kWhiteColor,
+                      fontWeight: FONTS.Regular,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const Spacer(),
+          Row(
+            children: [
+              CircleIconButton(
+                onPressed: () {
+                  Get.toNamed(
+                    Routes.CALL,
+                    arguments: CallViewArgumentsModel(
+                        session: null,
+                        callId: null,
+                        user: controller.getUser(),
+                        enableVideo: true,
+                        isAudioCall: false),
+                  );
+                },
+                icon: Assets.svg.videoCallIcon.svg(),
+                backgroundColor: Colors.transparent,
+              ),
+              CircleIconButton(
+                onPressed: () {
+                  Get.toNamed(
+                    Routes.CALL,
+                    arguments: CallViewArgumentsModel(
+                        session: null,
+                        callId: null,
+                        user: controller.getUser(),
+                        enableVideo: false,
+                        isAudioCall: true),
+                  );
+                },
+                backgroundColor: Colors.transparent,
+                icon: Assets.svg.audioCallIcon.svg(),
+              ),
+              CircleIconButton(
+                backgroundColor: Colors.transparent,
+                padding: const EdgeInsets.all(0),
+                icon: Assets.svg.verticalMenuIcon.svg(),
+                size: 22,
+                onPressed: () {
+                  _openAppBarActionBottomSheet(userModel: controller.getUser());
+                },
+              ),
             ],
           ),
-        ),
-        const Spacer(),
-        Row(
-          children: [
-            CircleIconButton(
-              onPressed: () {
-                Get.toNamed(
-                  Routes.CALL,
-                  arguments: CallViewArgumentsModel(
-                      session: null,
-                      callId: null,
-                      user: controller.getUser(),
-                      enableVideo: true,
-                      isAudioCall: false),
-                );
-              },
-              icon: Assets.svg.videoCallIcon.svg(),
-              backgroundColor: Colors.transparent,
-            ),
-            CircleIconButton(
-              onPressed: () {
-                Get.toNamed(
-                  Routes.CALL,
-                  arguments: CallViewArgumentsModel(
-                      session: null,
-                      callId: null,
-                      user: controller.getUser(),
-                      enableVideo: false,
-                      isAudioCall: true),
-                );
-              },
-              backgroundColor: Colors.transparent,
-              icon: Assets.svg.audioCallIcon.svg(),
-            ),
-            CircleIconButton(
-              backgroundColor: Colors.transparent,
-              padding: const EdgeInsets.all(0),
-              icon: Assets.svg.verticalMenuIcon.svg(),
-              size: 22,
-              onPressed: () {
-                _openAppBarActionBottomSheet(userModel: controller.getUser());
-              },
-            ),
-          ],
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }
 
@@ -221,7 +226,11 @@ void _openAppBarActionBottomSheet({required UserModel userModel}) {
 
                 Get.toNamed(
                   Routes.ADD_CONTACTS,
-                  arguments: AddContactsViewArgumentsModel(user: userModel),
+                  arguments: AddContactsViewArgumentsModel(
+                    //  user: userModel,
+                    coreId: userModel.coreId,
+                    iconUrl: userModel.iconUrl,
+                  ),
                 );
               },
               child: Row(

@@ -15,7 +15,6 @@ import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-import '../../new_chat/data/models/user_model.dart';
 import '../controllers/add_contacts_controller.dart';
 
 class AddContactsView extends GetView<AddContactsController> {
@@ -23,7 +22,6 @@ class AddContactsView extends GetView<AddContactsController> {
 
   @override
   Widget build(BuildContext context) {
-    UserModel user = controller.args.user;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -49,17 +47,19 @@ class AddContactsView extends GetView<AddContactsController> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     CustomSizes.largeSizedBoxHeight,
-                    CustomCircleAvatar(url: user.iconUrl, size: 64),
+                    CustomCircleAvatar(url: controller.user.value.iconUrl, size: 64),
                     CustomSizes.mediumSizedBoxHeight,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          controller.nickname.value.isEmpty ? user.name : controller.nickname.value,
+                          controller.nickname.value.isEmpty
+                              ? controller.user.value.name
+                              : controller.nickname.value,
                           style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
                         ),
                         CustomSizes.smallSizedBoxWidth,
-                        user.isVerified
+                        controller.user.value.isVerified
                             ? Assets.svg.verifiedWithBluePadding
                                 .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
                             : const SizedBox(),
@@ -70,7 +70,7 @@ class AddContactsView extends GetView<AddContactsController> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          user.walletAddress.shortenCoreId,
+                          controller.user.value.walletAddress.shortenCoreId,
                           style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
                         ),
                         Row(

@@ -15,10 +15,13 @@ import 'package:heyo/generated/locales.g.dart';
 import '../../../new_chat/data/models/user_model.dart';
 
 class BeginningOfMessagesHeaderWidget extends StatelessWidget {
-  final UserModel user;
+  final String iconUrl;
+  final String userName;
   const BeginningOfMessagesHeaderWidget({
     Key? key,
-    required this.user,
+    required this.iconUrl,
+    required this.userName,
+    //required this.user,
   }) : super(key: key);
 
   @override
@@ -36,15 +39,14 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
-          CustomCircleAvatar(url: user.iconUrl, size: 64),
+          CustomCircleAvatar(url: iconUrl, size: 64),
           CustomSizes.mediumSizedBoxHeight,
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                user.name,
-                style: TEXTSTYLES.kHeaderLarge
-                    .copyWith(color: COLORS.kDarkBlueColor),
+                userName,
+                style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
               ),
               CustomSizes.smallSizedBoxWidth,
               Container(
@@ -68,7 +70,7 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
           CustomSizes.mediumSizedBoxHeight,
           Text(
             LocaleKeys.MessagesPage_endToEndEncryptedMessaging.trParams(
-              {"name": user.name},
+              {"name": userName},
             ),
             style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
             textAlign: TextAlign.center,

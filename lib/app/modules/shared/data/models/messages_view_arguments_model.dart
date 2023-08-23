@@ -5,15 +5,16 @@ import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import '../../../messages/data/models/messages/message_model.dart';
 
 class MessagesViewArgumentsModel {
-  final UserModel user;
   final List<MessageModel>? forwardedMessages;
   final MessageSession? session;
   final MessagingConnectionType connectionType;
-
+  final String coreId;
+  final String? iconUrl;
   MessagesViewArgumentsModel({
-    required this.user,
+    required this.coreId,
     this.forwardedMessages,
     this.session,
+    this.iconUrl,
     this.connectionType = MessagingConnectionType.internet,
   });
 }

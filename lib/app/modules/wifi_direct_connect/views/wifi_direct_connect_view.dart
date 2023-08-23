@@ -35,7 +35,7 @@ class WifiDirectConnectView extends GetView<WifiDirectConnectController> {
             ),
             Obx(() {
               return Text(
-                controller.connectionStatus.value.display,
+                controller.connectionStatus.value.toString(),
                 style: const TextStyle(fontSize: 14),
               );
             })
