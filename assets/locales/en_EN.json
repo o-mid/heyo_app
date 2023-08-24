@@ -337,5 +337,8 @@
     "wifiDirectAppbar": "Wifi Direct",
     "emptyPeersTitle": "There is no online peer! \n Searching for available peers ...",
     "availablePeers": "Available Peers"
+  },
+  "addParticipate": {
+    "appbarTitle": "Add Participate"
   }
 }

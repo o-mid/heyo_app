@@ -20,7 +20,7 @@ class AppBarWidget extends PreferredSize {
               title,
               style: TEXTSTYLES.kHeaderLarge,
             ),
-            automaticallyImplyLeading: false,
+            //automaticallyImplyLeading: false,
             actions: actions,
           ),
         );

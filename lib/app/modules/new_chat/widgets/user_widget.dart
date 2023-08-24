@@ -40,7 +40,11 @@ class UserWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(user.name, style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kDarkBlueColor)),
+                Text(
+                  user.name,
+                  style: TEXTSTYLES.kChatName
+                      .copyWith(color: COLORS.kDarkBlueColor),
+                ),
                 CustomSizes.smallSizedBoxWidth,
                 if (user.isVerified) Assets.svg.verifiedWithBluePadding.svg(),
               ],
@@ -49,7 +53,8 @@ class UserWidget extends StatelessWidget {
             Text(
               user.walletAddress.shortenCoreId,
               maxLines: 1,
-              style: TEXTSTYLES.kChatText.copyWith(color: COLORS.kTextBlueColor),
+              style:
+                  TEXTSTYLES.kChatText.copyWith(color: COLORS.kTextBlueColor),
             ),
           ],
         ),
@@ -77,7 +82,12 @@ class UserWidget extends StatelessWidget {
               Get.toNamed(
                 Routes.CALL,
                 arguments: CallViewArgumentsModel(
-                    session: null, user: user, callId: null, enableVideo: true, isAudioCall: false),
+                  session: null,
+                  user: user,
+                  callId: null,
+                  enableVideo: true,
+                  isAudioCall: false,
+                ),
               );
             },
             backgroundColor: COLORS.kBrightBlueColor,

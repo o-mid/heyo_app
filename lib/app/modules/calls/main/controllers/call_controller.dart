@@ -80,7 +80,7 @@ class CallController extends GetxController {
 
   final _screenRecorder = EdScreenRecorder();
 
-  void message(){
+  void message() {
     Get.toNamed(
       Routes.MESSAGES,
       arguments: MessagesViewArgumentsModel(
@@ -95,6 +95,7 @@ class CallController extends GetxController {
           connectionType: MessagingConnectionType.internet),
     );
   }
+
   @override
   void onInit() {
     super.onInit();
@@ -220,12 +221,13 @@ class CallController extends GetxController {
 
   // Todo
   void addParticipant() {
-    participants.add(
-      CallParticipantModel(
-        user: args.user,
-        status: CallParticipantStatus.inCall,
-      ),
-    );
+    Get.toNamed(Routes.ADD_PARTICIPATE);
+    //participants.add(
+    //  CallParticipantModel(
+    //    user: args.user,
+    //    status: CallParticipantStatus.inCall,
+    //  ),
+    //);
   }
 
   void recordCall() {
