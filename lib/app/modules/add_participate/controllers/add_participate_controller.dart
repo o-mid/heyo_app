@@ -6,20 +6,28 @@ import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../p2p_node/data/account/account_info.dart';
 import '../../shared/data/repository/contact_repository.dart';
-import '../data/models/filter_model.dart';
+import 'filter_model.dart';
+import 'package:heyo/app/modules/add_participate/controllers/model.dart';
+import 'package:heyo/app/modules/add_participate/domain/search_user_use_case.dart';
 
 class AddParticipateController extends GetxController {
-  RxList<UserModel> selectedUser = <UserModel>[].obs;
+  RxList<ParticipateItem> selectedUser = <ParticipateItem>[].obs;
+  RxList<ParticipateItem> searchSuggestions = <ParticipateItem>[].obs;
 
   late TextEditingController inputController;
-  final ContactRepository contactRepository;
-  final AccountInfo accountInfo;
+ /* final ContactRepository contactRepository;
+  final AccountInfo accountInfo;*/
   final inputFocusNode = FocusNode();
   final inputText = "".obs;
   late StreamSubscription _contactsStreamSubscription;
-  AddParticipateController({
+
+ /* AddParticipateController({
     required this.contactRepository,
     required this.accountInfo,
+  });*/
+  final SearchUserUseCase searchUserUseCase;
+  AddParticipateController({
+    required this.searchUserUseCase
   });
 
 // in nearby users Tab after 3 seconds the refresh button will be visible
@@ -44,6 +52,7 @@ class AddParticipateController extends GetxController {
     _contactsStreamSubscription.cancel();
   }
 
+  //TODO ali check
   final String profileLink = "https://heyo.core/m6ljkB4KJ";
 
 // Mock filters for the users
@@ -58,7 +67,6 @@ class AddParticipateController extends GetxController {
     ),
   ].obs;
 
-  RxList<UserModel> searchSuggestions = <UserModel>[].obs;
 
   listenToContacts() async {
     inputController.addListener(() {
@@ -67,11 +75,17 @@ class AddParticipateController extends GetxController {
     });
 
     _contactsStreamSubscription =
-        (await contactRepository.getContactsStream()).listen((newContacts) {
+        (await contactRepository.getContactsStream()).listen((newContacts) async{
       // remove the deleted contacts from the list
 
       if (inputText.value == "") {
-        searchSuggestions.value = newContacts;
+        searchSuggestions.value = newContacts.map((e) => e.mapToParticipateItem()).toList();
+      }else {
+        List<UserModel> items= (await searchUserUseCase.execute(inputText.value));
+
+          searchSuggestions.value = items.map((e) => e.mapToParticipateItem()).toList();
+        refresh();
+        searchSuggestions.refresh();
       }
     });
 
@@ -80,7 +94,15 @@ class AddParticipateController extends GetxController {
 
   void searchUsers(String query) async {
     //TODO icon and chatmodel should be filled with correct data
-    List<UserModel> searchedItems =
+
+
+   List<UserModel> items= (await searchUserUseCase.execute(query));
+
+   searchSuggestions.value = items.map((e) => e.mapToParticipateItem()).toList();
+   refresh();
+   searchSuggestions.refresh();
+
+   /*  List<UserModel> searchedItems =
         (await contactRepository.search(query)).toList();
 
     if (searchedItems.isEmpty) {
@@ -94,17 +116,17 @@ class AddParticipateController extends GetxController {
             iconUrl: profileLink,
             walletAddress: query,
             coreId: query,
-          )
+          ).mapToParticipateItem()
         ];
       } else {
         searchSuggestions.value = [];
       }
     } else {
-      searchSuggestions.value = searchedItems;
+      searchSuggestions.value = searchedItems.map((e) => e.mapToParticipateItem()).toList();
       refresh();
     }
 
-    searchSuggestions.refresh();
+    searchSuggestions.refresh();*/
   }
 
   RxBool isTextInputFocused = false.obs;
@@ -115,7 +137,7 @@ class AddParticipateController extends GetxController {
     if (existingIndex != -1) {
       selectedUser.removeAt(existingIndex);
     } else {
-      selectedUser.insert(0, user); //It will add user to the top
+      selectedUser.insert(0, user.mapToParticipateItem()); //It will add user to the top
     }
   }
 
