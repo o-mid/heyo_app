@@ -23,51 +23,53 @@ class AddableUserWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<AddParticipateController>();
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        CustomCircleAvatar(
-          url: user.iconUrl,
-          size: 48,
-          isOnline: user.isOnline,
-        ),
-        CustomSizes.mediumSizedBoxWidth,
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  user.name,
-                  style: TEXTSTYLES.kChatName.copyWith(
-                    color: COLORS.kDarkBlueColor,
+    return InkWell(
+      onTap: () => controller.addUser(user),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CustomCircleAvatar(
+            url: user.iconUrl,
+            size: 48,
+            isOnline: user.isOnline,
+          ),
+          CustomSizes.mediumSizedBoxWidth,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    user.name,
+                    style: TEXTSTYLES.kChatName.copyWith(
+                      color: COLORS.kDarkBlueColor,
+                    ),
                   ),
-                ),
-                CustomSizes.smallSizedBoxWidth,
-                if (user.isVerified) Assets.svg.verifiedWithBluePadding.svg(),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              user.walletAddress.shortenCoreId,
-              maxLines: 1,
-              style: TEXTSTYLES.kChatText.copyWith(
-                color: COLORS.kTextBlueColor,
+                  CustomSizes.smallSizedBoxWidth,
+                  if (user.isVerified) Assets.svg.verifiedWithBluePadding.svg(),
+                ],
               ),
-            ),
-          ],
-        ),
-        const Spacer(),
+              const SizedBox(height: 4),
+              Text(
+                user.walletAddress.shortenCoreId,
+                maxLines: 1,
+                style: TEXTSTYLES.kChatText.copyWith(
+                  color: COLORS.kTextBlueColor,
+                ),
+              ),
+            ],
+          ),
+          const Spacer(),
 
-        // Below code is + icon for adding multiple participate in call
-        CircleIconButton(
-          onPressed: () => controller.addUser(user),
-          backgroundColor: COLORS.kBrightBlueColor,
-          icon: Assets.svg.addCircle.svg(color: COLORS.kDarkBlueColor),
-        ),
-      ],
+          // Below code is + icon for adding multiple participate in call
+          CircleIconButton(
+            backgroundColor: COLORS.kBrightBlueColor,
+            icon: Assets.svg.addCircle.svg(color: COLORS.kDarkBlueColor),
+          ),
+        ],
+      ),
     );
   }
 }

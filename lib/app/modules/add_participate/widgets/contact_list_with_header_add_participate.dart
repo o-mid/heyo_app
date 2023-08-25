@@ -68,16 +68,7 @@ class ContactListWithHeaderAddParticipate
                                     .toUpperCase(),
                               )
                             : const SizedBox(),
-                        InkWell(
-                          borderRadius: BorderRadius.circular(8),
-                          onTap: () {
-                            controller.inputFocusNode.unfocus();
-                            Get.find<UserPreview>().openUserPreview(
-                              userModel: contacts[index],
-                            );
-                          },
-                          child: AddableUserWidget(user: suggestedUser),
-                        ),
+                        AddableUserWidget(user: suggestedUser),
                       ],
                     )
                   : Container();
