@@ -5,7 +5,7 @@ import 'package:heyo/app/modules/shared/widgets/appbar_widget.dart';
 
 import '../../../../generated/assets.gen.dart';
 import '../../../../generated/locales.g.dart';
-import 'appbar_action_bottom_sheet.dart';
+//import 'appbar_action_bottom_sheet.dart';
 import 'filter_bottom_sheet.dart';
 
 class AppBarAddParticipate extends AppBarWidget {
@@ -19,14 +19,14 @@ class AppBarAddParticipate extends AppBarWidget {
               onPressed: () => openFiltersBottomSheet(controller: controller),
               icon: Assets.svg.filterIcon.svg(),
             ),
-            IconButton(
-              onPressed: () => openAppbarActionBottomSheet(
-                profileLink: controller.profileLink,
-              ),
-              icon: Assets.svg.dotColumn.svg(
-                width: 5,
-              ),
-            ),
+            //IconButton(
+            //  onPressed: () => openAppbarActionBottomSheet(
+            //    profileLink: controller.profileLink,
+            //  ),
+            //  icon: Assets.svg.dotColumn.svg(
+            //    width: 5,
+            //  ),
+            //),
           ],
         );
 }
