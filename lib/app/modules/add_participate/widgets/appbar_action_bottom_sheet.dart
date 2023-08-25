@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
-import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-import '../../shared/utils/constants/textStyles.dart';
 
 void openAppbarActionBottomSheet({required String profileLink}) {
   Get.bottomSheet(

@@ -3,12 +3,14 @@ import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 
-class SearchUserUseCase {
+class SearchContactUserUseCase {
   final ContactRepository contactRepository;
   final AccountInfo accountInfo;
 
-  SearchUserUseCase(
-      {required this.accountInfo, required this.contactRepository});
+  SearchContactUserUseCase({
+    required this.accountInfo,
+    required this.contactRepository,
+  });
 
   Future<List<UserModel>> execute(String query) async {
     List<UserModel> searchedItems =
@@ -22,17 +24,16 @@ class SearchUserUseCase {
         return [
           UserModel(
             name: 'unknown',
-            iconUrl: "",
+            iconUrl: "https://avatars.githubusercontent.com/u/9801359?v=4",
             walletAddress: query,
             coreId: query,
           )
         ];
       } else {
-       return [];
+        return [];
       }
     } else {
-     return searchedItems;
+      return searchedItems;
     }
-
   }
 }

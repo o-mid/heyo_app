@@ -1,59 +1,44 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
-
-import '../../new_chat/data/models/user_model.dart';
-import '../../p2p_node/data/account/account_info.dart';
-import '../../shared/data/repository/contact_repository.dart';
-import 'filter_model.dart';
-import 'package:heyo/app/modules/add_participate/controllers/model.dart';
-import 'package:heyo/app/modules/add_participate/domain/search_user_use_case.dart';
+import 'package:heyo/app/modules/add_participate/controllers/filter_model.dart';
+import 'package:heyo/app/modules/add_participate/usecase/get_contact_user_use_case.dart';
+import 'package:heyo/app/modules/add_participate/usecase/search_contact_user_use_case.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/add_participate/controllers/participate_item_model.dart';
 
 class AddParticipateController extends GetxController {
   RxList<ParticipateItem> selectedUser = <ParticipateItem>[].obs;
-  RxList<ParticipateItem> searchSuggestions = <ParticipateItem>[].obs;
+  RxList<ParticipateItem> participateItems = <ParticipateItem>[].obs;
+  RxList<ParticipateItem> searchItems = <ParticipateItem>[].obs;
 
   late TextEditingController inputController;
- /* final ContactRepository contactRepository;
+  /* final ContactRepository contactRepository;
   final AccountInfo accountInfo;*/
   final inputFocusNode = FocusNode();
   final inputText = "".obs;
-  late StreamSubscription _contactsStreamSubscription;
+  //late StreamSubscription _contactsStreamSubscription;
+  final String profileLink = "https://heyo.core/m6ljkB4KJ";
 
- /* AddParticipateController({
-    required this.contactRepository,
-    required this.accountInfo,
-  });*/
-  final SearchUserUseCase searchUserUseCase;
+  final SearchContactUserUseCase searchContactUserUseCase;
+  final GetContactUserUseCase getContactUserUseCase;
   AddParticipateController({
-    required this.searchUserUseCase
+    required this.searchContactUserUseCase,
+    required this.getContactUserUseCase,
   });
-
-// in nearby users Tab after 3 seconds the refresh button will be visible
-  //RxBool refreshBtnVisibility = false.obs;
-
-  //void makeRefreshBtnVisible() {
-  //  Future.delayed(const Duration(seconds: 3), () {
-  //    refreshBtnVisibility.value = true;
-  //  });
-  //}
 
   @override
   Future<void> onInit() async {
     inputController = TextEditingController();
-    await listenToContacts();
+    getContact();
     super.onInit();
   }
 
   @override
   void onClose() {
     inputController.dispose();
-    _contactsStreamSubscription.cancel();
+    //_contactsStreamSubscription.cancel();
   }
-
-  //TODO ali check
-  final String profileLink = "https://heyo.core/m6ljkB4KJ";
 
 // Mock filters for the users
   RxList<FilterModel> filters = [
@@ -67,81 +52,70 @@ class AddParticipateController extends GetxController {
     ),
   ].obs;
 
+  void getContact() async {
+    List<UserModel> contacts = await getContactUserUseCase.execute();
 
-  listenToContacts() async {
-    inputController.addListener(() {
-      inputText.value = inputController.text;
-      searchUsers(inputController.text);
-    });
-
-    _contactsStreamSubscription =
-        (await contactRepository.getContactsStream()).listen((newContacts) async{
-      // remove the deleted contacts from the list
-
-      if (inputText.value == "") {
-        searchSuggestions.value = newContacts.map((e) => e.mapToParticipateItem()).toList();
-      }else {
-        List<UserModel> items= (await searchUserUseCase.execute(inputText.value));
-
-          searchSuggestions.value = items.map((e) => e.mapToParticipateItem()).toList();
-        refresh();
-        searchSuggestions.refresh();
-      }
-    });
-
-    super.onInit();
+    participateItems.value =
+        contacts.map((e) => e.mapToParticipateItem()).toList();
+    searchItems.value = participateItems;
   }
 
+  //listenToContacts() async {
+  //  inputController.addListener(() {
+  //    inputText.value = inputController.text;
+  //    searchUsers(inputController.text);
+  //  });
+  //  _contactsStreamSubscription = (await contactRepository.getContactsStream())
+  //      .listen((newContacts) async {
+  //    // remove the deleted contacts from the list
+  //    if (inputText.value == "") {
+  //      searchSuggestions.value =
+  //          newContacts.map((e) => e.mapToParticipateItem()).toList();
+  //    } else {
+  //      List<UserModel> items =
+  //          (await searchUserUseCase.execute(inputText.value));
+  //      searchSuggestions.value =
+  //          items.map((e) => e.mapToParticipateItem()).toList();
+  //      refresh();
+  //      searchSuggestions.refresh();
+  //    }
+  //  });
+  //  super.onInit();
+  //}
+
   void searchUsers(String query) async {
-    //TODO icon and chatmodel should be filled with correct data
+    //List<UserModel> items = (await searchContactUserUseCase.execute(query));
 
-
-   List<UserModel> items= (await searchUserUseCase.execute(query));
-
-   searchSuggestions.value = items.map((e) => e.mapToParticipateItem()).toList();
-   refresh();
-   searchSuggestions.refresh();
-
-   /*  List<UserModel> searchedItems =
-        (await contactRepository.search(query)).toList();
-
-    if (searchedItems.isEmpty) {
-      String? currentUserCoreId = await accountInfo.getCoreId();
-      if (query.isValidCoreId() && currentUserCoreId != query) {
-        //its a new user
-        //TODO update fields based on correct data
-        searchSuggestions.value = [
-          UserModel(
-            name: 'unknown',
-            iconUrl: profileLink,
-            walletAddress: query,
-            coreId: query,
-          ).mapToParticipateItem()
-        ];
-      } else {
-        searchSuggestions.value = [];
-      }
+    //searchSuggestions.value =
+    //    items.map((e) => e.mapToParticipateItem()).toList();
+    //refresh();
+    //searchSuggestions.refresh();
+    if (query == "") {
+      searchItems.value = participateItems;
     } else {
-      searchSuggestions.value = searchedItems.map((e) => e.mapToParticipateItem()).toList();
-      refresh();
-    }
+      query = query.toLowerCase();
 
-    searchSuggestions.refresh();*/
+      searchItems.value = participateItems
+          .where((item) => item.name.toLowerCase().contains(query))
+          .toList();
+    }
+    //refresh();
   }
 
   RxBool isTextInputFocused = false.obs;
 
-  void addUser(UserModel user) {
+  void addUser(ParticipateItem user) {
     var existingIndex = selectedUser.indexWhere((u) => u.coreId == user.coreId);
 
     if (existingIndex != -1) {
       selectedUser.removeAt(existingIndex);
     } else {
-      selectedUser.insert(0, user.mapToParticipateItem()); //It will add user to the top
+      //It will add user to the top
+      selectedUser.insert(0, user);
     }
   }
 
-  bool isSelected(UserModel user) {
+  bool isSelected(ParticipateItem user) {
     return selectedUser.any((u) => u.coreId == user.coreId);
   }
 }

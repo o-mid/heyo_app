@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../../generated/locales.g.dart';
-import '../../shared/utils/constants/colors.dart';
-import '../../shared/utils/constants/textStyles.dart';
-import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/generated/locales.g.dart';
 
 void openFiltersBottomSheet({required controller}) {
   Get.bottomSheet(

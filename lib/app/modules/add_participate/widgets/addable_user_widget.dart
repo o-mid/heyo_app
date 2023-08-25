@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/add_participate/controllers/add_participate_controller.dart';
+import 'package:heyo/app/modules/add_participate/controllers/participate_item_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
@@ -9,10 +10,8 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
-import '../../new_chat/data/models/user_model.dart';
-
 class AddableUserWidget extends StatelessWidget {
-  final UserModel user;
+  final ParticipateItem user;
 
   const AddableUserWidget({
     Key? key,

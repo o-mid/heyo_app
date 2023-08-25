@@ -11,7 +11,7 @@ class CUSTOMTEXTFIELD extends StatefulWidget {
   final String? hintText;
   final String initialValue;
   final bool hasClearSign;
-  final Function? onChanged;
+  final Function(String)? onChanged;
   final bool hasError;
   final String error;
   final List<TextInputFormatter>? inputFormatters;
@@ -171,6 +171,7 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
             child: SizedBox(
               height: 48,
               child: TextFormField(
+                onChanged: widget.onChanged,
                 autofocus: widget.autofocus,
                 validator: widget.validator,
                 focusNode: focusNode,

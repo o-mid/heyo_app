@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:heyo/app/modules/add_participate/controllers/add_participate_controller.dart';
 import 'package:heyo/app/modules/add_participate/widgets/contact_list_with_header_add_participate.dart';
-
-import '../../shared/utils/constants/colors.dart';
-import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
-import '../controllers/add_participate_controller.dart';
-import 'selected_user_chip.dart';
+import 'package:heyo/app/modules/add_participate/widgets/selected_user_chip.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 
 class SearchInContactsBody extends StatelessWidget {
   const SearchInContactsBody(this.controller, {super.key});
@@ -21,7 +20,7 @@ class SearchInContactsBody extends StatelessWidget {
         Padding(
           padding: CustomSizes.mainContentPadding,
           child: ContactListWithHeaderAddParticipate(
-            contacts: controller.searchSuggestions,
+            contacts: controller.searchItems,
             searchMode: controller.inputController.text.isNotEmpty,
           ),
         ),

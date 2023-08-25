@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/add_participate/controllers/add_participate_controller.dart';
+import 'package:heyo/app/modules/add_participate/widgets/appbar_add_participate.dart';
+import 'package:heyo/app/modules/add_participate/widgets/invite_bttom_sheet.dart';
+import 'package:heyo/app/modules/add_participate/widgets/search_in_contact_add_participate.dart';
+import 'package:heyo/app/modules/add_participate/widgets/textfield_add_participate.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/custom_button.dart';
-
-import '../../../../generated/locales.g.dart';
-import '../../new_chat/widgets/invite_bttom_sheet.dart';
-import '../../shared/utils/constants/textStyles.dart';
-import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
-import '../../shared/widgets/empty_users_body.dart';
-import '../controllers/add_participate_controller.dart';
-import '../widgets/appbar_add_participate.dart';
-import '../widgets/search_in_contact_add_participate.dart';
-import '../widgets/textfield_add_participate.dart';
+import 'package:heyo/app/modules/shared/widgets/empty_users_body.dart';
+import 'package:heyo/generated/locales.g.dart';
 
 class AddParticipateView extends GetView<AddParticipateController> {
   const AddParticipateView({Key? key}) : super(key: key);
@@ -29,18 +28,16 @@ class AddParticipateView extends GetView<AddParticipateController> {
                 children: [
                   CustomSizes.largeSizedBoxHeight,
                   TextfieldAddParticipate(controller),
-                  Expanded(
-                    child: controller.searchSuggestions.isEmpty
-                        ? EmptyUsersBody(
-                            infoText:
-                                LocaleKeys.newChat_emptyStateTitleContacts.tr,
-                            buttonText: LocaleKeys.newChat_buttons_invite.tr,
-                            onInvite: () => openInviteBottomSheet(
-                              profileLink: controller.profileLink,
-                            ),
-                          )
-                        : SearchInContactsBody(controller),
-                  ),
+                  controller.searchItems.isEmpty
+                      ? EmptyUsersBody(
+                          infoText:
+                              LocaleKeys.newChat_emptyStateTitleContacts.tr,
+                          buttonText: LocaleKeys.newChat_buttons_invite.tr,
+                          onInvite: () => openInviteBottomSheet(
+                            profileLink: controller.profileLink,
+                          ),
+                        )
+                      : SearchInContactsBody(controller),
                 ],
               ),
               Padding(
