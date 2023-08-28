@@ -53,7 +53,7 @@ class CallController extends GetxController {
 
   final recordState = RecordState.notRecording.obs;
   final CallConnectionController callConnectionController;
-  late Session session;
+  //late Session session;
   final Stopwatch stopwatch = Stopwatch();
   Timer? calltimer;
 
@@ -123,7 +123,7 @@ class CallController extends GetxController {
       updateCallerVideoWidget();
     });
 
-    if (args.session == null) {
+    if (args.callId == null) {
       await callerSetup();
     } else {
       await calleeSetup();
@@ -143,19 +143,19 @@ class CallController extends GetxController {
     enableWakeScreenLock();
   }
 
+  late String requestedCallId;
   Future callerSetup() async {
-    final callId = DateTime.now().millisecondsSinceEpoch.toString();
-    session = (await callConnectionController.startCall(
-        args.user.walletAddress, callId, args.isAudioCall));
+    requestedCallId=(await callConnectionController.startCall(
+        args.user.walletAddress, args.isAudioCall));
 
     isInCall.value = false;
     _playWatingBeep();
   }
 
   Future calleeSetup() async {
-    session = args.session!;
-    await callConnectionController.acceptCall(args.session!);
-    args.session?.pc?.getRemoteStreams().forEach((element) {
+    await callConnectionController.acceptCall(args.callId!);
+
+    callConnectionController.getRemoteStreams(args.callId!).forEach((element) {
       _remoteRenderer.srcObject = element;
       updateCalleeVideoWidget();
     });
@@ -205,7 +205,13 @@ class CallController extends GetxController {
   void toggleMuteCall() {}
 
   void endCall() {
-    callConnectionController.endOrCancelCall(session);
+    if(args.callId==null){
+      callConnectionController.endOrCancelCall(requestedCallId);
+
+    }else{
+      callConnectionController.endOrCancelCall(args.callId!);
+
+    }
     _stopWatingBeep();
     Get.back();
   }
@@ -250,7 +256,8 @@ class CallController extends GetxController {
   // Todo
   void toggleVideo() {
     callerVideoEnabled.value = !callerVideoEnabled.value;
-    callConnectionController.showLocalVideoStream(callerVideoEnabled.value, session.sid, true);
+    //todo farzam
+  //  callConnectionController.showLocalVideoStream(callerVideoEnabled.value, session.sid, true);
   }
 
   void switchCamera() {

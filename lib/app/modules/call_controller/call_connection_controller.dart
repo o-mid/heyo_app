@@ -1,5 +1,3 @@
-import 'dart:ffi';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,13 +6,13 @@ import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/app/modules/web-rtc/models.dart';
 import 'package:heyo/app/modules/web-rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 import '../notifications/controllers/notifications_controller.dart';
-import '../shared/utils/constants/notifications_constant.dart';
 
 class CallConnectionController extends GetxController {
   final CallConnectionsHandler callConnectionsHandler;
@@ -47,18 +45,20 @@ class CallConnectionController extends GetxController {
   }
 
   void observeCallStatus() {
-    callConnectionsHandler.onCallStateChange = (session, state) async {
+    callConnectionsHandler.onCallStateChange = (callId, calls, state) async {
       callState.value = state;
 
       callHistoryState.value = CallHistoryState(
-        session: session,
-        callHistoryStatus: CallHistoryState.mapCallStateToCallHistoryStatus(state),
+        callId: callId,
+        remotes: calls,
+        callHistoryStatus:
+            CallHistoryState.mapCallStateToCallHistoryStatus(state),
       );
 
       print("Call State changed, state is: $state");
 
       if (state == CallState.callStateRinging) {
-        await handleCallStateRinging(session: session);
+        await handleCallStateRinging(callId: callId,calls: calls);
       } else if (state == CallState.callStateBye) {
         if (Get.currentRoute == Routes.CALL) {
           Get.until((route) => Get.currentRoute != Routes.CALL);
@@ -67,12 +67,12 @@ class CallConnectionController extends GetxController {
         }
       }
     };
-    callConnectionsHandler.onAddRemoteStream = (session, stream) async {
+    /* callConnectionsHandler.onAddRemoteStream = (session, stream) async {
       onAddRemoteStream?.call(stream);
     };
     callConnectionsHandler.onRemoveRemoteStream = (session, stream) async {
       removeStream.value = stream;
-    };
+    };*/
   }
 
   CallConnectionController(
@@ -81,22 +81,30 @@ class CallConnectionController extends GetxController {
       required this.notificationsController,
       required this.contactRepository});
 
-  Future<Session> startCall(String remoteId, String callId, bool isAudioCall) async {
+  Future<String> startCall(
+      String remoteId, bool isAudioCall) async {
     String? selfCoreId = await accountInfo.getCoreId();
-    final session = await callConnectionsHandler.invite(remoteId, 'video', false, selfCoreId!, isAudioCall);
+    final session =
+        await callConnectionsHandler.requestCall(remoteId, isAudioCall);
 
-    callHistoryState.value =
-        CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.initial);
-    return session;
+    callHistoryState.value = CallHistoryState(
+        callId: session.callId,
+        remotes: [
+          CallInfo(
+              remotePeer:
+                  RemotePeer(remotePeerId: null, remoteCoreId: remoteId),
+              isAudioCall: isAudioCall)
+        ],
+        callHistoryStatus: CallHistoryStatus.initial);
+    return session.callId;
   }
 
-  Future acceptCall(Session session) async {
-    callConnectionsHandler.accept(
-      session.sid,
-    );
+  Future acceptCall(CallId callId) async {
+    callConnectionsHandler.accept(callId);
+    //callConnectionsHandler.accept(callId);
 
-    callHistoryState.value =
-        CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.connected);
+    /* callHistoryState.value = CallHistoryState(
+        session: session, callHistoryStatus: CallHistoryStatus.connected);*/
   }
 
   void switchCamera() {
@@ -118,10 +126,11 @@ class CallConnectionController extends GetxController {
     }
   }
 
-  void rejectCall(Session session) {
-    callConnectionsHandler.reject(session);
-    callHistoryState.value =
-        CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.connected);
+  void rejectCall(CallId callId) {
+    callConnectionsHandler.reject(callId);
+    //TODO update
+    /* callHistoryState.value = CallHistoryState(
+        session: session, callHistoryStatus: CallHistoryStatus.connected);*/
   }
 
   Future<void> close() async {
@@ -130,35 +139,39 @@ class CallConnectionController extends GetxController {
     onAddRemoteStream = null;
   }
 
-  void endOrCancelCall(Session session) {
-    callConnectionsHandler.reject(session);
-    callHistoryState.value =
-        CallHistoryState(session: session, callHistoryStatus: CallHistoryStatus.byeSent);
+  void endOrCancelCall(CallId callId) {
+    callConnectionsHandler.reject(callId);
+    //TODO farzam
+    /*callHistoryState.value = CallHistoryState(
+        session: session, callHistoryStatus: CallHistoryStatus.byeSent);*/
   }
 
-  Future<void> handleCallStateRinging({required Session session}) async {
-    UserModel? userModel = await contactRepository.getContactById(session.cid);
-    await notifyReceivedCall(callSession: session);
+  Future<void> handleCallStateRinging(
+      {required CallId callId, required List<CallInfo> calls}) async {
+    UserModel? userModel = await contactRepository
+        .getContactById(calls.first.remotePeer.remoteCoreId);
+    await notifyReceivedCall(callInfo: calls.first);
 
     await Get.toNamed(
       Routes.INCOMING_CALL,
       arguments: IncomingCallViewArguments(
-          session: session,
-          callId: "",
-          sdp: session.sid,
-          remoteCoreId: session.cid,
-          remotePeerId: session.pid!,
+          callId: callId,
+          isAudioCall: calls.first.isAudioCall,
+          remoteCoreId: calls.first.remotePeer.remoteCoreId,
+          remotePeerId: calls.first.remotePeer.remotePeerId!,
           name: userModel?.name),
     );
   }
 
   Future<void> notifyReceivedCall({
-    required Session callSession,
+    required CallInfo callInfo,
   }) async {
     await notificationsController.receivedCallNotify(
-      title: "Incoming ${callSession.isAudioCall ? "Audio" : "Video"} Call",
+      title: "Incoming ${callInfo.isAudioCall ? "Audio" : "Video"} Call",
       body:
-          "from ${callSession.cid.characters.take(4).string}...${callSession.cid.characters.takeLast(4).string}",
+          "from ${callInfo.remotePeer.remoteCoreId.characters.take(4).string}...${callInfo.remotePeer.remoteCoreId.characters.takeLast(4).string}",
     );
   }
+
+  getRemoteStreams(CallId callId) {}
 }

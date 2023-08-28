@@ -78,7 +78,6 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                       onPressed: () => Get.toNamed(
                         Routes.CALL,
                         arguments: CallViewArgumentsModel(
-                            session: null,
                             callId: null,
                             user: controller.user.value,
                             enableVideo: false,
@@ -93,7 +92,6 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                       onPressed: () => Get.toNamed(
                         Routes.CALL,
                         arguments: CallViewArgumentsModel(
-                            session: null,
                             callId: null,
                             user: controller.user.value,
                             enableVideo: true,

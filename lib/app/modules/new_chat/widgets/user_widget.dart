@@ -60,7 +60,6 @@ class UserWidget extends StatelessWidget {
               Get.toNamed(
                 Routes.CALL,
                 arguments: CallViewArgumentsModel(
-                  session: null,
                   user: user,
                   callId: null,
                   isAudioCall: true,
@@ -77,7 +76,7 @@ class UserWidget extends StatelessWidget {
               Get.toNamed(
                 Routes.CALL,
                 arguments: CallViewArgumentsModel(
-                    session: null, user: user, callId: null, enableVideo: true, isAudioCall: false),
+                    user: user, callId: null, enableVideo: true, isAudioCall: false),
               );
             },
             backgroundColor: COLORS.kBrightBlueColor,

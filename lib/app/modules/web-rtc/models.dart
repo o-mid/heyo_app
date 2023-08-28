@@ -9,9 +9,11 @@ class CallSignalingCommands {
   static const cameraOpen = 'cameraOpen';
   static const cameraClosed = 'cameraClosed';
 }
+
 CallId generateCallId() {
   return '${DateTime.now().millisecondsSinceEpoch}';
 }
+
 class RemotePeer {
   String remoteCoreId;
   String? remotePeerId;
@@ -25,14 +27,25 @@ class CallRTCSession {
   CallRTCSession(
       {required this.callId,
       required this.remotePeer,
-      required this.onConnectionFailed}) {}
+      required this.onConnectionFailed,
+      required this.isAudioCall});
+
+  final bool isAudioCall;
 
   late int timeStamp;
   Function(CallId, String) onConnectionFailed;
 
   CallId callId;
   RemotePeer remotePeer;
+  Function(MediaStream mediaStream)? onAddRemoteStream;
+
   MediaStream? stream;
+
+  set(MediaStream mediaStream) {
+    stream = mediaStream;
+    onAddRemoteStream?.call(stream!);
+  }
+
   RTCPeerConnection? _pc;
   bool isDataChannelConnectionAvailable = false;
   Function(RTCDataChannelMessage)? onDataChannelMessage;
@@ -46,7 +59,6 @@ class CallRTCSession {
   RTCPeerConnection? get pc => _pc;
 
   RTCDataChannel? dc;
-  final bool isAudioCall = false;
   final List<RTCIceCandidate> remoteCandidates = [];
 
   //Function(RTCSessionStatus)? onNewRTCSessionStatus;
@@ -135,9 +147,9 @@ class CallRTCSession {
     }
   }
 
-  void dispose() {
+   dispose() async {
     // onNewRTCSessionStatus = null;
     dc = null;
-    _pc?.dispose();
+    await _pc?.dispose();
   }
 }

@@ -171,7 +171,6 @@ class _DefaultAppBar extends StatelessWidget {
                   Get.toNamed(
                     Routes.CALL,
                     arguments: CallViewArgumentsModel(
-                        session: null,
                         callId: null,
                         user: controller.getUser(),
                         enableVideo: true,
@@ -186,7 +185,6 @@ class _DefaultAppBar extends StatelessWidget {
                   Get.toNamed(
                     Routes.CALL,
                     arguments: CallViewArgumentsModel(
-                        session: null,
                         callId: null,
                         user: controller.getUser(),
                         enableVideo: false,

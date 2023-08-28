@@ -1,3 +1,6 @@
+import 'package:heyo/app/modules/messaging/models.dart';
+import 'package:heyo/app/modules/web-rtc/models.dart';
+import 'package:heyo/app/modules/web-rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 
 enum CallHistoryStatus {
@@ -13,11 +16,13 @@ enum CallHistoryStatus {
 }
 
 class CallHistoryState {
-  final Session session;
+  final String callId;
+  final List<CallInfo> remotes;
   final CallHistoryStatus callHistoryStatus;
 
   CallHistoryState({
-    required this.session,
+    required this.callId,
+    required this.remotes,
     required this.callHistoryStatus,
   });
 

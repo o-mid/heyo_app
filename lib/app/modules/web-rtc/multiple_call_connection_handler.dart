@@ -1,37 +1,91 @@
+import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/modules/web-rtc/single_call_web_rtc_connection.dart';
 import 'package:heyo/app/modules/web-rtc/models.dart';
 
+class CurrentCall {
+  final CallId callId;
+  final List<CallRTCSession> activeSessions;
+
+  CurrentCall({required this.callId, required this.activeSessions});
+}
+
+class CallInfo {
+  RemotePeer remotePeer;
+  bool isAudioCall;
+
+  CallInfo({required this.remotePeer, required this.isAudioCall});
+}
+
+class RequestedCalls {
+  final CallId callId;
+  final List<CallInfo> remotePeers;
+
+  RequestedCalls({required this.callId, required this.remotePeers});
+}
+
+class IncomingCalls {
+  final CallId callId;
+  final List<CallInfo> remotePeers;
+
+  IncomingCalls({required this.callId, required this.remotePeers});
+}
+
 class CallConnectionsHandler {
   SingleCallWebRTCBuilder singleCallWebRTCBuilder;
+  MediaStream? _localStream;
+  Function(MediaStream stream)? onLocalStream;
+  IncomingCalls? _incomingCalls;
 
   CallConnectionsHandler({required this.singleCallWebRTCBuilder});
 
-  late CallId _callId;
-  List<CallRTCSession> sessions = [];
+  Function(CallId callId, List<CallInfo> callInfo, CallState state)?
+      onCallStateChange;
+  CurrentCall? _currentCall;
+  IncomingCalls? incomingCall;
+  RequestedCalls? requestedCalls;
 
-  requestCall(String remoteCoreId) async {
-    _callId = generateCallId();
-    CallRTCSession callRTCSession = await _createSession(_callId,remoteCoreId,null);
+  Future<CallRTCSession> requestCall(
+      String remoteCoreId, bool isAudioCall) async {
+    CallId callId = generateCallId();
+    _currentCall = CurrentCall(callId: callId, activeSessions: []);
+    CallRTCSession callRTCSession =
+        await _createSession(RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null), isAudioCall);
     singleCallWebRTCBuilder.requestSession(callRTCSession);
+    CallInfo callInfo = CallInfo(
+        remotePeer: RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
+        isAudioCall: isAudioCall);
+    onCallStateChange?.call(callId, [callInfo], CallState.callStateNew);
+    onCallStateChange?.call(callId, [callInfo], CallState.callStateInvite);
     //generate a connectionId
     //send requestCall
-  }
-
-  Future<CallRTCSession> _createSession(CallId callId,String remoteCoreId,String? remotePeerId) async {
-    CallRTCSession callRTCSession = await singleCallWebRTCBuilder.createSession(
-        _callId, remoteCoreId, null);
-    sessions.add(callRTCSession);
     return callRTCSession;
   }
 
-  Future<CallRTCSession> _getConnection(
-      String remoteCoreId, String remotePeerId, CallId callId) async{
-    for (var value in sessions) {
-      if (value.remotePeer.remoteCoreId == remoteCoreId) {
+  Future<CallRTCSession> _createSession(
+      RemotePeer remotePeer, bool isAudioCall) async {
+    if (_localStream == null) {
+      await _createStream('video', false);
+    }
+    CallRTCSession callRTCSession = await singleCallWebRTCBuilder.createSession(
+        _currentCall!.callId,
+        remotePeer.remoteCoreId,
+        remotePeer.remotePeerId,
+        _localStream!,
+        isAudioCall);
+    callRTCSession.onAddRemoteStream = (stream) {};
+    _currentCall!.activeSessions.add(callRTCSession);
+    return callRTCSession;
+  }
+
+  CallRTCSession? _getConnection(String remoteCoreId, CallId callId) {
+    for (var value in _currentCall!.activeSessions) {
+      if (value.callId == callId &&
+          value.remotePeer.remoteCoreId == remoteCoreId) {
         return value;
       }
     }
-    return _createSession(callId, remoteCoreId, remotePeerId);
+    return null;
   }
 
   addParticipants(String remoteCoreId) {
@@ -39,15 +93,40 @@ class CallConnectionsHandler {
     //sendCall request with an array of participants
   }
 
-
-  accept(List<String> remotes, String callerId) {
-    //send offer to remotes with this callId
+  accept(CallId callId) async{
+    if(incomingCall?.callId==callId){
+      incomingCall!.remotePeers.forEach((element) async{
+       CallRTCSession callRTCSession=await _createSession(element.remotePeer,element.isAudioCall);
+        singleCallWebRTCBuilder.startSession(callRTCSession);
+      });
+    }
+    // singleCallWebRTCBuilder.startSession(rtcSession)
   }
 
-  reject(String callerId) {}
+  reject(String callId) {
+    print("rejectcd ${_incomingCalls} ");
+    if (_incomingCalls?.callId == callId) {
+      _incomingCalls?.remotePeers.forEach((element) {
+        print("rejectcd 2");
 
-  close() {
-    //remove connectionId
+        singleCallWebRTCBuilder.reject(callId, element.remotePeer);
+      });
+    }
+    if (_currentCall?.callId == callId) {
+      _currentCall?.activeSessions.forEach((element) {
+        singleCallWebRTCBuilder.reject(callId, element.remotePeer);
+      });
+    }
+    _currentCall = null;
+    _incomingCalls = null;
+  }
+
+  close() async {
+    for (var element in _currentCall!.activeSessions) {
+      await element.dispose();
+    }
+    _currentCall!.activeSessions.clear();
+    _currentCall = null;
   }
 
   Future<void> onRequestReceived(Map<String, dynamic> mapData,
@@ -58,53 +137,135 @@ class CallConnectionsHandler {
     switch (mapData['type']) {
       case CallSignalingCommands.request:
         {
-           //TODO show the user income
-          //user accepts or rejects
-          //accepting means
+          _onCallRequestReceived(
+              mapData,
+              data,
+              RemotePeer(
+                  remoteCoreId: remoteCoreId, remotePeerId: remotePeerId));
         }
         break;
-      /*case initiate:
+      case CallSignalingCommands.reject:
         {
-          String connectionId = mapData[CONNECTION_ID];
-
-          RTCSession rtcSession =
-          await _getConnection(connectionId, remoteCoreId, remotePeerId);
-          singleWebRTCConnection.startSession(rtcSession);
+          onCallRequestRejected(
+              mapData,
+              RemotePeer(
+                  remoteCoreId: remoteCoreId, remotePeerId: remotePeerId));
         }
-        break;*/
+        break;
       case CallSignalingCommands.offer:
         {
           String callId = mapData[CALL_ID];
 
-          CallRTCSession rtcSession =
+          /*  CallRTCSession rtcSession =
               await _getConnection(callId, remoteCoreId, remotePeerId);
           var description = data[DATA_DESCRIPTION];
 
           await singleCallWebRTCBuilder.onOfferReceived(
-              rtcSession, description);
+              rtcSession, description);*/
         }
         break;
       case CallSignalingCommands.answer:
         {
-          String callId = mapData[CALL_ID];
+          /*  String callId = mapData[CALL_ID];
           CallRTCSession rtcSession =
               await _getConnection(callId, remoteCoreId, remotePeerId);
           var description = data[DATA_DESCRIPTION];
           await singleCallWebRTCBuilder.onAnswerReceived(
-              rtcSession, description);
+              rtcSession, description);*/
         }
         break;
       case CallSignalingCommands.candidate:
         {
-          String callId = mapData[CALL_ID];
+          /*  String callId = mapData[CALL_ID];
 
           CallRTCSession rtcSession =
               await _getConnection(callId, remoteCoreId, remotePeerId);
           var candidateMap = data[CallSignalingCommands.candidate];
           await singleCallWebRTCBuilder.onCandidateReceived(
-              rtcSession, candidateMap);
+              rtcSession, candidateMap);*/
         }
         break;
     }
+  }
+
+  void switchCamera() {}
+
+  void muteMic() {}
+
+  void showLocalVideoStream(bool value) {}
+
+  void peerOpendCamera(String sessionId) {}
+
+  void peerClosedCamera(String sessionId) {}
+
+  Future<MediaStream> _createStream(String media, bool userScreen) async {
+    final Map<String, dynamic> mediaConstraints = {
+      'audio': true,
+      'video': userScreen
+          ? true
+          : {
+              'mandatory': {
+                'minWidth': '640',
+                // Provide your own width, height and frame rate here
+                'minHeight': '480',
+                'minFrameRate': '30',
+              },
+              'facingMode': 'user',
+              'optional': [],
+            }
+    };
+
+    MediaStream stream = userScreen
+        ? await RTCFactoryNative.instance.navigator.mediaDevices
+            .getDisplayMedia(mediaConstraints)
+        : await RTCFactoryNative.instance.navigator.mediaDevices
+            .getUserMedia(mediaConstraints);
+    _localStream = stream;
+    onLocalStream?.call(stream);
+    return stream;
+  }
+
+  onCallRequestRejected(mapData, RemotePeer remotePeer) async {
+    String callId = mapData[CALL_ID];
+    if (_currentCall != null) {
+      CallRTCSession? callRTCSession =
+          _getConnection(remotePeer.remoteCoreId, callId);
+      if (callRTCSession != null) {
+        //TODO update based on..
+        onCallStateChange?.call(
+            callId,
+            [
+              CallInfo(
+                  remotePeer: callRTCSession.remotePeer,
+                  isAudioCall: callRTCSession.isAudioCall)
+            ],
+            CallState.callStateBye);
+        await callRTCSession.dispose();
+        _currentCall?.activeSessions.removeWhere((element) =>
+            element.remotePeer.remoteCoreId == remotePeer.remoteCoreId);
+      }
+    }
+    if (_incomingCalls != null) {
+      onCallStateChange?.call(
+          callId, [_incomingCalls!.remotePeers.first], CallState.callStateBye);
+      _incomingCalls = null;
+    }
+  }
+
+  _onCallRequestReceived(mapData, data, remotePeer) {
+    String callId = mapData[CALL_ID];
+    bool isAudioCall = data["isAudioCall"];
+    CallInfo callInfo =
+        CallInfo(remotePeer: remotePeer, isAudioCall: isAudioCall);
+    if (_incomingCalls?.callId != null && _incomingCalls?.callId == callId) {
+    } else if (_incomingCalls != null && _incomingCalls?.callId != callId ||
+        _currentCall != null) {
+      //TODO busy
+    } else if (_incomingCalls?.callId == null) {
+      _incomingCalls = IncomingCalls(callId: callId, remotePeers: [callInfo]);
+    }
+    onCallStateChange?.call(callId, [callInfo], CallState.callStateNew);
+
+    onCallStateChange?.call(callId, [callInfo], CallState.callStateRinging);
   }
 }

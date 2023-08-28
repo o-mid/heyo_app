@@ -1,8 +1,9 @@
 import 'dart:convert';
 
-import 'package:heyo/app/modules/messaging/web_rtc_connection_manager.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
 import 'package:heyo/app/modules/web-rtc/models.dart';
+import 'package:heyo/app/modules/web-rtc/web_rtc_call_connection_manager.dart';
+
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 const MEDIA_TYPE = 'data';
@@ -16,44 +17,64 @@ const CALL_ID = 'call_id';
 
 class SingleCallWebRTCBuilder {
   final P2PCommunicator p2pCommunicator;
-  final WebRTCConnectionManager webRTCConnectionManager;
+  final WebRTCCallConnectionManager webRTCConnectionManager;
   final JsonEncoder _encoder = const JsonEncoder();
   final JsonDecoder _decoder = const JsonDecoder();
   Function(CallId, String)? onConnectionFailed;
+  Function(MediaStream stream)? onAddRemoteStream;
+  Function(MediaStream stream)? onRemoveStream;
 
   SingleCallWebRTCBuilder(
       {required this.p2pCommunicator, required this.webRTCConnectionManager});
 
   Future<CallRTCSession> _createRTCSession(
-      CallId connectionId, String remoteCoreId, String? remotePeer) async {
+      CallId connectionId,
+      String remoteCoreId,
+      String? remotePeer,
+      MediaStream localStream,
+      bool isAudioCall) async {
     RTCPeerConnection peerConnection =
         await webRTCConnectionManager.createRTCPeerConnection();
+    print("dasdasda1 $isAudioCall");
     CallRTCSession rtcSession = CallRTCSession(
         callId: connectionId,
         remotePeer:
             RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: remotePeer),
         onConnectionFailed: (id, remote) {
           onConnectionFailed?.call(id, remote);
-        });
+        },
+        isAudioCall: isAudioCall);
+    print("dasdasda1 ${rtcSession.isAudioCall}");
+
     rtcSession.pc = peerConnection;
     rtcSession.remotePeer.remotePeerId = remotePeer;
-    webRTCConnectionManager.setListeners(rtcSession.pc!,
-        onIceCandidate: (candidate) => _sendCandidate(candidate, rtcSession));
+    webRTCConnectionManager.setListeners(
+      localStream,
+      rtcSession.pc!,
+      onAddRemoteStream: (remoteStream) {
+        rtcSession.stream = remoteStream;
+      },
+      onIceCandidate: (candidate) => _sendCandidate(candidate, rtcSession),
+    );
     return rtcSession;
   }
 
-  Future<CallRTCSession> createSession(
-      CallId connectionId, String remoteCoreId, String? remotePeer) async {
-    return await _createRTCSession(connectionId, remoteCoreId, remotePeer);
+  Future<CallRTCSession> createSession(CallId connectionId, String remoteCoreId,
+      String? remotePeer, MediaStream stream, bool isAudioCall) async {
+    return await _createRTCSession(
+        connectionId, remoteCoreId, remotePeer, stream, isAudioCall);
   }
 
   requestSession(CallRTCSession callRTCSession) {
     _send(
-        CallSignalingCommands.request,
-        {},
-        callRTCSession.remotePeer.remoteCoreId,
-        callRTCSession.remotePeer.remotePeerId,
-        callRTCSession.callId);
+      CallSignalingCommands.request,
+      {
+        "isAudioCall": callRTCSession.isAudioCall,
+      },
+      callRTCSession.remotePeer.remoteCoreId,
+      callRTCSession.remotePeer.remotePeerId,
+      callRTCSession.callId,
+    );
   }
 
   Future<bool> startSession(CallRTCSession rtcSession) async {
@@ -111,6 +132,16 @@ class SingleCallWebRTCBuilder {
         description['type'],
       ),
     );
+  }
+  void reject(String callId, RemotePeer remotePeer) {
+    _send(
+        CallSignalingCommands.reject,
+        {
+
+        },
+        remotePeer.remoteCoreId,
+        remotePeer.remotePeerId,
+        callId);
   }
 
   _sendCandidate(RTCIceCandidate iceCandidate, CallRTCSession rtcSession) {

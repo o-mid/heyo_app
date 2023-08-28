@@ -30,17 +30,19 @@ import '../data/models/notifications_payload_model.dart';
 class NotificationsController extends GetxController with WidgetsBindingObserver {
   NotificationsController({
     required this.appNotifications,
+    required this.chatHistoryRepo,
+    required this.messagesRepo
   });
 
   final AppNotifications appNotifications;
-  final ChatHistoryLocalAbstractRepo chatHistoryRepo = ChatHistoryLocalRepo(
+  final ChatHistoryLocalAbstractRepo chatHistoryRepo; /*= ChatHistoryLocalRepo(
     chatHistoryProvider: ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-  );
-  final MessagesAbstractRepo messagesRepo = MessagesRepo(
+  );*/
+  final MessagesAbstractRepo messagesRepo; /*= MessagesRepo(
     messagesProvider: MessagesProvider(
       appDatabaseProvider: Get.find(),
     ),
-  );
+  );*/
 
   RxBool isAppOnBackground = false.obs;
 

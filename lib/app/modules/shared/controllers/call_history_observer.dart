@@ -38,30 +38,30 @@ class CallHistoryObserver extends GetxController {
         case CallHistoryStatus.ringing:
           {
             await _createMissedCallRecord(
-              await _getUserFromCoreId(state.session.cid),
-              state.session.sid,
-              state.session.isAudioCall ? CallType.audio : CallType.video,
+              await _getUserFromCoreId(state.remotes.first.remotePeer.remoteCoreId),
+              state.callId,
+              state.remotes.first.isAudioCall ? CallType.audio : CallType.video,
             );
             break;
           }
         case CallHistoryStatus.invite:
           {
             await _createOutgoingNotAnsweredRecord(
-              await _getUserFromCoreId(state.session.cid),
-              state.session.sid,
-              state.session.isAudioCall ? CallType.audio : CallType.video,
+              await _getUserFromCoreId(state.remotes.first.remotePeer.remoteCoreId),
+              state.callId,
+              state.remotes.first.isAudioCall ? CallType.audio : CallType.video,
             );
             break;
           }
         case CallHistoryStatus.connected:
           {
-            final call = await callHistoryRepo.getOneCall(state.session.sid);
+            final call = await callHistoryRepo.getOneCall(state.remotes.first.remotePeer.remoteCoreId);
             if (call == null) {
               return;
             }
 
             /// store the time call started
-            _callStartTimestamps[state.session.sid] = DateTime.now();
+            _callStartTimestamps[state.callId] = DateTime.now();
 
             await _updateCallStatusAndDuration(
               callId: call.id,
@@ -74,7 +74,7 @@ class CallHistoryObserver extends GetxController {
         case CallHistoryStatus.byeSent:
         case CallHistoryStatus.byeReceived:
           {
-            final call = await callHistoryRepo.getOneCall(state.session.sid);
+            final call = await callHistoryRepo.getOneCall(state.callId);
             if (call == null) {
               return;
             }

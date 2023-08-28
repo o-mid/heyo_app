@@ -29,7 +29,7 @@ class IncomingCallView extends GetView<IncomingCallController> {
               shortenCoreId: controller.caller.coreId.shortenCoreId),
           SizedBox(height: 40.h),
           Text(
-            controller.args.session.isAudioCall
+            controller.args.isAudioCall
                 ? LocaleKeys.IncomingCallPage_incomingVoiceCall.tr
                 : LocaleKeys.IncomingCallPage_incomingVideoCall.tr,
             style: TEXTSTYLES.kBodyBasic.copyWith(color: COLORS.kWhiteColor),
@@ -72,7 +72,7 @@ class IncomingCallView extends GetView<IncomingCallController> {
               CircleIconButton(
                 onPressed: controller.acceptCall,
                 backgroundColor: COLORS.kStatesSuccessColor,
-                icon: controller.args.session.isAudioCall
+                icon: controller.args.isAudioCall
                     ? Assets.svg.audioCallIcon.svg()
                     : Assets.svg.videoCallIcon.svg(),
               ),

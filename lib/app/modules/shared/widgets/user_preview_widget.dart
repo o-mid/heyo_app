@@ -95,7 +95,6 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.toNamed(
                       Routes.CALL,
                       arguments: CallViewArgumentsModel(
-                          session: null,
                           callId: null,
                           user: user,
                           enableVideo: false,
@@ -119,7 +118,6 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.toNamed(
                       Routes.CALL,
                       arguments: CallViewArgumentsModel(
-                        session: null,
                         callId: null,
                         user: user,
                         enableVideo: true,

@@ -32,6 +32,7 @@ import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_
 import 'package:core_web3dart/web3dart.dart';
 import 'package:heyo/app/modules/web-rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/modules/web-rtc/single_call_web_rtc_connection.dart';
+import 'package:heyo/app/modules/web-rtc/web_rtc_call_connection_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
@@ -91,26 +92,42 @@ class GlobalBindings extends Bindings {
             chatHistoryProvider: ChatHistoryProvider(
                 appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
-          notificationsController:
-              NotificationsController(appNotifications: appNotifications),
+          notificationsController: Get.find(),
           contactRepository: Get.find());
-
-  static AppNotifications appNotifications = AppNotifications();
 
   @override
   void dependencies() {
+    Get.put(AppDatabaseProvider(accountInfo: accountInfo), permanent: true);
+
+    Get.put(ChatHistoryLocalRepo(
+      chatHistoryProvider: ChatHistoryProvider(
+          appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+    ));
+    Get.put(MessagesRepo(
+      messagesProvider: MessagesProvider(
+        appDatabaseProvider: Get.find(),
+      ),
+    ));
+    Get.put(AppNotifications(), permanent: true);
+
+    Get.put(
+        NotificationsController(
+            appNotifications: Get.find(),
+            chatHistoryRepo: Get.find<ChatHistoryLocalRepo>(),
+            messagesRepo: Get.find<MessagesRepo>()),
+        permanent: true);
+
     Get.put(
         CallConnectionsHandler(
             singleCallWebRTCBuilder: SingleCallWebRTCBuilder(
                 p2pCommunicator: p2pCommunicator,
-                webRTCConnectionManager: WebRTCConnectionManager())),
+                webRTCConnectionManager: WebRTCCallConnectionManager())),
         permanent: true);
     Get.put(
         CallConnectionController(
             accountInfo: accountInfo,
             callConnectionsHandler: Get.find(),
-            notificationsController:
-                NotificationsController(appNotifications: appNotifications),
+            notificationsController: Get.find(),
             contactRepository: ContactRepository(
               cacheContractor: CacheRepository(
                   userProvider: UserProvider(
@@ -131,7 +148,6 @@ class GlobalBindings extends Bindings {
             multipleConnectionHandler: Get.find()),
         permanent: true);
     // data base provider dependencies
-    Get.put(AppDatabaseProvider(accountInfo: accountInfo), permanent: true);
     Get.put(ContactRepository(
       cacheContractor: CacheRepository(
           userProvider: UserProvider(
@@ -164,7 +180,6 @@ class GlobalBindings extends Bindings {
                 appDatabaseProvider: Get.find<AppDatabaseProvider>())),
       ),
     ));
-
 
     Get.put(
       CallsController(
@@ -209,8 +224,7 @@ class GlobalBindings extends Bindings {
               appDatabaseProvider: Get.find<AppDatabaseProvider>(),
             ),
           ),
-          notificationsController:
-              NotificationsController(appNotifications: appNotifications),
+          notificationsController: Get.find(),
           contactRepository: Get.find()),
       permanent: true,
     );
@@ -235,13 +249,6 @@ class GlobalBindings extends Bindings {
     //   AppNotifications(),
     //   permanent: true,
     // );
-
-    Get.put<NotificationsController>(
-      NotificationsController(
-        appNotifications: appNotifications,
-      ),
-      permanent: true,
-    );
 
     Get.put<CommonMessagingConnectionController>(
         Get.find<MessagingConnectionController>());

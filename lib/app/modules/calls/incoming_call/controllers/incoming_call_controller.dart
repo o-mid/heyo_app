@@ -64,11 +64,11 @@ class IncomingCallController extends GetxController {
   void acceptCall() async {
     _stopRingtone();
 
-    //TODO name should be get from contacts
+    //TODO farzam, accept
+   /* //TODO name should be get from contacts
     Get.offNamed(
       Routes.CALL,
       arguments: CallViewArgumentsModel(
-          session: args.session,
           callId: args.callId,
           enableVideo: args.session.isAudioCall ? false : true,
           user: UserModel(
@@ -79,12 +79,12 @@ class IncomingCallController extends GetxController {
             coreId: args.remoteCoreId,
           ),
           isAudioCall: args.session.isAudioCall),
-    );
+    );*/
   }
 
   void _hangUp() {
-    callConnectionController.rejectCall(args.session);
-    callConnectionController.close();
+    callConnectionController.rejectCall(args.callId);
+    //callConnectionController.close();
   }
 
   void _playRingtone() {
