@@ -1,8 +1,10 @@
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/add_participate/views/add_participate_view.dart';
 
 import '../modules/account/views/account_view.dart';
 import '../modules/add_contacts/bindings/add_contacts_binding.dart';
 import '../modules/add_contacts/views/add_contacts_view.dart';
+import '../modules/add_participate/bindings/add_participate_binding.dart';
 import '../modules/auth/generatePrivateKeys/bindings/generate_private_keys_binding.dart';
 import '../modules/auth/generatePrivateKeys/views/generate_private_keys_view.dart';
 import '../modules/auth/pinCode/bindings/pin_code_binding.dart';
@@ -260,6 +262,11 @@ class AppPages {
       name: _Paths.WIFI_DIRECT_CONNECT,
       page: () => const WifiDirectConnectView(),
       binding: WifiDirectConnectBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADD_PARTICIPATE,
+      page: () => const AddParticipateView(),
+      binding: AddParticipateBinding(),
     ),
   ];
 }

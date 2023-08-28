@@ -11,7 +11,7 @@ class CUSTOMTEXTFIELD extends StatefulWidget {
   final String? hintText;
   final String initialValue;
   final bool hasClearSign;
-  final Function? onChanged;
+  final Function(String)? onChanged;
   final bool hasError;
   final String error;
   final List<TextInputFormatter>? inputFormatters;
@@ -22,6 +22,7 @@ class CUSTOMTEXTFIELD extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final bool? initialFocus;
   final CustomTextFieldHeight heightType;
+  final bool autofocus;
 
   const CUSTOMTEXTFIELD({
     Key? key,
@@ -41,6 +42,7 @@ class CUSTOMTEXTFIELD extends StatefulWidget {
     this.rightWidget,
     this.validator,
     this.initialFocus,
+    this.autofocus = false,
   }) : super(key: key);
 
   @override
@@ -169,6 +171,8 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
             child: SizedBox(
               height: 48,
               child: TextFormField(
+                onChanged: widget.onChanged,
+                autofocus: widget.autofocus,
                 validator: widget.validator,
                 focusNode: focusNode,
                 obscureText: widget.obscureText,
