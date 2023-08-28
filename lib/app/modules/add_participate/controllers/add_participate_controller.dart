@@ -13,11 +13,8 @@ class AddParticipateController extends GetxController {
   RxList<ParticipateItem> searchItems = <ParticipateItem>[].obs;
 
   late TextEditingController inputController;
-  /* final ContactRepository contactRepository;
-  final AccountInfo accountInfo;*/
   final inputFocusNode = FocusNode();
   final inputText = "".obs;
-  //late StreamSubscription _contactsStreamSubscription;
   final String profileLink = "https://heyo.core/m6ljkB4KJ";
 
   final SearchContactUserUseCase searchContactUserUseCase;
@@ -60,36 +57,7 @@ class AddParticipateController extends GetxController {
     searchItems.value = participateItems;
   }
 
-  //listenToContacts() async {
-  //  inputController.addListener(() {
-  //    inputText.value = inputController.text;
-  //    searchUsers(inputController.text);
-  //  });
-  //  _contactsStreamSubscription = (await contactRepository.getContactsStream())
-  //      .listen((newContacts) async {
-  //    // remove the deleted contacts from the list
-  //    if (inputText.value == "") {
-  //      searchSuggestions.value =
-  //          newContacts.map((e) => e.mapToParticipateItem()).toList();
-  //    } else {
-  //      List<UserModel> items =
-  //          (await searchUserUseCase.execute(inputText.value));
-  //      searchSuggestions.value =
-  //          items.map((e) => e.mapToParticipateItem()).toList();
-  //      refresh();
-  //      searchSuggestions.refresh();
-  //    }
-  //  });
-  //  super.onInit();
-  //}
-
   void searchUsers(String query) async {
-    //List<UserModel> items = (await searchContactUserUseCase.execute(query));
-
-    //searchSuggestions.value =
-    //    items.map((e) => e.mapToParticipateItem()).toList();
-    //refresh();
-    //searchSuggestions.refresh();
     if (query == "") {
       searchItems.value = participateItems;
     } else {

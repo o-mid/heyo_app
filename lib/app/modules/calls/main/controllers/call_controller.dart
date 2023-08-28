@@ -220,15 +220,7 @@ class CallController extends GetxController {
   }
 
   // Todo
-  void addParticipant() {
-    Get.toNamed(Routes.ADD_PARTICIPATE);
-    //participants.add(
-    //  CallParticipantModel(
-    //    user: args.user,
-    //    status: CallParticipantStatus.inCall,
-    //  ),
-    //);
-  }
+  void addParticipant() => Get.toNamed(Routes.ADD_PARTICIPATE);
 
   void recordCall() {
     Get.dialog(RecordCallDialog(onRecord: () async {
