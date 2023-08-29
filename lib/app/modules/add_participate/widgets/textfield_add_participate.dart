@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:heyo/app/modules/add_participate/controllers/add_participate_controller.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
@@ -17,7 +18,7 @@ class TextfieldAddParticipate extends StatelessWidget {
         child: Focus(
           onFocusChange: (focus) => controller.isTextInputFocused.value = focus,
           focusNode: controller.inputFocusNode,
-          child: CUSTOMTEXTFIELD(
+          child: CustomTextField(
             autofocus: true,
             textController: controller.inputController,
             labelText: LocaleKeys.newChat_usernameInput.tr,
