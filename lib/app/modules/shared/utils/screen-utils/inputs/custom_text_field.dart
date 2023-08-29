@@ -6,7 +6,7 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_input_b
 
 enum CustomTextFieldHeight { Small, Regular }
 
-class CUSTOMTEXTFIELD extends StatefulWidget {
+class CustomTextField extends StatefulWidget {
   final String labelText;
   final String? hintText;
   final String initialValue;
@@ -24,8 +24,7 @@ class CUSTOMTEXTFIELD extends StatefulWidget {
   final CustomTextFieldHeight heightType;
   final bool autofocus;
 
-  const CUSTOMTEXTFIELD({
-    Key? key,
+  const CustomTextField({
     this.heightType = CustomTextFieldHeight.Regular,
     this.hasClearSign = false,
     this.error = "",
@@ -43,13 +42,14 @@ class CUSTOMTEXTFIELD extends StatefulWidget {
     this.validator,
     this.initialFocus,
     this.autofocus = false,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _CustomTextFieldState createState() => _CustomTextFieldState();
 }
 
-class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
+class _CustomTextFieldState extends State<CustomTextField> {
   TextEditingController controller = TextEditingController();
   FocusNode focusNode = FocusNode();
   InputBorder? border;
@@ -141,7 +141,7 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      key: this.widget.key,
+      key: widget.key,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -150,11 +150,14 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
           padding: const EdgeInsets.fromLTRB(16.0, 4.0, 0, 0),
           child: Visibility(
             visible: widget.hasError && widget.error.isNotEmpty,
-            child: Text(widget.error,
-                style: TEXTSTYLES.kButtonSmall
-                    .copyWith(color: COLORS.kStatesErrorColor)),
+            child: Text(
+              widget.error,
+              style: TEXTSTYLES.kButtonSmall.copyWith(
+                color: COLORS.kStatesErrorColor,
+              ),
+            ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -168,53 +171,49 @@ class _CustomTextFieldState extends State<CUSTOMTEXTFIELD> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Expanded(
-            child: SizedBox(
-              height: 48,
-              child: TextFormField(
-                onChanged: widget.onChanged,
-                autofocus: widget.autofocus,
-                validator: widget.validator,
-                focusNode: focusNode,
-                obscureText: widget.obscureText,
-                keyboardType: widget.keyboardType,
-                controller: controller,
-                style: TEXTSTYLES.kHeaderMedium
-                    .copyWith(color: COLORS.kBlackColor),
-                inputFormatters: widget.inputFormatters,
-                decoration: InputDecoration(
-                  fillColor: COLORS.kBrightBlueColor,
-                  filled: true,
-                  //errorText: widget.validator(controller.value.text),
-                  suffixIcon: widget.rightWidget,
-                  suffixIconColor: iconColor,
-                  prefixIconColor: iconColor,
-                  prefixIcon: widget.leftWidget,
-                  hintText: widget.hintText ?? widget.labelText,
-                  //labelText: widget.labelText,
-                  hintStyle: TEXTSTYLES.kBodyBasic
-                      .copyWith(color: COLORS.kTextSoftBlueColor, fontSize: 15),
-                  labelStyle: TEXTSTYLES.kBodySmall.copyWith(
-                      color: COLORS.kBlackColor, height: 1, fontSize: 15),
-                  //border: border,
-
-                  //focusedBorder: border,
-                  //enabledBorder: InputBorder.none,
-                  //errorBorder: border,
-                  //disabledBorder: border,
-                  border: inputBorder,
-                  enabledBorder: inputBorder,
-                  focusedBorder: inputBorder,
-                  errorBorder: inputBorder,
-                  focusedErrorBorder: inputBorder,
-                  disabledBorder: inputBorder,
-
-                  contentPadding: const EdgeInsets.only(
-                    left: 16,
-                    bottom: 15,
-                    top: 15,
-                    right: 16,
-                  ),
+            child: TextFormField(
+              onChanged: widget.onChanged,
+              autofocus: widget.autofocus,
+              validator: widget.validator,
+              focusNode: focusNode,
+              obscureText: widget.obscureText,
+              keyboardType: widget.keyboardType,
+              controller: controller,
+              style: TEXTSTYLES.kHeaderMedium.copyWith(
+                color: COLORS.kBlackColor,
+              ),
+              inputFormatters: widget.inputFormatters,
+              decoration: InputDecoration(
+                fillColor: COLORS.kBrightBlueColor,
+                filled: true,
+                //errorText: widget.validator(controller.value.text),
+                suffixIcon: widget.rightWidget,
+                suffixIconColor: iconColor,
+                prefixIconColor: iconColor,
+                prefixIcon: widget.leftWidget,
+                hintText: widget.hintText ?? widget.labelText,
+                //labelText: widget.labelText,
+                hintStyle: TEXTSTYLES.kBodyBasic.copyWith(
+                  color: COLORS.kTextSoftBlueColor,
+                  fontSize: 15,
                 ),
+                labelStyle: TEXTSTYLES.kBodySmall.copyWith(
+                  color: COLORS.kBlackColor,
+                  height: 1,
+                  fontSize: 15,
+                ),
+                //border: border,
+                //focusedBorder: border,
+                //enabledBorder: InputBorder.none,
+                //errorBorder: border,
+                //disabledBorder: border,
+                border: inputBorder,
+                enabledBorder: inputBorder,
+                focusedBorder: inputBorder,
+                errorBorder: inputBorder,
+                focusedErrorBorder: inputBorder,
+                disabledBorder: inputBorder,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               ),
             ),
           ),
@@ -242,14 +241,14 @@ Widget removeSign({required Function onPressed, bool hasError = false}) {
       onPressed();
     },
     child: Container(
-      margin: EdgeInsets.all(8),
-      padding: EdgeInsets.all(8),
+      margin: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       height: 24,
       width: 24,
       decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color:
-              hasError ? COLORS.kStatesErrorColor : COLORS.kTextSoftBlueColor),
+        shape: BoxShape.circle,
+        color: hasError ? COLORS.kStatesErrorColor : COLORS.kTextSoftBlueColor,
+      ),
       // child: SvgPicture.asset(ImageAsset.closeSign.path),
     ),
   );
