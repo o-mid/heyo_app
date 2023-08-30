@@ -90,8 +90,8 @@ class VerificationBottomSheet extends StatelessWidget {
               children: [
                 CustomButton(
                   onTap: onTap,
-                  title:
-                      LocaleKeys.registration_WelcomePage_buttons_Continue.tr,
+                  title: LocaleKeys
+                      .registration_WelcomePage_bottomSheet_buttonTitle.tr,
                   titleStyle: TEXTSTYLES.kButtonBasic.copyWith(
                     color: COLORS.kWhiteColor,
                   ),
