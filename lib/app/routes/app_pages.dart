@@ -62,7 +62,7 @@ class AppPages {
   AppPages._();
 
   // Todo :
-  static const INITIAL = Routes.INTRO;
+  static const INITIAL = Routes.HOME;
 
   static final routes = [
     GetPage(
