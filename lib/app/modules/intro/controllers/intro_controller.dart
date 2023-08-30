@@ -20,7 +20,7 @@ class IntroController extends GetxController {
       () {
         //close the loading modal
         Get.back();
-        Get.toNamed(Routes.VERIFIED_USER);
+        Get.offAllNamed(Routes.VERIFIED_USER);
       },
     );
     openLoadingDialog();
