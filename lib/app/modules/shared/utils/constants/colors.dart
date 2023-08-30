@@ -126,5 +126,8 @@ class COLORS {
   static const Color KChatFooterGrey = Color(0xfff7f6ff);
 
   /// Chip color
-  static const Color KChipColor = Color(0xffF1F1F9);
+  static const Color kChipColor = Color(0xffF1F1F9);
+
+  /// Chip color
+  static const Color kTextGreenButtonColor = Color(0xff004A45);
 }
