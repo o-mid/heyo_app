@@ -49,8 +49,9 @@ class CallConnectionsHandler {
       String remoteCoreId, bool isAudioCall) async {
     CallId callId = generateCallId();
     _currentCall = CurrentCall(callId: callId, activeSessions: []);
-    CallRTCSession callRTCSession =
-        await _createSession(RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null), isAudioCall);
+    CallRTCSession callRTCSession = await _createSession(
+        RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
+        isAudioCall);
     singleCallWebRTCBuilder.requestSession(callRTCSession);
     CallInfo callInfo = CallInfo(
         remotePeer: RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
@@ -93,10 +94,11 @@ class CallConnectionsHandler {
     //sendCall request with an array of participants
   }
 
-  accept(CallId callId) async{
-    if(incomingCall?.callId==callId){
-      incomingCall!.remotePeers.forEach((element) async{
-       CallRTCSession callRTCSession=await _createSession(element.remotePeer,element.isAudioCall);
+  accept(CallId callId) async {
+    if (incomingCall?.callId == callId) {
+      incomingCall!.remotePeers.forEach((element) async {
+        CallRTCSession callRTCSession =
+            await _createSession(element.remotePeer, element.isAudioCall);
         singleCallWebRTCBuilder.startSession(callRTCSession);
       });
     }
@@ -117,16 +119,19 @@ class CallConnectionsHandler {
         singleCallWebRTCBuilder.reject(callId, element.remotePeer);
       });
     }
-    _currentCall = null;
     _incomingCalls = null;
   }
 
   close() async {
-    for (var element in _currentCall!.activeSessions) {
-      await element.dispose();
+    if (_currentCall != null) {
+      for (var element in _currentCall!.activeSessions) {
+        await element.dispose();
+      }
+      _currentCall!.activeSessions.clear();
+      _currentCall = null;
     }
-    _currentCall!.activeSessions.clear();
-    _currentCall = null;
+    _localStream?.dispose();
+    _localStream = null;
   }
 
   Future<void> onRequestReceived(Map<String, dynamic> mapData,
