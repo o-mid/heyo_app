@@ -350,6 +350,7 @@ class LocaleKeys {
   static const wifiDirect_wifiDirectAppbar = 'wifiDirect_wifiDirectAppbar';
   static const wifiDirect_emptyPeersTitle = 'wifiDirect_emptyPeersTitle';
   static const wifiDirect_availablePeers = 'wifiDirect_availablePeers';
+  static const addParticipate_appbarTitle = 'addParticipate_appbarTitle';
 }
 
 class Locales {
@@ -613,5 +614,6 @@ class Locales {
     'wifiDirect_emptyPeersTitle':
         'There is no online peer! \n Searching for available peers ...',
     'wifiDirect_availablePeers': 'Available Peers',
+    'addParticipate_appbarTitle': 'Add Participate',
   };
 }

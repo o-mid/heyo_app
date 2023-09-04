@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
+import 'package:heyo/app/modules/new_chat/controllers/new_chat_controller.dart';
+import 'package:heyo/app/modules/new_chat/widgets/app_bar_action_bottom_sheet.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
@@ -11,9 +15,6 @@ import 'package:heyo/app/modules/shared/widgets/contact_list_with_header.dart';
 import 'package:heyo/app/modules/shared/widgets/empty_users_body.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-import '../../shared/utils/constants/fonts.dart';
-import '../controllers/new_chat_controller.dart';
-import '../widgets/app_bar_action_bottom_sheet.dart';
 
 class NewChatView extends GetView<NewChatController> {
   const NewChatView({Key? key}) : super(key: key);
@@ -87,57 +88,61 @@ class NewChatView extends GetView<NewChatController> {
       Container(
         padding: CustomSizes.mainContentPadding,
         child: Column(
-            mainAxisSize: MainAxisSize.min,
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              CustomSizes.smallSizedBoxHeight,
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton.icon(
-                  // Close the bottom sheet
-                  onPressed: () => Get.back(),
-                  icon: const Icon(
-                    Icons.arrow_back,
+          mainAxisSize: MainAxisSize.min,
+          // crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            CustomSizes.smallSizedBoxHeight,
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                // Close the bottom sheet
+                onPressed: () => Get.back(),
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: COLORS.kDarkBlueColor,
+                ),
+                label: Text(
+                  LocaleKeys.newChat_buttons_filter.tr,
+                  style: TEXTSTYLES.kHeaderLarge.copyWith(
                     color: COLORS.kDarkBlueColor,
-                  ),
-                  label: Text(
-                    LocaleKeys.newChat_buttons_filter.tr,
-                    style: TEXTSTYLES.kHeaderLarge
-                        .copyWith(color: COLORS.kDarkBlueColor),
                   ),
                 ),
               ),
-              Obx(() {
-                return ListView.builder(
-                  itemCount: controller.filters.length,
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    return CheckboxListTile(
-                        title: Text(
-                          controller.filters[index].title,
-                          style: TEXTSTYLES.kLinkBig
-                              .copyWith(color: COLORS.kDarkBlueColor),
-                        ),
-                        value: controller.filters[index].isActive.value,
-                        onChanged: (Value) {
-                          if (Value != null) {
-                            controller.filters[index].isActive.value = Value;
+            ),
+            Obx(() {
+              return ListView.builder(
+                itemCount: controller.filters.length,
+                shrinkWrap: true,
+                itemBuilder: (BuildContext context, int index) {
+                  return CheckboxListTile(
+                    title: Text(
+                      controller.filters[index].title,
+                      style: TEXTSTYLES.kLinkBig.copyWith(
+                        color: COLORS.kDarkBlueColor,
+                      ),
+                    ),
+                    value: controller.filters[index].isActive.value,
+                    onChanged: (Value) {
+                      if (Value != null) {
+                        controller.filters[index].isActive.value = Value;
 
-                            controller.filters.refresh();
+                        controller.filters.refresh();
 
-                            controller.nearbyUsers.refresh();
-                          }
-                        },
-                        contentPadding: EdgeInsets.zero,
-                        activeColor: COLORS.kGreenMainColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        controlAffinity: ListTileControlAffinity.leading);
-                  },
-                );
-              }),
-            ]),
+                        controller.nearbyUsers.refresh();
+                      }
+                    },
+                    contentPadding: EdgeInsets.zero,
+                    activeColor: COLORS.kGreenMainColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    controlAffinity: ListTileControlAffinity.leading,
+                  );
+                },
+              );
+            }),
+          ],
+        ),
       ),
       backgroundColor: COLORS.kWhiteColor,
       isDismissible: true,
@@ -332,7 +337,7 @@ class _Contacts extends StatelessWidget {
                   onFocusChange: (focus) =>
                       controller.isTextInputFocused.value = focus,
                   focusNode: controller.inputFocusNode,
-                  child: CUSTOMTEXTFIELD(
+                  child: CustomTextField(
                     textController: controller.inputController,
                     labelText: LocaleKeys.newChat_usernameInput.tr,
                     rightWidget: IconButton(

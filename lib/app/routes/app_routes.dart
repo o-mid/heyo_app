@@ -32,6 +32,7 @@ abstract class Routes {
   static const NEW_CALL = _Paths.NEW_CALL;
   static const WIFI_DIRECT = _Paths.WIFI_DIRECT;
   static const WIFI_DIRECT_CONNECT = _Paths.WIFI_DIRECT_CONNECT;
+  static const ADD_PARTICIPATE = _Paths.ADD_PARTICIPATE;
 }
 
 abstract class _Paths {
@@ -65,4 +66,5 @@ abstract class _Paths {
   static const NEW_CALL = '/new-call';
   static const WIFI_DIRECT = '/wifi-direct';
   static const WIFI_DIRECT_CONNECT = '/wifi-direct-connect';
+  static const ADD_PARTICIPATE = '/add-participate';
 }

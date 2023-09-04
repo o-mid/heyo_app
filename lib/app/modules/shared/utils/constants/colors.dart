@@ -124,4 +124,7 @@ class COLORS {
 
   /// chat footer color
   static const Color KChatFooterGrey = Color(0xfff7f6ff);
+
+  /// Chip color
+  static const Color KChipColor = Color(0xffF1F1F9);
 }
