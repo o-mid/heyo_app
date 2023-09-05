@@ -67,6 +67,11 @@ class CallConnectionController extends GetxController {
         }
       }
     };
+    callConnectionsHandler.onAddRemoteStream = (stream) async {
+      print("onAddRemoteStreammmm3 : ");
+
+      onAddRemoteStream?.call(stream);
+    };
     /* callConnectionsHandler.onAddRemoteStream = (session, stream) async {
       onAddRemoteStream?.call(stream);
     };
@@ -173,5 +178,7 @@ class CallConnectionController extends GetxController {
     );
   }
 
-  getRemoteStreams(CallId callId) {}
+  List<MediaStream > getRemoteStreams(CallId callId) {
+    return callConnectionsHandler.getRemoteStreams();
+  }
 }

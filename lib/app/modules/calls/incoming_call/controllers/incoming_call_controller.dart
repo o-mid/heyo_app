@@ -65,12 +65,12 @@ class IncomingCallController extends GetxController {
     _stopRingtone();
 
     //TODO farzam, accept
-   /* //TODO name should be get from contacts
+    //TODO name should be get from contacts
     Get.offNamed(
       Routes.CALL,
       arguments: CallViewArgumentsModel(
           callId: args.callId,
-          enableVideo: args.session.isAudioCall ? false : true,
+          enableVideo: args.isAudioCall ? false : true,
           user: UserModel(
             name: userName,
             iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
@@ -78,8 +78,8 @@ class IncomingCallController extends GetxController {
             walletAddress: args.remoteCoreId,
             coreId: args.remoteCoreId,
           ),
-          isAudioCall: args.session.isAudioCall),
-    );*/
+          isAudioCall: args.isAudioCall),
+    );
   }
 
   void _hangUp() {

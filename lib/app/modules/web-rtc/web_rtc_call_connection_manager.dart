@@ -91,9 +91,7 @@ class WebRTCCallConnectionManager {
       print("renogottionnnn neeeded");
     };
     pc.onIceCandidate = (candidate) {
-      if (candidate == null) {
-        return;
-      }
+
       onIceCandidate?.call(candidate);
     };
     pc.onIceGatheringState = (RTCIceGatheringState state) {

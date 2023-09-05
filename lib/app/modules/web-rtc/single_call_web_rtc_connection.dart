@@ -6,7 +6,7 @@ import 'package:heyo/app/modules/web-rtc/web_rtc_call_connection_manager.dart';
 
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
-const MEDIA_TYPE = 'data';
+const MEDIA_TYPE = 'video';
 
 const COMMAND = 'call_connection';
 const DATA = 'data';
@@ -52,7 +52,8 @@ class SingleCallWebRTCBuilder {
       localStream,
       rtcSession.pc!,
       onAddRemoteStream: (remoteStream) {
-        rtcSession.stream = remoteStream;
+        print("onAddRemoteStreammmm1 : ");
+        rtcSession.setRemoteStream(remoteStream);
       },
       onIceCandidate: (candidate) => _sendCandidate(candidate, rtcSession),
     );
@@ -79,7 +80,6 @@ class SingleCallWebRTCBuilder {
 
   Future<bool> startSession(CallRTCSession rtcSession) async {
     print("startSession");
-    await rtcSession.createDataChannel();
     RTCSessionDescription rtcSessionDescription =
         await webRTCConnectionManager.setupUpOffer(rtcSession.pc!, MEDIA_TYPE);
     print("onMessage send");
@@ -106,9 +106,11 @@ class SingleCallWebRTCBuilder {
   Future<void> onOfferReceived(CallRTCSession rtcSession, description) async {
     await rtcSession.pc!.setRemoteDescription(
         RTCSessionDescription(description['sdp'], description['type']));
+
     RTCSessionDescription sessionDescription =
         await webRTCConnectionManager.setupAnswer(rtcSession.pc!, MEDIA_TYPE);
     print("onMessage onOfferReceived Send");
+
 
     _send(
         CallSignalingCommands.answer,
@@ -184,11 +186,12 @@ class SingleCallWebRTCBuilder {
       candidateMap['sdpMid'],
       candidateMap['sdpMLineIndex'],
     );
-    if (rtcSession.isConnectionStable()) {
+  /*  if (rtcSession.isConnectionStable()) {
       await rtcSession.pc!.addCandidate(candidate);
     } else {
       rtcSession.remoteCandidates.add(candidate);
-    }
+    }*/
+    await rtcSession.pc!.addCandidate(candidate);
   }
 
 }

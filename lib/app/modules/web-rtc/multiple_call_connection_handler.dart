@@ -36,13 +36,14 @@ class CallConnectionsHandler {
   MediaStream? _localStream;
   Function(MediaStream stream)? onLocalStream;
   IncomingCalls? _incomingCalls;
+  Function(MediaStream stream)? onAddRemoteStream;
+  final List<MediaStream> _remoteStreams = <MediaStream>[];
 
   CallConnectionsHandler({required this.singleCallWebRTCBuilder});
 
   Function(CallId callId, List<CallInfo> callInfo, CallState state)?
       onCallStateChange;
   CurrentCall? _currentCall;
-  IncomingCalls? incomingCall;
   RequestedCalls? requestedCalls;
 
   Future<CallRTCSession> requestCall(
@@ -74,7 +75,12 @@ class CallConnectionsHandler {
         remotePeer.remotePeerId,
         _localStream!,
         isAudioCall);
-    callRTCSession.onAddRemoteStream = (stream) {};
+    callRTCSession.onAddRemoteStream = (stream) {
+      print("onAddRemoteStreammmm2 : ");
+
+      onAddRemoteStream?.call(stream);
+      _remoteStreams.add(stream);
+    };
     _currentCall!.activeSessions.add(callRTCSession);
     return callRTCSession;
   }
@@ -95,8 +101,11 @@ class CallConnectionsHandler {
   }
 
   accept(CallId callId) async {
-    if (incomingCall?.callId == callId) {
-      incomingCall!.remotePeers.forEach((element) async {
+    print("accepttt ${_incomingCalls}");
+    if (_incomingCalls?.callId == callId) {
+      _incomingCalls!.remotePeers.forEach((element) async {
+        print("accepttt11");
+        _currentCall = CurrentCall(callId: callId, activeSessions: []);
         CallRTCSession callRTCSession =
             await _createSession(element.remotePeer, element.isAudioCall);
         singleCallWebRTCBuilder.startSession(callRTCSession);
@@ -130,7 +139,11 @@ class CallConnectionsHandler {
       _currentCall!.activeSessions.clear();
       _currentCall = null;
     }
+    _localStream?.getTracks().forEach((element) async {
+      await element.stop();
+    });
     _localStream?.dispose();
+    _remoteStreams.clear();
     _localStream = null;
   }
 
@@ -161,33 +174,40 @@ class CallConnectionsHandler {
         {
           String callId = mapData[CALL_ID];
 
-          /*  CallRTCSession rtcSession =
-              await _getConnection(callId, remoteCoreId, remotePeerId);
+          CallRTCSession rtcSession = _getConnection(remoteCoreId, callId)!;
           var description = data[DATA_DESCRIPTION];
+          rtcSession.remotePeer.remotePeerId ??= remotePeerId;
 
-          await singleCallWebRTCBuilder.onOfferReceived(
-              rtcSession, description);*/
+          onCallStateChange?.call(
+              callId,
+              [
+                CallInfo(
+                    remotePeer: rtcSession.remotePeer,
+                    isAudioCall: rtcSession.isAudioCall)
+              ],
+              CallState.callStateConnected);
+
+          singleCallWebRTCBuilder.onOfferReceived(rtcSession, description);
         }
         break;
       case CallSignalingCommands.answer:
         {
-          /*  String callId = mapData[CALL_ID];
-          CallRTCSession rtcSession =
-              await _getConnection(callId, remoteCoreId, remotePeerId);
+          String callId = mapData[CALL_ID];
+          CallRTCSession rtcSession = _getConnection(remoteCoreId, callId)!;
+          rtcSession.remotePeer.remotePeerId ??= remotePeerId;
           var description = data[DATA_DESCRIPTION];
-          await singleCallWebRTCBuilder.onAnswerReceived(
-              rtcSession, description);*/
+          singleCallWebRTCBuilder.onAnswerReceived(rtcSession, description);
         }
         break;
       case CallSignalingCommands.candidate:
         {
-          /*  String callId = mapData[CALL_ID];
+          String callId = mapData[CALL_ID];
 
-          CallRTCSession rtcSession =
-              await _getConnection(callId, remoteCoreId, remotePeerId);
+          CallRTCSession rtcSession = _getConnection(remoteCoreId, callId)!;
+          rtcSession.remotePeer.remotePeerId ??= remotePeerId;
+
           var candidateMap = data[CallSignalingCommands.candidate];
-          await singleCallWebRTCBuilder.onCandidateReceived(
-              rtcSession, candidateMap);*/
+          singleCallWebRTCBuilder.onCandidateReceived(rtcSession, candidateMap);
         }
         break;
     }
@@ -195,9 +215,18 @@ class CallConnectionsHandler {
 
   void switchCamera() {}
 
-  void muteMic() {}
+  void muteMic() {
+    if (_localStream != null) {
+      bool enabled = _localStream!.getAudioTracks()[0].enabled;
+      _localStream!.getAudioTracks()[0].enabled = !enabled;
+    }
+  }
 
-  void showLocalVideoStream(bool value) {}
+  void showLocalVideoStream(bool value) {
+    if (_localStream != null) {
+      _localStream!.getVideoTracks()[0].enabled = value;
+    }
+  }
 
   void peerOpendCamera(String sessionId) {}
 
@@ -262,15 +291,20 @@ class CallConnectionsHandler {
     bool isAudioCall = data["isAudioCall"];
     CallInfo callInfo =
         CallInfo(remotePeer: remotePeer, isAudioCall: isAudioCall);
-    if (_incomingCalls?.callId != null && _incomingCalls?.callId == callId) {
+    /*  if (_incomingCalls?.callId != null && _incomingCalls?.callId == callId) {
     } else if (_incomingCalls != null && _incomingCalls?.callId != callId ||
         _currentCall != null) {
       //TODO busy
     } else if (_incomingCalls?.callId == null) {
-      _incomingCalls = IncomingCalls(callId: callId, remotePeers: [callInfo]);
-    }
+    }*/
+    _incomingCalls = IncomingCalls(callId: callId, remotePeers: [callInfo]);
+
     onCallStateChange?.call(callId, [callInfo], CallState.callStateNew);
 
     onCallStateChange?.call(callId, [callInfo], CallState.callStateRinging);
+  }
+
+  List<MediaStream> getRemoteStreams() {
+    return _remoteStreams;
   }
 }

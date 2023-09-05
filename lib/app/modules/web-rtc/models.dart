@@ -39,11 +39,11 @@ class CallRTCSession {
   RemotePeer remotePeer;
   Function(MediaStream mediaStream)? onAddRemoteStream;
 
-  MediaStream? stream;
+  MediaStream? _stream;
 
-  set(MediaStream mediaStream) {
-    stream = mediaStream;
-    onAddRemoteStream?.call(stream!);
+  setRemoteStream(MediaStream mediaStream) {
+    _stream = mediaStream;
+    onAddRemoteStream?.call(_stream!);
   }
 
   RTCPeerConnection? _pc;
