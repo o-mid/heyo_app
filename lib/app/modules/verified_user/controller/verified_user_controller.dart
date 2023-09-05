@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 
 class VerifiedUserController extends GetxController {
-  buttonAction() {
-    debugPrint("Hii");
-  }
+  void buttonAction() => Get.offAllNamed(Routes.HOME);
 }
