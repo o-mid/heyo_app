@@ -68,7 +68,6 @@ class CallConnectionController extends GetxController {
       }
     };
     callConnectionsHandler.onAddRemoteStream = (stream) async {
-      print("onAddRemoteStreammmm3 : ");
 
       onAddRemoteStream?.call(stream);
     };
@@ -168,6 +167,9 @@ class CallConnectionController extends GetxController {
     );
   }
 
+  addMember(String coreId){
+    callConnectionsHandler.addMember(coreId);
+  }
   Future<void> notifyReceivedCall({
     required CallInfo callInfo,
   }) async {

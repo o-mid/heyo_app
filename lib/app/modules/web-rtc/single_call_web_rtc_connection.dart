@@ -35,7 +35,6 @@ class SingleCallWebRTCBuilder {
       bool isAudioCall) async {
     RTCPeerConnection peerConnection =
         await webRTCConnectionManager.createRTCPeerConnection();
-    print("dasdasda1 $isAudioCall");
     CallRTCSession rtcSession = CallRTCSession(
         callId: connectionId,
         remotePeer:
@@ -44,7 +43,6 @@ class SingleCallWebRTCBuilder {
           onConnectionFailed?.call(id, remote);
         },
         isAudioCall: isAudioCall);
-    print("dasdasda1 ${rtcSession.isAudioCall}");
 
     rtcSession.pc = peerConnection;
     rtcSession.remotePeer.remotePeerId = remotePeer;
@@ -52,7 +50,6 @@ class SingleCallWebRTCBuilder {
       localStream,
       rtcSession.pc!,
       onAddRemoteStream: (remoteStream) {
-        print("onAddRemoteStreammmm1 : ");
         rtcSession.setRemoteStream(remoteStream);
       },
       onIceCandidate: (candidate) => _sendCandidate(candidate, rtcSession),
@@ -66,11 +63,12 @@ class SingleCallWebRTCBuilder {
         connectionId, remoteCoreId, remotePeer, stream, isAudioCall);
   }
 
-  requestSession(CallRTCSession callRTCSession) {
+  requestSession(CallRTCSession callRTCSession,List<String> members) {
     _send(
       CallSignalingCommands.request,
       {
         "isAudioCall": callRTCSession.isAudioCall,
+        "members":members
       },
       callRTCSession.remotePeer.remoteCoreId,
       callRTCSession.remotePeer.remotePeerId,
@@ -186,11 +184,6 @@ class SingleCallWebRTCBuilder {
       candidateMap['sdpMid'],
       candidateMap['sdpMLineIndex'],
     );
-  /*  if (rtcSession.isConnectionStable()) {
-      await rtcSession.pc!.addCandidate(candidate);
-    } else {
-      rtcSession.remoteCandidates.add(candidate);
-    }*/
     await rtcSession.pc!.addCandidate(candidate);
   }
 

@@ -217,7 +217,12 @@ class CallController extends GetxController {
   }
 
   // Todo
-  void addParticipant() => Get.toNamed(Routes.ADD_PARTICIPATE);
+  void addParticipant() {
+    //TODO add this
+    callConnectionController.addMember("coreId");
+    //Get.toNamed(Routes.ADD_PARTICIPATE);
+  }
+
 
   void recordCall() {
     Get.dialog(RecordCallDialog(onRecord: () async {

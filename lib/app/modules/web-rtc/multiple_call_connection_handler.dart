@@ -46,6 +46,18 @@ class CallConnectionsHandler {
   CurrentCall? _currentCall;
   RequestedCalls? requestedCalls;
 
+  addMember(String remoteCoreId) async {
+    //TODO refactor isAudio
+    CallRTCSession callRTCSession = await _createSession(
+        RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
+        _currentCall!.activeSessions.first.isAudioCall);
+    singleCallWebRTCBuilder.requestSession(
+        callRTCSession,
+        _currentCall!.activeSessions
+            .map((e) => e.remotePeer.remoteCoreId)
+            .toList());
+  }
+
   Future<CallRTCSession> requestCall(
       String remoteCoreId, bool isAudioCall) async {
     CallId callId = generateCallId();
@@ -53,7 +65,7 @@ class CallConnectionsHandler {
     CallRTCSession callRTCSession = await _createSession(
         RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
         isAudioCall);
-    singleCallWebRTCBuilder.requestSession(callRTCSession);
+    singleCallWebRTCBuilder.requestSession(callRTCSession, []);
     CallInfo callInfo = CallInfo(
         remotePeer: RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
         isAudioCall: isAudioCall);
@@ -289,6 +301,7 @@ class CallConnectionsHandler {
   _onCallRequestReceived(mapData, data, remotePeer) {
     String callId = mapData[CALL_ID];
     bool isAudioCall = data["isAudioCall"];
+    List<String> members = data["members"];
     CallInfo callInfo =
         CallInfo(remotePeer: remotePeer, isAudioCall: isAudioCall);
     /*  if (_incomingCalls?.callId != null && _incomingCalls?.callId == callId) {
@@ -297,7 +310,13 @@ class CallConnectionsHandler {
       //TODO busy
     } else if (_incomingCalls?.callId == null) {
     }*/
-    _incomingCalls = IncomingCalls(callId: callId, remotePeers: [callInfo]);
+    List<CallInfo> remotePeers = [callInfo];
+    for (var element in members) {
+      remotePeers.add(CallInfo(
+          remotePeer: RemotePeer(remotePeerId: null, remoteCoreId: element),
+          isAudioCall: isAudioCall));
+    }
+    _incomingCalls = IncomingCalls(callId: callId, remotePeers: remotePeers);
 
     onCallStateChange?.call(callId, [callInfo], CallState.callStateNew);
 
