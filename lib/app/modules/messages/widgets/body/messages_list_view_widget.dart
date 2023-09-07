@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
 
 import '../../data/models/messages/message_model.dart';
+import '../../utils/messages_list_scroll_physics.dart';
 import 'MessagesLoadingWidget.dart';
 import 'beginning_of_messages_header_widget.dart';
 import 'message_item_widget.dart';
@@ -32,6 +33,10 @@ class MessagesListViewWidget extends StatelessWidget {
               primary: false,
               controller: controller.scrollController,
               shrinkWrap: true,
+              // change the isFastScroll property if the scroll is slower than expected
+              physics: const MessagesListScrollPhysics(
+                isFastScroll: false,
+              ),
               reverse: true,
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
               padding: EdgeInsets.only(top: 54.h, bottom: 16.h),
