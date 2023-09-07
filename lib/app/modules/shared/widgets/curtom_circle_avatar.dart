@@ -32,10 +32,9 @@ class CustomCircleAvatar extends StatelessWidget {
                   url,
                   enableLoadState: false,
                 )
-              : Expanded(
-                  child: Container(
+              : Container(
                   color: Colors.grey,
-                )),
+                ),
         ),
 
         // The two following widgets are to show a green online badge on chat icon

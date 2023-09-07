@@ -122,7 +122,7 @@ class MessagesController extends GetxController {
     await _getUserContact();
     // // Initialize messagingConnection instance of CommonMessagingController-inherited class depends on connection type
     // // Also included previous functionality of _initDataChannel()
-    await _initMessagingConnection();
+    await initMessagingConnection();
 
     _sendForwardedMessages();
     await _getMessages();
@@ -189,7 +189,7 @@ class MessagesController extends GetxController {
     scrollController = _globalMessageController.scrollController;
   }
 
-  _initMessagingConnection() async {
+  Future<void> initMessagingConnection() async {
     switch (connectionType) {
       case MessagingConnectionType.internet:
         // TODO remove debug print

@@ -78,5 +78,4 @@ class DatachannelConnectionStatusWidget extends GetView<CommonMessagingConnectio
                 ));
     });
   }
-
 }
