@@ -17,9 +17,13 @@ class SplashController extends GetxController {
     } else {
       Get.offAllNamed(Routes.INTRO);
     }
-    await Future.delayed(const Duration(milliseconds: 500), () {
-      FlutterNativeSplash.remove();
-    });
+    //await Future.delayed(const Duration(milliseconds: 500), () {});
+  }
+
+  @override
+  void onClose() {
+    FlutterNativeSplash.remove();
+    super.onClose();
   }
 
   @override
