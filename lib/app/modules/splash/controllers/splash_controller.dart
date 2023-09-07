@@ -1,8 +1,7 @@
-import 'dart:async';
-
 import 'package:get/get.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 class SplashController extends GetxController {
   SplashController();
@@ -18,6 +17,9 @@ class SplashController extends GetxController {
     } else {
       Get.offAllNamed(Routes.INTRO);
     }
+    await Future.delayed(const Duration(milliseconds: 500), () {
+      FlutterNativeSplash.remove();
+    });
   }
 
   @override

@@ -17,10 +17,11 @@ class VerificationBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
-        height: 0.75.sh,
+      child: Padding(
+        //height: 0.75.sh,
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             //close Button
             Row(
@@ -85,7 +86,7 @@ class VerificationBottomSheet extends StatelessWidget {
             CustomSizes.mediumSizedBoxHeight,
             //verification description
             const VerificationBottomSheetDescription(),
-            const Spacer(),
+            CustomSizes.extraLargeSizedBoxHeight,
             Column(
               children: [
                 CustomButton(

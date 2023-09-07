@@ -27,6 +27,9 @@ class VerificationWithCorePassUseCase {
       // we need to launch it & see it got error or not
       if (Platform.isAndroid) {
         await launchUrlString(uri);
+        //
+        // Now on the app will listen to incoming link
+        await handleDeepLink();
       } else if (Platform.isIOS) {
         if (await canLaunchUrlString(uri)) {
           await launchUrlString(uri);
