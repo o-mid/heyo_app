@@ -428,7 +428,7 @@ class MessagesController extends GetxController {
   }
 
   void toggleMessageReadStatus({required String messageId}) async {
-    await messagingConnection.confirmReadMessages(
+    await messagingConnection.toggleMessageReadConfirm(
         messageId: messageId, remoteCoreId: user.value.walletAddress);
 
     await markMessagesAsReadById(

@@ -282,12 +282,12 @@ abstract class CommonMessagingConnectionController extends GetxController {
 
     if (notify) {
       print("notifyyyyy $chatId");
-      UserModel? userModel= await contactRepository.getContactById(chatId);
+      UserModel? userModel = await contactRepository.getContactById(chatId);
 
       await notifyReceivedMessage(
         receivedMessage: receivedMessage,
         chatId: chatId,
-        senderName: (userModel==null)
+        senderName: (userModel == null)
             ? "${chatId.characters.take(4).string}...${chatId.characters.takeLast(4).string}"
             : userModel.name,
       );
@@ -330,22 +330,46 @@ abstract class CommonMessagingConnectionController extends GetxController {
       {required Map<String, dynamic> receivedconfirmJson, required String chatId}) async {
     ConfirmMessageModel confirmMessage = ConfirmMessageModel.fromJson(receivedconfirmJson);
 
-    final String messageId = confirmMessage.messageId;
     if (confirmMessage.status == ConfirmMessageStatus.delivered) {
-      MessageModel? currentMessage =
-          await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
-
-      // check if message is found and update the Message status
-      if (currentMessage != null) {
-        if (currentMessage.status != MessageStatus.read) {
-          await messagesRepo.updateMessage(
-              message: currentMessage.copyWith(status: MessageStatus.delivered), chatId: chatId);
-        }
-      }
+      await _handleMessageDelivery(chatId: chatId, confirmMessageModel: confirmMessage);
     } else {
+      await _handleMessageRead(chatId: chatId, confirmMessageModel: confirmMessage);
+    }
+  }
+
+  toggleMessageReadConfirm({required String messageId, required String remoteCoreId}) async {
+    await confirmMessageById(
+        messageId: messageId, status: ConfirmMessageStatus.read, remoteCoreId: remoteCoreId);
+  }
+
+  Future<void> _handleMessageDelivery(
+      {required ConfirmMessageModel confirmMessageModel, required String chatId}) async {
+    final String messageId = confirmMessageModel.messageId;
+
+    MessageModel? currentMessage =
+        await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
+
+    // check if message is found and update the Message status
+    if (currentMessage != null) {
+      if (currentMessage.status != MessageStatus.read) {
+        await messagesRepo.updateMessage(
+            message: currentMessage.copyWith(status: MessageStatus.delivered), chatId: chatId);
+      }
+    }
+  }
+
+  Future<void> _handleMessageRead(
+      {required ConfirmMessageModel confirmMessageModel, required String chatId}) async {
+    final String messageId = confirmMessageModel.messageId;
+
+    if (confirmMessageModel.status == ConfirmMessageStatus.read) {
+      // gets the message from the repo
       final List<MessageModel> messages = await messagesRepo.getMessages(chatId);
+
+      // find the message index in the messages list
       final index = messages.lastIndexWhere((element) => element.messageId == messageId);
       // print(index);
+
       // if the message is found create a sublist of messages
       // that the status is not read and are from me
 
@@ -353,22 +377,15 @@ abstract class CommonMessagingConnectionController extends GetxController {
         final List<MessageModel> messagesToUpdate = messages
             .sublist(0, index + 1)
             .where((element) =>
-                element.isFromMe == true &&
-                (element.status == MessageStatus.delivered ||
-                    element.status == MessageStatus.sending))
+                element.isFromMe == true && (element.status == MessageStatus.delivered))
             .toList();
-        // update the status of the messages that need to be update to read
+        // update the status of the messages that need to be update to read (only if the MessageStatus is already deliverd)
         for (var item in messagesToUpdate) {
           await messagesRepo.updateMessage(
               message: item.copyWith(status: MessageStatus.read), chatId: chatId);
         }
       }
     }
-  }
-
-  confirmReadMessages({required String messageId, required String remoteCoreId}) async {
-    await confirmMessageById(
-        messageId: messageId, status: ConfirmMessageStatus.read, remoteCoreId: remoteCoreId);
   }
 
   // creates a ChatModel and saves it to the chat history if it is not available
