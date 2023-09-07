@@ -30,6 +30,7 @@ class VerificationWithCorePassUseCase {
         //
         // Now on the app will listen to incoming link
         await handleDeepLink();
+        debugPrint('The app is installed on the device.');
       } else if (Platform.isIOS) {
         if (await canLaunchUrlString(uri)) {
           await launchUrlString(uri);
