@@ -31,14 +31,16 @@ class DeleteCallDialog extends StatelessWidget {
               Get.back();
             },
             title: LocaleKeys.HomePage_Calls_deleteCallDialog_delete.tr,
-            textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
+            textStyle:
+                TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
             backgroundColor: COLORS.kPinCodeDeactivateColor,
           ),
           CustomSizes.smallSizedBoxHeight,
           CustomButton(
             onTap: Get.back,
             title: LocaleKeys.HomePage_Calls_deleteCallDialog_cancel.tr,
-            textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
+            textStyle:
+                TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
           ),
         ],
       ),
