@@ -7,6 +7,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/multi_media_messa
 import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
+import 'package:heyo/app/modules/messages/utils/extensions/messageModel.extension.dart';
 import 'package:heyo/app/modules/messages/utils/open_camera_for_sending_media_message.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
@@ -223,16 +224,6 @@ class MessagesController extends GetxController {
     _messagesStreamSubscription = (messagesStream).listen((newMessages) {
       messages.value = newMessages;
       messages.refresh();
-      // uncomment this if you want to scroll to the bottom after every new message is received
-
-      // WidgetsBinding.instance.addPostFrameCallback(
-      //   (_) {
-      //     animateToBottom(
-      //       duration: TRANSITIONS.messagingPage_receiveMsgDurtion,
-      //       curve: TRANSITIONS.messagingPage_getAllMsgscurve,
-      //     );
-      //   },
-      // );
     });
   }
 
@@ -252,9 +243,9 @@ class MessagesController extends GetxController {
   }
 
   void _handleKeyboardVisibilityChanges() {
-    _globalMessageController.streamSubscriptions
-        .add(keyboardController.onChange.listen((bool keyboardVisible) {
-      if (keyboardVisible) {
+    StreamSubscription keyboardChangesStream =
+        keyboardController.onChange.listen((bool iskeyboardVisible) {
+      if (iskeyboardVisible) {
         // Close emoji picker when keyboard opens
         showEmojiPicker.value = false;
 
@@ -286,7 +277,8 @@ class MessagesController extends GetxController {
           }
         });
       }
-    }));
+    });
+    _globalMessageController.streamSubscriptions.add(keyboardChangesStream);
   }
 
   void _sendForwardedMessages() {
@@ -339,14 +331,11 @@ class MessagesController extends GetxController {
     );
   }
 
-  void scrollToMessage({required String messageId}) {
+  Future<void> scrollToMessage({required String messageId}) async {
     final index = messages.lastIndexWhere((m) => m.messageId == messageId);
     if (index != -1) {
-      WidgetsBinding.instance.scheduleFrameCallback((_) {
-        scrollController.scrollToIndex(
-          // check if index +1 is avialble
-
-          //index + 1 != 0 ? index - 1 : index,
+      WidgetsBinding.instance.scheduleFrameCallback((_) async {
+        await scrollController.scrollToIndex(
           index,
           duration: const Duration(milliseconds: 200),
           preferPosition: AutoScrollPosition.end,
@@ -365,9 +354,6 @@ class MessagesController extends GetxController {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await scrollController
             .scrollToIndex(
-              // check if index +1 is avialble
-
-              //index + 1 != 0 ? index - 1 : index,
               index,
               duration: const Duration(milliseconds: 1),
               preferPosition: AutoScrollPosition.end,
@@ -602,26 +588,7 @@ class MessagesController extends GetxController {
     if (selectedMessages.length != 1) return;
     final msg = selectedMessages.first;
 
-    late String replyMsg;
-    switch (msg.runtimeType) {
-      case TextMessageModel:
-        replyMsg = (msg as TextMessageModel).text;
-        break;
-      case ImageMessageModel:
-        replyMsg = LocaleKeys.MessagesPage_replyToImage.tr;
-        break;
-      case VideoMessageModel:
-        // Todo: use video metadata to show video duration
-        replyMsg = LocaleKeys.MessagesPage_replyToVideo.tr;
-        break;
-      case AudioMessageModel:
-        // Todo: use video metadata to show audio duration
-        replyMsg = LocaleKeys.MessagesPage_replyToAudio.tr;
-        break;
-      case MultiMediaMessageModel:
-        replyMsg = LocaleKeys.MessagesPage_replyToImage.tr;
-        break;
-    }
+    String replyMsg = msg.getReplyMsgText();
 
     replyingTo.value = ReplyToModel(
       repliedToMessageId: msg.messageId,
