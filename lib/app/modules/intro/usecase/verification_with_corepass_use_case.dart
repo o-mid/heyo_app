@@ -23,30 +23,21 @@ class VerificationWithCorePassUseCase {
     String uri = 'corepass://authentication?heyoId=$heyoId';
 
     try {
-      // The canLaunchUrlString it's not working for android
-      // we need to launch it & see it got error or not
-      if (Platform.isAndroid) {
+      if (await canLaunchUrlString(uri)) {
         await launchUrlString(uri);
         //
         // Now on the app will listen to incoming link
         await handleDeepLink();
         debugPrint('The app is installed on the device.');
-      } else if (Platform.isIOS) {
-        if (await canLaunchUrlString(uri)) {
-          await launchUrlString(uri);
-          //
-          // Now on the app will listen to incoming link
-          await handleDeepLink();
-          debugPrint('The app is installed on the device.');
-        } else {
-          throw 'The app is not installed on the device.';
-        }
       } else {
-        debugPrint("The platform is not supported");
+        throw 'The app is not installed on the device.';
       }
     } catch (e) {
-      debugPrint('Error checking app installation: $e');
-      debugPrint('The app is not installed on the device.');
+      debugPrint(e.toString());
+      //
+      // Close the loading dialog
+      Get.back();
+      //
       //TODO: Open google play or app store
       _launchStore();
       return;
