@@ -17,66 +17,88 @@ import '../../../new_chat/data/models/user_model.dart';
 class BeginningOfMessagesHeaderWidget extends StatelessWidget {
   final String iconUrl;
   final String userName;
+
   const BeginningOfMessagesHeaderWidget({
     Key? key,
     required this.iconUrl,
     required this.userName,
-    //required this.user,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Todo: Add group header
     return Container(
       margin: EdgeInsets.all(16.w).copyWith(top: 0, bottom: 16.h),
       padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 24.h),
-      decoration: BoxDecoration(
-        border: Border.all(
-          width: 1,
-          color: COLORS.kPinCodeDeactivateColor,
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
+      decoration: _containerDecoration(),
       child: Column(
         children: [
-          CustomCircleAvatar(url: iconUrl, size: 64),
+          _buildUserAvatar(),
           CustomSizes.mediumSizedBoxHeight,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                userName,
-                style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
-              ),
-              CustomSizes.smallSizedBoxWidth,
-              Container(
-                width: 24.w,
-                height: 24.w,
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
-                decoration: const BoxDecoration(
-                  color: COLORS.kBlueColor,
-                  shape: BoxShape.circle,
-                ),
-                child: Assets.svg.verified.svg(color: COLORS.kWhiteColor),
-              ),
-            ],
-          ),
+          _buildUserNameRow(),
           SizedBox(height: 4.h),
-          // Todo: show core id
-          Text(
-            "CB13...586A",
-            style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
-          ),
+          _buildCoreIdText(),
           CustomSizes.mediumSizedBoxHeight,
-          Text(
-            LocaleKeys.MessagesPage_endToEndEncryptedMessaging.trParams(
-              {"name": userName},
-            ),
-            style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
-            textAlign: TextAlign.center,
-          ),
+          _buildEncryptedMessagingText(),
         ],
       ),
+    );
+  }
+
+  BoxDecoration _containerDecoration() {
+    return BoxDecoration(
+      border: Border.all(
+        width: 1,
+        color: COLORS.kPinCodeDeactivateColor,
+      ),
+      borderRadius: BorderRadius.circular(8),
+    );
+  }
+
+  Widget _buildUserAvatar() {
+    return CustomCircleAvatar(url: iconUrl, size: 64);
+  }
+
+  Widget _buildUserNameRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          userName,
+          style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+        ),
+        CustomSizes.smallSizedBoxWidth,
+        _buildVerifiedIcon(),
+      ],
+    );
+  }
+
+  Widget _buildVerifiedIcon() {
+    return Container(
+      width: 24.w,
+      height: 24.w,
+      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+      decoration: const BoxDecoration(
+        color: COLORS.kBlueColor,
+        shape: BoxShape.circle,
+      ),
+      child: Assets.svg.verified.svg(color: COLORS.kWhiteColor),
+    );
+  }
+
+  Widget _buildCoreIdText() {
+    return Text(
+      "CB13...586A",
+      style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
+    );
+  }
+
+  Widget _buildEncryptedMessagingText() {
+    return Text(
+      LocaleKeys.MessagesPage_endToEndEncryptedMessaging.trParams(
+        {"name": userName},
+      ),
+      style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
+      textAlign: TextAlign.center,
     );
   }
 }
