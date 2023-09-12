@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+
+import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/routes/app_pages.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 class IncomingCallController extends GetxController {
-  late UserModel caller;
+  late CallUserModel caller;
   final muted = false.obs;
   final CallConnectionController callConnectionController;
   late IncomingCallViewArguments args;
@@ -27,11 +27,10 @@ class IncomingCallController extends GetxController {
       userName = args.name!;
     }
     //TODO name should be get from contacts
-    caller = UserModel(
+    caller = CallUserModel(
       name: userName,
-      isContact:(!(args.name == null)),
+      isContact: (!(args.name == null)),
       iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
-      isVerified: true,
       walletAddress: args.remoteCoreId,
       coreId: args.remoteCoreId,
     );
@@ -71,10 +70,9 @@ class IncomingCallController extends GetxController {
       arguments: CallViewArgumentsModel(
           callId: args.callId,
           enableVideo: args.isAudioCall ? false : true,
-          user: UserModel(
+          user: CallUserModel(
             name: userName,
             iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
-            isVerified: true,
             walletAddress: args.remoteCoreId,
             coreId: args.remoteCoreId,
           ),

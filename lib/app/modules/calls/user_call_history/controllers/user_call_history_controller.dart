@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
-import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
-import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
-import '../../../../../generated/locales.g.dart';
-import '../../../new_chat/data/models/user_model.dart';
-import '../../../shared/data/repository/contact_repository.dart';
-import '../../../shared/utils/constants/colors.dart';
-import '../../../shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
+import 'package:heyo/generated/locales.g.dart';
 
 class UserCallHistoryController extends GetxController {
   final CallHistoryAbstractRepo callHistoryRepo;
@@ -23,17 +24,15 @@ class UserCallHistoryController extends GetxController {
 
   late UserCallHistoryViewArgumentsModel args;
   final calls = <CallModel>[].obs;
-  Rx<UserModel> user = UserModel(
+  Rx<CallUserModel> user = CallUserModel(
     coreId: (Get.arguments as UserCallHistoryViewArgumentsModel).coreId,
     iconUrl: (Get.arguments as UserCallHistoryViewArgumentsModel).iconUrl ??
         "https://avatars.githubusercontent.com/u/2345136?v=4",
-    name: (Get.arguments as UserCallHistoryViewArgumentsModel).coreId.shortenCoreId,
+    name: (Get.arguments as UserCallHistoryViewArgumentsModel)
+        .coreId
+        .shortenCoreId,
     walletAddress: (Get.arguments).coreId,
-    isBlocked: false,
-    isOnline: false,
     isContact: false,
-    isVerified: false,
-    nickname: "",
   ).obs;
 
   @override
@@ -41,17 +40,21 @@ class UserCallHistoryController extends GetxController {
     super.onInit();
     args = Get.arguments as UserCallHistoryViewArgumentsModel;
     await _getUserContact();
-    await callHistoryRepo.getCallsFromUserId(args.coreId).then((value) => calls.value = value);
+    await callHistoryRepo
+        .getCallsFromUserId(args.coreId)
+        .then((value) => calls.value = value);
   }
 
   _getUserContact() async {
     // check if user is already in contact
-    UserModel? createdUser = await contactRepository.getContactById(args.coreId);
+    UserModel? createdUser =
+        await contactRepository.getContactById(args.coreId);
 
     if (createdUser == null) {
       createdUser = UserModel(
         coreId: args.coreId,
-        iconUrl: args.iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
+        iconUrl: args.iconUrl ??
+            "https://avatars.githubusercontent.com/u/2345136?v=4",
         name: args.coreId.shortenCoreId,
         isOnline: true,
         isContact: false,
@@ -59,9 +62,11 @@ class UserCallHistoryController extends GetxController {
       );
       // adds the new user to the repo and update the UserModel
       await contactRepository.addContact(createdUser);
-      user.value = createdUser;
+      // convert userModel to callUserModel
+      user.value = createdUser.toCallUserModel();
     } else {
-      user.value = createdUser;
+      // convert userModel to callUserModel
+      user.value = createdUser.toCallUserModel();
     }
     user.refresh();
   }

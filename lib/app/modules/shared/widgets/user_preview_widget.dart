@@ -1,26 +1,23 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
+import 'package:heyo/app/modules/contacts/widgets/removeContactsDialog.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/shared/controllers/user_preview_controller.dart';
+import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
+import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
+import 'package:heyo/app/routes/app_pages.dart';
+import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-
-import '../../../../generated/assets.gen.dart';
-import '../../../routes/app_pages.dart';
-import '../../contacts/widgets/removeContactsDialog.dart';
-import '../../shared/data/models/add_contacts_view_arguments_model.dart';
-import '../../shared/utils/constants/textStyles.dart';
-import '../controllers/user_preview_controller.dart';
-import '../utils/constants/colors.dart';
-import '../utils/screen-utils/sizing/custom_sizes.dart';
-import 'curtom_circle_avatar.dart';
 
 class UserPreviewWidget extends GetView<UserPreview> {
   final UserModel user;
@@ -45,12 +42,13 @@ class UserPreviewWidget extends GetView<UserPreview> {
             children: [
               Text(
                 user.name,
-                style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+                style: TEXTSTYLES.kHeaderLarge
+                    .copyWith(color: COLORS.kDarkBlueColor),
               ),
               CustomSizes.smallSizedBoxWidth,
               user.isVerified
-                  ? Assets.svg.verifiedWithBluePadding
-                      .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
+                  ? Assets.svg.verifiedWithBluePadding.svg(
+                      alignment: Alignment.center, height: 24.w, width: 24.w)
                   : const SizedBox(),
             ],
           ),
@@ -71,13 +69,17 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.back();
                     print('UserPreviewWidget isWifiDirect $isWifiDirect');
                     isWifiDirect
-                        ? Get.toNamed(Routes.WIFI_DIRECT_CONNECT, arguments: user)
+                        ? Get.toNamed(
+                            Routes.WIFI_DIRECT_CONNECT,
+                            arguments: user,
+                          )
                         : Get.toNamed(
                             Routes.MESSAGES,
                             arguments: MessagesViewArgumentsModel(
-                                coreId: user.coreId,
-                                iconUrl: user.iconUrl,
-                                connectionType: MessagingConnectionType.internet),
+                              coreId: user.coreId,
+                              iconUrl: user.iconUrl,
+                              connectionType: MessagingConnectionType.internet,
+                            ),
                           );
                   }
                 },
@@ -95,13 +97,18 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.toNamed(
                       Routes.CALL,
                       arguments: CallViewArgumentsModel(
-                          callId: null,
-                          user: user,
-                          enableVideo: false,
-                          isAudioCall: true),
+                        callId: null,
+                        // convert userModel to callUserModel
+                        user: user.toCallUserModel(),
+                        enableVideo: false,
+                        isAudioCall: true,
+                      ),
                     );
                   } else {
-                    Get.snackbar("Wifi Direct", "Calling over wifi direct are not supported yet");
+                    Get.snackbar(
+                      "Wifi Direct",
+                      "Calling over wifi direct are not supported yet",
+                    );
                   }
                 },
                 backgroundColor: COLORS.kBrightBlueColor,
@@ -119,7 +126,8 @@ class UserPreviewWidget extends GetView<UserPreview> {
                       Routes.CALL,
                       arguments: CallViewArgumentsModel(
                         callId: null,
-                        user: user,
+                        // convert userModel to callUserModel
+                        user: user.toCallUserModel(),
                         enableVideo: true,
                         isAudioCall: false,
                       ),
@@ -172,24 +180,31 @@ class UserPreviewWidget extends GetView<UserPreview> {
                             ),
                           );
                         },
-                        icon: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
-                        title: LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
+                        icon: Assets.svg.addToContactsIcon
+                            .svg(width: 20, height: 20),
+                        title:
+                            LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
                       )
                     : _buildIconTextButton(
                         onPressed: () async {
                           Get.back();
-                          await Get.dialog(RemoveContactsDialog(
-                            userName: user.name,
-                          )).then((result) async {
+                          await Get.dialog(
+                            RemoveContactsDialog(
+                              userName: user.name,
+                            ),
+                          ).then((result) async {
                             if (result is bool && result == true) {
                               print("result   $result");
 
-                              await controller.deleteContact(user.walletAddress);
+                              await controller
+                                  .deleteContact(user.walletAddress);
                             }
                           });
                         },
-                        icon: Assets.svg.removeContact.svg(width: 20, height: 20),
-                        title: LocaleKeys.newChat_userBottomSheet_RemoveFromContacts.tr,
+                        icon:
+                            Assets.svg.removeContact.svg(width: 20, height: 20),
+                        title: LocaleKeys
+                            .newChat_userBottomSheet_RemoveFromContacts.tr,
                       ),
                 _buildIconTextButton(
                   onPressed: () {
@@ -197,7 +212,8 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.rawSnackbar(
                       messageText: Text(
                         "Blocking feature is in development phase",
-                        style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kDarkBlueColor),
+                        style: TEXTSTYLES.kBodySmall
+                            .copyWith(color: COLORS.kDarkBlueColor),
                         textAlign: TextAlign.center,
                       ),
                       //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),

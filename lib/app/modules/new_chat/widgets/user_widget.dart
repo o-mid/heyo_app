@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/app/routes/app_pages.dart';
-import '../data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
@@ -42,8 +44,9 @@ class UserWidget extends StatelessWidget {
               children: [
                 Text(
                   user.name,
-                  style: TEXTSTYLES.kChatName
-                      .copyWith(color: COLORS.kDarkBlueColor),
+                  style: TEXTSTYLES.kChatName.copyWith(
+                    color: COLORS.kDarkBlueColor,
+                  ),
                 ),
                 CustomSizes.smallSizedBoxWidth,
                 if (user.isVerified) Assets.svg.verifiedWithBluePadding.svg(),
@@ -53,8 +56,9 @@ class UserWidget extends StatelessWidget {
             Text(
               user.walletAddress.shortenCoreId,
               maxLines: 1,
-              style:
-                  TEXTSTYLES.kChatText.copyWith(color: COLORS.kTextBlueColor),
+              style: TEXTSTYLES.kChatText.copyWith(
+                color: COLORS.kTextBlueColor,
+              ),
             ),
           ],
         ),
@@ -65,14 +69,17 @@ class UserWidget extends StatelessWidget {
               Get.toNamed(
                 Routes.CALL,
                 arguments: CallViewArgumentsModel(
-                  user: user,
+                  // convert userModel to callUserModel
+                  user: user.toCallUserModel(),
                   callId: null,
                   isAudioCall: true,
                 ),
               );
             },
             backgroundColor: COLORS.kBrightBlueColor,
-            icon: Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor),
+            icon: Assets.svg.audioCallIcon.svg(
+              color: COLORS.kDarkBlueColor,
+            ),
           ),
         CustomSizes.mediumSizedBoxWidth,
         if (showVideoCallButton)
@@ -81,11 +88,18 @@ class UserWidget extends StatelessWidget {
               Get.toNamed(
                 Routes.CALL,
                 arguments: CallViewArgumentsModel(
-                    user: user, callId: null, enableVideo: true, isAudioCall: false),
+                  // convert userModel to callUserModel
+                  user: user.toCallUserModel(),
+                  callId: null,
+                  enableVideo: true,
+                  isAudioCall: false,
+                ),
               );
             },
             backgroundColor: COLORS.kBrightBlueColor,
-            icon: Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
+            icon: Assets.svg.videoCallIcon.svg(
+              color: COLORS.kDarkBlueColor,
+            ),
           ),
       ],
     );

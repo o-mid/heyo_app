@@ -1,4 +1,4 @@
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 
 enum CallParticipantStatus {
   calling,
@@ -7,7 +7,7 @@ enum CallParticipantStatus {
 
 class CallParticipantModel {
   final CallParticipantStatus status;
-  final UserModel user;
+  final CallUserModel user;
 
   CallParticipantModel({
     this.status = CallParticipantStatus.calling,
@@ -16,7 +16,7 @@ class CallParticipantModel {
 
   CallParticipantModel copyWith({
     CallParticipantStatus? status,
-    UserModel? user,
+    CallUserModel? user,
   }) {
     return CallParticipantModel(
       status: status ?? this.status,
