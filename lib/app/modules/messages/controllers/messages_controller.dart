@@ -243,41 +243,36 @@ class MessagesController extends GetxController {
 
   void _handleKeyboardVisibilityChanges() {
     StreamSubscription keyboardChangesStream =
-        keyboardController.onChange.listen((bool iskeyboardVisible) {
-      if (iskeyboardVisible) {
-        // Close emoji picker when keyboard opens
-        showEmojiPicker.value = false;
-
+        keyboardController.onChange.listen((bool isKeyboardVisible) {
+      // Toggle emoji picker based on keyboard visibility
+      if (isKeyboardVisible) {
+        _closeEmojiPicker();
         _keyboardHeight = Get.mediaQuery.viewInsets.bottom;
-        // when keyboard opens scroll in the amount of keyboard height so that
-        // the same part of the messages as before remains visible
+      }
 
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (scrollController.hasClients) {
-            double scrollOffset = scrollController.offset;
-            animateToPosition(
-              offset: scrollOffset + _keyboardHeight,
-              duration: TRANSITIONS.messagingPage_KeyboardVisibilityDurtion,
-              curve: TRANSITIONS.messagingPage_KeyboardVisibilityCurve,
-            );
-          }
-        });
-      } else {
-        // when keyboard closes scroll in the amount of keyboard height so that
-        // the same part of the messages as before remains visible
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (scrollController.hasClients) {
-            double scrollOffset = scrollController.offset;
-            animateToPosition(
-              offset: scrollOffset - _keyboardHeight,
-              duration: TRANSITIONS.messagingPage_KeyboardVisibilityDurtion,
-              curve: TRANSITIONS.messagingPage_KeyboardVisibilityCurve,
-            );
-          }
-        });
+      _adjustScrollPosition(isKeyboardVisible);
+    });
+
+    _globalMessageController.streamSubscriptions.add(keyboardChangesStream);
+  }
+
+  void _closeEmojiPicker() {
+    showEmojiPicker.value = false;
+  }
+
+  void _adjustScrollPosition(bool isKeyboardVisible) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients) {
+        double scrollOffset = scrollController.offset;
+        double offsetChange = isKeyboardVisible ? _keyboardHeight : -_keyboardHeight;
+
+        animateToPosition(
+          offset: scrollOffset + offsetChange,
+          duration: TRANSITIONS.messagingPage_KeyboardVisibilityDurtion,
+          curve: TRANSITIONS.messagingPage_KeyboardVisibilityCurve,
+        );
       }
     });
-    _globalMessageController.streamSubscriptions.add(keyboardChangesStream);
   }
 
   void _sendForwardedMessages() {
@@ -1015,10 +1010,18 @@ class MessagesController extends GetxController {
   Future<void> saveCoreIdToClipboard() async {
     final remoteCoreId = user.value.walletAddress;
     print("Core ID : $remoteCoreId");
-    await Clipboard.setData(ClipboardData(text: remoteCoreId));
+    await _copyToClipboard(remoteCoreId);
+    _displaySnackbar(LocaleKeys.ShareableQrPage_copiedToClipboardText.tr);
+  }
+
+  Future<void> _copyToClipboard(String text) async {
+    await Clipboard.setData(ClipboardData(text: text));
+  }
+
+  void _displaySnackbar(String message) {
     Get.rawSnackbar(
       messageText: Text(
-        LocaleKeys.ShareableQrPage_copiedToClipboardText.tr,
+        message,
         textAlign: TextAlign.center,
         style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kDarkBlueColor),
       ),
