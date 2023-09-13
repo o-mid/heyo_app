@@ -12,6 +12,7 @@ import 'package:heyo/generated/locales.g.dart';
 
 class CallMessageWidget extends StatelessWidget {
   final CallMessageModel message;
+
   const CallMessageWidget({
     super.key,
     required this.message,
@@ -20,61 +21,84 @@ class CallMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(8.w),
-      decoration: BoxDecoration(
-        border: Border.all(color: COLORS.kPinCodeDeactivateColor),
-        borderRadius: BorderRadius.circular(8.r),
-      ),
+      padding: _containerPadding(),
+      decoration: _containerDecoration(),
       child: Column(
         children: [
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(8.w),
-                decoration: const BoxDecoration(
-                  color: COLORS.kTextSoftBlueColor,
-                  shape: BoxShape.circle,
-                ),
-                child: message.callType == CallMessageType.video
-                    ? Assets.svg.videoCallIcon.svg()
-                    : Assets.svg.audioCallIcon.svg(),
-              ),
-              CustomSizes.smallSizedBoxWidth,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      LocaleKeys.MessagesPage_callMessageTitle.trParams(
-                          {"user": message.senderName}),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TEXTSTYLES.kChatText.copyWith(
-                        fontWeight: FONTS.SemiBold,
-                        color: COLORS.kDarkBlueColor,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      message.callStatus == CallMessageStatus.declined
-                          ? LocaleKeys.MessagesPage_callMessageSubtitleDeclined.tr
-                          : LocaleKeys.MessagesPage_callMessageSubtitleMissed.tr,
-                      style: TEXTSTYLES.kChatText.copyWith(color: COLORS.kTextBlueColor),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+          _buildCallInfoRow(),
           CustomSizes.smallSizedBoxHeight,
-          CustomButton(
-            title: LocaleKeys.MessagesPage_callMessageActionButton.tr,
-            backgroundColor: COLORS.kGreenLighterColor,
-            textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kGreenMainColor),
-            onTap: () {}, // Todo
+          _buildCallActionButton(),
+        ],
+      ),
+    );
+  }
+
+  EdgeInsets _containerPadding() => EdgeInsets.all(8.w);
+
+  BoxDecoration _containerDecoration() => BoxDecoration(
+        border: Border.all(color: COLORS.kPinCodeDeactivateColor),
+        borderRadius: BorderRadius.circular(8.r),
+      );
+
+  Widget _buildCallInfoRow() {
+    return Row(
+      children: [
+        _buildCallTypeIcon(),
+        CustomSizes.smallSizedBoxWidth,
+        _buildCallDetails(),
+      ],
+    );
+  }
+
+  Widget _buildCallTypeIcon() {
+    return Container(
+      padding: EdgeInsets.all(8.w),
+      decoration: const BoxDecoration(
+        color: COLORS.kTextSoftBlueColor,
+        shape: BoxShape.circle,
+      ),
+      child: message.callType == CallMessageType.video
+          ? Assets.svg.videoCallIcon.svg()
+          : Assets.svg.audioCallIcon.svg(),
+    );
+  }
+
+  Widget _buildCallDetails() {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            LocaleKeys.MessagesPage_callMessageTitle.trParams({"user": message.senderName}),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TEXTSTYLES.kChatText.copyWith(
+              fontWeight: FONTS.SemiBold,
+              color: COLORS.kDarkBlueColor,
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            _getCallStatusSubtitle(),
+            style: TEXTSTYLES.kChatText.copyWith(color: COLORS.kTextBlueColor),
           ),
         ],
       ),
+    );
+  }
+
+  String _getCallStatusSubtitle() {
+    return message.callStatus == CallMessageStatus.declined
+        ? LocaleKeys.MessagesPage_callMessageSubtitleDeclined.tr
+        : LocaleKeys.MessagesPage_callMessageSubtitleMissed.tr;
+  }
+
+  Widget _buildCallActionButton() {
+    return CustomButton(
+      title: LocaleKeys.MessagesPage_callMessageActionButton.tr,
+      backgroundColor: COLORS.kGreenLighterColor,
+      textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kGreenMainColor),
+      onTap: () {}, // Todo
     );
   }
 }
