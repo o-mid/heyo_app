@@ -14,9 +14,10 @@ import 'message_widget.dart';
 import 'reaction_box.dart';
 import 'recipient_reply_to_widget.dart';
 
-class MessageSelectionWrapper extends StatefulWidget {
+class MessageSelectionWrapper extends StatelessWidget {
   final MessageModel message;
   final bool isMockMessage;
+
   const MessageSelectionWrapper({
     Key? key,
     required this.message,
@@ -24,17 +25,7 @@ class MessageSelectionWrapper extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<MessageSelectionWrapper> createState() => _MessageSelectionWrapperState();
-}
-
-class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
-    with AutomaticKeepAliveClientMixin {
-  @override
   Widget build(BuildContext context) {
-    super.build(context);
-
-    final message = widget.message;
-    final isMockMessage = widget.isMockMessage;
     final controller = Get.find<MessagesController>();
 
     return Obx(() {
@@ -80,8 +71,6 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
                     child: MessageWidget(
                       message: message,
                       isMockMessage: isMockMessage,
-                      // showTimeAndProfile: index == controller.messages.length - 1 ||
-                      //     controller.messages[index + 1].senderName != message.senderName,
                     ),
                   ),
                 ),
@@ -113,11 +102,4 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
       );
     });
   }
-
-  @override
-  bool get wantKeepAlive =>
-      widget.message is VideoMessageModel ||
-      widget.message is AudioMessageModel ||
-      widget.message is LiveLocationMessageModel ||
-      widget.message is LocationMessageModel;
 }

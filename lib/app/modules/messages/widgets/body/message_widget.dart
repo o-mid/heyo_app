@@ -11,34 +11,50 @@ import 'message_header_widget.dart';
 class MessageWidget extends StatelessWidget {
   final MessageModel message;
   final bool isMockMessage;
-  const MessageWidget({Key? key, required this.message, this.isMockMessage = false})
-      : super(key: key);
+
+  const MessageWidget({
+    Key? key,
+    required this.message,
+    this.isMockMessage = false,
+  }) : super(key: key);
+
+  List<Widget> _buildChildren() {
+    List<Widget> children = [];
+
+    if (!message.isFromMe) {
+      children.add(CustomSizes.mediumSizedBoxWidth);
+      children.add(
+        CustomCircleAvatar(
+          url: message.senderAvatar,
+          size: 20,
+          isMockData: isMockMessage,
+        ),
+      );
+    }
+
+    children.add(
+      Expanded(
+        child: Column(
+          children: [
+            MessageHeaderWidget(message: message, isMockMessage: isMockMessage),
+            SizedBox(height: 4.h),
+            MessageBodyWidget(
+              message: message,
+              isMockMessage: isMockMessage,
+            ),
+          ],
+        ),
+      ),
+    );
+
+    return children;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (!message.isFromMe) CustomSizes.mediumSizedBoxWidth,
-        if (!message.isFromMe)
-          CustomCircleAvatar(
-            url: message.senderAvatar,
-            size: 20,
-            isMockData: isMockMessage,
-          ),
-        Expanded(
-          child: Column(
-            children: [
-              MessageHeaderWidget(message: message, isMockMessage: isMockMessage),
-              SizedBox(height: 4.h),
-              MessageBodyWidget(
-                message: message,
-                isMockMessage: isMockMessage,
-              ),
-            ],
-          ),
-        ),
-      ],
+      children: _buildChildren(),
     );
   }
 }
