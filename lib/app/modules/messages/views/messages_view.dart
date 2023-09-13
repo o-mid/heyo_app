@@ -33,7 +33,7 @@ class MessagesView extends GetView<MessagesController> {
                 MessagesList(),
                 Positioned(
                   bottom: 0,
-                  child: MediaGlassmorphic(),
+                  child: MediaGlassmorphicWidget(),
                 ),
               ],
             ),

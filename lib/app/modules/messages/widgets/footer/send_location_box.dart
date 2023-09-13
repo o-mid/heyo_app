@@ -10,61 +10,61 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
+import '../../data/models/messages/location_message_model.dart';
+
 class SendLocationBox extends StatelessWidget {
   const SendLocationBox({Key? key}) : super(key: key);
+
+  String _getLocationText(LocationMessageModel? locationMessage) {
+    return "${locationMessage?.latitude} ${locationMessage?.longitude}";
+  }
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MessagesController>();
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 0),
-      child: Column(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  controller.locationMessage.value = null;
-                },
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: Assets.svg.target.svg(),
-                ),
-              ),
-              CustomSizes.mediumSizedBoxWidth,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      LocaleKeys.MessagesPage_sharedLocation.tr,
-                      style: TEXTSTYLES.kChatText.copyWith(
-                        color: COLORS.kDarkBlueColor,
-                        fontWeight: FONTS.SemiBold,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      "${controller.locationMessage.value?.latitude} ${controller.locationMessage.value?.longitude}",
-                      style: TEXTSTYLES.kChatText.copyWith(
-                        color: COLORS.kTextBlueColor,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-              CustomSizes.largeSizedBoxWidth,
-              SendMessageButton(
-                onTap: () {
-                  controller.sendLocationMessage();
-                },
-              )
-            ],
+          GestureDetector(
+            onTap: () {
+              controller.locationMessage.value = null;
+            },
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: Assets.svg.target.svg(),
+            ),
           ),
+          CustomSizes.mediumSizedBoxWidth,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  LocaleKeys.MessagesPage_sharedLocation.tr,
+                  style: TEXTSTYLES.kChatText.copyWith(
+                    color: COLORS.kDarkBlueColor,
+                    fontWeight: FONTS.SemiBold,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  _getLocationText(controller.locationMessage.value),
+                  style: TEXTSTYLES.kChatText.copyWith(
+                    color: COLORS.kTextBlueColor,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          CustomSizes.largeSizedBoxWidth,
+          SendMessageButton(
+            onTap: controller.sendLocationMessage,
+          )
         ],
       ),
     );
