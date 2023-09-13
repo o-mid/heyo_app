@@ -11,7 +11,7 @@ class SplashController extends GetxController {
     // it will change when the corePass integration complete
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //prefs.setBool("isLogin", false);
-    bool isLogin = prefs.getBool("isLogin") ?? false;
+    bool isLogin = /*prefs.getBool("isLogin") ?? */false;
     if (isLogin) {
       Get.offAllNamed(Routes.HOME);
     } else {

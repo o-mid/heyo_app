@@ -6,8 +6,8 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-class LoadingDialog extends StatelessWidget {
-  const LoadingDialog({super.key});
+class VerificationLoading extends StatelessWidget {
+  const VerificationLoading({super.key});
 
   @override
   Widget build(BuildContext context) {

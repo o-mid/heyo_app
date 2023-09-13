@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -17,8 +18,18 @@ class VerificationWithCorePassUseCase {
 
   Future<void> executeLaunch() async {
     String? heyoId = await accountInfo.getCoreId();
+    while (heyoId == null) {
+      Get.rawSnackbar( messageText:  Text(
+        "Sending Files feature is in development phase",
+        textAlign: TextAlign.center,
+          style: TEXTSTYLES.kBodySmall
+      ));
+      await Future.delayed(const Duration(seconds: 5));
+      heyoId = await accountInfo.getCoreId();
+    }
     // App scheme for corePass
-    String uri = 'dongi://authentication?heyoId=$heyoId';
+    //String uri = 'corepass://authentication?heyoId=$heyoId';
+    String uri = 'corepass:sign/${heyoId}callback=heyo://auth/&type=callback';
     void launchStore() {
       String corePassAppStoreUri = '';
       String corePassPlayStoreUri = '';
@@ -47,6 +58,14 @@ class VerificationWithCorePassUseCase {
   Future<void> getUriFromDeepLink() async {
     try {
       void checkUri(Uri deepLink) async {
+        Get.rawSnackbar( messageText:  Text(
+          "URI is $deepLink",
+          textAlign: TextAlign.center,
+            style: TEXTSTYLES.kBodySmall
+
+        ));
+        debugPrint("Uri is ${deepLink}");
+
         String? query = deepLink.queryParameters['key'];
         debugPrint("QUERY is $query");
         // Add 2 seconds timer for showing the loading

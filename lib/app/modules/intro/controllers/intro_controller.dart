@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:heyo/app/modules/intro/usecase/verification_with_corepass_use_case.dart';
-import 'package:heyo/app/modules/intro/widgets/loading_dialog.dart';
+import 'package:heyo/app/modules/intro/widgets/verification_loading_dialog.dart';
 import 'package:heyo/app/modules/intro/widgets/verification_bottom_sheet.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/routes/app_pages.dart';
@@ -49,13 +49,13 @@ class IntroController extends GetxController with WidgetsBindingObserver {
   corePassVerificationAction() async {
     //close the corePass bottom sheet
     Get.back();
-    openLoadingDialog();
+    _openLoadingDialog();
     //TODO: checking verification
 
     // Launch corePass application
-    //await verificationWithCorePassUseCase.executeLaunch();
+    await verificationWithCorePassUseCase.executeLaunch();
 
-    // Comment launching and just push to verified user
+ /*   // Comment launching and just push to verified user
     Timer(
       const Duration(seconds: 2),
       () async {
@@ -65,7 +65,7 @@ class IntroController extends GetxController with WidgetsBindingObserver {
         prefs.setBool("isLogin", true);
         Get.offAllNamed(Routes.VERIFIED_USER);
       },
-    );
+    );*/
   }
 
   openCorePassVerificationBottomSheet() async {
@@ -79,13 +79,13 @@ class IntroController extends GetxController with WidgetsBindingObserver {
     );
   }
 
-  openLoadingDialog() async {
+  _openLoadingDialog() async {
     await Get.defaultDialog(
       onWillPop: () async => false,
       radius: 8,
       title: "",
       contentPadding: const EdgeInsets.fromLTRB(32, 16, 32, 32),
-      content: const LoadingDialog(),
+      content: const VerificationLoading(),
     );
   }
 }
