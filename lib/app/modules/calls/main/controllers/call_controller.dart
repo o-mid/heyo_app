@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -237,7 +238,7 @@ class CallController extends GetxController {
       participants.add(
         CallParticipantModel(user: element.mapToCallUserModel()),
       );
-      callConnectionController.addMember(element.coreId);
+      callRepository.addMember(element.coreId);
     }
   }
 
