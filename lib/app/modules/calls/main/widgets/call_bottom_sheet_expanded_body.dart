@@ -76,7 +76,7 @@ class CallBottomSheetExpandedBody extends StatelessWidget {
                 CircleIconButton(
                   icon: Assets.svg.addParticipant.svg(),
                   backgroundColor: Colors.transparent,
-                  onPressed: controller.addParticipant,
+                  onPressed: controller.pushToAddParticipate,
                 ),
               ],
             ),
@@ -101,12 +101,14 @@ class CallBottomSheetExpandedBody extends StatelessWidget {
                           children: [
                             Text(
                               controller.participants[index].user.name,
-                              style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kWhiteColor),
+                              style: TEXTSTYLES.kChatName
+                                  .copyWith(color: COLORS.kWhiteColor),
                             ),
                             Row(
                               children: [
                                 Text(
-                                  controller.participants[index].user.walletAddress.shortenCoreId,
+                                  controller.participants[index].user
+                                      .walletAddress.shortenCoreId,
                                   style: TEXTSTYLES.kBodySmall.copyWith(
                                     color: COLORS.kWhiteColor.withOpacity(0.6),
                                   ),
@@ -117,7 +119,8 @@ class CallBottomSheetExpandedBody extends StatelessWidget {
                                   Text(
                                     LocaleKeys.CallPage_calling.tr,
                                     style: TEXTSTYLES.kBodySmall.copyWith(
-                                      color: COLORS.kWhiteColor.withOpacity(0.6),
+                                      color:
+                                          COLORS.kWhiteColor.withOpacity(0.6),
                                     ),
                                   ),
                               ],

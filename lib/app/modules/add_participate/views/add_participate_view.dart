@@ -44,15 +44,13 @@ class AddParticipateView extends GetView<AddParticipateController> {
                 padding: const EdgeInsets.all(24.0),
                 child: CustomButton(
                   title: "Add to Call (${controller.selectedUser.length})",
-                  textStyle:
-                      TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kWhiteColor),
+                  textStyle: TEXTSTYLES.kLinkBig.copyWith(
+                    color: COLORS.kWhiteColor,
+                  ),
                   backgroundColor: COLORS.kGreenMainColor,
-                  onTap: () {
-                    debugPrint("The list of Selected user ids:");
-                    for (var element in controller.selectedUser) {
-                      debugPrint(element.coreId);
-                    }
-                  },
+                  onTap: controller.selectedUser.isNotEmpty
+                      ? controller.addUsersToCall
+                      : null,
                 ),
               ),
             ],
