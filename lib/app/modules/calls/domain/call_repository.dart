@@ -9,8 +9,8 @@ abstract class CallRepository{
   MediaStream? getLocalStream();
 
   Function(MediaStream stream)? onLocalStream;
-  List<CallStream> getRemoteStreams(String callId);
-  Function(CallStream callStateViewModel)? onAddRemoteStream;
+  List<CallStream> getCallStreams(String callId);
+  Function(CallStream callStateViewModel)? onAddCallStream;
 
 
   //Function(MediaStream stream)? onAddRemoteStream;

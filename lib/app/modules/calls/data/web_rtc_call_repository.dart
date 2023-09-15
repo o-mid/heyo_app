@@ -8,21 +8,21 @@ class WebRTCCallRepository implements CallRepository {
   @override
   Function(MediaStream stream)? onLocalStream;
   @override
-  Function(CallStream callStateViewModel)? onAddRemoteStream;
+  Function(CallStream callStateViewModel)? onAddCallStream;
 
   WebRTCCallRepository({required this.callConnectionsHandler}) {
     callConnectionsHandler.onLocalStream = ((stream) {
       onLocalStream?.call(stream);
     });
     callConnectionsHandler.onAddRemoteStream = ((callRTCSession) {
-      onAddRemoteStream?.call(CallStream(
+      onAddCallStream?.call(CallStream(
           coreId: callRTCSession.remotePeer.remoteCoreId,
           remoteStream: callRTCSession.getStream()!));
     });
   }
 
   @override
-  List<CallStream> getRemoteStreams(String callId) {
+  List<CallStream> getCallStreams(String callId) {
     return callConnectionsHandler
         .getRemoteStreams()
         .map((e) =>
@@ -45,7 +45,7 @@ class WebRTCCallRepository implements CallRepository {
   @override
   Future<void> closeCall() async {
      await callConnectionsHandler.close();
-     onAddRemoteStream=null;
+     onAddCallStream=null;
      onLocalStream = null;
   }
 

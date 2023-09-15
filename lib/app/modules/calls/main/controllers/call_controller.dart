@@ -161,7 +161,7 @@ class CallController extends GetxController {
     await callRepository.acceptCall(args.callId!);
 
     //TODO update List
-    callRepository.getRemoteStreams(args.callId!).forEach((element) {
+    callRepository.getCallStreams(args.callId!).forEach((element) {
       _remoteRenderer.srcObject = element.remoteStream;
       updateCalleeVideoWidget();
     });
@@ -195,7 +195,7 @@ class CallController extends GetxController {
    /* callRepository.onRemoveRemoteStream =((stream){
       _remoteRenderer.srcObject = null;
     });*/
-    callRepository.onAddRemoteStream = ((callStateView) {
+    callRepository.onAddCallStream = ((callStateView) {
       //print("calll ${_remoteRenderer} : $stream");
       //TODO refactor this if related to the call state
       if(!isInCall.value){
