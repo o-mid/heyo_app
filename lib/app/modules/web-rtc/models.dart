@@ -45,6 +45,9 @@ class CallRTCSession {
     _stream = mediaStream;
     onAddRemoteStream?.call(_stream!);
   }
+  MediaStream? getStream(){
+    return _stream;
+  }
 
   RTCPeerConnection? _pc;
   bool isDataChannelConnectionAvailable = false;

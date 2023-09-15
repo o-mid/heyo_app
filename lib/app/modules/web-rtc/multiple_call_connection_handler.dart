@@ -36,8 +36,7 @@ class CallConnectionsHandler {
   MediaStream? _localStream;
   Function(MediaStream stream)? onLocalStream;
   IncomingCalls? _incomingCalls;
-  Function(MediaStream stream)? onAddRemoteStream;
-  final List<MediaStream> _remoteStreams = <MediaStream>[];
+  Function(CallRTCSession callRTCSession)? onAddRemoteStream;
 
   CallConnectionsHandler({required this.singleCallWebRTCBuilder});
 
@@ -90,8 +89,7 @@ class CallConnectionsHandler {
     callRTCSession.onAddRemoteStream = (stream) {
       print("onAddRemoteStreammmm2 : ");
 
-      onAddRemoteStream?.call(stream);
-      _remoteStreams.add(stream);
+      onAddRemoteStream?.call(callRTCSession);
     };
     _currentCall!.activeSessions.add(callRTCSession);
     return callRTCSession;
@@ -155,7 +153,6 @@ class CallConnectionsHandler {
       await element.stop();
     });
     _localStream?.dispose();
-    _remoteStreams.clear();
     _localStream = null;
   }
 
@@ -301,7 +298,7 @@ class CallConnectionsHandler {
   _onCallRequestReceived(mapData, data, remotePeer) {
     String callId = mapData[CALL_ID];
     bool isAudioCall = data["isAudioCall"];
-    List<String> members = data["members"];
+    List<dynamic> members = data["members"];
     CallInfo callInfo =
         CallInfo(remotePeer: remotePeer, isAudioCall: isAudioCall);
     /*  if (_incomingCalls?.callId != null && _incomingCalls?.callId == callId) {
@@ -323,7 +320,11 @@ class CallConnectionsHandler {
     onCallStateChange?.call(callId, [callInfo], CallState.callStateRinging);
   }
 
-  List<MediaStream> getRemoteStreams() {
-    return _remoteStreams;
+  List<CallRTCSession> getRemoteStreams() {
+    return _currentCall!.activeSessions;
+  }
+
+  MediaStream? getLocalStream() {
+    return _localStream!;
   }
 }

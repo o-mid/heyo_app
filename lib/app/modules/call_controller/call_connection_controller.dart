@@ -14,7 +14,7 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 import '../notifications/controllers/notifications_controller.dart';
 
-class CallConnectionController extends GetxController {
+class CallConnectionController  {
   final CallConnectionsHandler callConnectionsHandler;
   final AccountInfo accountInfo;
   final NotificationsController notificationsController;
@@ -27,11 +27,6 @@ class CallConnectionController extends GetxController {
 
   MediaStream? _localStream;
 
-  @override
-  void onInit() {
-    super.onInit();
-    init();
-  }
 
   MediaStream? getLocalStream() => _localStream;
 
@@ -69,7 +64,7 @@ class CallConnectionController extends GetxController {
     };
     callConnectionsHandler.onAddRemoteStream = (stream) async {
 
-      onAddRemoteStream?.call(stream);
+      //onAddRemoteStream?.call(stream);
     };
     /* callConnectionsHandler.onAddRemoteStream = (session, stream) async {
       onAddRemoteStream?.call(stream);
@@ -83,7 +78,9 @@ class CallConnectionController extends GetxController {
       {required this.callConnectionsHandler,
       required this.accountInfo,
       required this.notificationsController,
-      required this.contactRepository});
+      required this.contactRepository}){
+    init();
+  }
 
   Future<String> startCall(
       String remoteId, bool isAudioCall) async {
@@ -180,7 +177,7 @@ class CallConnectionController extends GetxController {
     );
   }
 
-  List<MediaStream > getRemoteStreams(CallId callId) {
+ /* List<MediaStream > getRemoteStreams(CallId callId) {
     return callConnectionsHandler.getRemoteStreams();
-  }
+  }*/
 }

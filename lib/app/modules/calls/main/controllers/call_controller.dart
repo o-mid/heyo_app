@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
@@ -14,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:heyo/app/routes/app_pages.dart';
+import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 
 enum CallViewType {
   stack,
@@ -52,12 +51,12 @@ class CallController extends GetxController {
       participants.where((p) => p.status == CallParticipantStatus.inCall).length > 1;
 
   final recordState = RecordState.notRecording.obs;
-  final CallConnectionController callConnectionController;
+  final CallRepository callRepository;
   //late Session session;
   final Stopwatch stopwatch = Stopwatch();
   Timer? calltimer;
 
-  CallController({required this.callConnectionController});
+  CallController({required this.callRepository});
 
   final RTCVideoRenderer _localRenderer = RTCVideoRenderer();
   final RTCVideoRenderer _remoteRenderer = RTCVideoRenderer();
@@ -117,7 +116,7 @@ class CallController extends GetxController {
 
     observeSignalingStreams();
 
-    callConnectionController.onLocalStream = ((stream) {
+    callRepository.onLocalStream = ((stream) {
       _localRenderer.srcObject = stream;
 
       updateCallerVideoWidget();
@@ -129,14 +128,14 @@ class CallController extends GetxController {
       await calleeSetup();
     }
 
-    if (callConnectionController.getLocalStream() != null) {
-      _localRenderer.srcObject = callConnectionController.getLocalStream();
+    if (callRepository.getLocalStream() != null) {
+      _localRenderer.srcObject = callRepository.getLocalStream();
     }
 
     if (args.isAudioCall) {
       callerVideoEnabled.value = false;
       calleeVideoEnabled.value = false;
-      callConnectionController.showLocalVideoStream(false, "", false);
+      callRepository.showLocalVideoStream(false, "", false);
     }
     updateCallerVideoWidget();
     observeCallStates();
@@ -145,7 +144,7 @@ class CallController extends GetxController {
 
   late String requestedCallId;
   Future callerSetup() async {
-    requestedCallId=(await callConnectionController.startCall(
+    requestedCallId=(await callRepository.startCall(
         args.user.walletAddress, args.isAudioCall));
 
     isInCall.value = false;
@@ -153,10 +152,11 @@ class CallController extends GetxController {
   }
 
   Future calleeSetup() async {
-    await callConnectionController.acceptCall(args.callId!);
+    await callRepository.acceptCall(args.callId!);
 
-    callConnectionController.getRemoteStreams(args.callId!).forEach((element) {
-      _remoteRenderer.srcObject = element;
+    //TODO update List
+    callRepository.getRemoteStreams(args.callId!).forEach((element) {
+      _remoteRenderer.srcObject = element.remoteStream;
       updateCalleeVideoWidget();
     });
     isInCall.value = true;
@@ -164,7 +164,8 @@ class CallController extends GetxController {
   }
 
   void observeCallStates() {
-    callConnectionController.callState.listen((state) {
+   //TODO it requires another logic
+   /* callRepository.callState.listen((state) {
       if (state == CallState.callStateConnected) {
         isInCall.value = true;
         _stopWatingBeep();
@@ -180,24 +181,31 @@ class CallController extends GetxController {
         calleeVideoEnabled.value = false;
         resetCallView();
       }
-    });
+    });*/
   }
 
   void observeSignalingStreams() {
-    callConnectionController.removeStream.listen((p0) {
+    //todo remove stream logic!
+   /* callRepository.onRemoveRemoteStream =((stream){
       _remoteRenderer.srcObject = null;
-    });
-    callConnectionController.onAddRemoteStream = ((stream) {
-      print("calll ${_remoteRenderer} : $stream");
+    });*/
+    callRepository.onAddRemoteStream = ((callStateView) {
+      //print("calll ${_remoteRenderer} : $stream");
+      //TODO refactor this if related to the call state
+      if(!isInCall.value){
+        isInCall.value = true;
+        _stopWatingBeep();
+        startCallTimer();
+      }
 
-      _remoteRenderer.srcObject = stream;
+      _remoteRenderer.srcObject = callStateView.remoteStream;
       updateCalleeVideoWidget();
     });
   }
 
   // Todo
   void toggleMuteMic() {
-    callConnectionController.muteMic();
+    callRepository.muteMic();
     micEnabled.value = !micEnabled.value;
   }
 
@@ -206,10 +214,10 @@ class CallController extends GetxController {
 
   void endCall() {
     if(args.callId==null){
-      callConnectionController.endOrCancelCall(requestedCallId);
+      callRepository.endOrCancelCall(requestedCallId);
 
     }else{
-      callConnectionController.endOrCancelCall(args.callId!);
+      callRepository.endOrCancelCall(args.callId!);
 
     }
     _stopWatingBeep();
@@ -219,7 +227,7 @@ class CallController extends GetxController {
   // Todo
   void addParticipant() {
     //TODO add this
-    callConnectionController.addMember("coreId");
+    callRepository.addMember("coreId");
     //Get.toNamed(Routes.ADD_PARTICIPATE);
   }
 
@@ -259,7 +267,7 @@ class CallController extends GetxController {
   }
 
   void switchCamera() {
-    callConnectionController.switchCamera();
+    callRepository.switchCamera();
   }
 
   void toggleImmersiveMode() {
@@ -274,7 +282,7 @@ class CallController extends GetxController {
   void onClose() async {
     stopCallTimer();
 
-    await callConnectionController.close();
+    await callRepository.closeCall();
     await _localRenderer.dispose();
     await _remoteRenderer.dispose();
     _stopWatingBeep();
