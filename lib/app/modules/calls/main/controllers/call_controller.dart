@@ -58,6 +58,7 @@ class CallController extends GetxController {
 
   final recordState = RecordState.notRecording.obs;
   final CallRepository callRepository;
+
   //late Session session;
   final Stopwatch stopwatch = Stopwatch();
   Timer? calltimer;
@@ -149,8 +150,9 @@ class CallController extends GetxController {
   }
 
   late String requestedCallId;
+
   Future callerSetup() async {
-    requestedCallId=(await callRepository.startCall(
+    requestedCallId = (await callRepository.startCall(
         args.user.walletAddress, args.isAudioCall));
 
     isInCall.value = false;
@@ -170,8 +172,8 @@ class CallController extends GetxController {
   }
 
   void observeCallStates() {
-   //TODO it requires another logic
-   /* callRepository.callState.listen((state) {
+    //TODO it requires another logic
+    /* callRepository.callState.listen((state) {
       if (state == CallState.callStateConnected) {
         isInCall.value = true;
         _stopWatingBeep();
@@ -192,13 +194,13 @@ class CallController extends GetxController {
 
   void observeSignalingStreams() {
     //todo remove stream logic!
-   /* callRepository.onRemoveRemoteStream =((stream){
+    /* callRepository.onRemoveRemoteStream =((stream){
       _remoteRenderer.srcObject = null;
     });*/
     callRepository.onAddCallStream = ((callStateView) {
       //print("calll ${_remoteRenderer} : $stream");
       //TODO refactor this if related to the call state
-      if(!isInCall.value){
+      if (!isInCall.value) {
         isInCall.value = true;
         _stopWatingBeep();
         startCallTimer();
@@ -219,12 +221,10 @@ class CallController extends GetxController {
   void toggleMuteCall() {}
 
   void endCall() {
-    if(args.callId==null){
+    if (args.callId == null) {
       callRepository.endOrCancelCall(requestedCallId);
-
-    }else{
+    } else {
       callRepository.endOrCancelCall(args.callId!);
-
     }
     _stopWatingBeep();
     Get.back();

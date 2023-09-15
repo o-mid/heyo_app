@@ -7,9 +7,10 @@ class CallStream {
   CallStream({required this.coreId, required this.remoteStream});
 }
 
-class CallStateViewModel{
+class CallStateViewModel {
   final CallStream callStream;
   final String name;
-  bool isAudioCall=false;
+  bool isAudioCall = false;
+
   CallStateViewModel({required this.callStream, required this.name});
 }
