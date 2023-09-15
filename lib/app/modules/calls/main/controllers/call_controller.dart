@@ -4,6 +4,7 @@ import 'package:flutter_beep/flutter_beep.dart';
 import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/add_participate/controllers/participate_item_model.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
@@ -49,7 +50,10 @@ class CallController extends GetxController {
   final isVideoPositionsFlipped = false.obs;
 
   bool get isGroupCall =>
-      participants.where((p) => p.status == CallParticipantStatus.inCall).length > 1;
+      participants
+          .where((p) => p.status == CallParticipantStatus.inCall)
+          .length >
+      1;
 
   final recordState = RecordState.notRecording.obs;
   final CallConnectionController callConnectionController;
@@ -145,7 +149,7 @@ class CallController extends GetxController {
 
   late String requestedCallId;
   Future callerSetup() async {
-    requestedCallId=(await callConnectionController.startCall(
+    requestedCallId = (await callConnectionController.startCall(
         args.user.walletAddress, args.isAudioCall));
 
     isInCall.value = false;
@@ -205,24 +209,26 @@ class CallController extends GetxController {
   void toggleMuteCall() {}
 
   void endCall() {
-    if(args.callId==null){
+    if (args.callId == null) {
       callConnectionController.endOrCancelCall(requestedCallId);
-
-    }else{
+    } else {
       callConnectionController.endOrCancelCall(args.callId!);
-
     }
     _stopWatingBeep();
     Get.back();
   }
 
-  // Todo
-  void addParticipant() {
-    //TODO add this
-    callConnectionController.addMember("coreId");
-    //Get.toNamed(Routes.ADD_PARTICIPATE);
-  }
+  void pushToAddParticipate() => Get.toNamed(Routes.ADD_PARTICIPATE);
 
+  void addParticipant(List<ParticipateItem> selectedUsers) {
+    for (var element in selectedUsers) {
+      debugPrint(element.coreId);
+      participants.add(
+        CallParticipantModel(user: element.mapToCallUserModel()),
+      );
+      callConnectionController.addMember(element.coreId);
+    }
+  }
 
   void recordCall() {
     Get.dialog(RecordCallDialog(onRecord: () async {
@@ -255,7 +261,7 @@ class CallController extends GetxController {
   void toggleVideo() {
     callerVideoEnabled.value = !callerVideoEnabled.value;
     //todo farzam
-  //  callConnectionController.showLocalVideoStream(callerVideoEnabled.value, session.sid, true);
+    //  callConnectionController.showLocalVideoStream(callerVideoEnabled.value, session.sid, true);
   }
 
   void switchCamera() {
@@ -268,7 +274,8 @@ class CallController extends GetxController {
 
   void updateCallViewType(CallViewType type) => callViewType.value = type;
 
-  void flipVideoPositions() => isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
+  void flipVideoPositions() =>
+      isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   @override
   void onClose() async {

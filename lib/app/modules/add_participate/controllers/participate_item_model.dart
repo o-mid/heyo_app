@@ -1,3 +1,4 @@
+import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 
 class ParticipateItem {
@@ -18,7 +19,7 @@ class ParticipateItem {
   });
 }
 
-extension Mapper on UserModel {
+extension UserModelMapper on UserModel {
   ParticipateItem mapToParticipateItem() {
     return ParticipateItem(
       name: name,
@@ -26,6 +27,17 @@ extension Mapper on UserModel {
       iconUrl: iconUrl,
       isVerified: isVerified,
       isOnline: isOnline,
+      walletAddress: walletAddress,
+    );
+  }
+}
+
+extension ParticipateModelMapper on ParticipateItem {
+  CallUserModel mapToCallUserModel() {
+    return CallUserModel(
+      name: name,
+      coreId: coreId,
+      iconUrl: iconUrl,
       walletAddress: walletAddress,
     );
   }
