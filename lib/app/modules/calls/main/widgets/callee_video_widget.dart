@@ -4,9 +4,8 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 
-// Todo: replace this with remote video webrtc
 class CalleeVideoWidget extends StatelessWidget {
-  const CalleeVideoWidget({super.key});
+  const CalleeVideoWidget({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,28 +13,49 @@ class CalleeVideoWidget extends StatelessWidget {
       id: Get.find<CallController>().calleeVideoWidgetId,
       builder: (controller) {
         List<RTCVideoRenderer> remoteVideoRenderers =
-            controller.getRemoteVideRenderer();
+            controller.getRemoteVideoRenderers();
 
-        return ListView.builder(
-          itemCount: remoteVideoRenderers.length,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) {
-            RTCVideoRenderer remoteVideoRenderer = remoteVideoRenderers[index];
+        //* Calculate the number of rows needed based on the number of items.
+        int rowCount = (remoteVideoRenderers.length / 2).ceil();
 
-            return Container(
-              key: Key('remote_$index'), // Unique key for each video renderer
-              margin: const EdgeInsets.all(5),
-              decoration: const BoxDecoration(color: Colors.transparent),
-              child: GestureDetector(
-                onTap: controller.toggleImmersiveMode,
-                onDoubleTap: controller.flipVideoPositions,
+        return Wrap(
+          runSpacing: 5,
+          children: List.generate(rowCount, (rowIndex) {
+            if (rowIndex == 0 && remoteVideoRenderers.length % 2 != 0) {
+              //TODO: below step will be removed beacuse we show the local video
+              //* First row with an odd number of items, use one full width.
+              return SizedBox(
+                width: MediaQuery.of(context).size.width,
                 child: RTCVideoView(
-                  remoteVideoRenderer,
+                  remoteVideoRenderers[rowIndex * 2],
                   objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
                 ),
-              ),
-            );
-          },
+              );
+            } else {
+              //* Rows with two items each.
+              return Row(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 2 -
+                        5, // Half width with spacing
+                    child: RTCVideoView(
+                      remoteVideoRenderers[rowIndex * 2],
+                      objectFit:
+                          RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 2 - 5,
+                    child: RTCVideoView(
+                      remoteVideoRenderers[rowIndex * 2 + 1],
+                      objectFit:
+                          RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                    ),
+                  ),
+                ],
+              );
+            }
+          }),
         );
       },
     );

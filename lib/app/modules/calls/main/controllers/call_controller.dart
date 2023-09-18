@@ -65,10 +65,10 @@ class CallController extends GetxController {
   CallController({required this.callRepository});
 
   final RTCVideoRenderer _localRenderer = RTCVideoRenderer();
-  final List<RTCVideoRenderer> _remoteRenderer = [];
+  final List<RTCVideoRenderer> _remoteRenderers = [];
 
-  List<RTCVideoRenderer> getRemoteVideRenderer() {
-    return _remoteRenderer;
+  List<RTCVideoRenderer> getRemoteVideoRenderers() {
+    return _remoteRenderers;
   }
 
   RTCVideoRenderer getLocalVideRenderer() {
@@ -77,7 +77,7 @@ class CallController extends GetxController {
 
   initRenderers() async {
     await _localRenderer.initialize();
-    //await _remoteRenderer.initialize();
+    //await _remoteRenderers.initialize();
   }
 
   final _screenRecorder = EdScreenRecorder();
@@ -167,7 +167,7 @@ class CallController extends GetxController {
     RTCVideoRenderer renderer = RTCVideoRenderer();
     await renderer.initialize();
     renderer.srcObject = callStream.remoteStream;
-    _remoteRenderer.add(renderer);
+    _remoteRenderers.add(renderer);
     updateCalleeVideoWidget();
   }
 
@@ -215,10 +215,10 @@ class CallController extends GetxController {
   void observeSignalingStreams() {
     //todo remove stream logic!
     /* callRepository.onRemoveRemoteStream =((stream){
-      _remoteRenderer.srcObject = null;
+      _remoteRenderers.srcObject = null;
     });*/
     callRepository.onAddCallStream = ((callStateView) {
-      //print("calll ${_remoteRenderer} : $stream");
+      //print("calll ${_remoteRenderers} : $stream");
       //TODO refactor this if related to the call state
       if (!isInCall.value) {
         isInCall.value = true;
@@ -309,7 +309,7 @@ class CallController extends GetxController {
       isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   Future<void> disposeRTCRender() async {
-    for (var element in _remoteRenderer) {
+    for (var element in _remoteRenderers) {
       await element.dispose();
     }
   }
