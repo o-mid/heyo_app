@@ -23,7 +23,8 @@ class SelectedUserChip extends StatelessWidget {
                     avatarUrl: user.iconUrl,
                     label: user.name,
                     onDelete: () {
-                      controller.addUser(user); // Remove the user from the list
+                      //* Remove the user from the list
+                      controller.selectUser(user);
                     },
                   );
                 },

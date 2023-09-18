@@ -91,7 +91,7 @@ class CallBottomSheetExpandedBody extends StatelessWidget {
                   return Row(
                     children: [
                       CustomCircleAvatar(
-                        url: controller.participants[index].user.iconUrl,
+                        url: controller.participants[index].iconUrl,
                         size: 40,
                       ),
                       CustomSizes.mediumSizedBoxWidth,
@@ -100,15 +100,15 @@ class CallBottomSheetExpandedBody extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              controller.participants[index].user.name,
+                              controller.participants[index].name,
                               style: TEXTSTYLES.kChatName
                                   .copyWith(color: COLORS.kWhiteColor),
                             ),
                             Row(
                               children: [
                                 Text(
-                                  controller.participants[index].user
-                                      .walletAddress.shortenCoreId,
+                                  controller
+                                      .participants[index].coreId.shortenCoreId,
                                   style: TEXTSTYLES.kBodySmall.copyWith(
                                     color: COLORS.kWhiteColor.withOpacity(0.6),
                                   ),

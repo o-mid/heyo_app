@@ -118,11 +118,14 @@ class GlobalBindings extends Bindings {
         permanent: true);
 
     Get.put(
-        CallConnectionsHandler(
-            singleCallWebRTCBuilder: SingleCallWebRTCBuilder(
-                p2pCommunicator: p2pCommunicator,
-                webRTCConnectionManager: WebRTCCallConnectionManager())),
-        permanent: true);
+      CallConnectionsHandler(
+        singleCallWebRTCBuilder: SingleCallWebRTCBuilder(
+          p2pCommunicator: p2pCommunicator,
+          webRTCConnectionManager: WebRTCCallConnectionManager(),
+        ),
+      ),
+      permanent: true,
+    );
     Get.put(
         CallConnectionController(
             accountInfo: accountInfo,

@@ -23,7 +23,7 @@ class AddableUserWidget extends StatelessWidget {
     final controller = Get.find<AddParticipateController>();
 
     return InkWell(
-      onTap: () => controller.addUser(user),
+      onTap: () => controller.selectUser(user),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

@@ -7,11 +7,15 @@ enum CallParticipantStatus {
 
 class CallParticipantModel {
   final CallParticipantStatus status;
-  final CallUserModel user;
+  final String name;
+  final String iconUrl;
+  final String coreId;
 
   CallParticipantModel({
     this.status = CallParticipantStatus.calling,
-    required this.user,
+    required this.name,
+    required this.iconUrl,
+    required this.coreId,
   });
 
   CallParticipantModel copyWith({
@@ -20,7 +24,9 @@ class CallParticipantModel {
   }) {
     return CallParticipantModel(
       status: status ?? this.status,
-      user: user ?? this.user,
+      name: name,
+      iconUrl: iconUrl,
+      coreId: coreId,
     );
   }
 }

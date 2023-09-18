@@ -18,9 +18,9 @@ class CallInProgressWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<CallController>();
     return Obx(() {
-      if (controller.isGroupCall) {
-        return const GroupCallWidget();
-      }
+      //if (controller.isGroupCall) {
+      //  return const GroupCallWidget();
+      //}
 
       final calleeWidget = controller.calleeVideoEnabled.value
           ? const CalleeVideoWidget()
@@ -32,7 +32,9 @@ class CallInProgressWidget extends StatelessWidget {
               ? const CalleeNoVideoWidget()
               : const SizedBox.shrink();
 
-      final firstWidget = controller.isVideoPositionsFlipped.isFalse ? calleeWidget : callerWidget;
+      final firstWidget = controller.isVideoPositionsFlipped.isFalse
+          ? calleeWidget
+          : callerWidget;
 
       final secondWidget = controller.isVideoPositionsFlipped.isFalse
           ? callerWidget
@@ -42,11 +44,14 @@ class CallInProgressWidget extends StatelessWidget {
 
       switch (controller.callViewType.value) {
         case CallViewType.column:
-          return CallViewTypeColumnWidget(firstWidget: firstWidget, secondWidget: secondWidget);
+          return CallViewTypeColumnWidget(
+              firstWidget: firstWidget, secondWidget: secondWidget);
         case CallViewType.row:
-          return CallViewTypeRowWidget(firstWidget: firstWidget, secondWidget: secondWidget);
+          return CallViewTypeRowWidget(
+              firstWidget: firstWidget, secondWidget: secondWidget);
         case CallViewType.stack:
-          return CallViewTypeStackWidget(firstWidget: firstWidget, secondWidget: secondWidget);
+          return CallViewTypeStackWidget(
+              firstWidget: firstWidget, secondWidget: secondWidget);
       }
     });
   }
