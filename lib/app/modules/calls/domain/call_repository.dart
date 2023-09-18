@@ -11,7 +11,7 @@ abstract class CallRepository {
   MediaStream? getLocalStream();
 
   Function(MediaStream stream)? onLocalStream;
-  List<CallStream> getCallStreams(String callId);
+  List<CallStream> getCallStreams();
   Function(CallStream callStream)? onAddCallStream;
   Function(CallParticipantModel participate)? onChangeParticipateStream;
 
