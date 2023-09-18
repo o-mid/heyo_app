@@ -22,19 +22,13 @@ class CallConnectionController  {
   final callState = Rxn<CallState>();
   final callHistoryState = Rxn<CallHistoryState>();
   final removeStream = Rxn<MediaStream>();
-  Function(MediaStream stream)? onLocalStream;
-  Function(MediaStream stream)? onAddRemoteStream;
 
   MediaStream? _localStream;
 
 
-  MediaStream? getLocalStream() => _localStream;
 
   Future<void> init() async {
-    callConnectionsHandler.onLocalStream = ((stream) {
-      _localStream = stream;
-      onLocalStream?.call(stream);
-    });
+
 
     observeCallStatus();
   }
@@ -62,10 +56,7 @@ class CallConnectionController  {
         }
       }
     };
-    callConnectionsHandler.onAddRemoteStream = (stream) async {
 
-      //onAddRemoteStream?.call(stream);
-    };
     /* callConnectionsHandler.onAddRemoteStream = (session, stream) async {
       onAddRemoteStream?.call(stream);
     };
@@ -108,13 +99,7 @@ class CallConnectionController  {
         session: session, callHistoryStatus: CallHistoryStatus.connected);*/
   }
 
-  void switchCamera() {
-    callConnectionsHandler.switchCamera();
-  }
 
-  void muteMic() {
-    callConnectionsHandler.muteMic();
-  }
 
   void showLocalVideoStream(bool value, String? sessionId, bool sendSignal) {
     callConnectionsHandler.showLocalVideoStream(value);
@@ -134,11 +119,7 @@ class CallConnectionController  {
         session: session, callHistoryStatus: CallHistoryStatus.connected);*/
   }
 
-  Future<void> close() async {
-    await callConnectionsHandler.close();
-    onLocalStream = null;
-    onAddRemoteStream = null;
-  }
+
 
   void endOrCancelCall(CallId callId) {
     callConnectionsHandler.reject(callId);
@@ -164,9 +145,7 @@ class CallConnectionController  {
     );
   }
 
-  addMember(String coreId){
-    callConnectionsHandler.addMember(coreId);
-  }
+
   Future<void> notifyReceivedCall({
     required CallInfo callInfo,
   }) async {
