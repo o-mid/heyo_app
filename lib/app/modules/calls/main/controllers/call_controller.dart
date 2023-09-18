@@ -65,11 +65,7 @@ class CallController extends GetxController {
   CallController({required this.callRepository});
 
   final RTCVideoRenderer _localRenderer = RTCVideoRenderer();
-  final List<RTCVideoRenderer> _remoteRenderers = [];
-
-  List<RTCVideoRenderer> getRemoteVideoRenderers() {
-    return _remoteRenderers;
-  }
+  final RxList<RTCVideoRenderer> videoRenderers = RxList();
 
   RTCVideoRenderer getLocalVideRenderer() {
     return _localRenderer;
@@ -167,7 +163,7 @@ class CallController extends GetxController {
     RTCVideoRenderer renderer = RTCVideoRenderer();
     await renderer.initialize();
     renderer.srcObject = callStream.remoteStream;
-    _remoteRenderers.add(renderer);
+    videoRenderers.add(renderer);
     updateCalleeVideoWidget();
   }
 
@@ -309,7 +305,7 @@ class CallController extends GetxController {
       isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   Future<void> disposeRTCRender() async {
-    for (var element in _remoteRenderers) {
+    for (var element in videoRenderers) {
       await element.dispose();
     }
   }
