@@ -1,7 +1,15 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/modules/web-rtc/single_call_web_rtc_connection.dart';
 import 'package:heyo/app/modules/web-rtc/models.dart';
+
+enum CallState {
+  callStateNew,
+  callStateRinging,
+  callStateInvite,
+  callStateConnected,
+  callStateBye,
+  callStateBusy
+}
 
 class CurrentCall {
   final CallId callId;
@@ -78,17 +86,15 @@ class CallConnectionsHandler {
   Future<CallRTCSession> _createSession(
       RemotePeer remotePeer, bool isAudioCall) async {
     if (_localStream == null) {
-      await _createStream('video', false);
+      _localStream = await singleCallWebRTCBuilder.createStream('video', false);
+      onLocalStream?.call(_localStream!);
     }
     CallRTCSession callRTCSession = await singleCallWebRTCBuilder.createSession(
         _currentCall!.callId,
-        remotePeer.remoteCoreId,
-        remotePeer.remotePeerId,
+        remotePeer,
         _localStream!,
         isAudioCall);
     callRTCSession.onAddRemoteStream = (stream) {
-      print("onAddRemoteStreammmm2 : ");
-
       onAddRemoteStream?.call(callRTCSession);
     };
     _currentCall!.activeSessions.add(callRTCSession);
@@ -105,10 +111,7 @@ class CallConnectionsHandler {
     return null;
   }
 
-  addParticipants(String remoteCoreId) {
-    //get current participants
-    //sendCall request with an array of participants
-  }
+
 
   accept(CallId callId) async {
     print("accepttt ${_incomingCalls}");
@@ -124,21 +127,12 @@ class CallConnectionsHandler {
     // singleCallWebRTCBuilder.startSession(rtcSession)
   }
 
-  reject(String callId) {
-    print("rejectcd ${_incomingCalls} ");
-    if (_incomingCalls?.callId == callId) {
-      _incomingCalls?.remotePeers.forEach((element) {
-        print("rejectcd 2");
-
-        singleCallWebRTCBuilder.reject(callId, element.remotePeer);
-      });
-    }
+  reject(String callId) async{
     if (_currentCall?.callId == callId) {
       _currentCall?.activeSessions.forEach((element) {
         singleCallWebRTCBuilder.reject(callId, element.remotePeer);
       });
     }
-    _incomingCalls = null;
   }
 
   close() async {
@@ -320,6 +314,16 @@ class CallConnectionsHandler {
     onCallStateChange?.call(callId, [callInfo], CallState.callStateRinging);
   }
 
+  rejectIncomingCall(String callId){
+    if (_incomingCalls?.callId == callId) {
+      _incomingCalls?.remotePeers.forEach((element) {
+        print("rejectcd 2");
+
+        singleCallWebRTCBuilder.reject(callId, element.remotePeer);
+      });
+      _incomingCalls=null;
+    }
+  }
   List<CallRTCSession> getRemoteStreams() {
     return _currentCall!.activeSessions;
   }

@@ -125,4 +125,31 @@ class WebRTCCallConnectionManager {
     }, config);
     return pc;
   }
+
+
+  Future<MediaStream> createStream(String media, bool userScreen) async {
+    final Map<String, dynamic> mediaConstraints = {
+      'audio': true,
+      'video': userScreen
+          ? true
+          : {
+        'mandatory': {
+          'minWidth': '640',
+          // Provide your own width, height and frame rate here
+          'minHeight': '480',
+          'minFrameRate': '30',
+        },
+        'facingMode': 'user',
+        'optional': [],
+      }
+    };
+
+    MediaStream stream = userScreen
+        ? await RTCFactoryNative.instance.navigator.mediaDevices
+        .getDisplayMedia(mediaConstraints)
+        : await RTCFactoryNative.instance.navigator.mediaDevices
+        .getUserMedia(mediaConstraints);
+    return stream;
+  }
+
 }

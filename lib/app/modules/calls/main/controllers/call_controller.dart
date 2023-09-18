@@ -220,11 +220,11 @@ class CallController extends GetxController {
   // Todo
   void toggleMuteCall() {}
 
-  void endCall() {
+  void endCall() async {
     if (args.callId == null) {
-      callRepository.endOrCancelCall(requestedCallId);
+      await callRepository.endOrCancelCall(requestedCallId);
     } else {
-      callRepository.endOrCancelCall(args.callId!);
+      await callRepository.endOrCancelCall(args.callId!);
     }
     _stopWatingBeep();
     Get.back();

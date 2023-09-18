@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
@@ -11,10 +12,10 @@ import 'package:heyo/app/routes/app_pages.dart';
 class IncomingCallController extends GetxController {
   late CallUserModel caller;
   final muted = false.obs;
-  final CallConnectionController callConnectionController;
+  final CallRepository callRepository;
   late IncomingCallViewArguments args;
   late String userName;
-  IncomingCallController({required this.callConnectionController});
+  IncomingCallController({required this.callRepository});
 
   @override
   void onInit() {
@@ -81,7 +82,7 @@ class IncomingCallController extends GetxController {
   }
 
   void _hangUp() {
-    callConnectionController.rejectCall(args.callId);
+    callRepository.rejectIncomingCall(args.callId);
     //callConnectionController.close();
   }
 

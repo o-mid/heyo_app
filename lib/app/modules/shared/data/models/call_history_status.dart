@@ -1,7 +1,6 @@
 import 'package:heyo/app/modules/messaging/models.dart';
 import 'package:heyo/app/modules/web-rtc/models.dart';
 import 'package:heyo/app/modules/web-rtc/multiple_call_connection_handler.dart';
-import 'package:heyo/app/modules/web-rtc/signaling.dart';
 
 enum CallHistoryStatus {
   nop,
@@ -38,8 +37,7 @@ class CallHistoryState {
         return CallHistoryStatus.connected;
       case CallState.callStateBye:
         return CallHistoryStatus.byeReceived;
-      case CallState.callStateClosedCamera:
-      case CallState.callStateOpendCamera:
+      case CallState.callStateBusy:
         return CallHistoryStatus.nop;
     }
   }

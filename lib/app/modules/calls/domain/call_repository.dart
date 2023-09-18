@@ -1,8 +1,4 @@
-
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:get/get.dart';
-import 'package:heyo/app/modules/web-rtc/models.dart';
-import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
 
 abstract class CallRepository{
@@ -18,9 +14,10 @@ abstract class CallRepository{
       String remoteId, bool isAudioCall);
   Future acceptCall(String callId);
 
-  void endOrCancelCall(String callId);
+  Future<void> endOrCancelCall(String callId);
   addMember(String coreId);
   void switchCamera();
   Future<void> closeCall();
+  void rejectIncomingCall(String callId);
   void muteMic();
 }

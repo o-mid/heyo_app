@@ -8,7 +8,6 @@ import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/web-rtc/models.dart';
 import 'package:heyo/app/modules/web-rtc/multiple_call_connection_handler.dart';
-import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
@@ -73,7 +72,7 @@ class CallConnectionController  {
     init();
   }
 
-  Future<String> startCall(
+/*  Future<String> startCall(
       String remoteId, bool isAudioCall) async {
     String? selfCoreId = await accountInfo.getCoreId();
     final session =
@@ -89,19 +88,23 @@ class CallConnectionController  {
         ],
         callHistoryStatus: CallHistoryStatus.initial);
     return session.callId;
-  }
+  }*/
+/*
 
   Future acceptCall(CallId callId) async {
     callConnectionsHandler.accept(callId);
     //callConnectionsHandler.accept(callId);
 
-    /* callHistoryState.value = CallHistoryState(
-        session: session, callHistoryStatus: CallHistoryStatus.connected);*/
+    */
+/* callHistoryState.value = CallHistoryState(
+        session: session, callHistoryStatus: CallHistoryStatus.connected);*//*
+
   }
+*/
 
 
 
-  void showLocalVideoStream(bool value, String? sessionId, bool sendSignal) {
+ /* void showLocalVideoStream(bool value, String? sessionId, bool sendSignal) {
     callConnectionsHandler.showLocalVideoStream(value);
     if (sendSignal == true && sessionId != null) {
       if (value == true) {
@@ -110,23 +113,27 @@ class CallConnectionController  {
         callConnectionsHandler.peerClosedCamera(sessionId);
       }
     }
-  }
+  }*/
+/*
 
   void rejectCall(CallId callId) {
     callConnectionsHandler.reject(callId);
     //TODO update
-    /* callHistoryState.value = CallHistoryState(
-        session: session, callHistoryStatus: CallHistoryStatus.connected);*/
+    */
+/* callHistoryState.value = CallHistoryState(
+        session: session, callHistoryStatus: CallHistoryStatus.connected);*//*
+
   }
 
+*/
 
-
+/*
   void endOrCancelCall(CallId callId) {
     callConnectionsHandler.reject(callId);
     //TODO farzam
-    /*callHistoryState.value = CallHistoryState(
-        session: session, callHistoryStatus: CallHistoryStatus.byeSent);*/
-  }
+    *//*callHistoryState.value = CallHistoryState(
+        session: session, callHistoryStatus: CallHistoryStatus.byeSent);*//*
+  }*/
 
   Future<void> handleCallStateRinging(
       {required CallId callId, required List<CallInfo> calls}) async {

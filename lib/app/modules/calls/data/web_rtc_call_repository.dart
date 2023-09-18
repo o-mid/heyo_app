@@ -50,8 +50,8 @@ class WebRTCCallRepository implements CallRepository {
   }
 
   @override
-  void endOrCancelCall(String callId) {
-    callConnectionsHandler.reject(callId);
+  Future<void> endOrCancelCall(String callId) async{
+   await callConnectionsHandler.reject(callId);
   }
 
   @override
@@ -80,5 +80,10 @@ class WebRTCCallRepository implements CallRepository {
   @override
   void switchCamera() {
     callConnectionsHandler.switchCamera();
+  }
+
+  @override
+  void rejectIncomingCall(String callId) {
+    callConnectionsHandler.rejectIncomingCall(callId);
   }
 }
