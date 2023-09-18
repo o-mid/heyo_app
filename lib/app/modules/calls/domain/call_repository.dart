@@ -11,12 +11,9 @@ abstract class CallRepository {
   MediaStream? getLocalStream();
 
   Function(MediaStream stream)? onLocalStream;
-  List<CallStream> getCallStreams();
-  Function(CallStream callStateViewModel)? onAddCallStream;
+  List<CallStream> getCallStreams(String callId);
+  Function(CallStream callStream)? onAddCallStream;
   Function(CallParticipantModel participate)? onChangeParticipateStream;
-
-  //Function(MediaStream stream)? onAddRemoteStream;
-  //Function(MediaStream stream)? onRemoveRemoteStream;
 
   //UI events and actions
   void showLocalVideoStream(bool value, String? sessionId, bool sendSignal);

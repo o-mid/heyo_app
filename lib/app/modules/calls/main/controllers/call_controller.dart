@@ -58,6 +58,7 @@ class CallController extends GetxController {
 
   final recordState = RecordState.notRecording.obs;
   final CallRepository callRepository;
+
   //late Session session;
   final Stopwatch stopwatch = Stopwatch();
   Timer? calltimer;
@@ -154,6 +155,7 @@ class CallController extends GetxController {
   }
 
   late String requestedCallId;
+
   Future callerSetup() async {
     requestedCallId = (await callRepository.startCall(
         args.user.walletAddress, args.isAudioCall));

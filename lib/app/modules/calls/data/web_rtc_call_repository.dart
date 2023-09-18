@@ -9,7 +9,7 @@ class WebRTCCallRepository implements CallRepository {
   @override
   Function(MediaStream stream)? onLocalStream;
   @override
-  Function(CallStream callStateViewModel)? onAddCallStream;
+  Function(CallStream callStream)? onAddCallStream;
   @override
   Function(CallParticipantModel participate)? onChangeParticipateStream;
 
