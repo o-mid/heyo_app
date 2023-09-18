@@ -13,20 +13,31 @@ class CalleeVideoWidget extends StatelessWidget {
     return GetBuilder<CallController>(
       id: Get.find<CallController>().calleeVideoWidgetId,
       builder: (controller) {
-        RTCVideoRenderer remoteVideRenderer = controller.getRemoteVideRenderer();
+        List<RTCVideoRenderer> remoteVideoRenderers =
+            controller.getRemoteVideRenderer();
 
-        return Container(
-          key: const Key('remote'),
-          margin: const EdgeInsets.all(5),
-          decoration: const BoxDecoration(color: Colors.transparent),
-          child: GestureDetector(
-            onTap: controller.toggleImmersiveMode,
-            onDoubleTap: controller.flipVideoPositions,
-            child: RTCVideoView(remoteVideRenderer,
-                objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover),
-          ),
+        return ListView.builder(
+          itemCount: remoteVideoRenderers.length,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            RTCVideoRenderer remoteVideoRenderer = remoteVideoRenderers[index];
+
+            return Container(
+              key: Key('remote_$index'), // Unique key for each video renderer
+              margin: const EdgeInsets.all(5),
+              decoration: const BoxDecoration(color: Colors.transparent),
+              child: GestureDetector(
+                onTap: controller.toggleImmersiveMode,
+                onDoubleTap: controller.flipVideoPositions,
+                child: RTCVideoView(
+                  remoteVideoRenderer,
+                  objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                ),
+              ),
+            );
+          },
         );
       },
     );
-  } //
+  }
 }

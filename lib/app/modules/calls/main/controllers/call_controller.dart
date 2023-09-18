@@ -4,8 +4,7 @@ import 'package:flutter_beep/flutter_beep.dart';
 import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/add_participate/controllers/participate_item_model.dart';
-import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
+import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
@@ -66,9 +65,9 @@ class CallController extends GetxController {
   CallController({required this.callRepository});
 
   final RTCVideoRenderer _localRenderer = RTCVideoRenderer();
-  final RTCVideoRenderer _remoteRenderer = RTCVideoRenderer();
+  final List<RTCVideoRenderer> _remoteRenderer = [];
 
-  RTCVideoRenderer getRemoteVideRenderer() {
+  List<RTCVideoRenderer> getRemoteVideRenderer() {
     return _remoteRenderer;
   }
 
@@ -78,7 +77,7 @@ class CallController extends GetxController {
 
   initRenderers() async {
     await _localRenderer.initialize();
-    await _remoteRenderer.initialize();
+    //await _remoteRenderer.initialize();
   }
 
   final _screenRecorder = EdScreenRecorder();
@@ -164,14 +163,23 @@ class CallController extends GetxController {
     _playWatingBeep();
   }
 
+  addRTCRenderer(CallStream callStream) async {
+    RTCVideoRenderer renderer = RTCVideoRenderer();
+    await renderer.initialize();
+    renderer.srcObject = callStream.remoteStream;
+    _remoteRenderer.add(renderer);
+    updateCalleeVideoWidget();
+  }
+
   Future calleeSetup() async {
     await callRepository.acceptCall(args.callId!);
 
-    //TODO update List
-    callRepository.getCallStreams().forEach((element) {
-      _remoteRenderer.srcObject = element.remoteStream;
-      updateCalleeVideoWidget();
-    });
+    List<CallStream> callStreams = callRepository.getCallStreams();
+
+    for (var element in callStreams) {
+      addRTCRenderer(element);
+    }
+
     isInCall.value = true;
     startCallTimer();
   }
@@ -218,9 +226,7 @@ class CallController extends GetxController {
         startCallTimer();
       }
 
-      //TODO: ME
-      _remoteRenderer.srcObject = callStateView.remoteStream;
-      updateCalleeVideoWidget();
+      addRTCRenderer(callStateView);
     });
   }
 
@@ -302,13 +308,19 @@ class CallController extends GetxController {
   void flipVideoPositions() =>
       isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
+  Future<void> disposeRTCRender() async {
+    for (var element in _remoteRenderer) {
+      await element.dispose();
+    }
+  }
+
   @override
   void onClose() async {
     stopCallTimer();
 
     await callRepository.closeCall();
     await _localRenderer.dispose();
-    await _remoteRenderer.dispose();
+    await disposeRTCRender();
     _stopWatingBeep();
     disableWakeScreenLock();
     await _screenRecorder.stopRecord();
