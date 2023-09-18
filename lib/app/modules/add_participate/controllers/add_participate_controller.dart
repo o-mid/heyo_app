@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:heyo/app/modules/add_participate/controllers/filter_model.dart';
 import 'package:heyo/app/modules/add_participate/usecase/get_contact_user_use_case.dart';
 import 'package:heyo/app/modules/add_participate/usecase/search_contact_user_use_case.dart';
-import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
+import 'package:heyo/app/modules/calls/domain/call_repository.dart';
+import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/add_participate/controllers/participate_item_model.dart';
 
@@ -20,9 +22,11 @@ class AddParticipateController extends GetxController {
 
   final SearchContactUserUseCase searchContactUserUseCase;
   final GetContactUserUseCase getContactUserUseCase;
+  final CallRepository callRepository;
   AddParticipateController({
     required this.searchContactUserUseCase,
     required this.getContactUserUseCase,
+    required this.callRepository,
   });
 
   @override
@@ -51,13 +55,20 @@ class AddParticipateController extends GetxController {
   ].obs;
 
   void getContact() async {
-    final callController = Get.find<CallController>();
     List<UserModel> contacts = await getContactUserUseCase.execute();
+    //* Get the list of users who are in call
+    List<CallStream> callStreams;
+    try {
+      callStreams = callRepository.getCallStreams();
+    } catch (e) {
+      debugPrint(e.toString());
+      callStreams = [];
+    }
 
-    // Remove the users who are already in call
-    for (var callParticipate in callController.participants) {
+    //* Remove the users who are already in call
+    for (var callStream in callStreams) {
       contacts.removeWhere(
-        (contact) => contact.coreId == callParticipate.user.coreId,
+        (contact) => contact.coreId == callStream.coreId,
       );
     }
 
@@ -81,7 +92,7 @@ class AddParticipateController extends GetxController {
 
   RxBool isTextInputFocused = false.obs;
 
-  void addUser(ParticipateItem user) {
+  void selectUser(ParticipateItem user) {
     var existingIndex = selectedUser.indexWhere((u) => u.coreId == user.coreId);
 
     if (existingIndex != -1) {
@@ -99,9 +110,11 @@ class AddParticipateController extends GetxController {
   void addUsersToCall() async {
     debugPrint("Add selected users to call");
 
-    final callController = Get.find<CallController>();
-    callController.addParticipant(selectedUser);
-    // pop to call page
+    //* Add user to call repo
+    for (var user in selectedUser) {
+      callRepository.addMember(user.coreId);
+    }
+    //* Pop to call page
     Get.back();
   }
 }

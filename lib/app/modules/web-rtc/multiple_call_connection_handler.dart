@@ -48,13 +48,18 @@ class CallConnectionsHandler {
   addMember(String remoteCoreId) async {
     //TODO refactor isAudio
     CallRTCSession callRTCSession = await _createSession(
-        RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
-        _currentCall!.activeSessions.first.isAudioCall);
+      RemotePeer(
+        remoteCoreId: remoteCoreId,
+        remotePeerId: null,
+      ),
+      _currentCall!.activeSessions.first.isAudioCall,
+    );
     singleCallWebRTCBuilder.requestSession(
-        callRTCSession,
-        _currentCall!.activeSessions
-            .map((e) => e.remotePeer.remoteCoreId)
-            .toList());
+      callRTCSession,
+      _currentCall!.activeSessions
+          .map((e) => e.remotePeer.remoteCoreId)
+          .toList(),
+    );
   }
 
   Future<CallRTCSession> requestCall(

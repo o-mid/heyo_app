@@ -99,7 +99,11 @@ class CallController extends GetxController {
     callerVideoEnabled.value = args.enableVideo;
     setUp();
     participants.add(
-      CallParticipantModel(user: args.user),
+      CallParticipantModel(
+        name: args.user.name,
+        coreId: args.user.coreId,
+        iconUrl: args.user.iconUrl,
+      ),
     );
   }
 
@@ -121,6 +125,7 @@ class CallController extends GetxController {
     await initRenderers();
 
     observeSignalingStreams();
+    observeOnChangeParticipate();
 
     callRepository.onLocalStream = ((stream) {
       _localRenderer.srcObject = stream;
@@ -150,7 +155,7 @@ class CallController extends GetxController {
 
   late String requestedCallId;
   Future callerSetup() async {
-    requestedCallId=(await callRepository.startCall(
+    requestedCallId = (await callRepository.startCall(
         args.user.walletAddress, args.isAudioCall));
 
     isInCall.value = false;
@@ -161,7 +166,7 @@ class CallController extends GetxController {
     await callRepository.acceptCall(args.callId!);
 
     //TODO update List
-    callRepository.getCallStreams(args.callId!).forEach((element) {
+    callRepository.getCallStreams().forEach((element) {
       _remoteRenderer.srcObject = element.remoteStream;
       updateCalleeVideoWidget();
     });
@@ -170,8 +175,8 @@ class CallController extends GetxController {
   }
 
   void observeCallStates() {
-   //TODO it requires another logic
-   /* callRepository.callState.listen((state) {
+    //TODO it requires another logic
+    /* callRepository.callState.listen((state) {
       if (state == CallState.callStateConnected) {
         isInCall.value = true;
         _stopWatingBeep();
@@ -190,20 +195,28 @@ class CallController extends GetxController {
     });*/
   }
 
+  void observeOnChangeParticipate() {
+    callRepository.onChangeParticipateStream = ((participates) {
+      print("SAAAAAAAG");
+      debugPrint(participates.toString());
+    });
+  }
+
   void observeSignalingStreams() {
     //todo remove stream logic!
-   /* callRepository.onRemoveRemoteStream =((stream){
+    /* callRepository.onRemoveRemoteStream =((stream){
       _remoteRenderer.srcObject = null;
     });*/
     callRepository.onAddCallStream = ((callStateView) {
       //print("calll ${_remoteRenderer} : $stream");
       //TODO refactor this if related to the call state
-      if(!isInCall.value){
+      if (!isInCall.value) {
         isInCall.value = true;
         _stopWatingBeep();
         startCallTimer();
       }
 
+      //TODO: ME
       _remoteRenderer.srcObject = callStateView.remoteStream;
       updateCalleeVideoWidget();
     });
@@ -219,12 +232,10 @@ class CallController extends GetxController {
   void toggleMuteCall() {}
 
   void endCall() {
-    if(args.callId==null){
+    if (args.callId == null) {
       callRepository.endOrCancelCall(requestedCallId);
-
-    }else{
+    } else {
       callRepository.endOrCancelCall(args.callId!);
-
     }
     _stopWatingBeep();
     Get.back();
@@ -232,15 +243,15 @@ class CallController extends GetxController {
 
   void pushToAddParticipate() => Get.toNamed(Routes.ADD_PARTICIPATE);
 
-  void addParticipant(List<ParticipateItem> selectedUsers) {
-    for (var element in selectedUsers) {
-      debugPrint(element.coreId);
-      participants.add(
-        CallParticipantModel(user: element.mapToCallUserModel()),
-      );
-      callRepository.addMember(element.coreId);
-    }
-  }
+  //void addParticipant(List<ParticipateItem> selectedUsers) {
+  //  for (var element in selectedUsers) {
+  //    debugPrint(element.coreId);
+  //    participants.add(
+  //      CallParticipantModel(user: element.mapToCallUserModel()),
+  //    );
+  //    callRepository.addMember(element.coreId);
+  //  }
+  //}
 
   void recordCall() {
     Get.dialog(RecordCallDialog(onRecord: () async {
