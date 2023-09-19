@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
+import 'package:heyo/app/modules/shared/controllers/call_history_observer.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
@@ -21,9 +22,6 @@ class CallConnectionController  {
   final callState = Rxn<CallState>();
   final callHistoryState = Rxn<CallHistoryState>();
   final removeStream = Rxn<MediaStream>();
-
-  MediaStream? _localStream;
-
 
 
   Future<void> init() async {
@@ -56,12 +54,6 @@ class CallConnectionController  {
       }
     };
 
-    /* callConnectionsHandler.onAddRemoteStream = (session, stream) async {
-      onAddRemoteStream?.call(stream);
-    };
-    callConnectionsHandler.onRemoveRemoteStream = (session, stream) async {
-      removeStream.value = stream;
-    };*/
   }
 
   CallConnectionController(
@@ -148,7 +140,7 @@ class CallConnectionController  {
           isAudioCall: calls.first.isAudioCall,
           remoteCoreId: calls.first.remotePeer.remoteCoreId,
           remotePeerId: calls.first.remotePeer.remotePeerId!,
-          name: userModel?.name),
+          ),
     );
   }
 

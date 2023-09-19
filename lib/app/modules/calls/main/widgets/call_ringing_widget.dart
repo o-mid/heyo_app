@@ -13,7 +13,8 @@ class CallRingingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Get.find<CallController>().args.user;
+    //TODO Call
+    final user = Get.find<CallController>().getMockUser();
     return Center(
       child: Column(
         children: [

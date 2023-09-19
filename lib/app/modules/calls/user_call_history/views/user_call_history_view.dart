@@ -51,13 +51,15 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
             return Column(
               children: [
                 SizedBox(height: 40.h),
-                CustomCircleAvatar(url: controller.user.value.iconUrl, size: 64),
+                CustomCircleAvatar(
+                    url: controller.user.value.iconUrl, size: 64),
                 CustomSizes.mediumSizedBoxHeight,
                 GestureDetector(
                   onTap: () => controller.saveCoreIdToClipboard(),
                   child: Text(
                     controller.user.value.name,
-                    style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+                    style: TEXTSTYLES.kHeaderLarge
+                        .copyWith(color: COLORS.kDarkBlueColor),
                   ),
                 ),
                 SizedBox(height: 4.h),
@@ -65,7 +67,8 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                   onTap: () => controller.saveCoreIdToClipboard(),
                   child: Text(
                     controller.user.value.walletAddress.shortenCoreId,
-                    style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
+                    style: TEXTSTYLES.kBodySmall
+                        .copyWith(color: COLORS.kTextSoftBlueColor),
                   ),
                 ),
                 SizedBox(height: 40.h),
@@ -79,11 +82,12 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                         Routes.CALL,
                         arguments: CallViewArgumentsModel(
                             callId: null,
-                            user: controller.user.value,
                             enableVideo: false,
-                            isAudioCall: true),
+                            isAudioCall: true,
+                            members: [controller.args.coreId]),
                       ),
-                      icon: Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor),
+                      icon: Assets.svg.audioCallIcon
+                          .svg(color: COLORS.kDarkBlueColor),
                     ),
                     SizedBox(width: 24.w),
                     CircleIconButton(
@@ -93,11 +97,12 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                         Routes.CALL,
                         arguments: CallViewArgumentsModel(
                             callId: null,
-                            user: controller.user.value,
+                            members: [controller.args.coreId],
                             enableVideo: true,
                             isAudioCall: false),
                       ),
-                      icon: Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
+                      icon: Assets.svg.videoCallIcon
+                          .svg(color: COLORS.kDarkBlueColor),
                     ),
                     SizedBox(width: 24.w),
                     // Todo Omid : add go to messaging screen
@@ -113,7 +118,8 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                               connectionType: MessagingConnectionType.internet),
                         );
                       },
-                      icon: Assets.svg.chatOutlined.svg(color: COLORS.kDarkBlueColor),
+                      icon: Assets.svg.chatOutlined
+                          .svg(color: COLORS.kDarkBlueColor),
                     ),
                   ],
                 ),
@@ -125,14 +131,16 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Text(
                     LocaleKeys.CallHistory_appbar.tr,
-                    style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextBlueColor),
+                    style: TEXTSTYLES.kLinkSmall
+                        .copyWith(color: COLORS.kTextBlueColor),
                   ),
                 ),
                 CustomSizes.smallSizedBoxHeight,
                 ...controller.calls.map(
                   (call) => Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
                     child: HistoryCallLogWidget(call: call),
                   ),
                 ),

@@ -28,9 +28,11 @@ class CallView extends GetView<CallController> {
             : AppBar(
                 backgroundColor: COLORS.kCallPageDarkBlue,
                 title: Text(
-                  (controller.args.user.isContact)
+                  //TODO Call update name properly
+                  /*(controller.args.user.isContact)
                       ? controller.args.user.name
-                      : controller.args.user.coreId.shortenCoreId,
+                      : controller.args.user.coreId.shortenCoreId,*/
+                  controller.args.members.first,
                   style: TEXTSTYLES.kHeaderMedium.copyWith(
                     height: 1.21,
                     fontWeight: FONTS.SemiBold,
