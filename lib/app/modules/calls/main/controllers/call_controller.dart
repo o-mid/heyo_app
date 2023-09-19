@@ -71,6 +71,10 @@ class CallController extends GetxController {
     return _localRenderer;
   }
 
+  RxList<RTCVideoRenderer> getRemoteVideoRenderers() {
+    return videoRenderers;
+  }
+
   initRenderers() async {
     await _localRenderer.initialize();
     //await _remoteRenderers.initialize();

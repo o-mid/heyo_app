@@ -4,23 +4,22 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 
-class CalleeVideoWidget extends StatelessWidget {
-  const CalleeVideoWidget({Key? key});
+class CalleeVideoWidget extends GetView<CallController> {
+  const CalleeVideoWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<CallController>(
-      id: Get.find<CallController>().calleeVideoWidgetId,
-      builder: (controller) {
-        List<RTCVideoRenderer> remoteVideoRenderers =
-            controller.getRemoteVideoRenderers();
+    final remoteVideoRenderers = controller.getRemoteVideoRenderers();
 
-        //* Calculate the number of rows needed based on the number of items.
-        int rowCount = (remoteVideoRenderers.length / 2).ceil();
+    //* Calculate the number of rows needed based on the number of items.
+    int rowCount = (remoteVideoRenderers.length / 2).ceil();
 
-        return Wrap(
-          runSpacing: 5,
-          children: List.generate(rowCount, (rowIndex) {
+    return Obx(() {
+      return Wrap(
+        runSpacing: 5,
+        children: List.generate(
+          rowCount,
+          (rowIndex) {
             if (rowIndex == 0 && remoteVideoRenderers.length % 2 != 0) {
               //TODO: below step will be removed beacuse we show the local video
               //* First row with an odd number of items, use one full width.
@@ -55,9 +54,9 @@ class CalleeVideoWidget extends StatelessWidget {
                 ],
               );
             }
-          }),
-        );
-      },
-    );
+          },
+        ),
+      );
+    });
   }
 }

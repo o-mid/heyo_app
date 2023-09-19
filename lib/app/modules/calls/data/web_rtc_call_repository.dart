@@ -13,7 +13,7 @@ class WebRTCCallRepository implements CallRepository {
   Function(CallStream callStream)? onAddCallStream;
   @override
   Function(CallParticipantModel participate)? onChangeParticipateStream;
-  bool mock=false;
+  bool mock = true;
 
   WebRTCCallRepository({required this.callConnectionsHandler}) {
     callConnectionsHandler.onLocalStream = ((stream) {
@@ -47,14 +47,18 @@ class WebRTCCallRepository implements CallRepository {
   }
 
   @override
-  addMember(String coreId) async{
+  addMember(String coreId) async {
     callConnectionsHandler.addMember(coreId);
-    if(mock){
+    if (mock) {
       //TODO remove Mock
-      onAddCallStream?.call(CallStream(coreId: coreId, remoteStream: await _createMockStream()));
+      onAddCallStream?.call(
+        CallStream(
+          coreId: coreId,
+          remoteStream: await _createMockStream(),
+        ),
+      );
       _addParticipate(coreId);
     }
-
   }
 
   @override
@@ -65,8 +69,8 @@ class WebRTCCallRepository implements CallRepository {
   }
 
   @override
-  Future<void> endOrCancelCall(String callId) async{
-   await callConnectionsHandler.reject(callId);
+  Future<void> endOrCancelCall(String callId) async {
+    await callConnectionsHandler.reject(callId);
   }
 
   @override
@@ -116,7 +120,7 @@ class WebRTCCallRepository implements CallRepository {
     callConnectionsHandler.rejectIncomingCall(callId);
   }
 
-  Future<MediaStream> _createMockStream()async{
+  Future<MediaStream> _createMockStream() async {
     return await _createStream('video', false);
   }
 
@@ -126,22 +130,22 @@ class WebRTCCallRepository implements CallRepository {
       'video': userScreen
           ? true
           : {
-        'mandatory': {
-          'minWidth': '640',
-          // Provide your own width, height and frame rate here
-          'minHeight': '480',
-          'minFrameRate': '30',
-        },
-        'facingMode': 'user',
-        'optional': [],
-      }
+              'mandatory': {
+                'minWidth': '640',
+                // Provide your own width, height and frame rate here
+                'minHeight': '480',
+                'minFrameRate': '30',
+              },
+              'facingMode': 'user',
+              'optional': [],
+            }
     };
 
     MediaStream stream = userScreen
         ? await RTCFactoryNative.instance.navigator.mediaDevices
-        .getDisplayMedia(mediaConstraints)
+            .getDisplayMedia(mediaConstraints)
         : await RTCFactoryNative.instance.navigator.mediaDevices
-        .getUserMedia(mediaConstraints);
+            .getUserMedia(mediaConstraints);
     return stream;
   }
 }
