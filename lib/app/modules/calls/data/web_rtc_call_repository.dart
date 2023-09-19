@@ -13,7 +13,7 @@ class WebRTCCallRepository implements CallRepository {
   Function(CallStream callStream)? onAddCallStream;
   @override
   Function(CallParticipantModel participate)? onChangeParticipateStream;
-  bool mock=false;
+  bool mock=true;
 
   WebRTCCallRepository({required this.callConnectionsHandler}) {
     callConnectionsHandler.onLocalStream = ((stream) {
@@ -24,10 +24,26 @@ class WebRTCCallRepository implements CallRepository {
           coreId: callRTCSession.remotePeer.remoteCoreId,
           remoteStream: callRTCSession.getStream()!));
     });
+
+    if(mock){
+      emitMockStream();
+    }
+
+  }
+  emitMockStream()async{
+    await Future.delayed(const Duration(seconds: 10));
+    onAddCallStream?.call(CallStream(
+        coreId: "coreId",
+        remoteStream: await _createMockStream()));
   }
 
   @override
-  List<CallStream> getCallStreams() {
+  Future<List<CallStream>> getCallStreams() async{
+    if(mock){
+      return [CallStream(
+          coreId: "coreId",
+          remoteStream: await _createMockStream())];
+    }
     return callConnectionsHandler
         .getRemoteStreams()
         .map(

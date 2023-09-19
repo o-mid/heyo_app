@@ -13,7 +13,7 @@ class CalleeVideoWidget extends StatelessWidget {
       id: Get.find<CallController>().calleeVideoWidgetId,
       builder: (controller) {
         List<RTCVideoRenderer> remoteVideoRenderers =
-            controller.getRemoteVideoRenderers();
+            controller.videoRenderers;
 
         //* Calculate the number of rows needed based on the number of items.
         int rowCount = (remoteVideoRenderers.length / 2).ceil();

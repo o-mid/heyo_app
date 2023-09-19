@@ -13,7 +13,8 @@ class CalleeNoVideoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<CallController>();
-    final user = controller.args.user;
+    //TODO call
+    final user = controller.getMockUser();
     return Column(
       children: [
         SizedBox(height: 105.h),

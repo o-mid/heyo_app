@@ -59,7 +59,7 @@ class AddParticipateController extends GetxController {
     //* Get the list of users who are in call
     List<CallStream> callStreams;
     try {
-      callStreams = callRepository.getCallStreams();
+      callStreams = await callRepository.getCallStreams();
     } catch (e) {
       debugPrint(e.toString());
       callStreams = [];

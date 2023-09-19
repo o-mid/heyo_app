@@ -177,7 +177,7 @@ class _DefaultAppBar extends StatelessWidget {
                     arguments: CallViewArgumentsModel(
                       callId: null,
                       // convert userModel to callUserModel
-                      user: controller.getUser().toCallUserModel(),
+                      members: [controller.getUser().toCallUserModel().coreId],
                       enableVideo: true,
                       isAudioCall: false,
                     ),
@@ -193,7 +193,7 @@ class _DefaultAppBar extends StatelessWidget {
                     arguments: CallViewArgumentsModel(
                       callId: null,
                       // convert userModel to callUserModel
-                      user: controller.getUser().toCallUserModel(),
+                      members: [controller.getUser().toCallUserModel().coreId],
                       enableVideo: false,
                       isAudioCall: true,
                     ),

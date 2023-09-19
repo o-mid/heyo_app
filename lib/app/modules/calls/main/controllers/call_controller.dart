@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
@@ -79,11 +80,12 @@ class CallController extends GetxController {
   final _screenRecorder = EdScreenRecorder();
 
   void message() {
+    //TODO shoud passed correct coreId
     Get.toNamed(
       Routes.MESSAGES,
       arguments: MessagesViewArgumentsModel(
-          coreId: args.user.coreId,
-          iconUrl: args.user.iconUrl,
+          coreId: "",
+          iconUrl: "",
           connectionType: MessagingConnectionType.internet),
     );
   }
@@ -94,14 +96,18 @@ class CallController extends GetxController {
     args = Get.arguments as CallViewArgumentsModel;
     callerVideoEnabled.value = args.enableVideo;
     setUp();
-    participants.add(
-      CallParticipantModel(
-        name: args.user.name,
-        coreId: args.user.coreId,
-        iconUrl: args.user.iconUrl,
-      ),
-    );
+    args.members.forEach((element) {
+      //TODO should be check isContact or not
+      participants.add(
+        CallParticipantModel(
+          name: element,
+          coreId: element,
+          iconUrl: "",
+        ),
+      );
+    });
   }
+
 
   void startCallTimer() {
     stopwatch.start();
@@ -153,7 +159,7 @@ class CallController extends GetxController {
 
   Future callerSetup() async {
     requestedCallId = (await callRepository.startCall(
-        args.user.walletAddress, args.isAudioCall));
+        args.members.first, args.isAudioCall));
 
     isInCall.value = false;
     _playWatingBeep();
@@ -170,7 +176,7 @@ class CallController extends GetxController {
   Future calleeSetup() async {
     await callRepository.acceptCall(args.callId!);
 
-    List<CallStream> callStreams = callRepository.getCallStreams();
+    List<CallStream> callStreams = await callRepository.getCallStreams();
 
     for (var element in callStreams) {
       addRTCRenderer(element);
@@ -372,4 +378,13 @@ class CallController extends GetxController {
   final Duration callerScaleReverseDuration = const Duration(milliseconds: 200);
   final double callColumnViewAspectRatio = 359 / 283;
   final double callRowViewAspectRatio = 175 / 318;
+
+  //TODO Call
+  CallUserModel getMockUser() {
+    return CallUserModel(
+    name: "",
+    iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
+    walletAddress: args.members.first,
+    coreId: args.members.first,
+  );}
 }

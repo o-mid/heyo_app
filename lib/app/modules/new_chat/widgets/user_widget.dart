@@ -70,7 +70,7 @@ class UserWidget extends StatelessWidget {
                 Routes.CALL,
                 arguments: CallViewArgumentsModel(
                   // convert userModel to callUserModel
-                  user: user.toCallUserModel(),
+                  members: [user.toCallUserModel().coreId],
                   callId: null,
                   isAudioCall: true,
                 ),
@@ -89,7 +89,7 @@ class UserWidget extends StatelessWidget {
                 Routes.CALL,
                 arguments: CallViewArgumentsModel(
                   // convert userModel to callUserModel
-                  user: user.toCallUserModel(),
+                  members: [user.toCallUserModel().coreId],
                   callId: null,
                   enableVideo: true,
                   isAudioCall: false,

@@ -10,27 +10,28 @@ import 'package:heyo/app/modules/call_controller/call_connection_controller.dart
 import 'package:heyo/app/routes/app_pages.dart';
 
 class IncomingCallController extends GetxController {
+  //TODO Call remove this model, search for it's usage in IncomingView
   late CallUserModel caller;
   final muted = false.obs;
   final CallRepository callRepository;
   late IncomingCallViewArguments args;
-  late String userName;
+ // late String userName;
   IncomingCallController({required this.callRepository});
 
   @override
   void onInit() {
     args = Get.arguments as IncomingCallViewArguments;
 
-    if (args.name == null) {
+    /*if (args.name == null) {
       userName =
           "${args.remoteCoreId.characters.take(4).string}...${args.remoteCoreId.characters.takeLast(4).string}";
     } else {
       userName = args.name!;
-    }
-    //TODO name should be get from contacts
+    }*/
+    //TODO Call name should be get from contacts: put a state for name and update it based on isContact or not
     caller = CallUserModel(
-      name: userName,
-      isContact: (!(args.name == null)),
+      name: args.remoteCoreId,
+      isContact: false,
       iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
       walletAddress: args.remoteCoreId,
       coreId: args.remoteCoreId,
@@ -65,19 +66,13 @@ class IncomingCallController extends GetxController {
     _stopRingtone();
 
     //TODO farzam, accept
-    //TODO name should be get from contacts
     Get.offNamed(
       Routes.CALL,
       arguments: CallViewArgumentsModel(
           callId: args.callId,
           enableVideo: args.isAudioCall ? false : true,
-          user: CallUserModel(
-            name: userName,
-            iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
-            walletAddress: args.remoteCoreId,
-            coreId: args.remoteCoreId,
-          ),
-          isAudioCall: args.isAudioCall),
+          isAudioCall: args.isAudioCall,
+      members: [args.remoteCoreId]),
     );
   }
 
