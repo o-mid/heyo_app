@@ -7,6 +7,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/multi_media_messa
 import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
+import 'package:heyo/app/modules/messages/domain/message_repository_models.dart';
 import 'package:heyo/app/modules/messages/utils/extensions/messageModel.extension.dart';
 import 'package:heyo/app/modules/messages/utils/open_camera_for_sending_media_message.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
@@ -56,17 +57,20 @@ import '../../shared/utils/scroll_to_index.dart';
 import '../data/usecases/delete_message_usecase.dart';
 import '../data/usecases/update_message_usecase.dart';
 import '../../shared/data/repository/contact_repository.dart';
+import '../domain/message_repository.dart';
 
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
 
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final ContactRepository contactRepository;
+  final MessageRepository messageRepository;
 
   MessagesController(
       {required this.messagesRepo,
       required this.chatHistoryRepo,
-      required this.contactRepository}) {
+      required this.contactRepository,
+      required this.messageRepository}) {
     init();
   }
 
@@ -148,26 +152,32 @@ class MessagesController extends GetxController {
   }
 
   _getUserContact() async {
-    // check if user is already in contact
-    UserModel? createdUser = await contactRepository.getContactById(args.coreId);
-
-    if (createdUser == null) {
-      createdUser = UserModel(
-        coreId: args.coreId,
-        iconUrl: args.iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
-        name: args.coreId.shortenCoreId,
-        isOnline: true,
-        isContact: false,
-        walletAddress: args.coreId,
-      );
-      // adds the new user to the repo and update the UserModel
-      await contactRepository.addContact(createdUser);
-      user.value = createdUser;
-    } else {
-      user.value = createdUser;
-    }
-    chatId = user.value.coreId;
+    user.value = await messageRepository.getUserContact(
+        userInstance: UserInstance(
+      coreId: args.coreId,
+      iconUrl: args.iconUrl,
+    ));
     user.refresh();
+    // // check if user is already in contact
+    // UserModel? createdUser = await contactRepository.getContactById(args.coreId);
+
+    // if (createdUser == null) {
+    //   createdUser = UserModel(
+    //     coreId: args.coreId,
+    //     iconUrl: args.iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
+    //     name: args.coreId.shortenCoreId,
+    //     isOnline: true,
+    //     isContact: false,
+    //     walletAddress: args.coreId,
+    //   );
+    //   // adds the new user to the repo and update the UserModel
+    //   await contactRepository.addContact(createdUser);
+    //   user.value = createdUser;
+    // } else {
+    //   user.value = createdUser;
+    // }
+    // chatId = user.value.coreId;
+    // user.refresh();
   }
 
   // late UserModel _userModel;
