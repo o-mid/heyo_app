@@ -1,62 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
+
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 
 class CalleeVideoWidget extends GetView<CallController> {
-  const CalleeVideoWidget({super.key});
+  const CalleeVideoWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final remoteVideoRenderers = controller.getRemoteVideoRenderers();
-
-    //* Calculate the number of rows needed based on the number of items.
-    int rowCount = (remoteVideoRenderers.length / 2).ceil();
-
     return Obx(() {
-      return Wrap(
-        runSpacing: 5,
-        children: List.generate(
-          rowCount,
-          (rowIndex) {
-            if (rowIndex == 0 && remoteVideoRenderers.length % 2 != 0) {
-              //TODO: below step will be removed beacuse we show the local video
-              //* First row with an odd number of items, use one full width.
-              return SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: RTCVideoView(
-                  remoteVideoRenderers[rowIndex * 2],
-                  objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+      if (remoteVideoRenderers.isEmpty) {
+        return const Center(child: Text('No remote videos available.'));
+      }
+
+      if (remoteVideoRenderers.length <= 1) {
+        // If there are 2 or fewer remote videos, display them in a simple column.
+        return Column(
+          children: remoteVideoRenderers.map((renderer) {
+            return SizedBox(
+              height:
+                  ScreenUtil.defaultSize.height / remoteVideoRenderers.length,
+              child: RTCVideoView(
+                renderer,
+                objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+              ),
+            );
+          }).toList(),
+        );
+      } else {
+        // If there are more than 2 remote videos, display them in a grid.
+        return Column(
+          children: [
+            Expanded(
+              child: GridView.builder(
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: remoteVideoRenderers.length == 2 ? 1 : 2,
+                  childAspectRatio: ScreenUtil.defaultSize.aspectRatio *
+                      (remoteVideoRenderers.length == 2 ? 2 : 1),
                 ),
-              );
-            } else {
-              //* Rows with two items each.
-              return Row(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 2 -
-                        5, // Half width with spacing
-                    child: RTCVideoView(
-                      remoteVideoRenderers[rowIndex * 2],
-                      objectFit:
-                          RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-                    ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 2 - 5,
-                    child: RTCVideoView(
-                      remoteVideoRenderers[rowIndex * 2 + 1],
-                      objectFit:
-                          RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-                    ),
-                  ),
-                ],
-              );
-            }
-          },
-        ),
-      );
+                itemCount: remoteVideoRenderers.length,
+                itemBuilder: (context, index) {
+                  return RTCVideoView(
+                    remoteVideoRenderers[index],
+                    objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                  );
+                },
+              ),
+            ),
+            //* This sizeBox is because of call bottom sheet header
+            SizedBox(height: 70.h)
+          ],
+        );
+      }
     });
   }
 }

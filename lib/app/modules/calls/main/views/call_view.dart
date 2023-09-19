@@ -1,7 +1,8 @@
 import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+
+import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/calls/main/widgets/call_bottom_sheet_expanded_body.dart';
 import 'package:heyo/app/modules/calls/main/widgets/call_bottom_sheet_header.dart';
 import 'package:heyo/app/modules/calls/main/widgets/call_in_progress_widget.dart';
@@ -10,10 +11,7 @@ import 'package:heyo/app/modules/calls/main/widgets/record_indicator_widget.dart
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/generated/assets.gen.dart';
-
-import '../controllers/call_controller.dart';
 
 class CallView extends GetView<CallController> {
   const CallView({super.key});

@@ -30,9 +30,34 @@ class WebRTCCallRepository implements CallRepository {
     }
   }
   emitMockStream() async {
-    await Future.delayed(const Duration(seconds: 10));
+    await Future.delayed(const Duration(seconds: 5));
     onAddCallStream?.call(
-        CallStream(coreId: "coreId", remoteStream: await _createMockStream()));
+      CallStream(
+        coreId: "coreId",
+        remoteStream: await _createMockStream(),
+      ),
+    );
+    await Future.delayed(const Duration(seconds: 5));
+    onAddCallStream?.call(
+      CallStream(
+        coreId: "coreId",
+        remoteStream: await _createMockStream(),
+      ),
+    );
+    await Future.delayed(const Duration(seconds: 5));
+    onAddCallStream?.call(
+      CallStream(
+        coreId: "coreId",
+        remoteStream: await _createMockStream(),
+      ),
+    );
+    await Future.delayed(const Duration(seconds: 5));
+    onAddCallStream?.call(
+      CallStream(
+        coreId: "coreId",
+        remoteStream: await _createMockStream(),
+      ),
+    );
   }
 
   @override

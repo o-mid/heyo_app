@@ -112,7 +112,6 @@ class CallController extends GetxController {
     });
   }
 
-
   void startCallTimer() {
     stopwatch.start();
     calltimer = Timer.periodic(const Duration(seconds: 1), onCallTick);
@@ -162,8 +161,8 @@ class CallController extends GetxController {
   late String requestedCallId;
 
   Future callerSetup() async {
-    requestedCallId = (await callRepository.startCall(
-        args.members.first, args.isAudioCall));
+    requestedCallId =
+        (await callRepository.startCall(args.members.first, args.isAudioCall));
 
     isInCall.value = false;
     _playWatingBeep();
@@ -386,9 +385,10 @@ class CallController extends GetxController {
   //TODO Call
   CallUserModel getMockUser() {
     return CallUserModel(
-    name: "",
-    iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
-    walletAddress: args.members.first,
-    coreId: args.members.first,
-  );}
+      name: "",
+      iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
+      walletAddress: args.members.first,
+      coreId: args.members.first,
+    );
+  }
 }

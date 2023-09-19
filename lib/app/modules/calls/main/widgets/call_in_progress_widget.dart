@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/calls/main/widgets/call_view_type_column_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/call_view_type_row_widget.dart';
@@ -8,8 +8,6 @@ import 'package:heyo/app/modules/calls/main/widgets/call_view_type_stack_widget.
 import 'package:heyo/app/modules/calls/main/widgets/callee_no_video_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/callee_video_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/caller_video_widget.dart';
-import 'package:heyo/app/modules/calls/main/widgets/draggable_video.dart';
-import 'package:heyo/app/modules/calls/main/widgets/group_call_widget.dart';
 
 class CallInProgressWidget extends StatelessWidget {
   const CallInProgressWidget({Key? key}) : super(key: key);
@@ -42,17 +40,28 @@ class CallInProgressWidget extends StatelessWidget {
               ? calleeWidget
               : const SizedBox.shrink();
 
-      switch (controller.callViewType.value) {
-        case CallViewType.column:
-          return CallViewTypeColumnWidget(
-              firstWidget: firstWidget, secondWidget: secondWidget);
-        case CallViewType.row:
-          return CallViewTypeRowWidget(
-              firstWidget: firstWidget, secondWidget: secondWidget);
-        case CallViewType.stack:
-          return CallViewTypeStackWidget(
-              firstWidget: firstWidget, secondWidget: secondWidget);
-      }
+      return CallViewTypeStackWidget(
+        firstWidget: firstWidget,
+        secondWidget: secondWidget,
+      );
+
+      //switch (controller.callViewType.value) {
+      //  case CallViewType.column:
+      //    return CallViewTypeColumnWidget(
+      //      firstWidget: firstWidget,
+      //      secondWidget: secondWidget,
+      //    );
+      //  case CallViewType.row:
+      //    return CallViewTypeRowWidget(
+      //      firstWidget: firstWidget,
+      //      secondWidget: secondWidget,
+      //    );
+      //  case CallViewType.stack:
+      //    return CallViewTypeStackWidget(
+      //      firstWidget: firstWidget,
+      //      secondWidget: secondWidget,
+      //    );
+      //}
     });
   }
 }
