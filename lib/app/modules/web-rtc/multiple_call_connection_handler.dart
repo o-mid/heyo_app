@@ -334,6 +334,6 @@ class CallConnectionsHandler {
   }
 
   MediaStream? getLocalStream() {
-    return _localStream!;
+    return _localStream;
   }
 }
