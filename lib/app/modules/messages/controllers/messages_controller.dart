@@ -1095,36 +1095,43 @@ class MessagesController extends GetxController {
   }
 
   Future<void> _saveUserStates() async {
-    // saves the last read message index in the user preferences repo
-    print("saving lastReadRemoteMessagesId.value: ${lastReadRemoteMessagesId.value}");
-    print("saving scrollPositionMessagesId.value: ${scrollPositionMessagesId.value}");
-    int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
+    await messageRepository.saveUserStates(
+        userInstance: UserInstance(coreId: args.coreId, iconUrl: args.iconUrl),
+        userStates: UserStates(
+          chatId: chatId,
+          lastReadRemoteMessagesId: lastReadRemoteMessagesId.value,
+          scrollPositionMessagesId: scrollPositionMessagesId.value,
+          lastMessageTimestamp: messages.last.timestamp,
+          lastMessagePreview: messages.last.getMessagePreview(),
+        ));
 
-    if (chatModel == null) {
-      ChatModel updatedChatModel = ChatModel(
-        id: chatId,
-        icon: user.value.iconUrl,
-        name: user.value.name,
-        lastReadMessageId: lastReadRemoteMessagesId.value,
-        isOnline: true,
-        scrollPosition: scrollPositionMessagesId.value,
-        lastMessage: messages.last.getMessagePreview(),
-        notificationCount: unReadMessagesCount,
-        timestamp: messages.last.timestamp,
-      );
-      await chatHistoryRepo.updateChat(updatedChatModel);
-    } else {
-      print("messages ${messages.length}");
-      await chatHistoryRepo.updateChat(
-        chatModel!.copyWith(
-            icon: user.value.iconUrl,
-            name: user.value.name,
-            lastReadMessageId: lastReadRemoteMessagesId.value,
-            isOnline: true,
-            scrollPosition: scrollPositionMessagesId.value,
-            lastMessage: messages.last.getMessagePreview(),
-            notificationCount: unReadMessagesCount),
-      );
-    }
+    //   int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
+
+    //   if (chatModel == null) {
+    //     ChatModel updatedChatModel = ChatModel(
+    //       id: chatId,
+    //       icon: user.value.iconUrl,
+    //       name: user.value.name,
+    //       lastReadMessageId: lastReadRemoteMessagesId.value,
+    //       isOnline: true,
+    //       scrollPosition: scrollPositionMessagesId.value,
+    //       lastMessage: messages.last.getMessagePreview(),
+    //       notificationCount: unReadMessagesCount,
+    //       timestamp: messages.last.timestamp,
+    //     );
+    //     await chatHistoryRepo.updateChat(updatedChatModel);
+    //   } else {
+    //     print("messages ${messages.length}");
+    //     await chatHistoryRepo.updateChat(
+    //       chatModel!.copyWith(
+    //           icon: user.value.iconUrl,
+    //           name: user.value.name,
+    //           lastReadMessageId: lastReadRemoteMessagesId.value,
+    //           isOnline: true,
+    //           scrollPosition: scrollPositionMessagesId.value,
+    //           lastMessage: messages.last.getMessagePreview(),
+    //           notificationCount: unReadMessagesCount),
+    //     );
+    //   }
   }
 }

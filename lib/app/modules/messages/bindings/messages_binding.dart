@@ -29,6 +29,16 @@ class MessagesBinding extends Bindings {
           contactRepository: Get.find(),
           messageRepository: WebRTCMessageRepository(
             contactRepository: Get.find(),
+            messagesRepo: MessagesRepo(
+              messagesProvider: MessagesProvider(
+                appDatabaseProvider: Get.find(),
+              ),
+            ),
+            chatHistoryRepo: ChatHistoryLocalRepo(
+              chatHistoryProvider: ChatHistoryProvider(
+                appDatabaseProvider: Get.find(),
+              ),
+            ),
           )),
     );
   }

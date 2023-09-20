@@ -3,4 +3,6 @@ import 'message_repository_models.dart';
 
 abstract class MessageRepository {
   Future<UserModel> getUserContact({required UserInstance userInstance});
+
+  Future<void> saveUserStates({required UserInstance userInstance, required UserStates userStates});
 }
