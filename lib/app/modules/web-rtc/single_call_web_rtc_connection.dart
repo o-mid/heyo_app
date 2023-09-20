@@ -58,6 +58,7 @@ class SingleCallWebRTCBuilder {
   }
 
   requestSession(CallRTCSession callRTCSession, List<String> members) {
+    members.removeWhere((element) => element==callRTCSession.remotePeer.remoteCoreId);
     _send(
       CallSignalingCommands.request,
       {"isAudioCall": callRTCSession.isAudioCall, "members": members},
@@ -169,5 +170,18 @@ class SingleCallWebRTCBuilder {
 
   Future<MediaStream> createStream(String media, bool userScreen) async {
     return await webRTCConnectionManager.createStream(media, userScreen);
+  }
+
+  void addMemberEvent(String member, CallRTCSession rtcSession) {
+    _send(
+        CallSignalingCommands.newMember,
+        {
+          CallSignalingCommands.newMember: {
+           member
+          },
+        },
+        rtcSession.remotePeer.remoteCoreId,
+        rtcSession.remotePeer.remotePeerId,
+        rtcSession.callId);
   }
 }

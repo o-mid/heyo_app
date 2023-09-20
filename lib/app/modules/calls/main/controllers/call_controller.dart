@@ -180,6 +180,7 @@ class CallController extends GetxController {
     await callRepository.acceptCall(args.callId!);
 
     List<CallStream> callStreams = await callRepository.getCallStreams();
+    print("onAddCallStream Callee Set: ${callStreams.length}");
 
     for (var element in callStreams) {
       addRTCRenderer(element);
@@ -223,6 +224,7 @@ class CallController extends GetxController {
       _remoteRenderers.srcObject = null;
     });*/
     callRepository.onAddCallStream = ((callStateView) {
+      print("onAddCallStream : ${callStateView}");
       //print("calll ${_remoteRenderers} : $stream");
       //TODO refactor this if related to the call state
       if (!isInCall.value) {

@@ -8,6 +8,8 @@ class CallSignalingCommands {
   static const reject = 'reject';
   static const cameraOpen = 'cameraOpen';
   static const cameraClosed = 'cameraClosed';
+  static const newMember = 'newMemer';
+
 }
 
 CallId generateCallId() {
