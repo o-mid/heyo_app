@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
@@ -92,5 +95,18 @@ class WebRTCMessageRepository implements MessageRepository {
             notificationCount: unReadMessagesCount),
       );
     }
+  }
+
+  @override
+  Future<Stream<List<MessageModel>>> getMessagesStream({required String coreId}) async {
+    Stream<List<MessageModel>> messagesStream = await messagesRepo.getMessagesStream(coreId);
+    return messagesStream;
+  }
+
+  @override
+  Future<List<MessageModel>> getMessagesList({required String coreId}) async {
+    final messagesList = await messagesRepo.getMessages(coreId);
+
+    return messagesList;
   }
 }

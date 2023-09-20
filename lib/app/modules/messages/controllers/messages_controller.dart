@@ -228,7 +228,7 @@ class MessagesController extends GetxController {
 
   Future<void> _initMessagesStream() async {
     Stream<List<MessageModel>> messagesStream =
-        await messagesRepo.getMessagesStream(user.value.coreId);
+        await messageRepository.getMessagesStream(coreId: user.value.coreId);
 
     _messagesStreamSubscription = (messagesStream).listen((newMessages) {
       messages.value = newMessages;
@@ -971,10 +971,11 @@ class MessagesController extends GetxController {
   }
 
   Future<void> _getMessages() async {
-    await messagesRepo.getMessages(user.value.coreId).then((value) => {
+    await messageRepository.getMessagesList(coreId: user.value.coreId).then((value) => {
           messages.value = value,
           messages.refresh(),
         });
+
     await chatHistoryRepo.getChat(chatId).then((value) async => {
           chatModel = value,
         });
@@ -1104,34 +1105,5 @@ class MessagesController extends GetxController {
           lastMessageTimestamp: messages.last.timestamp,
           lastMessagePreview: messages.last.getMessagePreview(),
         ));
-
-    //   int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
-
-    //   if (chatModel == null) {
-    //     ChatModel updatedChatModel = ChatModel(
-    //       id: chatId,
-    //       icon: user.value.iconUrl,
-    //       name: user.value.name,
-    //       lastReadMessageId: lastReadRemoteMessagesId.value,
-    //       isOnline: true,
-    //       scrollPosition: scrollPositionMessagesId.value,
-    //       lastMessage: messages.last.getMessagePreview(),
-    //       notificationCount: unReadMessagesCount,
-    //       timestamp: messages.last.timestamp,
-    //     );
-    //     await chatHistoryRepo.updateChat(updatedChatModel);
-    //   } else {
-    //     print("messages ${messages.length}");
-    //     await chatHistoryRepo.updateChat(
-    //       chatModel!.copyWith(
-    //           icon: user.value.iconUrl,
-    //           name: user.value.name,
-    //           lastReadMessageId: lastReadRemoteMessagesId.value,
-    //           isOnline: true,
-    //           scrollPosition: scrollPositionMessagesId.value,
-    //           lastMessage: messages.last.getMessagePreview(),
-    //           notificationCount: unReadMessagesCount),
-    //     );
-    //   }
   }
 }
