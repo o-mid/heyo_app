@@ -60,17 +60,9 @@ import '../../shared/data/repository/contact_repository.dart';
 import '../domain/message_repository.dart';
 
 class MessagesController extends GetxController {
-  final MessagesAbstractRepo messagesRepo;
-
-  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
-  final ContactRepository contactRepository;
   final MessageRepository messageRepository;
 
-  MessagesController(
-      {required this.messagesRepo,
-      required this.chatHistoryRepo,
-      required this.contactRepository,
-      required this.messageRepository}) {
+  MessagesController({required this.messageRepository}) {
     init();
   }
 
@@ -427,11 +419,12 @@ class MessagesController extends GetxController {
   }
 
   Future<void> markMessagesAsReadById({required String lastReadmessageId}) async {
-    await messagesRepo.markMessagesAsRead(lastReadmessageId: lastReadmessageId, chatId: chatId);
+    await messageRepository.markMessagesAsReadById(
+        lastReadmessageId: lastReadmessageId, chatId: chatId);
   }
 
   Future<void> markAllMessagesAsRead() async {
-    await messagesRepo.markAllMessagesAsRead(chatId: chatId);
+    await messageRepository.markAllMessagesAsRead(chatId: chatId);
   }
 
   void toggleMessageSelection(String id) {
@@ -975,10 +968,7 @@ class MessagesController extends GetxController {
           messages.value = value,
           messages.refresh(),
         });
-
-    await chatHistoryRepo.getChat(chatId).then((value) async => {
-          chatModel = value,
-        });
+    chatModel = await messageRepository.getUserChatModel(chatId: chatId);
 
     // of chatModel is null, scroll to bottom
     // eles scroll to last position

@@ -109,4 +109,23 @@ class WebRTCMessageRepository implements MessageRepository {
 
     return messagesList;
   }
+
+  @override
+  Future<void> markAllMessagesAsRead({
+    required String chatId,
+  }) async {
+    await messagesRepo.markAllMessagesAsRead(chatId: chatId);
+  }
+
+  @override
+  Future<void> markMessagesAsReadById(
+      {required String lastReadmessageId, required String chatId}) async {
+    await messagesRepo.markMessagesAsRead(lastReadmessageId: lastReadmessageId, chatId: chatId);
+  }
+
+  @override
+  Future<ChatModel?> getUserChatModel({required String chatId}) async {
+    ChatModel? user = await chatHistoryRepo.getChat(chatId);
+    return user;
+  }
 }

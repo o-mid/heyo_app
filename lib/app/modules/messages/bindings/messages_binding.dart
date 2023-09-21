@@ -16,30 +16,19 @@ class MessagesBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<MessagesController>(
       () => MessagesController(
-          messagesRepo: MessagesRepo(
-            messagesProvider: MessagesProvider(
-              appDatabaseProvider: Get.find(),
-            ),
-          ),
-          chatHistoryRepo: ChatHistoryLocalRepo(
-            chatHistoryProvider: ChatHistoryProvider(
-              appDatabaseProvider: Get.find(),
-            ),
-          ),
-          contactRepository: Get.find(),
           messageRepository: WebRTCMessageRepository(
-            contactRepository: Get.find(),
-            messagesRepo: MessagesRepo(
-              messagesProvider: MessagesProvider(
-                appDatabaseProvider: Get.find(),
-              ),
-            ),
-            chatHistoryRepo: ChatHistoryLocalRepo(
-              chatHistoryProvider: ChatHistoryProvider(
-                appDatabaseProvider: Get.find(),
-              ),
-            ),
-          )),
+        contactRepository: Get.find(),
+        messagesRepo: MessagesRepo(
+          messagesProvider: MessagesProvider(
+            appDatabaseProvider: Get.find(),
+          ),
+        ),
+        chatHistoryRepo: ChatHistoryLocalRepo(
+          chatHistoryProvider: ChatHistoryProvider(
+            appDatabaseProvider: Get.find(),
+          ),
+        ),
+      )),
     );
   }
 }
