@@ -1,41 +1,34 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 
+import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
+import 'package:heyo/app/modules/calls/usecase/contact_availability_use_case.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
-import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
 class IncomingCallController extends GetxController {
-  //TODO Call remove this model, search for it's usage in IncomingView
-  late CallUserModel caller;
-  final muted = false.obs;
   final CallRepository callRepository;
+  final ContactAvailabilityUseCase contactAvailabilityUseCase;
+
+  //TODO Call remove this model, search for it's usage in IncomingView
+  Rx<CallUserModel?> caller = Rx(null);
+  final muted = false.obs;
   late IncomingCallViewArguments args;
- // late String userName;
-  IncomingCallController({required this.callRepository});
+  // late String userName;
+  IncomingCallController({
+    required this.callRepository,
+    required this.contactAvailabilityUseCase,
+  });
 
   @override
-  void onInit() {
+  void onInit() async {
     args = Get.arguments as IncomingCallViewArguments;
 
-    /*if (args.name == null) {
-      userName =
-          "${args.remoteCoreId.characters.take(4).string}...${args.remoteCoreId.characters.takeLast(4).string}";
-    } else {
-      userName = args.name!;
-    }*/
-    //TODO Call name should be get from contacts: put a state for name and update it based on isContact or not
-    caller = CallUserModel(
-      name: args.remoteCoreId,
-      isContact: false,
-      iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
-      walletAddress: args.remoteCoreId,
-      coreId: args.remoteCoreId,
-    );
+    getUserData();
     _playRingtone();
 
     super.onInit();
@@ -69,10 +62,11 @@ class IncomingCallController extends GetxController {
     Get.offNamed(
       Routes.CALL,
       arguments: CallViewArgumentsModel(
-          callId: args.callId,
-          enableVideo: args.isAudioCall ? false : true,
-          isAudioCall: args.isAudioCall,
-      members: [args.remoteCoreId]),
+        callId: args.callId,
+        enableVideo: args.isAudioCall ? false : true,
+        isAudioCall: args.isAudioCall,
+        members: [args.remoteCoreId],
+      ),
     );
   }
 
@@ -87,5 +81,24 @@ class IncomingCallController extends GetxController {
 
   void _stopRingtone() {
     FlutterRingtonePlayer.stop();
+  }
+
+  getUserData() async {
+    UserModel? userModel =
+        await contactAvailabilityUseCase.execute(args.remoteCoreId);
+
+    if (userModel == null) {
+      //* The user is not available in your contact
+      caller.value = CallUserModel(
+        name: args.remoteCoreId.shortenCoreId,
+        isContact: false,
+        iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
+        walletAddress: args.remoteCoreId,
+        coreId: args.remoteCoreId,
+      );
+    } else {
+      //* The user added to your contacts before
+      caller.value = userModel.toCallUserModel();
+    }
   }
 }

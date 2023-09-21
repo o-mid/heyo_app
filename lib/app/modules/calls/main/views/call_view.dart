@@ -48,6 +48,11 @@ class CallView extends GetView<CallController> {
                     splashRadius: 18,
                     icon: Assets.svg.cameraSwitch.svg(),
                   ),
+                  //* Mock for incoming call
+                  //IconButton(
+                  //  onPressed: controller.incomingMock,
+                  //  icon: const Icon(Icons.call_made),
+                  //),
                 ],
                 bottom: const RecordIndicatorWidget(),
               ),

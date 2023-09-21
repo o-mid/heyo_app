@@ -9,8 +9,9 @@ import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.d
 import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
-import 'package:heyo/app/modules/web-rtc/signaling.dart';
+//import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
@@ -304,6 +305,19 @@ class CallController extends GetxController {
 
   void switchCamera() {
     callRepository.switchCamera();
+  }
+
+  //* Mock for incoming call
+  void incomingMock() {
+    Get.toNamed(
+      Routes.INCOMING_CALL,
+      arguments: IncomingCallViewArguments(
+        callId: "args.callId!",
+        isAudioCall: args.isAudioCall,
+        remoteCoreId: args.members.first,
+        remotePeerId: args.members.first,
+      ),
+    );
   }
 
   void toggleImmersiveMode() {
