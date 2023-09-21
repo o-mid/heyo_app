@@ -54,6 +54,9 @@ class CallConnectionsHandler {
   RequestedCalls? requestedCalls;
 
   addMember(String remoteCoreId) async {
+    _currentCall!.activeSessions.forEach((element) {
+      singleCallWebRTCBuilder.addMemberEvent(remoteCoreId,element);
+    });
     //TODO refactor isAudio
     CallRTCSession callRTCSession = await _createSession(
       RemotePeer(
@@ -121,9 +124,9 @@ class CallConnectionsHandler {
   accept(CallId callId) async {
     print("accepttt ${_incomingCalls}");
     if (_incomingCalls?.callId == callId) {
+      _currentCall = CurrentCall(callId: callId, activeSessions: []);
       _incomingCalls!.remotePeers.forEach((element) async {
-        print("accepttt11");
-        _currentCall = CurrentCall(callId: callId, activeSessions: []);
+        print("accept ${element.remotePeer.remoteCoreId}");
         CallRTCSession callRTCSession =
             await _createSession(element.remotePeer, element.isAudioCall);
         singleCallWebRTCBuilder.startSession(callRTCSession);
@@ -218,6 +221,19 @@ class CallConnectionsHandler {
           singleCallWebRTCBuilder.onCandidateReceived(rtcSession, candidateMap);
         }
         break;
+      case CallSignalingCommands.newMember: {
+        String callId = mapData[CALL_ID];
+        String member = data[CallSignalingCommands.newMember];
+        if(callId==_currentCall?.callId) {
+          CallRTCSession callRTCSession = await _createSession(
+          RemotePeer(
+            remoteCoreId: member,
+            remotePeerId: null,
+          ),
+          _currentCall!.activeSessions.first.isAudioCall,
+        );
+        }
+      }
     }
   }
 

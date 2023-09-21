@@ -75,7 +75,6 @@ class WebRTCCallConnectionManager {
           "DEBUG race : Add track to localStream $track : ${track.id} : ${track.kind}");
       pc.addTrack(track, localStream);
     });
-
     pc.onDataChannel = (channel) {
       onAddDataChannel?.call(channel);
     };
