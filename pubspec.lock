@@ -303,10 +303,10 @@ packages:
     description:
       path: "."
       ref: core-master
-      resolved-ref: "628b530fa755435cdf5751c9a35cfda2a5b7f2d1"
+      resolved-ref: "6c74c36e5fa31a294daa3568b128dc5df9888beb"
       url: "git@git.energy:corepass/core-web3dart.git"
     source: git
-    version: "2.3.9"
+    version: "2.4.9"
   cross_file:
     dependency: transitive
     description:
