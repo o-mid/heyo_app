@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_camera/flutter_camera.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
@@ -72,8 +71,7 @@ class GalleryPickerView extends GetView<GalleryPickerController> {
                             'title': asset.title,
                             'size': asset.size,
                           });
-                          controller
-                              .setPickedfile(controller.provider.pickedFile);
+                          controller.setPickedfile(controller.provider.pickedFile);
                         });
                       },
                     ),
@@ -95,34 +93,33 @@ class GalleryPickerView extends GetView<GalleryPickerController> {
                       IconButton(
                         // Todo: send Btn
                         onPressed: () async {
-                          String path = controller.previewFiles[0]['path'];
-                          await CameraPickerViewer.pushToViewer(context,
-                              pickerState: CameraPickerState(),
-                              pickerType: controller.isAssetImage(path)
-                                  ? CameraPickerViewType.image
-                                  : CameraPickerViewType.video,
-                              previewXFile: XFile(path),
-                              theme: ThemeData(),
-                              sendIcon: Assets.svg.sendIcon.svg(),
-                              additionalPreviewButtonWidget:
-                                  const GalleryPreviewButtonWidget(),
-                              inputTextStyle: TEXTSTYLES.kBodySmall
-                                  .copyWith(color: COLORS.kTextSoftBlueColor),
-                              previewTextInputDecoration: InputDecoration(
-                                hintText: 'Type something',
-                                hintStyle: TEXTSTYLES.kBodySmall
-                                    .copyWith(color: COLORS.kTextSoftBlueColor),
-                              ),
-                              previewFiles: controller.pickedFile,
-                              shouldShowItemCount: true, onEntitySaving: (
-                            BuildContext context,
-                            CameraPickerViewType viewType,
-                            File file,
-                            List<Map<String, dynamic>>? confirmedFiles,
-                          ) {
-                            Navigator.of(context).pop();
-                            controller.setConfirmedFilesAndPop(confirmedFiles);
-                          });
+                          // String path = controller.previewFiles[0]['path'];
+                          // await CameraPickerViewer.pushToViewer(context,
+                          //     pickerState: CameraPickerState(),
+                          //     pickerType: controller.isAssetImage(path)
+                          //         ? CameraPickerViewType.image
+                          //         : CameraPickerViewType.video,
+                          //     previewXFile: XFile(path),
+                          //     theme: ThemeData(),
+                          //     sendIcon: Assets.svg.sendIcon.svg(),
+                          //     additionalPreviewButtonWidget: const GalleryPreviewButtonWidget(),
+                          //     inputTextStyle:
+                          //         TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
+                          //     previewTextInputDecoration: InputDecoration(
+                          //       hintText: 'Type something',
+                          //       hintStyle: TEXTSTYLES.kBodySmall
+                          //           .copyWith(color: COLORS.kTextSoftBlueColor),
+                          //     ),
+                          //     previewFiles: controller.pickedFile,
+                          //     shouldShowItemCount: true, onEntitySaving: (
+                          //   BuildContext context,
+                          //   CameraPickerViewType viewType,
+                          //   File file,
+                          //   List<Map<String, dynamic>>? confirmedFiles,
+                          // ) {
+                          //   Navigator.of(context).pop();
+                          //   controller.setConfirmedFilesAndPop(confirmedFiles);
+                          // });
                         },
 
                         icon: Assets.svg.sendImageIcon.svg(),

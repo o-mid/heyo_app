@@ -14,7 +14,6 @@ import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_camera/flutter_camera.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -738,74 +737,74 @@ class MessagesController extends GetxController {
   //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> openCameraPicker(BuildContext context) async {
     try {
-      await openCameraForSendingMediaMessage(
-        context,
-        receiverName: user.value.name,
-        onEntitySaving: (CameraPickerViewType viewType, File file) async {
-          AssetEntity? entity;
+      // await openCameraForSendingMediaMessage(
+      //   context,
+      //   receiverName: user.value.name,
+      //   onEntitySaving: (CameraPickerViewType viewType, File file) async {
+      //     AssetEntity? entity;
 
-          switch (viewType) {
-            case CameraPickerViewType.image:
-              final String filePath = file.path;
-              entity = await PhotoManager.editor.saveImageWithPath(
-                filePath,
-                title: path.basename(filePath),
-              );
+      //     switch (viewType) {
+      //       case CameraPickerViewType.image:
+      //         final String filePath = file.path;
+      //         entity = await PhotoManager.editor.saveImageWithPath(
+      //           filePath,
+      //           title: path.basename(filePath),
+      //         );
 
-              if (entity == null) {
-                break;
-              }
-              await SendMessage().execute(
-                  sendMessageType: SendMessageType.image(
-                    path: file.path,
-                    metadata: ImageMetadata(
-                      height: entity.height.toDouble(),
-                      width: entity.width.toDouble(),
-                    ),
-                    replyTo: replyingTo.value,
-                    chatId: chatId,
-                  ),
-                  remoteCoreId: user.value.walletAddress);
+      //         if (entity == null) {
+      //           break;
+      //         }
+      //         await SendMessage().execute(
+      //             sendMessageType: SendMessageType.image(
+      //               path: file.path,
+      //               metadata: ImageMetadata(
+      //                 height: entity.height.toDouble(),
+      //                 width: entity.width.toDouble(),
+      //               ),
+      //               replyTo: replyingTo.value,
+      //               chatId: chatId,
+      //             ),
+      //             remoteCoreId: user.value.walletAddress);
 
-              break;
-            case CameraPickerViewType.video:
-              entity = await PhotoManager.editor.saveVideo(
-                File(file.path),
-                title: path.basename(file.path),
-              );
+      //         break;
+      //       case CameraPickerViewType.video:
+      //         entity = await PhotoManager.editor.saveVideo(
+      //           File(file.path),
+      //           title: path.basename(file.path),
+      //         );
 
-              if (entity == null) {
-                break;
-              }
+      //         if (entity == null) {
+      //           break;
+      //         }
 
-              await SendMessage().execute(
-                  sendMessageType: SendMessageType.video(
-                    path: file.path,
-                    metadata: VideoMetadata(
-                      durationInSeconds: entity.videoDuration.inSeconds,
-                      height: entity.height.toDouble(),
-                      width: entity.width.toDouble(),
-                      isLocal: true,
-                      thumbnailBytes: await entity.thumbnailData,
-                      thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
-                    ),
-                    replyTo: replyingTo.value,
-                    chatId: chatId,
-                  ),
-                  remoteCoreId: user.value.walletAddress);
+      //         await SendMessage().execute(
+      //             sendMessageType: SendMessageType.video(
+      //               path: file.path,
+      //               metadata: VideoMetadata(
+      //                 durationInSeconds: entity.videoDuration.inSeconds,
+      //                 height: entity.height.toDouble(),
+      //                 width: entity.width.toDouble(),
+      //                 isLocal: true,
+      //                 thumbnailBytes: await entity.thumbnailData,
+      //                 thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+      //               ),
+      //               replyTo: replyingTo.value,
+      //               chatId: chatId,
+      //             ),
+      //             remoteCoreId: user.value.walletAddress);
 
-              break;
-          }
+      //         break;
+      //     }
 
-          Get.until((route) => Get.currentRoute == Routes.MESSAGES);
+      //     Get.until((route) => Get.currentRoute == Routes.MESSAGES);
 
-          mediaGlassmorphicChangeState();
-          messages.refresh();
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            animateToBottom();
-          });
-        },
-      );
+      //     mediaGlassmorphicChangeState();
+      //     messages.refresh();
+      //     WidgetsBinding.instance.addPostFrameCallback((_) {
+      //       animateToBottom();
+      //     });
+      //   },
+      // );
     } catch (e) {
       if (kDebugMode) {
         print(e);

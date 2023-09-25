@@ -80,11 +80,11 @@ class MultiMediaMessageWidget extends StatelessWidget {
                                       )
                                 : isMediaLocal
                                     ? ExtendedImage.file(
-                                        File(message.mediaList[index].url),
+                                        File(message.mediaList[index].url.toString()),
                                         fit: BoxFit.cover,
                                       )
                                     : ExtendedImage.network(
-                                        message.mediaList[index].url,
+                                        message.mediaList[index].url.toString(),
                                       ),
                           ),
                           Center(
@@ -100,7 +100,7 @@ class MultiMediaMessageWidget extends StatelessWidget {
                       )
                     : isMediaVideo
                         ? VideoMessagePlayer(
-                            message: message.mediaList[index],
+                            message: message.mediaList[index] as VideoMessageModel,
                             isMultiMessage: true,
                             multiMessageOnTap: () {
                               Get.toNamed(Routes.MEDIA_VIEW,
@@ -114,11 +114,11 @@ class MultiMediaMessageWidget extends StatelessWidget {
                           )
                         : isMediaLocal
                             ? ExtendedImage.file(
-                                File(message.mediaList[index].url),
+                                File(message.mediaList[index].url.toString()),
                                 fit: BoxFit.cover,
                               )
                             : Image.network(
-                                message.mediaList[index].url,
+                                message.mediaList[index].url.toString(),
                                 fit: BoxFit.cover,
                               ),
               ),
