@@ -2,7 +2,6 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:chewie/chewie.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -98,12 +97,12 @@ class _VideoThumbnail extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   if (isLocal)
-                    ExtendedImage.memory(
+                    Image.memory(
                       imageBytes!,
                       fit: isMultiMessage ? BoxFit.fitHeight : null,
                     )
                   else
-                    ExtendedImage.network(
+                    Image.network(
                       thumbnailUrl,
                       fit: isMultiMessage ? BoxFit.fitHeight : null,
                     ),
