@@ -32,7 +32,7 @@ class MediaPreview extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4.0),
                     child: Image.file(
-                      File(controller.previewFiles[index]['path']),
+                      File(controller.previewFiles[index]['path'] as String),
                       errorBuilder: (context, error, stackTrace) => Container(
                         color: Colors.white,
                         child: const Icon(

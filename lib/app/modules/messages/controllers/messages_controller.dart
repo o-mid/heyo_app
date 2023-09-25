@@ -102,9 +102,10 @@ class MessagesController extends GetxController {
   late ChatModel? chatModel;
   Rx<UserModel> user = UserModel(
     coreId: (Get.arguments as MessagesViewArgumentsModel).coreId,
-    iconUrl: (Get.arguments).iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
+    iconUrl:
+        (Get.arguments).iconUrl as String ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
     name: (Get.arguments as MessagesViewArgumentsModel).coreId.shortenCoreId,
-    walletAddress: (Get.arguments).coreId,
+    walletAddress: (Get.arguments).coreId as String,
     isBlocked: false,
     isOnline: false,
     isContact: false,
@@ -834,7 +835,7 @@ class MessagesController extends GetxController {
     if (closeMediaGlassmorphic) mediaGlassmorphicChangeState();
 
     List? tempImages = [];
-    for (var element in result) {
+    for (final element in result) {
       if (element["type"] == "image") {
         tempImages.add(ImageMessageModel(
           messageId: "${messages.lastIndexOf(messages.last) + 1}",

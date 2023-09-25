@@ -52,10 +52,10 @@ class UserModel {
         iconUrl: json[iconUrlSerializedName],
         walletAddress: json[walletAddressSerializedName],
         nickname: json[nicknameSerializedName],
-        isVerified: json[isVerifiedSerializedName],
-        isContact: json[isContactSerializedName],
-        isBlocked: json[isBlockedSerializedName],
-        isOnline: json[isOnlineSerializedName],
+        isVerified: json[isVerifiedSerializedName] as bool,
+        isContact: json[isContactSerializedName] as bool,
+        isBlocked: json[isBlockedSerializedName] as bool,
+        isOnline: json[isOnlineSerializedName] as bool,
         coreId: json[coreIdSerializedName],
       );
 
