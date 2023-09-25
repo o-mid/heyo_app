@@ -13,7 +13,7 @@ class WebRTCCallRepository implements CallRepository {
   Function(CallStream callStream)? onAddCallStream;
   @override
   Function(CallParticipantModel participate)? onChangeParticipateStream;
-  bool mock = false;
+  bool mock = true;
 
   WebRTCCallRepository({required this.callConnectionsHandler}) {
     callConnectionsHandler.onLocalStream = ((stream) {
@@ -37,27 +37,27 @@ class WebRTCCallRepository implements CallRepository {
         remoteStream: await _createMockStream(),
       ),
     );
-    await Future.delayed(const Duration(seconds: 5));
-    onAddCallStream?.call(
-      CallStream(
-        coreId: "coreId",
-        remoteStream: await _createMockStream(),
-      ),
-    );
-    await Future.delayed(const Duration(seconds: 5));
-    onAddCallStream?.call(
-      CallStream(
-        coreId: "coreId",
-        remoteStream: await _createMockStream(),
-      ),
-    );
-    await Future.delayed(const Duration(seconds: 5));
-    onAddCallStream?.call(
-      CallStream(
-        coreId: "coreId",
-        remoteStream: await _createMockStream(),
-      ),
-    );
+    //await Future.delayed(const Duration(seconds: 5));
+    //onAddCallStream?.call(
+    //  CallStream(
+    //    coreId: "coreId",
+    //    remoteStream: await _createMockStream(),
+    //  ),
+    //);
+    //await Future.delayed(const Duration(seconds: 5));
+    //onAddCallStream?.call(
+    //  CallStream(
+    //    coreId: "coreId",
+    //    remoteStream: await _createMockStream(),
+    //  ),
+    //);
+    //await Future.delayed(const Duration(seconds: 5));
+    //onAddCallStream?.call(
+    //  CallStream(
+    //    coreId: "coreId",
+    //    remoteStream: await _createMockStream(),
+    //  ),
+    //);
   }
 
   @override
@@ -91,7 +91,11 @@ class WebRTCCallRepository implements CallRepository {
     if (mock) {
       //TODO remove Mock
       onAddCallStream?.call(
-          CallStream(coreId: coreId, remoteStream: await _createMockStream()));
+        CallStream(
+          coreId: coreId,
+          remoteStream: await _createMockStream(),
+        ),
+      );
       _addParticipate(coreId);
     }
   }

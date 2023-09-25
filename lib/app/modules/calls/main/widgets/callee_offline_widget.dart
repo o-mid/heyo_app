@@ -5,7 +5,6 @@ import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/calls/shared/widgets/callee_or_caller_info_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -21,10 +20,9 @@ class CalleeOfflineWidget extends StatelessWidget {
       children: [
         SizedBox(height: 105.h),
         CalleeOrCallerInfoWidget(
+          coreId: user.coreId,
           iconUrl: user.iconUrl,
           name: user.name,
-          isContact: user.isContact,
-          shortenCoreId: user.coreId.shortenCoreId,
         ),
         SizedBox(height: 40.h),
         Row(
@@ -34,7 +32,9 @@ class CalleeOfflineWidget extends StatelessWidget {
             CustomSizes.smallSizedBoxWidth,
             Text(
               LocaleKeys.CallPage_currentlyOffline.tr,
-              style: TEXTSTYLES.kBodyBasic.copyWith(color: COLORS.kWhiteColor),
+              style: TEXTSTYLES.kBodyBasic.copyWith(
+                color: COLORS.kWhiteColor,
+              ),
             ),
           ],
         ),
@@ -44,22 +44,33 @@ class CalleeOfflineWidget extends StatelessWidget {
           style: TextButton.styleFrom(
             backgroundColor: COLORS.kDarkBlueColor,
             padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 9.h),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.r),
+            ),
           ),
           child: Text(
             LocaleKeys.CallPage_sendAMessageButton.tr,
-            style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kWhiteColor),
+            style: TEXTSTYLES.kLinkBig.copyWith(
+              color: COLORS.kWhiteColor,
+            ),
           ),
         ),
         TextButton(
           onPressed: Get.back,
           style: TextButton.styleFrom(
-            padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 9.h),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+            padding: EdgeInsets.symmetric(
+              horizontal: 32.w,
+              vertical: 9.h,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.r),
+            ),
           ),
           child: Text(
             LocaleKeys.CallPage_close.tr,
-            style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kTextSoftBlueColor),
+            style: TEXTSTYLES.kLinkBig.copyWith(
+              color: COLORS.kTextSoftBlueColor,
+            ),
           ),
         ),
         SizedBox(height: 20.h),

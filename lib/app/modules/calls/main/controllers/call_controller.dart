@@ -314,8 +314,7 @@ class CallController extends GetxController {
       arguments: IncomingCallViewArguments(
         callId: "args.callId!",
         isAudioCall: args.isAudioCall,
-        remoteCoreId: args.members.first,
-        remotePeerId: args.members.first,
+        members: args.members,
       ),
     );
   }

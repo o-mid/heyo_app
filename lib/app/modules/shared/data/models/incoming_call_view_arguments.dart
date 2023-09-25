@@ -1,13 +1,11 @@
 class IncomingCallViewArguments {
-  final String remotePeerId;
-  final String remoteCoreId;
   final String callId;
   final bool isAudioCall;
+  final List<String> members;
 
-  IncomingCallViewArguments(
-      {
-      required this.callId,
-      required this.remotePeerId,
-      required this.remoteCoreId,
-      required this.isAudioCall});
+  IncomingCallViewArguments({
+    required this.callId,
+    required this.isAudioCall,
+    required this.members,
+  });
 }

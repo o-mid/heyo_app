@@ -49,10 +49,10 @@ class CallView extends GetView<CallController> {
                     icon: Assets.svg.cameraSwitch.svg(),
                   ),
                   //* Mock for incoming call
-                  //IconButton(
-                  //  onPressed: controller.incomingMock,
-                  //  icon: const Icon(Icons.call_made),
-                  //),
+                  IconButton(
+                    onPressed: controller.incomingMock,
+                    icon: const Icon(Icons.call_made),
+                  ),
                 ],
                 bottom: const RecordIndicatorWidget(),
               ),

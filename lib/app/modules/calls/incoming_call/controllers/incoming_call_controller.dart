@@ -2,7 +2,7 @@ import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
+import 'package:heyo/app/modules/calls/incoming_call/controllers/incoming_call_model.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_availability_use_case.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
@@ -14,8 +14,7 @@ class IncomingCallController extends GetxController {
   final CallRepository callRepository;
   final ContactAvailabilityUseCase contactAvailabilityUseCase;
 
-  //TODO Call remove this model, search for it's usage in IncomingView
-  Rx<CallUserModel?> caller = Rx(null);
+  RxList<IncomingCallModel> incomingCallers = RxList();
   final muted = false.obs;
   late IncomingCallViewArguments args;
   // late String userName;
@@ -65,7 +64,7 @@ class IncomingCallController extends GetxController {
         callId: args.callId,
         enableVideo: args.isAudioCall ? false : true,
         isAudioCall: args.isAudioCall,
-        members: [args.remoteCoreId],
+        members: args.members,
       ),
     );
   }
@@ -84,21 +83,22 @@ class IncomingCallController extends GetxController {
   }
 
   getUserData() async {
-    UserModel? userModel =
-        await contactAvailabilityUseCase.execute(args.remoteCoreId);
+    for (var member in args.members) {
+      UserModel? userModel = await contactAvailabilityUseCase.execute(member);
 
-    if (userModel == null) {
-      //* The user is not available in your contact
-      caller.value = CallUserModel(
-        name: args.remoteCoreId.shortenCoreId,
-        isContact: false,
-        iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
-        walletAddress: args.remoteCoreId,
-        coreId: args.remoteCoreId,
-      );
-    } else {
-      //* The user added to your contacts before
-      caller.value = userModel.toCallUserModel();
+      if (userModel == null) {
+        //* The user is not available in your contact
+        incomingCallers.add(
+          IncomingCallModel(
+            name: member.shortenCoreId,
+            iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
+            coreId: member,
+          ),
+        );
+      } else {
+        //* The user added to your contacts before
+        incomingCallers.add(userModel.toIncomingCallModel());
+      }
     }
   }
 }
