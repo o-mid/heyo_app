@@ -13,6 +13,7 @@ flutter_build:
     - echo "$SSH_PRIVATE_KEY" | ssh-add -
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - flutter pub upgrade
     - flutter pub get
 
   script:
@@ -28,6 +29,7 @@ flutter_build:
     refs:
       - development
       - GitlabCi
+      - upgrade_version
 
   variables:
     # APPLICATION VERSION
