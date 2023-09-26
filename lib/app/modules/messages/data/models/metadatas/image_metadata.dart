@@ -10,8 +10,8 @@ class ImageMetadata {
   });
 
   factory ImageMetadata.fromJson(Map<String, dynamic> json) => ImageMetadata(
-        width: json[widthSerializedName],
-        height: json[heightSerializedName],
+        width: json[widthSerializedName] as double,
+        height: json[heightSerializedName] as double,
       );
 
   Map<String, dynamic> toJson() => {

@@ -24,9 +24,9 @@ class BinaryMetadata {
   });
 
   factory BinaryMetadata.fromJson(Map<String, dynamic> json) => BinaryMetadata(
-        totalBinarySize: json[totalBinarySizeSerializedName],
-        uint8List: json[uint8ListSerializedName],
-        chunkSize: json[chunkSizeSerializedName],
+        totalBinarySize: json[totalBinarySizeSerializedName] as int,
+        uint8List: json[uint8ListSerializedName] as Uint8List,
+        chunkSize: json[chunkSizeSerializedName] as int,
         status: sendingStatus.values.byName(json[statusSerializedName]),
       );
 
