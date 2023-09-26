@@ -834,134 +834,134 @@ class MessagesController extends GetxController {
       {@required dynamic result, bool closeMediaGlassmorphic = false}) async {
     if (closeMediaGlassmorphic) mediaGlassmorphicChangeState();
 
-    List? tempImages = [];
-    for (final element in result) {
-      if (element["type"] == "image") {
-        tempImages.add(ImageMessageModel(
-          messageId: "${messages.lastIndexOf(messages.last) + 1}",
-          isLocal: true,
-          metadata: ImageMetadata(
-            height: element["height"].toDouble(),
-            width: element["width"].toDouble(),
-          ),
-          senderAvatar: '',
-          senderName: '',
-          isFromMe: true,
-          status: MessageStatus.sending,
-          chatId: chatId,
-          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-          url: element["path"],
-        ));
-      } else if (element["type"] == "video") {
-        Uint8List thumbnailBytes = await element["thumbnail"];
-        tempImages.add(VideoMessageModel(
-          messageId: "${messages.lastIndexOf(messages.last) + 1}",
-          chatId: chatId,
-          metadata: VideoMetadata(
-            durationInSeconds: element["videoDuration"].inSeconds,
-            height: double.parse(element["height"].toString()),
-            width: double.parse(element["width"].toString()),
-            isLocal: true,
-            thumbnailBytes: thumbnailBytes,
-            thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
-          ),
-          url: element["path"],
-          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-          senderName: '',
-          senderAvatar: '',
-          isFromMe: true,
-          status: MessageStatus.sending,
-          type: MessageContentType.video,
-        ));
-      }
-    }
-    if (tempImages.length > 1) {
-      messages.add(MultiMediaMessageModel(
-        mediaList: tempImages,
-        messageId: "${messages.lastIndexOf(messages.last) + 1}",
-        chatId: chatId,
-        senderAvatar: '',
-        senderName: '',
-        isFromMe: true,
-        status: MessageStatus.sending,
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-      ));
-    } else {
-      result.forEach((asset) async {
-        switch (asset["type"]) {
-          case "image":
-            {
-              messages.add(
-                ImageMessageModel(
-                    messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                    chatId: chatId,
-                    isLocal: true,
-                    metadata: ImageMetadata(
-                      height: double.parse(asset["height"].toString()),
-                      width: double.parse(asset["width"].toString()),
-                    ),
-                    senderAvatar: '',
-                    senderName: '',
-                    isFromMe: true,
-                    status: MessageStatus.sending,
-                    timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                    url: asset["path"]),
-              );
-            }
-            break;
+    // List? tempImages = [];
+    // for (final element in result) {
+    //   if (element["type"] == "image") {
+    //     tempImages.add(ImageMessageModel(
+    //       messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //       isLocal: true,
+    //       metadata: ImageMetadata(
+    //         height: element["height"].toDouble(),
+    //         width: element["width"].toDouble(),
+    //       ),
+    //       senderAvatar: '',
+    //       senderName: '',
+    //       isFromMe: true,
+    //       status: MessageStatus.sending,
+    //       chatId: chatId,
+    //       timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //       url: element["path"],
+    //     ));
+    //   } else if (element["type"] == "video") {
+    //     Uint8List thumbnailBytes = await element["thumbnail"];
+    //     tempImages.add(VideoMessageModel(
+    //       messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //       chatId: chatId,
+    //       metadata: VideoMetadata(
+    //         durationInSeconds: element["videoDuration"].inSeconds,
+    //         height: double.parse(element["height"].toString()),
+    //         width: double.parse(element["width"].toString()),
+    //         isLocal: true,
+    //         thumbnailBytes: thumbnailBytes,
+    //         thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+    //       ),
+    //       url: element["path"],
+    //       timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //       senderName: '',
+    //       senderAvatar: '',
+    //       isFromMe: true,
+    //       status: MessageStatus.sending,
+    //       type: MessageContentType.video,
+    //     ));
+    //   }
+    // }
+    // if (tempImages.length > 1) {
+    //   messages.add(MultiMediaMessageModel(
+    //     mediaList: tempImages,
+    //     messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //     chatId: chatId,
+    //     senderAvatar: '',
+    //     senderName: '',
+    //     isFromMe: true,
+    //     status: MessageStatus.sending,
+    //     timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //   ));
+    // } else {
+    //   result.forEach((asset) async {
+    //     switch (asset["type"]) {
+    //       case "image":
+    //         {
+    //           messages.add(
+    //             ImageMessageModel(
+    //                 messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //                 chatId: chatId,
+    //                 isLocal: true,
+    //                 metadata: ImageMetadata(
+    //                   height: double.parse(asset["height"].toString()),
+    //                   width: double.parse(asset["width"].toString()),
+    //                 ),
+    //                 senderAvatar: '',
+    //                 senderName: '',
+    //                 isFromMe: true,
+    //                 status: MessageStatus.sending,
+    //                 timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //                 url: asset["path"]),
+    //           );
+    //         }
+    //         break;
 
-          case "video":
-            {
-              messages.add(
-                VideoMessageModel(
-                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                  chatId: chatId,
-                  metadata: VideoMetadata(
-                    durationInSeconds: asset["videoDuration"].inSeconds,
-                    height: double.parse(asset["height"].toString()),
-                    width: double.parse(asset["width"].toString()),
-                    isLocal: true,
-                    thumbnailBytes: await asset["thumbnail"],
-                    thumbnailUrl: '',
-                  ),
-                  url: asset["path"],
-                  timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                  senderName: '',
-                  senderAvatar: '',
-                  isFromMe: true,
-                  status: MessageStatus.sending,
-                ),
-              );
-            }
-            break;
-          case "text":
-            {
-              messages.add(
-                TextMessageModel(
-                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                  chatId: chatId,
-                  text: asset["value"],
-                  timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                  senderName: '',
-                  senderAvatar: '',
-                  isFromMe: true,
-                  status: MessageStatus.sending,
-                ),
-              );
-            }
-            break;
+    //       case "video":
+    //         {
+    //           messages.add(
+    //             VideoMessageModel(
+    //               messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //               chatId: chatId,
+    //               metadata: VideoMetadata(
+    //                 durationInSeconds: asset["videoDuration"].inSeconds,
+    //                 height: double.parse(asset["height"].toString()),
+    //                 width: double.parse(asset["width"].toString()),
+    //                 isLocal: true,
+    //                 thumbnailBytes: await asset["thumbnail"],
+    //                 thumbnailUrl: '',
+    //               ),
+    //               url: asset["path"],
+    //               timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //               senderName: '',
+    //               senderAvatar: '',
+    //               isFromMe: true,
+    //               status: MessageStatus.sending,
+    //             ),
+    //           );
+    //         }
+    //         break;
+    //       case "text":
+    //         {
+    //           messages.add(
+    //             TextMessageModel(
+    //               messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //               chatId: chatId,
+    //               text: asset["value"],
+    //               timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //               senderName: '',
+    //               senderAvatar: '',
+    //               isFromMe: true,
+    //               status: MessageStatus.sending,
+    //             ),
+    //           );
+    //         }
+    //         break;
 
-          default:
-            break;
-        }
-      });
-    }
+    //       default:
+    //         break;
+    //     }
+    //   });
+    // }
 
-    mediaGlassmorphicChangeState();
-    messages.refresh();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      animateToBottom();
-    });
+    // mediaGlassmorphicChangeState();
+    // messages.refresh();
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   animateToBottom();
+    // });
   }
 
   Future<void> openFiles() async {

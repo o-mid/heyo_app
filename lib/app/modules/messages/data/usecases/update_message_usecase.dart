@@ -19,9 +19,7 @@ class UpdateMessage {
   final CommonMessagingConnectionController messagingConnection =
       Get.find<CommonMessagingConnectionController>();
 
-  execute(
-      {required UpdateMessageType updateMessageType,
-      required String remoteCoreId}) async {
+  execute({required UpdateMessageType updateMessageType, required String remoteCoreId}) async {
     switch (updateMessageType.runtimeType) {
       case UpdateReactions:
         final message = (updateMessageType as UpdateReactions).selectedMessage;
@@ -43,9 +41,8 @@ class UpdateMessage {
       required String emoji,
       required String chatId,
       required String remoteCoreId}) async {
-    final String localCoreID =
-        await messagingConnection.accountInfo.getCoreId() ?? "";
-    var reaction = message.reactions[emoji] ?? ReactionModel();
+    final String localCoreID = await messagingConnection.accountInfo.getCoreId() ?? "";
+    ReactionModel reaction = message.reactions[emoji] as ReactionModel;
 
     if (reaction.isReactedByMe) {
       reaction.users.removeWhere((element) => element == localCoreID);
@@ -67,15 +64,13 @@ class UpdateMessage {
     );
     await messagesRepo.updateMessage(message: updatedMessage, chatId: chatId);
 
-    Map<String, dynamic> updatedMessageJson = UpdateMessageModel(
-            message:
-                updatedMessage.copyWith(reactions: updatedMessage.reactions))
-        .toJson();
+    Map<String, dynamic> updatedMessageJson =
+        UpdateMessageModel(message: updatedMessage.copyWith(reactions: updatedMessage.reactions))
+            .toJson();
 
     SendDataChannelMessage(messagingConnection: messagingConnection).execute(
       remoteCoreId: remoteCoreId,
-      channelMessageType:
-          ChannelMessageType.update(message: updatedMessageJson),
+      channelMessageType: ChannelMessageType.update(message: updatedMessageJson),
     );
   }
 }

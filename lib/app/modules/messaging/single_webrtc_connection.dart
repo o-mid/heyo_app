@@ -24,17 +24,14 @@ class SingleWebRTCConnection {
   final JsonDecoder _decoder = const JsonDecoder();
   Function(ConnectionId, String)? onConnectionFailed;
 
-  SingleWebRTCConnection(
-      {required this.p2pCommunicator, required this.webRTCConnectionManager});
+  SingleWebRTCConnection({required this.p2pCommunicator, required this.webRTCConnectionManager});
 
-  Future<RTCSession> _createRTCSession(ConnectionId connectionId,
-      String remoteCoreId, String? remotePeer) async {
-    RTCPeerConnection peerConnection =
-        await webRTCConnectionManager.createRTCPeerConnection();
+  Future<RTCSession> _createRTCSession(
+      ConnectionId connectionId, String remoteCoreId, String? remotePeer) async {
+    RTCPeerConnection peerConnection = await webRTCConnectionManager.createRTCPeerConnection();
     RTCSession rtcSession = RTCSession(
         connectionId: connectionId,
-        remotePeer:
-            RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: remotePeer),
+        remotePeer: RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: remotePeer),
         onConnectionFailed: (id, remote) {
           onConnectionFailed?.call(id, remote);
         });
@@ -45,8 +42,8 @@ class SingleWebRTCConnection {
     return rtcSession;
   }
 
-  Future<RTCSession> createSession(ConnectionId connectionId,
-      String remoteCoreId, String? remotePeer) async {
+  Future<RTCSession> createSession(
+      ConnectionId connectionId, String remoteCoreId, String? remotePeer) async {
     return await _createRTCSession(connectionId, remoteCoreId, remotePeer);
   }
 
@@ -60,14 +57,11 @@ class SingleWebRTCConnection {
     return await _send(
         offer,
         {
-          DATA_DESCRIPTION: {
-            'sdp': rtcSessionDescription.sdp,
-            'type': rtcSessionDescription.type
-          },
+          DATA_DESCRIPTION: {'sdp': rtcSessionDescription.sdp, 'type': rtcSessionDescription.type},
           'media': MEDIA_TYPE,
         },
         rtcSession.remotePeer.remoteCoreId,
-        rtcSession.remotePeer.remotePeerId,
+        rtcSession.remotePeer.remotePeerId as String,
         rtcSession.connectionId);
   }
 
@@ -76,9 +70,9 @@ class SingleWebRTCConnection {
         rtcSession.remotePeer.remotePeerId, rtcSession.connectionId);
   }*/
 
-  Future<void> onOfferReceived(RTCSession rtcSession, description) async {
-    await rtcSession.pc!.setRemoteDescription(
-        RTCSessionDescription(description['sdp'], description['type']));
+  Future<void> onOfferReceived(RTCSession rtcSession, Map<String, dynamic> description) async {
+    await rtcSession.pc!
+        .setRemoteDescription(RTCSessionDescription(description['sdp'], description['type']));
     RTCSessionDescription sessionDescription =
         await webRTCConnectionManager.setupAnswer(rtcSession.pc!, MEDIA_TYPE);
     print("onMessage onOfferReceived Send");
@@ -86,17 +80,14 @@ class SingleWebRTCConnection {
     _send(
         answer,
         {
-          'description': {
-            'sdp': sessionDescription.sdp,
-            'type': sessionDescription.type
-          },
+          'description': {'sdp': sessionDescription.sdp, 'type': sessionDescription.type},
         },
         rtcSession.remotePeer.remoteCoreId,
-        rtcSession.remotePeer.remotePeerId,
+        rtcSession.remotePeer.remotePeerId as String,
         rtcSession.connectionId);
   }
 
-  Future<void> onAnswerReceived(RTCSession rtcSession, description) async {
+  Future<void> onAnswerReceived(RTCSession rtcSession, Map<String, dynamic> description) async {
     print("onMessage onAnswerReceived  : ${rtcSession.pc?.signalingState}");
 
     await rtcSession.pc!.setRemoteDescription(
@@ -118,33 +109,31 @@ class SingleWebRTCConnection {
           },
         },
         rtcSession.remotePeer.remoteCoreId,
-        rtcSession.remotePeer.remotePeerId,
+        rtcSession.remotePeer.remotePeerId as String,
         rtcSession.connectionId);
   }
 
   Future<bool> _send(
-      eventType, data, remoteCoreId, remotePeerId, connectionId) async {
-    print(
-        "onMessage send $remotePeerId : $remoteCoreId : $connectionId : $eventType : $data ");
+      eventType, data, String remoteCoreId, String remotePeerId, connectionId) async {
+    print("onMessage send $remotePeerId : $remoteCoreId : $connectionId : $eventType : $data ");
     var request = {};
     request["type"] = eventType;
     request["data"] = data;
     request["command"] = COMMAND;
     request[CONNECTION_ID] = connectionId;
     print("P2PCommunicator: sendingSDP $remoteCoreId : $eventType");
-    bool requestSucceeded = await p2pCommunicator.sendSDP(
-        _encoder.convert(request), remoteCoreId, remotePeerId);
-    print(
-        "P2PCommunicator: sendingSDP $remoteCoreId : $eventType : $requestSucceeded");
+    bool requestSucceeded =
+        await p2pCommunicator.sendSDP(_encoder.convert(request), remoteCoreId, remotePeerId);
+    print("P2PCommunicator: sendingSDP $remoteCoreId : $eventType : $requestSucceeded");
 
     return requestSucceeded;
   }
 
-  Future<void> onCandidateReceived(RTCSession rtcSession, candidateMap) async {
+  Future<void> onCandidateReceived(RTCSession rtcSession, Map<String, dynamic> candidateMap) async {
     RTCIceCandidate candidate = RTCIceCandidate(
       candidateMap['candidate'],
       candidateMap['sdpMid'],
-      candidateMap['sdpMLineIndex'],
+      candidateMap['sdpMLineIndex'] as int?,
     );
     if (rtcSession.isConnectionStable()) {
       await rtcSession.pc!.addCandidate(candidate);

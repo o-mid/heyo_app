@@ -282,12 +282,12 @@ abstract class CommonMessagingConnectionController extends GetxController {
 
     if (notify) {
       print("notifyyyyy $chatId");
-      UserModel? userModel= await contactRepository.getContactById(chatId);
+      UserModel? userModel = await contactRepository.getContactById(chatId);
 
       await notifyReceivedMessage(
         receivedMessage: receivedMessage,
         chatId: chatId,
-        senderName: (userModel==null)
+        senderName: (userModel == null)
             ? "${chatId.characters.take(4).string}...${chatId.characters.takeLast(4).string}"
             : userModel.name,
       );
@@ -313,7 +313,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
       Map<String, ReactionModel> receivedReactions =
           updateMessage.message.reactions.map((key, value) {
         ReactionModel newValue = value.copyWith(
-          isReactedByMe: currentMessage.reactions[key]?.isReactedByMe ?? false,
+          isReactedByMe: (currentMessage.reactions[key] as ReactionModel).isReactedByMe ?? false,
         );
         return MapEntry(key, newValue);
       });

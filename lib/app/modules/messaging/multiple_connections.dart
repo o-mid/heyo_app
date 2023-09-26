@@ -2,7 +2,7 @@ import 'package:heyo/app/modules/messaging/models.dart';
 import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 
 class MultipleConnectionHandler {
-  Map<ConnectionId, RTCSession> connections = {};
+  Map<ConnectionId, RTCSession> connections = {} as Map<ConnectionId, RTCSession>;
   final SingleWebRTCConnection singleWebRTCConnection;
   Function(RTCSession)? onNewRTCSessionCreated;
   Function(RTCSession)? onRTCSessionConnected;
@@ -26,7 +26,7 @@ class MultipleConnectionHandler {
       if (rtcSession.rtcSessionStatus == RTCSessionStatus.failed ||
           (rtcSession.rtcSessionStatus == RTCSessionStatus.none &&
               ((currentTime - rtcSession.timeStamp) > 10000))) {
-        connections[rtcSession.connectionId]?.dispose();
+        (connections[rtcSession.connectionId] as RTCSession)?.dispose();
         connections.remove(rtcSession.connectionId);
         rtcSession = await _initiateSession(remoteCoreId);
       }
@@ -43,7 +43,7 @@ class MultipleConnectionHandler {
 
   reset() {
     connections.forEach((key, value) {
-      connections[key]?.dispose();
+      (connections[key] as RTCSession)?.dispose();
     });
     connections.clear();
   }
@@ -53,7 +53,7 @@ class MultipleConnectionHandler {
         .where((element) => (element.remotePeer.remoteCoreId == remoteCoreId))
         .toList();
     for (var element in items) {
-      connections[element.connectionId]?.dispose();
+      (connections[element.connectionId] as RTCSession)?.dispose();
       connections.remove(element.connectionId);
     }
   }
@@ -64,7 +64,7 @@ class MultipleConnectionHandler {
             element.connectionId != connectionId))
         .toList();
     for (var element in items) {
-      connections[element.connectionId]?.dispose();
+      (connections[element.connectionId] as RTCSession)?.dispose();
 
       connections.remove(element.connectionId);
     }
@@ -107,7 +107,7 @@ class MultipleConnectionHandler {
         _removePrevConnections(remoteCoreId, connectionId);
         print("_getConnection the latest");
 
-        return connections[connectionId]!;
+        return connections[connectionId] as RTCSession;
       } else {
         print("_getConnection deprecated");
 
@@ -119,8 +119,9 @@ class MultipleConnectionHandler {
   }
 
   void _setRemotePeerId(ConnectionId connectionId, String? remotePeerId) {
-    (connections[connectionId]!.remotePeer.remotePeerId == null && remotePeerId != null)
-        ? connections[connectionId]!.remotePeer.remotePeerId = remotePeerId
+    ((connections[connectionId] as RTCSession)!.remotePeer.remotePeerId == null &&
+            remotePeerId != null)
+        ? (connections[connectionId] as RTCSession)!.remotePeer.remotePeerId = remotePeerId
         : {};
   }
 
@@ -155,7 +156,7 @@ class MultipleConnectionHandler {
 
   Future<void> onRequestReceived(
       Map<String, dynamic> mapData, String remoteCoreId, String remotePeerId) async {
-    var data = mapData[DATA];
+    Map<String, dynamic> data = mapData[DATA] as Map<String, dynamic>;
     print("onMessage, type: ${mapData['type']}");
 
     switch (mapData['type']) {
@@ -172,7 +173,7 @@ class MultipleConnectionHandler {
         {
           String connectionId = mapData[CONNECTION_ID] as String;
           RTCSession rtcSession = await _getConnection(connectionId, remoteCoreId, remotePeerId);
-          var description = data[DATA_DESCRIPTION];
+          Map<String, dynamic> description = data[DATA_DESCRIPTION] as Map<String, dynamic>;
 
           await singleWebRTCConnection.onOfferReceived(rtcSession, description);
         }
@@ -182,7 +183,8 @@ class MultipleConnectionHandler {
           String connectionId = mapData[CONNECTION_ID];
           RTCSession rtcSession = await _getConnection(connectionId, remoteCoreId, remotePeerId);
           var description = data[DATA_DESCRIPTION];
-          await singleWebRTCConnection.onAnswerReceived(rtcSession, description);
+          await singleWebRTCConnection.onAnswerReceived(
+              rtcSession, description as Map<String, dynamic>);
         }
         break;
       case candidate:
@@ -191,7 +193,8 @@ class MultipleConnectionHandler {
 
           RTCSession rtcSession = await _getConnection(connectionId, remoteCoreId, remotePeerId);
           var candidateMap = data[candidate];
-          await singleWebRTCConnection.onCandidateReceived(rtcSession, candidateMap);
+          await singleWebRTCConnection.onCandidateReceived(
+              rtcSession, candidateMap as Map<String, dynamic>);
         }
         break;
     }

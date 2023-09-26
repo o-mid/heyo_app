@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/messaging/utils/data_binary_message.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../messages/data/models/messages/audio_message_model.dart';
@@ -28,9 +29,7 @@ class HandleReceivedBinaryData {
 
   HandleReceivedBinaryData({required this.messagesRepo, required this.chatId});
 
-  execute(
-      {required BinaryFileReceivingState? state,
-      required String remoteCoreId}) async {
+  execute({required BinaryFileReceivingState? state, required String remoteCoreId}) async {
     Function(double progress, int totalSize)? statusUpdateCallback;
     if (state!.processingMessage) {
       print('RECEIVER: Skipping, already processing message');
@@ -44,7 +43,7 @@ class HandleReceivedBinaryData {
       nextChunk = lastMessage.chunkStart + lastMessage.chunk.length;
     }
 
-    var message = state.pendingMessages[nextChunk];
+    DataBinaryMessage message = state.pendingMessages[nextChunk] as DataBinaryMessage;
     if (message == null) {
       // The next chunk is not transferred yet
       print('RECEIVER: Waiting, $nextChunk chunk not available');
@@ -78,11 +77,9 @@ class HandleReceivedBinaryData {
     builder.add(askheader);
 
     Uint8List askbytes = builder.toBytes();
-    messagingConnection.sendBinaryMessage(
-        binary: askbytes, remoteCoreId: remoteCoreId);
+    messagingConnection.sendBinaryMessage(binary: askbytes, remoteCoreId: remoteCoreId);
 
-    statusUpdateCallback?.call(
-        writtenLength / message.fileSize, message.fileSize);
+    statusUpdateCallback?.call(writtenLength / message.fileSize, message.fileSize);
     state.pendingMessages.remove(nextChunk);
 
     state.lastHandledMessage = message;

@@ -15,8 +15,7 @@ import 'common_messaging_controller.dart';
 /// Connection and messaging methods are implemented separately for different connection way,
 /// and when messaging initiated, we'll use MessagingConnectionController class instance for regular Internet connection.
 
-class MessagingConnectionController
-    extends CommonMessagingConnectionController {
+class MessagingConnectionController extends CommonMessagingConnectionController {
   final MultipleConnectionHandler multipleConnectionHandler;
 
   final JsonDecoder _decoder = const JsonDecoder();
@@ -31,7 +30,7 @@ class MessagingConnectionController
     required super.messagesRepo,
     required super.chatHistoryRepo,
     required super.notificationsController,
-    required super.contactRepository
+    required super.contactRepository,
   }) {
     //setCoreId();
   }
@@ -50,7 +49,8 @@ class MessagingConnectionController
 
     multipleConnectionHandler.onNewRTCSessionCreated = (rtcSession) {
       print(
-          "onNewRTCSessionCreated : ${rtcSession.connectionId} : ${rtcSession.remotePeer.remoteCoreId} : ${currentRemoteId}");
+        "onNewRTCSessionCreated : ${rtcSession.connectionId} : ${rtcSession.remotePeer.remoteCoreId} : ${currentRemoteId}",
+      );
       if (rtcSession.remotePeer.remoteCoreId == currentRemoteId) {
         _observeMessagingStatus(rtcSession);
       }
@@ -60,16 +60,17 @@ class MessagingConnectionController
 
         dataChannel.onMessage = (data) async {
           print("onMessageReceived : $data ${rtcSession.connectionId}");
-          await createUserChatModel(
-              sessioncid: rtcSession.remotePeer.remoteCoreId);
+          await createUserChatModel(sessioncid: rtcSession.remotePeer.remoteCoreId);
 
           data.isBinary
               ? await handleDataChannelBinary(
                   binaryData: data.binary,
-                  remoteCoreId: rtcSession.remotePeer.remoteCoreId)
+                  remoteCoreId: rtcSession.remotePeer.remoteCoreId,
+                )
               : await handleDataChannelText(
-                  receivedJson: _decoder.convert(data.text),
-                  remoteCoreId: rtcSession.remotePeer.remoteCoreId);
+                  receivedJson: _decoder.convert(data.text as String) as Map<String, dynamic>,
+                  remoteCoreId: rtcSession.remotePeer.remoteCoreId,
+                );
         };
       };
     };
@@ -77,34 +78,30 @@ class MessagingConnectionController
 
   @override
   Future<void> initMessagingConnection({required String remoteId}) async {
-    RTCSession rtcSession =
-        await multipleConnectionHandler.getConnection(remoteId);
+    RTCSession rtcSession = await multipleConnectionHandler.getConnection(remoteId);
     currentRemoteId = rtcSession.remotePeer.remoteCoreId;
-    print(
-        "initMessagingConnection RTCSession Status: ${rtcSession.rtcSessionStatus}");
+    print("initMessagingConnection RTCSession Status: ${rtcSession.rtcSessionStatus}");
     _observeMessagingStatus(rtcSession);
   }
 
   @override
-  Future<void> sendTextMessage(
-      {required String text, required String remoteCoreId}) async {
-    RTCSession rtcSession = await multipleConnectionHandler.getConnection(
-        remoteCoreId);
+  Future<void> sendTextMessage({required String text, required String remoteCoreId}) async {
+    RTCSession rtcSession = await multipleConnectionHandler.getConnection(remoteCoreId);
 
     await createUserChatModel(sessioncid: remoteCoreId);
 
     print(
-        "sendMessage  : ${rtcSession.connectionId} ${(rtcSession).dc} ${rtcSession.rtcSessionStatus}");
+      "sendMessage  : ${rtcSession.connectionId} ${(rtcSession).dc} ${rtcSession.rtcSessionStatus}",
+    );
     (rtcSession).dc?.send(RTCDataChannelMessage(text));
   }
 
   @override
-  Future<void> sendBinaryMessage(
-      {required Uint8List binary, required String remoteCoreId}) async {
-    RTCSession rtcSession = await multipleConnectionHandler.getConnection(
-        remoteCoreId);
+  Future<void> sendBinaryMessage({required Uint8List binary, required String remoteCoreId}) async {
+    RTCSession rtcSession = await multipleConnectionHandler.getConnection(remoteCoreId);
     print(
-        "sendTextMessage : ${(rtcSession.isDataChannelConnectionAvailable)} : ${rtcSession.dc?.state} : ${rtcSession.rtcSessionStatus}");
+      "sendTextMessage : ${(rtcSession.isDataChannelConnectionAvailable)} : ${rtcSession.dc?.state} : ${rtcSession.rtcSessionStatus}",
+    );
     await createUserChatModel(sessioncid: remoteCoreId);
 
     await rtcSession.dc?.send(RTCDataChannelMessage.fromBinary(binary));
@@ -133,19 +130,18 @@ class MessagingConnectionController
         break;
       case RTCSessionStatus.failed:
         {
-          dataChannelStatus.value =
-              DataChannelConnectivityStatus.connectionLost;
+          dataChannelStatus.value = DataChannelConnectivityStatus.connectionLost;
         }
         break;
     }
   }
 
   void _observeMessagingStatus(RTCSession rtcSession) {
-    _applyConnectionStatus(
-        rtcSession.rtcSessionStatus, rtcSession.remotePeer.remoteCoreId);
+    _applyConnectionStatus(rtcSession.rtcSessionStatus, rtcSession.remotePeer.remoteCoreId);
 
     print(
-        "onConnectionState for observe ${rtcSession.rtcSessionStatus} ${rtcSession.connectionId}");
+      "onConnectionState for observe ${rtcSession.rtcSessionStatus} ${rtcSession.connectionId}",
+    );
     rtcSession.onNewRTCSessionStatus = (status) {
       _applyConnectionStatus(status, rtcSession.remotePeer.remoteCoreId);
     };
