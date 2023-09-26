@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
+import 'package:get/get.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
@@ -37,9 +38,10 @@ class P2PNodeResponseStream {
     // 1. prints the event info
     // 2. check for advertised and if so send a advertise response
 
-    p2pState.status[event.id]?.value = (event.error == null);
+    (p2pState.status[event.id] as Rxn<bool>)?.value = (event.error == null);
 
-    print("_onNewResponseEvent ${event.name} : ${event.id} : ${p2pState.status[event.id]?.value}");
+    print(
+        "_onNewResponseEvent ${event.name} : ${event.id} : ${(p2pState.status[event.id] as Rxn<bool>)?.value}");
 
     p2pState.responses.add(event);
     print("_onNewResponseEvent : eventId is: ${event.id.toString()}");

@@ -17,9 +17,7 @@ class P2PNodeRequestStream {
   final JsonDecoder _decoder = const JsonDecoder();
 
   P2PNodeRequestStream(
-      {required this.p2pState,
-      required this.signaling,
-      required this.multipleConnectionHandler});
+      {required this.p2pState, required this.signaling, required this.multipleConnectionHandler});
 
   void setUp() {
     // listen to the events from the node side
@@ -51,42 +49,36 @@ class P2PNodeRequestStream {
     debugPrint("_onNewRequestEvent: body is: ${event.body}");
     debugPrint("_onNewRequestEvent: error is: ${event.error}");
 
-    if (event.name == P2PReqResNodeNames.login &&
-        event.error == null &&
-        event.body != null) {
+    if (event.name == P2PReqResNodeNames.login && event.error == null && event.body != null) {
       await FlutterP2pCommunicator.sendResponse(
-          info: P2PReqResNodeModel(
-              name: P2PReqResNodeNames.login, body: {}, id: event.id));
+          info: P2PReqResNodeModel(name: P2PReqResNodeNames.login, body: {}, id: event.id));
 
       //
       // MARK: here we are telling the sending party that everything is ok and the req was received
-      String remoteCoreId = (event.body!['info'])['remoteCoreID'];
-      String remotePeerId = (event.body!['info'])['remotePeerID'];
+      String remoteCoreId = (event.body!['info'] as Map<String, dynamic>)['remoteCoreID'];
+      String remotePeerId = (event.body!['info'] as Map<String, dynamic>)['remotePeerID'];
 
-      if ((event.body!['payload'])['session'] != null) {
-        String request = (event.body!['payload'])['session'];
+      if ((event.body!['payload'] as Map<String, dynamic>)['session'] != null) {
+        String request = (event.body!['payload'] as Map<String, dynamic>)['session'];
         // if session is not null then we have a request
-        await onRequestReceived(
-            request.convertHexToString(), remoteCoreId, remotePeerId);
+        await onRequestReceived(request.convertHexToString(), remoteCoreId, remotePeerId);
 
         //signaling.onMessage(session.convertHexToString(), remoteCoreId, remotePeerId);
       }
     }
   }
 
-  Future<void> onRequestReceived(
-      String request, String remoteCoreId, String remotePeerId) async {
+  Future<void> onRequestReceived(String request, String remoteCoreId, String remotePeerId) async {
     // checks the type of the request and sends it to signalling or messaging accordingly
-
-    Map<String, dynamic> mapData = _decoder.convert(request);
+    var mapData = _decoder.convert(request);
     print("onRequestReceived $mapData : ${mapData['command']} : $remoteCoreId");
 
     if (mapData['command'] == "call") {
-      signaling.onMessage(mapData, remoteCoreId, remotePeerId);
+      signaling.onMessage(mapData as Map<String, dynamic>, remoteCoreId, remotePeerId);
     }
     if (mapData['command'] == "multiple_connection") {
       await multipleConnectionHandler.onRequestReceived(
-          mapData, remoteCoreId, remotePeerId);
+          mapData as Map<String, dynamic>, remoteCoreId, remotePeerId);
     } else {}
   }
 }
