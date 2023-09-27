@@ -38,10 +38,10 @@ class P2PNodeResponseStream {
     // 1. prints the event info
     // 2. check for advertised and if so send a advertise response
 
-    (p2pState.status[event.id] as Rxn<bool>)?.value = (event.error == null);
+    //(p2pState.status[event.id] as Rxn<bool>).value = (event.error == null);
 
     print(
-        "_onNewResponseEvent ${event.name} : ${event.id} : ${(p2pState.status[event.id] as Rxn<bool>)?.value}");
+        "_onNewResponseEvent ${event.name} : ${event.id} : ");
 
     p2pState.responses.add(event);
     print("_onNewResponseEvent : eventId is: ${event.id.toString()}");

@@ -219,7 +219,7 @@ class Signaling {
           var session = _sessions[sessionId];
           var isAudioCall = data['isAudioCall'];
           var newSession = await _createSession(
-            session as Session,
+            session,
             coreId: remoteCoreId,
             peerId: remotePeerId,
             sessionId: sessionId,
@@ -260,7 +260,7 @@ class Signaling {
         {
           var candidateMap = data['candidate'] as Map<String, dynamic>;
           var sessionId = data['session_id'];
-          var session = _sessions[sessionId] as Session;
+          var session = _sessions[sessionId];
           var candidate = RTCIceCandidate(
             candidateMap['candidate'],
             candidateMap['sdpMid'],

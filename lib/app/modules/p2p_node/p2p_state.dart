@@ -26,11 +26,11 @@ class P2PState extends GetxController {
         return false;
       }
 
-      if ((status[id] as Rxn<bool>)?.value == null) {
+      if ((status[id]! as Rxn<bool>).value == null) {
         //print("P2PCommunicator: $id : tracking request : no response");
         return true;
       }
-      if ((status[id] as Rxn<bool>)!.value == true) {
+      if ((status[id])?.value == true) {
         print("P2PCommunicator: $id : tracking request : response received : success");
         requestSucceeded = true;
         return false;
