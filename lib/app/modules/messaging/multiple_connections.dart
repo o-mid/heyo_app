@@ -2,7 +2,7 @@ import 'package:heyo/app/modules/messaging/models.dart';
 import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 
 class MultipleConnectionHandler {
-  Map<ConnectionId, RTCSession> connections = {} as Map<ConnectionId, RTCSession>;
+  Map<ConnectionId, RTCSession> connections = {};
   final SingleWebRTCConnection singleWebRTCConnection;
   Function(RTCSession)? onNewRTCSessionCreated;
   Function(RTCSession)? onRTCSessionConnected;
