@@ -35,6 +35,7 @@ dependencies:
   #   git:
   #     url: git@git.energy:heyo/flutter_camera
   #     ref: development
+  #
   photo_manager: ^2.7.1
   mime: ^1.0.2
   chewie: ^1.3.3
@@ -48,7 +49,7 @@ dependencies:
   flutter_p2p_communicator:
     git:
       url: git@git.energy:corepass/flutter_p2p_communicator.git
-      ref: 1e2681c3
+      ref: d22f98e4
 
   flutter_bip39:
     git:
