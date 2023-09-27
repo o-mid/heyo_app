@@ -10,10 +10,8 @@ import 'package:heyo/generated/locales.g.dart';
 
 class RecordCallDialog extends StatelessWidget {
   final Function onRecord;
-  const RecordCallDialog({
-    Key? key,
-    required this.onRecord,
-  }) : super(key: key);
+
+  const RecordCallDialog({super.key, required this.onRecord});
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +30,18 @@ class RecordCallDialog extends StatelessWidget {
               Get.back();
             },
             title: LocaleKeys.recordCallDialog_acceptButton.tr,
-            textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kStatesErrorColor),
+            textStyle: TEXTSTYLES.kLinkBig.copyWith(
+              color: COLORS.kStatesErrorColor,
+            ),
             backgroundColor: COLORS.kStatesLightErrorColor,
           ),
           CustomSizes.smallSizedBoxHeight,
           CustomButton(
             onTap: Get.back,
             title: LocaleKeys.recordCallDialog_cancelButton.tr,
-            textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kTextBlueColor),
+            textStyle: TEXTSTYLES.kLinkBig.copyWith(
+              color: COLORS.kTextBlueColor,
+            ),
           ),
         ],
       ),

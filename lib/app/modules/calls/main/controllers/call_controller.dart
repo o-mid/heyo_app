@@ -1,10 +1,16 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:wakelock/wakelock.dart';
 import 'package:get/get.dart';
+
 import 'package:heyo/app/modules/calls/domain/models.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_item_model.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
@@ -12,9 +18,6 @@ import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.da
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 //import 'package:heyo/app/modules/web-rtc/signaling.dart';
-import 'package:intl/intl.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:wakelock/wakelock.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 
@@ -33,6 +36,7 @@ enum RecordState {
 class CallController extends GetxController {
   late CallViewArgumentsModel args;
   final participants = <CallParticipantModel>[].obs;
+  final RxList<CallItemModel> mainCallModels = RxList();
 
   // Todo: check whether they are actually enabled or not
   final micEnabled = true.obs;
@@ -51,11 +55,7 @@ class CallController extends GetxController {
 
   final isVideoPositionsFlipped = false.obs;
 
-  bool get isGroupCall =>
-      participants
-          .where((p) => p.status == CallParticipantStatus.inCall)
-          .length >
-      1;
+  Rx<bool> get isGroupCall => (getRemoteVideoRenderers().length > 1).obs;
 
   final recordState = RecordState.notRecording.obs;
   final CallRepository callRepository;
@@ -67,14 +67,20 @@ class CallController extends GetxController {
   CallController({required this.callRepository});
 
   final RTCVideoRenderer _localRenderer = RTCVideoRenderer();
-  final RxList<RTCVideoRenderer> videoRenderers = RxList();
+  final RxList<RTCVideoRenderer> _remoteRenderers = RxList();
 
   RTCVideoRenderer getLocalVideRenderer() {
     return _localRenderer;
   }
 
   RxList<RTCVideoRenderer> getRemoteVideoRenderers() {
-    return videoRenderers;
+    return _remoteRenderers;
+  }
+
+  RxList<RTCVideoRenderer> getAllVideoRenderers() {
+    //* Use this item for group call
+    //* The first video renderer is the local Renderer,
+    return RxList([_localRenderer, ..._remoteRenderers]);
   }
 
   initRenderers() async {
@@ -173,7 +179,7 @@ class CallController extends GetxController {
     RTCVideoRenderer renderer = RTCVideoRenderer();
     await renderer.initialize();
     renderer.srcObject = callStream.remoteStream;
-    videoRenderers.add(renderer);
+    _remoteRenderers.add(renderer);
     updateCalleeVideoWidget();
   }
 
@@ -329,7 +335,7 @@ class CallController extends GetxController {
       isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   Future<void> disposeRTCRender() async {
-    for (var element in videoRenderers) {
+    for (var element in _remoteRenderers) {
       await element.dispose();
     }
   }

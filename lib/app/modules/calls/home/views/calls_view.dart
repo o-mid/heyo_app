@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
+
+import 'package:heyo/app/modules/calls/home/controllers/calls_controller.dart';
 import 'package:heyo/app/modules/calls/home/widgets/call_log_widget.dart';
 import 'package:heyo/app/modules/calls/home/widgets/empty_calls_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
-import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/widgets/appbar_widget.dart';
 import 'package:heyo/app/modules/shared/widgets/connection_status.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-
-import '../controllers/calls_controller.dart';
 
 class CallsView extends GetView<CallsController> {
   const CallsView({Key? key}) : super(key: key);

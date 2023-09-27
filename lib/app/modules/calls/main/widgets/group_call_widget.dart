@@ -1,39 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
-import 'package:heyo/generated/assets.gen.dart';
-import 'package:reorderables/reorderables.dart';
 
-class GroupCallWidget extends StatelessWidget {
+import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
+import 'package:heyo/app/modules/calls/main/widgets/call_renderer_widget.dart';
+
+class GroupCallWidget extends GetView<CallController> {
   const GroupCallWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<CallController>();
-    final width = (context.width - (8.w * 3)) / 2;
-    final height = width / 1.27;
+    final allVideoRenderers = controller.getAllVideoRenderers();
     return Obx(() {
-      return SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
-        child: Padding(
-          // This is for being able to scroll down to view the last two people in call
-          padding: EdgeInsets.only(bottom: height),
-          child: ReorderableWrap(
-            spacing: 8.w,
-            runSpacing: 8.h,
-            onReorder: controller.reorderParticipants,
-            children: controller.participants
-                .map(
-                  // Todo: replace with actual video from call participants
-                  (p) => Assets.png.groupCall.image(
-                    width: width,
-                    height: height,
-                  ),
-                )
-                .toList(),
+      if (allVideoRenderers.isEmpty) {
+        return const Center(child: Text('No remote videos available.'));
+      }
+
+      return Column(
+        children: [
+          Expanded(
+            child: GridView.builder(
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: allVideoRenderers.length == 2 ? 1 : 2,
+                childAspectRatio: ScreenUtil.defaultSize.aspectRatio *
+                    (allVideoRenderers.length == 2 ? 2 : 1),
+              ),
+              itemCount: allVideoRenderers.length,
+              itemBuilder: (context, index) {
+                return CallRendererWidget(
+                  renderer: allVideoRenderers[index],
+                );
+              },
+            ),
           ),
-        ),
+          //* This sizeBox is because of call bottom sheet header
+          //TODO: AliAzim => It should be removed for ImmersiveMode
+          SizedBox(height: 70.h)
+        ],
       );
     });
   }
