@@ -47,7 +47,7 @@ android {
         applicationId "mobi.heyo.messenger"
         // to use flutter_launcher_icons: ^0.9.2 minSdkVersion needs to be an integer value
         // https://stackoverflow.com/questions/70308823/why-am-i-getting-errors-while-adding-launcher-icon-in-flutter-project
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -59,7 +59,7 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
             minifyEnabled true
-            useProguard true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
