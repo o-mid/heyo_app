@@ -16,30 +16,14 @@ class MultipleCallerInfoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Wrap(
-        spacing: 5,
-        children: incomingCallers.map(
-          (caller) {
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  caller.name,
-                  style: TEXTSTYLES.kHeaderLarge.copyWith(
-                    color: COLORS.kWhiteColor,
-                  ),
-                ),
-                if (caller.coreId != incomingCallers.last.coreId)
-                  Text(
-                    ",",
-                    style: TEXTSTYLES.kHeaderLarge.copyWith(
-                      color: COLORS.kWhiteColor,
-                    ),
-                  ),
-              ],
-            );
-          },
-        ).toList(),
+      child: Text(
+        incomingCallers.map((e) => e.name).toList().join(", "),
+        style: TEXTSTYLES.kHeaderLarge.copyWith(
+          color: COLORS.kWhiteColor,
+        ),
+        textAlign: TextAlign.center,
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

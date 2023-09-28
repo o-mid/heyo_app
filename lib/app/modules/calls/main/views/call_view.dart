@@ -11,6 +11,7 @@ import 'package:heyo/app/modules/calls/main/widgets/record_indicator_widget.dart
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/widgets/appbar_widget.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
 class CallView extends GetView<CallController> {
@@ -23,19 +24,12 @@ class CallView extends GetView<CallController> {
         backgroundColor: COLORS.kCallPageDarkGrey,
         appBar: controller.isImmersiveMode.value
             ? null
-            : AppBar(
+            : AppBarWidget(
                 backgroundColor: COLORS.kCallPageDarkBlue,
-                title: Text(
-                  //TODO Call update name properly
-                  /*(controller.args.user.isContact)
-                      ? controller.args.user.name
-                      : controller.args.user.coreId.shortenCoreId,*/
-                  controller.args.members.first,
-                  style: TEXTSTYLES.kHeaderMedium.copyWith(
-                    height: 1.21,
-                    fontWeight: FONTS.SemiBold,
-                    color: COLORS.kWhiteColor,
-                  ),
+                title: controller.getConnectedParticipantsName(),
+                titleStyle: TEXTSTYLES.kHeaderMedium.copyWith(
+                  fontWeight: FONTS.SemiBold,
+                  //color: COLORS.kWhiteColor,
                 ),
                 actions: [
                   IconButton(

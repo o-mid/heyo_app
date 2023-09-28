@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:get/get.dart';
 
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_item_model.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
@@ -35,8 +36,8 @@ enum RecordState {
 
 class CallController extends GetxController {
   late CallViewArgumentsModel args;
-  final participants = <CallParticipantModel>[].obs;
-  final RxList<CallItemModel> mainCallModels = RxList();
+  final participants = RxList<CallParticipantModel>();
+  final connectedCallModels = RxList<CallItemModel>();
 
   // Todo: check whether they are actually enabled or not
   final micEnabled = true.obs;
@@ -83,9 +84,17 @@ class CallController extends GetxController {
     return RxList([_localRenderer, ..._remoteRenderers]);
   }
 
-  initRenderers() async {
+  String getConnectedParticipantsName() {
+    //* This item will loop all call connected user
+    //* Return their name as string and split them with comma
+    return connectedCallModels
+        .map((element) => element.name)
+        .toList()
+        .join(', ');
+  }
+
+  initLocalRenderer() async {
     await _localRenderer.initialize();
-    //await _remoteRenderers.initialize();
   }
 
   final _screenRecorder = EdScreenRecorder();
@@ -95,9 +104,10 @@ class CallController extends GetxController {
     Get.toNamed(
       Routes.MESSAGES,
       arguments: MessagesViewArgumentsModel(
-          coreId: "",
-          iconUrl: "",
-          connectionType: MessagingConnectionType.internet),
+        coreId: "",
+        iconUrl: "",
+        connectionType: MessagingConnectionType.internet,
+      ),
     );
   }
 
@@ -111,9 +121,9 @@ class CallController extends GetxController {
       //TODO should be check isContact or not
       participants.add(
         CallParticipantModel(
-          name: element,
-          coreId: element,
-          iconUrl: "",
+          name: element.shortenCoreId,
+          coreId: element.shortenCoreId,
+          iconUrl: "https://avatars.githubusercontent.com/u/7847725?v=4",
         ),
       );
     });
@@ -134,9 +144,10 @@ class CallController extends GetxController {
   }
 
   Future<void> setUp() async {
-    await initRenderers();
+    await initLocalRenderer();
 
     observeSignalingStreams();
+
     observeOnChangeParticipate();
 
     callRepository.onLocalStream = ((stream) {
@@ -146,8 +157,10 @@ class CallController extends GetxController {
     });
 
     if (args.callId == null) {
+      //* This means you start the call (you are caller)
       await callerSetup();
     } else {
+      //* This mean you join the call (You are callee)
       await calleeSetup();
     }
 
@@ -180,6 +193,17 @@ class CallController extends GetxController {
     await renderer.initialize();
     renderer.srcObject = callStream.remoteStream;
     _remoteRenderers.add(renderer);
+    //TODO: The data should return from CallStream,
+    // or input of method should be CallItemModel
+    CallItemModel callItemModel = CallItemModel(
+      audioMode: true,
+      videoMode: true,
+      coreId: callStream.coreId,
+      name: callStream.coreId.shortenCoreId,
+      status: "connected",
+      stream: callStream.remoteStream,
+    );
+    connectedCallModels.add(callItemModel);
     updateCalleeVideoWidget();
   }
 
