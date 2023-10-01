@@ -3,6 +3,8 @@ import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 enum CallParticipantStatus {
   calling,
   inCall,
+  ringing,
+  rejected,
 }
 
 class CallParticipantModel {

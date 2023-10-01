@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
@@ -11,7 +12,7 @@ import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/call_item_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/connected_participate_model.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
@@ -22,11 +23,11 @@ import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_mode
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 
-enum CallViewType {
-  stack,
-  column,
-  row,
-}
+//enum CallViewType {
+//  stack,
+//  column,
+//  row,
+//}
 
 enum RecordState {
   notRecording,
@@ -35,9 +36,19 @@ enum RecordState {
 }
 
 class CallController extends GetxController {
+  final CallRepository callRepository;
+  final AccountInfo accountInfo;
+
+  CallController({
+    required this.callRepository,
+    required this.accountInfo,
+  });
+
   late CallViewArgumentsModel args;
   final participants = RxList<CallParticipantModel>();
-  final connectedCallModels = RxList<CallItemModel>();
+  final _connectedRemoteParticipates = RxList<ConnectedParticipateModel>();
+
+  ConnectedParticipateModel? _localParticipate;
 
   // Todo: check whether they are actually enabled or not
   final micEnabled = true.obs;
@@ -52,49 +63,68 @@ class CallController extends GetxController {
   final callDurationSeconds = 0.obs;
 
   // Todo: reset [callViewType] and [isVideoPositionsFlipped] when other user disables video
-  final callViewType = CallViewType.stack.obs;
+  //final callViewType = CallViewType.stack.obs;
 
   final isVideoPositionsFlipped = false.obs;
 
-  Rx<bool> get isGroupCall => (getRemoteVideoRenderers().length > 1).obs;
+  Rx<bool> get isGroupCall => (_connectedRemoteParticipates.length > 1).obs;
 
   final recordState = RecordState.notRecording.obs;
-  final CallRepository callRepository;
 
   //late Session session;
   final Stopwatch stopwatch = Stopwatch();
   Timer? calltimer;
 
-  CallController({required this.callRepository});
+  //final RxList<RTCVideoRenderer> _remoteRenderers = RxList();
 
-  final RTCVideoRenderer _localRenderer = RTCVideoRenderer();
-  final RxList<RTCVideoRenderer> _remoteRenderers = RxList();
-
-  RTCVideoRenderer getLocalVideRenderer() {
-    return _localRenderer;
+  ConnectedParticipateModel? getLocalParticipate() {
+    if (_localParticipate == null) {
+      return null;
+    }
+    return _localParticipate;
   }
 
-  RxList<RTCVideoRenderer> getRemoteVideoRenderers() {
-    return _remoteRenderers;
+  RxList<ConnectedParticipateModel> getConnectedRemoteParticipate() {
+    return _connectedRemoteParticipates;
   }
 
-  RxList<RTCVideoRenderer> getAllVideoRenderers() {
+  RxList<ConnectedParticipateModel> getAllConnectedParticipate() {
     //* Use this item for group call
     //* The first video renderer is the local Renderer,
-    return RxList([_localRenderer, ..._remoteRenderers]);
+    return RxList([_localParticipate!, ..._connectedRemoteParticipates]);
   }
 
   String getConnectedParticipantsName() {
     //* This item will loop all call connected user
     //* Return their name as string and split them with comma
-    return connectedCallModels
+    return _connectedRemoteParticipates
         .map((element) => element.name)
         .toList()
         .join(', ');
   }
 
   initLocalRenderer() async {
-    await _localRenderer.initialize();
+    String? localParticipateCoreId = await accountInfo.getCoreId();
+    _localParticipate = ConnectedParticipateModel(
+      name: localParticipateCoreId!,
+      iconUrl: "https://avatars.githubusercontent.com/u/7847725?v=4",
+      coreId: localParticipateCoreId,
+      //TODO: audio & video mode should be get from the call
+      audioMode: micEnabled.value,
+      videoMode: true,
+    );
+
+    if (_localParticipate!.videoMode) {
+      RTCVideoRenderer localRenderer = RTCVideoRenderer();
+      await localRenderer.initialize();
+      _localParticipate!.rtcVideoRenderer = localRenderer;
+
+      callRepository.onLocalStream = ((stream) {
+        localRenderer.srcObject = stream;
+
+        updateCallerVideoWidget();
+      });
+    }
   }
 
   final _screenRecorder = EdScreenRecorder();
@@ -116,17 +146,7 @@ class CallController extends GetxController {
     super.onInit();
     args = Get.arguments as CallViewArgumentsModel;
     callerVideoEnabled.value = args.enableVideo;
-    setUp();
-    args.members.forEach((element) {
-      //TODO should be check isContact or not
-      participants.add(
-        CallParticipantModel(
-          name: element.shortenCoreId,
-          coreId: element.shortenCoreId,
-          iconUrl: "https://avatars.githubusercontent.com/u/7847725?v=4",
-        ),
-      );
-    });
+    initCall();
   }
 
   void startCallTimer() {
@@ -143,18 +163,12 @@ class CallController extends GetxController {
     stopwatch.stop();
   }
 
-  Future<void> setUp() async {
+  Future<void> initCall() async {
     await initLocalRenderer();
 
     observeSignalingStreams();
 
     observeOnChangeParticipate();
-
-    callRepository.onLocalStream = ((stream) {
-      _localRenderer.srcObject = stream;
-
-      updateCallerVideoWidget();
-    });
 
     if (args.callId == null) {
       //* This means you start the call (you are caller)
@@ -165,7 +179,8 @@ class CallController extends GetxController {
     }
 
     if (callRepository.getLocalStream() != null) {
-      _localRenderer.srcObject = callRepository.getLocalStream();
+      _localParticipate!.rtcVideoRenderer!.srcObject =
+          callRepository.getLocalStream();
     }
 
     if (args.isAudioCall) {
@@ -173,6 +188,20 @@ class CallController extends GetxController {
       calleeVideoEnabled.value = false;
       callRepository.showLocalVideoStream(false, "", false);
     }
+
+    //* adding participate into bottom sheet
+    //TODO: AliAzim => This list will be change in future
+    for (var element in args.members) {
+      //TODO should be check isContact or not
+      participants.add(
+        CallParticipantModel(
+          name: element.shortenCoreId,
+          coreId: element.shortenCoreId,
+          iconUrl: "https://avatars.githubusercontent.com/u/7847725?v=4",
+        ),
+      );
+    }
+
     updateCallerVideoWidget();
     observeCallStates();
     enableWakeScreenLock();
@@ -189,21 +218,23 @@ class CallController extends GetxController {
   }
 
   addRTCRenderer(CallStream callStream) async {
+    //TODO: AliAzim => condition should be add to check if video is enable or not
     RTCVideoRenderer renderer = RTCVideoRenderer();
     await renderer.initialize();
     renderer.srcObject = callStream.remoteStream;
-    _remoteRenderers.add(renderer);
+    //_remoteRenderers.add(renderer);
     //TODO: The data should return from CallStream,
     // or input of method should be CallItemModel
-    CallItemModel callItemModel = CallItemModel(
+    ConnectedParticipateModel remoteParticipate = ConnectedParticipateModel(
       audioMode: true,
       videoMode: true,
       coreId: callStream.coreId,
       name: callStream.coreId.shortenCoreId,
-      status: "connected",
+      iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
       stream: callStream.remoteStream,
+      rtcVideoRenderer: renderer,
     );
-    connectedCallModels.add(callItemModel);
+    _connectedRemoteParticipates.add(remoteParticipate);
     updateCalleeVideoWidget();
   }
 
@@ -353,14 +384,16 @@ class CallController extends GetxController {
     isImmersiveMode.value = !isImmersiveMode.value;
   }
 
-  void updateCallViewType(CallViewType type) => callViewType.value = type;
+  //void updateCallViewType(CallViewType type) => callViewType.value = type;
 
   void flipVideoPositions() =>
       isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   Future<void> disposeRTCRender() async {
-    for (var element in _remoteRenderers) {
-      await element.dispose();
+    for (var participate in _connectedRemoteParticipates) {
+      if (participate.rtcVideoRenderer != null) {
+        await participate.rtcVideoRenderer!.dispose();
+      }
     }
   }
 
@@ -369,7 +402,7 @@ class CallController extends GetxController {
     stopCallTimer();
 
     await callRepository.closeCall();
-    await _localRenderer.dispose();
+    await _localParticipate!.rtcVideoRenderer!.dispose();
     await disposeRTCRender();
     _stopWatingBeep();
     disableWakeScreenLock();
@@ -410,7 +443,7 @@ class CallController extends GetxController {
 
 //reset Call View when one peer turn the Video Disabled
   void resetCallView() {
-    updateCallViewType(CallViewType.stack);
+    //updateCallViewType(CallViewType.stack);
     isVideoPositionsFlipped.value = false;
   }
 

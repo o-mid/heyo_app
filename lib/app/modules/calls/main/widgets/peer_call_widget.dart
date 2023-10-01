@@ -12,13 +12,13 @@ class PeerCallWidget extends GetView<CallController> {
 
   @override
   Widget build(BuildContext context) {
-    final localVideRenderer = controller.getLocalVideRenderer();
-    final remoteVideoRenderers = controller.getRemoteVideoRenderers();
+    final localParticipate = controller.getLocalParticipate();
+    final remoteParticipate = controller.getConnectedRemoteParticipate();
     return Obx(() {
       final bool changeCallerWidgetSize = controller.showCallerOptions.value &
           controller.isVideoPositionsFlipped.isFalse;
 
-      if (remoteVideoRenderers.isEmpty) {
+      if (remoteParticipate.isEmpty || localParticipate == null) {
         return const Center(child: Text('No remote videos available.'));
       }
 
@@ -27,7 +27,7 @@ class PeerCallWidget extends GetView<CallController> {
           children: [
             //* The remote video that will get whole screen
             CallRendererWidget(
-              renderer: remoteVideoRenderers.first,
+              participateModel: remoteParticipate.first,
             ),
             //* The local drapable video
             DraggableVideo(
@@ -47,7 +47,7 @@ class PeerCallWidget extends GetView<CallController> {
                     child: Container(
                       margin: const EdgeInsets.all(5),
                       child: CallRendererWidget(
-                        renderer: localVideRenderer,
+                        participateModel: localParticipate!,
                       ),
                     ),
                   ),

@@ -40,8 +40,10 @@ class CallBottomSheetHeader extends StatelessWidget {
                 Obx(() {
                   return _buildEnabledOrDisabledButton(
                     isEnabled: controller.callerVideoEnabled.value,
-                    enabled: Assets.svg.videoCallIcon.svg(color: COLORS.kWhiteColor),
-                    disabled: Assets.svg.videoDisabled.svg(color: COLORS.kWhiteColor),
+                    enabled:
+                        Assets.svg.videoCallIcon.svg(color: COLORS.kWhiteColor),
+                    disabled:
+                        Assets.svg.videoDisabled.svg(color: COLORS.kWhiteColor),
                     onPressed: controller.toggleVideo,
                   );
                 }),
@@ -55,8 +57,10 @@ class CallBottomSheetHeader extends StatelessWidget {
                 Obx(() {
                   return _buildEnabledOrDisabledButton(
                     isEnabled: controller.micEnabled.value,
-                    enabled: Assets.svg.recordIcon.svg(color: COLORS.kWhiteColor),
-                    disabled: Assets.svg.muteMicIcon.svg(color: COLORS.kWhiteColor),
+                    enabled:
+                        Assets.svg.recordIcon.svg(color: COLORS.kWhiteColor),
+                    disabled:
+                        Assets.svg.muteMicIcon.svg(color: COLORS.kWhiteColor),
                     onPressed: controller.toggleMuteMic,
                   );
                 }),
@@ -82,7 +86,8 @@ class CallBottomSheetHeader extends StatelessWidget {
     return CircleIconButton(
       onPressed: onPressed,
       padding: EdgeInsets.all(15.w),
-      backgroundColor: isEnabled ? COLORS.kCallPageDarkGrey : COLORS.kCallPageDarkBlue,
+      backgroundColor:
+          isEnabled ? COLORS.kCallPageDarkGrey : COLORS.kCallPageDarkBlue,
       border: Border.all(color: COLORS.kCallPageDarkGrey, width: 1.w),
       icon: isEnabled ? enabled : disabled,
     );

@@ -10,7 +10,7 @@ class GroupCallWidget extends GetView<CallController> {
 
   @override
   Widget build(BuildContext context) {
-    final allVideoRenderers = controller.getAllVideoRenderers();
+    final allVideoRenderers = controller.getAllConnectedParticipate();
     return Obx(() {
       if (allVideoRenderers.isEmpty) {
         return const Center(child: Text('No remote videos available.'));
@@ -29,7 +29,7 @@ class GroupCallWidget extends GetView<CallController> {
               itemCount: allVideoRenderers.length,
               itemBuilder: (context, index) {
                 return CallRendererWidget(
-                  renderer: allVideoRenderers[index],
+                  participateModel: allVideoRenderers[index],
                 );
               },
             ),
