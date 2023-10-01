@@ -47,7 +47,7 @@ class PeerCallWidget extends GetView<CallController> {
                     child: Container(
                       margin: const EdgeInsets.all(5),
                       child: CallRendererWidget(
-                        participateModel: localParticipate!,
+                        participateModel: localParticipate,
                       ),
                     ),
                   ),
