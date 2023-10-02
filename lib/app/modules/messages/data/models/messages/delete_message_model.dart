@@ -13,7 +13,7 @@ class DeleteMessageModel {
 
   factory DeleteMessageModel.fromJson(Map<String, dynamic> json) => DeleteMessageModel(
         messageIds:
-            List<String>.from((json[messageIdsSerializedName] as List<String>).map((x) => x)),
+            List<String>.from((json[messageIdsSerializedName] as List<dynamic>).map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {

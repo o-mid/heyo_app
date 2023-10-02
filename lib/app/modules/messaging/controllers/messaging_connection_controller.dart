@@ -68,7 +68,7 @@ class MessagingConnectionController extends CommonMessagingConnectionController 
                   remoteCoreId: rtcSession.remotePeer.remoteCoreId,
                 )
               : await handleDataChannelText(
-                  receivedJson: _decoder.convert(data.text as String) as Map<String, dynamic>,
+                  receivedJson: _decoder.convert(data.text) as Map<String, dynamic>,
                   remoteCoreId: rtcSession.remotePeer.remoteCoreId,
                 );
         };

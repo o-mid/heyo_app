@@ -72,7 +72,7 @@ class SingleWebRTCConnection {
 
   Future<void> onOfferReceived(RTCSession rtcSession, Map<String, dynamic> description) async {
     await rtcSession.pc!
-        .setRemoteDescription(RTCSessionDescription(description['sdp'], description['type']));
+        .setRemoteDescription(RTCSessionDescription(description['sdp'] as String?, description['type'] as String?));
     RTCSessionDescription sessionDescription =
         await webRTCConnectionManager.setupAnswer(rtcSession.pc!, MEDIA_TYPE);
     print("onMessage onOfferReceived Send");
@@ -84,7 +84,7 @@ class SingleWebRTCConnection {
         },
         rtcSession.remotePeer.remoteCoreId,
         rtcSession.remotePeer.remotePeerId,
-        rtcSession.connectionId);
+        rtcSession.connectionId,);
   }
 
   Future<void> onAnswerReceived(RTCSession rtcSession, Map<String, dynamic> description) async {
@@ -92,8 +92,8 @@ class SingleWebRTCConnection {
 
     await rtcSession.pc!.setRemoteDescription(
       RTCSessionDescription(
-        description['sdp'],
-        description['type'],
+        description['sdp'] as String?,
+        description['type'] as String?,
       ),
     );
   }
@@ -131,8 +131,8 @@ class SingleWebRTCConnection {
 
   Future<void> onCandidateReceived(RTCSession rtcSession, Map<String, dynamic> candidateMap) async {
     RTCIceCandidate candidate = RTCIceCandidate(
-      candidateMap['candidate'],
-      candidateMap['sdpMid'],
+      candidateMap['candidate'] as String?,
+      candidateMap['sdpMid'] as String?,
       candidateMap['sdpMLineIndex'] as int?,
     );
     if (rtcSession.isConnectionStable()) {
