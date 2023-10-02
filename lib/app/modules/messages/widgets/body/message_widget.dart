@@ -10,8 +10,10 @@ import 'message_header_widget.dart';
 
 class MessageWidget extends StatelessWidget {
   final MessageModel message;
+  final String? iconUrl;
   final bool isMockMessage;
-  const MessageWidget({Key? key, required this.message, this.isMockMessage = false})
+  const MessageWidget(
+      {Key? key, required this.message, this.isMockMessage = false, required this.iconUrl})
       : super(key: key);
 
   @override
@@ -22,7 +24,7 @@ class MessageWidget extends StatelessWidget {
         if (!message.isFromMe) CustomSizes.mediumSizedBoxWidth,
         if (!message.isFromMe)
           CustomCircleAvatar(
-            url: message.senderAvatar,
+            url: iconUrl ?? "",
             size: 20,
             isMockData: isMockMessage,
           ),

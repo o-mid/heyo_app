@@ -26,7 +26,7 @@ class CustomCircleAvatar extends StatelessWidget {
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
           ),
-          child: !isMockData
+          child: !isMockData || url.isNotEmpty
               ? Image.network(
                   url,
                 )
