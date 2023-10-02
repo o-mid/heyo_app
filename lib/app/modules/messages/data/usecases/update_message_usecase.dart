@@ -19,7 +19,8 @@ class UpdateMessage {
   final CommonMessagingConnectionController messagingConnection =
       Get.find<CommonMessagingConnectionController>();
 
-  execute({required UpdateMessageType updateMessageType, required String remoteCoreId}) async {
+  Future<void> execute(
+      {required UpdateMessageType updateMessageType, required String remoteCoreId}) async {
     switch (updateMessageType.runtimeType) {
       case UpdateReactions:
         final message = (updateMessageType as UpdateReactions).selectedMessage;
@@ -27,22 +28,24 @@ class UpdateMessage {
         final emoji = (updateMessageType).emoji;
 
         await updateReactions(
-            message: message,
-            chatId: updateMessageType.chatId,
-            emoji: emoji,
-            remoteCoreId: remoteCoreId);
+          message: message,
+          chatId: updateMessageType.chatId,
+          emoji: emoji,
+          remoteCoreId: remoteCoreId,
+        );
 
         break;
     }
   }
 
-  Future<void> updateReactions(
-      {required MessageModel message,
-      required String emoji,
-      required String chatId,
-      required String remoteCoreId}) async {
-    final String localCoreID = await messagingConnection.accountInfo.getCoreId() ?? "";
-    ReactionModel reaction = message.reactions[emoji] as ReactionModel;
+  Future<void> updateReactions({
+    required MessageModel message,
+    required String emoji,
+    required String chatId,
+    required String remoteCoreId,
+  }) async {
+    final localCoreID = await messagingConnection.accountInfo.getCoreId() ?? "";
+    var reaction = message.reactions[emoji] as ReactionModel? ?? ReactionModel();
 
     if (reaction.isReactedByMe) {
       reaction.users.removeWhere((element) => element == localCoreID);
@@ -56,7 +59,7 @@ class UpdateMessage {
       );
     }
 
-    MessageModel updatedMessage = message.copyWith(
+    var updatedMessage = message.copyWith(
       reactions: {
         ...message.reactions,
         emoji: reaction,
@@ -64,11 +67,11 @@ class UpdateMessage {
     );
     await messagesRepo.updateMessage(message: updatedMessage, chatId: chatId);
 
-    Map<String, dynamic> updatedMessageJson =
+    var updatedMessageJson =
         UpdateMessageModel(message: updatedMessage.copyWith(reactions: updatedMessage.reactions))
             .toJson();
 
-    SendDataChannelMessage(messagingConnection: messagingConnection).execute(
+    await SendDataChannelMessage(messagingConnection: messagingConnection).execute(
       remoteCoreId: remoteCoreId,
       channelMessageType: ChannelMessageType.update(message: updatedMessageJson),
     );
