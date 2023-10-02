@@ -26,7 +26,7 @@ class MultipleConnectionHandler {
       if (rtcSession.rtcSessionStatus == RTCSessionStatus.failed ||
           (rtcSession.rtcSessionStatus == RTCSessionStatus.none &&
               ((currentTime - rtcSession.timeStamp) > 10000))) {
-        (connections[rtcSession.connectionId] as RTCSession)?.dispose();
+        connections[rtcSession.connectionId]?.dispose();
         connections.remove(rtcSession.connectionId);
         rtcSession = await _initiateSession(remoteCoreId);
       }
@@ -43,28 +43,28 @@ class MultipleConnectionHandler {
 
   reset() {
     connections.forEach((key, value) {
-      (connections[key] as RTCSession)?.dispose();
+      connections[key]?.dispose();
     });
     connections.clear();
   }
 
   _removePeerConnections(String remoteCoreId) {
-    List<RTCSession> items = connections.values
+    var items = connections.values
         .where((element) => (element.remotePeer.remoteCoreId == remoteCoreId))
         .toList();
-    for (var element in items) {
-      (connections[element.connectionId] as RTCSession)?.dispose();
+    for (final element in items) {
+      connections[element.connectionId]?.dispose();
       connections.remove(element.connectionId);
     }
   }
 
   _removePrevConnections(String remoteCoreId, ConnectionId connectionId) {
-    List<RTCSession> items = connections.values
-        .where((element) => (element.remotePeer.remoteCoreId == remoteCoreId &&
-            element.connectionId != connectionId))
+    var items = connections.values
+        .where((element) => element.remotePeer.remoteCoreId == remoteCoreId &&
+            element.connectionId != connectionId)
         .toList();
     for (var element in items) {
-      (connections[element.connectionId] as RTCSession)?.dispose();
+      connections[element.connectionId]?.dispose();
 
       connections.remove(element.connectionId);
     }
@@ -72,7 +72,7 @@ class MultipleConnectionHandler {
 
   RTCSession? getLatestRemoteConnections(String remoteCoreId) {
     print("getLatestRemoteConnections method");
-    List<RTCSession> items = connections.values
+    final items = connections.values
         .where((element) => element.remotePeer.remoteCoreId == remoteCoreId)
         .toList();
     items.sort((a, b) => a.timeStamp.compareTo(b.timeStamp));
@@ -97,7 +97,8 @@ class MultipleConnectionHandler {
     print("_getConnection");
     if (connections[connectionId] == null) {
       _removePeerConnections(remoteCoreId);
-      RTCSession rtcSession = await _createSession(connectionId, remoteCoreId, remotePeerId);
+      RTCSession rtcSession =
+          await _createSession(connectionId, remoteCoreId, remotePeerId);
       print("_getConnection new created");
 
       return rtcSession;
@@ -112,23 +113,26 @@ class MultipleConnectionHandler {
         print("_getConnection deprecated");
 
         _removePeerConnections(remoteCoreId);
-        RTCSession rtcSession = await _createSession(connectionId, remoteCoreId, remotePeerId);
+        RTCSession rtcSession =
+            await _createSession(connectionId, remoteCoreId, remotePeerId);
         return rtcSession;
       }
     }
   }
 
   void _setRemotePeerId(ConnectionId connectionId, String? remotePeerId) {
-    ((connections[connectionId] as RTCSession)!.remotePeer.remotePeerId == null &&
+    ((connections[connectionId] as RTCSession)!.remotePeer.remotePeerId ==
+                null &&
             remotePeerId != null)
-        ? (connections[connectionId] as RTCSession)!.remotePeer.remotePeerId = remotePeerId
+        ? (connections[connectionId] as RTCSession)!.remotePeer.remotePeerId =
+            remotePeerId
         : {};
   }
 
-  Future<RTCSession> _createSession(
-      ConnectionId connectionId, String remoteCoreId, String? remotePeerId) async {
-    RTCSession rtcSession =
-        await singleWebRTCConnection.createSession(connectionId, remoteCoreId, remotePeerId);
+  Future<RTCSession> _createSession(ConnectionId connectionId,
+      String remoteCoreId, String? remotePeerId) async {
+    RTCSession rtcSession = await singleWebRTCConnection.createSession(
+        connectionId, remoteCoreId, remotePeerId);
     connections[connectionId] = rtcSession;
 
     rtcSession.onRTCSessionConnected = (rtc) {
@@ -141,8 +145,10 @@ class MultipleConnectionHandler {
   }
 
   // for preventing exception, always who has bigger coreId initiates the offer or starts the session
-  Future<RTCSession> _initiateSession(String remoteCoreId /*, String selfCoreId*/) async {
-    RTCSession rtcSession = await _getConnection(generateConnectionId(), remoteCoreId, null);
+  Future<RTCSession> _initiateSession(
+      String remoteCoreId /*, String selfCoreId*/) async {
+    RTCSession rtcSession =
+        await _getConnection(generateConnectionId(), remoteCoreId, null);
 
     // if (selfCoreId.compareTo(remoteCoreId) > 0) {
     singleWebRTCConnection.startSession(rtcSession);
@@ -154,8 +160,8 @@ class MultipleConnectionHandler {
     return rtcSession;
   }
 
-  Future<void> onRequestReceived(
-      Map<String, dynamic> mapData, String remoteCoreId, String remotePeerId) async {
+  Future<void> onRequestReceived(Map<String, dynamic> mapData,
+      String remoteCoreId, String remotePeerId) async {
     Map<String, dynamic> data = mapData[DATA] as Map<String, dynamic>;
     print("onMessage, type: ${mapData['type']}");
 
@@ -171,17 +177,20 @@ class MultipleConnectionHandler {
         break;*/
       case offer:
         {
-          String connectionId = mapData[CONNECTION_ID] as String;
-          RTCSession rtcSession = await _getConnection(connectionId, remoteCoreId, remotePeerId);
-          Map<String, dynamic> description = data[DATA_DESCRIPTION] as Map<String, dynamic>;
+          final connectionId = mapData[CONNECTION_ID] as String;
+          RTCSession rtcSession =
+              await _getConnection(connectionId, remoteCoreId, remotePeerId);
+          Map<String, dynamic> description =
+              data[DATA_DESCRIPTION] as Map<String, dynamic>;
 
           await singleWebRTCConnection.onOfferReceived(rtcSession, description);
         }
         break;
       case answer:
         {
-          String connectionId = mapData[CONNECTION_ID];
-          RTCSession rtcSession = await _getConnection(connectionId, remoteCoreId, remotePeerId);
+          final String connectionId = mapData[CONNECTION_ID] as String;
+          RTCSession rtcSession =
+              await _getConnection(connectionId, remoteCoreId, remotePeerId);
           var description = data[DATA_DESCRIPTION];
           await singleWebRTCConnection.onAnswerReceived(
               rtcSession, description as Map<String, dynamic>);
@@ -189,9 +198,10 @@ class MultipleConnectionHandler {
         break;
       case candidate:
         {
-          String connectionId = mapData[CONNECTION_ID];
+          final String connectionId = mapData[CONNECTION_ID] as String;
 
-          RTCSession rtcSession = await _getConnection(connectionId, remoteCoreId, remotePeerId);
+          RTCSession rtcSession =
+              await _getConnection(connectionId, remoteCoreId, remotePeerId);
           var candidateMap = data[candidate];
           await singleWebRTCConnection.onCandidateReceived(
               rtcSession, candidateMap as Map<String, dynamic>);
