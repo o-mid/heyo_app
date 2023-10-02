@@ -44,23 +44,27 @@ class MultiMediaMessageModel extends MessageModel {
     bool? isSelected,
   }) {
     return MultiMediaMessageModel(
-        mediaList: mediaList ?? this.mediaList,
-        messageId: messageId ?? this.messageId,
-        chatId: chatId ?? this.chatId,
-        timestamp: timestamp ?? this.timestamp,
-        senderName: senderName,
-        senderAvatar: senderAvatar,
-        reactions: reactions ?? this.reactions,
-        status: status ?? this.status,
-        replyTo: clearReply ? null : replyTo,
-        isFromMe: isFromMe ?? this.isFromMe,
-        isForwarded: isForwarded ?? this.isForwarded,
-        type: type ?? this.type,
-        isSelected: isSelected ?? this.isSelected);
+      mediaList: mediaList ?? this.mediaList,
+      messageId: messageId ?? this.messageId,
+      chatId: chatId ?? this.chatId,
+      timestamp: timestamp ?? this.timestamp,
+      senderName: senderName,
+      senderAvatar: senderAvatar,
+      reactions: reactions ?? this.reactions,
+      status: status ?? this.status,
+      replyTo: clearReply ? null : replyTo,
+      isFromMe: isFromMe ?? this.isFromMe,
+      isForwarded: isForwarded ?? this.isForwarded,
+      type: type ?? this.type,
+      isSelected: isSelected ?? this.isSelected,
+    );
   }
 
   factory MultiMediaMessageModel.fromJson(Map<String, dynamic> json) => MultiMediaMessageModel(
-        mediaList: List<dynamic>.from(json[mediaListSerializedName].map((x) => messageFromJson(x))),
+        mediaList: List<dynamic>.from(
+          (json[mediaListSerializedName] as List<dynamic>)
+              .map((x) => messageFromJson(x as Map<String, dynamic>)),
+        ),
         // parent props:
         messageId: json[MessageModel.messageIdSerializedName],
         chatId: json[MessageModel.chatIdSerializedName],
@@ -69,13 +73,15 @@ class MultiMediaMessageModel extends MessageModel {
         senderAvatar: json[MessageModel.senderAvatarSerializedName],
         status: MessageStatus.values.byName(json[MessageModel.statusSerializedName]),
         type: MessageContentType.values.byName(json[MessageModel.typeSerializedName]),
-        isFromMe: json[MessageModel.isFromMeSerializedName],
-        isForwarded: json[MessageModel.isForwardedSerializedName],
+        isFromMe: json[MessageModel.isFromMeSerializedName] as bool,
+        isForwarded: json[MessageModel.isForwardedSerializedName] as bool,
         reactions: (jsonDecode(json[MessageModel.reactionsSerializedName]) as Map<String, dynamic>)
-            .map((String k, v) => MapEntry(k, ReactionModel.fromJson(v))),
+            .map((String k, v) => MapEntry(k, ReactionModel.fromJson(v as Map<String, dynamic>))),
         replyTo: json[MessageModel.replyToSerializedName] == null
             ? null
-            : ReplyToModel.fromJson(json[MessageModel.replyToSerializedName]),
+            : ReplyToModel.fromJson(
+                json[MessageModel.replyToSerializedName] as Map<String, dynamic>,
+              ),
       );
 
   @override

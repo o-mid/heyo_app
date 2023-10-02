@@ -23,13 +23,14 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
 
   WifiDirectWrapper wifiDirectWrapper = WifiDirectWrapper();
 
-  WifiDirectConnectionController(
-      {required wifiDirectWrapper,
-      required super.accountInfo,
-      required super.messagesRepo,
-      required super.chatHistoryRepo,
-      required super.notificationsController,
-      required super.contactRepository});
+  WifiDirectConnectionController({
+    required wifiDirectWrapper,
+    required super.accountInfo,
+    required super.messagesRepo,
+    required super.chatHistoryRepo,
+    required super.notificationsController,
+    required super.contactRepository,
+  });
 
   // TODO since working with HeyoWifiDirectPlugin instance requests usage of streams
   // TODO it is necessary to ensure closing this class instance with closing or
@@ -53,7 +54,8 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
     _heyoWifiDirect = wifiDirectWrapper.pluginInstance;
     if (_heyoWifiDirect == null) {
       print(
-          "HeyoWifiDirect plugin not initialized! Wi-Fi Direct functionality may not be available");
+        "HeyoWifiDirect plugin not initialized! Wi-Fi Direct functionality may not be available",
+      );
     }
   }
 
@@ -73,7 +75,8 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
     if (this.remoteId == remoteId) {
       // TODO remove debug output
       print(
-          'WifiDirectConnectionController(remoteId $remoteId): initMessagingConnection -> already connected');
+        'WifiDirectConnectionController(remoteId $remoteId): initMessagingConnection -> already connected',
+      );
       return;
     }
 
@@ -81,10 +84,11 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
 
     // TODO remove debug output
     print(
-        'WifiDirectConnectionController: initMessagingConnection($remoteId), status ${_heyoWifiDirect!.peerList.peers[remoteId]!.status.name}');
+      'WifiDirectConnectionController: initMessagingConnection($remoteId), status ${(_heyoWifiDirect!.peerList.peers[remoteId] as Peer).status.name}',
+    );
     this.remoteId = remoteId;
 
-    switch (_heyoWifiDirect!.peerList.peers[remoteId]!.status) {
+    switch ((_heyoWifiDirect!.peerList.peers[remoteId] as Peer).status) {
       case PeerStatus.peerTCPOpened:
         dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
         break;
@@ -120,7 +124,8 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
 
     // TODO implement binary sending
     print(
-        'WifiDirectConnectionController(remoteId $remoteId): sendBinaryData() header ${sendingMessage.header.toString()}');
+      'WifiDirectConnectionController(remoteId $remoteId): sendBinaryData() header ${sendingMessage.header.toString()}',
+    );
 
     _heyoWifiDirect!.sendBinaryData(
       receiver: remoteId!,
@@ -170,13 +175,17 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
 
   messageHandler(HeyoWifiDirectMessage message) {
     print(
-        'WifiDirectConnectionController(remoteId $remoteId): binary: ${message.isBinary}, from ${message.senderId} to ${message.receiverId}');
+      'WifiDirectConnectionController(remoteId $remoteId): binary: ${message.isBinary}, from ${message.senderId} to ${message.receiverId}',
+    );
 
     MessageSession session = MessageSession(sid: Constants.coreID, cid: remoteId!, pid: remoteId);
 
     message.isBinary
-        ? handleDataChannelBinary(binaryData: message.body, remoteCoreId: session.cid)
+        ? handleDataChannelBinary(binaryData: message.body as Uint8List, remoteCoreId: session.cid)
         : handleDataChannelText(
-            receivedJson: const JsonDecoder().convert(message.body), remoteCoreId: session.cid);
+            receivedJson:
+                const JsonDecoder().convert(message.body as String) as Map<String, dynamic>,
+            remoteCoreId: session.cid,
+          );
   }
 }

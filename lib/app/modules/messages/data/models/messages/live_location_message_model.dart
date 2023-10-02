@@ -66,8 +66,8 @@ class LiveLocationMessageModel extends MessageModel {
   }
 
   factory LiveLocationMessageModel.fromJson(Map<String, dynamic> json) => LiveLocationMessageModel(
-        latitude: json[latitudeSerializedName],
-        longitude: json[longitudeSerializedName],
+        latitude: json[latitudeSerializedName] as double,
+        longitude: json[longitudeSerializedName] as double,
         endTime: DateTime.parse(json[endTimeSerializedName]),
         // parent props:
         messageId: json[MessageModel.messageIdSerializedName],
@@ -77,13 +77,14 @@ class LiveLocationMessageModel extends MessageModel {
         senderAvatar: json[MessageModel.senderAvatarSerializedName],
         status: MessageStatus.values.byName(json[MessageModel.statusSerializedName]),
         type: MessageContentType.values.byName(json[MessageModel.typeSerializedName]),
-        isFromMe: json[MessageModel.isFromMeSerializedName],
-        isForwarded: json[MessageModel.isForwardedSerializedName],
+        isFromMe: json[MessageModel.isFromMeSerializedName] as bool,
+        isForwarded: json[MessageModel.isForwardedSerializedName] as bool,
         reactions: (jsonDecode(json[MessageModel.reactionsSerializedName]) as Map<String, dynamic>)
-            .map((String k, v) => MapEntry(k, ReactionModel.fromJson(v))),
+            .map((String k, v) => MapEntry(k, ReactionModel.fromJson(v as Map<String, dynamic>))),
         replyTo: json[MessageModel.replyToSerializedName] == null
             ? null
-            : ReplyToModel.fromJson(json[MessageModel.replyToSerializedName]),
+            : ReplyToModel.fromJson(
+                json[MessageModel.replyToSerializedName] as Map<String, dynamic>),
       );
 
   @override

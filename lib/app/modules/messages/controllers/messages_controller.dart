@@ -14,7 +14,6 @@ import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_camera/flutter_camera.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -103,9 +102,10 @@ class MessagesController extends GetxController {
   late ChatModel? chatModel;
   Rx<UserModel> user = UserModel(
     coreId: (Get.arguments as MessagesViewArgumentsModel).coreId,
-    iconUrl: (Get.arguments).iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
+    iconUrl:
+        (Get.arguments).iconUrl as String ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
     name: (Get.arguments as MessagesViewArgumentsModel).coreId.shortenCoreId,
-    walletAddress: (Get.arguments).coreId,
+    walletAddress: (Get.arguments).coreId as String,
     isBlocked: false,
     isOnline: false,
     isContact: false,
@@ -738,74 +738,74 @@ class MessagesController extends GetxController {
   //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> openCameraPicker(BuildContext context) async {
     try {
-      await openCameraForSendingMediaMessage(
-        context,
-        receiverName: user.value.name,
-        onEntitySaving: (CameraPickerViewType viewType, File file) async {
-          AssetEntity? entity;
+      // await openCameraForSendingMediaMessage(
+      //   context,
+      //   receiverName: user.value.name,
+      //   onEntitySaving: (CameraPickerViewType viewType, File file) async {
+      //     AssetEntity? entity;
 
-          switch (viewType) {
-            case CameraPickerViewType.image:
-              final String filePath = file.path;
-              entity = await PhotoManager.editor.saveImageWithPath(
-                filePath,
-                title: path.basename(filePath),
-              );
+      //     switch (viewType) {
+      //       case CameraPickerViewType.image:
+      //         final String filePath = file.path;
+      //         entity = await PhotoManager.editor.saveImageWithPath(
+      //           filePath,
+      //           title: path.basename(filePath),
+      //         );
 
-              if (entity == null) {
-                break;
-              }
-              await SendMessage().execute(
-                  sendMessageType: SendMessageType.image(
-                    path: file.path,
-                    metadata: ImageMetadata(
-                      height: entity.height.toDouble(),
-                      width: entity.width.toDouble(),
-                    ),
-                    replyTo: replyingTo.value,
-                    chatId: chatId,
-                  ),
-                  remoteCoreId: user.value.walletAddress);
+      //         if (entity == null) {
+      //           break;
+      //         }
+      //         await SendMessage().execute(
+      //             sendMessageType: SendMessageType.image(
+      //               path: file.path,
+      //               metadata: ImageMetadata(
+      //                 height: entity.height.toDouble(),
+      //                 width: entity.width.toDouble(),
+      //               ),
+      //               replyTo: replyingTo.value,
+      //               chatId: chatId,
+      //             ),
+      //             remoteCoreId: user.value.walletAddress);
 
-              break;
-            case CameraPickerViewType.video:
-              entity = await PhotoManager.editor.saveVideo(
-                File(file.path),
-                title: path.basename(file.path),
-              );
+      //         break;
+      //       case CameraPickerViewType.video:
+      //         entity = await PhotoManager.editor.saveVideo(
+      //           File(file.path),
+      //           title: path.basename(file.path),
+      //         );
 
-              if (entity == null) {
-                break;
-              }
+      //         if (entity == null) {
+      //           break;
+      //         }
 
-              await SendMessage().execute(
-                  sendMessageType: SendMessageType.video(
-                    path: file.path,
-                    metadata: VideoMetadata(
-                      durationInSeconds: entity.videoDuration.inSeconds,
-                      height: entity.height.toDouble(),
-                      width: entity.width.toDouble(),
-                      isLocal: true,
-                      thumbnailBytes: await entity.thumbnailData,
-                      thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
-                    ),
-                    replyTo: replyingTo.value,
-                    chatId: chatId,
-                  ),
-                  remoteCoreId: user.value.walletAddress);
+      //         await SendMessage().execute(
+      //             sendMessageType: SendMessageType.video(
+      //               path: file.path,
+      //               metadata: VideoMetadata(
+      //                 durationInSeconds: entity.videoDuration.inSeconds,
+      //                 height: entity.height.toDouble(),
+      //                 width: entity.width.toDouble(),
+      //                 isLocal: true,
+      //                 thumbnailBytes: await entity.thumbnailData,
+      //                 thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+      //               ),
+      //               replyTo: replyingTo.value,
+      //               chatId: chatId,
+      //             ),
+      //             remoteCoreId: user.value.walletAddress);
 
-              break;
-          }
+      //         break;
+      //     }
 
-          Get.until((route) => Get.currentRoute == Routes.MESSAGES);
+      //     Get.until((route) => Get.currentRoute == Routes.MESSAGES);
 
-          mediaGlassmorphicChangeState();
-          messages.refresh();
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            animateToBottom();
-          });
-        },
-      );
+      //     mediaGlassmorphicChangeState();
+      //     messages.refresh();
+      //     WidgetsBinding.instance.addPostFrameCallback((_) {
+      //       animateToBottom();
+      //     });
+      //   },
+      // );
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -834,134 +834,134 @@ class MessagesController extends GetxController {
       {@required dynamic result, bool closeMediaGlassmorphic = false}) async {
     if (closeMediaGlassmorphic) mediaGlassmorphicChangeState();
 
-    List? tempImages = [];
-    for (var element in result) {
-      if (element["type"] == "image") {
-        tempImages.add(ImageMessageModel(
-          messageId: "${messages.lastIndexOf(messages.last) + 1}",
-          isLocal: true,
-          metadata: ImageMetadata(
-            height: element["height"].toDouble(),
-            width: element["width"].toDouble(),
-          ),
-          senderAvatar: '',
-          senderName: '',
-          isFromMe: true,
-          status: MessageStatus.sending,
-          chatId: chatId,
-          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-          url: element["path"],
-        ));
-      } else if (element["type"] == "video") {
-        Uint8List thumbnailBytes = await element["thumbnail"];
-        tempImages.add(VideoMessageModel(
-          messageId: "${messages.lastIndexOf(messages.last) + 1}",
-          chatId: chatId,
-          metadata: VideoMetadata(
-            durationInSeconds: element["videoDuration"].inSeconds,
-            height: double.parse(element["height"].toString()),
-            width: double.parse(element["width"].toString()),
-            isLocal: true,
-            thumbnailBytes: thumbnailBytes,
-            thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
-          ),
-          url: element["path"],
-          timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-          senderName: '',
-          senderAvatar: '',
-          isFromMe: true,
-          status: MessageStatus.sending,
-          type: MessageContentType.video,
-        ));
-      }
-    }
-    if (tempImages.length > 1) {
-      messages.add(MultiMediaMessageModel(
-        mediaList: tempImages,
-        messageId: "${messages.lastIndexOf(messages.last) + 1}",
-        chatId: chatId,
-        senderAvatar: '',
-        senderName: '',
-        isFromMe: true,
-        status: MessageStatus.sending,
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-      ));
-    } else {
-      result.forEach((asset) async {
-        switch (asset["type"]) {
-          case "image":
-            {
-              messages.add(
-                ImageMessageModel(
-                    messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                    chatId: chatId,
-                    isLocal: true,
-                    metadata: ImageMetadata(
-                      height: double.parse(asset["height"].toString()),
-                      width: double.parse(asset["width"].toString()),
-                    ),
-                    senderAvatar: '',
-                    senderName: '',
-                    isFromMe: true,
-                    status: MessageStatus.sending,
-                    timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                    url: asset["path"]),
-              );
-            }
-            break;
+    // List? tempImages = [];
+    // for (final element in result) {
+    //   if (element["type"] == "image") {
+    //     tempImages.add(ImageMessageModel(
+    //       messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //       isLocal: true,
+    //       metadata: ImageMetadata(
+    //         height: element["height"].toDouble(),
+    //         width: element["width"].toDouble(),
+    //       ),
+    //       senderAvatar: '',
+    //       senderName: '',
+    //       isFromMe: true,
+    //       status: MessageStatus.sending,
+    //       chatId: chatId,
+    //       timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //       url: element["path"],
+    //     ));
+    //   } else if (element["type"] == "video") {
+    //     Uint8List thumbnailBytes = await element["thumbnail"];
+    //     tempImages.add(VideoMessageModel(
+    //       messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //       chatId: chatId,
+    //       metadata: VideoMetadata(
+    //         durationInSeconds: element["videoDuration"].inSeconds,
+    //         height: double.parse(element["height"].toString()),
+    //         width: double.parse(element["width"].toString()),
+    //         isLocal: true,
+    //         thumbnailBytes: thumbnailBytes,
+    //         thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+    //       ),
+    //       url: element["path"],
+    //       timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //       senderName: '',
+    //       senderAvatar: '',
+    //       isFromMe: true,
+    //       status: MessageStatus.sending,
+    //       type: MessageContentType.video,
+    //     ));
+    //   }
+    // }
+    // if (tempImages.length > 1) {
+    //   messages.add(MultiMediaMessageModel(
+    //     mediaList: tempImages,
+    //     messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //     chatId: chatId,
+    //     senderAvatar: '',
+    //     senderName: '',
+    //     isFromMe: true,
+    //     status: MessageStatus.sending,
+    //     timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //   ));
+    // } else {
+    //   result.forEach((asset) async {
+    //     switch (asset["type"]) {
+    //       case "image":
+    //         {
+    //           messages.add(
+    //             ImageMessageModel(
+    //                 messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //                 chatId: chatId,
+    //                 isLocal: true,
+    //                 metadata: ImageMetadata(
+    //                   height: double.parse(asset["height"].toString()),
+    //                   width: double.parse(asset["width"].toString()),
+    //                 ),
+    //                 senderAvatar: '',
+    //                 senderName: '',
+    //                 isFromMe: true,
+    //                 status: MessageStatus.sending,
+    //                 timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //                 url: asset["path"]),
+    //           );
+    //         }
+    //         break;
 
-          case "video":
-            {
-              messages.add(
-                VideoMessageModel(
-                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                  chatId: chatId,
-                  metadata: VideoMetadata(
-                    durationInSeconds: asset["videoDuration"].inSeconds,
-                    height: double.parse(asset["height"].toString()),
-                    width: double.parse(asset["width"].toString()),
-                    isLocal: true,
-                    thumbnailBytes: await asset["thumbnail"],
-                    thumbnailUrl: '',
-                  ),
-                  url: asset["path"],
-                  timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                  senderName: '',
-                  senderAvatar: '',
-                  isFromMe: true,
-                  status: MessageStatus.sending,
-                ),
-              );
-            }
-            break;
-          case "text":
-            {
-              messages.add(
-                TextMessageModel(
-                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                  chatId: chatId,
-                  text: asset["value"],
-                  timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-                  senderName: '',
-                  senderAvatar: '',
-                  isFromMe: true,
-                  status: MessageStatus.sending,
-                ),
-              );
-            }
-            break;
+    //       case "video":
+    //         {
+    //           messages.add(
+    //             VideoMessageModel(
+    //               messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //               chatId: chatId,
+    //               metadata: VideoMetadata(
+    //                 durationInSeconds: asset["videoDuration"].inSeconds,
+    //                 height: double.parse(asset["height"].toString()),
+    //                 width: double.parse(asset["width"].toString()),
+    //                 isLocal: true,
+    //                 thumbnailBytes: await asset["thumbnail"],
+    //                 thumbnailUrl: '',
+    //               ),
+    //               url: asset["path"],
+    //               timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //               senderName: '',
+    //               senderAvatar: '',
+    //               isFromMe: true,
+    //               status: MessageStatus.sending,
+    //             ),
+    //           );
+    //         }
+    //         break;
+    //       case "text":
+    //         {
+    //           messages.add(
+    //             TextMessageModel(
+    //               messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //               chatId: chatId,
+    //               text: asset["value"],
+    //               timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //               senderName: '',
+    //               senderAvatar: '',
+    //               isFromMe: true,
+    //               status: MessageStatus.sending,
+    //             ),
+    //           );
+    //         }
+    //         break;
 
-          default:
-            break;
-        }
-      });
-    }
+    //       default:
+    //         break;
+    //     }
+    //   });
+    // }
 
-    mediaGlassmorphicChangeState();
-    messages.refresh();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      animateToBottom();
-    });
+    // mediaGlassmorphicChangeState();
+    // messages.refresh();
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   animateToBottom();
+    // });
   }
 
   Future<void> openFiles() async {

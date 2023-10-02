@@ -18,8 +18,10 @@ class SendDataChannelMessage {
     required this.messagingConnection,
   });
 
-  Future<void> execute(
-      {required ChannelMessageType channelMessageType, required String remoteCoreId}) async {
+  Future<void> execute({
+    required ChannelMessageType channelMessageType,
+    required String remoteCoreId,
+  }) async {
     Tuple3<DataChannelMessageModel?, bool, String> channelMessageObject =
         channelmessageFromType(channelMessageType: channelMessageType);
     DataChannelMessageModel? msg = channelMessageObject.item1;
@@ -31,7 +33,7 @@ class SendDataChannelMessage {
     }
 
     Map<String, dynamic> message = msg.toJson();
-   if (isDataBinary && messageLocalPath.isNotEmpty) {
+    if (isDataBinary && messageLocalPath.isNotEmpty) {
       BinaryFileSendingState sendingState = await BinaryFileSendingState.create(
         file: File(messageLocalPath),
         meta: msg.message,
@@ -39,16 +41,20 @@ class SendDataChannelMessage {
       await SendBinaryData(sendingState: sendingState, messagingConnection: messagingConnection)
           .execute(remoteCoreId);
     } else {
-      messagingConnection.sendTextMessage(text: jsonEncode(message), remoteCoreId: remoteCoreId);
+      await messagingConnection.sendTextMessage(
+        text: jsonEncode(message),
+        remoteCoreId: remoteCoreId,
+      );
     }
   }
 }
 
 class ChannelMessageType {
-  factory ChannelMessageType.message(
-      {required Map<String, dynamic> message,
-      required bool isDataBinary,
-      required String messageLocalPath}) = SendMessage;
+  factory ChannelMessageType.message({
+    required Map<String, dynamic> message,
+    required bool isDataBinary,
+    required String messageLocalPath,
+  }) = SendMessage;
 
   factory ChannelMessageType.delete({
     required Map<String, dynamic> message,

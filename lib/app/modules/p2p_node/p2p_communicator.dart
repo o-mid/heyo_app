@@ -20,7 +20,8 @@ class P2PCommunicator {
 
   Future<bool> _sendingData(dynamic model) async {
     final id = await FlutterP2pCommunicator.sendRequest(
-        info: P2PReqResNodeModel(name: P2PReqResNodeNames.login, body: model.toJson()));
+        info: P2PReqResNodeModel(
+            name: P2PReqResNodeNames.login, body: model.toJson() as Map<String, dynamic>));
     print("P2PCommunicator: sending data start $id");
     return await p2pState.trackRequest(id);
     print("P2PCommunicator: sending data finish $id");
@@ -36,7 +37,7 @@ class P2PCommunicator {
     await p2pState.trackRequest(id);
     print("P2PCommunicator: sending connect finish $id");
 
-    _connected = (p2pState.status[id]?.value == true);
+    _connected = ((p2pState.status[id] as Rxn<bool>)?.value == true);
 
     return _connected;
   }

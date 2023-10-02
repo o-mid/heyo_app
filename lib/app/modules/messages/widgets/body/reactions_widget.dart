@@ -17,7 +17,7 @@ class ReactionsWidget extends StatelessWidget {
       spacing: 4.w,
       runSpacing: 4.h,
       children: message.reactions.keys
-          .map((k) => _buildReaction(k, message.reactions[k]!))
+          .map((k) => _buildReaction(k, message.reactions[k] as ReactionModel))
           .toList(),
     );
   }
@@ -31,9 +31,7 @@ class ReactionsWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: reaction.isReactedByMe ? COLORS.kGreenLighterColor : null,
         border: Border.all(
-          color: reaction.isReactedByMe
-              ? COLORS.kGreenMainColor
-              : COLORS.kPinCodeDeactivateColor,
+          color: reaction.isReactedByMe ? COLORS.kGreenMainColor : COLORS.kPinCodeDeactivateColor,
           width: 1.w,
         ),
         borderRadius: BorderRadius.circular(4.w),
@@ -56,9 +54,7 @@ class ReactionsWidget extends StatelessWidget {
                 Text(
                   reaction.users.length.toString(),
                   style: TEXTSTYLES.kReactionNumber.copyWith(
-                    color: reaction.isReactedByMe
-                        ? COLORS.kGreenMainColor
-                        : COLORS.kTextBlueColor,
+                    color: reaction.isReactedByMe ? COLORS.kGreenMainColor : COLORS.kTextBlueColor,
                   ),
                 ),
             ],

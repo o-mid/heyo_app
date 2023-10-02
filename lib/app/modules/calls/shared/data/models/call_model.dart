@@ -65,9 +65,9 @@ class CallModel {
         type: CallType.values.byName(json[typeSerializedName]),
         status: CallStatus.values.byName(json[statusSerializedName]),
         date: DateTime.parse(json[dateSerializedName]),
-        user: UserModel.fromJson(json[userSerializedName]),
-        duration: Duration(milliseconds: json[durationSerializedName]),
-        dataUsageMB: json[dataUsageMBSerializedName],
+        user: UserModel.fromJson(json[userSerializedName] as Map<String, dynamic>),
+        duration: Duration(milliseconds: json[durationSerializedName] as int),
+        dataUsageMB: json[dataUsageMBSerializedName] as double,
       );
 
   Map<String, dynamic> toJson() => {

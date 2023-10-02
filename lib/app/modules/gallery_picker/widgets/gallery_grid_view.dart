@@ -3,8 +3,7 @@ import 'package:heyo/app/modules/gallery_picker/provider/gallery_provider.dart';
 import 'package:heyo/app/modules/gallery_picker/widgets/thumbnail_widget.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-typedef OnAssetItemClick = void Function(
-    BuildContext context, AssetEntity entity, int index);
+typedef OnAssetItemClick = void Function(BuildContext context, AssetEntity entity, int index);
 
 class GalleryGridView extends StatefulWidget {
   /// asset album
@@ -112,8 +111,7 @@ class _GalleryGridViewState extends State<GalleryGridView> {
                 ),
 
                 /// render thumbnail
-                itemBuilder: (context, index) =>
-                    _buildItem(context, index, widget.provider),
+                itemBuilder: (context, index) => _buildItem(context, index, widget.provider),
                 itemCount: widget.path!.assetCount,
                 addRepaintBoundaries: true,
               ),
@@ -126,10 +124,9 @@ class _GalleryGridViewState extends State<GalleryGridView> {
     return GestureDetector(
       /// on tap thumbnail
       onTap: () async {
-        var asset = cacheMap[index];
+        AssetEntity asset = cacheMap[index] as AssetEntity;
         if (asset == null) {
-          asset = (await widget.path!
-              .getAssetListRange(start: index, end: index + 1))[0];
+          asset = (await widget.path!.getAssetListRange(start: index as int, end: index + 1))[0];
           cacheMap[index] = asset;
         }
         ;
@@ -137,17 +134,16 @@ class _GalleryGridViewState extends State<GalleryGridView> {
       },
 
       /// render thumbnail
-      child: _buildScrollItem(context, index, provider),
+      child: _buildScrollItem(context, index as int, provider),
     );
   }
 
-  Widget _buildScrollItem(
-      BuildContext context, int index, PickerDataProvider provider) {
+  Widget _buildScrollItem(BuildContext context, int index, PickerDataProvider provider) {
     /// load cache images
     final asset = cacheMap[index];
     if (asset != null) {
       return ThumbnailWidget(
-        asset: asset,
+        asset: asset as AssetEntity,
         provider: provider,
         index: index,
         thumbnailQuality: widget.thumbnailQuality!,

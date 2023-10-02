@@ -49,7 +49,7 @@ class ShareableQrView extends GetView<ShareableQRController> {
             ),
             SizedBox(height: 24.h),
             Obx(() {
-              return QrImage(
+              return QrImageView(
                 padding: const EdgeInsets.all(0),
                 data: controller.shareableQr.value,
                 version: QrVersions.auto,

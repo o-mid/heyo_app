@@ -40,11 +40,11 @@ class MediaViewController extends GetxController {
     if (isMultiMessage) {
       messages.add(multiMessage!);
     } else {
-      messages.add(args.mediaList.first);
+      messages.add(args.mediaList.first as MessageModel);
     }
-    date = DateFormat('MM/dd/yyyy, H:mm').format(mediaList.first.timestamp);
-    name.value = mediaList.first.senderName ?? "";
-    currentMessage = mediaList[activeIndex.value];
+    date = DateFormat('MM/dd/yyyy, H:mm').format(mediaList.first.timestamp as DateTime);
+    name.value = mediaList.first.senderName as String ?? "";
+    currentMessage = mediaList[activeIndex.value] as MessageModel;
     currentMessage.type == MessageContentType.video ? isVideo = true : isVideo = false;
     photoViewController = PhotoViewScaleStateController();
     super.onInit();
@@ -53,7 +53,7 @@ class MediaViewController extends GetxController {
   void setActiveMediaAndResetController(int index) {
     photoViewController.reset();
     activeIndex.value = index;
-    currentMessage = mediaList[activeIndex.value];
+    currentMessage = mediaList[activeIndex.value] as MessageModel;
     currentMessage.type == MessageContentType.video ? isVideo = true : isVideo = false;
   }
 
@@ -81,11 +81,11 @@ class MediaViewController extends GetxController {
       for (var message in mediaList) {
         bool isVideo = message.type == MessageContentType.video;
         if (isVideo) {
-          paths.add(message.url);
-          await _saveVideo(message.url);
+          paths.add(message.url as String);
+          await _saveVideo(message.url as String);
         } else {
-          paths.add(message.url);
-          await _saveImage(message.url);
+          paths.add(message.url as String);
+          await _saveImage(message.url as String);
         }
       }
     }

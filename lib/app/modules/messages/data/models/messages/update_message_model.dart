@@ -19,7 +19,7 @@ class UpdateMessageModel {
   }
 
   factory UpdateMessageModel.fromJson(Map<String, dynamic> json) => UpdateMessageModel(
-        message: messageFromJson(json[messageSerializedName]),
+        message: messageFromJson(json[messageSerializedName] as Map<String, dynamic>),
       );
 
   Map<String, dynamic> toJson() => {
