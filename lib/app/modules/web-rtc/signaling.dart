@@ -214,8 +214,8 @@ class Signaling {
       case 'offer':
         {
           Map<String, dynamic> description = data['description'] as Map<String, dynamic>;
-          var media = data['media'];
-          var sessionId = data['session_id'];
+          var media = data['media'] as String;
+          var sessionId = data['session_id'] as String;
           var session = _sessions[sessionId];
           var isAudioCall = data['isAudioCall'];
           var newSession = await _createSession(
@@ -229,7 +229,7 @@ class Signaling {
           );
           _sessions[sessionId] = newSession;
           await newSession.pc?.setRemoteDescription(
-            RTCSessionDescription(description['sdp'], description['type']),
+            RTCSessionDescription(description['sdp'] as String, description['type'] as String),
           );
           // await _createAnswer(newSession, media);
 
@@ -250,8 +250,8 @@ class Signaling {
           var description = data['description'] as Map<String, dynamic>;
           var sessionId = data['session_id'];
           var session = _sessions[sessionId] as Session?;
-          session?.pc?.setRemoteDescription(
-            RTCSessionDescription(description['sdp'], description['type']),
+          await session?.pc?.setRemoteDescription(
+            RTCSessionDescription(description['sdp'] as String, description['type'] as String),
           );
           onCallStateChange?.call(session!, CallState.callStateConnected);
         }
@@ -259,11 +259,11 @@ class Signaling {
       case 'candidate':
         {
           var candidateMap = data['candidate'] as Map<String, dynamic>;
-          var sessionId = data['session_id'];
+          var sessionId = data['session_id'] as String;
           var session = _sessions[sessionId];
           var candidate = RTCIceCandidate(
-            candidateMap['candidate'],
-            candidateMap['sdpMid'],
+            candidateMap['candidate'] as String,
+            candidateMap['sdpMid'] as String,
             candidateMap['sdpMLineIndex'] as int?,
           );
 
@@ -290,7 +290,7 @@ class Signaling {
         break;
       case 'bye':
         {
-          var sessionId = data['session_id'];
+          var sessionId = data['session_id'] as String;
           var session = _sessions.remove(sessionId);
           print('bye: ' + sessionId + ' ${(session != null)}');
 
