@@ -61,8 +61,8 @@ class SingleWebRTCConnection {
           'media': MEDIA_TYPE,
         },
         rtcSession.remotePeer.remoteCoreId,
-        rtcSession.remotePeer.remotePeerId as String,
-        rtcSession.connectionId);
+        rtcSession.remotePeer.remotePeerId,
+        rtcSession.connectionId,);
   }
 
   /*Future<bool> initiateSession(RTCSession rtcSession) async {
@@ -83,7 +83,7 @@ class SingleWebRTCConnection {
           'description': {'sdp': sessionDescription.sdp, 'type': sessionDescription.type},
         },
         rtcSession.remotePeer.remoteCoreId,
-        rtcSession.remotePeer.remotePeerId as String,
+        rtcSession.remotePeer.remotePeerId,
         rtcSession.connectionId);
   }
 
@@ -109,12 +109,12 @@ class SingleWebRTCConnection {
           },
         },
         rtcSession.remotePeer.remoteCoreId,
-        rtcSession.remotePeer.remotePeerId as String,
+        rtcSession.remotePeer.remotePeerId,
         rtcSession.connectionId);
   }
 
   Future<bool> _send(
-      eventType, data, String remoteCoreId, String remotePeerId, connectionId) async {
+      eventType, data, String remoteCoreId, String? remotePeerId, connectionId) async {
     print("onMessage send $remotePeerId : $remoteCoreId : $connectionId : $eventType : $data ");
     var request = {};
     request["type"] = eventType;

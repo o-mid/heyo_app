@@ -186,7 +186,7 @@ class Signaling {
   }
 
   void accept(String sessionId) {
-    var session = _sessions[sessionId];
+    final session = _sessions[sessionId];
     print(sessionId);
     print("${_sessions.keys}");
     print("feafesfse ${session == null}");
@@ -196,7 +196,7 @@ class Signaling {
       return;
     }
 
-    _createAnswer(session as Session, 'video');
+    _createAnswer(session, 'video');
   }
 
   void reject(Session session) {
@@ -249,11 +249,11 @@ class Signaling {
         {
           var description = data['description'] as Map<String, dynamic>;
           var sessionId = data['session_id'];
-          var session = _sessions[sessionId] as Session;
+          var session = _sessions[sessionId] as Session?;
           session?.pc?.setRemoteDescription(
             RTCSessionDescription(description['sdp'], description['type']),
           );
-          onCallStateChange?.call(session, CallState.callStateConnected);
+          onCallStateChange?.call(session!, CallState.callStateConnected);
         }
         break;
       case 'candidate':
