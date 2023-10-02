@@ -648,7 +648,7 @@ Widget buildHighlightTransition(
 /// used to invoke async functions in order
 Future<T> co<T>(key, FutureOr<T> Function() action) async {
   for (;;) {
-    final c = _locks[key] as Completer<dynamic>;
+    final c = _locks[key] as Completer<dynamic>?;
     if (c == null) break;
     try {
       await c.future;
