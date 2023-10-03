@@ -9,6 +9,7 @@ import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/connected_participate_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/local_participate_model.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
@@ -38,41 +39,27 @@ class CallController extends GetxController {
 
   RxList<ConnectedParticipateModel> connectedRemoteParticipates =
       RxList<ConnectedParticipateModel>();
-  Rx<ConnectedParticipateModel?> localParticipate = Rx(null);
+
+  Rx<LocalParticipateModel?> localParticipate = Rx(null);
 
   RxList<CallParticipantModel> participants = RxList<CallParticipantModel>();
 
-  //final micEnabled = true.obs;
-  //final callerVideoEnabled = false.obs;
-
-  final isInCall = true.obs;
-
-  final calleeVideoEnabled = true.obs;
-
   final isImmersiveMode = false.obs;
-
-  final callDurationSeconds = 0.obs;
-
-  // Todo: reset [callViewType] and [isVideoPositionsFlipped] when other user disables video
-  //final callViewType = CallViewType.stack.obs;
 
   final isVideoPositionsFlipped = false.obs;
 
-  Rx<bool> get isGroupCall => (connectedRemoteParticipates.length > 1).obs;
+  RxBool get isGroupCall => (connectedRemoteParticipates.length > 1).obs;
 
-  //late Session session;
   final Stopwatch stopwatch = Stopwatch();
-  Timer? calltimer;
+  Timer? callTimer;
 
-  //final RxList<RTCVideoRenderer> _remoteRenderers = RxList();
-
-  Rx<ConnectedParticipateModel?> getLocalParticipate() {
-    return localParticipate;
-  }
-
-  RxList<ConnectedParticipateModel> getConnectedRemoteParticipate() {
-    return connectedRemoteParticipates;
-  }
+  //final micEnabled = true.obs;
+  //final callerVideoEnabled = false.obs;
+  //final isInCall = true.obs;
+  //final calleeVideoEnabled = true.obs;
+  //final callDurationSeconds = 0.obs;
+  //final callViewType = CallViewType.stack.obs;
+  //late Session session;
 
   RxList<ConnectedParticipateModel> getAllConnectedParticipate() {
     //* Use this item for group call
@@ -91,13 +78,16 @@ class CallController extends GetxController {
 
   Future<void> initLocalRenderer() async {
     final localParticipateCoreId = await accountInfo.getCoreId();
-    localParticipate.value = ConnectedParticipateModel(
+    localParticipate.value = LocalParticipateModel(
       name: localParticipateCoreId!,
       iconUrl: 'https://avatars.githubusercontent.com/u/7847725?v=4',
       coreId: localParticipateCoreId,
       // TODO(AliAzim): audio & video mode should be get from the call.
       audioMode: true.obs,
       videoMode: true.obs,
+      callDurationInSecond: 0.obs,
+      frondCamera: true.obs,
+      isInCall: false.obs,
     );
 
     if (localParticipate.value!.videoMode.isTrue) {
@@ -133,15 +123,16 @@ class CallController extends GetxController {
 
   void startCallTimer() {
     stopwatch.start();
-    calltimer = Timer.periodic(const Duration(seconds: 1), onCallTick);
+    callTimer = Timer.periodic(const Duration(seconds: 1), onCallTick);
   }
 
   void onCallTick(Timer timer) {
-    callDurationSeconds.value = stopwatch.elapsed.inSeconds;
+    localParticipate.value!.callDurationInSecond.value =
+        stopwatch.elapsed.inSeconds;
   }
 
   void stopCallTimer() {
-    calltimer?.cancel();
+    callTimer?.cancel();
     stopwatch.stop();
   }
 
@@ -167,7 +158,7 @@ class CallController extends GetxController {
 
     if (args.isAudioCall) {
       //callerVideoEnabled.value = false;
-      calleeVideoEnabled.value = false;
+      //calleeVideoEnabled.value = false;
       callRepository.showLocalVideoStream(false, '', false);
     }
 
@@ -197,11 +188,11 @@ class CallController extends GetxController {
       args.isAudioCall,
     );
 
-    isInCall.value = false;
+    localParticipate.value!.isInCall.value = false;
     _playWatingBeep();
   }
 
-  addRTCRenderer(CallStream callStream) async {
+  Future<void> addRTCRenderer(CallStream callStream) async {
     // TODO(AliAzim): condition should be add to check if video is enable or not
     final renderer = RTCVideoRenderer();
     await renderer.initialize();
@@ -232,7 +223,7 @@ class CallController extends GetxController {
       addRTCRenderer(element);
     }
 
-    isInCall.value = true;
+    localParticipate.value!.isInCall.value = true;
     startCallTimer();
   }
 
@@ -273,8 +264,8 @@ class CallController extends GetxController {
       debugPrint('onAddCallStream : $callStateView');
       //print("calll ${_remoteRenderers} : $stream");
       //TODO refactor this if related to the call state
-      if (!isInCall.value) {
-        isInCall.value = true;
+      if (!localParticipate.value!.isInCall.value) {
+        localParticipate.value!.isInCall.value = true;
         _stopWatingBeep();
         startCallTimer();
       }

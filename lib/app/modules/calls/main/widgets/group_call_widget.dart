@@ -6,7 +6,7 @@ import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/calls/main/widgets/call_renderer_widget.dart';
 
 class GroupCallWidget extends GetView<CallController> {
-  const GroupCallWidget({Key? key}) : super(key: key);
+  const GroupCallWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class GroupCallWidget extends GetView<CallController> {
           ),
           //* This sizeBox is because of call bottom sheet header
           //TODO: AliAzim => It should be removed for ImmersiveMode
-          SizedBox(height: 70.h)
+          SizedBox(height: 70.h),
         ],
       );
     });

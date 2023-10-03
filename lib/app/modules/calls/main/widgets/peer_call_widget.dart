@@ -12,8 +12,8 @@ class PeerCallWidget extends GetView<CallController> {
 
   @override
   Widget build(BuildContext context) {
-    final localParticipate = controller.getLocalParticipate();
-    final remoteParticipate = controller.getConnectedRemoteParticipate();
+    final localParticipate = controller.localParticipate;
+    final remoteParticipate = controller.connectedRemoteParticipates;
     return Obx(() {
       final bool changeCallerWidgetSize = controller.showCallerOptions.value &
           controller.isVideoPositionsFlipped.isFalse;
