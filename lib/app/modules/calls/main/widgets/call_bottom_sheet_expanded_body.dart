@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
+
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -13,53 +13,52 @@ import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-class CallBottomSheetExpandedBody extends StatelessWidget {
+class CallBottomSheetExpandedBody extends GetView<CallController> {
   const CallBottomSheetExpandedBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<CallController>();
     return Container(
       color: COLORS.kCallPageDarkBlue,
       child: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 32.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                // const RecordCallButton(),
-                CircleIconButton.p16(
-                  icon: Assets.svg.shareScreen.svg(color: COLORS.kWhiteColor),
-                  backgroundColor: COLORS.kCallPageDarkGrey,
-                ),
+          //Padding(
+          //  padding: EdgeInsets.symmetric(horizontal: 32.w),
+          //  child: Row(
+          //    mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //children: [
+          // const RecordCallButton(),
+          //CircleIconButton.p16(
+          //  icon: Assets.svg.shareScreen.svg(color: COLORS.kWhiteColor),
+          //  backgroundColor: COLORS.kCallPageDarkGrey,
+          //),
 
-                /// The following three are only here to match the top row which has four buttons
-                Opacity(
-                  opacity: 0,
-                  child: CircleIconButton.p16(
-                    icon: Assets.svg.muteMicIcon.svg(),
-                    backgroundColor: Colors.transparent,
-                  ),
-                ),
-                Opacity(
-                  opacity: 0,
-                  child: CircleIconButton.p16(
-                    icon: Assets.svg.callEnd.svg(),
-                    backgroundColor: Colors.transparent,
-                  ),
-                ),
-                Opacity(
-                  opacity: 0,
-                  child: CircleIconButton.p16(
-                    icon: Assets.svg.callEnd.svg(),
-                    backgroundColor: Colors.transparent,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 24.h),
+          /// The following three are only here to match the top row which has four buttons
+          //Opacity(
+          //  opacity: 0,
+          //  child: CircleIconButton.p16(
+          //    icon: Assets.svg.muteMicIcon.svg(),
+          //    backgroundColor: Colors.transparent,
+          //  ),
+          //),
+          //Opacity(
+          //  opacity: 0,
+          //  child: CircleIconButton.p16(
+          //    icon: Assets.svg.callEnd.svg(),
+          //    backgroundColor: Colors.transparent,
+          //  ),
+          //),
+          //Opacity(
+          //  opacity: 0,
+          //  child: CircleIconButton.p16(
+          //    icon: Assets.svg.callEnd.svg(),
+          //    backgroundColor: Colors.transparent,
+          //  ),
+          //),
+          //    ],
+          //  ),
+          //),
+          //SizedBox(height: 24.h),
           Container(color: const Color(0xff272D3D), height: 8.h),
           SizedBox(height: 8.h),
           Padding(
@@ -82,7 +81,7 @@ class CallBottomSheetExpandedBody extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 100.h,
+            height: 150.h,
             child: Obx(() {
               return ListView.separated(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),

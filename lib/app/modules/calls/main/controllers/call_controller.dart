@@ -2,11 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_beep/flutter_beep.dart';
-import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
-import 'package:intl/intl.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +11,6 @@ import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart'
 import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/connected_participate_model.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
-import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
@@ -28,12 +24,6 @@ import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 //  column,
 //  row,
 //}
-
-enum RecordState {
-  notRecording,
-  loading,
-  recording,
-}
 
 class CallController extends GetxController {
   final CallRepository callRepository;
@@ -68,8 +58,6 @@ class CallController extends GetxController {
   final isVideoPositionsFlipped = false.obs;
 
   Rx<bool> get isGroupCall => (_connectedRemoteParticipates.length > 1).obs;
-
-  final recordState = RecordState.notRecording.obs;
 
   //late Session session;
   final Stopwatch stopwatch = Stopwatch();
@@ -126,8 +114,6 @@ class CallController extends GetxController {
       });
     }
   }
-
-  final _screenRecorder = EdScreenRecorder();
 
   void message() {
     //TODO shoud passed correct coreId
@@ -330,33 +316,6 @@ class CallController extends GetxController {
   //  }
   //}
 
-  void recordCall() {
-    Get.dialog(RecordCallDialog(onRecord: () async {
-      recordState.value = RecordState.loading;
-      var permission = await Permission.storage.request();
-      if (!permission.isGranted) {
-        recordState.value = RecordState.notRecording;
-        return;
-      }
-
-      permission = await Permission.microphone.request();
-      if (!permission.isGranted) {
-        recordState.value = RecordState.notRecording;
-        return;
-      }
-      await _screenRecorder.startRecordScreen(
-        fileName: DateFormat('yMMddhhmmss').format(DateTime.now()),
-        audioEnable: true,
-      );
-      recordState.value = RecordState.recording;
-    }));
-  }
-
-  void stopRecording() async {
-    await _screenRecorder.stopRecord();
-    recordState.value = RecordState.notRecording;
-  }
-
   // Todo
   void toggleVideo() {
     callerVideoEnabled.value = !callerVideoEnabled.value;
@@ -406,7 +365,6 @@ class CallController extends GetxController {
     await disposeRTCRender();
     _stopWatingBeep();
     disableWakeScreenLock();
-    await _screenRecorder.stopRecord();
   }
 
   void reorderParticipants(int oldIndex, int newIndex) {

@@ -1,22 +1,13 @@
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:get/get.dart';
+
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
-import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
-import 'package:heyo/app/modules/messages/widgets/footer/send_location_box.dart';
+import 'package:heyo/app/modules/messages/widgets/footer/messages_active_box_widget.dart';
+import 'package:heyo/app/modules/messages/widgets/footer/replying_to_widget.dart';
+import 'package:heyo/app/modules/messages/widgets/footer/voice_recorder/voice_recorder_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/transitions_constant.dart';
-
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
-import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
-import 'package:heyo/app/modules/shared/widgets/scale_animated_switcher.dart';
-
-import '../../../shared/widgets/glassmorphic_container.dart';
-import 'compose_message_box.dart';
-import 'message_selection_options.dart';
-import 'messages_active_box_widget.dart';
-import 'replying_to_widget.dart';
-import 'voice_recorder/voice_recorder_widget.dart';
 
 class MessagesFooter extends StatelessWidget {
   const MessagesFooter({Key? key}) : super(key: key);
