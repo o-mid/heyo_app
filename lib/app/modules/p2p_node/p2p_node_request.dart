@@ -86,7 +86,7 @@ class P2PNodeRequestStream {
     print("onRequestReceived $mapData : ${mapData['command']} : $remoteCoreId");
 
     if (mapData['command'] == "call_connection") {
-      signaling.onMessage(
+      callConnectionsHandler.onRequestReceived(
           mapData as Map<String, dynamic>, remoteCoreId, remotePeerId,);
     }
     if (mapData['command'] == "multiple_connection") {
