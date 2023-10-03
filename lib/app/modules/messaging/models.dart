@@ -23,9 +23,7 @@ enum RTCSessionStatus { none, connecting, failed, connected }
 
 class RTCSession {
   RTCSession(
-      {required this.connectionId,
-      required this.remotePeer,
-      required this.onConnectionFailed}) {
+      {required this.connectionId, required this.remotePeer, required this.onConnectionFailed}) {
     timeStamp = connectionId.getTimeStamp();
   }
 
@@ -84,14 +82,12 @@ class RTCSession {
     if (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected) {
       rtcSessionStatus = RTCSessionStatus.connected;
       onRTCSessionConnected?.call(this);
-    } else if (state ==
-        RTCPeerConnectionState.RTCPeerConnectionStateConnecting) {
+    } else if (state == RTCPeerConnectionState.RTCPeerConnectionStateConnecting) {
       rtcSessionStatus = RTCSessionStatus.connecting;
     } else if (state == RTCPeerConnectionState.RTCPeerConnectionStateFailed) {
       rtcSessionStatus = RTCSessionStatus.failed;
       onConnectionFailed.call(connectionId, remotePeer.remoteCoreId);
-    } else if (state ==
-        RTCPeerConnectionState.RTCPeerConnectionStateDisconnected) {
+    } else if (state == RTCPeerConnectionState.RTCPeerConnectionStateDisconnected) {
       rtcSessionStatus = RTCSessionStatus.failed;
       onConnectionFailed.call(connectionId, remotePeer.remoteCoreId);
     }
@@ -116,16 +112,13 @@ class RTCSession {
   }
 
   Future<void> createDataChannel({label = 'fileTransfer'}) async {
-    RTCDataChannelInit dataChannelDict = RTCDataChannelInit()
-      ..maxRetransmits = 30;
-    RTCDataChannel channel =
-        await pc!.createDataChannel(label, dataChannelDict);
+    RTCDataChannelInit dataChannelDict = RTCDataChannelInit()..maxRetransmits = 30;
+    RTCDataChannel channel = await pc!.createDataChannel(label as String, dataChannelDict);
     dc = channel;
     _addDataChannel(channel);
   }
 
-  bool isConnectionStable() =>
-      (pc?.signalingState == RTCSignalingState.RTCSignalingStateStable);
+  bool isConnectionStable() => (pc?.signalingState == RTCSignalingState.RTCSignalingStateStable);
 
   Future<void> _setPeerCandidates() async {
     if (remoteCandidates.isNotEmpty) {

@@ -25,23 +25,21 @@ void openFiltersBottomSheet({required controller}) {
                 ),
                 label: Text(
                   LocaleKeys.newChat_buttons_filter.tr,
-                  style: TEXTSTYLES.kHeaderLarge
-                      .copyWith(color: COLORS.kDarkBlueColor),
+                  style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
                 ),
               ),
             ),
             Obx(() {
               return ListView.builder(
-                itemCount: controller.filters.length,
+                itemCount: controller.filters.length as int,
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) {
                   return CheckboxListTile(
                       title: Text(
-                        controller.filters[index].title,
-                        style: TEXTSTYLES.kLinkBig
-                            .copyWith(color: COLORS.kDarkBlueColor),
+                        controller.filters[index].title as String,
+                        style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
                       ),
-                      value: controller.filters[index].isActive.value,
+                      value: controller.filters[index].isActive.value as bool,
                       onChanged: (Value) {
                         if (Value != null) {
                           controller.filters[index].isActive.value = Value;

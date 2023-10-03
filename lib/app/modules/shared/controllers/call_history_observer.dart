@@ -92,7 +92,7 @@ class CallHistoryObserver extends GetxController {
 
             await _updateCallStatusAndDuration(
               callId: call.id,
-              duration: DateTime.now().difference(startTime),
+              duration: DateTime.now().difference(startTime as DateTime),
             );
             break;
           }

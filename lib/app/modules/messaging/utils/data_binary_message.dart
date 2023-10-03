@@ -44,6 +44,6 @@ class DataBinaryMessage {
     var json = utf8.decode(headerBytes);
     var header = jsonDecode(json);
 
-    return DataBinaryMessage(chunk, header, bytes.length);
+    return DataBinaryMessage(chunk, header as Map<String, dynamic>, bytes.length);
   }
 }

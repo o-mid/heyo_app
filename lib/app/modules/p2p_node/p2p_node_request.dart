@@ -62,14 +62,17 @@ class P2PNodeRequestStream {
 
       //
       // MARK: here we are telling the sending party that everything is ok and the req was received
-      String remoteCoreId = (event.body!['info'])['remoteCoreID'];
-      String remotePeerId = (event.body!['info'])['remotePeerID'];
+      final String remoteCoreId = (event.body!['info']
+          as Map<String, dynamic>)['remoteCoreID'] as String;
+      final remotePeerId =
+          (event.body!['info'] as Map<String, dynamic>)['remotePeerID'] as String;
 
-      if ((event.body!['payload'])['session'] != null) {
-        String request = (event.body!['payload'])['session'];
+      if ((event.body!['payload'] as Map<String, dynamic>)['session'] != null) {
+        final request =
+            (event.body!['payload'] as Map<String, dynamic>)['session'] as String;
         // if session is not null then we have a request
         await onRequestReceived(
-            request.convertHexToString(), remoteCoreId, remotePeerId);
+            request.convertHexToString(), remoteCoreId, remotePeerId,);
 
         //signaling.onMessage(session.convertHexToString(), remoteCoreId, remotePeerId);
       }
@@ -77,18 +80,18 @@ class P2PNodeRequestStream {
   }
 
   Future<void> onRequestReceived(
-      String request, String remoteCoreId, String remotePeerId) async {
+      String request, String remoteCoreId, String remotePeerId,) async {
     // checks the type of the request and sends it to signalling or messaging accordingly
-
-    Map<String, dynamic> mapData = _decoder.convert(request);
+    var mapData = _decoder.convert(request);
     print("onRequestReceived $mapData : ${mapData['command']} : $remoteCoreId");
 
     if (mapData['command'] == "call_connection") {
-      callConnectionsHandler.onRequestReceived(mapData, remoteCoreId, remotePeerId);
+      signaling.onMessage(
+          mapData as Map<String, dynamic>, remoteCoreId, remotePeerId,);
     }
     if (mapData['command'] == "multiple_connection") {
       await multipleConnectionHandler.onRequestReceived(
-          mapData, remoteCoreId, remotePeerId);
+          mapData as Map<String, dynamic>, remoteCoreId, remotePeerId,);
     } else {}
   }
 }

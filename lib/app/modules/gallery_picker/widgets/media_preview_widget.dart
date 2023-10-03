@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_camera/flutter_camera.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/gallery_picker/controllers/gallery_picker_controller.dart';
@@ -33,7 +32,7 @@ class MediaPreview extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4.0),
                     child: Image.file(
-                      File(controller.previewFiles[index]['path']),
+                      File(controller.previewFiles[index]['path'] as String),
                       errorBuilder: (context, error, stackTrace) => Container(
                         color: Colors.white,
                         child: const Icon(

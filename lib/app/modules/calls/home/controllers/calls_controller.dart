@@ -42,7 +42,8 @@ class CallsController extends GetxController {
 
   void init() async {
     calls.value = await callHistoryRepo.getAllCalls();
-    _callsStreamSubscription = (await callHistoryRepo.getCallsStream()).listen((newCalls) {
+    _callsStreamSubscription =
+        (await callHistoryRepo.getCallsStream()).listen((newCalls) {
       // remove the deleted calls
       for (int i = 0; i < calls.length; i++) {
         if (!newCalls.any((call) => call.id == calls[i].id)) {
@@ -66,14 +67,15 @@ class CallsController extends GetxController {
     });
   }
 
-  void showDeleteCallDialog(CallModel call) {
-    Get.dialog(
-      DeleteCallDialog(
-        deleteCall: () async {
-          await callHistoryRepo.deleteOneCall(call.id);
-        },
-      ),
+  Future deleteCall(CallModel call) async {
+    await callHistoryRepo.deleteOneCall(call.id);
+  }
+
+  Future<bool> showDeleteCallDialog(CallModel call) async {
+    await Get.dialog<bool>(
+      DeleteCallDialog(deleteCall: () => deleteCall(call)),
     );
+    return false;
   }
 
   void _removeAtAnimatedList(int index, CallModel call) {

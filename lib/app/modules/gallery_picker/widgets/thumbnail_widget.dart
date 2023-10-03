@@ -68,8 +68,7 @@ class ThumbnailWidget extends StatelessWidget {
                   borderRadius: const BorderRadius.all(Radius.circular(4)),
                   child: Image(
                     image: DecodeImage(
-                        provider.pathList[
-                            provider.pathList.indexOf(provider.currentPath!)],
+                        provider.pathList[provider.pathList.indexOf(provider.currentPath!)],
                         thumbSize: thumbnailQuality,
                         index: index),
                     gaplessPlayback: true,
@@ -93,9 +92,7 @@ class ThumbnailWidget extends StatelessWidget {
               return AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
                 decoration: BoxDecoration(
-                  color: picked
-                      ? selectedBackgroundColor.withOpacity(0.3)
-                      : Colors.transparent,
+                  color: picked ? selectedBackgroundColor.withOpacity(0.3) : Colors.transparent,
                 ),
               );
             }),
@@ -115,12 +112,9 @@ class ThumbnailWidget extends StatelessWidget {
                     width: 20,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color:
-                          picked ? COLORS.kGreenMainColor : Colors.transparent,
+                      color: picked ? COLORS.kGreenMainColor : Colors.transparent,
                       border: Border.all(
-                          width: 1.5,
-                          color:
-                              picked ? COLORS.kGreenMainColor : Colors.white),
+                          width: 1.5, color: picked ? COLORS.kGreenMainColor : Colors.white),
                     ),
                     child: Icon(
                       Icons.check_rounded,
@@ -143,14 +137,11 @@ class ThumbnailWidget extends StatelessWidget {
                     color: Colors.black.withOpacity(0.8),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                   child: Text(
-                    _parseDuration(asset.videoDuration.inSeconds),
+                    _parseDuration(asset.videoDuration.inSeconds) as String,
                     style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 8),
+                        color: Colors.white, fontWeight: FontWeight.w600, fontSize: 8),
                   )),
             ),
           )

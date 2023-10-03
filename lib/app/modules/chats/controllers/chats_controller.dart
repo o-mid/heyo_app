@@ -2,25 +2,26 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import 'package:heyo/app/modules/chats/widgets/delete_all_chats_bottom_sheet.dart';
+import 'package:heyo/app/modules/chats/widgets/delete_chat_dialog.dart';
+import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
-
-import '../../messages/data/repo/messages_abstract_repo.dart';
-import '../widgets/delete_all_chats_bottom_sheet.dart';
-import '../widgets/delete_chat_dialog.dart';
 
 class ChatsController extends GetxController {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final MessagesAbstractRepo messagesRepo;
   final ContactRepository contactRepository;
 
-  ChatsController(
-      {required this.chatHistoryRepo,
-      required this.messagesRepo,
-      required this.contactRepository});
+  ChatsController({
+    required this.chatHistoryRepo,
+    required this.messagesRepo,
+    required this.contactRepository,
+  });
 
   final animatedListKey = GlobalKey<AnimatedListState>();
 
@@ -77,15 +78,18 @@ class ChatsController extends GetxController {
     });
   }
 
-  void showDeleteChatDialog(ChatModel chat) {
-    Get.dialog(
+  Future deleteChat(ChatModel chat) async {
+    await chatHistoryRepo.deleteChat(chat.id);
+    await messagesRepo.deleteAllMessages(chat.id);
+  }
+
+  Future<bool> showDeleteChatDialog(ChatModel chat) async {
+    await Get.dialog<bool>(
       DeleteChatDialog(
-        deleteChat: () async {
-          await chatHistoryRepo.deleteChat(chat.id);
-          await messagesRepo.deleteAllMessages(chat.id);
-        },
+        deleteChat: () => deleteChat(chat),
       ),
     );
+    return false;
   }
 
   void showDeleteAllChatsBottomSheet() {

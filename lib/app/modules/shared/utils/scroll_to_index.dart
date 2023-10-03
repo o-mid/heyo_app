@@ -315,7 +315,7 @@ mixin AutoScrollControllerMixin on ScrollController implements AutoScrollControl
       {bool cancelExistHighlights = true,
       Duration highlightDuration = _highlightDuration,
       bool animated = true}) async {
-    final tag = tagMap[index];
+    AutoScrollTagState<AutoScrollTag> tag = tagMap[index] as AutoScrollTagState<AutoScrollTag>;
     return tag == null
         ? null
         : await tag.highlight(
@@ -450,7 +450,7 @@ mixin AutoScrollControllerMixin on ScrollController implements AutoScrollControl
   /// return offset, which is a absolute offset to bring the target index object into the center of the viewport
   /// see also: _directionalOffsetToRevealInViewport()
   RevealedOffset? _offsetToRevealInViewport(int index, double alignment) {
-    final ctx = tagMap[index]?.context;
+    final ctx = (tagMap[index] as AutoScrollTagState<AutoScrollTag>)?.context;
     if (ctx == null) return null;
 
     final renderBox = ctx.findRenderObject()!;
@@ -648,7 +648,7 @@ Widget buildHighlightTransition(
 /// used to invoke async functions in order
 Future<T> co<T>(key, FutureOr<T> Function() action) async {
   for (;;) {
-    final c = _locks[key];
+    final c = _locks[key] as Completer<dynamic>?;
     if (c == null) break;
     try {
       await c.future;
@@ -663,7 +663,7 @@ Future<T> co<T>(key, FutureOr<T> Function() action) async {
     assert(identical(c, c2));
   }
 
-  void catchError(ex, StackTrace st) {
+  void catchError(Object ex, StackTrace st) {
     final c2 = _locks.remove(key);
     c.completeError(ex, st);
 

@@ -1,30 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
-
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_camera/flutter_camera.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:visibility_detector/visibility_detector.dart';
-import 'package:path/path.dart' as path;
-import 'package:get/get.dart';
-
-import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
-import 'package:heyo/app/modules/messages/data/usecases/delete_message_usecase.dart';
-import 'package:heyo/app/modules/messages/data/usecases/update_message_usecase.dart';
-import 'package:heyo/app/modules/messaging/controllers/common_messaging_controller.dart';
-import 'package:heyo/app/modules/messaging/controllers/messaging_connection_controller.dart';
-import 'package:heyo/app/modules/messaging/controllers/wifi_direct_connection_controller.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
-import 'package:heyo/app/modules/share_files/models/file_model.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
-import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
-import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/app/modules/shared/utils/constants/transitions_constant.dart';
-import 'package:heyo/app/modules/shared/utils/scroll_to_index.dart';
+import 'dart:typed_data';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
@@ -33,6 +10,13 @@ import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dar
 import 'package:heyo/app/modules/messages/utils/open_camera_for_sending_media_message.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
+import 'package:path/path.dart' as path;
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/audio_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/call_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
@@ -56,6 +40,21 @@ import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:visibility_detector/visibility_detector.dart';
+import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import '../../messaging/controllers/common_messaging_controller.dart';
+import '../../messaging/controllers/messaging_connection_controller.dart';
+import '../../messaging/controllers/wifi_direct_connection_controller.dart';
+import '../../new_chat/data/models/user_model.dart';
+import '../../share_files/models/file_model.dart';
+import '../../shared/utils/constants/colors.dart';
+import '../../shared/utils/constants/textStyles.dart';
+import '../../shared/utils/constants/transitions_constant.dart';
+import '../../shared/utils/scroll_to_index.dart';
+import '../data/usecases/delete_message_usecase.dart';
+import '../data/usecases/update_message_usecase.dart';
+import '../../shared/data/repository/contact_repository.dart';
 
 class MessagesController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
@@ -103,10 +102,10 @@ class MessagesController extends GetxController {
   late ChatModel? chatModel;
   Rx<UserModel> user = UserModel(
     coreId: (Get.arguments as MessagesViewArgumentsModel).coreId,
-    iconUrl: (Get.arguments).iconUrl ??
-        "https://avatars.githubusercontent.com/u/2345136?v=4",
+    iconUrl:
+        (Get.arguments).iconUrl as String ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
     name: (Get.arguments as MessagesViewArgumentsModel).coreId.shortenCoreId,
-    walletAddress: (Get.arguments).coreId,
+    walletAddress: (Get.arguments).coreId as String,
     isBlocked: false,
     isOnline: false,
     isContact: false,
@@ -757,75 +756,74 @@ class MessagesController extends GetxController {
   //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> openCameraPicker(BuildContext context) async {
     try {
-      await openCameraForSendingMediaMessage(
-        context,
-        receiverName: user.value.name,
-        onEntitySaving: (CameraPickerViewType viewType, File file) async {
-          AssetEntity? entity;
+      // await openCameraForSendingMediaMessage(
+      //   context,
+      //   receiverName: user.value.name,
+      //   onEntitySaving: (CameraPickerViewType viewType, File file) async {
+      //     AssetEntity? entity;
 
-          switch (viewType) {
-            case CameraPickerViewType.image:
-              final String filePath = file.path;
-              entity = await PhotoManager.editor.saveImageWithPath(
-                filePath,
-                title: path.basename(filePath),
-              );
+      //     switch (viewType) {
+      //       case CameraPickerViewType.image:
+      //         final String filePath = file.path;
+      //         entity = await PhotoManager.editor.saveImageWithPath(
+      //           filePath,
+      //           title: path.basename(filePath),
+      //         );
 
-              if (entity == null) {
-                break;
-              }
-              await SendMessage().execute(
-                  sendMessageType: SendMessageType.image(
-                    path: file.path,
-                    metadata: ImageMetadata(
-                      height: entity.height.toDouble(),
-                      width: entity.width.toDouble(),
-                    ),
-                    replyTo: replyingTo.value,
-                    chatId: chatId,
-                  ),
-                  remoteCoreId: user.value.walletAddress);
+      //         if (entity == null) {
+      //           break;
+      //         }
+      //         await SendMessage().execute(
+      //             sendMessageType: SendMessageType.image(
+      //               path: file.path,
+      //               metadata: ImageMetadata(
+      //                 height: entity.height.toDouble(),
+      //                 width: entity.width.toDouble(),
+      //               ),
+      //               replyTo: replyingTo.value,
+      //               chatId: chatId,
+      //             ),
+      //             remoteCoreId: user.value.walletAddress);
 
-              break;
-            case CameraPickerViewType.video:
-              entity = await PhotoManager.editor.saveVideo(
-                File(file.path),
-                title: path.basename(file.path),
-              );
+      //         break;
+      //       case CameraPickerViewType.video:
+      //         entity = await PhotoManager.editor.saveVideo(
+      //           File(file.path),
+      //           title: path.basename(file.path),
+      //         );
 
-              if (entity == null) {
-                break;
-              }
+      //         if (entity == null) {
+      //           break;
+      //         }
 
-              await SendMessage().execute(
-                  sendMessageType: SendMessageType.video(
-                    path: file.path,
-                    metadata: VideoMetadata(
-                      durationInSeconds: entity.videoDuration.inSeconds,
-                      height: entity.height.toDouble(),
-                      width: entity.width.toDouble(),
-                      isLocal: true,
-                      thumbnailBytes: await entity.thumbnailData,
-                      thumbnailUrl:
-                          "https://mixkit.imgix.net/static/home/video-thumb3.png",
-                    ),
-                    replyTo: replyingTo.value,
-                    chatId: chatId,
-                  ),
-                  remoteCoreId: user.value.walletAddress);
+      //         await SendMessage().execute(
+      //             sendMessageType: SendMessageType.video(
+      //               path: file.path,
+      //               metadata: VideoMetadata(
+      //                 durationInSeconds: entity.videoDuration.inSeconds,
+      //                 height: entity.height.toDouble(),
+      //                 width: entity.width.toDouble(),
+      //                 isLocal: true,
+      //                 thumbnailBytes: await entity.thumbnailData,
+      //                 thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+      //               ),
+      //               replyTo: replyingTo.value,
+      //               chatId: chatId,
+      //             ),
+      //             remoteCoreId: user.value.walletAddress);
 
-              break;
-          }
+      //         break;
+      //     }
 
-          Get.until((route) => Get.currentRoute == Routes.MESSAGES);
+      //     Get.until((route) => Get.currentRoute == Routes.MESSAGES);
 
-          mediaGlassmorphicChangeState();
-          messages.refresh();
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            animateToBottom();
-          });
-        },
-      );
+      //     mediaGlassmorphicChangeState();
+      //     messages.refresh();
+      //     WidgetsBinding.instance.addPostFrameCallback((_) {
+      //       animateToBottom();
+      //     });
+      //   },
+      // );
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -854,141 +852,134 @@ class MessagesController extends GetxController {
       {@required dynamic result, bool closeMediaGlassmorphic = false}) async {
     if (closeMediaGlassmorphic) mediaGlassmorphicChangeState();
 
-    List? tempImages = [];
-    for (var element in result) {
-      if (element["type"] == "image") {
-        tempImages.add(ImageMessageModel(
-          messageId: "${messages.lastIndexOf(messages.last) + 1}",
-          isLocal: true,
-          metadata: ImageMetadata(
-            height: element["height"].toDouble(),
-            width: element["width"].toDouble(),
-          ),
-          senderAvatar: '',
-          senderName: '',
-          isFromMe: true,
-          status: MessageStatus.sending,
-          chatId: chatId,
-          timestamp:
-              DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-          url: element["path"],
-        ));
-      } else if (element["type"] == "video") {
-        Uint8List thumbnailBytes = await element["thumbnail"];
-        tempImages.add(VideoMessageModel(
-          messageId: "${messages.lastIndexOf(messages.last) + 1}",
-          chatId: chatId,
-          metadata: VideoMetadata(
-            durationInSeconds: element["videoDuration"].inSeconds,
-            height: double.parse(element["height"].toString()),
-            width: double.parse(element["width"].toString()),
-            isLocal: true,
-            thumbnailBytes: thumbnailBytes,
-            thumbnailUrl:
-                "https://mixkit.imgix.net/static/home/video-thumb3.png",
-          ),
-          url: element["path"],
-          timestamp:
-              DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-          senderName: '',
-          senderAvatar: '',
-          isFromMe: true,
-          status: MessageStatus.sending,
-          type: MessageContentType.video,
-        ));
-      }
-    }
-    if (tempImages.length > 1) {
-      messages.add(MultiMediaMessageModel(
-        mediaList: tempImages,
-        messageId: "${messages.lastIndexOf(messages.last) + 1}",
-        chatId: chatId,
-        senderAvatar: '',
-        senderName: '',
-        isFromMe: true,
-        status: MessageStatus.sending,
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-      ));
-    } else {
-      result.forEach((asset) async {
-        switch (asset["type"]) {
-          case "image":
-            {
-              messages.add(
-                ImageMessageModel(
-                    messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                    chatId: chatId,
-                    isLocal: true,
-                    metadata: ImageMetadata(
-                      height: double.parse(asset["height"].toString()),
-                      width: double.parse(asset["width"].toString()),
-                    ),
-                    senderAvatar: '',
-                    senderName: '',
-                    isFromMe: true,
-                    status: MessageStatus.sending,
-                    timestamp: DateTime.now()
-                        .subtract(const Duration(hours: 1, minutes: 49)),
-                    url: asset["path"]),
-              );
-            }
-            break;
+    // List? tempImages = [];
+    // for (final element in result) {
+    //   if (element["type"] == "image") {
+    //     tempImages.add(ImageMessageModel(
+    //       messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //       isLocal: true,
+    //       metadata: ImageMetadata(
+    //         height: element["height"].toDouble(),
+    //         width: element["width"].toDouble(),
+    //       ),
+    //       senderAvatar: '',
+    //       senderName: '',
+    //       isFromMe: true,
+    //       status: MessageStatus.sending,
+    //       chatId: chatId,
+    //       timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //       url: element["path"],
+    //     ));
+    //   } else if (element["type"] == "video") {
+    //     Uint8List thumbnailBytes = await element["thumbnail"];
+    //     tempImages.add(VideoMessageModel(
+    //       messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //       chatId: chatId,
+    //       metadata: VideoMetadata(
+    //         durationInSeconds: element["videoDuration"].inSeconds,
+    //         height: double.parse(element["height"].toString()),
+    //         width: double.parse(element["width"].toString()),
+    //         isLocal: true,
+    //         thumbnailBytes: thumbnailBytes,
+    //         thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
+    //       ),
+    //       url: element["path"],
+    //       timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //       senderName: '',
+    //       senderAvatar: '',
+    //       isFromMe: true,
+    //       status: MessageStatus.sending,
+    //       type: MessageContentType.video,
+    //     ));
+    //   }
+    // }
+    // if (tempImages.length > 1) {
+    //   messages.add(MultiMediaMessageModel(
+    //     mediaList: tempImages,
+    //     messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //     chatId: chatId,
+    //     senderAvatar: '',
+    //     senderName: '',
+    //     isFromMe: true,
+    //     status: MessageStatus.sending,
+    //     timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //   ));
+    // } else {
+    //   result.forEach((asset) async {
+    //     switch (asset["type"]) {
+    //       case "image":
+    //         {
+    //           messages.add(
+    //             ImageMessageModel(
+    //                 messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //                 chatId: chatId,
+    //                 isLocal: true,
+    //                 metadata: ImageMetadata(
+    //                   height: double.parse(asset["height"].toString()),
+    //                   width: double.parse(asset["width"].toString()),
+    //                 ),
+    //                 senderAvatar: '',
+    //                 senderName: '',
+    //                 isFromMe: true,
+    //                 status: MessageStatus.sending,
+    //                 timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //                 url: asset["path"]),
+    //           );
+    //         }
+    //         break;
 
-          case "video":
-            {
-              messages.add(
-                VideoMessageModel(
-                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                  chatId: chatId,
-                  metadata: VideoMetadata(
-                    durationInSeconds: asset["videoDuration"].inSeconds,
-                    height: double.parse(asset["height"].toString()),
-                    width: double.parse(asset["width"].toString()),
-                    isLocal: true,
-                    thumbnailBytes: await asset["thumbnail"],
-                    thumbnailUrl: '',
-                  ),
-                  url: asset["path"],
-                  timestamp: DateTime.now()
-                      .subtract(const Duration(hours: 1, minutes: 49)),
-                  senderName: '',
-                  senderAvatar: '',
-                  isFromMe: true,
-                  status: MessageStatus.sending,
-                ),
-              );
-            }
-            break;
-          case "text":
-            {
-              messages.add(
-                TextMessageModel(
-                  messageId: "${messages.lastIndexOf(messages.last) + 1}",
-                  chatId: chatId,
-                  text: asset["value"],
-                  timestamp: DateTime.now()
-                      .subtract(const Duration(hours: 1, minutes: 49)),
-                  senderName: '',
-                  senderAvatar: '',
-                  isFromMe: true,
-                  status: MessageStatus.sending,
-                ),
-              );
-            }
-            break;
+    //       case "video":
+    //         {
+    //           messages.add(
+    //             VideoMessageModel(
+    //               messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //               chatId: chatId,
+    //               metadata: VideoMetadata(
+    //                 durationInSeconds: asset["videoDuration"].inSeconds,
+    //                 height: double.parse(asset["height"].toString()),
+    //                 width: double.parse(asset["width"].toString()),
+    //                 isLocal: true,
+    //                 thumbnailBytes: await asset["thumbnail"],
+    //                 thumbnailUrl: '',
+    //               ),
+    //               url: asset["path"],
+    //               timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //               senderName: '',
+    //               senderAvatar: '',
+    //               isFromMe: true,
+    //               status: MessageStatus.sending,
+    //             ),
+    //           );
+    //         }
+    //         break;
+    //       case "text":
+    //         {
+    //           messages.add(
+    //             TextMessageModel(
+    //               messageId: "${messages.lastIndexOf(messages.last) + 1}",
+    //               chatId: chatId,
+    //               text: asset["value"],
+    //               timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
+    //               senderName: '',
+    //               senderAvatar: '',
+    //               isFromMe: true,
+    //               status: MessageStatus.sending,
+    //             ),
+    //           );
+    //         }
+    //         break;
 
-          default:
-            break;
-        }
-      });
-    }
+    //       default:
+    //         break;
+    //     }
+    //   });
+    // }
 
-    mediaGlassmorphicChangeState();
-    messages.refresh();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      animateToBottom();
-    });
+    // mediaGlassmorphicChangeState();
+    // messages.refresh();
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   animateToBottom();
+    // });
   }
 
   Future<void> openFiles() async {
@@ -1372,8 +1363,7 @@ class MessagesController extends GetxController {
         latitude: 48.153445,
         longitude: 17.129925,
         address: "Kocelova 11-11, 821 08, Bratislava",
-        timestamp:
-            DateTime.now().subtract(const Duration(hours: 1, minutes: 44)),
+        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 44)),
         senderName: user.value.name,
         senderAvatar: user.value.iconUrl,
       ),
@@ -1447,8 +1437,7 @@ class MessagesController extends GetxController {
         chatId: "${index++}",
         text:
             "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-        timestamp: DateTime.now()
-            .subtract(const Duration(days: 1, hours: 2, minutes: 4)),
+        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 4)),
         senderName: user.value.name,
         senderAvatar: user.value.iconUrl,
       ),

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -79,12 +78,12 @@ class MultiMediaMessageWidget extends StatelessWidget {
                                         fit: BoxFit.cover,
                                       )
                                 : isMediaLocal
-                                    ? ExtendedImage.file(
-                                        File(message.mediaList[index].url),
+                                    ? Image.file(
+                                        File(message.mediaList[index].url.toString()),
                                         fit: BoxFit.cover,
                                       )
-                                    : ExtendedImage.network(
-                                        message.mediaList[index].url,
+                                    : Image.network(
+                                        message.mediaList[index].url.toString(),
                                       ),
                           ),
                           Center(
@@ -100,7 +99,7 @@ class MultiMediaMessageWidget extends StatelessWidget {
                       )
                     : isMediaVideo
                         ? VideoMessagePlayer(
-                            message: message.mediaList[index],
+                            message: message.mediaList[index] as VideoMessageModel,
                             isMultiMessage: true,
                             multiMessageOnTap: () {
                               Get.toNamed(Routes.MEDIA_VIEW,
@@ -113,12 +112,12 @@ class MultiMediaMessageWidget extends StatelessWidget {
                             },
                           )
                         : isMediaLocal
-                            ? ExtendedImage.file(
-                                File(message.mediaList[index].url),
+                            ? Image.file(
+                                File(message.mediaList[index].url.toString()),
                                 fit: BoxFit.cover,
                               )
                             : Image.network(
-                                message.mediaList[index].url,
+                                message.mediaList[index].url.toString(),
                                 fit: BoxFit.cover,
                               ),
               ),

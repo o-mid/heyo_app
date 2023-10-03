@@ -46,7 +46,7 @@ class FileMetaData {
         extension: json[extensionSerializedName],
         size: json[sizeSerializedName],
         timestamp: DateTime.parse(json[timestampSerializedName]),
-        isImage: json[isImageSerializedName],
+        isImage: json[isImageSerializedName] as bool,
       );
 
   Map<String, dynamic> toJson() => {
