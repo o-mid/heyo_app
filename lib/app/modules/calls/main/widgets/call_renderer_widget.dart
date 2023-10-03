@@ -11,7 +11,7 @@ class CallRendererWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //TODO: AliAzim => the condition for voice and video call should add in here
-    return participateModel.videoMode
+    return participateModel.videoMode.value
         ? RTCVideoView(
             participateModel.rtcVideoRenderer!,
             objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,

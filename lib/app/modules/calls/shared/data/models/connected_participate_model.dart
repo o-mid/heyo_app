@@ -1,11 +1,12 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:get/get.dart';
 
 class ConnectedParticipateModel {
   String name;
   String iconUrl;
   String coreId;
-  bool audioMode;
-  bool videoMode;
+  RxBool audioMode;
+  RxBool videoMode;
   String status;
   MediaStream? stream;
   RTCVideoRenderer? rtcVideoRenderer;
@@ -25,8 +26,8 @@ class ConnectedParticipateModel {
     String? name,
     String? iconUrl,
     String? coreId,
-    bool? audioMode,
-    bool? videoMode,
+    RxBool? audioMode,
+    RxBool? videoMode,
     String? status,
     MediaStream? stream,
     RTCVideoRenderer? rtcVideoRenderer,
