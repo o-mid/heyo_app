@@ -24,20 +24,27 @@ class SingleCallWebRTCBuilder {
   Function(MediaStream stream)? onAddRemoteStream;
   Function(MediaStream stream)? onRemoveStream;
 
-  SingleCallWebRTCBuilder(
-      {required this.p2pCommunicator, required this.webRTCConnectionManager});
+  SingleCallWebRTCBuilder({
+    required this.p2pCommunicator,
+    required this.webRTCConnectionManager,
+  });
 
-  Future<CallRTCSession> _createRTCSession(CallId connectionId,
-      RemotePeer remotePeer, MediaStream localStream, bool isAudioCall) async {
+  Future<CallRTCSession> _createRTCSession(
+    CallId connectionId,
+    RemotePeer remotePeer,
+    MediaStream localStream,
+    bool isAudioCall,
+  ) async {
     RTCPeerConnection peerConnection =
         await webRTCConnectionManager.createRTCPeerConnection();
     CallRTCSession rtcSession = CallRTCSession(
-        callId: connectionId,
-        remotePeer: remotePeer,
-        onConnectionFailed: (id, remote) {
-          onConnectionFailed?.call(id, remote);
-        },
-        isAudioCall: isAudioCall);
+      callId: connectionId,
+      remotePeer: remotePeer,
+      onConnectionFailed: (id, remote) {
+        onConnectionFailed?.call(id, remote);
+      },
+      isAudioCall: isAudioCall,
+    );
 
     rtcSession.pc = peerConnection;
     webRTCConnectionManager.setListeners(
@@ -51,14 +58,24 @@ class SingleCallWebRTCBuilder {
     return rtcSession;
   }
 
-  Future<CallRTCSession> createSession(CallId connectionId,
-      RemotePeer remotePeer, MediaStream stream, bool isAudioCall) async {
+  Future<CallRTCSession> createSession(
+    CallId connectionId,
+    RemotePeer remotePeer,
+    MediaStream stream,
+    bool isAudioCall,
+  ) async {
     return await _createRTCSession(
-        connectionId, remotePeer, stream, isAudioCall);
+      connectionId,
+      remotePeer,
+      stream,
+      isAudioCall,
+    );
   }
 
   requestSession(CallRTCSession callRTCSession, List<String> members) {
-    members.removeWhere((element) => element==callRTCSession.remotePeer.remoteCoreId);
+    members.removeWhere(
+      (element) => element == callRTCSession.remotePeer.remoteCoreId,
+    );
     _send(
       CallSignalingCommands.request,
       {"isAudioCall": callRTCSession.isAudioCall, "members": members},
@@ -75,38 +92,44 @@ class SingleCallWebRTCBuilder {
     print("onMessage send");
 
     return await _send(
-        CallSignalingCommands.offer,
-        {
-          DATA_DESCRIPTION: {
-            'sdp': rtcSessionDescription.sdp,
-            'type': rtcSessionDescription.type
-          },
-          'media': MEDIA_TYPE,
+      CallSignalingCommands.offer,
+      {
+        DATA_DESCRIPTION: {
+          'sdp': rtcSessionDescription.sdp,
+          'type': rtcSessionDescription.type,
         },
-        rtcSession.remotePeer.remoteCoreId,
-        rtcSession.remotePeer.remotePeerId,
-        rtcSession.callId);
+        'media': MEDIA_TYPE,
+      },
+      rtcSession.remotePeer.remoteCoreId,
+      rtcSession.remotePeer.remotePeerId,
+      rtcSession.callId,
+    );
   }
 
   Future<void> onOfferReceived(CallRTCSession rtcSession, description) async {
     await rtcSession.pc!.setRemoteDescription(
-        RTCSessionDescription(description['sdp'], description['type']));
+      RTCSessionDescription(
+        description['sdp'] as String?,
+        description['type'] as String?,
+      ),
+    );
 
     RTCSessionDescription sessionDescription =
         await webRTCConnectionManager.setupAnswer(rtcSession.pc!, MEDIA_TYPE);
     print("onMessage onOfferReceived Send");
 
     _send(
-        CallSignalingCommands.answer,
-        {
-          'description': {
-            'sdp': sessionDescription.sdp,
-            'type': sessionDescription.type
-          },
+      CallSignalingCommands.answer,
+      {
+        'description': {
+          'sdp': sessionDescription.sdp,
+          'type': sessionDescription.type,
         },
-        rtcSession.remotePeer.remoteCoreId,
-        rtcSession.remotePeer.remotePeerId,
-        rtcSession.callId);
+      },
+      rtcSession.remotePeer.remoteCoreId,
+      rtcSession.remotePeer.remotePeerId,
+      rtcSession.callId,
+    );
   }
 
   Future<void> onAnswerReceived(CallRTCSession rtcSession, description) async {
@@ -114,56 +137,74 @@ class SingleCallWebRTCBuilder {
 
     await rtcSession.pc!.setRemoteDescription(
       RTCSessionDescription(
-        description['sdp'],
-        description['type'],
+        description['sdp'] as String?,
+        description['type'] as String?,
       ),
     );
   }
 
   void reject(String callId, RemotePeer remotePeer) {
-    _send(CallSignalingCommands.reject, {}, remotePeer.remoteCoreId,
-        remotePeer.remotePeerId, callId);
+    _send(
+      CallSignalingCommands.reject,
+      {},
+      remotePeer.remoteCoreId,
+      remotePeer.remotePeerId,
+      callId,
+    );
   }
 
   _sendCandidate(RTCIceCandidate iceCandidate, CallRTCSession rtcSession) {
     _send(
-        CallSignalingCommands.candidate,
-        {
-          CallSignalingCommands.candidate: {
-            'sdpMLineIndex': iceCandidate.sdpMLineIndex,
-            'sdpMid': iceCandidate.sdpMid,
-            'candidate': iceCandidate.candidate,
-          },
+      CallSignalingCommands.candidate,
+      {
+        CallSignalingCommands.candidate: {
+          'sdpMLineIndex': iceCandidate.sdpMLineIndex,
+          'sdpMid': iceCandidate.sdpMid,
+          'candidate': iceCandidate.candidate,
         },
-        rtcSession.remotePeer.remoteCoreId,
-        rtcSession.remotePeer.remotePeerId,
-        rtcSession.callId);
+      },
+      rtcSession.remotePeer.remoteCoreId,
+      rtcSession.remotePeer.remotePeerId,
+      rtcSession.callId,
+    );
   }
 
   Future<bool> _send(
-      eventType, data, remoteCoreId, remotePeerId, connectionId) async {
+    eventType,
+    data,
+    remoteCoreId,
+    remotePeerId,
+    connectionId,
+  ) async {
     print(
-        "onMessage send $remotePeerId : $remoteCoreId : $connectionId : $eventType : $data ");
+      "onMessage send $remotePeerId : $remoteCoreId : $connectionId : $eventType : $data ",
+    );
     var request = {};
     request["type"] = eventType;
     request["data"] = data;
     request["command"] = COMMAND;
     request[CALL_ID] = connectionId;
     print("P2PCommunicator: sendingSDP $remoteCoreId : $eventType");
-    bool requestSucceeded = await p2pCommunicator.sendSDP(
-        _encoder.convert(request), remoteCoreId, remotePeerId);
+    final requestSucceeded = await p2pCommunicator.sendSDP(
+      _encoder.convert(request),
+      remoteCoreId as String,
+      remotePeerId as String?,
+    );
     print(
-        "P2PCommunicator: sendingSDP $remoteCoreId : $eventType : $requestSucceeded");
+      "P2PCommunicator: sendingSDP $remoteCoreId : $eventType : $requestSucceeded",
+    );
 
     return requestSucceeded;
   }
 
   Future<void> onCandidateReceived(
-      CallRTCSession rtcSession, candidateMap) async {
+    CallRTCSession rtcSession,
+    candidateMap,
+  ) async {
     RTCIceCandidate candidate = RTCIceCandidate(
-      candidateMap['candidate'],
-      candidateMap['sdpMid'],
-      candidateMap['sdpMLineIndex'],
+      candidateMap['candidate'] as String?,
+      candidateMap['sdpMid'] as String?,
+      candidateMap['sdpMLineIndex'] as int?,
     );
     await rtcSession.pc!.addCandidate(candidate);
   }
@@ -174,14 +215,13 @@ class SingleCallWebRTCBuilder {
 
   void addMemberEvent(String member, CallRTCSession rtcSession) {
     _send(
-        CallSignalingCommands.newMember,
-        {
-          CallSignalingCommands.newMember: {
-           member
-          },
-        },
-        rtcSession.remotePeer.remoteCoreId,
-        rtcSession.remotePeer.remotePeerId,
-        rtcSession.callId);
+      CallSignalingCommands.newMember,
+      {
+        CallSignalingCommands.newMember: {member},
+      },
+      rtcSession.remotePeer.remoteCoreId,
+      rtcSession.remotePeer.remotePeerId,
+      rtcSession.callId,
+    );
   }
 }

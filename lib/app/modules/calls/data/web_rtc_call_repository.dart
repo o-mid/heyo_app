@@ -6,6 +6,34 @@ import 'package:heyo/app/modules/web-rtc/multiple_call_connection_handler.dart';
 import 'package:webrtc_interface/src/media_stream.dart';
 
 class WebRTCCallRepository implements CallRepository {
+  WebRTCCallRepository({required this.callConnectionsHandler}) {
+    callConnectionsHandler
+      ..onLocalStream = (stream) {
+        onLocalStream?.call(stream);
+      }
+      ..onAddRemoteStream = ((callRTCSession) {
+        onAddCallStream?.call(
+          CallStream(
+            coreId: callRTCSession.remotePeer.remoteCoreId,
+            remoteStream: callRTCSession.getStream()!,
+          ),
+        );
+      });
+    //callConnectionsHandler.onChangeParticipateStream = (() {
+    //  onChangeParticipateStream?.call(
+    //    CallParticipantModel(
+    //      name: name,
+    //      iconUrl: iconUrl,
+    //      coreId: coreId,
+    //    ),
+    //  );
+    //});
+
+    if (mock) {
+      emitMockStream();
+    }
+  }
+
   final CallConnectionsHandler callConnectionsHandler;
   @override
   Function(MediaStream stream)? onLocalStream;
@@ -13,45 +41,32 @@ class WebRTCCallRepository implements CallRepository {
   Function(CallStream callStream)? onAddCallStream;
   @override
   Function(CallParticipantModel participate)? onChangeParticipateStream;
+
   bool mock = true;
 
-  WebRTCCallRepository({required this.callConnectionsHandler}) {
-    callConnectionsHandler.onLocalStream = ((stream) {
-      onLocalStream?.call(stream);
-    });
-    callConnectionsHandler.onAddRemoteStream = ((callRTCSession) {
-      onAddCallStream?.call(CallStream(
-          coreId: callRTCSession.remotePeer.remoteCoreId,
-          remoteStream: callRTCSession.getStream()!));
-    });
-
-    if (mock) {
-      emitMockStream();
-    }
-  }
-  emitMockStream() async {
-    await Future.delayed(const Duration(seconds: 5));
+  Future<void> emitMockStream() async {
+    await Future<void>.delayed(const Duration(seconds: 5));
     onAddCallStream?.call(
       CallStream(
-        coreId: "coreId",
+        coreId: 'coreId',
         remoteStream: await _createMockStream(),
       ),
     );
-    await Future.delayed(const Duration(seconds: 5));
+    await Future<void>.delayed(const Duration(seconds: 5));
     onAddCallStream?.call(
       CallStream(
-        coreId: "coreId",
+        coreId: 'coreId',
         remoteStream: await _createMockStream(),
       ),
     );
-    //await Future.delayed(const Duration(seconds: 5));
+    //await Future<void>.delayed(const Duration(seconds: 5));
     //onAddCallStream?.call(
     //  CallStream(
     //    coreId: "coreId",
     //    remoteStream: await _createMockStream(),
     //  ),
     //);
-    //await Future.delayed(const Duration(seconds: 5));
+    //await Future<void>.delayed(const Duration(seconds: 5));
     //onAddCallStream?.call(
     //  CallStream(
     //    coreId: "coreId",
@@ -64,7 +79,7 @@ class WebRTCCallRepository implements CallRepository {
   Future<List<CallStream>> getCallStreams() async {
     if (mock) {
       return [
-        CallStream(coreId: "coreId", remoteStream: await _createMockStream())
+        CallStream(coreId: 'coreId', remoteStream: await _createMockStream()),
       ];
     }
     return callConnectionsHandler
@@ -96,7 +111,7 @@ class WebRTCCallRepository implements CallRepository {
           remoteStream: await _createMockStream(),
         ),
       );
-      _addParticipate(coreId);
+      await _addParticipate(coreId);
     }
   }
 
@@ -137,9 +152,9 @@ class WebRTCCallRepository implements CallRepository {
     return session.callId;
   }
 
-  void _addParticipate(String coreId) async {
-    String mockProfileImage =
-        "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png";
+  Future<void> _addParticipate(String coreId) async {
+    const mockProfileImage =
+        'https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png';
     onChangeParticipateStream?.call(
       CallParticipantModel(
         coreId: coreId,
@@ -177,7 +192,7 @@ class WebRTCCallRepository implements CallRepository {
               },
               'facingMode': 'user',
               'optional': [],
-            }
+            },
     };
 
     MediaStream stream = userScreen

@@ -210,7 +210,7 @@ class CallController extends GetxController {
       rtcVideoRenderer: renderer,
     );
     connectedRemoteParticipates.add(remoteParticipate);
-    updateCalleeVideoWidget();
+    //updateCalleeVideoWidget();
   }
 
   Future<void> calleeSetup() async {
