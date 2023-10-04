@@ -6,7 +6,7 @@ import '../../new_chat/data/models/user_model.dart';
 import '../data/models/messages/message_model.dart';
 import 'message_repository_models.dart';
 
-abstract class MessageRepository {
+abstract class ConnectionMessageRepository {
   Future<UserModel> getUserContact({required UserInstance userInstance});
 
   Future<void> saveUserStates({required UserInstance userInstance, required UserStates userStates});
