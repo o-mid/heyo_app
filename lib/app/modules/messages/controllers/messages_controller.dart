@@ -8,6 +8,7 @@ import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.da
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/messages/domain/message_repository_models.dart';
+import 'package:heyo/app/modules/messages/domain/user_state_repository.dart';
 import 'package:heyo/app/modules/messages/utils/extensions/messageModel.extension.dart';
 import 'package:heyo/app/modules/messages/utils/open_camera_for_sending_media_message.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
@@ -60,8 +61,9 @@ import '../domain/connection_message_repository.dart';
 
 class MessagesController extends GetxController {
   final ConnectionMessageRepository messageRepository;
+  final UserStateRepository userStateRepository;
 
-  MessagesController({required this.messageRepository}) {
+  MessagesController({required this.messageRepository, required this.userStateRepository}) {
     init();
   }
 
@@ -144,7 +146,7 @@ class MessagesController extends GetxController {
   }
 
   _getUserContact() async {
-    user.value = await messageRepository.getUserContact(
+    user.value = await userStateRepository.getUserContact(
         userInstance: UserInstance(
       coreId: args.coreId,
       iconUrl: args.iconUrl,
@@ -968,7 +970,7 @@ class MessagesController extends GetxController {
           messages.value = value,
           messages.refresh(),
         });
-    chatModel = await messageRepository.getUserChatModel(chatId: chatId);
+    chatModel = await userStateRepository.getUserChatModel(chatId: chatId);
 
     // of chatModel is null, scroll to bottom
     // eles scroll to last position
@@ -1086,7 +1088,7 @@ class MessagesController extends GetxController {
   }
 
   Future<void> _saveUserStates() async {
-    await messageRepository.saveUserStates(
+    await userStateRepository.saveUserStates(
         userInstance: UserInstance(coreId: args.coreId, iconUrl: args.iconUrl),
         userStates: UserStates(
           chatId: chatId,
