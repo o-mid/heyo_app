@@ -65,7 +65,7 @@ class VideoMessageModel extends MessageModel {
 
   factory VideoMessageModel.fromJson(Map<String, dynamic> json) => VideoMessageModel(
         url: json[urlSerializedName],
-        metadata: VideoMetadata.fromJson(json[metadataSerializedName]),
+        metadata: VideoMetadata.fromJson(json[metadataSerializedName] as Map<String, dynamic>),
         // parent props:
         messageId: json[MessageModel.messageIdSerializedName],
         chatId: json[MessageModel.chatIdSerializedName],
@@ -74,13 +74,14 @@ class VideoMessageModel extends MessageModel {
         senderAvatar: json[MessageModel.senderAvatarSerializedName],
         status: MessageStatus.values.byName(json[MessageModel.statusSerializedName]),
         type: MessageContentType.values.byName(json[MessageModel.typeSerializedName]),
-        isFromMe: json[MessageModel.isFromMeSerializedName],
-        isForwarded: json[MessageModel.isForwardedSerializedName],
+        isFromMe: json[MessageModel.isFromMeSerializedName] as bool,
+        isForwarded: json[MessageModel.isForwardedSerializedName] as bool,
         reactions: (jsonDecode(json[MessageModel.reactionsSerializedName]) as Map<String, dynamic>)
-            .map((String k, v) => MapEntry(k, ReactionModel.fromJson(v))),
+            .map((String k, v) => MapEntry(k, ReactionModel.fromJson(v as Map<String, dynamic>))),
         replyTo: json[MessageModel.replyToSerializedName] == null
             ? null
-            : ReplyToModel.fromJson(json[MessageModel.replyToSerializedName]),
+            : ReplyToModel.fromJson(
+                json[MessageModel.replyToSerializedName] as Map<String, dynamic>),
       );
 
   @override

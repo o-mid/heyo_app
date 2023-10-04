@@ -10,14 +10,15 @@ import 'message_header_widget.dart';
 
 class MessageWidget extends StatelessWidget {
   final MessageModel message;
+  final String? iconUrl;
   final bool isMockMessage;
 
   const MessageWidget({
-    Key? key,
     required this.message,
+    required this.iconUrl,
+    Key? key,
     this.isMockMessage = false,
   }) : super(key: key);
-
   List<Widget> _buildChildren() {
     List<Widget> children = [];
 
@@ -25,7 +26,7 @@ class MessageWidget extends StatelessWidget {
       children.add(CustomSizes.mediumSizedBoxWidth);
       children.add(
         CustomCircleAvatar(
-          url: message.senderAvatar,
+          url: iconUrl ?? "",
           size: 20,
           isMockData: isMockMessage,
         ),

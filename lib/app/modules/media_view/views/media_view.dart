@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -82,14 +81,14 @@ class MediaView extends GetView<MediaViewController> {
                         color: Colors.black,
                         child: (controller.currentMessage as ImageMessageModel).isLocal
                             ? PhotoView(
-                                imageProvider: ExtendedFileImageProvider(
+                                imageProvider: FileImage(
                                   File((controller.currentMessage as ImageMessageModel).url),
                                 ),
                                 scaleStateController: controller.photoViewController,
                                 minScale: PhotoViewComputedScale.contained * 1.0,
                               )
                             : PhotoView(
-                                imageProvider: ExtendedFileImageProvider(
+                                imageProvider: FileImage(
                                     File((controller.currentMessage as ImageMessageModel).url)),
                               ),
                       ),

@@ -52,7 +52,7 @@ class WifiDirectConnectController extends GetxController {
 
         // PeerList peerList = signaling.wifiDirectPlugin.peerList;
         if (_pluginInstance.peerList.contains(user.coreId)) {
-          connectionStatus.value = _pluginInstance.peerList.peers[user.coreId]!.status;
+          connectionStatus.value = (_pluginInstance.peerList.peers[user.coreId] as Peer)!.status;
         } else {
           connectionStatus.value = PeerStatus.peerUnavailable;
         }
@@ -65,7 +65,8 @@ class WifiDirectConnectController extends GetxController {
         // incomingConnection = true.obs;
         // connectedPeer = event.message as Peer;
         //   wifiDirectConnectionController.eventHandler(event);
-        connectionStatus.value = _pluginInstance.peerList.peers[user.coreId]!.status;
+        connectionStatus.value =
+            (_pluginInstance.peerList.peers[user.coreId] as Peer).status as PeerStatus;
 
         print('WifiDirectConnectController: linked to ${(event.message as Peer).multiAddress}');
 

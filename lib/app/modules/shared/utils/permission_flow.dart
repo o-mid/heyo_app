@@ -17,13 +17,13 @@ class PermissionFlow {
 
   Future<bool> start() async {
     if (await permission.isDenied) {
-      bool result = await Get.dialog(
+      var result = await Get.dialog(
         PermissionDialog(
           indicatorIcon: indicatorIcon,
           title: LocaleKeys.Permissions_AllowAccess.tr,
           subtitle: subtitle,
         ),
-      );
+      ) as bool;
 
       if (!result) {
         return false;

@@ -51,16 +51,16 @@ class ChatModel {
   });
 
   factory ChatModel.fromJson(Map<String, dynamic> json) => ChatModel(
-        id: json[idSerializedName],
-        name: json[nameSerializedName],
-        icon: json[iconSerializedName],
-        lastMessage: json[lastMessageSerializedName],
-        timestamp: DateTime.parse(json[timestampSerializedName]),
-        isOnline: json[isOnlineSerializedName],
-        isVerified: json[isVerifiedSerializedName],
-        notificationCount: json[notificationCountSerializedName],
-        lastReadMessageId: json[lastReadMessageIdSerializedName],
-        scrollPosition: json[scrollPositionSerializedName],
+        id: json[idSerializedName] as String,
+        name: json[nameSerializedName] as String,
+        icon: json[iconSerializedName] as String,
+        lastMessage: json[lastMessageSerializedName] as String,
+        timestamp: DateTime.parse(json[timestampSerializedName] as String),
+        isOnline: json[isOnlineSerializedName] as bool,
+        isVerified: json[isVerifiedSerializedName] as bool,
+        notificationCount: json[notificationCountSerializedName] as int,
+        lastReadMessageId: json[lastReadMessageIdSerializedName] as String,
+        scrollPosition: json[scrollPositionSerializedName] as String,
       );
 
   Map<String, dynamic> toJson() => {

@@ -23,7 +23,7 @@ class ReactionsWidget extends StatelessWidget {
 
   List<Widget> _buildReactionsList() {
     return message.reactions.keys
-        .map((emoji) => _buildReaction(emoji, message.reactions[emoji]!))
+        .map((emoji) => _buildReaction(emoji, message.reactions[emoji] as ReactionModel))
         .where((widget) => widget != null)
         .cast<Widget>()
         .toList();

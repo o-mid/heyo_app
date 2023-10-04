@@ -18,7 +18,10 @@ class DeleteMessage {
   final CommonMessagingConnectionController messagingConnection =
       Get.find<CommonMessagingConnectionController>();
 
-  execute({required DeleteMessageType deleteMessageType, required String remoteCoreId}) async {
+  Future<void> execute({
+    required DeleteMessageType deleteMessageType,
+    required String remoteCoreId,
+  }) async {
     switch (deleteMessageType.runtimeType) {
       case DeleteLocalMessages:
         final localMessages = (deleteMessageType as DeleteLocalMessages).selectedMessages;
@@ -29,35 +32,41 @@ class DeleteMessage {
         final remoteMessages = (deleteMessageType as DeleteRemoteMessages).selectedMessages;
 
         await deleteRemoteMessages(
-            remoteMessages: remoteMessages, chatId: deleteMessageType.chatId,remoteCoreId: remoteCoreId);
+          remoteMessages: remoteMessages,
+          chatId: deleteMessageType.chatId,
+          remoteCoreId: remoteCoreId,
+        );
         break;
     }
   }
 
-  Future<void> deleteLocalMessages(
-      {required List<MessageModel> localMessages, required String chatId}) async {
+  Future<void> deleteLocalMessages({
+    required List<MessageModel> localMessages,
+    required String chatId,
+  }) async {
     final messageIds = localMessages.map((e) => e.messageId).toList();
     await messagesRepo.deleteMessages(messageIds: messageIds, chatId: chatId);
   }
 
-  Future<void> deleteRemoteMessages(
-      {required List<MessageModel> remoteMessages, required String chatId, required String remoteCoreId}) async {
+  Future<void> deleteRemoteMessages({
+    required List<MessageModel> remoteMessages,
+    required String chatId,
+    required String remoteCoreId,
+  }) async {
     final messageIds = remoteMessages.map((e) => e.messageId).toList();
 
-    Map<String, dynamic> deleteMessagesJson = DeleteMessageModel(messageIds: messageIds).toJson();
+    final deleteMessagesJson = DeleteMessageModel(messageIds: messageIds).toJson();
 
     await messagesRepo.deleteMessages(messageIds: messageIds, chatId: chatId);
 
     await SendDataChannelMessage(messagingConnection: messagingConnection).execute(
       channelMessageType: ChannelMessageType.delete(message: deleteMessagesJson),
-      remoteCoreId: remoteCoreId
+      remoteCoreId: remoteCoreId,
     );
   }
 }
 
 class DeleteMessageType {
-  final String chatId;
-
   DeleteMessageType({required this.chatId});
 
   factory DeleteMessageType.forMe({
@@ -69,20 +78,21 @@ class DeleteMessageType {
     required List<MessageModel> selectedMessages,
     required String chatId,
   }) = DeleteRemoteMessages;
+  final String chatId;
 }
 
 class DeleteLocalMessages extends DeleteMessageType {
-  final List<MessageModel> selectedMessages;
   DeleteLocalMessages({
     required super.chatId,
     required this.selectedMessages,
   });
+  final List<MessageModel> selectedMessages;
 }
 
 class DeleteRemoteMessages extends DeleteMessageType {
-  final List<MessageModel> selectedMessages;
   DeleteRemoteMessages({
     required super.chatId,
     required this.selectedMessages,
   });
+  final List<MessageModel> selectedMessages;
 }

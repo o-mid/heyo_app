@@ -17,11 +17,12 @@ import 'recipient_reply_to_widget.dart';
 class MessageSelectionWrapper extends StatelessWidget {
   final MessageModel message;
   final bool isMockMessage;
-
+  final String? iconUrl;
   const MessageSelectionWrapper({
     Key? key,
     required this.message,
     this.isMockMessage = false,
+    this.iconUrl,
   }) : super(key: key);
 
   @override
@@ -70,6 +71,7 @@ class MessageSelectionWrapper extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 4.h),
                     child: MessageWidget(
                       message: message,
+                      iconUrl: iconUrl,
                       isMockMessage: isMockMessage,
                     ),
                   ),

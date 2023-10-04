@@ -14,11 +14,7 @@ enum CallState {
 }
 
 class Session {
-  Session(
-      {required this.sid,
-      required this.cid,
-      required this.pid,
-      this.isAudioCall = false});
+  Session({required this.sid, required this.cid, required this.pid, this.isAudioCall = false});
 
   final String cid;
   final String sid;
@@ -45,12 +41,10 @@ class Signaling {
   Function(MediaStream stream)? onLocalStream;
   Function(Session session, MediaStream stream)? onAddRemoteStream;
   Function(Session session, MediaStream stream)? onRemoveRemoteStream;
-  Function(Session session, RTCDataChannel dc, RTCDataChannelMessage data)?
-      onDataChannelMessage;
+  Function(Session session, RTCDataChannel dc, RTCDataChannelMessage data)? onDataChannelMessage;
   Function(Session session, RTCDataChannel dc)? onDataChannel;
 
-  String get sdpSemantics =>
-      WebRTC.platformIsWindows ? 'plan-b' : 'unified-plan';
+  String get sdpSemantics => WebRTC.platformIsWindows ? 'plan-b' : 'unified-plan';
 
   final Map<String, dynamic> _iceServers = {
     'iceServers': [
@@ -75,14 +69,14 @@ class Signaling {
         "username": 'turn-server-ir',
         "credential": 'turn-server-ir',
       }
-    ]
+    ],
   };
 
   final Map<String, dynamic> _config = {
     'mandatory': {},
     'optional': [
       {'DtlsSrtpKeyAgreement': true},
-    ]
+    ],
   };
 
   final Map<String, dynamic> _dcConstraints = {
@@ -105,7 +99,7 @@ class Signaling {
 
   void muteMic() {
     if (_localStream != null) {
-      bool enabled = _localStream!.getAudioTracks()[0].enabled;
+      var enabled = _localStream!.getAudioTracks()[0].enabled;
       _localStream!.getAudioTracks()[0].enabled = !enabled;
     }
   }
@@ -116,18 +110,24 @@ class Signaling {
     }
   }
 
-  Future<Session> invite(String coreId, String media, bool useScreen,
-      String selfId, bool isAudioCall) async {
-    final sessionId =
-        '$selfId-$coreId-${DateTime.now().millisecondsSinceEpoch}';
+  Future<Session> invite(
+    String coreId,
+    String media,
+    bool useScreen,
+    String selfId,
+    bool isAudioCall,
+  ) async {
+    final sessionId = '$selfId-$coreId-${DateTime.now().millisecondsSinceEpoch}';
 
-    Session session = await _createSession(null,
-        coreId: coreId,
-        peerId: null,
-        sessionId: sessionId,
-        media: media,
-        screenSharing: useScreen,
-        isAudioCall: isAudioCall);
+    var session = await _createSession(
+      null,
+      coreId: coreId,
+      peerId: null,
+      sessionId: sessionId,
+      media: media,
+      screenSharing: useScreen,
+      isAudioCall: isAudioCall,
+    );
     _sessions[sessionId] = session;
     if (media == 'data') {
       _createDataChannel(session);
@@ -139,51 +139,54 @@ class Signaling {
   }
 
   void peerOpendCamera(String sessionId) {
-    var session = _sessions[sessionId];
+    var session = _sessions[sessionId] as Session;
 
     if (session != null) {
       _send(
-          'opendcamera',
-          {
-            'session_id': sessionId,
-          },
-          session.cid,
-          session.pid);
+        'opendcamera',
+        {
+          'session_id': sessionId,
+        },
+        session.cid,
+        session.pid,
+      );
     }
   }
 
   void peerClosedCamera(String sessionId) {
-    var session = _sessions[sessionId];
+    Session session = _sessions[sessionId] as Session;
 
     if (session != null) {
       _send(
-          'closedcamera',
-          {
-            'session_id': sessionId,
-          },
-          session.cid,
-          session.pid);
+        'closedcamera',
+        {
+          'session_id': sessionId,
+        },
+        session.cid,
+        session.pid,
+      );
     }
   }
 
   void bye(Session session) {
     final sessionId = session.sid;
-    var sess = _sessions[sessionId];
+    Session sess = _sessions[sessionId] as Session;
 
     if (sess != null) {
       _closeSession(sess);
       _send(
-          'bye',
-          {
-            'session_id': sessionId,
-          },
-          sess.cid,
-          sess.pid);
+        'bye',
+        {
+          'session_id': sessionId,
+        },
+        sess.cid,
+        sess.pid,
+      );
     }
   }
 
   void accept(String sessionId) {
-    var session = _sessions[sessionId];
+    final session = _sessions[sessionId];
     print(sessionId);
     print("${_sessions.keys}");
     print("feafesfse ${session == null}");
@@ -203,17 +206,16 @@ class Signaling {
     bye(session);
   }
 
-  void onMessage(Map<String, dynamic> mapData, String remoteCoreId,
-      String remotePeerId) async {
-    var data = mapData['data'];
+  void onMessage(Map<String, dynamic> mapData, String remoteCoreId, String remotePeerId) async {
+    Map<String, dynamic> data = mapData['data'] as Map<String, dynamic>;
     print("onMessage, type: ${mapData['type']}");
 
     switch (mapData['type']) {
       case 'offer':
         {
-          var description = data['description'];
-          var media = data['media'];
-          var sessionId = data['session_id'];
+          Map<String, dynamic> description = data['description'] as Map<String, dynamic>;
+          var media = data['media'] as String;
+          var sessionId = data['session_id'] as String;
           var session = _sessions[sessionId];
           var isAudioCall = data['isAudioCall'];
           var newSession = await _createSession(
@@ -223,11 +225,12 @@ class Signaling {
             sessionId: sessionId,
             media: media,
             screenSharing: false,
-            isAudioCall: isAudioCall,
+            isAudioCall: isAudioCall as bool,
           );
           _sessions[sessionId] = newSession;
           await newSession.pc?.setRemoteDescription(
-              RTCSessionDescription(description['sdp'], description['type']));
+            RTCSessionDescription(description['sdp'] as String, description['type'] as String),
+          );
           // await _createAnswer(newSession, media);
 
           if (newSession.remoteCandidates.isNotEmpty) {
@@ -237,7 +240,6 @@ class Signaling {
             newSession.remoteCandidates.clear();
           }
 
-
           onCallStateChange?.call(newSession, CallState.callStateNew);
 
           onCallStateChange?.call(newSession, CallState.callStateRinging);
@@ -245,21 +247,25 @@ class Signaling {
         break;
       case 'answer':
         {
-          var description = data['description'];
+          var description = data['description'] as Map<String, dynamic>;
           var sessionId = data['session_id'];
-          var session = _sessions[sessionId];
-          session?.pc?.setRemoteDescription(
-              RTCSessionDescription(description['sdp'], description['type']));
+          var session = _sessions[sessionId] as Session?;
+          await session?.pc?.setRemoteDescription(
+            RTCSessionDescription(description['sdp'] as String, description['type'] as String),
+          );
           onCallStateChange?.call(session!, CallState.callStateConnected);
         }
         break;
       case 'candidate':
         {
-          var candidateMap = data['candidate'];
-          var sessionId = data['session_id'];
+          var candidateMap = data['candidate'] as Map<String, dynamic>;
+          var sessionId = data['session_id'] as String;
           var session = _sessions[sessionId];
-          RTCIceCandidate candidate = RTCIceCandidate(candidateMap['candidate'],
-              candidateMap['sdpMid'], candidateMap['sdpMLineIndex']);
+          var candidate = RTCIceCandidate(
+            candidateMap['candidate'] as String,
+            candidateMap['sdpMid'] as String,
+            candidateMap['sdpMLineIndex'] as int?,
+          );
 
           if (session != null) {
             if (session.pc != null) {
@@ -284,7 +290,7 @@ class Signaling {
         break;
       case 'bye':
         {
-          var sessionId = data['session_id'];
+          var sessionId = data['session_id'] as String;
           var session = _sessions.remove(sessionId);
           print('bye: ' + sessionId + ' ${(session != null)}');
 
@@ -303,7 +309,7 @@ class Signaling {
       case "closedcamera":
         {
           var sessionId = data['session_id'];
-          var session = _sessions[sessionId];
+          var session = _sessions[sessionId] as Session;
           if (session != null) {
             onCallStateChange?.call(session, CallState.callStateClosedCamera);
           }
@@ -312,7 +318,7 @@ class Signaling {
       case "opendcamera":
         {
           var sessionId = data['session_id'];
-          var session = _sessions[sessionId];
+          var session = _sessions[sessionId] as Session;
           if (session != null) {
             onCallStateChange?.call(session, CallState.callStateOpendCamera);
           }
@@ -324,7 +330,7 @@ class Signaling {
   }
 
   Future<MediaStream> createStream(String media, bool userScreen) async {
-    final Map<String, dynamic> mediaConstraints = {
+    final mediaConstraints = <String, dynamic>{
       'audio': userScreen ? false : true,
       'video': userScreen
           ? true
@@ -337,34 +343,38 @@ class Signaling {
               },
               'facingMode': 'user',
               'optional': [],
-            }
+            },
     };
 
-    MediaStream stream = userScreen
+    var stream = userScreen
         ? await navigator.mediaDevices.getDisplayMedia(mediaConstraints)
         : await navigator.mediaDevices.getUserMedia(mediaConstraints);
     onLocalStream?.call(stream);
     return stream;
   }
 
-  Future<Session> _createSession(Session? session,
-      {required String coreId,
-      required String? peerId,
-      required String sessionId,
-      required String media,
-      required bool screenSharing,
-      required bool isAudioCall}) async {
-    var newSession = session ??
-        Session(
-            sid: sessionId, cid: coreId, pid: peerId, isAudioCall: isAudioCall);
+  Future<Session> _createSession(
+    Session? session, {
+    required String coreId,
+    required String? peerId,
+    required String sessionId,
+    required String media,
+    required bool screenSharing,
+    required bool isAudioCall,
+  }) async {
+    var newSession =
+        session ?? Session(sid: sessionId, cid: coreId, pid: peerId, isAudioCall: isAudioCall);
     if (media != 'data') {
       _localStream = await createStream(media, screenSharing);
     }
     print(_iceServers);
-    RTCPeerConnection pc = await createPeerConnection({
-      ..._iceServers,
-      ...{'sdpSemantics': sdpSemantics}
-    }, _config);
+    var pc = await createPeerConnection(
+      {
+        ..._iceServers,
+        ...{'sdpSemantics': sdpSemantics},
+      },
+      _config,
+    );
     if (media != 'data') {
       switch (sdpSemantics) {
         case 'plan-b':
@@ -386,7 +396,6 @@ class Signaling {
           });
           break;
       }
-
     }
     pc.onIceCandidate = (candidate) async {
       if (candidate == null) {
@@ -397,20 +406,22 @@ class Signaling {
       // before skipping to the next one. 1 second is just an heuristic value
       // and should be thoroughly tested in your own environment.
       await Future.delayed(
-          const Duration(seconds: 1),
-          () => _send(
-              'candidate',
-              {
-                'to': peerId,
-                'candidate': {
-                  'sdpMLineIndex': candidate.sdpMLineIndex,
-                  'sdpMid': candidate.sdpMid,
-                  'candidate': candidate.candidate,
-                },
-                'session_id': sessionId,
-              },
-              coreId,
-              peerId));
+        const Duration(seconds: 1),
+        () => _send(
+          'candidate',
+          {
+            'to': peerId,
+            'candidate': {
+              'sdpMLineIndex': candidate.sdpMLineIndex,
+              'sdpMid': candidate.sdpMid,
+              'candidate': candidate.candidate,
+            },
+            'session_id': sessionId,
+          },
+          coreId,
+          peerId,
+        ),
+      );
     };
 
     pc.onIceConnectionState = (state) {};
@@ -439,31 +450,28 @@ class Signaling {
     onDataChannel?.call(session, channel);
   }
 
-  Future<void> _createDataChannel(Session session,
-      {label: 'fileTransfer'}) async {
-    RTCDataChannelInit dataChannelDict = RTCDataChannelInit()
-      ..maxRetransmits = 30;
-    RTCDataChannel channel =
-        await session.pc!.createDataChannel(label, dataChannelDict);
+  Future<void> _createDataChannel(Session session, {label = 'fileTransfer'}) async {
+    var dataChannelDict = RTCDataChannelInit()..maxRetransmits = 30;
+    var channel = await session.pc!.createDataChannel(label as String, dataChannelDict);
     _addDataChannel(session, channel);
   }
 
   Future<void> _createOffer(Session session, String media) async {
     try {
-      RTCSessionDescription s =
-          await session.pc!.createOffer(media == 'data' ? _dcConstraints : {});
+      var s = await session.pc!.createOffer(media == 'data' ? _dcConstraints : {});
       await session.pc!.setLocalDescription(s);
       _send(
-          'offer',
-          {
-            'to': session.cid,
-            'description': {'sdp': s.sdp, 'type': s.type},
-            'session_id': session.sid,
-            'media': media,
-            "isAudioCall": session.isAudioCall,
-          },
-          session.cid,
-          session.pid);
+        'offer',
+        {
+          'to': session.cid,
+          'description': {'sdp': s.sdp, 'type': s.type},
+          'session_id': session.sid,
+          'media': media,
+          "isAudioCall": session.isAudioCall,
+        },
+        session.cid,
+        session.pid,
+      );
     } catch (e) {
       print(e.toString());
     }
@@ -471,30 +479,29 @@ class Signaling {
 
   Future<void> _createAnswer(Session session, String media) async {
     try {
-      RTCSessionDescription s =
-          await session.pc!.createAnswer(media == 'data' ? _dcConstraints : {});
+      var s = await session.pc!.createAnswer(media == 'data' ? _dcConstraints : {});
       await session.pc!.setLocalDescription(s);
       _send(
-          'answer',
-          {
-            'to': session.cid,
-            'description': {'sdp': s.sdp, 'type': s.type},
-            'session_id': session.sid,
-          },
-          session.cid,
-          session.pid);
+        'answer',
+        {
+          'to': session.cid,
+          'description': {'sdp': s.sdp, 'type': s.type},
+          'session_id': session.sid,
+        },
+        session.cid,
+        session.pid,
+      );
     } catch (e) {
       print(e.toString());
     }
   }
 
-  _send(event, data, remoteCoreId, remotePeerId) {
+  _send(event, data, String remoteCoreId, String? remotePeerId) {
     var request = {};
     request["type"] = event;
     request["data"] = data;
     request["command"] = "call";
-    p2pCommunicator.sendSDP(
-        _encoder.convert(request), remoteCoreId, remotePeerId);
+    p2pCommunicator.sendSDP(_encoder.convert(request), remoteCoreId, remotePeerId);
   }
 
   Future<void> _cleanSessions() async {
@@ -520,8 +527,8 @@ class Signaling {
       return peerId == ids[0] || peerId == ids[1];
     });
     if (session != null) {
-      _closeSession(session);
-      onCallStateChange?.call(session, CallState.callStateBye);
+      _closeSession(session as Session);
+      onCallStateChange?.call(session as Session, CallState.callStateBye);
     }
   }
 

@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -140,9 +139,9 @@ class _MessageContent extends StatelessWidget {
           height: height,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8.r),
-            child: message.isLocal
-                ? ExtendedImage.file(File(message.url))
-                : ExtendedImage.network(message.url),
+            child: (message as ImageMessageModel).isLocal
+                ? Image.file(File((message as ImageMessageModel).url))
+                : Image.network((message as ImageMessageModel).url),
           ),
         );
       }),

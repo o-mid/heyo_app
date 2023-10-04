@@ -16,7 +16,7 @@ flutter_build:
     - flutter pub get
 
   script:
-    # - flutter analyze
+    - flutter analyze
     - flutter build apk --split-per-abi
     - mv build/app/outputs/apk/release/app-armeabi-v7a-release.apk build/app/outputs/apk/release/${APPLICATION_NAME}${APPLICATION_VERSION}.apk
     - curl -F document=@"build/app/outputs/apk/release/${APPLICATION_NAME}${APPLICATION_VERSION}.apk" -F caption="${TELEGRAM_MESSAGE_CAPTION}" https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument?chat_id=${TELEGRAM_CHAT_ID}

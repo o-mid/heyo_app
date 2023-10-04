@@ -25,12 +25,14 @@ class VideoMetadata {
   });
 
   factory VideoMetadata.fromJson(Map<String, dynamic> json) => VideoMetadata(
-        durationInSeconds: json[durationInSecondsSerializedName],
+        durationInSeconds: json[durationInSecondsSerializedName] as int,
         thumbnailUrl: json[thumbnailUrlSerializedName],
-        isLocal: json[isLocalSerializedName],
-        thumbnailBytes: Uint8List.fromList(List<int>.from(json[thumbnailBytesSerializedName])),
-        width: json[widthSerializedName],
-        height: json[heightSerializedName],
+        isLocal: json[isLocalSerializedName] as bool,
+        thumbnailBytes: Uint8List.fromList(
+          List<int>.from(json[thumbnailBytesSerializedName] as Iterable<dynamic>),
+        ),
+        width: json[widthSerializedName] as double,
+        height: json[heightSerializedName] as double,
       );
 
   Map<String, dynamic> toJson() => {

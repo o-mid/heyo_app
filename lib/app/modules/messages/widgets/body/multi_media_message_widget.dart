@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -102,22 +101,22 @@ class MultiMediaMessageWidget extends StatelessWidget {
               fit: BoxFit.cover,
             );
     } else {
-      return content.isLocal
-          ? ExtendedImage.file(File(content.url), fit: BoxFit.cover)
-          : ExtendedImage.network(content.url);
+      return (content as ImageMessageModel).isLocal
+          ? Image.file(File(content.url), fit: BoxFit.cover)
+          : Image.network(content.url);
     }
   }
 
   Widget _buildMediaContent(dynamic content) {
     if (content.type == MessageContentType.video) {
       return VideoMessagePlayer(
-        message: content,
+        message: content as VideoMessageModel,
         isMultiMessage: true,
-        multiMessageOnTap: () => _handleMediaTap(content),
+        multiMessageOnTap: () => _handleMediaTap(message.mediaList.indexOf(content)),
       );
     } else {
-      return content.isLocal
-          ? ExtendedImage.file(File(content.url), fit: BoxFit.cover)
+      return (content as ImageMessageModel).isLocal
+          ? Image.file(File(content.url), fit: BoxFit.cover)
           : Image.network(content.url, fit: BoxFit.cover);
     }
   }
