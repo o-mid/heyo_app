@@ -87,7 +87,7 @@ class WebRTCCallRepository implements CallRepository {
         .map(
           (e) => CallStream(
             coreId: e.remotePeer.remoteCoreId,
-            remoteStream: e.getStream()!,
+            remoteStream: e.getStream(),
           ),
         )
         .toList();

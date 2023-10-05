@@ -140,17 +140,22 @@ class CallController extends GetxController {
   Future<void> initCall() async {
     await initLocalRenderer();
 
-    observeSignalingStreams();
 
     observeOnChangeParticipate();
 
     if (args.callId == null) {
       //* This means you start the call (you are caller)
-      await callerSetup();
+      await startCalling();
     } else {
       //* This mean you join the call (You are callee)
-      await calleeSetup();
+      await inCallSetUp();
     }
+    observeSignalingStreams();
+
+    final callStreams = await callRepository.getCallStreams();
+    debugPrint('onAddCallStream Callee Set: ${callStreams.length}');
+    _applyCallStreams(callStreams);
+
 
     if (callRepository.getLocalStream() != null) {
       localParticipate.value!.rtcVideoRenderer!.srcObject =
@@ -181,9 +186,15 @@ class CallController extends GetxController {
     await enableWakeScreenLock();
   }
 
+  void _applyCallStreams(List<CallStream> callStreams){
+    for (final element in callStreams) {
+      addRTCRenderer(element);
+    }
+  }
+
   late String requestedCallId;
 
-  Future<void> callerSetup() async {
+  Future<void> startCalling() async {
     requestedCallId = await callRepository.startCall(
       args.members.first,
       args.isAudioCall,
@@ -214,15 +225,10 @@ class CallController extends GetxController {
     //updateCalleeVideoWidget();
   }
 
-  Future<void> calleeSetup() async {
+  Future<void> inCallSetUp() async {
     await callRepository.acceptCall(args.callId!);
 
-    final callStreams = await callRepository.getCallStreams();
-    debugPrint('onAddCallStream Callee Set: ${callStreams.length}');
 
-    for (final element in callStreams) {
-      addRTCRenderer(element);
-    }
 
     localParticipate.value!.isInCall.value = true;
     startCallTimer();
