@@ -60,12 +60,14 @@ import '../../shared/data/repository/contact_repository.dart';
 import '../domain/connection_message_repository.dart';
 
 class MessagesController extends GetxController {
-  final ConnectionMessageRepository messageRepository;
-  final UserStateRepository userStateRepository;
-
-  MessagesController({required this.messageRepository, required this.userStateRepository}) {
+  MessagesController({
+    required this.messageRepository,
+    required this.userStateRepository,
+  }) {
     init();
   }
+  final ConnectionMessageRepository messageRepository;
+  final UserStateRepository userStateRepository;
 
   late CommonMessagingConnectionController messagingConnection;
 
@@ -104,10 +106,6 @@ class MessagesController extends GetxController {
         (Get.arguments).iconUrl as String ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
     name: (Get.arguments as MessagesViewArgumentsModel).coreId.shortenCoreId,
     walletAddress: (Get.arguments).coreId as String,
-    isBlocked: false,
-    isOnline: false,
-    isContact: false,
-    isVerified: false,
   ).obs;
   final FocusNode textFocusNode = FocusNode();
 
@@ -145,33 +143,14 @@ class MessagesController extends GetxController {
     // _userModel = user.value.copyWith(isContact: (userModel != null));
   }
 
-  _getUserContact() async {
+  Future<void> _getUserContact() async {
     user.value = await userStateRepository.getUserContact(
-        userInstance: UserInstance(
-      coreId: args.coreId,
-      iconUrl: args.iconUrl,
-    ));
+      userInstance: UserInstance(
+        coreId: args.coreId,
+        iconUrl: args.iconUrl,
+      ),
+    );
     user.refresh();
-    // // check if user is already in contact
-    // UserModel? createdUser = await contactRepository.getContactById(args.coreId);
-
-    // if (createdUser == null) {
-    //   createdUser = UserModel(
-    //     coreId: args.coreId,
-    //     iconUrl: args.iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
-    //     name: args.coreId.shortenCoreId,
-    //     isOnline: true,
-    //     isContact: false,
-    //     walletAddress: args.coreId,
-    //   );
-    //   // adds the new user to the repo and update the UserModel
-    //   await contactRepository.addContact(createdUser);
-    //   user.value = createdUser;
-    // } else {
-    //   user.value = createdUser;
-    // }
-    // chatId = user.value.coreId;
-    // user.refresh();
   }
 
   // late UserModel _userModel;
@@ -186,7 +165,7 @@ class MessagesController extends GetxController {
     super.onReady();
   }
 
-  _initUiControllers() {
+  void _initUiControllers() {
     keyboardController = KeyboardVisibilityController();
     _globalMessageController.reset();
     textController = _globalMessageController.textController;
@@ -221,8 +200,7 @@ class MessagesController extends GetxController {
   }
 
   Future<void> _initMessagesStream() async {
-    Stream<List<MessageModel>> messagesStream =
-        await messageRepository.getMessagesStream(coreId: user.value.coreId);
+    final messagesStream = await messageRepository.getMessagesStream(coreId: user.value.coreId);
 
     _messagesStreamSubscription = (messagesStream).listen((newMessages) {
       messages.value = newMessages;
@@ -238,7 +216,7 @@ class MessagesController extends GetxController {
     super.onClose();
   }
 
-  _closeMediaPlayers() {
+  void _closeMediaPlayers() {
     // Todo: remove this when a global player is implemented
     Get.find<AudioMessageController>().player.stop();
 
@@ -246,7 +224,7 @@ class MessagesController extends GetxController {
   }
 
   void _handleKeyboardVisibilityChanges() {
-    StreamSubscription keyboardChangesStream =
+    final StreamSubscription keyboardChangesStream =
         keyboardController.onChange.listen((bool isKeyboardVisible) {
       // Toggle emoji picker based on keyboard visibility
       if (isKeyboardVisible) {
@@ -267,8 +245,8 @@ class MessagesController extends GetxController {
   void _adjustScrollPosition(bool isKeyboardVisible) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (scrollController.hasClients) {
-        double scrollOffset = scrollController.offset;
-        double offsetChange = isKeyboardVisible ? _keyboardHeight : -_keyboardHeight;
+        final scrollOffset = scrollController.offset;
+        final offsetChange = isKeyboardVisible ? _keyboardHeight : -_keyboardHeight;
 
         animateToPosition(
           offset: scrollOffset + offsetChange,
@@ -403,17 +381,20 @@ class MessagesController extends GetxController {
 
   void toggleReaction(MessageModel msg, String emoji) {
     UpdateMessage().execute(
-        remoteCoreId: user.value.walletAddress,
-        updateMessageType: UpdateMessageType.updateReactions(
-          selectedMessage: msg,
-          emoji: emoji,
-          chatId: chatId,
-        ));
+      remoteCoreId: user.value.walletAddress,
+      updateMessageType: UpdateMessageType.updateReactions(
+        selectedMessage: msg,
+        emoji: emoji,
+        chatId: chatId,
+      ),
+    );
   }
 
   void toggleMessageReadStatus({required String messageId}) async {
     await messagingConnection.toggleMessageReadConfirm(
-        messageId: messageId, remoteCoreId: user.value.walletAddress);
+      messageId: messageId,
+      remoteCoreId: user.value.walletAddress,
+    );
 
     await markMessagesAsReadById(
       lastReadmessageId: messageId,
@@ -422,7 +403,9 @@ class MessagesController extends GetxController {
 
   Future<void> markMessagesAsReadById({required String lastReadmessageId}) async {
     await messageRepository.markMessagesAsReadById(
-        lastReadmessageId: lastReadmessageId, chatId: chatId);
+      lastReadmessageId: lastReadmessageId,
+      chatId: chatId,
+    );
   }
 
   Future<void> markAllMessagesAsRead() async {
@@ -451,14 +434,23 @@ class MessagesController extends GetxController {
     selectedMessages.clear();
   }
 
-  void sendTextMessage() async {
-    SendMessage().execute(
-        sendMessageType: SendMessageType.text(
-          text: newMessage.value,
-          replyTo: replyingTo.value,
-          chatId: chatId,
-        ),
-        remoteCoreId: user.value.walletAddress);
+  Future<void> sendTextMessage() async {
+    await messageRepository.sendTextMessage(
+      sendMessageRepoModel: SendMessageRepoModel(
+        chatId: chatId,
+        replyingToValue: replyingTo.value,
+        newMessageValue: newMessage.value,
+        remoteCoreId: user.value.walletAddress,
+      ),
+    );
+    // SendMessage().execute(
+    //   sendMessageType: SendMessageType.text(
+    //     text: newMessage.value,
+    //     replyTo: replyingTo.value,
+    //     chatId: chatId,
+    //   ),
+    //   remoteCoreId: user.value.walletAddress,
+    // );
 
     textController.clear();
     newMessage.value = "";
@@ -469,13 +461,14 @@ class MessagesController extends GetxController {
 //TODO
   void sendAudioMessage(String path, int duration) {
     SendMessage().execute(
-        sendMessageType: SendMessageType.audio(
-          path: path,
-          metadata: AudioMetadata(durationInSeconds: duration),
-          replyTo: replyingTo.value,
-          chatId: chatId,
-        ),
-        remoteCoreId: user.value.walletAddress);
+      sendMessageType: SendMessageType.audio(
+        path: path,
+        metadata: AudioMetadata(durationInSeconds: duration),
+        replyTo: replyingTo.value,
+        chatId: chatId,
+      ),
+      remoteCoreId: user.value.walletAddress,
+    );
 
     _postMessageSendOperations();
   }
@@ -488,14 +481,15 @@ class MessagesController extends GetxController {
     }
 
     SendMessage().execute(
-        sendMessageType: SendMessageType.location(
-          lat: message.latitude,
-          long: message.longitude,
-          address: message.address,
-          replyTo: replyingTo.value,
-          chatId: chatId,
-        ),
-        remoteCoreId: user.value.walletAddress);
+      sendMessageType: SendMessageType.location(
+        lat: message.latitude,
+        long: message.longitude,
+        address: message.address,
+        replyTo: replyingTo.value,
+        chatId: chatId,
+      ),
+      remoteCoreId: user.value.walletAddress,
+    );
 
     locationMessage.value = null;
 
@@ -509,14 +503,15 @@ class MessagesController extends GetxController {
     required double startLong,
   }) {
     SendMessage().execute(
-        sendMessageType: SendMessageType.liveLocation(
-          startLat: startLat,
-          startLong: startLong,
-          duration: duration,
-          replyTo: replyingTo.value,
-          chatId: chatId,
-        ),
-        remoteCoreId: user.value.walletAddress);
+      sendMessageType: SendMessageType.liveLocation(
+        startLat: startLat,
+        startLong: startLong,
+        duration: duration,
+        replyTo: replyingTo.value,
+        chatId: chatId,
+      ),
+      remoteCoreId: user.value.walletAddress,
+    );
 
     _postMessageSendOperations();
 
@@ -587,7 +582,7 @@ class MessagesController extends GetxController {
     if (selectedMessages.length != 1) return;
     final msg = selectedMessages.first;
 
-    String replyMsg = msg.getReplyMsgText();
+    final replyMsg = msg.getReplyMsgText();
 
     replyingTo.value = ReplyToModel(
       repliedToMessageId: msg.messageId,
@@ -620,21 +615,23 @@ class MessagesController extends GetxController {
 
   void deleteSelectedForEveryone() {
     DeleteMessage().execute(
-        remoteCoreId: user.value.walletAddress,
-        deleteMessageType: DeleteMessageType.forEveryone(
-          chatId: chatId,
-          selectedMessages: selectedMessages,
-        ));
+      remoteCoreId: user.value.walletAddress,
+      deleteMessageType: DeleteMessageType.forEveryone(
+        chatId: chatId,
+        selectedMessages: selectedMessages,
+      ),
+    );
     clearSelected();
   }
 
   void deleteSelectedForMe() {
     DeleteMessage().execute(
-        remoteCoreId: user.value.walletAddress,
-        deleteMessageType: DeleteMessageType.forMe(
-          chatId: chatId,
-          selectedMessages: selectedMessages,
-        ));
+      remoteCoreId: user.value.walletAddress,
+      deleteMessageType: DeleteMessageType.forMe(
+        chatId: chatId,
+        selectedMessages: selectedMessages,
+      ),
+    );
     clearSelected();
   }
 
@@ -796,8 +793,10 @@ class MessagesController extends GetxController {
   }
 
   //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
-  Future<void> addSelectedMedia(
-      {@required dynamic result, bool closeMediaGlassmorphic = false}) async {
+  Future<void> addSelectedMedia({
+    @required dynamic result,
+    bool closeMediaGlassmorphic = false,
+  }) async {
     if (closeMediaGlassmorphic) mediaGlassmorphicChangeState();
 
     // List? tempImages = [];
@@ -938,19 +937,20 @@ class MessagesController extends GetxController {
       result as RxList<FileModel>;
       for (var asset in result) {
         await SendMessage().execute(
-            sendMessageType: SendMessageType.file(
-              metadata: FileMetaData(
-                extension: asset.extension,
-                name: asset.name,
-                path: asset.path,
-                size: asset.size,
-                timestamp: asset.timestamp,
-                isImage: asset.isImage,
-              ),
-              replyTo: replyingTo.value,
-              chatId: chatId,
+          sendMessageType: SendMessageType.file(
+            metadata: FileMetaData(
+              extension: asset.extension,
+              name: asset.name,
+              path: asset.path,
+              size: asset.size,
+              timestamp: asset.timestamp,
+              isImage: asset.isImage,
             ),
-            remoteCoreId: user.value.walletAddress);
+            replyTo: replyingTo.value,
+            chatId: chatId,
+          ),
+          remoteCoreId: user.value.walletAddress,
+        );
       }
       mediaGlassmorphicChangeState();
       messages.refresh();
@@ -966,10 +966,12 @@ class MessagesController extends GetxController {
   }
 
   Future<void> _getMessages() async {
-    await messageRepository.getMessagesList(coreId: user.value.coreId).then((value) => {
-          messages.value = value,
-          messages.refresh(),
-        });
+    await messageRepository.getMessagesList(coreId: user.value.coreId).then(
+          (value) => {
+            messages.value = value,
+            messages.refresh(),
+          },
+        );
     chatModel = await userStateRepository.getUserChatModel(chatId: chatId);
 
     // of chatModel is null, scroll to bottom
@@ -1030,9 +1032,7 @@ class MessagesController extends GetxController {
       ),
       padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 24.w),
       backgroundColor: COLORS.kWhiteColor,
-      snackStyle: SnackStyle.FLOATING,
       snackPosition: SnackPosition.TOP,
-      isDismissible: true,
       maxWidth: 250.w,
       margin: EdgeInsets.only(top: 60.h),
       boxShadows: [
@@ -1047,7 +1047,7 @@ class MessagesController extends GetxController {
   }
 
   Future<List<int>> pathToUint8List(String path) async {
-    var data = await rootBundle.load(path);
+    final data = await rootBundle.load(path);
     return data.buffer.asUint8List().toList();
   }
 
@@ -1089,13 +1089,14 @@ class MessagesController extends GetxController {
 
   Future<void> _saveUserStates() async {
     await userStateRepository.saveUserStates(
-        userInstance: UserInstance(coreId: args.coreId, iconUrl: args.iconUrl),
-        userStates: UserStates(
-          chatId: chatId,
-          lastReadRemoteMessagesId: lastReadRemoteMessagesId.value,
-          scrollPositionMessagesId: scrollPositionMessagesId.value,
-          lastMessageTimestamp: messages.last.timestamp,
-          lastMessagePreview: messages.last.getMessagePreview(),
-        ));
+      userInstance: UserInstance(coreId: args.coreId, iconUrl: args.iconUrl),
+      userStates: UserStates(
+        chatId: chatId,
+        lastReadRemoteMessagesId: lastReadRemoteMessagesId.value,
+        scrollPositionMessagesId: scrollPositionMessagesId.value,
+        lastMessageTimestamp: messages.last.timestamp,
+        lastMessagePreview: messages.last.getMessagePreview(),
+      ),
+    );
   }
 }

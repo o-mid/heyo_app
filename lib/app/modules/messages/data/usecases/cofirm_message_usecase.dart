@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import '../../../messaging/controllers/common_messaging_controller.dart';
-import '../../../messaging/controllers/messaging_connection_controller.dart';
+
 import '../../../messaging/usecases/send_data_channel_message_usecase.dart';
 import '../models/messages/confirm_message_model.dart';
 
@@ -17,7 +17,7 @@ class ConfirmMessage {
   final CommonMessagingConnectionController messagingConnection =
       Get.find<CommonMessagingConnectionController>();
 
-  execute({required ConfirmMessageType confirmMessageType,required String remoteCoreId}) async {
+  execute({required ConfirmMessageType confirmMessageType, required String remoteCoreId}) async {
     switch (confirmMessageType.runtimeType) {
       case ConfirmReceivedText:
         final String messageId = (confirmMessageType as ConfirmReceivedText).messageId;
@@ -29,9 +29,8 @@ class ConfirmMessage {
         ).toJson();
 
         SendDataChannelMessage(messagingConnection: messagingConnection).execute(
-          channelMessageType: ChannelMessageType.confirm(message: confirmmessageJson),
-          remoteCoreId: remoteCoreId
-        );
+            channelMessageType: ChannelMessageType.confirm(message: confirmmessageJson),
+            remoteCoreId: remoteCoreId);
         break;
     }
   }

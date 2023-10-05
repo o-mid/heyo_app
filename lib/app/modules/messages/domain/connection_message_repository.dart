@@ -14,4 +14,6 @@ abstract class ConnectionMessageRepository {
   Future<void> markMessagesAsReadById({required String lastReadmessageId, required String chatId});
 
   Future<void> markAllMessagesAsRead({required String chatId});
+
+  Future<void> sendTextMessage({required SendMessageRepoModel sendMessageRepoModel});
 }
