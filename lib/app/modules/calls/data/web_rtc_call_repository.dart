@@ -48,17 +48,17 @@ class WebRTCCallRepository implements CallRepository {
     await Future<void>.delayed(const Duration(seconds: 5));
     onAddCallStream?.call(
       CallStream(
-        coreId: 'coreId',
+        coreId: 'coreId1',
         remoteStream: await _createMockStream(),
       ),
     );
-    await Future<void>.delayed(const Duration(seconds: 5));
-    onAddCallStream?.call(
-      CallStream(
-        coreId: 'coreId',
-        remoteStream: await _createMockStream(),
-      ),
-    );
+    //await Future<void>.delayed(const Duration(seconds: 5));
+    //onAddCallStream?.call(
+    //  CallStream(
+    //    coreId: 'coreId',
+    //    remoteStream: await _createMockStream(),
+    //  ),
+    //);
     //await Future<void>.delayed(const Duration(seconds: 5));
     //onAddCallStream?.call(
     //  CallStream(
@@ -101,17 +101,18 @@ class WebRTCCallRepository implements CallRepository {
   }
 
   @override
-  addMember(String coreId) async {
-    callConnectionsHandler.addMember(coreId);
+  Future<void> addMember(String coreId) async {
+    //callConnectionsHandler.addMember(coreId);
     if (mock) {
       //TODO remove Mock
+      await Future<void>.delayed(const Duration(seconds: 5));
       onAddCallStream?.call(
         CallStream(
-          coreId: coreId,
+          coreId: 'coreId',
           remoteStream: await _createMockStream(),
         ),
       );
-      await _addParticipate(coreId);
+      //await _addParticipate(coreId);
     }
   }
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/add_participate/controllers/participate_item_model.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
@@ -297,15 +298,13 @@ class CallController extends GetxController {
 
   void pushToAddParticipate() => Get.toNamed(Routes.ADD_PARTICIPATE);
 
-  //void addParticipant(List<ParticipateItem> selectedUsers) {
-  //  for (var element in selectedUsers) {
-  //    debugPrint(element.coreId);
-  //    participants.add(
-  //      CallParticipantModel(user: element.mapToCallUserModel()),
-  //    );
-  //    callRepository.addMember(element.coreId);
-  //  }
-  //}
+  Future<void> addParticipant(List<ParticipateItem> selectedUsers) async {
+    for (final element in selectedUsers) {
+      debugPrint(element.coreId);
+
+      await callRepository.addMember(element.coreId);
+    }
+  }
 
   // Todo
   void toggleVideo() {
@@ -350,7 +349,7 @@ class CallController extends GetxController {
   }
 
   @override
-  void onClose() async {
+  Future<void> onClose() async {
     stopCallTimer();
 
     await callRepository.closeCall();

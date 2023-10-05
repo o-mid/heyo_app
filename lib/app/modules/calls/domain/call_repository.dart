@@ -28,7 +28,7 @@ abstract class CallRepository {
 
   Future<void> endOrCancelCall(String callId);
 
-  addMember(String coreId);
+  Future<void> addMember(String coreId);
 
   void switchCamera();
 

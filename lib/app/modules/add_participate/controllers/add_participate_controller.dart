@@ -1,38 +1,37 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:heyo/app/modules/add_participate/controllers/filter_model.dart';
+import 'package:heyo/app/modules/add_participate/controllers/participate_item_model.dart';
 import 'package:heyo/app/modules/add_participate/usecase/get_contact_user_use_case.dart';
 import 'package:heyo/app/modules/add_participate/usecase/search_contact_user_use_case.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
-import 'package:heyo/app/modules/add_participate/controllers/participate_item_model.dart';
 
 class AddParticipateController extends GetxController {
-  RxList<ParticipateItem> selectedUser = <ParticipateItem>[].obs;
-  RxList<ParticipateItem> participateItems = <ParticipateItem>[].obs;
-  RxList<ParticipateItem> searchItems = <ParticipateItem>[].obs;
-
-  late TextEditingController inputController;
-  final inputFocusNode = FocusNode();
-  final inputText = "".obs;
-  final String profileLink = "https://heyo.core/m6ljkB4KJ";
-
-  final SearchContactUserUseCase searchContactUserUseCase;
-  final GetContactUserUseCase getContactUserUseCase;
-  final CallRepository callRepository;
   AddParticipateController({
     required this.searchContactUserUseCase,
     required this.getContactUserUseCase,
     required this.callRepository,
   });
 
+  final SearchContactUserUseCase searchContactUserUseCase;
+  final GetContactUserUseCase getContactUserUseCase;
+  final CallRepository callRepository;
+
+  RxList<ParticipateItem> selectedUser = <ParticipateItem>[].obs;
+  RxList<ParticipateItem> participateItems = <ParticipateItem>[].obs;
+  RxList<ParticipateItem> searchItems = <ParticipateItem>[].obs;
+  late TextEditingController inputController;
+  final inputFocusNode = FocusNode();
+  final inputText = ''.obs;
+  final profileLink = 'https://heyo.core/m6ljkB4KJ';
+
   @override
   Future<void> onInit() async {
     inputController = TextEditingController();
-    getContact();
+    await getContact();
     super.onInit();
   }
 
@@ -45,17 +44,17 @@ class AddParticipateController extends GetxController {
 // Mock filters for the users
   RxList<FilterModel> filters = [
     FilterModel(
-      title: "Verified",
+      title: 'Verified',
       isActive: false.obs,
     ),
     FilterModel(
-      title: "Online",
+      title: 'Online',
       isActive: false.obs,
     ),
   ].obs;
 
-  void getContact() async {
-    List<UserModel> contacts = await getContactUserUseCase.execute();
+  Future<void> getContact() async {
+    final contacts = await getContactUserUseCase.execute();
     //* Get the list of users who are in call
     List<CallStream> callStreams;
     try {
@@ -66,7 +65,7 @@ class AddParticipateController extends GetxController {
     }
 
     //* Remove the users who are already in call
-    for (var callStream in callStreams) {
+    for (final callStream in callStreams) {
       contacts.removeWhere(
         (contact) => contact.coreId == callStream.coreId,
       );
@@ -77,8 +76,8 @@ class AddParticipateController extends GetxController {
     searchItems.value = participateItems;
   }
 
-  void searchUsers(String query) async {
-    if (query == "") {
+  Future<void> searchUsers(String query) async {
+    if (query == '') {
       searchItems.value = participateItems;
     } else {
       query = query.toLowerCase();
@@ -93,7 +92,8 @@ class AddParticipateController extends GetxController {
   RxBool isTextInputFocused = false.obs;
 
   void selectUser(ParticipateItem user) {
-    var existingIndex = selectedUser.indexWhere((u) => u.coreId == user.coreId);
+    final existingIndex =
+        selectedUser.indexWhere((u) => u.coreId == user.coreId);
 
     if (existingIndex != -1) {
       selectedUser.removeAt(existingIndex);
@@ -107,14 +107,15 @@ class AddParticipateController extends GetxController {
     return selectedUser.any((u) => u.coreId == user.coreId);
   }
 
-  void addUsersToCall() async {
-    debugPrint("Add selected users to call");
+  Future<void> addUsersToCall() async {
+    debugPrint('Add selected users to call');
 
-    //* Add user to call repo
-    for (var user in selectedUser) {
-      callRepository.addMember(user.coreId);
-    }
     //* Pop to call page
     Get.back();
+
+    //* Add user to call repo
+    for (final user in selectedUser) {
+      await callRepository.addMember(user.coreId);
+    }
   }
 }
