@@ -61,7 +61,7 @@ class CallConnectionsHandler {
       singleCallWebRTCBuilder.addMemberEvent(remoteCoreId, element);
     });
     //TODO refactor isAudio
-    CallRTCSession callRTCSession = await _createSession(
+    final callRTCSession = await _createSession(
       RemotePeer(
         remoteCoreId: remoteCoreId,
         remotePeerId: null,
