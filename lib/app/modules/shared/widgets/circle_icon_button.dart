@@ -28,7 +28,7 @@ class CircleIconButton extends StatelessWidget {
   }) =>
       CircleIconButton(
         padding: EdgeInsets.all(16.w),
-        backgroundColor: backgroundColor,
+        backgroundColor: backgroundColor as Color,
         size: size,
         onPressed: onPressed,
         border: border,

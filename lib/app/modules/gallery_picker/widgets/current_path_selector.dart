@@ -47,8 +47,7 @@ class SelectedPathDropdownButton extends StatelessWidget {
       builder: (_, __) => Row(
         children: [
           DropDown<AssetPathEntity>(
-            child:
-                ((context) => buildButton(context, arrowDownNotifier))(context),
+            child: ((context) => buildButton(context as BuildContext, arrowDownNotifier))(context),
             dropdownWidgetBuilder: (BuildContext context, close) {
               return ChangePathWidget(
                 provider: provider as PickerDataProvider,

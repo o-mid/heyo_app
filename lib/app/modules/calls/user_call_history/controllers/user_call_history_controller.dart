@@ -28,7 +28,7 @@ class UserCallHistoryController extends GetxController {
     iconUrl: (Get.arguments as UserCallHistoryViewArgumentsModel).iconUrl ??
         "https://avatars.githubusercontent.com/u/2345136?v=4",
     name: (Get.arguments as UserCallHistoryViewArgumentsModel).coreId.shortenCoreId,
-    walletAddress: (Get.arguments).coreId,
+    walletAddress: (Get.arguments).coreId as String,
     isBlocked: false,
     isOnline: false,
     isContact: false,

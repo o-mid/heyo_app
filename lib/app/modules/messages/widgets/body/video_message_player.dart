@@ -2,7 +2,6 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:chewie/chewie.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -34,9 +33,8 @@ class VideoMessagePlayer extends GetView<VideoMessageController> {
                 chewieController.videoPlayerController.value.isInitialized &&
                 !isMultiMessage
             ? AspectRatio(
-                aspectRatio: isMultiMessage
-                    ? 1.0
-                    : chewieController.videoPlayerController.value.aspectRatio,
+                aspectRatio:
+                    isMultiMessage ? 1.0 : chewieController.videoPlayerController.value.aspectRatio,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.r),
                   child: Chewie(
@@ -46,9 +44,8 @@ class VideoMessagePlayer extends GetView<VideoMessageController> {
               )
             : _VideoThumbnail(
                 thumbnailUrl: message.metadata.thumbnailUrl,
-                onTap: () => isMultiMessage
-                    ? multiMessageOnTap!()
-                    : controller.initializePlayer(message),
+                onTap: () =>
+                    isMultiMessage ? multiMessageOnTap!() : controller.initializePlayer(message),
                 isLoading: isActive,
                 mWidth: message.metadata.width,
                 mHeight: message.metadata.height,
@@ -99,15 +96,16 @@ class _VideoThumbnail extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  isLocal
-                      ? ExtendedImage.memory(
-                          imageBytes!,
-                          fit: isMultiMessage ? BoxFit.fitHeight : null,
-                        )
-                      : ExtendedImage.network(
-                          thumbnailUrl,
-                          fit: isMultiMessage ? BoxFit.fitHeight : null,
-                        ),
+                  if (isLocal)
+                    Image.memory(
+                      imageBytes!,
+                      fit: isMultiMessage ? BoxFit.fitHeight : null,
+                    )
+                  else
+                    Image.network(
+                      thumbnailUrl,
+                      fit: isMultiMessage ? BoxFit.fitHeight : null,
+                    ),
                   Container(
                     width: 40.h,
                     height: 40.h,
@@ -117,8 +115,7 @@ class _VideoThumbnail extends StatelessWidget {
                       color: COLORS.kBlackColor.withOpacity(0.5),
                     ),
                     child: isLoading && !isMultiMessage
-                        ? const CircularProgressIndicator(
-                            color: COLORS.kWhiteColor)
+                        ? const CircularProgressIndicator(color: COLORS.kWhiteColor)
                         : Assets.svg.playIcon.svg(
                             color: COLORS.kWhiteColor,
                           ),

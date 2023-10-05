@@ -12,7 +12,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/video_message_mod
 MessageModel messageFromJson(Map<String, dynamic> json) {
   final typeString = json[MessageModel.typeSerializedName];
 
-  final type = MessageContentType.values.byName(typeString);
+  final type = MessageContentType.values.byName(typeString as String);
 
   switch (type) {
     case MessageContentType.text:

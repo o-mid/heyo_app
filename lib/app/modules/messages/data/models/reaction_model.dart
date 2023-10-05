@@ -18,9 +18,10 @@ class ReactionModel {
       );
 
   factory ReactionModel.fromJson(Map<String, dynamic> json) => ReactionModel(
-        users:
-            json[usersSerializedName] == null ? [] : List<String>.from(json[usersSerializedName]),
-        isReactedByMe: json[isReactedByMeSerializedName],
+        users: json[usersSerializedName] == null
+            ? []
+            : List<String>.from(json[usersSerializedName] as Iterable<dynamic>),
+        isReactedByMe: json[isReactedByMeSerializedName] as bool,
       );
 
   Map<String, dynamic> toJson() => {

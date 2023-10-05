@@ -5,7 +5,7 @@ class AudioMetadata {
   AudioMetadata({required this.durationInSeconds});
 
   factory AudioMetadata.fromJson(Map<String, dynamic> json) => AudioMetadata(
-        durationInSeconds: json[durationInSecondsSerializedName],
+        durationInSeconds: json[durationInSecondsSerializedName] as int,
       );
 
   Map<String, dynamic> toJson() => {
