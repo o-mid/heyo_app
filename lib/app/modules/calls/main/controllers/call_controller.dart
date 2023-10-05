@@ -142,6 +142,12 @@ class CallController extends GetxController {
 
     observeOnChangeParticipate();
 
+
+    /*final callStreams = await callRepository.getCallStreams();
+    debugPrint('onAddCallStream Callee Set: ${callStreams.length}');
+    _applyCallStreams(callStreams);*/
+    observeSignalingStreams();
+
     if (args.callId == null) {
       //* This means you start the call (you are caller)
       await startCalling();
@@ -149,11 +155,7 @@ class CallController extends GetxController {
       //* This mean you join the call (You are callee)
       await inCallSetUp();
     }
-    observeSignalingStreams();
 
-    final callStreams = await callRepository.getCallStreams();
-    debugPrint('onAddCallStream Callee Set: ${callStreams.length}');
-    _applyCallStreams(callStreams);
 
 
     if (callRepository.getLocalStream() != null) {
