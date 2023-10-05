@@ -60,12 +60,14 @@ class CallModel {
   });
 
   factory CallModel.fromJson(Map<String, dynamic> json) => CallModel(
-        id: json[idSerializedName],
-        coreId: json[coreIdSerializedName],
-        type: CallType.values.byName(json[typeSerializedName]),
-        status: CallStatus.values.byName(json[statusSerializedName]),
-        date: DateTime.parse(json[dateSerializedName]),
-        user: UserModel.fromJson(json[userSerializedName] as Map<String, dynamic>),
+        id: json[idSerializedName] as String,
+        coreId: json[coreIdSerializedName] as String,
+        type: CallType.values.byName(json[typeSerializedName] as String),
+        status: CallStatus.values.byName(json[statusSerializedName] as String),
+        date: DateTime.parse(json[dateSerializedName] as String),
+        user: UserModel.fromJson(
+          json[userSerializedName] as Map<String, dynamic>,
+        ),
         duration: Duration(milliseconds: json[durationSerializedName] as int),
         dataUsageMB: json[dataUsageMBSerializedName] as double,
       );
