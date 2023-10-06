@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/add_participate/controllers/filter_model.dart';
-import 'package:heyo/app/modules/add_participate/controllers/participate_item_model.dart';
+
 import 'package:heyo/app/modules/add_participate/usecase/get_contact_user_use_case.dart';
 import 'package:heyo/app/modules/add_participate/usecase/search_contact_user_use_case.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 
 class AddParticipateController extends GetxController {
   AddParticipateController({
@@ -20,9 +21,9 @@ class AddParticipateController extends GetxController {
   final GetContactUserUseCase getContactUserUseCase;
   final CallRepository callRepository;
 
-  RxList<ParticipateItem> selectedUser = <ParticipateItem>[].obs;
-  RxList<ParticipateItem> participateItems = <ParticipateItem>[].obs;
-  RxList<ParticipateItem> searchItems = <ParticipateItem>[].obs;
+  RxList<AllParticipantModel> selectedUser = <AllParticipantModel>[].obs;
+  RxList<AllParticipantModel> participateItems = <AllParticipantModel>[].obs;
+  RxList<AllParticipantModel> searchItems = <AllParticipantModel>[].obs;
   late TextEditingController inputController;
   final inputFocusNode = FocusNode();
   final inputText = ''.obs;
@@ -72,7 +73,7 @@ class AddParticipateController extends GetxController {
     }
 
     participateItems.value =
-        contacts.map((e) => e.mapToParticipateItem()).toList();
+        contacts.map((e) => e.mapToAllParticipantModel()).toList();
     searchItems.value = participateItems;
   }
 
@@ -91,7 +92,7 @@ class AddParticipateController extends GetxController {
 
   RxBool isTextInputFocused = false.obs;
 
-  void selectUser(ParticipateItem user) {
+  void selectUser(AllParticipantModel user) {
     final existingIndex =
         selectedUser.indexWhere((u) => u.coreId == user.coreId);
 
@@ -103,7 +104,7 @@ class AddParticipateController extends GetxController {
     }
   }
 
-  bool isSelected(ParticipateItem user) {
+  bool isSelected(AllParticipantModel user) {
     return selectedUser.any((u) => u.coreId == user.coreId);
   }
 

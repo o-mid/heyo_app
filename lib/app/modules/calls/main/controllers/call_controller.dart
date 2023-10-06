@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/add_participate/controllers/participate_item_model.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/connected_participate_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/local_participate_model.dart';
@@ -140,9 +140,7 @@ class CallController extends GetxController {
   Future<void> initCall() async {
     await initLocalRenderer();
 
-
     observeOnChangeParticipate();
-
 
     /*final callStreams = await callRepository.getCallStreams();
     debugPrint('onAddCallStream Callee Set: ${callStreams.length}');
@@ -156,8 +154,6 @@ class CallController extends GetxController {
       //* This mean you join the call (You are callee)
       await inCallSetUp();
     }
-
-
 
     if (callRepository.getLocalStream() != null) {
       localParticipate.value!.rtcVideoRenderer!.srcObject =
@@ -188,7 +184,7 @@ class CallController extends GetxController {
     await enableWakeScreenLock();
   }
 
-  void _applyCallStreams(List<CallStream> callStreams){
+  void _applyCallStreams(List<CallStream> callStreams) {
     for (final element in callStreams) {
       addRTCRenderer(element);
     }
@@ -229,8 +225,6 @@ class CallController extends GetxController {
 
   Future<void> inCallSetUp() async {
     await callRepository.acceptCall(args.callId!);
-
-
 
     localParticipate.value!.isInCall.value = true;
     startCallTimer();
@@ -306,7 +300,7 @@ class CallController extends GetxController {
 
   void pushToAddParticipate() => Get.toNamed(Routes.ADD_PARTICIPATE);
 
-  Future<void> addParticipant(List<ParticipateItem> selectedUsers) async {
+  Future<void> addParticipant(List<AllParticipantModel> selectedUsers) async {
     for (final element in selectedUsers) {
       debugPrint(element.coreId);
 
