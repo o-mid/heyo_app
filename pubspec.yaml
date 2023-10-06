@@ -49,7 +49,7 @@ dependencies:
   flutter_p2p_communicator:
     git:
       url: git@git.energy:corepass/flutter_p2p_communicator.git
-      ref: c3658e1d
+      ref: e8b8a0de
 
   flutter_bip39:
     git:
@@ -65,6 +65,8 @@ dependencies:
   file_picker: ^4.6.1
   path_provider: ^2.0.11
   open_file: ^3.2.1
+  ed_screen_recorder: ^0.0.10
+
   photo_view: ^0.14.0
   gallery_saver: ^2.3.2
   flutter_ringtone_player: ^3.2.0
