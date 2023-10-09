@@ -964,8 +964,8 @@ class MessagesController extends GetxController {
     if (result != null) {
       result as RxList<FileModel>;
       for (var asset in result) {
-        await SendMessage().execute(
-          sendMessageType: SendMessageType.file(
+        await messageRepository.sendFileMessage(
+          sendFileMessageRepoModel: SendFileMessageRepoModel(
             metadata: FileMetaData(
               extension: asset.extension,
               name: asset.name,
@@ -974,11 +974,27 @@ class MessagesController extends GetxController {
               timestamp: asset.timestamp,
               isImage: asset.isImage,
             ),
-            replyTo: replyingTo.value,
+            replyingToValue: replyingTo.value,
             chatId: chatId,
+            remoteCoreId: user.value.walletAddress,
           ),
-          remoteCoreId: user.value.walletAddress,
         );
+
+        // await SendMessage().execute(
+        //   sendMessageType: SendMessageType.file(
+        //     metadata: FileMetaData(
+        //       extension: asset.extension,
+        //       name: asset.name,
+        //       path: asset.path,
+        //       size: asset.size,
+        //       timestamp: asset.timestamp,
+        //       isImage: asset.isImage,
+        //     ),
+        //     replyTo: replyingTo.value,
+        //     chatId: chatId,
+        //   ),
+        //   remoteCoreId: user.value.walletAddress,
+        // );
       }
       mediaGlassmorphicChangeState();
       messages.refresh();

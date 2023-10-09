@@ -1,5 +1,7 @@
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
 
+import '../data/models/metadatas/file_metadata.dart';
+
 class UserInstance {
   String coreId;
   String? iconUrl;
@@ -81,6 +83,20 @@ class SendLiveLocationRepoModel {
     required this.startLat,
     required this.startLong,
     required this.duration,
+    required this.chatId,
+    required this.remoteCoreId,
+    this.replyingToValue,
+  });
+}
+
+class SendFileMessageRepoModel {
+  final FileMetaData metadata;
+  final ReplyToModel? replyingToValue;
+  final String chatId;
+  final String remoteCoreId;
+
+  SendFileMessageRepoModel({
+    required this.metadata,
     required this.chatId,
     required this.remoteCoreId,
     this.replyingToValue,

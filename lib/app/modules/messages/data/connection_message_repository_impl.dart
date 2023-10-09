@@ -123,4 +123,21 @@ class ConnectionMessageRepositoryImpl implements ConnectionMessageRepository {
       remoteCoreId: remoteCoreId,
     );
   }
+
+  @override
+  Future<void> sendFileMessage({required SendFileMessageRepoModel sendFileMessageRepoModel}) async {
+    final metadata = sendFileMessageRepoModel.metadata;
+    final replyingToValue = sendFileMessageRepoModel.replyingToValue;
+    final chatId = sendFileMessageRepoModel.chatId;
+    final remoteCoreId = sendFileMessageRepoModel.remoteCoreId;
+
+    await sendMessage.execute(
+      sendMessageType: SendMessageType.file(
+        metadata: metadata,
+        replyTo: replyingToValue,
+        chatId: chatId,
+      ),
+      remoteCoreId: remoteCoreId,
+    );
+  }
 }
