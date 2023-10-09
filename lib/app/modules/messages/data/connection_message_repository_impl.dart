@@ -4,13 +4,17 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/audio_metadata.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
+import 'package:heyo/app/modules/messages/data/usecases/delete_message_usecase.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/messages/domain/connection_message_repository.dart';
 import 'package:heyo/app/modules/messages/domain/message_repository_models.dart';
+import 'usecases/update_message_usecase.dart';
 
 class ConnectionMessageRepositoryImpl implements ConnectionMessageRepository {
   final MessagesAbstractRepo messagesRepo;
   final SendMessage sendMessage = Get.find<SendMessage>(); // Getting the SendMessage instance.
+  final DeleteMessage deleteMessage = Get.find<DeleteMessage>();
+  final UpdateMessage updateMessage = Get.find<UpdateMessage>();
 
   ConnectionMessageRepositoryImpl({
     required this.messagesRepo,
@@ -18,7 +22,7 @@ class ConnectionMessageRepositoryImpl implements ConnectionMessageRepository {
 
   @override
   Future<Stream<List<MessageModel>>> getMessagesStream({required String coreId}) async {
-    final Stream<List<MessageModel>> messagesStream = await messagesRepo.getMessagesStream(coreId);
+    final messagesStream = await messagesRepo.getMessagesStream(coreId);
     return messagesStream;
   }
 
@@ -138,6 +142,46 @@ class ConnectionMessageRepositoryImpl implements ConnectionMessageRepository {
         chatId: chatId,
       ),
       remoteCoreId: remoteCoreId,
+    );
+  }
+
+  @override
+  Future<void> deleteMessages({required DeleteMessageRepoModel deleteMessageRepoModel}) async {
+    final selectedMessages = deleteMessageRepoModel.selectedMessages;
+    final chatId = deleteMessageRepoModel.chatId;
+    final remoteCoreId = deleteMessageRepoModel.remoteCoreId;
+    final deleteForEveryOne = deleteMessageRepoModel.deleteForEveryOne;
+
+    final deleteMessageType = deleteForEveryOne
+        ? DeleteMessageType.forEveryone(
+            selectedMessages: selectedMessages,
+            chatId: chatId,
+          )
+        : DeleteMessageType.forMe(
+            selectedMessages: selectedMessages,
+            chatId: chatId,
+          );
+
+    await deleteMessage.execute(
+      remoteCoreId: remoteCoreId,
+      deleteMessageType: deleteMessageType,
+    );
+  }
+
+  @override
+  Future<void> updateReactions({required UpdateMessageRepoModel updateMessageRepoModel}) async {
+    final selectedMessage = updateMessageRepoModel.selectedMessage;
+    final emoji = updateMessageRepoModel.emoji;
+    final chatId = updateMessageRepoModel.chatId;
+    final remoteCoreId = updateMessageRepoModel.remoteCoreId;
+
+    await updateMessage.execute(
+      remoteCoreId: remoteCoreId,
+      updateMessageType: UpdateMessageType.updateReactions(
+        selectedMessage: selectedMessage,
+        emoji: emoji,
+        chatId: chatId,
+      ),
     );
   }
 }

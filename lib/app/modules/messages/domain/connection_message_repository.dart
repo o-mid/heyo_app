@@ -25,4 +25,8 @@ abstract class ConnectionMessageRepository {
   Future<void> sendLiveLocation({required SendLiveLocationRepoModel sendLiveLocationRepoModel});
 
   Future<void> sendFileMessage({required SendFileMessageRepoModel sendFileMessageRepoModel});
+
+  Future<void> deleteMessages({required DeleteMessageRepoModel deleteMessageRepoModel});
+
+  Future<void> updateReactions({required UpdateMessageRepoModel updateMessageRepoModel});
 }

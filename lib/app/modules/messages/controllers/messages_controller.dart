@@ -379,15 +379,24 @@ class MessagesController extends GetxController {
     );
   }
 
-  void toggleReaction(MessageModel msg, String emoji) {
-    UpdateMessage().execute(
-      remoteCoreId: user.value.walletAddress,
-      updateMessageType: UpdateMessageType.updateReactions(
+  Future<void> toggleReaction(MessageModel msg, String emoji) async {
+    await messageRepository.updateReactions(
+      updateMessageRepoModel: UpdateMessageRepoModel(
         selectedMessage: msg,
         emoji: emoji,
         chatId: chatId,
+        remoteCoreId: user.value.walletAddress,
       ),
     );
+
+    // UpdateMessage().execute(
+    //   remoteCoreId: user.value.walletAddress,
+    //   updateMessageType: UpdateMessageType.updateReactions(
+    //     selectedMessage: msg,
+    //     emoji: emoji,
+    //     chatId: chatId,
+    //   ),
+    // );
   }
 
   void toggleMessageReadStatus({required String messageId}) async {
@@ -641,25 +650,41 @@ class MessagesController extends GetxController {
     return !selectedMessages.any((msg) => !msg.isFromMe);
   }
 
-  void deleteSelectedForEveryone() {
-    DeleteMessage().execute(
-      remoteCoreId: user.value.walletAddress,
-      deleteMessageType: DeleteMessageType.forEveryone(
-        chatId: chatId,
+  Future<void> deleteSelectedForEveryone() async {
+    await messageRepository.deleteMessages(
+      deleteMessageRepoModel: DeleteMessageRepoModel(
         selectedMessages: selectedMessages,
+        chatId: chatId,
+        remoteCoreId: user.value.walletAddress,
+        deleteForEveryOne: true,
       ),
     );
+    // DeleteMessage().execute(
+    //   remoteCoreId: user.value.walletAddress,
+    //   deleteMessageType: DeleteMessageType.forEveryone(
+    //     chatId: chatId,
+    //     selectedMessages: selectedMessages,
+    //   ),
+    // );
     clearSelected();
   }
 
-  void deleteSelectedForMe() {
-    DeleteMessage().execute(
-      remoteCoreId: user.value.walletAddress,
-      deleteMessageType: DeleteMessageType.forMe(
-        chatId: chatId,
+  Future<void> deleteSelectedForMe() async {
+    await messageRepository.deleteMessages(
+      deleteMessageRepoModel: DeleteMessageRepoModel(
         selectedMessages: selectedMessages,
+        chatId: chatId,
+        remoteCoreId: user.value.walletAddress,
+        deleteForEveryOne: false,
       ),
     );
+    // DeleteMessage().execute(
+    //   remoteCoreId: user.value.walletAddress,
+    //   deleteMessageType: DeleteMessageType.forMe(
+    //     chatId: chatId,
+    //     selectedMessages: selectedMessages,
+    //   ),
+    // );
     clearSelected();
   }
 
@@ -669,7 +694,7 @@ class MessagesController extends GetxController {
     if (selectedMessages.length == 1 && selectedMessages.first is TextMessageModel) {
       text = (selectedMessages.first as TextMessageModel).text;
     } else {
-      for (var message in selectedMessages) {
+      for (final message in selectedMessages) {
         if (message is! TextMessageModel) {
           continue;
         }
@@ -963,7 +988,7 @@ class MessagesController extends GetxController {
     );
     if (result != null) {
       result as RxList<FileModel>;
-      for (var asset in result) {
+      for (final asset in result) {
         await messageRepository.sendFileMessage(
           sendFileMessageRepoModel: SendFileMessageRepoModel(
             metadata: FileMetaData(
