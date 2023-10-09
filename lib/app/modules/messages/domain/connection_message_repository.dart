@@ -15,5 +15,12 @@ abstract class ConnectionMessageRepository {
 
   Future<void> markAllMessagesAsRead({required String chatId});
 
-  Future<void> sendTextMessage({required SendMessageRepoModel sendMessageRepoModel});
+  Future<void> sendTextMessage({required SendTextMessageRepoModel sendTextMessageRepoModel});
+
+  Future<void> sendAudioMessage({required SendAudioMessageRepoModel sendAudioMessageRepoModel});
+
+  Future<void> sendLocationMessage({
+    required SendLocationMessageRepoModel sendLocationMessageRepoModel,
+  });
+  Future<void> sendLiveLocation({required SendLiveLocationRepoModel sendLiveLocationRepoModel});
 }

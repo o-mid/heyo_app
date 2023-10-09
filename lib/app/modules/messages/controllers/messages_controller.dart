@@ -436,7 +436,7 @@ class MessagesController extends GetxController {
 
   Future<void> sendTextMessage() async {
     await messageRepository.sendTextMessage(
-      sendMessageRepoModel: SendMessageRepoModel(
+      sendTextMessageRepoModel: SendTextMessageRepoModel(
         chatId: chatId,
         replyingToValue: replyingTo.value,
         newMessageValue: newMessage.value,
@@ -459,37 +459,56 @@ class MessagesController extends GetxController {
   }
 
 //TODO
-  void sendAudioMessage(String path, int duration) {
-    SendMessage().execute(
-      sendMessageType: SendMessageType.audio(
+  Future<void> sendAudioMessage(String path, int duration) async {
+    await messageRepository.sendAudioMessage(
+      sendAudioMessageRepoModel: SendAudioMessageRepoModel(
         path: path,
-        metadata: AudioMetadata(durationInSeconds: duration),
-        replyTo: replyingTo.value,
+        duration: duration,
+        replyingToValue: replyingTo.value,
         chatId: chatId,
+        remoteCoreId: user.value.walletAddress,
       ),
-      remoteCoreId: user.value.walletAddress,
     );
+    // SendMessage().execute(
+    //   sendMessageType: SendMessageType.audio(
+    //     path: path,
+    //     metadata: AudioMetadata(durationInSeconds: duration),
+    //     replyTo: replyingTo.value,
+    //     chatId: chatId,
+    //   ),
+    //   remoteCoreId: user.value.walletAddress,
+    // );
 
     _postMessageSendOperations();
   }
 
 //TODO
-  void sendLocationMessage() {
+  Future<void> sendLocationMessage() async {
     final message = locationMessage.value;
     if (message == null) {
       return;
     }
 
-    SendMessage().execute(
-      sendMessageType: SendMessageType.location(
-        lat: message.latitude,
-        long: message.longitude,
+    await messageRepository.sendLocationMessage(
+      sendLocationMessageRepoModel: SendLocationMessageRepoModel(
+        latitude: message.latitude,
+        longitude: message.longitude,
         address: message.address,
-        replyTo: replyingTo.value,
+        replyingToValue: replyingTo.value,
         chatId: chatId,
+        remoteCoreId: user.value.walletAddress,
       ),
-      remoteCoreId: user.value.walletAddress,
     );
+    // SendMessage().execute(
+    //   sendMessageType: SendMessageType.location(
+    //     lat: message.latitude,
+    //     long: message.longitude,
+    //     address: message.address,
+    //     replyTo: replyingTo.value,
+    //     chatId: chatId,
+    //   ),
+    //   remoteCoreId: user.value.walletAddress,
+    // );
 
     locationMessage.value = null;
 
@@ -497,21 +516,30 @@ class MessagesController extends GetxController {
   }
 
 //TODO
-  void sendLiveLocation({
+  Future<void> sendLiveLocation({
     required Duration duration,
     required double startLat,
     required double startLong,
-  }) {
-    SendMessage().execute(
-      sendMessageType: SendMessageType.liveLocation(
+  }) async {
+    await messageRepository.sendLiveLocation(
+      sendLiveLocationRepoModel: SendLiveLocationRepoModel(
         startLat: startLat,
         startLong: startLong,
         duration: duration,
-        replyTo: replyingTo.value,
+        replyingToValue: replyingTo.value,
         chatId: chatId,
+        remoteCoreId: user.value.walletAddress,
       ),
-      remoteCoreId: user.value.walletAddress,
     );
+    //   sendMessageType: SendMessageType.liveLocation(
+    //     startLat: startLat,
+    //     startLong: startLong,
+    //     duration: duration,
+    //     replyTo: replyingTo.value,
+    //     chatId: chatId,
+    //   ),
+    //   remoteCoreId: user.value.walletAddress,
+    // );
 
     _postMessageSendOperations();
 

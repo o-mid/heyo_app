@@ -21,14 +21,66 @@ class UserStates {
       required this.lastMessageTimestamp});
 }
 
-class SendMessageRepoModel {
+class SendTextMessageRepoModel {
   final String newMessageValue;
   final ReplyToModel? replyingToValue;
   final String chatId;
   final String remoteCoreId;
 
-  SendMessageRepoModel({
+  SendTextMessageRepoModel({
     required this.newMessageValue,
+    required this.chatId,
+    required this.remoteCoreId,
+    this.replyingToValue,
+  });
+}
+
+class SendAudioMessageRepoModel {
+  final String path;
+  final int duration;
+  final ReplyToModel? replyingToValue;
+  final String chatId;
+  final String remoteCoreId;
+
+  SendAudioMessageRepoModel({
+    required this.path,
+    required this.duration,
+    required this.chatId,
+    required this.remoteCoreId,
+    this.replyingToValue,
+  });
+}
+
+class SendLocationMessageRepoModel {
+  final double latitude;
+  final double longitude;
+  final String address;
+  final ReplyToModel? replyingToValue;
+  final String chatId;
+  final String remoteCoreId;
+
+  SendLocationMessageRepoModel({
+    required this.latitude,
+    required this.longitude,
+    required this.address,
+    required this.chatId,
+    required this.remoteCoreId,
+    this.replyingToValue,
+  });
+}
+
+class SendLiveLocationRepoModel {
+  final double startLat;
+  final double startLong;
+  final Duration duration;
+  final ReplyToModel? replyingToValue;
+  final String chatId;
+  final String remoteCoreId;
+
+  SendLiveLocationRepoModel({
+    required this.startLat,
+    required this.startLong,
+    required this.duration,
     required this.chatId,
     required this.remoteCoreId,
     this.replyingToValue,
