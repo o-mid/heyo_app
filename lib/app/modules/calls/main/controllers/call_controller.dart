@@ -6,8 +6,7 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
-import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/connected_participate_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/local_participate_model.dart';
@@ -43,7 +42,7 @@ class CallController extends GetxController {
 
   Rx<LocalParticipateModel?> localParticipate = Rx(null);
 
-  RxList<CallParticipantModel> participants = RxList<CallParticipantModel>();
+  RxList<AllParticipantModel> participants = RxList<AllParticipantModel>();
 
   final isImmersiveMode = false.obs;
 
@@ -172,7 +171,7 @@ class CallController extends GetxController {
     for (final element in args.members) {
       // TODO(AliAzim): should be check isContact or not
       participants.add(
-        CallParticipantModel(
+        AllParticipantModel(
           name: element.shortenCoreId,
           coreId: element.shortenCoreId,
           iconUrl: 'https://avatars.githubusercontent.com/u/7847725?v=4',

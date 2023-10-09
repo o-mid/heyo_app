@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
-import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model.dart';
 
 abstract class CallRepository {
   MediaStream? getLocalStream();
@@ -13,9 +13,9 @@ abstract class CallRepository {
 
   Function(CallStream callStream)? onAddCallStream;
 
-  Function(CallParticipantModel participantModel)? onChangeParticipateStream;
+  Function(AllParticipantModel participantModel)? onChangeParticipateStream;
 
-  //void notifyParticipantsChange(CallParticipantModel participant);
+  //void notifyParticipantsChange(AllParticipantModel participant);
 
   //UI events and actions
   void showLocalVideoStream(bool value, String? sessionId, bool sendSignal);

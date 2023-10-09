@@ -1,9 +1,8 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
-import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model.dart';
 import 'package:heyo/app/modules/web-rtc/multiple_call_connection_handler.dart';
-import 'package:webrtc_interface/src/media_stream.dart';
 
 class WebRTCCallRepository implements CallRepository {
   WebRTCCallRepository({required this.callConnectionsHandler}) {
@@ -31,7 +30,7 @@ class WebRTCCallRepository implements CallRepository {
   @override
   Function(CallStream callStream)? onAddCallStream;
   @override
-  Function(CallParticipantModel participantModel)? onChangeParticipateStream;
+  Function(AllParticipantModel participantModel)? onChangeParticipateStream;
 
   bool mock = true;
 
@@ -87,6 +86,7 @@ class WebRTCCallRepository implements CallRepository {
     await callConnectionsHandler.close();
     onAddCallStream = null;
     onLocalStream = null;
+    onChangeParticipateStream = null;
   }
 
   @override
@@ -125,11 +125,11 @@ class WebRTCCallRepository implements CallRepository {
 
     //* it will notify the onChangeParticipateStream
     onChangeParticipateStream?.call(
-      CallParticipantModel(
+      AllParticipantModel(
         coreId: coreId,
         name: coreId,
         iconUrl: mockProfileImage,
-        status: CallParticipantStatus.inCall,
+        status: CallParticipantStatus.accepted,
       ),
     );
   }

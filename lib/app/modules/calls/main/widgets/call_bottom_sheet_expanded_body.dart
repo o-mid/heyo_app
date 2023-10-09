@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
-import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';

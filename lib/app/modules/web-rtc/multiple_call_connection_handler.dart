@@ -1,5 +1,5 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model.dart';
 import 'package:heyo/app/modules/web-rtc/models.dart';
 import 'package:heyo/app/modules/web-rtc/single_call_web_rtc_connection.dart';
 
@@ -47,7 +47,7 @@ class CallConnectionsHandler {
   IncomingCalls? _incomingCalls;
   Function(CallRTCSession callRTCSession)? onAddRemoteStream;
 
-  Function(CallParticipantModel participate)? onChangeParticipateStream;
+  Function(AllParticipantModel participate)? onChangeParticipateStream;
 
   CallConnectionsHandler({required this.singleCallWebRTCBuilder});
 

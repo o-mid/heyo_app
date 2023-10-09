@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/add_participate/controllers/filter_model.dart';
-
 import 'package:heyo/app/modules/add_participate/usecase/get_contact_user_use_case.dart';
 import 'package:heyo/app/modules/add_participate/usecase/search_contact_user_use_case.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model.dart';
 
 class AddParticipateController extends GetxController {
   AddParticipateController({
@@ -114,6 +113,8 @@ class AddParticipateController extends GetxController {
     searchItems.clear();
   }
 
+// region ali
+  // endregion
   Future<void> addUsersToCall() async {
     if (selectedUser.isEmpty) {
       return;
