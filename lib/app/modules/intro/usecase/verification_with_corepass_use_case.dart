@@ -29,7 +29,8 @@ class VerificationWithCorePassUseCase {
     }
     // App scheme for corePass
     //String uri = 'corepass://authentication?heyoId=$heyoId';
-    String uri = 'corepass:sign/${heyoId}callback=heyo://auth/&type=callback';
+    final uri = 'corepass:sign/?data=${heyoId}&conn=heyo://auth&dl=${getCurrentTimeInSeconds()+300}&type=app-link';
+    print("deeep Link ${uri}");
     void launchStore() {
       String corePassAppStoreUri = '';
       String corePassPlayStoreUri = '';
@@ -55,33 +56,36 @@ class VerificationWithCorePassUseCase {
     }
   }
 
+  int getCurrentTimeInSeconds() {
+    final ms = DateTime.now().millisecondsSinceEpoch;
+    return (ms / 1000).round();
+  }
+  void _checkUri(Uri deepLink) async {
+    debugPrint("Uri is ${deepLink}");
+
+    final result=deepLink.queryParameters;
+
+    final signature=result['signature'];
+    final coreId= result['coreID'];
+    debugPrint("signature is $signature");
+    debugPrint("coreId is $coreId");
+
+    debugPrint("QUERY is $result");
+    // Add 2 seconds timer for showing the loading
+
+    debugPrint("Verification complete");
+    //TODO: Set isLogin to true, temporary
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool("isLogin", true);
+    // Navigate to verified user page
+    Get.offAllNamed(Routes.VERIFIED_USER);
+  }
   Future<void> getUriFromDeepLink() async {
     try {
-      void checkUri(Uri deepLink) async {
-        Get.rawSnackbar( messageText:  Text(
-          "URI is $deepLink",
-          textAlign: TextAlign.center,
-            style: TEXTSTYLES.kBodySmall
-
-        ));
-        debugPrint("Uri is ${deepLink}");
-
-        String? query = deepLink.queryParameters['key'];
-        debugPrint("QUERY is $query");
-        // Add 2 seconds timer for showing the loading
-
-        debugPrint("Verification complete");
-        //TODO: Set isLogin to true, temporary
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setBool("isLogin", true);
-        // Navigate to verified user page
-        Get.offAllNamed(Routes.VERIFIED_USER);
-      }
-
       final initialUri = await getInitialUri();
       if (initialUri != null) {
         // Handle the initial deep uri
-        checkUri(initialUri);
+        _checkUri(initialUri);
       }
     } catch (e) {
       debugPrint(e.toString());

@@ -34,11 +34,12 @@ class IntroController extends GetxController with WidgetsBindingObserver {
       // no incoming link arrived, we dispose the stream
       Timer(
         const Duration(seconds: 2),
-        () {
+        () async{
           //close the loading modal
           if (Get.isDialogOpen == true) {
+            await verificationWithCorePassUseCase.getUriFromDeepLink();
+
             Get.back();
-            verificationWithCorePassUseCase.getUriFromDeepLink();
             debugPrint("Verification not complete");
           }
         },

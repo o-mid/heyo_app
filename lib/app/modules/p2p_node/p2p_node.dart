@@ -69,14 +69,14 @@ class P2PNode {
       await accountInfo.createAccountAndSaveInStorage();
     }
 
-    String? peerSeed = await accountInfo.getP2PSecret();
+    var peerSeed = await accountInfo.getP2PSecret();
 
     if (peerSeed == null) {
       final generatedMnemonic = await compute(mnemonicToSeed, generateMnemonic());
       peerSeed = bytesToHex(generatedMnemonic.aesKeySeed);
       await accountInfo.setP2PSecret(peerSeed);
     }
-    int networkId = await web3client.getNetworkId();
+    final networkId = await web3client.getNetworkId();
     await FlutterP2pCommunicator.startNode(peerSeed: peerSeed, networkId: networkId.toString());
 
     final privateKey = await accountInfo.getPrivateKey();

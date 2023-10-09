@@ -6,7 +6,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 class SplashController extends GetxController {
   SplashController();
 
-  checkIfAuthenticated() async {
+  _checkIfAuthenticated() async {
     //TODO: just use prefs for test, users will see this screen once
     // it will change when the corePass integration complete
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -29,7 +29,7 @@ class SplashController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    checkIfAuthenticated();
+    _checkIfAuthenticated();
   }
 
   //@override

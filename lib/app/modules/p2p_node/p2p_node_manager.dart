@@ -4,14 +4,15 @@ import 'package:flutter/foundation.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 
-class P2PNodeController extends GetxController {
+class P2PNodeController {
   ConnectivityResult? _latestConnectivityStatus;
   final P2PNode p2pNode;
   final P2PState p2pState;
-  P2PNodeController({required this.p2pNode,required this.p2pState});
+  P2PNodeController({required this.p2pNode,required this.p2pState}){
+    _init();
+  }
 
-  @override
-  void onReady() async {
+  void _init(){
     Connectivity().onConnectivityChanged.listen((connectivityResult) async {
       debugPrint("onConnectivityChanged: $connectivityResult");
       if (connectivityResult == ConnectivityResult.none) {
@@ -26,15 +27,15 @@ class P2PNodeController extends GetxController {
         _latestConnectivityStatus = connectivityResult;
       }
     });
-    super.onReady();
   }
 
-  _stopP2PNode() {
+
+  void _stopP2PNode() {
     print("p2p stopNode");
     p2pNode.stop();
   }
 
-  _setUpP2PNode() {
+  void _setUpP2PNode() {
     print("p2p startNode");
     p2pNode.restart();
   }
