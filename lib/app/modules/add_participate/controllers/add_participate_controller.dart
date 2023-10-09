@@ -108,7 +108,17 @@ class AddParticipateController extends GetxController {
     return selectedUser.any((u) => u.coreId == user.coreId);
   }
 
+  void clearRxList() {
+    selectedUser.clear();
+    participateItems.clear();
+    searchItems.clear();
+  }
+
   Future<void> addUsersToCall() async {
+    if (selectedUser.isEmpty) {
+      return;
+    }
+
     debugPrint('Add selected users to call');
 
     //* Pop to call page
@@ -118,5 +128,8 @@ class AddParticipateController extends GetxController {
     for (final user in selectedUser) {
       await callRepository.addMember(user.coreId);
     }
+
+    //* Clears list
+    clearRxList();
   }
 }

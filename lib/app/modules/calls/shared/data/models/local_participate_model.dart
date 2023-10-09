@@ -9,11 +9,9 @@ class LocalParticipateModel extends ConnectedParticipateModel {
     required super.audioMode,
     required super.videoMode,
     required this.frondCamera,
-    required this.isInCall,
     required this.callDurationInSecond,
   });
 
   RxBool frondCamera;
-  RxBool isInCall;
   RxInt callDurationInSecond;
 }

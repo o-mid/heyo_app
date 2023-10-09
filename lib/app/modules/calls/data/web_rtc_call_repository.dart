@@ -15,19 +15,10 @@ class WebRTCCallRepository implements CallRepository {
         onAddCallStream?.call(
           CallStream(
             coreId: callRTCSession.remotePeer.remoteCoreId,
-            remoteStream: callRTCSession.getStream()!,
+            remoteStream: callRTCSession.getStream(),
           ),
         );
       });
-    //callConnectionsHandler.onChangeParticipateStream = (() {
-    //  onChangeParticipateStream?.call(
-    //    CallParticipantModel(
-    //      name: name,
-    //      iconUrl: iconUrl,
-    //      coreId: coreId,
-    //    ),
-    //  );
-    //});
 
     if (mock) {
       emitMockStream();
@@ -40,48 +31,22 @@ class WebRTCCallRepository implements CallRepository {
   @override
   Function(CallStream callStream)? onAddCallStream;
   @override
-  Function(CallParticipantModel participate)? onChangeParticipateStream;
+  Function(CallParticipantModel participantModel)? onChangeParticipateStream;
 
   bool mock = true;
 
   Future<void> emitMockStream() async {
-    await Future<void>.delayed(const Duration(seconds: 5));
-    onAddCallStream?.call(
-      CallStream(
-        coreId: 'coreId1',
-        remoteStream: await _createMockStream(),
-      ),
-    );
-    await Future<void>.delayed(const Duration(seconds: 5));
-    onAddCallStream?.call(
-      CallStream(
-        coreId: 'coreId',
-        remoteStream: await _createMockStream(),
-      ),
-    );
-    //await Future<void>.delayed(const Duration(seconds: 5));
-    //onAddCallStream?.call(
-    //  CallStream(
-    //    coreId: "coreId",
-    //    remoteStream: await _createMockStream(),
-    //  ),
-    //);
-    //await Future<void>.delayed(const Duration(seconds: 5));
-    //onAddCallStream?.call(
-    //  CallStream(
-    //    coreId: "coreId",
-    //    remoteStream: await _createMockStream(),
-    //  ),
-    //);
+    await _createMockStream("coreId");
+    await _createMockStream("coreId1");
   }
 
   @override
   Future<List<CallStream>> getCallStreams() async {
-    if (mock) {
-      return [
-        CallStream(coreId: 'coreId', remoteStream: await _createMockStream()),
-      ];
-    }
+    //if (mock) {
+    //  return [
+    //    CallStream(coreId: 'coreId', remoteStream: await _createMockStream()),
+    //  ];
+    //}
     return callConnectionsHandler
         .getRemoteStreams()
         .map(
@@ -94,7 +59,7 @@ class WebRTCCallRepository implements CallRepository {
   }
 
   @override
-  Future acceptCall(String callId) async {
+  Future<void> acceptCall(String callId) async {
     callConnectionsHandler.accept(callId);
     //Todo: AZ => we don't have coreId in here
     //_addParticipate(coreId);
@@ -102,18 +67,19 @@ class WebRTCCallRepository implements CallRepository {
 
   @override
   Future<void> addMember(String coreId) async {
-    //callConnectionsHandler.addMember(coreId);
-    if (mock) {
-      //TODO remove Mock
-      await Future<void>.delayed(const Duration(seconds: 5));
-      onAddCallStream?.call(
-        CallStream(
-          coreId: 'coreId',
-          remoteStream: await _createMockStream(),
-        ),
-      );
-      //await _addParticipate(coreId);
-    }
+    callConnectionsHandler.addMember(coreId);
+    _addToAllParticipant(coreId);
+    //if (mock) {
+    //  //TODO remove Mock
+    //  await Future<void>.delayed(const Duration(seconds: 5));
+    //  onAddCallStream?.call(
+    //    CallStream(
+    //      coreId: 'coreId',
+    //      remoteStream: await _createMockStream(),
+    //    ),
+    //  );
+    //await _addToAllParticipant(coreId);
+    //}
   }
 
   @override
@@ -149,18 +115,21 @@ class WebRTCCallRepository implements CallRepository {
     final session =
         await callConnectionsHandler.requestCall(remoteId, isAudioCall);
     //Todo: AZ => we don't have coreId in here
-    //_addParticipate(coreId);
+    //_addToAllParticipant(coreId);
     return session.callId;
   }
 
-  Future<void> _addParticipate(String coreId) async {
+  void _addToAllParticipant(String coreId) {
     const mockProfileImage =
         'https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png';
+
+    //* it will notify the onChangeParticipateStream
     onChangeParticipateStream?.call(
       CallParticipantModel(
         coreId: coreId,
         name: coreId,
         iconUrl: mockProfileImage,
+        status: CallParticipantStatus.inCall,
       ),
     );
   }
@@ -175,8 +144,15 @@ class WebRTCCallRepository implements CallRepository {
     callConnectionsHandler.rejectIncomingCall(callId);
   }
 
-  Future<MediaStream> _createMockStream() async {
-    return await _createStream('video', false);
+  Future<void> _createMockStream(String coreId) async {
+    await Future<void>.delayed(const Duration(seconds: 3));
+    _addToAllParticipant(coreId);
+    onAddCallStream?.call(
+      CallStream(
+        coreId: coreId,
+        remoteStream: await _createStream('video', false),
+      ),
+    );
   }
 
   Future<MediaStream> _createStream(String media, bool userScreen) async {

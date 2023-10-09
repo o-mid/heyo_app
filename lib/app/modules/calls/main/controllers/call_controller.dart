@@ -47,6 +47,8 @@ class CallController extends GetxController {
 
   final isImmersiveMode = false.obs;
 
+  final isInCall = false.obs;
+
   final isVideoPositionsFlipped = false.obs;
 
   RxBool get isGroupCall => (connectedRemoteParticipates.length > 1).obs;
@@ -88,7 +90,6 @@ class CallController extends GetxController {
       videoMode: true.obs,
       callDurationInSecond: 0.obs,
       frondCamera: true.obs,
-      isInCall: false.obs,
     );
 
     if (localParticipate.value!.videoMode.isTrue) {
@@ -198,7 +199,7 @@ class CallController extends GetxController {
       args.isAudioCall,
     );
 
-    localParticipate.value!.isInCall.value = false;
+    isInCall.value = false;
     _playWatingBeep();
   }
 
@@ -226,7 +227,7 @@ class CallController extends GetxController {
   Future<void> inCallSetUp() async {
     await callRepository.acceptCall(args.callId!);
 
-    localParticipate.value!.isInCall.value = true;
+    isInCall.value = true;
     startCallTimer();
   }
 
@@ -252,9 +253,10 @@ class CallController extends GetxController {
   }
 
   void observeOnChangeParticipate() {
-    callRepository.onChangeParticipateStream = (participates) {
-      debugPrint('Change participate observer...');
-      debugPrint(participates.toString());
+    callRepository.onChangeParticipateStream = (participant) {
+      debugPrint('Change participate observer in Call Controller...');
+      //debugPrint(participant.toString());
+      participants.add(participant);
     };
   }
 
@@ -267,8 +269,8 @@ class CallController extends GetxController {
       debugPrint('onAddCallStream : $callStateView');
       //print("calll ${_remoteRenderers} : $stream");
       //TODO refactor this if related to the call state
-      if (!localParticipate.value!.isInCall.value) {
-        localParticipate.value!.isInCall.value = true;
+      if (!isInCall.value) {
+        isInCall.value = true;
         _stopWatingBeep();
         startCallTimer();
       }
