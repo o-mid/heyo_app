@@ -17,7 +17,7 @@ class VerificationWithCorePassUseCase {
   VerificationWithCorePassUseCase({required this.accountInfo});
 
   Future<void> executeLaunch() async {
-    String? heyoId = await accountInfo.getCoreId();
+    String? heyoId = await accountInfo.getLocalCoreId();
     while (heyoId == null) {
       Get.rawSnackbar( messageText:  Text(
         "Sending Files feature is in development phase",
@@ -25,7 +25,7 @@ class VerificationWithCorePassUseCase {
           style: TEXTSTYLES.kBodySmall
       ));
       await Future.delayed(const Duration(seconds: 5));
-      heyoId = await accountInfo.getCoreId();
+      heyoId = await accountInfo.getLocalCoreId();
     }
     // App scheme for corePass
     //String uri = 'corepass://authentication?heyoId=$heyoId';

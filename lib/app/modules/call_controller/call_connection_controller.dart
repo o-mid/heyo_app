@@ -81,7 +81,7 @@ class CallConnectionController extends GetxController {
       required this.contactRepository});
 
   Future<Session> startCall(String remoteId, String callId, bool isAudioCall) async {
-    String? selfCoreId = await accountInfo.getCoreId();
+    String? selfCoreId = await accountInfo.getLocalCoreId();
     final session = await signaling.invite(remoteId, 'video', false, selfCoreId!, isAudioCall);
 
     callHistoryState.value =

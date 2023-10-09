@@ -65,7 +65,7 @@ class P2PNode {
         await storage.deleteAll();
       }
     }
-    if (await accountInfo.getCoreId() == null) {
+    if (await accountInfo.getLocalCoreId() == null) {
       await accountInfo.createAccountAndSaveInStorage();
     }
 

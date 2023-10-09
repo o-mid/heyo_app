@@ -50,7 +50,7 @@ class P2PCommunicator {
     // 4. create p2p login model
     // 5. send login request and track the Request
 
-    final localCoreId = await accountInfo.getCoreId();
+    final localCoreId = await accountInfo.getLocalCoreId();
     if (localCoreId == null) throw 'Core id is null!!';
 
     String hexSDP = sdp.getHex();

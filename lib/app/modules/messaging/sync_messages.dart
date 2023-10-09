@@ -65,7 +65,7 @@ class SyncMessages {
     p2pState.advertise.listen((advertise) async {
       print("syncMessages : _initiateConnections : $advertise");
       if (advertise) {
-        String selfCoreId = (await accountInfo.getCoreId())!;
+        String selfCoreId = (await accountInfo.getLocalCoreId())!;
         multipleConnectionHandler.reset();
         for (var value in (await chatHistoryRepo.getAllChats())) {
           print("syncMessages : _initiateConnections : getConnection");

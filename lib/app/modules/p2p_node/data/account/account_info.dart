@@ -8,7 +8,12 @@ abstract class AccountInfo {
   Future<void> saveCredentials(String coreId, String privateKey, String aesKey,
       List<String> mneomns, String address, String publicKey);
 
-  Future<String?> getCoreId();
+  Future<String?> getLocalCoreId();
 
   Future<String?> getPrivateKey();
+
+  Future<String?> getCoreId();
+  Future<void> setCoreId();
+  Future<void> setSignature(String signature);
+  Future<String> getSignature();
 }

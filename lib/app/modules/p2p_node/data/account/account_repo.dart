@@ -3,7 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/cryptography_key_generator.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/local_storages_abstract.dart';
-import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
+String P2P_KEY_IN_STORE = "P2P_KEY_IN_STORE";
+String CRED_KEY_IN_STORE = "CRED_KEY_IN_STORE";
+String CORE_ID_KEY_IN_STORE = "coreId";
+String PRIV_KEY_IN_STORE = "priv";
+String AES_KEY_IN_STORE = "AES";
+String MNEOMONIC_IN_STORE = "mneomonic";
+String PUBLIC_KEY = "public_key";
+String ADDRESS = "address";
 
 class AccountRepo implements AccountInfo {
   final LocalStorageAbstractProvider localProvider;
@@ -71,7 +78,7 @@ class AccountRepo implements AccountInfo {
   }
 
   @override
-  Future<String?> getCoreId() async {
+  Future<String?> getLocalCoreId() async {
     final credentialInLocalStorage = await localProvider.readFromStorage(CRED_KEY_IN_STORE);
     if (credentialInLocalStorage == null) {
       return null;
@@ -90,6 +97,30 @@ class AccountRepo implements AccountInfo {
       final previousCreds = ((jsonDecode(prevs) as Map<String, dynamic>));
       return previousCreds[PRIV_KEY_IN_STORE];
     }
+  }
+
+  @override
+  Future<String?> getCoreId() {
+    // TODO: implement getCoreId
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> setCoreId() {
+    // TODO: implement setCoreId
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> getSignature() {
+    // TODO: implement getSignature
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> setSignature(String signature) {
+    // TODO: implement setSignature
+    throw UnimplementedError();
   }
 }
 
