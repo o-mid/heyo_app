@@ -29,7 +29,7 @@ class GroupCallWidget extends GetView<CallController> {
               itemCount: allVideoRenderers.length,
               itemBuilder: (context, index) {
                 return CallRendererWidget(
-                  participateModel: allVideoRenderers[index],
+                  participantModel: allVideoRenderers[index],
                 );
               },
             ),

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 
 abstract class CallRepository {
   MediaStream? getLocalStream();

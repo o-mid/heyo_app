@@ -6,10 +6,10 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/connected_participate_model.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/local_participate_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/connected_participant_model/connected_participant_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/local_participant_model/local_participant_model.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
@@ -37,10 +37,10 @@ class CallController extends GetxController {
   //* CallViewArgumentsModel will not effect the UI
   late CallViewArgumentsModel args;
 
-  RxList<ConnectedParticipateModel> connectedRemoteParticipates =
-      RxList<ConnectedParticipateModel>();
+  RxList<ConnectedParticipantModel> connectedRemoteParticipates =
+      RxList<ConnectedParticipantModel>();
 
-  Rx<LocalParticipateModel?> localParticipate = Rx(null);
+  Rx<LocalParticipantModel?> localParticipate = Rx(null);
 
   RxList<AllParticipantModel> participants = RxList<AllParticipantModel>();
 
@@ -63,10 +63,13 @@ class CallController extends GetxController {
   //final callViewType = CallViewType.stack.obs;
   //late Session session;
 
-  RxList<ConnectedParticipateModel> getAllConnectedParticipate() {
+  RxList<ConnectedParticipantModel> getAllConnectedParticipate() {
     //* Use this item for group call
     //* The first video renderer is the local Renderer,
-    return RxList([localParticipate.value!, ...connectedRemoteParticipates]);
+    return RxList([
+      localParticipate.value!.mapToConnectedParticipantModel(),
+      ...connectedRemoteParticipates,
+    ]);
   }
 
   String getConnectedParticipantsName() {
@@ -80,7 +83,7 @@ class CallController extends GetxController {
 
   Future<void> initLocalRenderer() async {
     final localParticipateCoreId = await accountInfo.getCoreId();
-    localParticipate.value = LocalParticipateModel(
+    localParticipate.value = LocalParticipantModel(
       name: localParticipateCoreId!,
       iconUrl: 'https://avatars.githubusercontent.com/u/7847725?v=4',
       coreId: localParticipateCoreId,
@@ -94,7 +97,9 @@ class CallController extends GetxController {
     if (localParticipate.value!.videoMode.isTrue) {
       final localRenderer = RTCVideoRenderer();
       await localRenderer.initialize();
-      localParticipate.value!.rtcVideoRenderer = localRenderer;
+
+      localParticipate.value =
+          localParticipate.value!.copyWith(rtcVideoRenderer: localRenderer);
 
       callRepository.onLocalStream = (stream) {
         localRenderer.srcObject = stream;
@@ -210,7 +215,7 @@ class CallController extends GetxController {
     //_remoteRenderers.add(renderer);
     //TODO: The data should return from CallStream,
     // or input of method should be CallItemModel
-    final remoteParticipate = ConnectedParticipateModel(
+    final remoteParticipate = ConnectedParticipantModel(
       audioMode: true.obs,
       videoMode: true.obs,
       coreId: callStream.coreId,

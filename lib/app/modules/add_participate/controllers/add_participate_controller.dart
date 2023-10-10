@@ -7,7 +7,7 @@ import 'package:heyo/app/modules/add_participate/usecase/get_contact_user_use_ca
 import 'package:heyo/app/modules/add_participate/usecase/search_contact_user_use_case.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 
 class AddParticipateController extends GetxController {
   AddParticipateController({

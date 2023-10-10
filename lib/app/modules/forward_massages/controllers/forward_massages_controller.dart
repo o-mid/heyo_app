@@ -4,7 +4,7 @@ import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 
-import '../data/models/forward_massages_view_arguments_model..dart';
+import '../data/models/forward_massages_view_arguments_model.dart';
 
 class ForwardMassagesController extends GetxController {
   //TODO: Implement ForwardMassagesController
@@ -44,7 +44,8 @@ class ForwardMassagesController extends GetxController {
     UserModel(
       name: "Crapps Wallbanger",
       walletAddress: 'CB92...969A',
-      iconUrl: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+      iconUrl:
+          "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
       nickname: "Nickname",
       coreId: 'CB92...969A',
     ),
@@ -71,7 +72,8 @@ class ForwardMassagesController extends GetxController {
       String inputedQuery = query.toLowerCase();
       return username.contains(inputedQuery);
     }).toList();
-    searchSuggestions.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    searchSuggestions
+        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     searchSuggestions.refresh();
   }
 
