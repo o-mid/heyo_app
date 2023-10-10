@@ -10,27 +10,28 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
 
 class VerificationWithCorePassUseCase {
-  final AccountInfo accountInfo;
+  VerificationWithCorePassUseCase(
+      {required this.accountInfo, required this.p2pCommunicator});
 
-  VerificationWithCorePassUseCase({required this.accountInfo});
+  final AccountInfo accountInfo;
+  final P2PCommunicator p2pCommunicator;
 
   Future<void> executeLaunch() async {
     String? heyoId = await accountInfo.getLocalCoreId();
     while (heyoId == null) {
-      Get.rawSnackbar( messageText:  Text(
-        "Generating id...",
-        textAlign: TextAlign.center,
-          style: TEXTSTYLES.kBodySmall
-      ));
+      Get.rawSnackbar(
+          messageText: Text("Generating id...",
+              textAlign: TextAlign.center, style: TEXTSTYLES.kBodySmall));
       await Future.delayed(const Duration(seconds: 5));
       heyoId = await accountInfo.getLocalCoreId();
     }
     // App scheme for corePass
-    final uri = 'corepass:sign/?data=${heyoId}&conn=heyo://auth&dl=${_getCurrentTimeInSeconds()+300}&type=app-link';
+    final uri =
+        'corepass:sign/?data=${heyoId}&conn=heyo://auth&dl=${_getCurrentTimeInSeconds() + 300}&type=app-link';
     print("deeep Link ${uri}");
-
 
     try {
       await launchUrlString(uri);
@@ -51,6 +52,7 @@ class VerificationWithCorePassUseCase {
     final ms = DateTime.now().millisecondsSinceEpoch;
     return (ms / 1000).round();
   }
+
   void _launchStore() {
     String corePassAppStoreUri = '';
     String corePassPlayStoreUri = '';
@@ -60,30 +62,32 @@ class VerificationWithCorePassUseCase {
       launchUrlString(corePassPlayStoreUri);
     }
   }
-  void _checkUri(Uri deepLink) async {
+
+  Future<void> _checkUri(Uri deepLink) async {
     debugPrint("Uri is ${deepLink}");
 
-    final result=deepLink.queryParameters;
+    final result = deepLink.queryParameters;
 
-    final signature=result['signature'];
-    final coreId= result['coreID'];
-    if(signature!=null &&coreId!=null){
-     await accountInfo.setSignature(signature);
+    final signature = result['signature'];
+    final coreId = result['coreID'];
+    if (signature != null && coreId != null) {
+
+      await accountInfo.setSignature(signature.replaceAll('0x', ''));
       await accountInfo.setCoreId(coreId);
-
+      await p2pCommunicator.applyDelegatedAuth();
       // Navigate to verified user page
       await Get.offAllNamed(Routes.VERIFIED_USER);
-    }else {
+    } else {
       //todo show error
     }
-
   }
+
   Future<void> getUriFromDeepLink() async {
     try {
       final initialUri = await getInitialUri();
       if (initialUri != null) {
         // Handle the initial deep uri
-        _checkUri(initialUri);
+        await _checkUri(initialUri);
       }
     } catch (e) {
       debugPrint(e.toString());

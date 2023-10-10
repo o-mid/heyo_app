@@ -10,7 +10,7 @@ class AccountController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    coreId.value = (await accountInfo.getLocalCoreId()) ?? "";
+    coreId.value = (await accountInfo.getCoreId()) ?? "";
   }
 
   @override

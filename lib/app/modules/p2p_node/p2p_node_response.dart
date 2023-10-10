@@ -73,7 +73,7 @@ class P2PNodeResponseStream {
     }
     if (event.name == P2PReqResNodeNames.peerID && event.error == null) {
       p2pState.peerId.value = event.body!["peerID"].toString();
-      final coreId = (await GlobalBindings.accountInfo.getLocalCoreId())!;
+      final coreId = (await GlobalBindings.accountInfo.getCoreId())!;
       final peerId = GlobalBindings.p2pState.peerId.value;
       final addressId = jsonEncode(GlobalBindings.p2pState.address.value);
       print(

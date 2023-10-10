@@ -11,7 +11,7 @@ class QRInfo {
   QRInfo({required this.p2pState, required this.accountInfo});
 
   Future<String> getSharableQr() async {
-    String? coreId = await accountInfo.getLocalCoreId();
+    String? coreId = await accountInfo.getCoreId();
     if (coreId == null) throw 'core Id is null!!';
 
     return coreId +
@@ -22,6 +22,6 @@ class QRInfo {
   }
 
   Future<String?> getCoreId() {
-    return accountInfo.getLocalCoreId();
+    return accountInfo.getCoreId();
   }
 }

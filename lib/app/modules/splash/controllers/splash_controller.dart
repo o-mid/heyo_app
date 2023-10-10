@@ -1,8 +1,7 @@
-import 'package:get/get.dart';
-import 'package:heyo/app/routes/app_pages.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:get/get.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 
 class SplashController extends GetxController {
   SplashController({required this.accountInfo});
@@ -13,12 +12,11 @@ class SplashController extends GetxController {
   _checkIfAuthenticated() async {
     final isLogin = (await accountInfo.getCoreId() != null) &&
         (await accountInfo.getSignature() != null);
-    if (isLogin) {
+    if (false) {
       await Get.offAllNamed(Routes.HOME);
     } else {
       await Get.offAllNamed(Routes.INTRO);
     }
-    //await Future.delayed(const Duration(milliseconds: 500), () {});
   }
 
   @override
@@ -33,6 +31,4 @@ class SplashController extends GetxController {
     _checkIfAuthenticated();
   }
 
-//@override
-//void onClose() {}
 }

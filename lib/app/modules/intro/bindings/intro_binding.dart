@@ -19,6 +19,7 @@ class IntroBinding extends Bindings {
               web3client: GlobalBindings.web3Client,
             ),
           ),
+          p2pCommunicator: GlobalBindings.p2pCommunicator
         ),
       ),
     );

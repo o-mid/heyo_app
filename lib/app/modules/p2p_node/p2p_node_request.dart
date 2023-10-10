@@ -51,12 +51,12 @@ class P2PNodeRequestStream {
     debugPrint("_onNewRequestEvent: body is: ${event.body}");
     debugPrint("_onNewRequestEvent: error is: ${event.error}");
 
-    if (event.name == P2PReqResNodeNames.login &&
+    if (event.name == P2PReqResNodeNames.signaling &&
         event.error == null &&
         event.body != null) {
       await FlutterP2pCommunicator.sendResponse(
           info: P2PReqResNodeModel(
-              name: P2PReqResNodeNames.login, body: {}, id: event.id));
+              name: P2PReqResNodeNames.signaling, body: {}, id: event.id));
 
       //
       // MARK: here we are telling the sending party that everything is ok and the req was received
