@@ -13,7 +13,7 @@ abstract class AccountInfo {
   Future<String?> getPrivateKey();
 
   Future<String?> getCoreId();
-  Future<void> setCoreId();
+  Future<void> setCoreId(String coreId);
   Future<void> setSignature(String signature);
-  Future<String> getSignature();
+  Future<String?> getSignature();
 }

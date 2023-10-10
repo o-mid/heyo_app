@@ -34,7 +34,7 @@ class IntroController extends GetxController with WidgetsBindingObserver {
       // no incoming link arrived, we dispose the stream
       Timer(
         const Duration(seconds: 2),
-        () async{
+        () async {
           //close the loading modal
           if (Get.isDialogOpen == true) {
             await verificationWithCorePassUseCase.getUriFromDeepLink();
@@ -47,31 +47,17 @@ class IntroController extends GetxController with WidgetsBindingObserver {
     }
   }
 
-  corePassVerificationAction() async {
+  void _corePassVerificationAction() async {
     //close the corePass bottom sheet
     Get.back();
     _openLoadingDialog();
-    //TODO: checking verification
-
     // Launch corePass application
     await verificationWithCorePassUseCase.executeLaunch();
-
- /*   // Comment launching and just push to verified user
-    Timer(
-      const Duration(seconds: 2),
-      () async {
-        Get.back();
-        //TODO: Set isLogin to true, temporary
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setBool("isLogin", true);
-        Get.offAllNamed(Routes.VERIFIED_USER);
-      },
-    );*/
   }
 
-  openCorePassVerificationBottomSheet() async {
+  void openCorePassVerificationBottomSheet() async {
     await Get.bottomSheet(
-      VerificationBottomSheet(onTap: () => corePassVerificationAction()),
+      VerificationBottomSheet(onTap: _corePassVerificationAction),
       isScrollControlled: true,
       backgroundColor: COLORS.kWhiteColor,
       shape: RoundedRectangleBorder(
@@ -80,7 +66,7 @@ class IntroController extends GetxController with WidgetsBindingObserver {
     );
   }
 
-  _openLoadingDialog() async {
+  void _openLoadingDialog() async {
     await Get.defaultDialog(
       onWillPop: () async => false,
       radius: 8,

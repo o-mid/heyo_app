@@ -20,7 +20,7 @@ class VerificationWithCorePassUseCase {
     String? heyoId = await accountInfo.getLocalCoreId();
     while (heyoId == null) {
       Get.rawSnackbar( messageText:  Text(
-        "Sending Files feature is in development phase",
+        "Generating id...",
         textAlign: TextAlign.center,
           style: TEXTSTYLES.kBodySmall
       ));
@@ -28,18 +28,9 @@ class VerificationWithCorePassUseCase {
       heyoId = await accountInfo.getLocalCoreId();
     }
     // App scheme for corePass
-    //String uri = 'corepass://authentication?heyoId=$heyoId';
-    final uri = 'corepass:sign/?data=${heyoId}&conn=heyo://auth&dl=${getCurrentTimeInSeconds()+300}&type=app-link';
+    final uri = 'corepass:sign/?data=${heyoId}&conn=heyo://auth&dl=${_getCurrentTimeInSeconds()+300}&type=app-link';
     print("deeep Link ${uri}");
-    void launchStore() {
-      String corePassAppStoreUri = '';
-      String corePassPlayStoreUri = '';
-      if (Platform.isIOS) {
-        launchUrlString(corePassAppStoreUri);
-      } else if (Platform.isAndroid) {
-        launchUrlString(corePassPlayStoreUri);
-      }
-    }
+
 
     try {
       await launchUrlString(uri);
@@ -51,14 +42,23 @@ class VerificationWithCorePassUseCase {
       Get.back();
       //
       //TODO: Open google play or app store
-      launchStore();
+      _launchStore();
       return;
     }
   }
 
-  int getCurrentTimeInSeconds() {
+  int _getCurrentTimeInSeconds() {
     final ms = DateTime.now().millisecondsSinceEpoch;
     return (ms / 1000).round();
+  }
+  void _launchStore() {
+    String corePassAppStoreUri = '';
+    String corePassPlayStoreUri = '';
+    if (Platform.isIOS) {
+      launchUrlString(corePassAppStoreUri);
+    } else if (Platform.isAndroid) {
+      launchUrlString(corePassPlayStoreUri);
+    }
   }
   void _checkUri(Uri deepLink) async {
     debugPrint("Uri is ${deepLink}");
@@ -67,18 +67,16 @@ class VerificationWithCorePassUseCase {
 
     final signature=result['signature'];
     final coreId= result['coreID'];
-    debugPrint("signature is $signature");
-    debugPrint("coreId is $coreId");
+    if(signature!=null &&coreId!=null){
+     await accountInfo.setSignature(signature);
+      await accountInfo.setCoreId(coreId);
 
-    debugPrint("QUERY is $result");
-    // Add 2 seconds timer for showing the loading
+      // Navigate to verified user page
+      await Get.offAllNamed(Routes.VERIFIED_USER);
+    }else {
+      //todo show error
+    }
 
-    debugPrint("Verification complete");
-    //TODO: Set isLogin to true, temporary
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool("isLogin", true);
-    // Navigate to verified user page
-    Get.offAllNamed(Routes.VERIFIED_USER);
   }
   Future<void> getUriFromDeepLink() async {
     try {
