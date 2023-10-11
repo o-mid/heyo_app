@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/home/widgets/delete_all_calls_dialog.dart';
+import 'package:heyo/app/modules/calls/call_history/widgets/delete_all_call_history_dialog.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/widgets/bottom_sheet.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-void openDeleteAllCallsBottomSheet({required VoidCallback onDelete}) {
+void openDeleteAllCallHistoryBottomSheet({required VoidCallback onDelete}) {
   Get.bottomSheet(
     backgroundColor: COLORS.kWhiteColor,
     shape: const RoundedRectangleBorder(
@@ -17,13 +17,13 @@ void openDeleteAllCallsBottomSheet({required VoidCallback onDelete}) {
         topRight: Radius.circular(20),
       ),
     ),
-    DeleteAllCallsBottomSheet(onDelete: onDelete),
+    DeleteAllCallHistoryBottomSheet(onDelete: onDelete),
   );
 }
 
-class DeleteAllCallsBottomSheet extends StatelessWidget {
+class DeleteAllCallHistoryBottomSheet extends StatelessWidget {
+  const DeleteAllCallHistoryBottomSheet({required this.onDelete, super.key});
   final VoidCallback onDelete;
-  const DeleteAllCallsBottomSheet({Key? key, required this.onDelete}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,8 @@ class DeleteAllCallsBottomSheet extends StatelessWidget {
         children: [
           TextButton(
             onPressed: () async {
-              final result = await Get.dialog(const DeleteAllCallsDialog());
+              final result =
+                  await Get.dialog(const DeleteAllCallHistoryDialog());
               if (result is bool && result) {
                 onDelete();
               }
@@ -49,12 +50,14 @@ class DeleteAllCallsBottomSheet extends StatelessWidget {
                     color: COLORS.kBrightBlueColor,
                     shape: BoxShape.circle,
                   ),
-                  child: Assets.svg.deleteIcon.svg(color: COLORS.kDarkBlueColor),
+                  child:
+                      Assets.svg.deleteIcon.svg(color: COLORS.kDarkBlueColor),
                 ),
                 SizedBox(width: 20.w),
                 Text(
                   LocaleKeys.HomePage_Calls_bottomSheet_deleteAllCalls.tr,
-                  style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
+                  style: TEXTSTYLES.kLinkBig
+                      .copyWith(color: COLORS.kDarkBlueColor),
                 ),
               ],
             ),

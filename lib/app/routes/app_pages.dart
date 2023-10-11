@@ -11,7 +11,7 @@ import '../modules/auth/pinCode/bindings/pin_code_binding.dart';
 import '../modules/auth/pinCode/views/pin_code_view.dart';
 import '../modules/auth/sing-up/bindings/sing_up_binding.dart';
 import '../modules/auth/sing-up/views/sing_up_view.dart';
-import '../modules/calls/home/views/calls_view.dart';
+import '../modules/calls/call_history/views/call_history_view.dart';
 import '../modules/calls/incoming_call/bindings/incoming_call_binding.dart';
 import '../modules/calls/incoming_call/views/incoming_call_view.dart';
 import '../modules/calls/main/bindings/call_binding.dart';
@@ -105,7 +105,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CALLS,
-      page: () => CallsView(),
+      page: () => CallHistoryView(),
       transition: TRANSITIONS.navigation_generalPageTransition,
       transitionDuration: TRANSITIONS.navigation_generalPageTransitionDurtion,
       curve: TRANSITIONS.navigation_generalPageTransitionCurve,

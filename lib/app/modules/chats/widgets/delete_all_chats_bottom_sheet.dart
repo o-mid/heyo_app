@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/home/widgets/delete_all_calls_dialog.dart';
+import 'package:heyo/app/modules/calls/call_history/widgets/delete_all_call_history_dialog.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/widgets/bottom_sheet.dart';
@@ -25,7 +25,8 @@ void openDeleteAllChatsBottomSheet({required VoidCallback onDelete}) {
 
 class DeleteAllChatsBottomSheet extends StatelessWidget {
   final VoidCallback onDelete;
-  const DeleteAllChatsBottomSheet({Key? key, required this.onDelete}) : super(key: key);
+  const DeleteAllChatsBottomSheet({Key? key, required this.onDelete})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +52,14 @@ class DeleteAllChatsBottomSheet extends StatelessWidget {
                     color: COLORS.kBrightBlueColor,
                     shape: BoxShape.circle,
                   ),
-                  child: Assets.svg.deleteIcon.svg(color: COLORS.kDarkBlueColor),
+                  child:
+                      Assets.svg.deleteIcon.svg(color: COLORS.kDarkBlueColor),
                 ),
                 SizedBox(width: 20.w),
                 Text(
                   LocaleKeys.HomePage_Chats_bottomSheet_deleteAllchats.tr,
-                  style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
+                  style: TEXTSTYLES.kLinkBig
+                      .copyWith(color: COLORS.kDarkBlueColor),
                 ),
               ],
             ),

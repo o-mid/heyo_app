@@ -7,8 +7,8 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-class EmptyCallsWidget extends StatelessWidget {
-  const EmptyCallsWidget({Key? key}) : super(key: key);
+class EmptyCallHistoryWidget extends StatelessWidget {
+  const EmptyCallHistoryWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,8 @@ class EmptyCallsWidget extends StatelessWidget {
           SizedBox(height: 72.h),
           Text(
             LocaleKeys.HomePage_Calls_emptyState_title.tr,
-            style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+            style:
+                TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
           ),
           CustomSizes.smallSizedBoxHeight,
           Text(

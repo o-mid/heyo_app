@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/account/controllers/account_controller.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
-import 'package:heyo/app/modules/calls/home/controllers/calls_controller.dart';
+import 'package:heyo/app/modules/calls/call_history/controllers/call_history_controller.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
@@ -185,7 +185,7 @@ class GlobalBindings extends Bindings {
     ));
 
     Get.put(
-      CallsController(
+      CallHistoryController(
         callHistoryRepo: CallHistoryRepo(
           callHistoryProvider: CallHistoryProvider(
             appDatabaseProvider: Get.find<AppDatabaseProvider>(),

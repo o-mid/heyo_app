@@ -8,12 +8,9 @@ import 'package:heyo/app/modules/shared/widgets/modified_alert_dialog.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-class DeleteCallDialog extends StatelessWidget {
+class DeleteCallHistoryDialog extends StatelessWidget {
+  const DeleteCallHistoryDialog({required this.deleteCall, super.key});
   final VoidCallback deleteCall;
-  const DeleteCallDialog({
-    Key? key,
-    required this.deleteCall,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:heyo/app/modules/calls/home/controllers/calls_controller.dart';
+import 'package:heyo/app/modules/calls/call_history/controllers/call_history_controller.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
 import 'package:heyo/app/modules/calls/shared/widgets/call_status_icon_and_date.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
@@ -15,15 +15,12 @@ import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
 class CallLogWidget extends StatelessWidget {
+  const CallLogWidget({required this.call, super.key});
   final CallModel call;
-  const CallLogWidget({
-    super.key,
-    required this.call,
-  });
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<CallsController>();
+    final controller = Get.find<CallHistoryController>();
     return InkWell(
       onTap: () {
         Get.toNamed(

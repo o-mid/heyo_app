@@ -8,10 +8,8 @@ import 'package:heyo/app/modules/shared/widgets/modified_alert_dialog.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-class DeleteAllCallsDialog extends StatelessWidget {
-  const DeleteAllCallsDialog({
-    Key? key,
-  }) : super(key: key);
+class DeleteAllCallHistoryDialog extends StatelessWidget {
+  const DeleteAllCallHistoryDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +26,16 @@ class DeleteAllCallsDialog extends StatelessWidget {
               Get.back(result: true);
             },
             title: LocaleKeys.HomePage_Calls_deleteAllCallsDialog_delete.tr,
-            textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
+            textStyle:
+                TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
             backgroundColor: COLORS.kPinCodeDeactivateColor,
           ),
           CustomSizes.smallSizedBoxHeight,
           CustomButton(
             onTap: () => Get.back(result: false),
             title: LocaleKeys.HomePage_Calls_deleteAllCallsDialog_cancel.tr,
-            textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
+            textStyle:
+                TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
           ),
         ],
       ),
