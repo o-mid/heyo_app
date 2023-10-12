@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
@@ -10,11 +10,9 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:intl/intl.dart';
 
 class CallStatusIconAndDate extends StatelessWidget {
-  final CallModel call;
-  const CallStatusIconAndDate({
-    super.key,
-    required this.call,
-  });
+  const CallStatusIconAndDate({required this.call, super.key});
+
+  final CallHistoryModel call;
 
   @override
   Widget build(BuildContext context) {
@@ -63,18 +61,18 @@ class CallStatusIconAndDate extends StatelessWidget {
   String _formatDuration() {
     final difference = DateTime.now().difference(call.date);
 
-    String duration = "";
+    String duration = '';
     final hours = difference.inMinutes ~/ 60;
     final minutes = difference.inMinutes % 60;
 
     /// if hour and minute are both greater than zero separate them with a space
-    final joiner = hours > 0 && difference.inMinutes > 0 ? " " : "";
+    final joiner = hours > 0 && difference.inMinutes > 0 ? ' ' : '';
 
     if (hours > 0) {
       duration += LocaleKeys.HomePage_Calls_hour.trPluralParams(
         LocaleKeys.HomePage_Calls_hours,
         hours,
-        {"count": hours.toString()},
+        {'count': hours.toString()},
       );
       duration += joiner;
     }
@@ -83,7 +81,7 @@ class CallStatusIconAndDate extends StatelessWidget {
       duration += LocaleKeys.HomePage_Calls_minute.trPluralParams(
         LocaleKeys.HomePage_Calls_minutes,
         minutes,
-        {"count": minutes.toString()},
+        {'count': minutes.toString()},
       );
     }
 
@@ -91,12 +89,12 @@ class CallStatusIconAndDate extends StatelessWidget {
       duration += LocaleKeys.HomePage_Calls_minute.trPluralParams(
         LocaleKeys.HomePage_Calls_minutes,
         minutes,
-        {"count": minutes.toString()},
+        {'count': minutes.toString()},
       );
     }
 
     return LocaleKeys.HomePage_Calls_durationAgo.trParams({
-      "duration": duration,
+      'duration': duration,
     });
   }
 }

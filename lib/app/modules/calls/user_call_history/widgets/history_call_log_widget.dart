@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/widgets/call_status_icon_and_date.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 class HistoryCallLogWidget extends StatelessWidget {
-  final CallModel call;
-  const HistoryCallLogWidget({
-    super.key,
-    required this.call,
-  });
+  const HistoryCallLogWidget({required this.call, super.key});
+
+  final CallHistoryModel call;
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +21,14 @@ class HistoryCallLogWidget extends StatelessWidget {
           children: [
             Text(
               _callTitle(),
-              style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kDarkBlueColor),
+              style:
+                  TEXTSTYLES.kChatName.copyWith(color: COLORS.kDarkBlueColor),
             ),
             const Spacer(),
             Text(
               _callStatus(),
-              style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
+              style:
+                  TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
             ),
           ],
         ),
@@ -40,7 +40,8 @@ class HistoryCallLogWidget extends StatelessWidget {
             if (call.dataUsageMB > 0)
               Text(
                 "${call.dataUsageMB} MB",
-                style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
+                style: TEXTSTYLES.kBodySmall
+                    .copyWith(color: COLORS.kTextBlueColor),
               ),
           ],
         ),

@@ -11,7 +11,7 @@ import '../../../../generated/assets.gen.dart';
 import '../../../../generated/locales.g.dart';
 import '../../chats/data/models/chat_model.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
-import '../../new_chat/data/models/user_model.dart';
+import '../../new_chat/data/models/user_model/user_model.dart';
 import '../../p2p_node/data/account/account_info.dart';
 import '../../shared/data/repository/contact_repository.dart';
 
@@ -29,7 +29,8 @@ class WifiDirectController extends GetxController {
       {required this.accountInfo,
       required this.wifiDirectConnectionController,
       required this.contactRepository}) {
-    _heyoWifiDirect = wifiDirectConnectionController.wifiDirectWrapper.pluginInstance;
+    _heyoWifiDirect =
+        wifiDirectConnectionController.wifiDirectWrapper.pluginInstance;
   }
 
   final coreId = "".obs;
@@ -46,17 +47,19 @@ class WifiDirectController extends GetxController {
     _heyoWifiDirect ?? _initializePlugin();
 
     //TODO remove debug print
-    print ("WifiDirectController: onInit(). Is _heyoWifiDirect.consumerEventSource.hasListener -> ${_heyoWifiDirect?.consumerEventSource.hasListener}");
+    print(
+        "WifiDirectController: onInit(). Is _heyoWifiDirect.consumerEventSource.hasListener -> ${_heyoWifiDirect?.consumerEventSource.hasListener}");
 
-    _eventListener =
-        _heyoWifiDirect!.consumerEventSource.stream.listen((event) => _eventHandler(event));
-    _messageListener =
-        _heyoWifiDirect!.tcpMessage.stream.listen((message) => _messageHandler(message));
+    _eventListener = _heyoWifiDirect!.consumerEventSource.stream
+        .listen((event) => _eventHandler(event));
+    _messageListener = _heyoWifiDirect!.tcpMessage.stream
+        .listen((message) => _messageHandler(message));
     await wifiDirectOn();
     wifiDirectEnabled.value = await _heyoWifiDirect!.isWifiDirectEnabled();
 
     //TODO remove debug print
-    print ("WifiDirectController: onInit() wifiDirectEnabled value $wifiDirectEnabled");
+    print(
+        "WifiDirectController: onInit() wifiDirectEnabled value $wifiDirectEnabled");
 
     super.onInit();
   }
@@ -73,7 +76,6 @@ class WifiDirectController extends GetxController {
 
   @override
   Future<void> onClose() async {
-
     await _eventListener.cancel();
     await _messageListener.cancel();
     await wifiDirectOff();
@@ -87,15 +89,18 @@ class WifiDirectController extends GetxController {
 
       visibleName.value = "name";
 
-      _heyoWifiDirect = HeyoWifiDirect(coreID: coreId.value, name: 'name', debugOutputEnable: true);
+      _heyoWifiDirect = HeyoWifiDirect(
+          coreID: coreId.value, name: 'name', debugOutputEnable: true);
       // await _heyoWifiDirect!.wifiDirectOn();
-      wifiDirectConnectionController.wifiDirectWrapper.pluginInstance = _heyoWifiDirect;
+      wifiDirectConnectionController.wifiDirectWrapper.pluginInstance =
+          _heyoWifiDirect;
       Get.put(wifiDirectConnectionController);
     }
   }
 
   _eventHandler(WifiDirectEvent event) {
-    print('WifiDirectController: WifiDirect event: ${event.type}, ${event.dateTime}');
+    print(
+        'WifiDirectController: WifiDirect event: ${event.type}, ${event.dateTime}');
 
     switch (event.type) {
       // Refresh information about wifi-direct available peers
@@ -103,7 +108,8 @@ class WifiDirectController extends GetxController {
 
         // PeerList peerList = signaling.wifiDirectPlugin.peerList;
         Map<String, Peer> peersAvailable = (event.message as PeerList).peers;
-        print('WifiDirectController: peerListRefresh: ${peersAvailable.toString()}');
+        print(
+            'WifiDirectController: peerListRefresh: ${peersAvailable.toString()}');
         _peersToUsers(peersAvailable);
         break;
 
@@ -112,7 +118,8 @@ class WifiDirectController extends GetxController {
         // connectedPeer = event.message as Peer;
         wifiDirectConnectionController.eventHandler(event);
 
-        print('WifiDirectController: linked to ${(event.message as Peer).multiAddress}');
+        print(
+            'WifiDirectController: linked to ${(event.message as Peer).multiAddress}');
         break;
 
       case EventType.groupStopped:

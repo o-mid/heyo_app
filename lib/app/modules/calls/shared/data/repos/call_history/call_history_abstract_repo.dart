@@ -1,19 +1,19 @@
-import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 
 abstract class CallHistoryAbstractRepo {
-  Future<void> addCallToHistory(CallModel call);
+  Future<void> addCallToHistory(CallHistoryModel call);
 
-  Future<List<CallModel>> getAllCalls();
+  Future<List<CallHistoryModel>> getAllCalls();
 
-  Future<CallModel?> getOneCall(String callId);
+  Future<CallHistoryModel?> getOneCall(String callId);
 
-  Future<List<CallModel>> getCallsFromUserId(String userId);
+  Future<List<CallHistoryModel>> getCallsFromUserId(String userId);
 
   Future<void> deleteAllCalls();
 
   Future<void> deleteOneCall(String callId);
 
-  Future<Stream<List<CallModel>>> getCallsStream();
+  Future<Stream<List<CallHistoryModel>>> getCallsStream();
 
-  Future<void> updateCall(CallModel call);
+  Future<void> updateCall(CallHistoryModel call);
 }

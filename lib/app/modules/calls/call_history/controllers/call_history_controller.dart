@@ -5,16 +5,16 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/call_log_widget.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/delete_all_calls_bottom_sheet.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/delete_call_history_dialog.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 
 class CallHistoryController extends GetxController {
   CallHistoryController({required this.callHistoryRepo});
 
   final CallHistoryAbstractRepo callHistoryRepo;
 
-  final calls = <CallModel>[].obs;
+  final calls = <CallHistoryModel>[].obs;
   final animatedListKey = GlobalKey<AnimatedListState>();
 
   late StreamSubscription _callsStreamSubscription;
@@ -65,18 +65,18 @@ class CallHistoryController extends GetxController {
     });
   }
 
-  Future<void> deleteCall(CallModel call) async {
+  Future<void> deleteCall(CallHistoryModel call) async {
     await callHistoryRepo.deleteOneCall(call.id);
   }
 
-  Future<bool> showDeleteCallDialog(CallModel call) async {
+  Future<bool> showDeleteCallDialog(CallHistoryModel call) async {
     await Get.dialog<bool>(
       DeleteCallHistoryDialog(deleteCall: () => deleteCall(call)),
     );
     return false;
   }
 
-  void _removeAtAnimatedList(int index, CallModel call) {
+  void _removeAtAnimatedList(int index, CallHistoryModel call) {
     animatedListKey.currentState?.removeItem(
       index,
       (context, animation) => SizeTransition(
@@ -127,60 +127,60 @@ class CallHistoryController extends GetxController {
     );
     var index = 0;
     final calls = [
-      CallModel(
+      CallHistoryModel(
         id: '${index++}',
         type: CallType.audio,
         status: CallStatus.outgoingCanceled,
         date: DateTime.now().subtract(const Duration(minutes: 37)),
-        user: uBoiled,
+        participants: [uBoiled],
         coreId: uBoiled.coreId,
       ),
-      CallModel(
+      CallHistoryModel(
         id: '${index++}',
         type: CallType.video,
         status: CallStatus.incomingMissed,
         date: DateTime.utc(2022, DateTime.march, 30, 20, 32),
-        user: uCrapps,
+        participants: [uCrapps],
         coreId: uCrapps.coreId,
       ),
-      CallModel(
+      CallHistoryModel(
         id: '${index++}',
         type: CallType.audio,
         status: CallStatus.outgoingNotAnswered,
         date: DateTime.utc(2022, DateTime.march, 30, 17, 44),
-        user: uFancy,
+        participants: [uFancy],
         coreId: uFancy.coreId,
       ),
-      CallModel(
+      CallHistoryModel(
         id: '${index++}',
         type: CallType.audio,
         status: CallStatus.outgoingNotAnswered,
         date: DateTime.utc(2022, DateTime.march, 29, 21, 17),
-        user: uOckerito,
+        participants: [uOckerito],
         coreId: uOckerito.coreId,
       ),
-      CallModel(
+      CallHistoryModel(
         id: '${index++}',
         type: CallType.video,
         status: CallStatus.incomingMissed,
         date: DateTime.utc(2022, DateTime.march, 28, 20, 48),
-        user: uUnchained,
+        participants: [uUnchained],
         coreId: uUnchained.coreId,
       ),
-      CallModel(
+      CallHistoryModel(
         id: '${index++}',
         type: CallType.audio,
         status: CallStatus.incomingAnswered,
         date: DateTime.utc(2022, DateTime.february, 16, 20, 59),
-        user: uUnchained,
+        participants: [uUnchained],
         coreId: uUnchained.coreId,
       ),
-      CallModel(
+      CallHistoryModel(
         id: '${index++}',
         type: CallType.audio,
         status: CallStatus.incomingAnswered,
         date: DateTime.utc(2022, DateTime.february, 15, 9, 2),
-        user: uSwagger,
+        participants: [uSwagger],
         coreId: uSwagger.coreId,
       ),
     ];

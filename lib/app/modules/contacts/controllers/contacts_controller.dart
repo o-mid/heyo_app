@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 
-import '../../new_chat/data/models/user_model.dart';
+import '../../new_chat/data/models/user_model/user_model.dart';
 
 class ContactsController extends GetxController {
   final contacts = <UserModel>[].obs;
@@ -25,11 +25,13 @@ class ContactsController extends GetxController {
 
   Future<void> getContacts() async {
     contacts.value = await contactRepo.getContacts();
-    blockedContacts.value = contacts.where((element) => element.isBlocked).toList();
+    blockedContacts.value =
+        contacts.where((element) => element.isBlocked).toList();
   }
 
   Future<void> listenToContactsStream() async {
-    Stream<List<UserModel>> contactsStream = await contactRepo.getContactsStream();
+    Stream<List<UserModel>> contactsStream =
+        await contactRepo.getContactsStream();
 
     _contactStreamSubscription = contactsStream.listen((newContacts) {
       contacts.value = newContacts;
@@ -38,7 +40,8 @@ class ContactsController extends GetxController {
 
       contacts.refresh();
 
-      blockedContacts.value = contacts.where((element) => element.isBlocked).toList();
+      blockedContacts.value =
+          contacts.where((element) => element.isBlocked).toList();
 
       blockedContacts.refresh();
     });

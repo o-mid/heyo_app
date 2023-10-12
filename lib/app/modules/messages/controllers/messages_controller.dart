@@ -46,7 +46,7 @@ import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import '../../messaging/controllers/common_messaging_controller.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
-import '../../new_chat/data/models/user_model.dart';
+import '../../new_chat/data/models/user_model/user_model.dart';
 import '../../share_files/models/file_model.dart';
 import '../../shared/utils/constants/colors.dart';
 import '../../shared/utils/constants/textStyles.dart';
@@ -102,8 +102,8 @@ class MessagesController extends GetxController {
   late ChatModel? chatModel;
   Rx<UserModel> user = UserModel(
     coreId: (Get.arguments as MessagesViewArgumentsModel).coreId,
-    iconUrl:
-        (Get.arguments).iconUrl as String ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
+    iconUrl: (Get.arguments).iconUrl as String ??
+        "https://avatars.githubusercontent.com/u/2345136?v=4",
     name: (Get.arguments as MessagesViewArgumentsModel).coreId.shortenCoreId,
     walletAddress: (Get.arguments).coreId as String,
     isBlocked: false,
@@ -1363,7 +1363,8 @@ class MessagesController extends GetxController {
         latitude: 48.153445,
         longitude: 17.129925,
         address: "Kocelova 11-11, 821 08, Bratislava",
-        timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 44)),
+        timestamp:
+            DateTime.now().subtract(const Duration(hours: 1, minutes: 44)),
         senderName: user.value.name,
         senderAvatar: user.value.iconUrl,
       ),
@@ -1437,7 +1438,8 @@ class MessagesController extends GetxController {
         chatId: "${index++}",
         text:
             "In quibusdam possimus, temporibus itaque, soluta recusandae facere consequuntur consectetur dolorem deleniti reprehenderit.",
-        timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2, minutes: 4)),
+        timestamp: DateTime.now()
+            .subtract(const Duration(days: 1, hours: 2, minutes: 4)),
         senderName: user.value.name,
         senderAvatar: user.value.iconUrl,
       ),

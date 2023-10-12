@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -15,20 +15,23 @@ import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart'
 import 'package:heyo/generated/locales.g.dart';
 
 class UserCallHistoryController extends GetxController {
-  final CallHistoryAbstractRepo callHistoryRepo;
-  final ContactRepository contactRepository;
   UserCallHistoryController({
     required this.callHistoryRepo,
     required this.contactRepository,
   });
 
+  final CallHistoryAbstractRepo callHistoryRepo;
+  final ContactRepository contactRepository;
+
   late UserCallHistoryViewArgumentsModel args;
-  final calls = <CallModel>[].obs;
+  final calls = <CallHistoryModel>[].obs;
   Rx<CallUserModel> user = CallUserModel(
     coreId: (Get.arguments as UserCallHistoryViewArgumentsModel).coreId,
     iconUrl: (Get.arguments as UserCallHistoryViewArgumentsModel).iconUrl ??
-        "https://avatars.githubusercontent.com/u/2345136?v=4",
-    name: (Get.arguments as UserCallHistoryViewArgumentsModel).coreId.shortenCoreId,
+        'https://avatars.githubusercontent.com/u/2345136?v=4',
+    name: (Get.arguments as UserCallHistoryViewArgumentsModel)
+        .coreId
+        .shortenCoreId,
     walletAddress: (Get.arguments).coreId as String,
     isContact: false,
   ).obs;
@@ -52,7 +55,7 @@ class UserCallHistoryController extends GetxController {
       createdUser = UserModel(
         coreId: args.coreId,
         iconUrl: args.iconUrl ??
-            "https://avatars.githubusercontent.com/u/2345136?v=4",
+            'https://avatars.githubusercontent.com/u/2345136?v=4',
         name: args.coreId.shortenCoreId,
         isOnline: true,
         isContact: false,
@@ -79,7 +82,7 @@ class UserCallHistoryController extends GetxController {
 
   Future<void> saveCoreIdToClipboard() async {
     final remoteCoreId = args.coreId;
-    print("Core ID : $remoteCoreId");
+    print('Core ID : $remoteCoreId');
     await Clipboard.setData(ClipboardData(text: remoteCoreId));
     Get.rawSnackbar(
       messageText: Text(

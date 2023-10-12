@@ -3,11 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/call_history/controllers/call_history_controller.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/widgets/call_status_icon_and_date.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/app/modules/shared/widgets/slidable_widget.dart';
@@ -16,18 +17,19 @@ import 'package:heyo/generated/assets.gen.dart';
 
 class CallLogWidget extends StatelessWidget {
   const CallLogWidget({required this.call, super.key});
-  final CallModel call;
+  final CallHistoryModel call;
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<CallHistoryController>();
     return InkWell(
       onTap: () {
+        //TODO:(Aliazim) add index while pushing
         Get.toNamed(
           Routes.USER_CALL_HISTORY,
           arguments: UserCallHistoryViewArgumentsModel(
-            coreId: call.user.coreId,
-            iconUrl: call.user.iconUrl,
+            coreId: call.participants[0].coreId,
+            iconUrl: call.participants[0].iconUrl,
           ),
         );
       },
@@ -39,7 +41,7 @@ class CallLogWidget extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
           child: Row(
             children: [
-              CustomCircleAvatar(url: call.user.iconUrl, size: 40),
+              CustomCircleAvatar(url: call.participants[0].iconUrl, size: 40),
               CustomSizes.mediumSizedBoxWidth,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,13 +49,13 @@ class CallLogWidget extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        call.user.name,
+                        call.coreId.shortenCoreId,
                         style: TEXTSTYLES.kChatName.copyWith(
                           color: COLORS.kDarkBlueColor,
                         ),
                       ),
                       SizedBox(width: 8.w),
-                      if (call.user.isVerified)
+                      if (call.participants[0].isVerified)
                         Assets.svg.verifiedWithBluePadding.svg(
                           width: 16.w,
                           height: 16.w,

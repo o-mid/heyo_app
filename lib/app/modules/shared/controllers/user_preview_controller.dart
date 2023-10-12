@@ -1,29 +1,15 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
-import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
-import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
+import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/transitions_constant.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
-import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
-import 'package:heyo/generated/assets.gen.dart';
-import 'package:heyo/generated/locales.g.dart';
-
-import '../../../routes/app_pages.dart';
-import '../../contacts/widgets/removeContactsDialog.dart';
-import '../../shared/data/models/add_contacts_view_arguments_model.dart';
-import '../../shared/data/repository/contact_repository.dart';
-import '../../shared/utils/constants/textStyles.dart';
-import '../../shared/utils/constants/transitions_constant.dart';
-import '../../shared/utils/screen-utils/sizing/custom_sizes.dart';
-import '../../shared/widgets/curtom_circle_avatar.dart';
-import '../widgets/user_preview_widget.dart';
-import '../../calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
+import 'package:heyo/app/modules/shared/widgets/user_preview_widget.dart';
 
 class UserPreview extends GetxController {
   final ContactRepository contactRepository;
@@ -31,10 +17,11 @@ class UserPreview extends GetxController {
   final CallHistoryAbstractRepo callHistoryRepo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
 
-  UserPreview(
-      {required this.contactRepository,
-      required this.callHistoryRepo,
-      required this.chatHistoryRepo});
+  UserPreview({
+    required this.contactRepository,
+    required this.callHistoryRepo,
+    required this.chatHistoryRepo,
+  });
 
   Future<void> openUserPreview({
     bool isWifiDirect = false,
@@ -72,13 +59,21 @@ class UserPreview extends GetxController {
       await chatHistoryRepo
           .updateChat(chatModel.copyWith(name: userCoreId.shortenCoreId));
     }
-    List<CallModel> calls =
+    List<CallHistoryModel> calls =
         await callHistoryRepo.getCallsFromUserId(userCoreId);
     calls.forEach((call) async {
       await callHistoryRepo.deleteOneCall(call.id);
-      await callHistoryRepo.addCallToHistory(call.copyWith(
-          user: call.user
-              .copyWith(name: userCoreId.shortenCoreId, isContact: false)));
+      await callHistoryRepo.addCallToHistory(
+        call.copyWith(
+          //TODO:(Aliazim) the call history participant will change
+          participants: [
+            call.participants[0].copyWith(
+              name: userCoreId.shortenCoreId,
+              isContact: false,
+            ),
+          ],
+        ),
+      );
     });
   }
 }
