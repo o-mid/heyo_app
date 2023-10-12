@@ -7,8 +7,6 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:hashlib/hashlib.dart';
-import 'package:hashlib_codecs/hashlib_codecs.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
@@ -32,7 +30,7 @@ class VerificationWithCorePassUseCase {
     ;
     // App scheme for corePass
     final uri =
-        'corepass:sign/?data=${keccak256sum(heyoId)}&conn=heyo://auth&dl=${_getCurrentTimeInSeconds() + 300}&type=app-link';
+        'corepass:sign/?data=${heyoId}&conn=heyo://auth&dl=${_getCurrentTimeInSeconds() + 300}&type=app-link';
     print("deeep Link ${uri}");
 
     try {
