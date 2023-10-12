@@ -56,7 +56,7 @@ class P2PNodeRequestStream {
         event.body != null) {
       await FlutterP2pCommunicator.sendResponse(
           info: P2PReqResNodeModel(
-              name: P2PReqResNodeNames.signaling, body: {}, id: event.id));
+              name: P2PReqResNodeNames.signaling, body: {}, id: event.id,),);
 
       //
       // MARK: here we are telling the sending party that everything is ok and the req was received
@@ -65,9 +65,9 @@ class P2PNodeRequestStream {
       final remotePeerId =
           (event.body!['info'] as Map<String, dynamic>)['remotePeerID'] as String;
 
-      if ((event.body!['payload'] as Map<String, dynamic>)['session'] != null) {
+      if ((event.body!['payload'] as Map<String, dynamic>)['data'] != null) {
         final request =
-            (event.body!['payload'] as Map<String, dynamic>)['session'] as String;
+            (event.body!['payload'] as Map<String, dynamic>)['data'] as String;
         // if session is not null then we have a request
         await onRequestReceived(
             request.convertHexToString(), remoteCoreId, remotePeerId,);
