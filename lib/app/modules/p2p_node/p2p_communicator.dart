@@ -4,6 +4,7 @@ import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/addr_model.dart';
 import 'package:flutter_p2p_communicator/model/login_mode.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
+import 'package:flutter_p2p_communicator/model/signaling_model.dart';
 import 'package:flutter_p2p_communicator/model/transfer_model.dart';
 import 'package:collection/src/iterable_extensions.dart';
 import 'package:get/get.dart';
@@ -18,29 +19,15 @@ class P2PCommunicator {
 
   P2PCommunicator({required this.p2pState, required this.accountInfo});
 
-  Future<bool> _sendingData(dynamic model) async {
+  Future<bool> _sendingData(SignalingModel model) async {
     final id = await FlutterP2pCommunicator.sendRequest(
         info: P2PReqResNodeModel(
-            name: P2PReqResNodeNames.login, body: model.toJson() as Map<String, dynamic>));
+            name: P2PReqResNodeNames.signaling, body: model.toJson(),),);
     print("P2PCommunicator: sending data start $id");
     return await p2pState.trackRequest(id);
     print("P2PCommunicator: sending data finish $id");
   }
 
-  Future<bool> _connect(P2PAddrModel info) async {
-    bool _connected = false;
-
-    final id = await FlutterP2pCommunicator.sendRequest(
-        info: P2PReqResNodeModel(name: P2PReqResNodeNames.connect, body: info.toJson()));
-    print("P2PCommunicator: sending connect start $id");
-
-    await p2pState.trackRequest(id);
-    print("P2PCommunicator: sending connect finish $id");
-
-    _connected = ((p2pState.status[id] as Rxn<bool>)?.value == true);
-
-    return _connected;
-  }
 
   Future<bool> sendSDP(String sdp, String remoteCoreId, String? remotePeerId) async {
     // seding sdp to remote peer prosess
@@ -53,28 +40,19 @@ class P2PCommunicator {
     final localCoreId = await accountInfo.getCoreId();
     if (localCoreId == null) throw 'Core id is null!!';
 
-    String hexSDP = sdp.getHex();
+    final hexSDP = sdp.getHex();
 
-    var connected = false;
-    if (remotePeerId != null) {
-      print("ADDRESS IS : ${p2pState.address.value}");
-      connected = await _connect(P2PAddrModel(id: remotePeerId, addrs: p2pState.address.value));
-    }
+    final p2pSignalingObj = SignalingModel(
+        info: P2PTransferModel(
+          localCoreID: localCoreId,
+          remoteCoreID: remoteCoreId,
+          remotePeerID: remotePeerId,
+        ),
+        payload: SignalingPayloadModel(
+            data:hexSDP,),);
 
-    final loginModel = P2PLoginBodyModel(
-      // if connected is true then we need to send the remote peer id as well
-      info: connected
-          ? P2PTransferModel(
-              localCoreID: localCoreId,
-              remotePeerID: remotePeerId,
-              remoteCoreID: remoteCoreId,
-            )
-          : P2PTransferModel(
-              localCoreID: localCoreId,
-              remoteCoreID: remoteCoreId,
-            ),
-      payload: P2PLoginPayloadModel(session: hexSDP),
-    );
-    return await _sendingData(loginModel);
+
+
+    return _sendingData(p2pSignalingObj);
   }
 }
