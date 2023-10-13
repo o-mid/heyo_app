@@ -1,3 +1,91 @@
+## **Create a New Model with freezed and json_serializable**
+
+Create a new Dart file for your model, for example, **`my_model.dart`**:
+
+```dart
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+// Optional: Use json_annotation if needed
+import 'package:json_annotation/json_annotation.dart';
+
+part 'my_model.freezed.dart';
+// Optional: Part for json_annotation
+part 'my_model.g.dart';
+
+@freezed
+class MyModel with _$MyModel {
+  // Optional: Part for json_annotation
+  @JsonSerializable(explicitToJson: true)
+  factory MyModel({
+    required String name,
+    required int age,
+  }) = _MyModel;
+
+  // Optional: Factory for json_annotation
+  factory MyModel.fromJson(Map<String, dynamic> json) =>
+      _$MyModelFromJson(json);
+}
+```
+
+Run the following command to generate necessary files:
+
+```dart
+dart run build_runner build
+```
+
+## ****Adding New Images with flutter_gen****
+
+Assuming you have your image files in **`assets/png/`** or  **`assets/svg/`**  directory:
+
+Open your terminal and run the following command:
+
+```dart
+flutter pub run flutter_gen
+```
+
+This will generate the necessary files directly into the specified output directory (**`lib/generated/`**).
+
+In your Dart files, import the generated code to use it. For example, in your widget file:
+
+```dart
+// Use generated code from flutter_gen
+import 'package:heyo/generated/assets.gen.dart';
+
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      Assets.images.myImage,
+    );
+  }
+}
+```
+
+## ****Localization****
+
+**Navigate to the Localization Directory** (**`assets/locales/`**), update the json and add or modify translations as needed.
+
+**Run `flutter_gen`:**
+
+```dart
+flutter pub run flutter_gen
+```
+
+Import the generated code in your Dart files for it usage:
+
+```dart
+import 'package:heyo/generated/assets.gen.dart';
+
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      LocaleKeys.registration_WelcomePage_title.tr,
+    ),
+  }
+}
+
+```
 
 # Architecture and Boundaries:
 
