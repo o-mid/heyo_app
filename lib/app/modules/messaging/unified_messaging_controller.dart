@@ -6,18 +6,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/confirm_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/delete_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/update_message_model.dart';
+import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
+import 'package:heyo/app/modules/messages/utils/message_from_json.dart';
 import 'package:heyo/app/modules/messaging/controllers/common_messaging_controller.dart';
 import 'package:heyo/app/modules/messaging/controllers/wifi_direct_connection_controller.dart';
 import 'package:heyo/app/modules/messaging/messaging_session.dart';
 import 'package:heyo/app/modules/messaging/models.dart';
+import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
+import 'package:heyo/app/modules/messaging/usecases/handle_received_binary_data_usecase.dart';
 import 'package:heyo/app/modules/messaging/utils/data_binary_message.dart';
+import 'package:heyo/app/modules/notifications/data/models/notifications_payload_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/app/modules/shared/utils/constants/notifications_constant.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 
 import '../chats/data/models/chat_model.dart';
+import '../messages/data/models/messages/message_model.dart';
 import '../messages/data/repo/messages_repo.dart';
 import '../new_chat/data/models/user_model.dart';
 import '../notifications/controllers/notifications_controller.dart';
@@ -25,6 +37,8 @@ import '../p2p_node/data/account/account_info.dart';
 
 import 'dart:convert';
 import 'dart:typed_data';
+
+import 'utils/binary_file_receiving_state.dart';
 
 enum ConnectionType { RTC, WiFiDirect }
 
@@ -46,6 +60,9 @@ class UnifiedConnectionController {
   HeyoWifiDirect? _heyoWifiDirect;
   MessageSession? session;
   String? remoteId;
+  BinaryFileReceivingState? currentWebrtcBinaryState;
+  ChatModel? userChatmodel;
+  final JsonDecoder _decoder = const JsonDecoder();
 
   UnifiedConnectionController({
     required this.connectionType,
@@ -128,7 +145,7 @@ class UnifiedConnectionController {
   }
 
   Future<void> _initRTCConnection(String remoteId) async {
-    RTCSession rtcSession = await multipleConnectionHandler.getConnection(remoteId);
+    RTCSession rtcSession = await multipleConnectionHandler!.getConnection(remoteId);
     currentRemoteId = rtcSession.remotePeer.remoteCoreId;
     print("initMessagingConnection RTCSession Status: ${rtcSession.rtcSessionStatus}");
     _observeMessagingStatus(rtcSession);
@@ -289,7 +306,7 @@ class UnifiedConnectionController {
   createUserChatModel({required String sessioncid}) async {
     UserModel? userModel = await contactRepository.getContactById(sessioncid);
 
-    ChatModel userChatModel = ChatModel(
+    final userChatModel = ChatModel(
       id: sessioncid,
       isOnline: true,
       name: (userModel == null)
@@ -312,6 +329,192 @@ class UnifiedConnectionController {
         notificationCount: currentChatModel.notificationCount,
         isOnline: true,
       ));*/
+    }
+  }
+
+  /// Handles binary data, received from remote peer.
+  Future<void> handleDataChannelBinary({
+    required Uint8List binaryData,
+    required String remoteCoreId,
+  }) async {
+    DataBinaryMessage message = DataBinaryMessage.parse(binaryData);
+    print('handleDataChannelBinary header ${message.header.toString()}');
+    print('handleDataChannelBinary chunk length ${message.chunk.length}');
+
+    if (message.chunk.isNotEmpty) {
+      if (currentWebrtcBinaryState == null) {
+        currentWebrtcBinaryState = BinaryFileReceivingState(message.filename, message.meta);
+        print('RECEIVER: New file transfer and State started');
+      }
+      currentWebrtcBinaryState!.pendingMessages[message.chunkStart] = message;
+      await HandleReceivedBinaryData(messagesRepo: messagesRepo, chatId: remoteCoreId)
+          .execute(state: currentWebrtcBinaryState!, remoteCoreId: remoteCoreId);
+    } else {
+      // handle the acknowledge
+      print(message.header);
+
+      return;
+    }
+  }
+
+  /// Handles text data, received from remote peer.
+  Future<void> handleDataChannelText({
+    required Map<String, dynamic> receivedJson,
+    required String remoteCoreId,
+  }) async {
+    DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(receivedJson);
+    switch (channelMessage.dataChannelMessagetype) {
+      case DataChannelMessageType.message:
+        await saveAndConfirmReceivedMessage(
+          receivedMessageJson: channelMessage.message,
+          chatId: remoteCoreId,
+        );
+        break;
+
+      case DataChannelMessageType.delete:
+        await deleteReceivedMessage(
+          receivedDeleteJson: channelMessage.message,
+          chatId: remoteCoreId,
+        );
+        break;
+
+      case DataChannelMessageType.update:
+        await updateReceivedMessage(
+          receivedUpdateJson: channelMessage.message,
+          chatId: remoteCoreId,
+        );
+        break;
+
+      case DataChannelMessageType.confirm:
+        await confirmReceivedMessage(
+          receivedconfirmJson: channelMessage.message,
+          chatId: remoteCoreId,
+        );
+        break;
+    }
+  }
+
+  Future<void> saveAndConfirmReceivedMessage({
+    required Map<String, dynamic> receivedMessageJson,
+    required String chatId,
+  }) async {
+    MessageModel receivedMessage = messageFromJson(receivedMessageJson);
+// checks for existing messageId in case of msg duplication
+    MessageModel? _currentMsg =
+        await messagesRepo.getMessageById(messageId: receivedMessage.messageId, chatId: chatId);
+    if (_currentMsg == null) {
+      // creates and send delivery confirmtion of msg and push a notification event
+      // in case of not existing message
+      await messagesRepo.createMessage(
+        message: receivedMessage.copyWith(
+          isFromMe: false,
+          status: receivedMessage.status.deliveredStatus(),
+        ),
+        chatId: chatId,
+      );
+
+      confirmMessageById(
+        messageId: receivedMessage.messageId,
+        status: ConfirmMessageStatus.delivered,
+        remoteCoreId: chatId,
+      );
+
+      await updateChatRepoAndNotify(
+        receivedMessage: receivedMessage,
+        chatId: chatId,
+        notify: true,
+      );
+    } else {
+      print('Message already exists');
+      // update the existing message and send delivery confirmtion of msg
+
+      await messagesRepo.updateMessage(
+        message: receivedMessage.copyWith(
+          isFromMe: false,
+          status: receivedMessage.status.deliveredStatus(),
+        ),
+        chatId: chatId,
+      );
+
+      confirmMessageById(
+        messageId: receivedMessage.messageId,
+        status: ConfirmMessageStatus.delivered,
+        remoteCoreId: chatId,
+      );
+
+      await updateChatRepoAndNotify(
+        receivedMessage: receivedMessage,
+        chatId: chatId,
+        notify: false,
+      );
+    }
+  }
+
+  Future<void> notifyReceivedMessage({
+    required MessageModel receivedMessage,
+    required String chatId,
+    required String senderName,
+  }) async {
+    await notificationsController.receivedMessageNotify(
+      chatId: chatId,
+      channelKey: NOTIFICATIONS.messagesChannelKey,
+
+      // largeIcon: 'resource://drawable/usericon',
+      title: senderName,
+      body: receivedMessage.type == MessageContentType.text
+          ? (receivedMessage as TextMessageModel).text
+          : receivedMessage.type.name,
+      bigPicture: receivedMessage.type == MessageContentType.image
+          ? (await messagesRepo.getMessageById(
+              messageId: receivedMessage.messageId,
+              chatId: chatId,
+            ) as ImageMessageModel)
+              .url
+          : null,
+      payload: NotificationsPayloadModel(
+        chatId: chatId,
+        messageId: receivedMessage.messageId,
+        senderName: receivedMessage.senderName,
+        replyMsg: receivedMessage.type == MessageContentType.text
+            ? (receivedMessage as TextMessageModel).text
+            : receivedMessage.type.name,
+      ).toJson(),
+    );
+  }
+
+  Future<void> updateChatRepoAndNotify({
+    required MessageModel receivedMessage,
+    required String chatId,
+    required bool notify,
+  }) async {
+    userChatmodel ??= await chatHistoryRepo.getChat(chatId);
+
+    int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
+
+    userChatmodel = userChatmodel?.copyWith(
+      lastMessage: receivedMessage.type == MessageContentType.text
+          ? (receivedMessage as TextMessageModel).text
+          : receivedMessage.type.name,
+      notificationCount: unReadMessagesCount,
+      id: chatId,
+      timestamp: receivedMessage.timestamp.toLocal(),
+    );
+
+    if (userChatmodel != null) {
+      await chatHistoryRepo.updateChat(userChatmodel!);
+    }
+
+    if (notify) {
+      print("notifyyyyy $chatId");
+      UserModel? userModel = await contactRepository.getContactById(chatId);
+
+      await notifyReceivedMessage(
+        receivedMessage: receivedMessage,
+        chatId: chatId,
+        senderName: (userModel == null)
+            ? "${chatId.characters.take(4).string}...${chatId.characters.takeLast(4).string}"
+            : userModel.name,
+      );
     }
   }
 }
