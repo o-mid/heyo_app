@@ -517,4 +517,122 @@ class UnifiedConnectionController {
       );
     }
   }
+
+  Future<void> deleteReceivedMessage({
+    required Map<String, dynamic> receivedDeleteJson,
+    required String chatId,
+  }) async {
+    DeleteMessageModel deleteMessage = DeleteMessageModel.fromJson(receivedDeleteJson);
+
+    await messagesRepo.deleteMessages(messageIds: deleteMessage.messageIds, chatId: chatId);
+  }
+
+  Future<void> updateReceivedMessage({
+    required Map<String, dynamic> receivedUpdateJson,
+    required String chatId,
+  }) async {
+    final updateMessage = UpdateMessageModel.fromJson(receivedUpdateJson);
+
+    final MessageModel? currentMessage = await messagesRepo.getMessageById(
+      messageId: updateMessage.message.messageId,
+      chatId: chatId,
+    );
+
+    if (currentMessage != null) {
+      final receivedReactions = updateMessage.message.reactions.map((key, value) {
+        ReactionModel? existingReaction = currentMessage.reactions[key] as ReactionModel?;
+        if (existingReaction is ReactionModel) {
+          final newValue = value.copyWith(
+            isReactedByMe: existingReaction.isReactedByMe,
+          );
+          return MapEntry(key, newValue);
+        }
+        return MapEntry(
+          key,
+          value,
+        ); // handle case where the reaction doesn't exist in currentMessage
+      });
+
+      await messagesRepo.updateMessage(
+        message: currentMessage.copyWith(
+          reactions: receivedReactions,
+        ),
+        chatId: chatId,
+      );
+    }
+  }
+
+  Future<void> confirmReceivedMessage({
+    required Map<String, dynamic> receivedconfirmJson,
+    required String chatId,
+  }) async {
+    ConfirmMessageModel confirmMessage = ConfirmMessageModel.fromJson(receivedconfirmJson);
+
+    final String messageId = confirmMessage.messageId;
+    if (confirmMessage.status == ConfirmMessageStatus.delivered) {
+      MessageModel? currentMessage =
+          await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
+
+      // check if message is found and update the Message status
+      if (currentMessage != null) {
+        if (currentMessage.status != MessageStatus.read) {
+          await messagesRepo.updateMessage(
+            message: currentMessage.copyWith(status: MessageStatus.delivered),
+            chatId: chatId,
+          );
+        }
+      }
+    } else {
+      final List<MessageModel> messages = await messagesRepo.getMessages(chatId);
+      final index = messages.lastIndexWhere((element) => element.messageId == messageId);
+      // print(index);
+      // if the message is found create a sublist of messages
+      // that the status is not read and are from me
+
+      if (index != -1) {
+        final List<MessageModel> messagesToUpdate = messages
+            .sublist(0, index + 1)
+            .where(
+              (element) =>
+                  element.isFromMe == true &&
+                  (element.status == MessageStatus.delivered ||
+                      element.status == MessageStatus.sending),
+            )
+            .toList();
+        // update the status of the messages that need to be update to read
+        for (var item in messagesToUpdate) {
+          await messagesRepo.updateMessage(
+            message: item.copyWith(status: MessageStatus.read),
+            chatId: chatId,
+          );
+        }
+      }
+    }
+  }
+
+  /// Confirms received message by it's Id, using sendTextMessage() method,
+  /// defined by the appropriate derived class.
+  confirmMessageById({
+    required String messageId,
+    required ConfirmMessageStatus status,
+    required String remoteCoreId,
+  }) async {
+    Map<String, dynamic> confirmMessageJson =
+        ConfirmMessageModel(messageId: messageId, status: status).toJson();
+
+    DataChannelMessageModel dataChannelMessage = DataChannelMessageModel(
+      message: confirmMessageJson,
+      dataChannelMessagetype: DataChannelMessageType.confirm,
+    );
+
+    Map<String, dynamic> dataChannelMessageJson = dataChannelMessage.toJson();
+
+    await sendTextMessage(text: jsonEncode(dataChannelMessageJson), remoteCoreId: remoteCoreId);
+  }
+
+  Future<void> setConnectivityOnline() async {
+    await Future.delayed(const Duration(seconds: 2), () {
+      connectivityStatus.value = DataChannelConnectivityStatus.online;
+    });
+  }
 }
