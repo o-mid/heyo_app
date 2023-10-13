@@ -1,11 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_abstract_provider.dart';
 import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
-
-import '../../../../../new_chat/data/models/user_model/user_model.dart';
 
 class CallHistoryProvider implements CallHistoryAbstractProvider {
   final AppDatabaseProvider appDatabaseProvider;
@@ -18,7 +18,11 @@ class CallHistoryProvider implements CallHistoryAbstractProvider {
 
   @override
   Future<void> insert(CallHistoryModel call) async {
-    await _store.add(await _db, call.toJson());
+    try {
+      await _store.add(await _db, call.toJson());
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   @override

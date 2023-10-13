@@ -30,7 +30,7 @@ Map<String, dynamic> _$$CallHistoryModelImplToJson(
       'coreId': instance.coreId,
       'type': _$CallTypeEnumMap[instance.type]!,
       'status': _$CallStatusEnumMap[instance.status]!,
-      'participants': instance.participants,
+      'participants': instance.participants.map((e) => e.toJson()).toList(),
       'date': instance.date.toIso8601String(),
       'dataUsageMB': instance.dataUsageMB,
       'duration': instance.duration.inMicroseconds,

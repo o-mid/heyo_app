@@ -188,7 +188,8 @@ class __$$CallHistoryModelImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$CallHistoryModelImpl implements _CallHistoryModel {
   const _$CallHistoryModelImpl(
       {required this.id,

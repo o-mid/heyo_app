@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_annotation_target
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 
@@ -20,7 +22,8 @@ enum CallStatus {
 }
 
 @freezed
-class CallHistoryModel with _$CallHistoryModel {
+abstract class CallHistoryModel implements _$CallHistoryModel {
+  @JsonSerializable(explicitToJson: true)
   const factory CallHistoryModel({
     required String id,
     required String coreId,
