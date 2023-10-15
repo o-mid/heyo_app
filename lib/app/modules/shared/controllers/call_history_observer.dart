@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
@@ -68,8 +68,8 @@ class CallHistoryObserver extends GetxController {
             /// store the time call started
             _callStartTimestamps[state.callId] = DateTime.now();
 
-            await _updateCallStatusAndDuration(
-              callId: call.id,
+            await _updateCallStatusAndEndTime(
+              callId: call.callId,
               status: call.status == CallStatus.incomingMissed
                   ? CallStatus.incomingAnswered
                   : CallStatus.outgoingAnswered,
@@ -84,11 +84,11 @@ class CallHistoryObserver extends GetxController {
               return;
             }
 
-            final startTime = _callStartTimestamps[call.id];
+            final startTime = _callStartTimestamps[call.callId];
 
             if (startTime == null) {
-              await _updateCallStatusAndDuration(
-                callId: call.id,
+              await _updateCallStatusAndEndTime(
+                callId: call.callId,
                 status: _determineCallStatusFromPrevAndHistory(
                   call.status,
                   state.callHistoryStatus,
@@ -97,9 +97,8 @@ class CallHistoryObserver extends GetxController {
               return;
             }
 
-            await _updateCallStatusAndDuration(
-              callId: call.id,
-              duration: DateTime.now().difference(startTime as DateTime),
+            await _updateCallStatusAndEndTime(
+              callId: call.callId,
             );
             break;
           }
@@ -144,15 +143,15 @@ class CallHistoryObserver extends GetxController {
   }
 
   Future<void> _createMissedCallRecord(
-    UserModel user,
+    CallHistoryParticipantModel user,
     String callId,
     CallType type,
   ) async {
     final callHistory = CallHistoryModel(
       participants: [user],
       status: CallStatus.incomingMissed,
-      date: DateTime.now(),
-      id: callId,
+      startDate: DateTime.now(),
+      callId: callId,
       coreId: user.coreId,
       type: type,
     );
@@ -161,15 +160,15 @@ class CallHistoryObserver extends GetxController {
   }
 
   Future<void> _createOutgoingNotAnsweredRecord(
-    UserModel user,
+    CallHistoryParticipantModel user,
     String callId,
     CallType type,
   ) async {
     final callHistory = CallHistoryModel(
       participants: [user],
       status: CallStatus.outgoingNotAnswered,
-      date: DateTime.now(),
-      id: callId,
+      startDate: DateTime.now(),
+      callId: callId,
       coreId: user.coreId,
       type: type,
     );
@@ -177,36 +176,40 @@ class CallHistoryObserver extends GetxController {
     await callHistoryRepo.addCallToHistory(callHistory);
   }
 
-  Future<void> _updateCallStatusAndDuration({
+  Future<void> _updateCallStatusAndEndTime({
     required String callId,
     CallStatus? status,
-    Duration? duration,
   }) async {
     final call = await callHistoryRepo.getOneCall(callId);
     if (call == null) {
       return;
     }
+    //TODO:(Aliazim) update model why delete and create !?
     await callHistoryRepo.deleteOneCall(callId);
     //TODO:(Aliazim) change call histoy model
     await callHistoryRepo.addCallToHistory(
       call.copyWith(
         status: status!,
-        //TODO(Aliazim)  duration should be change to start & end time
-        duration: duration ?? Duration.zero,
+        endDate: DateTime.now(),
       ),
     );
   }
 
-  Future<UserModel> _getUserFromCoreId(String coreId) async {
-    var user = await contactRepository.getContactById(coreId);
-    // ignore: join_return_with_assignment
-    user ??= UserModel(
-      name: coreId.shortenCoreId,
-      iconUrl: 'https://avatars.githubusercontent.com/u/6645136?v=4',
-      isVerified: true,
-      walletAddress: coreId,
-      coreId: coreId,
-    );
-    return user;
+  Future<CallHistoryParticipantModel> _getUserFromCoreId(String coreId) async {
+    final user = await contactRepository.getContactById(coreId);
+    CallHistoryParticipantModel callHistoryParticipant;
+
+    if (user != null) {
+      callHistoryParticipant = user.mapToCallHistoryParticipantModel();
+    } else {
+      callHistoryParticipant = CallHistoryParticipantModel(
+        name: coreId.shortenCoreId,
+        iconUrl: 'https://avatars.githubusercontent.com/u/6645136?v=4',
+        coreId: coreId,
+        startDate: DateTime.now(),
+      );
+    }
+
+    return callHistoryParticipant;
   }
 }

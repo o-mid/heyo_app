@@ -103,7 +103,7 @@ class CallHistoryProvider implements CallHistoryAbstractProvider {
       await _db,
       call.toJson(),
       finder: Finder(
-        filter: Filter.equals('id', call.id),
+        filter: Filter.equals('id', call.callId),
       ),
     );
   }

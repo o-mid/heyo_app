@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
-import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
@@ -49,27 +47,24 @@ class UserPreview extends GetxController {
 
   Future<void> deleteContact(String userCoreId) async {
     await contactRepository
-        .deleteContactById(
-          userCoreId,
-        )
+        .deleteContactById(userCoreId)
         .then((value) => print("object deleted  $value "));
 
-    ChatModel? chatModel = await chatHistoryRepo.getChat(userCoreId);
+    final chatModel = await chatHistoryRepo.getChat(userCoreId);
     if (chatModel != null) {
       await chatHistoryRepo
           .updateChat(chatModel.copyWith(name: userCoreId.shortenCoreId));
     }
-    List<CallHistoryModel> calls =
-        await callHistoryRepo.getCallsFromUserId(userCoreId);
+    final calls = await callHistoryRepo.getCallsFromUserId(userCoreId);
     calls.forEach((call) async {
-      await callHistoryRepo.deleteOneCall(call.id);
+      //TODO:(Aliazim) update model why delete and create !?
+      await callHistoryRepo.deleteOneCall(call.callId);
       await callHistoryRepo.addCallToHistory(
         call.copyWith(
           //TODO:(Aliazim) the call history participant will change
           participants: [
             call.participants[0].copyWith(
               name: userCoreId.shortenCoreId,
-              isContact: false,
             ),
           ],
         ),

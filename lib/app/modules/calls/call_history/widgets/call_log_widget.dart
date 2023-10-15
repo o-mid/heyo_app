@@ -34,7 +34,7 @@ class CallLogWidget extends StatelessWidget {
         );
       },
       child: SlidableWidget(
-        key: Key(call.id),
+        key: Key(call.callId),
         onDismissed: () => controller.deleteCall(call),
         confirmDismiss: () => controller.showDeleteCallDialog(call),
         child: Padding(
@@ -55,11 +55,11 @@ class CallLogWidget extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 8.w),
-                      if (call.participants[0].isVerified)
-                        Assets.svg.verifiedWithBluePadding.svg(
-                          width: 16.w,
-                          height: 16.w,
-                        ),
+                      //if (call.participants[0].isVerified)
+                      //  Assets.svg.verifiedWithBluePadding.svg(
+                      //    width: 16.w,
+                      //    height: 16.w,
+                      //  ),
                     ],
                   ),
                   SizedBox(height: 4.h),

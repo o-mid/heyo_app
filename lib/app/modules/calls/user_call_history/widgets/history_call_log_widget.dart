@@ -36,13 +36,13 @@ class HistoryCallLogWidget extends StatelessWidget {
         Row(
           children: [
             CallStatusIconAndDate(call: call),
-            const Spacer(),
-            if (call.dataUsageMB > 0)
-              Text(
-                "${call.dataUsageMB} MB",
-                style: TEXTSTYLES.kBodySmall
-                    .copyWith(color: COLORS.kTextBlueColor),
-              ),
+            //const Spacer(),
+            //if (call.dataUsageMB > 0)
+            //  Text(
+            //    "${call.dataUsageMB} MB",
+            //    style: TEXTSTYLES.kBodySmall
+            //        .copyWith(color: COLORS.kTextBlueColor),
+            //  ),
           ],
         ),
       ],
@@ -75,10 +75,11 @@ class HistoryCallLogWidget extends StatelessWidget {
 
       case CallStatus.incomingAnswered:
       case CallStatus.outgoingAnswered:
-        return "${call.duration.inMinutes}:${(call.duration.inSeconds % 60).toString().padLeft(2, "0")}";
+        final duration = call.endDate!.difference(call.startDate);
+        return "${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, "0")}";
 
       default:
-        return "";
+        return '';
     }
   }
 }

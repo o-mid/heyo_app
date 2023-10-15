@@ -9,31 +9,30 @@ part of 'call_history_model.dart';
 _$CallHistoryModelImpl _$$CallHistoryModelImplFromJson(
         Map<String, dynamic> json) =>
     _$CallHistoryModelImpl(
-      id: json['id'] as String,
+      callId: json['callId'] as String,
       coreId: json['coreId'] as String,
       type: $enumDecode(_$CallTypeEnumMap, json['type']),
       status: $enumDecode(_$CallStatusEnumMap, json['status']),
       participants: (json['participants'] as List<dynamic>)
-          .map((e) => UserModel.fromJson(e as Map<String, dynamic>))
+          .map((e) =>
+              CallHistoryParticipantModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      date: DateTime.parse(json['date'] as String),
-      dataUsageMB: (json['dataUsageMB'] as num?)?.toDouble() ?? 0,
-      duration: json['duration'] == null
-          ? Duration.zero
-          : Duration(microseconds: json['duration'] as int),
+      startDate: DateTime.parse(json['startDate'] as String),
+      endDate: json['endDate'] == null
+          ? null
+          : DateTime.parse(json['endDate'] as String),
     );
 
 Map<String, dynamic> _$$CallHistoryModelImplToJson(
         _$CallHistoryModelImpl instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      'callId': instance.callId,
       'coreId': instance.coreId,
       'type': _$CallTypeEnumMap[instance.type]!,
       'status': _$CallStatusEnumMap[instance.status]!,
       'participants': instance.participants.map((e) => e.toJson()).toList(),
-      'date': instance.date.toIso8601String(),
-      'dataUsageMB': instance.dataUsageMB,
-      'duration': instance.duration.inMicroseconds,
+      'startDate': instance.startDate.toIso8601String(),
+      'endDate': instance.endDate?.toIso8601String(),
     };
 
 const _$CallTypeEnumMap = {

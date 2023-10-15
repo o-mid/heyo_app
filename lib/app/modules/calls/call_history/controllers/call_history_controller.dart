@@ -44,7 +44,7 @@ class CallHistoryController extends GetxController {
         (await callHistoryRepo.getCallsStream()).listen((newCalls) {
       // remove the deleted calls
       for (int i = 0; i < calls.length; i++) {
-        if (!newCalls.any((call) => call.id == calls[i].id)) {
+        if (!newCalls.any((call) => call.callId == calls[i].callId)) {
           _removeAtAnimatedList(i, calls[i]);
           calls.removeAt(i);
         }
@@ -52,7 +52,7 @@ class CallHistoryController extends GetxController {
 
       // add new calls
       for (int i = 0; i < newCalls.length; i++) {
-        if (!calls.any((call) => call.id == newCalls[i].id)) {
+        if (!calls.any((call) => call.callId == newCalls[i].callId)) {
           calls.insert(i, newCalls[i]);
           animatedListKey.currentState?.insertItem(i);
         }
@@ -66,7 +66,7 @@ class CallHistoryController extends GetxController {
   }
 
   Future<void> deleteCall(CallHistoryModel call) async {
-    await callHistoryRepo.deleteOneCall(call.id);
+    await callHistoryRepo.deleteOneCall(call.callId);
   }
 
   Future<bool> showDeleteCallDialog(CallHistoryModel call) async {
@@ -86,109 +86,108 @@ class CallHistoryController extends GetxController {
     );
   }
 
-  void _addMockData() {
-    final uBoiled = UserModel(
-      name: 'Boiled Dealmaker',
-      iconUrl: 'https://avatars.githubusercontent.com/u/6645136?v=4',
-      isVerified: true,
-      walletAddress: 'CB11${List.generate(11, (index) => index).join()}14AB',
-      coreId: 'CB11${List.generate(11, (index) => index).join()}14AB',
-    );
-    final uCrapps = UserModel(
-      name: 'Crapps Wallbanger',
-      iconUrl: 'https://avatars.githubusercontent.com/u/2345136?v=4',
-      walletAddress: 'CB11${List.generate(11, (index) => index).join()}49BB',
-      coreId: 'CB11${List.generate(11, (index) => index).join()}49BB',
-    );
-    final uFancy = UserModel(
-      name: 'Fancy Potato',
-      iconUrl: 'https://avatars.githubusercontent.com/u/6644146?v=4',
-      walletAddress: 'CB11${List.generate(11, (index) => index).join()}11FE',
-      coreId: 'CB11${List.generate(11, (index) => index).join()}11FE',
-    );
-    final uOckerito = UserModel(
-      name: 'Ockerito Fazola',
-      isVerified: true,
-      iconUrl: 'https://avatars.githubusercontent.com/u/7844146?v=4',
-      walletAddress: 'CB11${List.generate(11, (index) => index).join()}5A5D',
-      coreId: 'CB11${List.generate(11, (index) => index).join()}5A5D',
-    );
-    final uUnchained = UserModel(
-      name: 'Unchained Banana',
-      iconUrl: 'https://avatars.githubusercontent.com/u/7847725?v=4',
-      walletAddress: 'CB11${List.generate(11, (index) => index).join()}44AC',
-      coreId: 'CB11${List.generate(11, (index) => index).join()}44AC',
-    );
-    final uSwagger = UserModel(
-      name: 'Swagger Uncut',
-      iconUrl: 'https://avatars.githubusercontent.com/u/9947725?v=4',
-      walletAddress: 'CB11${List.generate(11, (index) => index).join()}532A',
-      coreId: 'CB11${List.generate(11, (index) => index).join()}532A',
-    );
-    var index = 0;
-    final calls = [
-      CallHistoryModel(
-        id: '${index++}',
-        type: CallType.audio,
-        status: CallStatus.outgoingCanceled,
-        date: DateTime.now().subtract(const Duration(minutes: 37)),
-        participants: [uBoiled],
-        coreId: uBoiled.coreId,
-      ),
-      CallHistoryModel(
-        id: '${index++}',
-        type: CallType.video,
-        status: CallStatus.incomingMissed,
-        date: DateTime.utc(2022, DateTime.march, 30, 20, 32),
-        participants: [uCrapps],
-        coreId: uCrapps.coreId,
-      ),
-      CallHistoryModel(
-        id: '${index++}',
-        type: CallType.audio,
-        status: CallStatus.outgoingNotAnswered,
-        date: DateTime.utc(2022, DateTime.march, 30, 17, 44),
-        participants: [uFancy],
-        coreId: uFancy.coreId,
-      ),
-      CallHistoryModel(
-        id: '${index++}',
-        type: CallType.audio,
-        status: CallStatus.outgoingNotAnswered,
-        date: DateTime.utc(2022, DateTime.march, 29, 21, 17),
-        participants: [uOckerito],
-        coreId: uOckerito.coreId,
-      ),
-      CallHistoryModel(
-        id: '${index++}',
-        type: CallType.video,
-        status: CallStatus.incomingMissed,
-        date: DateTime.utc(2022, DateTime.march, 28, 20, 48),
-        participants: [uUnchained],
-        coreId: uUnchained.coreId,
-      ),
-      CallHistoryModel(
-        id: '${index++}',
-        type: CallType.audio,
-        status: CallStatus.incomingAnswered,
-        date: DateTime.utc(2022, DateTime.february, 16, 20, 59),
-        participants: [uUnchained],
-        coreId: uUnchained.coreId,
-      ),
-      CallHistoryModel(
-        id: '${index++}',
-        type: CallType.audio,
-        status: CallStatus.incomingAnswered,
-        date: DateTime.utc(2022, DateTime.february, 15, 9, 2),
-        participants: [uSwagger],
-        coreId: uSwagger.coreId,
-      ),
-    ];
-
-    for (var call in calls) {
-      callHistoryRepo.addCallToHistory(call);
-    }
-  }
+  //void _addMockData() {
+  //  final uBoiled = UserModel(
+  //    name: 'Boiled Dealmaker',
+  //    iconUrl: 'https://avatars.githubusercontent.com/u/6645136?v=4',
+  //    isVerified: true,
+  //    walletAddress: 'CB11${List.generate(11, (index) => index).join()}14AB',
+  //    coreId: 'CB11${List.generate(11, (index) => index).join()}14AB',
+  //  );
+  //  final uCrapps = UserModel(
+  //    name: 'Crapps Wallbanger',
+  //    iconUrl: 'https://avatars.githubusercontent.com/u/2345136?v=4',
+  //    walletAddress: 'CB11${List.generate(11, (index) => index).join()}49BB',
+  //    coreId: 'CB11${List.generate(11, (index) => index).join()}49BB',
+  //  );
+  //  final uFancy = UserModel(
+  //    name: 'Fancy Potato',
+  //    iconUrl: 'https://avatars.githubusercontent.com/u/6644146?v=4',
+  //    walletAddress: 'CB11${List.generate(11, (index) => index).join()}11FE',
+  //    coreId: 'CB11${List.generate(11, (index) => index).join()}11FE',
+  //  );
+  //  final uOckerito = UserModel(
+  //    name: 'Ockerito Fazola',
+  //    isVerified: true,
+  //    iconUrl: 'https://avatars.githubusercontent.com/u/7844146?v=4',
+  //    walletAddress: 'CB11${List.generate(11, (index) => index).join()}5A5D',
+  //    coreId: 'CB11${List.generate(11, (index) => index).join()}5A5D',
+  //  );
+  //  final uUnchained = UserModel(
+  //    name: 'Unchained Banana',
+  //    iconUrl: 'https://avatars.githubusercontent.com/u/7847725?v=4',
+  //    walletAddress: 'CB11${List.generate(11, (index) => index).join()}44AC',
+  //    coreId: 'CB11${List.generate(11, (index) => index).join()}44AC',
+  //  );
+  //  final uSwagger = UserModel(
+  //    name: 'Swagger Uncut',
+  //    iconUrl: 'https://avatars.githubusercontent.com/u/9947725?v=4',
+  //    walletAddress: 'CB11${List.generate(11, (index) => index).join()}532A',
+  //    coreId: 'CB11${List.generate(11, (index) => index).join()}532A',
+  //  );
+  //  var index = 0;
+  //  final calls = [
+  //    CallHistoryModel(
+  //      callId: '${index++}',
+  //      type: CallType.audio,
+  //      status: CallStatus.outgoingCanceled,
+  //      startDate: DateTime.now().subtract(const Duration(minutes: 37)),
+  //      participants: [uBoiled],
+  //      coreId: uBoiled.coreId,
+  //    ),
+  //    CallHistoryModel(
+  //      callId: '${index++}',
+  //      type: CallType.video,
+  //      status: CallStatus.incomingMissed,
+  //      startDate: DateTime.utc(2022, DateTime.march, 30, 20, 32),
+  //      participants: [uCrapps],
+  //      coreId: uCrapps.coreId,
+  //    ),
+  //    CallHistoryModel(
+  //      callId: '${index++}',
+  //      type: CallType.audio,
+  //      status: CallStatus.outgoingNotAnswered,
+  //      startDate: DateTime.utc(2022, DateTime.march, 30, 17, 44),
+  //      participants: [uFancy],
+  //      coreId: uFancy.coreId,
+  //    ),
+  //    CallHistoryModel(
+  //      callId: '${index++}',
+  //      type: CallType.audio,
+  //      status: CallStatus.outgoingNotAnswered,
+  //      startDate: DateTime.utc(2022, DateTime.march, 29, 21, 17),
+  //      participants: [uOckerito],
+  //      coreId: uOckerito.coreId,
+  //    ),
+  //    CallHistoryModel(
+  //      callId: '${index++}',
+  //      type: CallType.video,
+  //      status: CallStatus.incomingMissed,
+  //      startDate: DateTime.utc(2022, DateTime.march, 28, 20, 48),
+  //      participants: [uUnchained],
+  //      coreId: uUnchained.coreId,
+  //    ),
+  //    CallHistoryModel(
+  //      callId: '${index++}',
+  //      type: CallType.audio,
+  //      status: CallStatus.incomingAnswered,
+  //      startDate: DateTime.utc(2022, DateTime.february, 16, 20, 59),
+  //      participants: [uUnchained],
+  //      coreId: uUnchained.coreId,
+  //    ),
+  //    CallHistoryModel(
+  //      callId: '${index++}',
+  //      type: CallType.audio,
+  //      status: CallStatus.incomingAnswered,
+  //      startDate: DateTime.utc(2022, DateTime.february, 15, 9, 2),
+  //      participants: [uSwagger],
+  //      coreId: uSwagger.coreId,
+  //    ),
+  //  ];
+  //  for (var call in calls) {
+  //    callHistoryRepo.addCallToHistory(call);
+  //  }
+  //}
 
   void showDeleteAllCallsBottomSheet() {
     openDeleteAllCallHistoryBottomSheet(

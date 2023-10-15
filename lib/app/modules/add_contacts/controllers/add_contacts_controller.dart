@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
@@ -10,6 +11,12 @@ import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart'
 import 'package:heyo/app/routes/app_pages.dart';
 
 class AddContactsController extends GetxController {
+  AddContactsController({
+    required this.contactRepository,
+    required this.chatHistoryRepo,
+    required this.callHistoryRepo,
+  });
+
   late AddContactsViewArgumentsModel args;
   late RxString nickname;
   final ContactRepository contactRepository;
@@ -28,12 +35,6 @@ class AddContactsController extends GetxController {
     isVerified: false,
     nickname: '',
   ).obs;
-
-  AddContactsController({
-    required this.contactRepository,
-    required this.chatHistoryRepo,
-    required this.callHistoryRepo,
-  });
 
   @override
   void onInit() async {
@@ -69,8 +70,7 @@ class AddContactsController extends GetxController {
 
   _getUserContact() async {
     // check if user is already in contact
-    UserModel? createdUser =
-        await contactRepository.getContactById(args.coreId);
+    var createdUser = await contactRepository.getContactById(args.coreId);
 
     if (createdUser == null) {
       createdUser = UserModel(
@@ -92,7 +92,7 @@ class AddContactsController extends GetxController {
   }
 
   Future<void> updateUserChatMode({required UserModel userModel}) async {
-    UserModel? user = await contactRepository.getContactById(userModel.coreId);
+    final user = await contactRepository.getContactById(userModel.coreId);
     if (user == null) {
       await contactRepository.addContact(userModel);
     } else {
@@ -123,17 +123,38 @@ class AddContactsController extends GetxController {
   }
 
   Future<void> _updateCallHistory({required UserModel userModel}) async {
-    await callHistoryRepo
-        .getCallsFromUserId(userModel.coreId)
-        .then((calls) async {
-      debugPrint('_updateCallHistory: ${calls.length}');
-      for (final call in calls) {
-        debugPrint('_updateCallHistory: ${call.id} : ${call.participants}');
-        await callHistoryRepo.deleteOneCall(call.id);
-        await callHistoryRepo.addCallToHistory(
-          call.copyWith(participants: [userModel]),
+    final callHistoryList =
+        await callHistoryRepo.getCallsFromUserId(userModel.coreId);
+
+    //* For loop for all stored call history
+    for (final call in callHistoryList) {
+      debugPrint('_updateCallHistory: ${call.callId}');
+
+      final index = call.participants.indexWhere(
+        (participant) => participant.coreId == userModel.coreId,
+      );
+
+      //* Check if the item was found
+      if (index != -1) {
+        //final newParticipants = call.participants.fi
+
+        final updatedParticipant = call.participants[index].copyWith(
+          name: userModel.name,
+          iconUrl: userModel.iconUrl,
         );
+
+        // Create a copy of the list
+        final newParticipantList =
+            List<CallHistoryParticipantModel>.from(call.participants);
+
+        // Replace the old item with the new one
+        newParticipantList[index] = updatedParticipant;
+
+        // Create a new instance of the call with the updated list
+        final updatedCall = call.copyWith(participants: newParticipantList);
+
+        await callHistoryRepo.updateCall(updatedCall);
       }
-    });
+    }
   }
 }

@@ -47,8 +47,8 @@ class CallStatusIconAndDate extends StatelessWidget {
       textColor = COLORS.kStatesErrorColor;
     }
 
-    String callTime = DateFormat('d MMMM, hh:mm').format(call.date);
-    if (DateTime.now().isSameDate(call.date)) {
+    String callTime = DateFormat('d MMMM, hh:mm').format(call.startDate);
+    if (DateTime.now().isSameDate(call.startDate)) {
       callTime = _formatDuration();
     }
 
@@ -59,9 +59,9 @@ class CallStatusIconAndDate extends StatelessWidget {
   }
 
   String _formatDuration() {
-    final difference = DateTime.now().difference(call.date);
+    final difference = DateTime.now().difference(call.startDate);
 
-    String duration = '';
+    var duration = '';
     final hours = difference.inMinutes ~/ 60;
     final minutes = difference.inMinutes % 60;
 

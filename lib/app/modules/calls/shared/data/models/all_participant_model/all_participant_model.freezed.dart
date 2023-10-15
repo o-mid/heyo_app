@@ -14,6 +14,10 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
+AllParticipantModel _$AllParticipantModelFromJson(Map<String, dynamic> json) {
+  return _AllParticipantModel.fromJson(json);
+}
+
 /// @nodoc
 mixin _$AllParticipantModel {
   String get name => throw _privateConstructorUsedError;
@@ -21,6 +25,7 @@ mixin _$AllParticipantModel {
   String get coreId => throw _privateConstructorUsedError;
   AllParticipantStatus get status => throw _privateConstructorUsedError;
 
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $AllParticipantModelCopyWith<AllParticipantModel> get copyWith =>
       throw _privateConstructorUsedError;
@@ -132,12 +137,16 @@ class __$$AllParticipantModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 
+@JsonSerializable(explicitToJson: true)
 class _$AllParticipantModelImpl implements _AllParticipantModel {
   const _$AllParticipantModelImpl(
       {required this.name,
       required this.iconUrl,
       required this.coreId,
       this.status = AllParticipantStatus.calling});
+
+  factory _$AllParticipantModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AllParticipantModelImplFromJson(json);
 
   @override
   final String name;
@@ -165,6 +174,7 @@ class _$AllParticipantModelImpl implements _AllParticipantModel {
             (identical(other.status, status) || other.status == status));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, name, iconUrl, coreId, status);
 
@@ -174,6 +184,13 @@ class _$AllParticipantModelImpl implements _AllParticipantModel {
   _$$AllParticipantModelImplCopyWith<_$AllParticipantModelImpl> get copyWith =>
       __$$AllParticipantModelImplCopyWithImpl<_$AllParticipantModelImpl>(
           this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$AllParticipantModelImplToJson(
+      this,
+    );
+  }
 }
 
 abstract class _AllParticipantModel implements AllParticipantModel {
@@ -182,6 +199,9 @@ abstract class _AllParticipantModel implements AllParticipantModel {
       required final String iconUrl,
       required final String coreId,
       final AllParticipantStatus status}) = _$AllParticipantModelImpl;
+
+  factory _AllParticipantModel.fromJson(Map<String, dynamic> json) =
+      _$AllParticipantModelImpl.fromJson;
 
   @override
   String get name;
