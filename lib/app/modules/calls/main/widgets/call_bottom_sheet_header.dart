@@ -37,6 +37,9 @@ class CallBottomSheetHeader extends GetView<CallController> {
               children: [
                 Obx(() {
                   final localParticipate = controller.localParticipate.value;
+                  if (localParticipate == null) {
+                    return Container();
+                  }
 
                   return _buildEnabledOrDisabledButton(
                     isEnabled: localParticipate!.videoMode.value,
@@ -60,6 +63,9 @@ class CallBottomSheetHeader extends GetView<CallController> {
                 ),
                 Obx(() {
                   final localParticipate = controller.localParticipate.value;
+                  if (localParticipate == null) {
+                    return Container();
+                  }
 
                   return _buildEnabledOrDisabledButton(
                     isEnabled: localParticipate!.audioMode.isTrue,
