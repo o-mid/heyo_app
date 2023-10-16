@@ -71,8 +71,8 @@ class MessagesBinding extends Bindings {
                 web3client: GlobalBindings.web3Client,
               ),
             ),
-            multipleConnectionHandler: Get.find(),
-            wifiDirectWrapper: Get.find(),
+            multipleConnectionHandler: GlobalBindings.multipleConnectionHandler,
+            wifiDirectWrapper: GlobalBindings.wifiDirectWrapper,
             notificationsController:
                 NotificationsController(appNotifications: GlobalBindings.appNotifications),
             connectionType: connectionType,

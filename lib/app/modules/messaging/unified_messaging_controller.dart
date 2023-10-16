@@ -132,7 +132,8 @@ class UnifiedConnectionController {
     _heyoWifiDirect = wifiDirectWrapper!.pluginInstance;
     if (_heyoWifiDirect == null) {
       print(
-          "HeyoWifiDirect plugin not initialized! Wi-Fi Direct functionality may not be available");
+        "HeyoWifiDirect plugin not initialized! Wi-Fi Direct functionality may not be available",
+      );
     }
   }
 
@@ -634,5 +635,16 @@ class UnifiedConnectionController {
     await Future.delayed(const Duration(seconds: 2), () {
       connectivityStatus.value = DataChannelConnectivityStatus.online;
     });
+  }
+
+  Future<void> toggleMessageReadConfirm({
+    required String messageId,
+    required String remoteCoreId,
+  }) async {
+    await confirmMessageById(
+      messageId: messageId,
+      status: ConfirmMessageStatus.read,
+      remoteCoreId: remoteCoreId,
+    );
   }
 }

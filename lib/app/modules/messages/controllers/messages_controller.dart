@@ -1,3 +1,5 @@
+// ignore_for_file: require_trailing_commas
+
 import 'dart:async';
 
 import 'dart:io';
@@ -72,7 +74,7 @@ class MessagesController extends GetxController {
 
   final UnifiedConnectionController messagingController;
 
-  late CommonMessagingConnectionController messagingConnection;
+  // late CommonMessagingConnectionController messagingConnection;
 
   late MessagingConnectionType connectionType;
 
@@ -114,7 +116,7 @@ class MessagesController extends GetxController {
 
   final isListLoaded = false.obs;
 
-  void init() async {
+  Future<void> init() async {
     _initMessagesArguments();
 
     _initUiControllers();
@@ -176,30 +178,31 @@ class MessagesController extends GetxController {
   }
 
   Future<void> initMessagingConnection() async {
-    switch (connectionType) {
-      case MessagingConnectionType.internet:
-        // TODO remove debug print
-        print('switch to the internet connection messaging');
-        messagingConnection = Get.find<MessagingConnectionController>();
-        break;
-      case MessagingConnectionType.wifiDirect:
-        // TODO remove debug print
-        print('switch to the wifi-direct connection messaging');
-        messagingConnection = Get.find<WifiDirectConnectionController>();
-        break;
-      default:
-        // TODO replace this value to correct if connectionType is unknown (if it possible)
-        print('switch to the unknown connection type messaging (internet by default)');
-        messagingConnection = Get.find<MessagingConnectionController>();
-        break;
-    }
+    await messagingController.initMessagingConnection(remoteId: user.value.coreId);
+    // switch (connectionType) {
+    //   case MessagingConnectionType.internet:
+    //     // TODO remove debug print
+    //     print('switch to the internet connection messaging');
+    //     messagingConnection = Get.find<MessagingConnectionController>();
+    //     break;
+    //   case MessagingConnectionType.wifiDirect:
+    //     // TODO remove debug print
+    //     print('switch to the wifi-direct connection messaging');
+    //     messagingConnection = Get.find<WifiDirectConnectionController>();
+    //     break;
+    //   default:
+    //     // TODO replace this value to correct if connectionType is unknown (if it possible)
+    //     print('switch to the unknown connection type messaging (internet by default)');
+    //     messagingConnection = Get.find<MessagingConnectionController>();
+    //     break;
+    // }
 
-    // TODO this is debug test of put instance as CommonMessagingConnectionController
-    // Put current actual CommonMessagingConnectionController instance to use it in messaging process flow.
-    Get.delete<CommonMessagingConnectionController>();
-    Get.put<CommonMessagingConnectionController>(messagingConnection);
+    // // TODO this is debug test of put instance as CommonMessagingConnectionController
+    // // Put current actual CommonMessagingConnectionController instance to use it in messaging process flow.
+    // Get.delete<CommonMessagingConnectionController>();
+    // Get.put<CommonMessagingConnectionController>(messagingConnection);
 
-    await messagingConnection.initMessagingConnection(remoteId: user.value.coreId);
+    // await messagingConnection.initMessagingConnection(remoteId: user.value.coreId);
   }
 
   Future<void> _initMessagesStream() async {
@@ -303,11 +306,12 @@ class MessagesController extends GetxController {
     final prefix = textController.text.substring(0, currentPos).characters.skipLast(1).toString();
     final suffix = textController.text.substring(currentPos);
 
-    textController.text = prefix + suffix;
-    textController.selection = textController.selection.copyWith(
-      baseOffset: prefix.length,
-      extentOffset: prefix.length,
-    );
+    textController
+      ..text = prefix + suffix
+      ..selection = textController.selection.copyWith(
+        baseOffset: prefix.length,
+        extentOffset: prefix.length,
+      );
   }
 
   Future<void> scrollToMessage({required String messageId}) async {
@@ -402,8 +406,8 @@ class MessagesController extends GetxController {
     // );
   }
 
-  void toggleMessageReadStatus({required String messageId}) async {
-    await messagingConnection.toggleMessageReadConfirm(
+  Future<void> toggleMessageReadStatus({required String messageId}) async {
+    await messagingController.toggleMessageReadConfirm(
       messageId: messageId,
       remoteCoreId: user.value.walletAddress,
     );
@@ -1123,7 +1127,7 @@ class MessagesController extends GetxController {
     return data.buffer.asUint8List().toList();
   }
 
-  void onMessagesItemVisibilityChanged({
+  Future<void> onMessagesItemVisibilityChanged({
     required VisibilityInfo visibilityInfo,
     required int itemIndex,
     required String itemMessageId,
