@@ -48,6 +48,7 @@ import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import '../../messaging/controllers/common_messaging_controller.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
+import '../../messaging/unified_messaging_controller.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../share_files/models/file_model.dart';
 import '../../shared/utils/constants/colors.dart';
@@ -60,14 +61,16 @@ import '../../shared/data/repository/contact_repository.dart';
 import '../domain/connection_message_repository.dart';
 
 class MessagesController extends GetxController {
-  MessagesController({
-    required this.messageRepository,
-    required this.userStateRepository,
-  }) {
+  MessagesController(
+      {required this.messageRepository,
+      required this.userStateRepository,
+      required this.messagingController}) {
     init();
   }
   final ConnectionMessageRepository messageRepository;
   final UserStateRepository userStateRepository;
+
+  final UnifiedConnectionController messagingController;
 
   late CommonMessagingConnectionController messagingConnection;
 

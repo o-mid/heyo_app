@@ -42,6 +42,7 @@ import '../../messages/data/usecases/update_message_usecase.dart';
 import '../../messaging/controllers/common_messaging_controller.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
+import '../../messaging/unified_messaging_controller.dart';
 import '../../notifications/controllers/notifications_controller.dart';
 import '../../wifi_direct/controllers/wifi_direct_wrapper.dart';
 import '../controllers/user_preview_controller.dart';
@@ -105,16 +106,37 @@ class GlobalBindings extends Bindings {
   );
 
   static AppNotifications appNotifications = AppNotifications();
+  static MultipleConnectionHandler multipleConnectionHandler = MultipleConnectionHandler(
+    singleWebRTCConnection: SingleWebRTCConnection(
+      p2pCommunicator: p2pCommunicator,
+      webRTCConnectionManager: WebRTCConnectionManager(),
+    ),
+  );
+  static UnifiedConnectionController unifiedConnectionController = UnifiedConnectionController(
+    messagesRepo: MessagesRepo(
+      messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+    ),
+    chatHistoryRepo: ChatHistoryLocalRepo(
+      chatHistoryProvider:
+          ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+    ),
+    contactRepository: ContactRepository(
+      cacheContractor: CacheRepository(
+        userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+      ),
+    ),
+    accountInfo: accountInfo,
+    multipleConnectionHandler: multipleConnectionHandler,
+    wifiDirectWrapper: wifiDirectWrapper,
+    notificationsController: NotificationsController(appNotifications: appNotifications),
+    connectionType:
+        ConnectionType.RTC, // You might want to determine this dynamically based on your app logic
+  );
 
   @override
   void dependencies() {
     Get.put(
-      MultipleConnectionHandler(
-        singleWebRTCConnection: SingleWebRTCConnection(
-          p2pCommunicator: p2pCommunicator,
-          webRTCConnectionManager: WebRTCConnectionManager(),
-        ),
-      ),
+      multipleConnectionHandler,
       permanent: true,
     );
 
@@ -295,5 +317,10 @@ class GlobalBindings extends Bindings {
     Get.put(UpdateMessage());
     Get.put(DeleteMessage());
     Get.put(ConfirmMessage());
+
+    Get.put(
+      unifiedConnectionController,
+      permanent: true,
+    );
   }
 }
