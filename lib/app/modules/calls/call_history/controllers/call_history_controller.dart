@@ -7,7 +7,6 @@ import 'package:heyo/app/modules/calls/call_history/widgets/delete_all_calls_bot
 import 'package:heyo/app/modules/calls/call_history/widgets/delete_call_history_dialog.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 
 class CallHistoryController extends GetxController {
   CallHistoryController({required this.callHistoryRepo});

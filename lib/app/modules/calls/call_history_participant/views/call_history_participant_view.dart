@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/user_call_history/controllers/user_call_history_controller.dart';
-import 'package:heyo/app/modules/calls/user_call_history/widgets/history_call_log_widget.dart';
+import 'package:heyo/app/modules/calls/call_history_participant/controllers/call_history_participant_controller.dart';
+import 'package:heyo/app/modules/calls/call_history_participant/widgets/history_call_log_widget.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -15,8 +15,9 @@ import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-class UserCallHistoryView extends GetView<UserCallHistoryController> {
-  const UserCallHistoryView({super.key});
+class CallHistoryParticipantView
+    extends GetView<CallHistoryParticipantController> {
+  const CallHistoryParticipantView({super.key});
 
   @override
   Widget build(BuildContext context) {

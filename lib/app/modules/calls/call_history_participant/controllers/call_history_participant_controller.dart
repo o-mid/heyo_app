@@ -12,8 +12,8 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-class UserCallHistoryController extends GetxController {
-  UserCallHistoryController({
+class CallHistoryParticipantController extends GetxController {
+  CallHistoryParticipantController({
     required this.callHistoryRepo,
     required this.contactAvailabilityUseCase,
   });
