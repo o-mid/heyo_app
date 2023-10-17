@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
@@ -8,8 +7,9 @@ import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
 
 class CallHistoryProvider implements CallHistoryAbstractProvider {
-  final AppDatabaseProvider appDatabaseProvider;
   CallHistoryProvider({required this.appDatabaseProvider});
+
+  final AppDatabaseProvider appDatabaseProvider;
   static const String callHistoryStoreName = 'call_history';
 
   final _store = intMapStoreFactory.store(callHistoryStoreName);
@@ -67,14 +67,19 @@ class CallHistoryProvider implements CallHistoryAbstractProvider {
 
   @override
   Future<List<CallHistoryModel>> getCallsFromUserId(String userId) async {
+    //* because sembast does not support nested query
+    //* we need to use custom filter
+    final customFilter = Filter.custom((record) {
+      final participants = (record['participants']! as List)
+          .map((participant) => (participant as Map)['coreId'] as String);
+      return participants.contains(userId);
+    });
+
     final records = await _store.find(
       await _db,
       finder: Finder(
-        sortOrders: [SortOrder('date', false)],
-        filter: Filter.equals(
-          'user.walletAddress',
-          userId,
-        ),
+        sortOrders: [SortOrder('startDate', false)],
+        filter: customFilter,
       ),
     );
 
@@ -103,7 +108,7 @@ class CallHistoryProvider implements CallHistoryAbstractProvider {
       await _db,
       call.toJson(),
       finder: Finder(
-        filter: Filter.equals('id', call.callId),
+        filter: Filter.equals('callId', call.callId),
       ),
     );
   }

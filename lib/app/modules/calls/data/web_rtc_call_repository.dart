@@ -68,17 +68,6 @@ class WebRTCCallRepository implements CallRepository {
   Future<void> addMember(String coreId) async {
     callConnectionsHandler.addMember(coreId);
     _addToAllParticipant(coreId);
-    //if (mock) {
-    //  //TODO remove Mock
-    //  await Future<void>.delayed(const Duration(seconds: 5));
-    //  onAddCallStream?.call(
-    //    CallStream(
-    //      coreId: 'coreId',
-    //      remoteStream: await _createMockStream(),
-    //    ),
-    //  );
-    //await _addToAllParticipant(coreId);
-    //}
   }
 
   @override
@@ -119,6 +108,15 @@ class WebRTCCallRepository implements CallRepository {
     return session.callId;
   }
 
+  Future<void> _addToCallStream(String coreId) async {
+    onAddCallStream?.call(
+      CallStream(
+        coreId: coreId,
+        remoteStream: await _createStream('video', false),
+      ),
+    );
+  }
+
   void _addToAllParticipant(String coreId) {
     const mockProfileImage =
         'https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png';
@@ -147,12 +145,7 @@ class WebRTCCallRepository implements CallRepository {
   Future<void> _createMockStream(String coreId) async {
     await Future<void>.delayed(const Duration(seconds: 3));
     _addToAllParticipant(coreId);
-    onAddCallStream?.call(
-      CallStream(
-        coreId: coreId,
-        remoteStream: await _createStream('video', false),
-      ),
-    );
+    _addToCallStream(coreId);
   }
 
   Future<MediaStream> _createStream(String media, bool userScreen) async {
