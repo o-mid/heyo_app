@@ -15,6 +15,7 @@ class VerificationWithCorePassUseCase {
   VerificationWithCorePassUseCase(
       {required this.accountInfo, required this.p2pCommunicator});
 
+  StreamSubscription? _urlStream;
   final AccountInfo accountInfo;
   final P2PCommunicator p2pCommunicator;
 
@@ -36,6 +37,7 @@ class VerificationWithCorePassUseCase {
     try {
       await launchUrlString(uri);
       debugPrint('The app is installed on the device.');
+      _listenToUriDataStream();
     } catch (e) {
       debugPrint(e.toString());
       //
@@ -63,18 +65,20 @@ class VerificationWithCorePassUseCase {
     }
   }
 
-  Future<void> _checkUri(Uri deepLink) async {
-    debugPrint("Uri is ${deepLink}");
+  Future<void> _checkUri(String deepLink) async {
+    debugPrint('Uri is ${deepLink}');
 
-    final result = deepLink.queryParameters;
+    final result = Uri.parse(deepLink).queryParameters;
+
+    if (_checkUriIsInvalid(result)) return;
 
     final signature = result['signature'];
     final coreId = result['coreID'];
     if (signature != null && coreId != null) {
-
       await accountInfo.setSignature(signature.replaceAll('0x', ''));
       await accountInfo.setCoreId(coreId);
       await p2pCommunicator.applyDelegatedAuth();
+      await _cleanUp();
       // Navigate to verified user page
       await Get.offAllNamed(Routes.VERIFIED_USER);
     } else {
@@ -82,15 +86,20 @@ class VerificationWithCorePassUseCase {
     }
   }
 
-  Future<void> getUriFromDeepLink() async {
-    try {
-      final initialUri = await getInitialUri();
-      if (initialUri != null) {
-        // Handle the initial deep uri
-        await _checkUri(initialUri);
+  Future<void> _cleanUp() async {
+    await _urlStream?.cancel();
+    _urlStream = null;
+  }
+
+  bool _checkUriIsInvalid(Map<String, String> result) {
+    return result['signature'] == null || result['coreID'] == null;
+  }
+
+  void _listenToUriDataStream() {
+    _urlStream = linkStream.listen((event) {
+      if (event != null) {
+        _checkUri(event);
       }
-    } catch (e) {
-      debugPrint(e.toString());
-    }
+    });
   }
 }

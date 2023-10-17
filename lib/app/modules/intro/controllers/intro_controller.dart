@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:heyo/app/modules/intro/usecase/verification_with_corepass_use_case.dart';
 import 'package:heyo/app/modules/intro/widgets/verification_loading_dialog.dart';
 import 'package:heyo/app/modules/intro/widgets/verification_bottom_sheet.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
-import 'package:heyo/app/routes/app_pages.dart';
 
 class IntroController extends GetxController with WidgetsBindingObserver {
   final VerificationWithCorePassUseCase verificationWithCorePassUseCase;
@@ -37,7 +34,6 @@ class IntroController extends GetxController with WidgetsBindingObserver {
         () async {
           //close the loading modal
           if (Get.isDialogOpen == true) {
-            await verificationWithCorePassUseCase.getUriFromDeepLink();
 
             Get.back();
             debugPrint("Verification not complete");
