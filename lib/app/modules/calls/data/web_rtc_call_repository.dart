@@ -66,7 +66,7 @@ class WebRTCCallRepository implements CallRepository {
 
   @override
   Future<void> addMember(String coreId) async {
-    callConnectionsHandler.addMember(coreId);
+    await callConnectionsHandler.addMember(coreId);
     _addToAllParticipant(coreId);
   }
 
@@ -117,6 +117,23 @@ class WebRTCCallRepository implements CallRepository {
     );
   }
 
+  //Future<void> updateCallHistory({
+  //  required String callId,
+  //  required String coreId,
+  //  required bool isAudioCall,
+  //}) async {
+  //  callConnectionsHandler.onCallStateChange?.call(
+  //    callId,
+  //    [
+  //      CallInfo(
+  //        remotePeer: coreId,
+  //        isAudioCall: isAudioCall,
+  //      ),
+  //    ],
+  //    CallState.callStateConnected,
+  //  );
+  //}
+
   void _addToAllParticipant(String coreId) {
     const mockProfileImage =
         'https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png';
@@ -144,8 +161,11 @@ class WebRTCCallRepository implements CallRepository {
 
   Future<void> _createMockStream(String coreId) async {
     await Future<void>.delayed(const Duration(seconds: 3));
+    //* Add participant to bottom sheet (All participant)
     _addToAllParticipant(coreId);
-    _addToCallStream(coreId);
+    //* Add stream participant to call (connected participant)
+    await _addToCallStream(coreId);
+    //*  update call history for mock
   }
 
   Future<MediaStream> _createStream(String media, bool userScreen) async {

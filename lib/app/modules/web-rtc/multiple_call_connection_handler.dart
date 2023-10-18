@@ -53,10 +53,11 @@ class CallConnectionsHandler {
 
   Function(CallId callId, List<CallInfo> callInfo, CallState state)?
       onCallStateChange;
+
   CurrentCall? _currentCall;
   RequestedCalls? requestedCalls;
 
-  addMember(String remoteCoreId) async {
+  Future<void> addMember(String remoteCoreId) async {
     _currentCall!.activeSessions.forEach((element) {
       singleCallWebRTCBuilder.addMemberEvent(remoteCoreId, element);
     });
@@ -129,7 +130,7 @@ class CallConnectionsHandler {
     return null;
   }
 
-  accept(CallId callId) async {
+  Future<void> accept(CallId callId) async {
     print("accepttt ${_incomingCalls}");
     if (_incomingCalls?.callId == callId) {
       _currentCall = CurrentCall(callId: callId, activeSessions: []);
@@ -143,7 +144,7 @@ class CallConnectionsHandler {
     // singleCallWebRTCBuilder.startSession(rtcSession)
   }
 
-  reject(String callId) async {
+  Future<void> reject(String callId) async {
     if (_currentCall?.callId == callId) {
       _currentCall?.activeSessions.forEach((element) {
         singleCallWebRTCBuilder.reject(callId, element.remotePeer);
@@ -151,7 +152,7 @@ class CallConnectionsHandler {
     }
   }
 
-  close() async {
+  Future<void> close() async {
     if (_currentCall != null) {
       for (var element in _currentCall!.activeSessions) {
         await element.dispose();
@@ -303,7 +304,7 @@ class CallConnectionsHandler {
     return stream;
   }
 
-  onCallRequestRejected(mapData, RemotePeer remotePeer) async {
+  Future<void> onCallRequestRejected(mapData, RemotePeer remotePeer) async {
     String callId = mapData[CALL_ID] as String;
     if (_currentCall != null) {
       CallRTCSession? callRTCSession =
@@ -337,7 +338,7 @@ class CallConnectionsHandler {
     }
   }
 
-  _onCallRequestReceived(mapData, data, remotePeer) {
+  void _onCallRequestReceived(mapData, data, remotePeer) {
     final callId = mapData[CALL_ID] as String;
     final isAudioCall = data["isAudioCall"] as bool;
     final members = data["members"] as List<dynamic>;
@@ -368,7 +369,7 @@ class CallConnectionsHandler {
     onCallStateChange?.call(callId, [callInfo], CallState.callStateRinging);
   }
 
-  rejectIncomingCall(String callId) {
+  void rejectIncomingCall(String callId) {
     if (_incomingCalls?.callId == callId) {
       _incomingCalls?.remotePeers.forEach((element) {
         print("rejectcd 2");

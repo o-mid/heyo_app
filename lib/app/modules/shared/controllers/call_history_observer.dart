@@ -28,7 +28,17 @@ class CallHistoryObserver extends GetxController {
 
   @override
   void onInit() {
+    callHistoryObserver();
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    stateListener.cancel();
+    super.onClose();
+  }
+
+  void callHistoryObserver() {
     stateListener =
         callConnectionController.callHistoryState.listen((state) async {
       if (state == null) {
@@ -38,9 +48,7 @@ class CallHistoryObserver extends GetxController {
         case CallHistoryStatus.ringing:
           {
             await _createMissedCallRecord(
-              await _getUserFromCoreId(
-                state.remotes.first.remotePeer.remoteCoreId,
-              ),
+              state.remotes.first.remotePeer.remoteCoreId,
               state.callId,
               state.remotes.first.isAudioCall ? CallType.audio : CallType.video,
             );
@@ -49,9 +57,7 @@ class CallHistoryObserver extends GetxController {
         case CallHistoryStatus.invite:
           {
             await _createOutgoingNotAnsweredRecord(
-              await _getUserFromCoreId(
-                state.remotes.first.remotePeer.remoteCoreId,
-              ),
+              state.remotes.first.remotePeer.remoteCoreId,
               state.callId,
               state.remotes.first.isAudioCall ? CallType.audio : CallType.video,
             );
@@ -109,12 +115,6 @@ class CallHistoryObserver extends GetxController {
     });
   }
 
-  @override
-  void onClose() {
-    stateListener.cancel();
-    super.onClose();
-  }
-
   CallStatus? _determineCallStatusFromPrevAndHistory(
     CallStatus prevStatus,
     CallHistoryStatus historyStatus,
@@ -143,16 +143,18 @@ class CallHistoryObserver extends GetxController {
   }
 
   Future<void> _createMissedCallRecord(
-    CallHistoryParticipantModel user,
+    String coreId,
     String callId,
     CallType type,
   ) async {
+    final callParticipant = await _getUserFromCoreId(coreId);
+
     final callHistory = CallHistoryModel(
-      participants: [user],
+      participants: [callParticipant],
       status: CallStatus.incomingMissed,
       startDate: DateTime.now(),
       callId: callId,
-      coreId: user.coreId,
+      coreId: callParticipant.coreId,
       type: type,
     );
 
@@ -160,16 +162,18 @@ class CallHistoryObserver extends GetxController {
   }
 
   Future<void> _createOutgoingNotAnsweredRecord(
-    CallHistoryParticipantModel user,
+    String coreId,
     String callId,
     CallType type,
   ) async {
+    final callParticipant = await _getUserFromCoreId(coreId);
+
     final callHistory = CallHistoryModel(
-      participants: [user],
+      participants: [callParticipant],
       status: CallStatus.outgoingNotAnswered,
       startDate: DateTime.now(),
       callId: callId,
-      coreId: user.coreId,
+      coreId: callParticipant.coreId,
       type: type,
     );
 

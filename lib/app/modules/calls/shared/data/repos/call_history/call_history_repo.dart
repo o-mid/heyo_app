@@ -3,9 +3,9 @@ import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_h
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 
 class CallHistoryRepo implements CallHistoryAbstractRepo {
-  final CallHistoryAbstractProvider callHistoryProvider;
-
   CallHistoryRepo({required this.callHistoryProvider});
+
+  final CallHistoryAbstractProvider callHistoryProvider;
 
   @override
   Future<void> addCallToHistory(CallHistoryModel call) async {
@@ -44,6 +44,6 @@ class CallHistoryRepo implements CallHistoryAbstractRepo {
 
   @override
   Future<void> updateCall(CallHistoryModel call) async {
-    await callHistoryProvider.insert(call);
+    await callHistoryProvider.updateCall(call);
   }
 }

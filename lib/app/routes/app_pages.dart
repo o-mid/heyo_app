@@ -16,8 +16,8 @@ import '../modules/calls/incoming_call/bindings/incoming_call_binding.dart';
 import '../modules/calls/incoming_call/views/incoming_call_view.dart';
 import '../modules/calls/main/bindings/call_binding.dart';
 import '../modules/calls/main/views/call_view.dart';
-import '../modules/calls/call_history_participant/bindings/call_history_participant_binding.dart';
-import '../modules/calls/call_history_participant/views/call_history_participant_view.dart';
+import '../modules/calls/call_history_detail/bindings/call_history_detail_binding.dart';
+import '../modules/calls/call_history_detail/views/call_history_detail_view.dart';
 import '../modules/contacts/bindings/contacts_binding.dart';
 import '../modules/contacts/views/contacts_view.dart';
 import '../modules/forward_massages/bindings/forward_massages_binding.dart';
@@ -199,8 +199,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.USER_CALL_HISTORY,
-      page: () => CallHistoryParticipantView(),
-      binding: CallHistoryParticipantBinding(),
+      page: () => CallHistoryDetailView(),
+      binding: CallHistoryDetailBinding(),
       transition: TRANSITIONS.navigation_generalPageTransition,
       transitionDuration: TRANSITIONS.navigation_generalPageTransitionDurtion,
       curve: TRANSITIONS.navigation_generalPageTransitionCurve,
