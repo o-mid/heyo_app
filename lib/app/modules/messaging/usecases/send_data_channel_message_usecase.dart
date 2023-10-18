@@ -8,11 +8,12 @@ import 'package:tuple/tuple.dart';
 import '../controllers/common_messaging_controller.dart';
 import '../controllers/messaging_connection_controller.dart';
 import '../models/data_channel_message_model.dart';
+import '../unified_messaging_controller.dart';
 import '../utils/binary_file_sending_state.dart';
 import '../utils/channel_message_from_type.dart';
 
 class SendDataChannelMessage {
-  CommonMessagingConnectionController messagingConnection;
+  UnifiedConnectionController messagingConnection;
 
   SendDataChannelMessage({
     required this.messagingConnection,

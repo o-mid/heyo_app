@@ -90,20 +90,20 @@ class GlobalBindings extends Bindings {
 
   static WifiDirectWrapper wifiDirectWrapper = WifiDirectWrapper();
 
-  static WifiDirectConnectionController wifiDirectConnectionController =
-      WifiDirectConnectionController(
-    wifiDirectWrapper: wifiDirectWrapper,
-    accountInfo: accountInfo,
-    messagesRepo: MessagesRepo(
-      messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-    ),
-    chatHistoryRepo: ChatHistoryLocalRepo(
-      chatHistoryProvider:
-          ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-    ),
-    notificationsController: NotificationsController(appNotifications: appNotifications),
-    contactRepository: Get.find(),
-  );
+  // static WifiDirectConnectionController wifiDirectConnectionController =
+  //     WifiDirectConnectionController(
+  //   wifiDirectWrapper: wifiDirectWrapper,
+  //   accountInfo: accountInfo,
+  //   messagesRepo: MessagesRepo(
+  //     messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+  //   ),
+  //   chatHistoryRepo: ChatHistoryLocalRepo(
+  //     chatHistoryProvider:
+  //         ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+  //   ),
+  //   notificationsController: NotificationsController(appNotifications: appNotifications),
+  //   contactRepository: Get.find(),
+  // );
 
   static AppNotifications appNotifications = AppNotifications();
   static MultipleConnectionHandler multipleConnectionHandler = MultipleConnectionHandler(
@@ -222,27 +222,27 @@ class GlobalBindings extends Bindings {
     Get.put(LiveLocationController());
     Get.put(ConnectionController(p2pState: p2pState));
 
-    Get.put(
-      MessagingConnectionController(
-        multipleConnectionHandler: Get.find(),
-        accountInfo: accountInfo,
-        messagesRepo: MessagesRepo(
-          messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-        ),
-        chatHistoryRepo: ChatHistoryLocalRepo(
-          chatHistoryProvider: ChatHistoryProvider(
-            appDatabaseProvider: Get.find<AppDatabaseProvider>(),
-          ),
-        ),
-        notificationsController: NotificationsController(appNotifications: appNotifications),
-        contactRepository: Get.find(),
-      ),
-      permanent: true,
-    );
-    Get.put(
-      wifiDirectConnectionController,
-      permanent: true,
-    );
+    // Get.put(
+    //   MessagingConnectionController(
+    //     multipleConnectionHandler: Get.find(),
+    //     accountInfo: accountInfo,
+    //     messagesRepo: MessagesRepo(
+    //       messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+    //     ),
+    //     chatHistoryRepo: ChatHistoryLocalRepo(
+    //       chatHistoryProvider: ChatHistoryProvider(
+    //         appDatabaseProvider: Get.find<AppDatabaseProvider>(),
+    //       ),
+    //     ),
+    //     notificationsController: NotificationsController(appNotifications: appNotifications),
+    //     contactRepository: Get.find(),
+    //   ),
+    //   permanent: true,
+    // );
+    // Get.put(
+    //   wifiDirectConnectionController,
+    //   permanent: true,
+    // );
 
     Get.put<P2PNodeController>(
       P2PNodeController(
@@ -269,7 +269,7 @@ class GlobalBindings extends Bindings {
       permanent: true,
     );
 
-    Get.put<CommonMessagingConnectionController>(Get.find<MessagingConnectionController>());
+    // Get.put<CommonMessagingConnectionController>(Get.find<MessagingConnectionController>());
 
     Get.put<ChatHistoryLocalRepo>(
       ChatHistoryLocalRepo(
@@ -293,7 +293,7 @@ class GlobalBindings extends Bindings {
         chatHistoryRepo: Get.find<ChatHistoryLocalRepo>(),
       ),
     );
-    Get.put<CommonMessagingConnectionController>(Get.find<MessagingConnectionController>());
+    // Get.put<CommonMessagingConnectionController>(Get.find<MessagingConnectionController>());
 
     Get.put(
       SyncMessages(

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/messaging/unified_messaging_controller.dart';
 import '../../../messaging/controllers/common_messaging_controller.dart';
 
 import '../../../messaging/usecases/send_data_channel_message_usecase.dart';
@@ -14,8 +15,7 @@ class ConfirmMessage {
       appDatabaseProvider: Get.find(),
     ),
   );
-  final CommonMessagingConnectionController messagingConnection =
-      Get.find<CommonMessagingConnectionController>();
+  final UnifiedConnectionController messagingConnection = Get.find<UnifiedConnectionController>();
 
   execute({required ConfirmMessageType confirmMessageType, required String remoteCoreId}) async {
     switch (confirmMessageType.runtimeType) {

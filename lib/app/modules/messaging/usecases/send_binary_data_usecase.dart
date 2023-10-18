@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:get/get.dart';
 import '../controllers/common_messaging_controller.dart';
 import '../controllers/messaging_connection_controller.dart';
+import '../unified_messaging_controller.dart';
 import '../utils/binary_file_sending_state.dart';
 import '../utils/binary_single_completer.dart';
 
@@ -11,8 +12,8 @@ class SendBinaryData {
   final BinaryFileSendingState sendingState;
   int maximumMessageSize = 100000;
   SingleCompleter<bool>? messageTimeoutCompleter;
-  SendBinaryData({required this.sendingState,required this.messagingConnection});
-  final CommonMessagingConnectionController messagingConnection ;
+  SendBinaryData({required this.sendingState, required this.messagingConnection});
+  final UnifiedConnectionController messagingConnection;
 
   execute(String remoteCoreId) async {
     print('SENDER: Sending first chunk...');
@@ -78,7 +79,7 @@ class SendBinaryData {
     builder.add(chunk);
     var bytes = builder.toBytes();
 
-    messagingConnection.sendBinaryMessage(binary: bytes,remoteCoreId: remoteCoreId);
+    messagingConnection.sendBinaryMessage(binary: bytes, remoteCoreId: remoteCoreId);
     if (isFileRead) {
       print("SENDER: Last chunk sent");
       state.fileSendingComplete = true;

@@ -18,12 +18,12 @@ import '../../messages/data/usecases/cofirm_message_usecase.dart';
 import '../../messages/utils/message_from_json.dart';
 import '../controllers/common_messaging_controller.dart';
 import '../controllers/messaging_connection_controller.dart';
+import '../unified_messaging_controller.dart';
 import '../utils/binary_file_receiving_state.dart';
 
 class HandleReceivedBinaryData {
   final MessagesAbstractRepo messagesRepo;
-  final CommonMessagingConnectionController messagingConnection =
-      Get.find<CommonMessagingConnectionController>();
+  final UnifiedConnectionController messagingConnection = Get.find<UnifiedConnectionController>();
 
   final String chatId;
 

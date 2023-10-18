@@ -3,6 +3,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/update_message_mo
 
 import '../../../messaging/controllers/common_messaging_controller.dart';
 import '../../../messaging/controllers/messaging_connection_controller.dart';
+import '../../../messaging/unified_messaging_controller.dart';
 import '../../../messaging/usecases/send_data_channel_message_usecase.dart';
 import '../models/messages/message_model.dart';
 import '../models/reaction_model.dart';
@@ -16,8 +17,7 @@ class UpdateMessage {
       appDatabaseProvider: Get.find(),
     ),
   );
-  final CommonMessagingConnectionController messagingConnection =
-      Get.find<CommonMessagingConnectionController>();
+  final UnifiedConnectionController messagingConnection = Get.find<UnifiedConnectionController>();
 
   Future<void> execute(
       {required UpdateMessageType updateMessageType, required String remoteCoreId}) async {

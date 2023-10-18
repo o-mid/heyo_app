@@ -4,6 +4,7 @@ import 'package:heyo/app/modules/messages/data/repo/messages_repo.dart';
 
 import '../../../messaging/controllers/common_messaging_controller.dart';
 import '../../../messaging/controllers/messaging_connection_controller.dart';
+import '../../../messaging/unified_messaging_controller.dart';
 import '../../../messaging/usecases/send_data_channel_message_usecase.dart';
 import '../models/messages/message_model.dart';
 import '../provider/messages_provider.dart';
@@ -15,8 +16,7 @@ class DeleteMessage {
       appDatabaseProvider: Get.find(),
     ),
   );
-  final CommonMessagingConnectionController messagingConnection =
-      Get.find<CommonMessagingConnectionController>();
+  final UnifiedConnectionController messagingConnection = Get.find<UnifiedConnectionController>();
 
   Future<void> execute({
     required DeleteMessageType deleteMessageType,

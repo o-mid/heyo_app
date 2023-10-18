@@ -6,19 +6,20 @@ import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
+import '../../messaging/unified_messaging_controller.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
 
 class WifiDirectConnectController extends GetxController {
   //TODO: Implement WifiDirectConnectController
 
-  WifiDirectConnectionController wifiDirectConnectionController;
+  UnifiedConnectionController wifiDirectConnectionController;
 
   late HeyoWifiDirect _pluginInstance;
   late StreamSubscription _eventListener;
   late UserModel user;
 
   WifiDirectConnectController({required this.wifiDirectConnectionController}) {
-    _pluginInstance = wifiDirectConnectionController.wifiDirectWrapper.pluginInstance!;
+    _pluginInstance = wifiDirectConnectionController.wifiDirectWrapper!.pluginInstance!;
   }
 
   Rx<PeerStatus> connectionStatus = PeerStatus.statusUnknown.obs;
@@ -28,7 +29,7 @@ class WifiDirectConnectController extends GetxController {
     super.onInit();
 
     _eventListener = wifiDirectConnectionController
-        .wifiDirectWrapper.pluginInstance!.consumerEventSource.stream
+        .wifiDirectWrapper!.pluginInstance!.consumerEventSource.stream
         .listen((event) => _eventHandler(event));
     user = Get.arguments as UserModel;
   }

@@ -7,6 +7,7 @@ import 'package:heyo/app/modules/messages/data/models/metadatas/video_metadata.d
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messaging/controllers/common_messaging_controller.dart';
+import 'package:heyo/app/modules/messaging/unified_messaging_controller.dart';
 import 'package:tuple/tuple.dart';
 import '../../../messaging/usecases/send_data_channel_message_usecase.dart';
 import '../../utils/message_from_type.dart';
@@ -20,17 +21,15 @@ class SendMessage {
       appDatabaseProvider: Get.find(),
     ),
   );
-  final CommonMessagingConnectionController messagingConnection =
-      Get.find<CommonMessagingConnectionController>();
+  final UnifiedConnectionController messagingConnection = Get.find<UnifiedConnectionController>();
 
   execute(
       {required SendMessageType sendMessageType,
       required String remoteCoreId,
       bool isUpdate = false,
       MessageModel? messageModel = null}) async {
-
     Tuple3<MessageModel?, bool, String> messageObject =
-        messageFromType(messageType: sendMessageType,messageModel: messageModel);
+        messageFromType(messageType: sendMessageType, messageModel: messageModel);
     MessageModel? msg = messageObject.item1;
     bool isDataBinary = messageObject.item2;
     String messageLocalPath = messageObject.item3;
@@ -39,25 +38,19 @@ class SendMessage {
       return;
     }
     if (isUpdate) {
-       await messagesRepo.updateMessage(
-        message: msg.copyWith(status: MessageStatus.sending), chatId: sendMessageType.chatId);
-
+      await messagesRepo.updateMessage(
+          message: msg.copyWith(status: MessageStatus.sending), chatId: sendMessageType.chatId);
     } else {
       await messagesRepo.createMessage(
-          message: msg.copyWith(status: MessageStatus.sending),
-          chatId: sendMessageType.chatId);
+          message: msg.copyWith(status: MessageStatus.sending), chatId: sendMessageType.chatId);
     }
 
     Map<String, dynamic> messageJson = msg.toJson();
-    await SendDataChannelMessage(messagingConnection: messagingConnection)
-        .execute(
+    await SendDataChannelMessage(messagingConnection: messagingConnection).execute(
       channelMessageType: ChannelMessageType.message(
-          message: messageJson,
-          isDataBinary: isDataBinary,
-          messageLocalPath: messageLocalPath),
+          message: messageJson, isDataBinary: isDataBinary, messageLocalPath: messageLocalPath),
       remoteCoreId: remoteCoreId,
     );
-
   }
 }
 
