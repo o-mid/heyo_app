@@ -19,6 +19,7 @@ import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/data/repo/messages_repo.dart';
 import '../../messages/data/usecases/send_message_usecase.dart';
 import '../../messaging/controllers/common_messaging_controller.dart';
+import '../../messaging/unified_messaging_controller.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../../shared/providers/database/app_database.dart';
@@ -200,7 +201,7 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
 
         if (userChatModel != null) {
           // sends the confirm message to the remote side
-          await Get.find<CommonMessagingConnectionController>().toggleMessageReadConfirm(
+          await Get.find<UnifiedConnectionController>().toggleMessageReadConfirm(
               messageId: payload.messageId, remoteCoreId: userChatModel.id);
           // mark the message as read in the local database
           await messagesRepo.markMessagesAsRead(

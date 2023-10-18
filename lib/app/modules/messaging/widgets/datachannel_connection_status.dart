@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/messaging/unified_messaging_controller.dart';
 
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/constants/transitions_constant.dart';
@@ -14,7 +15,7 @@ import '../../shared/widgets/connection_status_body.dart';
 import '../controllers/common_messaging_controller.dart';
 import '../controllers/messaging_connection_controller.dart';
 
-class DatachannelConnectionStatusWidget extends GetView<CommonMessagingConnectionController> {
+class DatachannelConnectionStatusWidget extends GetView<UnifiedConnectionController> {
   DatachannelConnectionStatusWidget({Key? key}) : super(key: key);
   final offsetAnimation = Tween<Offset>(
     begin: const Offset(0, -1),

@@ -51,7 +51,7 @@ class WifiDirectController extends GetxController {
         "WifiDirectController: onInit(). Is _heyoWifiDirect.consumerEventSource.hasListener -> ${_heyoWifiDirect?.consumerEventSource.hasListener}");
 
     _eventListener =
-        _heyoWifiDirect!.consumerEventSource.stream.listen((event) => _eventHandler(event));
+        _heyoWifiDirect!.consumerEventSource.stream.listen((event) => eventHandler(event));
     _messageListener =
         _heyoWifiDirect!.tcpMessage.stream.listen((message) => _messageHandler(message));
     await wifiDirectOn();
@@ -111,7 +111,7 @@ class WifiDirectController extends GetxController {
       case EventType.linkedPeer:
         // incomingConnection = true.obs;
         // connectedPeer = event.message as Peer;
-        wifiDirectConnectionController.eventHandler(event);
+        wifiDirectConnectionController.wifiDirecteventHandler(event);
 
         print('WifiDirectController: linked to ${(event.message as Peer).multiAddress}');
         break;
@@ -120,7 +120,7 @@ class WifiDirectController extends GetxController {
         // incomingConnection = false.obs;
         // outgoingConnection = false.obs;
         // connectedPeer = null;
-        wifiDirectConnectionController.eventHandler(event);
+        wifiDirectConnectionController.wifiDirecteventHandler(event);
 
         print('WifiDirectController: Wifi-direct group stopped');
         break;
@@ -131,7 +131,7 @@ class WifiDirectController extends GetxController {
   }
 
   _messageHandler(HeyoWifiDirectMessage message) {
-    wifiDirectConnectionController.messageHandler(message);
+    wifiDirectConnectionController.wifiDirectmessageHandler(message);
   }
 
   Future<bool> connectPeer(String coreId, {bool encrypt = true}) async {

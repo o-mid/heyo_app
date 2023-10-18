@@ -30,7 +30,7 @@ class WifiDirectConnectController extends GetxController {
 
     _eventListener = wifiDirectConnectionController
         .wifiDirectWrapper!.pluginInstance!.consumerEventSource.stream
-        .listen((event) => _eventHandler(event));
+        .listen((event) => eventHandler(event));
     user = Get.arguments as UserModel;
   }
 
@@ -44,7 +44,7 @@ class WifiDirectConnectController extends GetxController {
     return true;
   }
 
-  void _eventHandler(WifiDirectEvent event) {
+  void eventHandler(WifiDirectEvent event) {
     print('WifiDirectConnectController: WifiDirect event: ${event.type}, ${event.dateTime}');
 
     switch (event.type) {

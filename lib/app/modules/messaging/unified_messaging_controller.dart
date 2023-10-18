@@ -26,6 +26,7 @@ import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart'
 import 'package:heyo/app/modules/shared/utils/constants/notifications_constant.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 
 import '../chats/data/models/chat_model.dart';
@@ -38,9 +39,15 @@ import '../p2p_node/data/account/account_info.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import '../shared/data/models/messages_view_arguments_model.dart';
 import 'utils/binary_file_receiving_state.dart';
 
 enum ConnectionType { RTC, WiFiDirect }
+
+// // Todo :  change this status names if needed base on the connection status of the wifi direct
+enum WifiDirectConnectivityStatus { connectionLost, connecting, justConnected, online }
+
+enum DataChannelConnectivityStatus { connectionLost, connecting, justConnected, online }
 
 class UnifiedConnectionController {
   final ConnectionType connectionType;
@@ -646,5 +653,66 @@ class UnifiedConnectionController {
       status: ConfirmMessageStatus.read,
       remoteCoreId: remoteCoreId,
     );
+  }
+
+  wifiDirecteventHandler(WifiDirectEvent event) {
+    print('WifiDirectConnectionController(remoteId $remoteId): WifiDirect event: ${event.type}');
+    switch (event.type) {
+      case EventType.linkedPeer:
+        remoteId = (event.message as Peer).coreID;
+        _startIncomingWiFiDirectMessaging();
+        break;
+      case EventType.groupStopped:
+        remoteId = null;
+        handleWifiDirectConnectionClose();
+        break;
+      default:
+        break;
+    }
+  }
+
+  _startIncomingWiFiDirectMessaging() async {
+    ChatModel? userChatModel;
+
+    await chatHistoryRepo.getChat(remoteId!).then((value) {
+      userChatModel = value;
+    });
+
+    _initWiFiDirect();
+
+    Get.toNamed(
+      Routes.MESSAGES,
+      arguments: MessagesViewArgumentsModel(
+        // session: session,
+
+        coreId: remoteId!,
+        iconUrl: userChatModel?.icon,
+        connectionType: MessagingConnectionType.wifiDirect,
+      ),
+    );
+    dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
+    setConnectivityOnline();
+  }
+
+  wifiDirectmessageHandler(HeyoWifiDirectMessage message) {
+    print(
+      'WifiDirectConnectionController(remoteId $remoteId): binary: ${message.isBinary}, from ${message.senderId} to ${message.receiverId}',
+    );
+
+    MessageSession session = MessageSession(sid: Constants.coreID, cid: remoteId!, pid: remoteId);
+
+    message.isBinary
+        ? handleDataChannelBinary(binaryData: message.body as Uint8List, remoteCoreId: session.cid)
+        : handleDataChannelText(
+            receivedJson:
+                const JsonDecoder().convert(message.body as String) as Map<String, dynamic>,
+            remoteCoreId: session.cid,
+          );
+  }
+
+  handleWifiDirectConnectionClose() {
+    if (Get.currentRoute == Routes.MESSAGES) {
+      Get.until((route) => Get.currentRoute != Routes.MESSAGES);
+    }
   }
 }
