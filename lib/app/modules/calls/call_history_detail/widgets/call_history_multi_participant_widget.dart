@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/call_history_detail/controllers/call_history_detail_controller.dart';
-import 'package:heyo/app/modules/calls/call_history_detail/widgets/history_call_log_widget.dart';
+import 'package:heyo/app/modules/calls/call_history_detail/widgets/call_history_user_list_tile_widget.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
@@ -15,9 +16,9 @@ import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-class CallHistorySingleParticipantView
+class CallHistoryMultiParticipantWidget
     extends GetView<CallHistoryDetailController> {
-  const CallHistorySingleParticipantView({super.key});
+  const CallHistoryMultiParticipantWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,21 +26,22 @@ class CallHistorySingleParticipantView
       child: SizedBox(
         width: double.infinity,
         child: Obx(() {
-          if (controller.user.value == null) {
+          if (controller.participants.isEmpty) {
             return const SizedBox.shrink();
           }
           return Column(
             children: [
               SizedBox(height: 40.h),
+              // TODO(AliAzim): it should change to current user or summery of group call.
               CustomCircleAvatar(
-                url: controller.user.value!.iconUrl,
+                url: controller.participants[0].iconUrl,
                 size: 64,
               ),
               CustomSizes.mediumSizedBoxHeight,
               GestureDetector(
                 onTap: () => controller.saveCoreIdToClipboard(),
                 child: Text(
-                  controller.user.value!.name,
+                  controller.participants[0].name,
                   style: TEXTSTYLES.kHeaderLarge
                       .copyWith(color: COLORS.kDarkBlueColor),
                 ),
@@ -48,7 +50,7 @@ class CallHistorySingleParticipantView
               GestureDetector(
                 onTap: () => controller.saveCoreIdToClipboard(),
                 child: Text(
-                  controller.user.value!.coreId.shortenCoreId,
+                  controller.participants[0].coreId.shortenCoreId,
                   style: TEXTSTYLES.kBodySmall
                       .copyWith(color: COLORS.kTextSoftBlueColor),
                 ),
@@ -97,8 +99,8 @@ class CallHistorySingleParticipantView
                       Get.toNamed(
                         Routes.MESSAGES,
                         arguments: MessagesViewArgumentsModel(
-                          coreId: controller.user.value!.coreId,
-                          iconUrl: controller.user.value!.iconUrl,
+                          coreId: controller.participants[0].coreId,
+                          iconUrl: controller.participants[0].iconUrl,
                           connectionType: MessagingConnectionType.internet,
                         ),
                       );
@@ -121,14 +123,15 @@ class CallHistorySingleParticipantView
                 ),
               ),
               CustomSizes.smallSizedBoxHeight,
-              ...controller.calls.map(
-                (call) => Container(
-                  width: double.infinity,
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-                  child: HistoryCallLogWidget(call: call),
-                ),
-              ),
+              ...controller.participants.map((participant) {
+                return CallHistoryUserListTileWidget(
+                  iconUrl: participant.iconUrl,
+                  coreId: participant.coreId,
+                  name: participant.name,
+                  trailing: participant.startDate
+                      .formattedDifference(participant.endDate),
+                );
+              }),
               CustomSizes.mediumSizedBoxHeight,
             ],
           );

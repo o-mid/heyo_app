@@ -24,7 +24,7 @@ class CallHistoryDetailController extends GetxController {
   late UserCallHistoryViewArgumentsModel args;
   final calls = <CallHistoryModel>[].obs;
 
-  Rx<CallHistoryParticipantModel?> user = Rx(null);
+  RxList<CallHistoryParticipantModel> participants = RxList();
 
   @override
   Future<void> onInit() async {
@@ -39,11 +39,16 @@ class CallHistoryDetailController extends GetxController {
   }
 
   Future<void> _getUserInfo() async {
-    final checkContactAvailability = await contactAvailabilityUseCase.execute(
-      coreId: args.coreId,
-      iconUrl: args.iconUrl,
-    );
-    user.value = checkContactAvailability.mapToCallHistoryParticipantModel();
+    //TODO(AliAzim): the argument should return list of participant(coreId list)
+    for (final participant in [args]) {
+      final checkContactAvailability = await contactAvailabilityUseCase.execute(
+        coreId: participant.coreId,
+        iconUrl: participant.iconUrl,
+      );
+      participants.add(
+        checkContactAvailability.mapToCallHistoryParticipantModel(),
+      );
+    }
   }
 
   Future<void> saveCoreIdToClipboard() async {
