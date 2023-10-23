@@ -40,6 +40,9 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import '../shared/data/models/messages_view_arguments_model.dart';
+import 'connection/connection_repo.dart';
+import 'connection/connection_repo_factory.dart';
+import 'connection/rtc_connection_repo_impl.dart';
 import 'utils/binary_file_receiving_state.dart';
 
 enum ConnectionType { RTC, WiFiDirect }
@@ -70,6 +73,7 @@ class UnifiedConnectionController {
   BinaryFileReceivingState? currentWebrtcBinaryState;
   ChatModel? userChatmodel;
   final JsonDecoder _decoder = const JsonDecoder();
+  late ConnectionRepo connectionRepo;
 
   UnifiedConnectionController({
     required this.connectionType,
@@ -98,6 +102,8 @@ class UnifiedConnectionController {
       DataChannelConnectivityStatus.connectionLost.obs;
 
   void _initializeBasedOnConnectionType() {
+    connectionRepo = ConnectionRepoFactory.create(connectionType);
+
     if (connectionType == ConnectionType.RTC) {
       _initRTC();
     } else {
