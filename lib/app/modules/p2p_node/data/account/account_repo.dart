@@ -109,12 +109,12 @@ class AccountRepo implements AccountInfo {
   }
 
   @override
-  Future<String?> getCoreId() async{
+  Future<String?> getCorePassCoreId() async{
     return localProvider.readFromStorage(COREPASS_ID);
   }
 
   @override
-  Future<void> setCoreId(String coreId) async {
+  Future<void> setCorePassCoreId(String coreId) async {
     await localProvider.saveToStorage(COREPASS_ID, coreId);
   }
 

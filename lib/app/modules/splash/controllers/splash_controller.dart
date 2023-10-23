@@ -10,9 +10,9 @@ class SplashController extends GetxController {
 
   //Todo accountInfo
   _checkIfAuthenticated() async {
-    final isLogin = (await accountInfo.getCoreId() != null) &&
+    final isLogin = (await accountInfo.getCorePassCoreId() != null) &&
         (await accountInfo.getSignature() != null);
-    if (false) {
+    if (true) {
       await Get.offAllNamed(Routes.HOME);
     } else {
       await Get.offAllNamed(Routes.INTRO);
