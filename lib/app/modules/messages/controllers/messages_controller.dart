@@ -74,8 +74,6 @@ class MessagesController extends GetxController {
 
   final UnifiedConnectionController messagingController;
 
-  // late CommonMessagingConnectionController messagingConnection;
-
   late MessagingConnectionType connectionType;
 
   final _globalMessageController = Get.find<GlobalMessageController>();

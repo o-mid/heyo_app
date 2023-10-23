@@ -73,13 +73,13 @@ class UnifiedConnectionController {
 
   UnifiedConnectionController({
     required this.connectionType,
-    this.multipleConnectionHandler,
-    this.wifiDirectWrapper,
     required this.accountInfo,
     required this.messagesRepo,
     required this.chatHistoryRepo,
     required this.notificationsController,
     required this.contactRepository,
+    this.multipleConnectionHandler,
+    this.wifiDirectWrapper,
     //... other dependencies
   }) {
     if (connectionType == ConnectionType.RTC && multipleConnectionHandler == null) {
@@ -95,7 +95,7 @@ class UnifiedConnectionController {
   Rx<DataChannelConnectivityStatus> connectivityStatus =
       DataChannelConnectivityStatus.connecting.obs;
   Rx<DataChannelConnectivityStatus> dataChannelStatus =
-      DataChannelConnectivityStatus.connecting.obs;
+      DataChannelConnectivityStatus.connectionLost.obs;
 
   void _initializeBasedOnConnectionType() {
     if (connectionType == ConnectionType.RTC) {
@@ -146,14 +146,14 @@ class UnifiedConnectionController {
 
   Future<void> initMessagingConnection({required String remoteId}) async {
     if (connectionType == ConnectionType.RTC) {
-      _initRTCConnection(remoteId);
+      await _initRTCConnection(remoteId);
     } else {
-      _initWiFiDirectConnection(remoteId);
+      await _initWiFiDirectConnection(remoteId);
     }
   }
 
   Future<void> _initRTCConnection(String remoteId) async {
-    RTCSession rtcSession = await multipleConnectionHandler!.getConnection(remoteId);
+    final rtcSession = await multipleConnectionHandler!.getConnection(remoteId);
     currentRemoteId = rtcSession.remotePeer.remoteCoreId;
     print("initMessagingConnection RTCSession Status: ${rtcSession.rtcSessionStatus}");
     _observeMessagingStatus(rtcSession);
@@ -170,7 +170,7 @@ class UnifiedConnectionController {
     };
   }
 
-  void _applyConnectionStatus(RTCSessionStatus status, String remoteCoreId) {
+  Future<void> _applyConnectionStatus(RTCSessionStatus status, String remoteCoreId) async {
     if (currentRemoteId != remoteCoreId) {
       return;
     }
@@ -178,24 +178,20 @@ class UnifiedConnectionController {
       case RTCSessionStatus.connected:
         {
           dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
-          setConnectivityOnline();
+          await setConnectivityOnline();
         }
-        break;
       case RTCSessionStatus.none:
         {
           dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
         }
-        break;
       case RTCSessionStatus.connecting:
         {
           dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
         }
-        break;
       case RTCSessionStatus.failed:
         {
           dataChannelStatus.value = DataChannelConnectivityStatus.connectionLost;
         }
-        break;
     }
   }
 
@@ -219,10 +215,8 @@ class UnifiedConnectionController {
     switch ((_heyoWifiDirect!.peerList.peers[remoteId] as Peer).status) {
       case PeerStatus.peerTCPOpened:
         dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
-        break;
       case PeerStatus.peerConnected:
         dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
-        break;
       default:
         dataChannelStatus.value = DataChannelConnectivityStatus.connectionLost;
         break;
@@ -377,28 +371,24 @@ class UnifiedConnectionController {
           receivedMessageJson: channelMessage.message,
           chatId: remoteCoreId,
         );
-        break;
 
       case DataChannelMessageType.delete:
         await deleteReceivedMessage(
           receivedDeleteJson: channelMessage.message,
           chatId: remoteCoreId,
         );
-        break;
 
       case DataChannelMessageType.update:
         await updateReceivedMessage(
           receivedUpdateJson: channelMessage.message,
           chatId: remoteCoreId,
         );
-        break;
 
       case DataChannelMessageType.confirm:
         await confirmReceivedMessage(
           receivedconfirmJson: channelMessage.message,
           chatId: remoteCoreId,
         );
-        break;
     }
   }
 
@@ -618,28 +608,9 @@ class UnifiedConnectionController {
     }
   }
 
-  /// Confirms received message by it's Id, using sendTextMessage() method,
-  /// defined by the appropriate derived class.
-  confirmMessageById({
-    required String messageId,
-    required ConfirmMessageStatus status,
-    required String remoteCoreId,
-  }) async {
-    Map<String, dynamic> confirmMessageJson =
-        ConfirmMessageModel(messageId: messageId, status: status).toJson();
-
-    DataChannelMessageModel dataChannelMessage = DataChannelMessageModel(
-      message: confirmMessageJson,
-      dataChannelMessagetype: DataChannelMessageType.confirm,
-    );
-
-    Map<String, dynamic> dataChannelMessageJson = dataChannelMessage.toJson();
-
-    await sendTextMessage(text: jsonEncode(dataChannelMessageJson), remoteCoreId: remoteCoreId);
-  }
-
   Future<void> setConnectivityOnline() async {
     await Future.delayed(const Duration(seconds: 2), () {
+      dataChannelStatus.value = DataChannelConnectivityStatus.online;
       connectivityStatus.value = DataChannelConnectivityStatus.online;
     });
   }
@@ -655,17 +626,15 @@ class UnifiedConnectionController {
     );
   }
 
-  wifiDirecteventHandler(WifiDirectEvent event) {
+  void handleWifiDirectEvents(WifiDirectEvent event) {
     print('WifiDirectConnectionController(remoteId $remoteId): WifiDirect event: ${event.type}');
     switch (event.type) {
       case EventType.linkedPeer:
         remoteId = (event.message as Peer).coreID;
         _startIncomingWiFiDirectMessaging();
-        break;
       case EventType.groupStopped:
         remoteId = null;
         handleWifiDirectConnectionClose();
-        break;
       default:
         break;
     }
@@ -714,5 +683,22 @@ class UnifiedConnectionController {
     if (Get.currentRoute == Routes.MESSAGES) {
       Get.until((route) => Get.currentRoute != Routes.MESSAGES);
     }
+  }
+
+  /// Confirms received message by it's Id, using sendTextMessage() method,
+  /// defined by the appropriate derived class.
+
+  Future<void> confirmMessageById({
+    required String messageId,
+    required ConfirmMessageStatus status,
+    required String remoteCoreId,
+  }) async {
+    final confirmMessageJson = ConfirmMessageModel(messageId: messageId, status: status).toJson();
+    final dataChannelMessage = DataChannelMessageModel(
+      message: confirmMessageJson,
+      dataChannelMessagetype: DataChannelMessageType.confirm,
+    );
+    final dataChannelMessageJson = dataChannelMessage.toJson();
+    await sendTextMessage(text: jsonEncode(dataChannelMessageJson), remoteCoreId: remoteCoreId);
   }
 }

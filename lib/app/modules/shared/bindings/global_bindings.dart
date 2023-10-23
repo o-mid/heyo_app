@@ -171,7 +171,10 @@ class GlobalBindings extends Bindings {
       ),
       permanent: true,
     );
-
+    Get.put(
+      unifiedConnectionController,
+      permanent: true,
+    );
     // call related dependencies
     Get.put(
       CallHistoryObserver(
@@ -317,10 +320,5 @@ class GlobalBindings extends Bindings {
     Get.put(UpdateMessage());
     Get.put(DeleteMessage());
     Get.put(ConfirmMessage());
-
-    Get.put(
-      unifiedConnectionController,
-      permanent: true,
-    );
   }
 }

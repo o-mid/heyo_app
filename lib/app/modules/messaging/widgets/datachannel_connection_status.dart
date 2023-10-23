@@ -27,11 +27,12 @@ class DatachannelConnectionStatusWidget extends GetView<UnifiedConnectionControl
     //   frequency: 10,
     //   delayInSeconds: 4,
     // );
+    Rx<DataChannelConnectivityStatus> dataChannelStatus = controller.dataChannelStatus;
     return Obx(() {
       Color backgroundColor;
       String title;
       Color titleColor;
-      switch (controller.dataChannelStatus.value) {
+      switch (dataChannelStatus.value) {
         case DataChannelConnectivityStatus.connectionLost:
           title = LocaleKeys.DataChannelStatus_ConnectionLost.tr;
           backgroundColor = COLORS.kStatesLightErrorColor;
