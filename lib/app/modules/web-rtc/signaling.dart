@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
 
@@ -48,7 +49,6 @@ class Signaling {
 
   final Map<String, dynamic> _iceServers = {
     'iceServers': [
-      {'url': 'stun:stun.l.google.com:19302'},
       {
         "url": 'turn:turn-ca.ting.tube',
         "username": 'turn-server-ca',
@@ -67,7 +67,7 @@ class Signaling {
       {
         "url": 'turn:turn-ir.ting.tube',
         "username": 'turn-server-ir',
-        "credential": 'turn-server-ir',
+        "credential": 'Sckjas86AVicubao9s8c7',
       }
     ],
   };
@@ -501,6 +501,7 @@ class Signaling {
     request["type"] = event;
     request["data"] = data;
     request["command"] = "call";
+    debugPrint("Sending Request : " + request.toString());
     p2pCommunicator.sendSDP(_encoder.convert(request), remoteCoreId, remotePeerId);
   }
 

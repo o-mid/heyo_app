@@ -49,7 +49,9 @@ class CallController extends GetxController {
   final isVideoPositionsFlipped = false.obs;
 
   bool get isGroupCall =>
-      participants.where((p) => p.status == CallParticipantStatus.inCall).length > 1;
+      participants
+          .where((p) => p.status == CallParticipantStatus.inCall)
+          .length > 1;
 
   final recordState = RecordState.notRecording.obs;
   final CallConnectionController callConnectionController;
@@ -243,7 +245,8 @@ class CallController extends GetxController {
   // Todo
   void toggleVideo() {
     callerVideoEnabled.value = !callerVideoEnabled.value;
-    callConnectionController.showLocalVideoStream(callerVideoEnabled.value, session.sid, true);
+    callConnectionController.showLocalVideoStream(
+        callerVideoEnabled.value, session.sid, true);
   }
 
   void switchCamera() {
@@ -256,7 +259,8 @@ class CallController extends GetxController {
 
   void updateCallViewType(CallViewType type) => callViewType.value = type;
 
-  void flipVideoPositions() => isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
+  void flipVideoPositions() =>
+      isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   @override
   void onClose() async {
