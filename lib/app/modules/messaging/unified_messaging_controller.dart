@@ -40,6 +40,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import '../shared/data/models/messages_view_arguments_model.dart';
+import 'connection/connection_data_handler.dart';
 import 'connection/connection_repo.dart';
 import 'connection/connection_repo_factory.dart';
 import 'connection/rtc_connection_repo_impl.dart';
@@ -74,6 +75,7 @@ class UnifiedConnectionController {
   ChatModel? userChatmodel;
   final JsonDecoder _decoder = const JsonDecoder();
   late ConnectionRepo connectionRepo;
+  late DataHandler dataHandler;
 
   UnifiedConnectionController({
     required this.connectionType,
@@ -102,7 +104,14 @@ class UnifiedConnectionController {
       DataChannelConnectivityStatus.connectionLost.obs;
 
   void _initializeBasedOnConnectionType() {
-    connectionRepo = ConnectionRepoFactory.create(connectionType);
+    final dataHandler = DataHandler(
+      messagesRepo: messagesRepo,
+      chatHistoryRepo: chatHistoryRepo,
+      notificationsController: notificationsController,
+      contactRepository: contactRepository,
+    );
+
+    connectionRepo = ConnectionRepoFactory.create(ConnectionType.RTC, dataHandler);
 
     if (connectionType == ConnectionType.RTC) {
       _initRTC();

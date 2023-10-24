@@ -10,8 +10,13 @@ import 'package:heyo/app/modules/messaging/usecases/handle_received_binary_data_
 import '../models/data_channel_message_model.dart';
 import '../utils/binary_file_receiving_state.dart';
 import '../utils/data_binary_message.dart';
+import 'connection_data_handler.dart';
 
 class RTCConnectionRepoImpl extends ConnectionRepo {
+  RTCConnectionRepoImpl({
+    required super.dataHandler,
+  });
+
   String currentRemoteId = "";
   BinaryFileReceivingState? currentWebrtcBinaryState;
   final JsonDecoder _decoder = const JsonDecoder();
@@ -46,7 +51,7 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
 
         dataChannel.onMessage = (data) async {
           print("onMessageReceived : $data ${rtcSession.connectionId}");
-          await createUserChatModel(sessioncid: rtcSession.remotePeer.remoteCoreId);
+          await dataHandler.createUserChatModel(sessioncid: rtcSession.remotePeer.remoteCoreId);
 
           data.isBinary
               ? await handleDataChannelBinary(
@@ -113,8 +118,8 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
         print('RECEIVER: New file transfer and State started');
       }
       currentWebrtcBinaryState!.pendingMessages[message.chunkStart] = message;
-      await HandleReceivedBinaryData(messagesRepo: messagesRepo, chatId: remoteCoreId)
-          .execute(state: currentWebrtcBinaryState!, remoteCoreId: remoteCoreId);
+      await dataHandler.handleReceivedBinaryData(
+          currentWebrtcBinaryState: currentWebrtcBinaryState!, remoteCoreId: remoteCoreId);
     } else {
       // handle the acknowledge
       print(message.header);

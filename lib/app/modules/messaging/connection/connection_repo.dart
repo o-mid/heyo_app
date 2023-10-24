@@ -2,7 +2,12 @@ import 'dart:typed_data';
 
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 
+import 'connection_data_handler.dart';
+
 abstract class ConnectionRepo {
+  final DataHandler dataHandler;
+
+  ConnectionRepo({required this.dataHandler});
   Future<void> initMessagingConnection({
     required String remoteId,
   });

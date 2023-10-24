@@ -1,9 +1,14 @@
 import 'dart:typed_data';
 
+import 'package:heyo/app/modules/messaging/connection/connection_data_handler.dart';
+
 import '../multiple_connections.dart';
 import 'connection_repo.dart';
 
-class WiFiDirectConnectionRepo extends ConnectionRepo {
+class WiFiDirectConnectionRepoImpl extends ConnectionRepo {
+  WiFiDirectConnectionRepoImpl({
+    required super.dataHandler, // New argument
+  });
   // ... fields specific to RTC
   @override
   Future<void> initMessagingConnection({required String remoteId}) async {
