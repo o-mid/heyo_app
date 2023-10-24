@@ -1,13 +1,16 @@
 import 'dart:typed_data';
 
+import 'package:get/get.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 
 import 'connection_data_handler.dart';
 
-abstract class ConnectionRepo {
-  final DataHandler dataHandler;
+enum ConnectivityStatus { connectionLost, connecting, justConnected, online }
 
+abstract class ConnectionRepo {
   ConnectionRepo({required this.dataHandler});
+  final DataHandler dataHandler;
+  Rx<ConnectivityStatus> connectivityStatus = ConnectivityStatus.connecting.obs;
   Future<void> initMessagingConnection({
     required String remoteId,
     MultipleConnectionHandler? multipleConnectionHandler,

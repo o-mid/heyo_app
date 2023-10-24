@@ -135,11 +135,11 @@ class UnifiedConnectionController {
       remoteId: remoteId,
       multipleConnectionHandler: multipleConnectionHandler,
     );
-    if (connectionType == ConnectionType.RTC) {
-      // await _initRTCConnection(remoteId);
-    } else {
-      await _initWiFiDirectConnection(remoteId);
-    }
+    // if (connectionType == ConnectionType.RTC) {
+    //   // await _initRTCConnection(remoteId);
+    // } else {
+    //   await _initWiFiDirectConnection(remoteId);
+    // }
   }
 
   // Future<void> _initRTCConnection(String remoteId) async {
@@ -214,22 +214,13 @@ class UnifiedConnectionController {
   }
 
   Future<void> sendTextMessage({required String text, required String remoteCoreId}) async {
-    if (connectionType == ConnectionType.RTC) {
-      _sendRTCMessage(text, remoteCoreId);
-    } else {
-      _sendWiFiDirectMessage(text, remoteCoreId);
-    }
-  }
+    await connectionRepo.sendTextMessage(text: text, remoteCoreId: remoteCoreId);
 
-  Future<void> _sendRTCMessage(String text, String remoteCoreId) async {
-    RTCSession rtcSession = await multipleConnectionHandler!.getConnection(remoteCoreId);
-
-    await createUserChatModel(sessioncid: remoteCoreId);
-
-    print(
-      "sendMessage  : ${rtcSession.connectionId} ${(rtcSession).dc} ${rtcSession.rtcSessionStatus}",
-    );
-    (rtcSession).dc?.send(RTCDataChannelMessage(text));
+    // if (connectionType == ConnectionType.RTC) {
+    //   _sendRTCMessage(text, remoteCoreId);
+    // } else {
+    //   _sendWiFiDirectMessage(text, remoteCoreId);
+    // }
   }
 
   Future<void> _sendWiFiDirectMessage(String text, String remoteCoreId) async {
@@ -246,41 +237,12 @@ class UnifiedConnectionController {
   // Continued...
 
   Future<void> sendBinaryMessage({required Uint8List binary, required String remoteCoreId}) async {
-    if (connectionType == ConnectionType.RTC) {
-      _sendRTCBinary(binary, remoteCoreId);
-    } else {
-      _sendWiFiDirectBinary(binary, remoteCoreId);
-    }
-  }
-
-  Future<void> _sendRTCBinary(Uint8List binary, String remoteCoreId) async {
-    RTCSession rtcSession = await multipleConnectionHandler!.getConnection(remoteCoreId);
-    print(
-      "sendTextMessage : ${(rtcSession.isDataChannelConnectionAvailable)} : ${rtcSession.dc?.state} : ${rtcSession.rtcSessionStatus}",
-    );
-    await createUserChatModel(sessioncid: remoteCoreId);
-
-    await rtcSession.dc?.send(RTCDataChannelMessage.fromBinary(binary));
-  }
-
-  Future<void> _sendWiFiDirectBinary(Uint8List binary, String remoteCoreId) async {
-    // TODO remove debug output
-
-    DataBinaryMessage sendingMessage = DataBinaryMessage.parse(binary);
-
-    // TODO needs to be optimized to remove the redundant null check _heyoWifiDirect
-    _initWiFiDirect();
-
-    // TODO implement binary sending
-    print(
-      'WifiDirectConnectionController(remoteId $remoteId): sendBinaryData() header ${sendingMessage.header.toString()}',
-    );
-
-    _heyoWifiDirect!.sendBinaryData(
-      receiver: remoteId!,
-      header: sendingMessage.header,
-      chunk: sendingMessage.chunk,
-    );
+    await connectionRepo.sendBinaryMessage(binary: binary, remoteCoreId: remoteCoreId);
+    // if (connectionType == ConnectionType.RTC) {
+    //   _sendRTCBinary(binary, remoteCoreId);
+    // } else {
+    //   _sendWiFiDirectBinary(binary, remoteCoreId);
+    // }
   }
 
   void onClose() {

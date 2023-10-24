@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
 import 'package:heyo/app/modules/messaging/models.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
@@ -34,12 +35,25 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
 
   @override
   Future<void> sendTextMessage({required String text, required String remoteCoreId}) async {
-    // ... implement RTC logic
+    RTCSession rtcSession = await multiConnectionHandler.getConnection(remoteCoreId);
+
+    await dataHandler.createUserChatModel(sessioncid: remoteCoreId);
+
+    print(
+      "sendMessage  : ${rtcSession.connectionId} ${(rtcSession).dc} ${rtcSession.rtcSessionStatus}",
+    );
+    (rtcSession).dc?.send(RTCDataChannelMessage(text));
   }
 
   @override
   Future<void> sendBinaryMessage({required Uint8List binary, required String remoteCoreId}) async {
-    // ... implement RTC logic
+    RTCSession rtcSession = await multiConnectionHandler.getConnection(remoteCoreId);
+    print(
+      "sendTextMessage : ${(rtcSession.isDataChannelConnectionAvailable)} : ${rtcSession.dc?.state} : ${rtcSession.rtcSessionStatus}",
+    );
+    await dataHandler.createUserChatModel(sessioncid: remoteCoreId);
+
+    await rtcSession.dc?.send(RTCDataChannelMessage.fromBinary(binary));
   }
 
   @override
@@ -92,20 +106,20 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
     switch (status) {
       case RTCSessionStatus.connected:
         {
-          dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
+          connectivityStatus.value = ConnectivityStatus.justConnected;
           await setConnectivityOnline();
         }
       case RTCSessionStatus.none:
         {
-          dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
+          connectivityStatus.value = ConnectivityStatus.connecting;
         }
       case RTCSessionStatus.connecting:
         {
-          dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
+          connectivityStatus.value = ConnectivityStatus.connecting;
         }
       case RTCSessionStatus.failed:
         {
-          dataChannelStatus.value = DataChannelConnectivityStatus.connectionLost;
+          connectivityStatus.value = ConnectivityStatus.connectionLost;
         }
     }
   }
@@ -166,5 +180,11 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
           chatId: remoteCoreId,
         );
     }
+  }
+
+  Future<void> setConnectivityOnline() async {
+    await Future.delayed(const Duration(seconds: 2), () {
+      connectivityStatus.value = ConnectivityStatus.online;
+    });
   }
 }
