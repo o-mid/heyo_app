@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node.dart';
@@ -23,12 +22,11 @@ class P2PNodeController {
           _stopP2PNode();
         }
         _setUpP2PNode();
-        print("New networkStatus: $connectivityResult");
+        print('New networkStatus: $connectivityResult');
         _latestConnectivityStatus = connectivityResult;
       }
     });
   }
-
 
   void _stopP2PNode() {
     print("p2p stopNode");
@@ -39,4 +37,5 @@ class P2PNodeController {
     print("p2p startNode");
     p2pNode.restart();
   }
+
 }

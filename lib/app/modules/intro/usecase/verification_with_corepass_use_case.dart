@@ -20,7 +20,7 @@ class VerificationWithCorePassUseCase {
   final P2PCommunicator p2pCommunicator;
 
   Future<void> executeLaunch() async {
-    String? heyoId = await accountInfo.getLocalCoreId();
+    var heyoId = await accountInfo.getLocalCoreId();
     while (heyoId == null) {
       Get.rawSnackbar(
           messageText: Text("Generating id...",
@@ -37,7 +37,6 @@ class VerificationWithCorePassUseCase {
     try {
       await launchUrlString(uri);
       debugPrint('The app is installed on the device.');
-      _listenToUriDataStream();
     } catch (e) {
       debugPrint(e.toString());
       //
@@ -76,7 +75,7 @@ class VerificationWithCorePassUseCase {
     final coreId = result['coreID'];
     if (signature != null && coreId != null) {
       await accountInfo.setSignature(signature.replaceAll('0x', ''));
-      await accountInfo.setCoreId(coreId);
+      await accountInfo.setCorePassCoreId(coreId);
       await p2pCommunicator.applyDelegatedAuth();
       await _cleanUp();
       // Navigate to verified user page
@@ -95,7 +94,7 @@ class VerificationWithCorePassUseCase {
     return result['signature'] == null || result['coreID'] == null;
   }
 
-  void _listenToUriDataStream() {
+  void listenForResponse() {
     _urlStream = linkStream.listen((event) {
       if (event != null) {
         _checkUri(event);

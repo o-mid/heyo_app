@@ -7,6 +7,7 @@ import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:flutter_p2p_communicator/utils/constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_request.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
@@ -21,6 +22,7 @@ class P2PNode {
   final P2PNodeRequestStream p2pNodeRequestStream;
   final P2PState p2pState;
   final Web3Client web3client;
+  final P2PCommunicator p2pCommunicator;
 
   P2PNode({
     required this.accountInfo,
@@ -28,6 +30,7 @@ class P2PNode {
     required this.p2pNodeResponseStream,
     required this.p2pState,
     required this.web3client,
+    required this.p2pCommunicator,
   });
 
   _setUpP2PNode() async {
@@ -60,8 +63,8 @@ class P2PNode {
 
       if (prefs.getBool('first_run') ?? true) {
         // sets a key-value pair of first run in IOS NSUserDefaults with shared_preferences
-        prefs.setBool('first_run', false);
-        FlutterSecureStorage storage = const FlutterSecureStorage();
+        await prefs.setBool('first_run', false);
+        const storage = FlutterSecureStorage();
         await storage.deleteAll();
       }
     }
@@ -72,21 +75,27 @@ class P2PNode {
     var peerSeed = await accountInfo.getP2PSecret();
 
     if (peerSeed == null) {
-      final generatedMnemonic = await compute(mnemonicToSeed, generateMnemonic());
+      final generatedMnemonic =
+          await compute(mnemonicToSeed, generateMnemonic());
       peerSeed = bytesToHex(generatedMnemonic.aesKeySeed);
       await accountInfo.setP2PSecret(peerSeed);
     }
     final networkId = await web3client.getNetworkId();
-    await FlutterP2pCommunicator.startNode(peerSeed: peerSeed, networkId: networkId.toString());
 
-    final privateKey = await accountInfo.getPrivateKey();
-    final privToAdd =
-        P2PReqResNodeModel(name: P2PReqResNodeNames.addCoreID, body: {"privKey": privateKey});
+    await FlutterP2pCommunicator.startNode(
+      peerSeed: peerSeed,
+      networkId: networkId.toString(),
+    );
 
-    await FlutterP2pCommunicator.sendRequest(info: privToAdd);
+    await p2pCommunicator.addCoreId();
+
+    if (await accountInfo.getSignature() != null) {
+      await p2pCommunicator.applyDelegatedAuth();
+    }
 
     await Future.forEach(P2P_Nodes, (P2PAddrModel element) async {
-      final info = P2PReqResNodeModel(name: P2PReqResNodeNames.connect, body: element.toJson());
+      final info = P2PReqResNodeModel(
+          name: P2PReqResNodeNames.connect, body: element.toJson());
       await FlutterP2pCommunicator.sendRequest(info: info);
     });
   }
