@@ -20,10 +20,16 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
   String currentRemoteId = "";
   BinaryFileReceivingState? currentWebrtcBinaryState;
   final JsonDecoder _decoder = const JsonDecoder();
+  late MultipleConnectionHandler multiConnectionHandler;
   // ... fields specific to RTC
   @override
-  Future<void> initMessagingConnection({required String remoteId}) async {
-    // ... implement RTC logic
+  Future<void> initMessagingConnection(
+      {required String remoteId, MultipleConnectionHandler? multipleConnectionHandler}) async {
+    multiConnectionHandler = multipleConnectionHandler!;
+    final rtcSession = await multipleConnectionHandler.getConnection(remoteId);
+    currentRemoteId = rtcSession.remotePeer.remoteCoreId;
+    print("initMessagingConnection RTCSession Status: ${rtcSession.rtcSessionStatus}");
+    _observeMessagingStatus(rtcSession);
   }
 
   @override
@@ -39,6 +45,7 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
   @override
   Future<void> initConnection({MultipleConnectionHandler? multipleConnectionHandler}) async {
     multipleConnectionHandler?.onNewRTCSessionCreated = (rtcSession) {
+      multiConnectionHandler = multipleConnectionHandler;
       print(
         "onNewRTCSessionCreated : ${rtcSession.connectionId} : ${rtcSession.remotePeer.remoteCoreId} : ${currentRemoteId}",
       );
@@ -68,40 +75,40 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
   }
 
   void _observeMessagingStatus(RTCSession rtcSession) {
-    //  _applyConnectionStatus(rtcSession.rtcSessionStatus, rtcSession.remotePeer.remoteCoreId);
+    _applyConnectionStatus(rtcSession.rtcSessionStatus, rtcSession.remotePeer.remoteCoreId);
 
     print(
       "onConnectionState for observe ${rtcSession.rtcSessionStatus} ${rtcSession.connectionId}",
     );
     rtcSession.onNewRTCSessionStatus = (status) {
-      //  _applyConnectionStatus(status, rtcSession.remotePeer.remoteCoreId);
+      _applyConnectionStatus(status, rtcSession.remotePeer.remoteCoreId);
     };
   }
 
-  // Future<void> _applyConnectionStatus(RTCSessionStatus status, String remoteCoreId) async {
-  //   if (currentRemoteId != remoteCoreId) {
-  //     return;
-  //   }
-  //   switch (status) {
-  //     case RTCSessionStatus.connected:
-  //       {
-  //         dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
-  //         await setConnectivityOnline();
-  //       }
-  //     case RTCSessionStatus.none:
-  //       {
-  //         dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
-  //       }
-  //     case RTCSessionStatus.connecting:
-  //       {
-  //         dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
-  //       }
-  //     case RTCSessionStatus.failed:
-  //       {
-  //         dataChannelStatus.value = DataChannelConnectivityStatus.connectionLost;
-  //       }
-  //   }
-  // }
+  Future<void> _applyConnectionStatus(RTCSessionStatus status, String remoteCoreId) async {
+    if (currentRemoteId != remoteCoreId) {
+      return;
+    }
+    switch (status) {
+      case RTCSessionStatus.connected:
+        {
+          dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
+          await setConnectivityOnline();
+        }
+      case RTCSessionStatus.none:
+        {
+          dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
+        }
+      case RTCSessionStatus.connecting:
+        {
+          dataChannelStatus.value = DataChannelConnectivityStatus.connecting;
+        }
+      case RTCSessionStatus.failed:
+        {
+          dataChannelStatus.value = DataChannelConnectivityStatus.connectionLost;
+        }
+    }
+  }
 
   /// Handles binary data, received from remote peer.
   Future<void> handleDataChannelBinary({
@@ -136,25 +143,25 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
     DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(receivedJson);
     switch (channelMessage.dataChannelMessagetype) {
       case DataChannelMessageType.message:
-        await saveAndConfirmReceivedMessage(
+        await dataHandler.saveAndConfirmReceivedMessage(
           receivedMessageJson: channelMessage.message,
           chatId: remoteCoreId,
         );
 
       case DataChannelMessageType.delete:
-        await deleteReceivedMessage(
+        await dataHandler.deleteReceivedMessage(
           receivedDeleteJson: channelMessage.message,
           chatId: remoteCoreId,
         );
 
       case DataChannelMessageType.update:
-        await updateReceivedMessage(
+        await dataHandler.updateReceivedMessage(
           receivedUpdateJson: channelMessage.message,
           chatId: remoteCoreId,
         );
 
       case DataChannelMessageType.confirm:
-        await confirmReceivedMessage(
+        await dataHandler.confirmReceivedMessage(
           receivedconfirmJson: channelMessage.message,
           chatId: remoteCoreId,
         );

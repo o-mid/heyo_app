@@ -10,9 +10,10 @@ abstract class ConnectionRepo {
   ConnectionRepo({required this.dataHandler});
   Future<void> initMessagingConnection({
     required String remoteId,
+    MultipleConnectionHandler? multipleConnectionHandler,
   });
   Future<void> initConnection({
-    MultipleConnectionHandler multipleConnectionHandler,
+    MultipleConnectionHandler? multipleConnectionHandler,
   });
 
   Future<void> sendTextMessage({required String text, required String remoteCoreId});

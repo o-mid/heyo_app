@@ -111,43 +111,14 @@ class UnifiedConnectionController {
       contactRepository: contactRepository,
     );
 
-    connectionRepo = ConnectionRepoFactory.create(ConnectionType.RTC, dataHandler);
+    connectionRepo = ConnectionRepoFactory.create(connectionType, dataHandler);
 
     if (connectionType == ConnectionType.RTC) {
-      _initRTC();
+      // remove if connection
+      connectionRepo.initConnection(multipleConnectionHandler: multipleConnectionHandler);
     } else {
       _initWiFiDirect();
     }
-  }
-
-  void _initRTC() {
-    multipleConnectionHandler?.onNewRTCSessionCreated = (rtcSession) {
-      print(
-        "onNewRTCSessionCreated : ${rtcSession.connectionId} : ${rtcSession.remotePeer.remoteCoreId} : ${currentRemoteId}",
-      );
-      if (rtcSession.remotePeer.remoteCoreId == currentRemoteId) {
-        _observeMessagingStatus(rtcSession);
-      }
-
-      rtcSession.onDataChannel = (dataChannel) {
-        print("connectionId ${rtcSession.connectionId} ${rtcSession.dc}");
-
-        dataChannel.onMessage = (data) async {
-          print("onMessageReceived : $data ${rtcSession.connectionId}");
-          await createUserChatModel(sessioncid: rtcSession.remotePeer.remoteCoreId);
-
-          data.isBinary
-              ? await handleDataChannelBinary(
-                  binaryData: data.binary,
-                  remoteCoreId: rtcSession.remotePeer.remoteCoreId,
-                )
-              : await handleDataChannelText(
-                  receivedJson: _decoder.convert(data.text) as Map<String, dynamic>,
-                  remoteCoreId: rtcSession.remotePeer.remoteCoreId,
-                );
-        };
-      };
-    };
   }
 
   void _initWiFiDirect() {
@@ -160,19 +131,23 @@ class UnifiedConnectionController {
   }
 
   Future<void> initMessagingConnection({required String remoteId}) async {
+    await connectionRepo.initMessagingConnection(
+      remoteId: remoteId,
+      multipleConnectionHandler: multipleConnectionHandler,
+    );
     if (connectionType == ConnectionType.RTC) {
-      await _initRTCConnection(remoteId);
+      // await _initRTCConnection(remoteId);
     } else {
       await _initWiFiDirectConnection(remoteId);
     }
   }
 
-  Future<void> _initRTCConnection(String remoteId) async {
-    final rtcSession = await multipleConnectionHandler!.getConnection(remoteId);
-    currentRemoteId = rtcSession.remotePeer.remoteCoreId;
-    print("initMessagingConnection RTCSession Status: ${rtcSession.rtcSessionStatus}");
-    _observeMessagingStatus(rtcSession);
-  }
+  // Future<void> _initRTCConnection(String remoteId) async {
+  //   // final rtcSession = await multipleConnectionHandler!.getConnection(remoteId);
+  //   // currentRemoteId = rtcSession.remotePeer.remoteCoreId;
+  //   // print("initMessagingConnection RTCSession Status: ${rtcSession.rtcSessionStatus}");
+  //   // _observeMessagingStatus(rtcSession);
+  // }
 
   void _observeMessagingStatus(RTCSession rtcSession) {
     _applyConnectionStatus(rtcSession.rtcSessionStatus, rtcSession.remotePeer.remoteCoreId);
@@ -350,278 +325,278 @@ class UnifiedConnectionController {
   }
 
   /// Handles binary data, received from remote peer.
-  Future<void> handleDataChannelBinary({
-    required Uint8List binaryData,
-    required String remoteCoreId,
-  }) async {
-    DataBinaryMessage message = DataBinaryMessage.parse(binaryData);
-    print('handleDataChannelBinary header ${message.header.toString()}');
-    print('handleDataChannelBinary chunk length ${message.chunk.length}');
+  // Future<void> handleDataChannelBinary({
+  //   required Uint8List binaryData,
+  //   required String remoteCoreId,
+  // }) async {
+  //   DataBinaryMessage message = DataBinaryMessage.parse(binaryData);
+  //   print('handleDataChannelBinary header ${message.header.toString()}');
+  //   print('handleDataChannelBinary chunk length ${message.chunk.length}');
 
-    if (message.chunk.isNotEmpty) {
-      if (currentWebrtcBinaryState == null) {
-        currentWebrtcBinaryState = BinaryFileReceivingState(message.filename, message.meta);
-        print('RECEIVER: New file transfer and State started');
-      }
-      currentWebrtcBinaryState!.pendingMessages[message.chunkStart] = message;
-      await HandleReceivedBinaryData(messagesRepo: messagesRepo, chatId: remoteCoreId)
-          .execute(state: currentWebrtcBinaryState!, remoteCoreId: remoteCoreId);
-    } else {
-      // handle the acknowledge
-      print(message.header);
+  //   if (message.chunk.isNotEmpty) {
+  //     if (currentWebrtcBinaryState == null) {
+  //       currentWebrtcBinaryState = BinaryFileReceivingState(message.filename, message.meta);
+  //       print('RECEIVER: New file transfer and State started');
+  //     }
+  //     currentWebrtcBinaryState!.pendingMessages[message.chunkStart] = message;
+  //     await HandleReceivedBinaryData(messagesRepo: messagesRepo, chatId: remoteCoreId)
+  //         .execute(state: currentWebrtcBinaryState!, remoteCoreId: remoteCoreId);
+  //   } else {
+  //     // handle the acknowledge
+  //     print(message.header);
 
-      return;
-    }
-  }
+  //     return;
+  //   }
+  // }
 
-  /// Handles text data, received from remote peer.
-  Future<void> handleDataChannelText({
-    required Map<String, dynamic> receivedJson,
-    required String remoteCoreId,
-  }) async {
-    DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(receivedJson);
-    switch (channelMessage.dataChannelMessagetype) {
-      case DataChannelMessageType.message:
-        await saveAndConfirmReceivedMessage(
-          receivedMessageJson: channelMessage.message,
-          chatId: remoteCoreId,
-        );
+  // /// Handles text data, received from remote peer.
+  // Future<void> handleDataChannelText({
+  //   required Map<String, dynamic> receivedJson,
+  //   required String remoteCoreId,
+  // }) async {
+  //   DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(receivedJson);
+  //   switch (channelMessage.dataChannelMessagetype) {
+  //     case DataChannelMessageType.message:
+  //       await saveAndConfirmReceivedMessage(
+  //         receivedMessageJson: channelMessage.message,
+  //         chatId: remoteCoreId,
+  //       );
 
-      case DataChannelMessageType.delete:
-        await deleteReceivedMessage(
-          receivedDeleteJson: channelMessage.message,
-          chatId: remoteCoreId,
-        );
+  //     case DataChannelMessageType.delete:
+  //       await deleteReceivedMessage(
+  //         receivedDeleteJson: channelMessage.message,
+  //         chatId: remoteCoreId,
+  //       );
 
-      case DataChannelMessageType.update:
-        await updateReceivedMessage(
-          receivedUpdateJson: channelMessage.message,
-          chatId: remoteCoreId,
-        );
+  //     case DataChannelMessageType.update:
+  //       await updateReceivedMessage(
+  //         receivedUpdateJson: channelMessage.message,
+  //         chatId: remoteCoreId,
+  //       );
 
-      case DataChannelMessageType.confirm:
-        await confirmReceivedMessage(
-          receivedconfirmJson: channelMessage.message,
-          chatId: remoteCoreId,
-        );
-    }
-  }
+  //     case DataChannelMessageType.confirm:
+  //       await confirmReceivedMessage(
+  //         receivedconfirmJson: channelMessage.message,
+  //         chatId: remoteCoreId,
+  //       );
+  //   }
+  // }
 
-  Future<void> saveAndConfirmReceivedMessage({
-    required Map<String, dynamic> receivedMessageJson,
-    required String chatId,
-  }) async {
-    MessageModel receivedMessage = messageFromJson(receivedMessageJson);
-// checks for existing messageId in case of msg duplication
-    MessageModel? _currentMsg =
-        await messagesRepo.getMessageById(messageId: receivedMessage.messageId, chatId: chatId);
-    if (_currentMsg == null) {
-      // creates and send delivery confirmtion of msg and push a notification event
-      // in case of not existing message
-      await messagesRepo.createMessage(
-        message: receivedMessage.copyWith(
-          isFromMe: false,
-          status: receivedMessage.status.deliveredStatus(),
-        ),
-        chatId: chatId,
-      );
+//   Future<void> saveAndConfirmReceivedMessage({
+//     required Map<String, dynamic> receivedMessageJson,
+//     required String chatId,
+//   }) async {
+//     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
+// // checks for existing messageId in case of msg duplication
+//     MessageModel? _currentMsg =
+//         await messagesRepo.getMessageById(messageId: receivedMessage.messageId, chatId: chatId);
+//     if (_currentMsg == null) {
+//       // creates and send delivery confirmtion of msg and push a notification event
+//       // in case of not existing message
+//       await messagesRepo.createMessage(
+//         message: receivedMessage.copyWith(
+//           isFromMe: false,
+//           status: receivedMessage.status.deliveredStatus(),
+//         ),
+//         chatId: chatId,
+//       );
 
-      confirmMessageById(
-        messageId: receivedMessage.messageId,
-        status: ConfirmMessageStatus.delivered,
-        remoteCoreId: chatId,
-      );
+//       confirmMessageById(
+//         messageId: receivedMessage.messageId,
+//         status: ConfirmMessageStatus.delivered,
+//         remoteCoreId: chatId,
+//       );
 
-      await updateChatRepoAndNotify(
-        receivedMessage: receivedMessage,
-        chatId: chatId,
-        notify: true,
-      );
-    } else {
-      print('Message already exists');
-      // update the existing message and send delivery confirmtion of msg
+//       await updateChatRepoAndNotify(
+//         receivedMessage: receivedMessage,
+//         chatId: chatId,
+//         notify: true,
+//       );
+//     } else {
+//       print('Message already exists');
+//       // update the existing message and send delivery confirmtion of msg
 
-      await messagesRepo.updateMessage(
-        message: receivedMessage.copyWith(
-          isFromMe: false,
-          status: receivedMessage.status.deliveredStatus(),
-        ),
-        chatId: chatId,
-      );
+//       await messagesRepo.updateMessage(
+//         message: receivedMessage.copyWith(
+//           isFromMe: false,
+//           status: receivedMessage.status.deliveredStatus(),
+//         ),
+//         chatId: chatId,
+//       );
 
-      confirmMessageById(
-        messageId: receivedMessage.messageId,
-        status: ConfirmMessageStatus.delivered,
-        remoteCoreId: chatId,
-      );
+//       confirmMessageById(
+//         messageId: receivedMessage.messageId,
+//         status: ConfirmMessageStatus.delivered,
+//         remoteCoreId: chatId,
+//       );
 
-      await updateChatRepoAndNotify(
-        receivedMessage: receivedMessage,
-        chatId: chatId,
-        notify: false,
-      );
-    }
-  }
+//       await updateChatRepoAndNotify(
+//         receivedMessage: receivedMessage,
+//         chatId: chatId,
+//         notify: false,
+//       );
+//     }
+//   }
 
-  Future<void> notifyReceivedMessage({
-    required MessageModel receivedMessage,
-    required String chatId,
-    required String senderName,
-  }) async {
-    await notificationsController.receivedMessageNotify(
-      chatId: chatId,
-      channelKey: NOTIFICATIONS.messagesChannelKey,
+//   Future<void> notifyReceivedMessage({
+//     required MessageModel receivedMessage,
+//     required String chatId,
+//     required String senderName,
+//   }) async {
+//     await notificationsController.receivedMessageNotify(
+//       chatId: chatId,
+//       channelKey: NOTIFICATIONS.messagesChannelKey,
 
-      // largeIcon: 'resource://drawable/usericon',
-      title: senderName,
-      body: receivedMessage.type == MessageContentType.text
-          ? (receivedMessage as TextMessageModel).text
-          : receivedMessage.type.name,
-      bigPicture: receivedMessage.type == MessageContentType.image
-          ? (await messagesRepo.getMessageById(
-              messageId: receivedMessage.messageId,
-              chatId: chatId,
-            ) as ImageMessageModel)
-              .url
-          : null,
-      payload: NotificationsPayloadModel(
-        chatId: chatId,
-        messageId: receivedMessage.messageId,
-        senderName: receivedMessage.senderName,
-        replyMsg: receivedMessage.type == MessageContentType.text
-            ? (receivedMessage as TextMessageModel).text
-            : receivedMessage.type.name,
-      ).toJson(),
-    );
-  }
+//       // largeIcon: 'resource://drawable/usericon',
+//       title: senderName,
+//       body: receivedMessage.type == MessageContentType.text
+//           ? (receivedMessage as TextMessageModel).text
+//           : receivedMessage.type.name,
+//       bigPicture: receivedMessage.type == MessageContentType.image
+//           ? (await messagesRepo.getMessageById(
+//               messageId: receivedMessage.messageId,
+//               chatId: chatId,
+//             ) as ImageMessageModel)
+//               .url
+//           : null,
+//       payload: NotificationsPayloadModel(
+//         chatId: chatId,
+//         messageId: receivedMessage.messageId,
+//         senderName: receivedMessage.senderName,
+//         replyMsg: receivedMessage.type == MessageContentType.text
+//             ? (receivedMessage as TextMessageModel).text
+//             : receivedMessage.type.name,
+//       ).toJson(),
+//     );
+//   }
 
-  Future<void> updateChatRepoAndNotify({
-    required MessageModel receivedMessage,
-    required String chatId,
-    required bool notify,
-  }) async {
-    userChatmodel ??= await chatHistoryRepo.getChat(chatId);
+//   Future<void> updateChatRepoAndNotify({
+//     required MessageModel receivedMessage,
+//     required String chatId,
+//     required bool notify,
+//   }) async {
+//     userChatmodel ??= await chatHistoryRepo.getChat(chatId);
 
-    int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
+//     int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
 
-    userChatmodel = userChatmodel?.copyWith(
-      lastMessage: receivedMessage.type == MessageContentType.text
-          ? (receivedMessage as TextMessageModel).text
-          : receivedMessage.type.name,
-      notificationCount: unReadMessagesCount,
-      id: chatId,
-      timestamp: receivedMessage.timestamp.toLocal(),
-    );
+//     userChatmodel = userChatmodel?.copyWith(
+//       lastMessage: receivedMessage.type == MessageContentType.text
+//           ? (receivedMessage as TextMessageModel).text
+//           : receivedMessage.type.name,
+//       notificationCount: unReadMessagesCount,
+//       id: chatId,
+//       timestamp: receivedMessage.timestamp.toLocal(),
+//     );
 
-    if (userChatmodel != null) {
-      await chatHistoryRepo.updateChat(userChatmodel!);
-    }
+//     if (userChatmodel != null) {
+//       await chatHistoryRepo.updateChat(userChatmodel!);
+//     }
 
-    if (notify) {
-      print("notifyyyyy $chatId");
-      UserModel? userModel = await contactRepository.getContactById(chatId);
+//     if (notify) {
+//       print("notifyyyyy $chatId");
+//       UserModel? userModel = await contactRepository.getContactById(chatId);
 
-      await notifyReceivedMessage(
-        receivedMessage: receivedMessage,
-        chatId: chatId,
-        senderName: (userModel == null)
-            ? "${chatId.characters.take(4).string}...${chatId.characters.takeLast(4).string}"
-            : userModel.name,
-      );
-    }
-  }
+//       await notifyReceivedMessage(
+//         receivedMessage: receivedMessage,
+//         chatId: chatId,
+//         senderName: (userModel == null)
+//             ? "${chatId.characters.take(4).string}...${chatId.characters.takeLast(4).string}"
+//             : userModel.name,
+//       );
+//     }
+//   }
 
-  Future<void> deleteReceivedMessage({
-    required Map<String, dynamic> receivedDeleteJson,
-    required String chatId,
-  }) async {
-    DeleteMessageModel deleteMessage = DeleteMessageModel.fromJson(receivedDeleteJson);
+//   Future<void> deleteReceivedMessage({
+//     required Map<String, dynamic> receivedDeleteJson,
+//     required String chatId,
+//   }) async {
+//     DeleteMessageModel deleteMessage = DeleteMessageModel.fromJson(receivedDeleteJson);
 
-    await messagesRepo.deleteMessages(messageIds: deleteMessage.messageIds, chatId: chatId);
-  }
+//     await messagesRepo.deleteMessages(messageIds: deleteMessage.messageIds, chatId: chatId);
+//   }
 
-  Future<void> updateReceivedMessage({
-    required Map<String, dynamic> receivedUpdateJson,
-    required String chatId,
-  }) async {
-    final updateMessage = UpdateMessageModel.fromJson(receivedUpdateJson);
+  // Future<void> updateReceivedMessage({
+  //   required Map<String, dynamic> receivedUpdateJson,
+  //   required String chatId,
+  // }) async {
+  //   final updateMessage = UpdateMessageModel.fromJson(receivedUpdateJson);
 
-    final MessageModel? currentMessage = await messagesRepo.getMessageById(
-      messageId: updateMessage.message.messageId,
-      chatId: chatId,
-    );
+  //   final MessageModel? currentMessage = await messagesRepo.getMessageById(
+  //     messageId: updateMessage.message.messageId,
+  //     chatId: chatId,
+  //   );
 
-    if (currentMessage != null) {
-      final receivedReactions = updateMessage.message.reactions.map((key, value) {
-        ReactionModel? existingReaction = currentMessage.reactions[key] as ReactionModel?;
-        if (existingReaction is ReactionModel) {
-          final newValue = value.copyWith(
-            isReactedByMe: existingReaction.isReactedByMe,
-          );
-          return MapEntry(key, newValue);
-        }
-        return MapEntry(
-          key,
-          value,
-        ); // handle case where the reaction doesn't exist in currentMessage
-      });
+  //   if (currentMessage != null) {
+  //     final receivedReactions = updateMessage.message.reactions.map((key, value) {
+  //       ReactionModel? existingReaction = currentMessage.reactions[key] as ReactionModel?;
+  //       if (existingReaction is ReactionModel) {
+  //         final newValue = value.copyWith(
+  //           isReactedByMe: existingReaction.isReactedByMe,
+  //         );
+  //         return MapEntry(key, newValue);
+  //       }
+  //       return MapEntry(
+  //         key,
+  //         value,
+  //       ); // handle case where the reaction doesn't exist in currentMessage
+  //     });
 
-      await messagesRepo.updateMessage(
-        message: currentMessage.copyWith(
-          reactions: receivedReactions,
-        ),
-        chatId: chatId,
-      );
-    }
-  }
+  //     await messagesRepo.updateMessage(
+  //       message: currentMessage.copyWith(
+  //         reactions: receivedReactions,
+  //       ),
+  //       chatId: chatId,
+  //     );
+  //   }
+  // }
 
-  Future<void> confirmReceivedMessage({
-    required Map<String, dynamic> receivedconfirmJson,
-    required String chatId,
-  }) async {
-    ConfirmMessageModel confirmMessage = ConfirmMessageModel.fromJson(receivedconfirmJson);
+  // Future<void> confirmReceivedMessage({
+  //   required Map<String, dynamic> receivedconfirmJson,
+  //   required String chatId,
+  // }) async {
+  //   ConfirmMessageModel confirmMessage = ConfirmMessageModel.fromJson(receivedconfirmJson);
 
-    final String messageId = confirmMessage.messageId;
-    if (confirmMessage.status == ConfirmMessageStatus.delivered) {
-      MessageModel? currentMessage =
-          await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
+  //   final String messageId = confirmMessage.messageId;
+  //   if (confirmMessage.status == ConfirmMessageStatus.delivered) {
+  //     MessageModel? currentMessage =
+  //         await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
 
-      // check if message is found and update the Message status
-      if (currentMessage != null) {
-        if (currentMessage.status != MessageStatus.read) {
-          await messagesRepo.updateMessage(
-            message: currentMessage.copyWith(status: MessageStatus.delivered),
-            chatId: chatId,
-          );
-        }
-      }
-    } else {
-      final List<MessageModel> messages = await messagesRepo.getMessages(chatId);
-      final index = messages.lastIndexWhere((element) => element.messageId == messageId);
-      // print(index);
-      // if the message is found create a sublist of messages
-      // that the status is not read and are from me
+  //     // check if message is found and update the Message status
+  //     if (currentMessage != null) {
+  //       if (currentMessage.status != MessageStatus.read) {
+  //         await messagesRepo.updateMessage(
+  //           message: currentMessage.copyWith(status: MessageStatus.delivered),
+  //           chatId: chatId,
+  //         );
+  //       }
+  //     }
+  //   } else {
+  //     final List<MessageModel> messages = await messagesRepo.getMessages(chatId);
+  //     final index = messages.lastIndexWhere((element) => element.messageId == messageId);
+  //     // print(index);
+  //     // if the message is found create a sublist of messages
+  //     // that the status is not read and are from me
 
-      if (index != -1) {
-        final List<MessageModel> messagesToUpdate = messages
-            .sublist(0, index + 1)
-            .where(
-              (element) =>
-                  element.isFromMe == true &&
-                  (element.status == MessageStatus.delivered ||
-                      element.status == MessageStatus.sending),
-            )
-            .toList();
-        // update the status of the messages that need to be update to read
-        for (var item in messagesToUpdate) {
-          await messagesRepo.updateMessage(
-            message: item.copyWith(status: MessageStatus.read),
-            chatId: chatId,
-          );
-        }
-      }
-    }
-  }
+  //     if (index != -1) {
+  //       final List<MessageModel> messagesToUpdate = messages
+  //           .sublist(0, index + 1)
+  //           .where(
+  //             (element) =>
+  //                 element.isFromMe == true &&
+  //                 (element.status == MessageStatus.delivered ||
+  //                     element.status == MessageStatus.sending),
+  //           )
+  //           .toList();
+  //       // update the status of the messages that need to be update to read
+  //       for (var item in messagesToUpdate) {
+  //         await messagesRepo.updateMessage(
+  //           message: item.copyWith(status: MessageStatus.read),
+  //           chatId: chatId,
+  //         );
+  //       }
+  //     }
+  //   }
+  // }
 
   Future<void> setConnectivityOnline() async {
     await Future.delayed(const Duration(seconds: 2), () {

@@ -11,7 +11,8 @@ class WiFiDirectConnectionRepoImpl extends ConnectionRepo {
   });
   // ... fields specific to RTC
   @override
-  Future<void> initMessagingConnection({required String remoteId}) async {
+  Future<void> initMessagingConnection(
+      {required String remoteId, MultipleConnectionHandler? multipleConnectionHandler}) async {
     // ... implement RTC logic
   }
 
