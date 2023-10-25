@@ -90,7 +90,8 @@ class P2PNode {
     await p2pCommunicator.addCoreId();
 
     if (await accountInfo.getSignature() != null) {
-      await p2pCommunicator.applyDelegatedAuth();
+      final result = await p2pCommunicator.applyDelegatedAuth();
+      p2pCommunicator.applyDelegationStatus(status: result);
     }
 
     await Future.forEach(P2P_Nodes, (P2PAddrModel element) async {
