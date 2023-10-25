@@ -95,7 +95,7 @@ class IntroController extends GetxController with WidgetsBindingObserver {
   Future<bool> waitUntilCoreIdIsReady() async {
     final jobCompleter = Completer<String>();
     if (p2pState.peerId.value.isNotEmpty) return true;
-    final cancelJob = ever(p2pState.peerId, (value) async {
+    final listener = p2pState.peerId.listen((value) {
       if (value.isNotEmpty) {
         jobCompleter.complete(value);
       }
@@ -103,7 +103,7 @@ class IntroController extends GetxController with WidgetsBindingObserver {
     await jobCompleter.future;
 
     /// cancels subscription
-    await cancelJob.worker?.call();
+    await listener.cancel();
     return true;
   }
 

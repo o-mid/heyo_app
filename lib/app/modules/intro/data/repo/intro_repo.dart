@@ -28,6 +28,7 @@ class IntroRepo extends IntroAbstractRepo {
   Future<bool> applyDelegatedCredentials(
       String coreId, String signature) async {
     final isSuccessful = await vcp.applyDelegatedCredentials(coreId, signature);
+    vcp.setDelegationStatus(status: isSuccessful);
     if (isSuccessful) await vcp.cleanUp();
     debugPrint('Delegated Credentials Successfully added');
     return isSuccessful;

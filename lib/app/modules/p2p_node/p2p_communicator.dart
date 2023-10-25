@@ -8,6 +8,7 @@ import 'package:flutter_p2p_communicator/model/delegate_auth_model.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:flutter_p2p_communicator/model/signaling_model.dart';
 import 'package:flutter_p2p_communicator/model/transfer_model.dart';
+import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 
 import 'data/account/account_info.dart';
@@ -47,7 +48,6 @@ class P2PCommunicator {
           delegateRemote: DelegateRemoteModel(
             remoteDelegatedCoreID: remoteCoreId,
             remoteDelegateName: DelegateName.heyo,
-
           ),
         ),
         payload: SignalingPayloadModel(
@@ -61,9 +61,6 @@ class P2PCommunicator {
 
   Future<bool> applyDelegatedAuth() async {
     final localCoreId = await accountInfo.getLocalCoreId();
-    final corepassId = await accountInfo.getCorePassCoreId();
-    debugPrint('Local CoreId : $localCoreId');
-    debugPrint('corepassId : $corepassId');
     final delegatedSignature = await accountInfo.getSignature();
 
     final delegatedAuth = DelegateAuthModel(
@@ -78,6 +75,14 @@ class P2PCommunicator {
       ),
     );
     return p2pState.trackRequest(id);
+  }
+
+  RxBool delegatedIsApplied() {
+    return p2pState.delegationSuccessful;
+  }
+
+  void applyDelegationStatus({required bool status}) {
+    p2pState.delegationSuccessful.value = status;
   }
 
   Future<bool> addCoreId() async {

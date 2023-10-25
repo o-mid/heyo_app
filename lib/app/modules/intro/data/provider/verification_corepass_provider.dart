@@ -65,8 +65,6 @@ class VerificationCorePassProvider
   }
 
   Tuple2<String, String>? _checkUri(String deepLink) {
-    debugPrint('Uri is ${deepLink}');
-
     final result = Uri.parse(deepLink).queryParameters;
 
     if (_checkUriIsInvalid(result)) return null;
@@ -99,5 +97,10 @@ class VerificationCorePassProvider
       debugPrint(e.toString());
       return false;
     }
+  }
+
+  @override
+  void setDelegationStatus({required bool status}) {
+    p2pCommunicator.applyDelegationStatus(status: status);
   }
 }

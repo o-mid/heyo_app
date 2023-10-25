@@ -6,6 +6,7 @@ import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/messages/utils/message_to_send_message_type.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/getx.extension.dart';
 
 class SyncMessages {
   final P2PState p2pState;
@@ -62,18 +63,19 @@ class SyncMessages {
   }
 
   _initiateConnections() async {
-    p2pState.advertise.listen((advertise) async {
-      print("syncMessages : _initiateConnections : $advertise");
-      if (advertise) {
-        String selfCoreId = (await accountInfo.getCorePassCoreId())!;
-        multipleConnectionHandler.reset();
-        for (var value in (await chatHistoryRepo.getAllChats())) {
-          print("syncMessages : _initiateConnections : getConnection");
+    //  wait until getting advertised
+    await p2pState.advertise
+        .waitForResult(condition: (advertise) => advertise == true);
+    //
+    await p2pState.delegationSuccessful
+        .waitForResult(condition: (value) => value);
 
-          multipleConnectionHandler.initiateConnections(
-              value.id, selfCoreId);
-        }
-      }
-    });
+    final selfCoreId = (await accountInfo.getCorePassCoreId())!;
+    multipleConnectionHandler.reset();
+    for (var value in await chatHistoryRepo.getAllChats()) {
+      print('syncMessages : _initiateConnections : getConnection');
+
+      multipleConnectionHandler.initiateConnections(value.id, selfCoreId);
+    }
   }
 }
