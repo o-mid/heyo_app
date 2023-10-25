@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:heyo/app/modules/messaging/connection/connection_data_handler.dart';
 import 'package:heyo/app/modules/messaging/utils/data_binary_message.dart';
+import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
+import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 
 import '../multiple_connections.dart';
 import 'connection_repo.dart';
@@ -10,11 +12,37 @@ class WiFiDirectConnectionRepoImpl extends ConnectionRepo {
   WiFiDirectConnectionRepoImpl({
     required super.dataHandler, // New argument
   });
-  // ... fields specific to RTC
+  WifiDirectWrapper? wifiDirectWrapper;
+  HeyoWifiDirect? _heyoWifiDirect;
+  String? remoteId;
   @override
   Future<void> initMessagingConnection(
       {required String remoteId, MultipleConnectionHandler? multipleConnectionHandler}) async {
-    // ... implement RTC logic
+    if (this.remoteId == remoteId) {
+      // TODO remove debug output
+      print(
+        'WifiDirectConnectionController(remoteId $remoteId): initMessagingConnection -> already connected',
+      );
+      return;
+    }
+
+    _initWiFiDirect();
+
+    // TODO remove debug output
+    print(
+      'WifiDirectConnectionController: initMessagingConnection($remoteId), status ${(_heyoWifiDirect!.peerList.peers[remoteId] as Peer).status.name}',
+    );
+    this.remoteId = remoteId;
+
+    switch ((_heyoWifiDirect!.peerList.peers[remoteId] as Peer).status) {
+      case PeerStatus.peerTCPOpened:
+        connectivityStatus.value = ConnectivityStatus.justConnected;
+      case PeerStatus.peerConnected:
+        connectivityStatus.value = ConnectivityStatus.justConnected;
+      default:
+        connectivityStatus.value = ConnectivityStatus.connectionLost;
+        break;
+    }
   }
 
   @override
@@ -51,5 +79,19 @@ class WiFiDirectConnectionRepoImpl extends ConnectionRepo {
   }
 
   @override
-  Future<void> initConnection({MultipleConnectionHandler? multipleConnectionHandler}) async {}
+  Future<void> initConnection({
+    MultipleConnectionHandler? multipleConnectionHandler,
+    WifiDirectWrapper? wifiDirectWrapper,
+  }) async {
+    this.wifiDirectWrapper = wifiDirectWrapper;
+  }
+
+  void _initWiFiDirect() {
+    _heyoWifiDirect = wifiDirectWrapper!.pluginInstance;
+    if (_heyoWifiDirect == null) {
+      print(
+        "HeyoWifiDirect plugin not initialized! Wi-Fi Direct functionality may not be available",
+      );
+    }
+  }
 }
