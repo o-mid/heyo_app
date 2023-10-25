@@ -30,7 +30,8 @@ class BaseLocationMessageWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<BaseLocationMessageWidget> createState() => _BaseLocationMessageWidgetState();
+  State<BaseLocationMessageWidget> createState() =>
+      _BaseLocationMessageWidgetState();
 }
 
 class _BaseLocationMessageWidgetState extends State<BaseLocationMessageWidget> {
@@ -40,12 +41,14 @@ class _BaseLocationMessageWidgetState extends State<BaseLocationMessageWidget> {
   bool isMapReady = false;
   bool isMarkerLocked = false;
   final markerLockDuration = const Duration(milliseconds: 600);
+
   @override
   void initState() {
     super.initState();
-    final geoPoint = GeoPoint(latitude: widget.latitude, longitude: widget.longitude);
+    final geoPoint =
+        GeoPoint(latitude: widget.latitude, longitude: widget.longitude);
     controller = MapController(
-      initMapWithUserPosition: false,
+      initMapWithUserPosition: UserTrackingOption(enableTracking: true),
       initPosition: geoPoint,
     );
   }
@@ -57,15 +60,19 @@ class _BaseLocationMessageWidgetState extends State<BaseLocationMessageWidget> {
       return;
     }
 
-    if (oldWidget.latitude != widget.latitude || oldWidget.longitude != widget.longitude) {
+    if (oldWidget.latitude != widget.latitude ||
+        oldWidget.longitude != widget.longitude) {
       isMarkerLocked = true;
 
       // Todo: animate this once following issue is resolved: https://github.com/liodali/osm_flutter/issues/258
-      final oldPoint = GeoPoint(latitude: oldWidget.latitude, longitude: oldWidget.longitude);
+      final oldPoint = GeoPoint(
+          latitude: oldWidget.latitude, longitude: oldWidget.longitude);
       controller.removeMarker(oldPoint);
 
-      final newPoint = GeoPoint(latitude: widget.latitude, longitude: widget.longitude);
-      controller.addMarker(newPoint, markerIcon: widget.markerIcon ?? _defaultMarkerIcon());
+      final newPoint =
+          GeoPoint(latitude: widget.latitude, longitude: widget.longitude);
+      controller.addMarker(newPoint,
+          markerIcon: widget.markerIcon ?? _defaultMarkerIcon());
 
       controller.goToLocation(newPoint);
       controller.setZoom(zoomLevel: _zoomLevel);
@@ -96,7 +103,7 @@ class _BaseLocationMessageWidgetState extends State<BaseLocationMessageWidget> {
             height: 166,
             child: OSMFlutter(
               controller: controller,
-              initZoom: _zoomLevel,
+              osmOption: OSMOption(zoomOption: ZoomOption(initZoom: _zoomLevel)),
               onMapIsReady: (isReady) {
                 isMapReady = isReady;
                 if (!isReady) {
@@ -126,7 +133,8 @@ class _BaseLocationMessageWidgetState extends State<BaseLocationMessageWidget> {
                 if (widget.includeLeading)
                   Padding(
                     padding:
-                        EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w).copyWith(right: 0),
+                        EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w)
+                            .copyWith(right: 0),
                     child: Assets.svg.liveLocationActive.svg(
                       color: COLORS.kGreenMainColor,
                     ),

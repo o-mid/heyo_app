@@ -46,16 +46,22 @@ class ShareLocationView extends GetView<ShareLocationController> {
                   if (controller.controller != null) {
                     return OSMFlutter(
                       controller: controller.controller!,
-                      initZoom: 16,
-                      trackMyPosition: true,
-                      isPicker: true,
-                      markerOption: MarkerOption(
-                        advancedPickerMarker: MarkerIcon(
-                          iconWidget: Assets.svg.locationFilled.svg(
-                            color: COLORS.kDarkBlueColor,
-                            width: 100.w,
-                            height: 100.w,
+                      osmOption: OSMOption(
+                        zoomOption: ZoomOption(
+                          initZoom: 16,
+                        ),
+                        isPicker: true,
+                        userTrackingOption:
+                            UserTrackingOption(enableTracking: true),
+                        userLocationMarker: UserLocationMaker(
+                          personMarker: MarkerIcon(
+                            iconWidget: Assets.svg.locationFilled.svg(
+                              color: COLORS.kDarkBlueColor,
+                              width: 100.w,
+                              height: 100.w,
+                            ),
                           ),
+                          directionArrowMarker: MarkerIcon(),
                         ),
                       ),
                       onMapIsReady: (isReady) {
@@ -72,7 +78,8 @@ class ShareLocationView extends GetView<ShareLocationController> {
                   right: 20.w,
                   child: GestureDetector(
                     onTap: () async {
-                      final currentLocation = await controller.controller?.myLocation();
+                      final currentLocation =
+                          await controller.controller?.myLocation();
                       if (currentLocation == null) {
                         return;
                       }
