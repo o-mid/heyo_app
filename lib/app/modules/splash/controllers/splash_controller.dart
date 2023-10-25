@@ -10,9 +10,9 @@ class SplashController extends GetxController {
 
   //Todo accountInfo
   _checkIfAuthenticated() async {
-    final isLogin = (await accountInfo.getCorePassCoreId() != null) &&
-        (await accountInfo.getSignature() != null);
-    if (true) {
+    final isLogin = (await accountInfo.getSignature() != null);
+    print("Signature detected");
+    if (isLogin) {
       await Get.offAllNamed(Routes.HOME);
     } else {
       await Get.offAllNamed(Routes.INTRO);
@@ -21,6 +21,7 @@ class SplashController extends GetxController {
 
   @override
   void onClose() {
+    print("removing native splash");
     FlutterNativeSplash.remove();
     super.onClose();
   }
@@ -30,5 +31,4 @@ class SplashController extends GetxController {
     super.onReady();
     _checkIfAuthenticated();
   }
-
 }
