@@ -52,9 +52,7 @@ class P2PNodeResponseStream {
     if (event.name == P2PReqResNodeNames.connect && event.error == null && !advertised) {
       final info = P2PReqResNodeModel(name: P2PReqResNodeNames.advertise);
 
-      advertised = true;
 
-      p2pState.advertise.value = true;
 
       final id = await FlutterP2pCommunicator.sendRequest(info: info);
       /* -------------------------------------------------------------------------- */
@@ -67,6 +65,9 @@ class P2PNodeResponseStream {
           info: P2PReqResNodeModel(name: P2PReqResNodeNames.addrs));
     } else if (event.name == P2PReqResNodeNames.advertise && event.error == null) {
       // now you can start talking or communicating to others
+      advertised = true;
+      p2pState.advertise.value = true;
+
     } else if (event.name == P2PReqResNodeNames.addrs && event.error == null) {
       p2pState.address.value =
           (event.body!["addrs"] as List<dynamic>).map((e) => e.toString()).toList();
