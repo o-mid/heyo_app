@@ -71,7 +71,7 @@ class UnifiedConnectionController {
   HeyoWifiDirect? _heyoWifiDirect;
   MessageSession? session;
   String? remoteId;
-  BinaryFileReceivingState? currentWebrtcBinaryState;
+  BinaryFileReceivingState? currentBinaryState;
   ChatModel? userChatmodel;
   final JsonDecoder _decoder = const JsonDecoder();
   late ConnectionRepo connectionRepo;
@@ -164,90 +164,17 @@ class UnifiedConnectionController {
     });
   }
 
+  /// Confirms received message by it's Id, using sendTextMessage() method,
   Future<void> toggleMessageReadConfirm({
     required String messageId,
     required String remoteCoreId,
   }) async {
-    await confirmMessageById(
+    final messageJsonEncode = await dataHandler.getMessageJsonEncode(
       messageId: messageId,
       status: ConfirmMessageStatus.read,
       remoteCoreId: remoteCoreId,
     );
-  }
 
-  void handleWifiDirectEvents(WifiDirectEvent event) {
-    print('WifiDirectConnectionController(remoteId $remoteId): WifiDirect event: ${event.type}');
-    switch (event.type) {
-      case EventType.linkedPeer:
-        remoteId = (event.message as Peer).coreID;
-        _startIncomingWiFiDirectMessaging();
-      case EventType.groupStopped:
-        remoteId = null;
-        handleWifiDirectConnectionClose();
-      default:
-        break;
-    }
-  }
-
-  _startIncomingWiFiDirectMessaging() async {
-    ChatModel? userChatModel;
-
-    await chatHistoryRepo.getChat(remoteId!).then((value) {
-      userChatModel = value;
-    });
-
-    _initWiFiDirect();
-
-    Get.toNamed(
-      Routes.MESSAGES,
-      arguments: MessagesViewArgumentsModel(
-        // session: session,
-
-        coreId: remoteId!,
-        iconUrl: userChatModel?.icon,
-        connectionType: MessagingConnectionType.wifiDirect,
-      ),
-    );
-    dataChannelStatus.value = DataChannelConnectivityStatus.justConnected;
-    setConnectivityOnline();
-  }
-
-  wifiDirectmessageHandler(HeyoWifiDirectMessage message) {
-    print(
-      'WifiDirectConnectionController(remoteId $remoteId): binary: ${message.isBinary}, from ${message.senderId} to ${message.receiverId}',
-    );
-
-    MessageSession session = MessageSession(sid: Constants.coreID, cid: remoteId!, pid: remoteId);
-
-    message.isBinary
-        ? handleDataChannelBinary(binaryData: message.body as Uint8List, remoteCoreId: session.cid)
-        : handleDataChannelText(
-            receivedJson:
-                const JsonDecoder().convert(message.body as String) as Map<String, dynamic>,
-            remoteCoreId: session.cid,
-          );
-  }
-
-  handleWifiDirectConnectionClose() {
-    if (Get.currentRoute == Routes.MESSAGES) {
-      Get.until((route) => Get.currentRoute != Routes.MESSAGES);
-    }
-  }
-
-  /// Confirms received message by it's Id, using sendTextMessage() method,
-  /// defined by the appropriate derived class.
-
-  Future<void> confirmMessageById({
-    required String messageId,
-    required ConfirmMessageStatus status,
-    required String remoteCoreId,
-  }) async {
-    final confirmMessageJson = ConfirmMessageModel(messageId: messageId, status: status).toJson();
-    final dataChannelMessage = DataChannelMessageModel(
-      message: confirmMessageJson,
-      dataChannelMessagetype: DataChannelMessageType.confirm,
-    );
-    final dataChannelMessageJson = dataChannelMessage.toJson();
-    await sendTextMessage(text: jsonEncode(dataChannelMessageJson), remoteCoreId: remoteCoreId);
+    await connectionRepo.sendTextMessage(text: messageJsonEncode, remoteCoreId: remoteCoreId);
   }
 }

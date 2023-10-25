@@ -11,6 +11,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../../generated/assets.gen.dart';
 import '../../../../generated/locales.g.dart';
 import '../../chats/data/models/chat_model.dart';
+import '../../messaging/connection/wifi_direct_connection_repo_impl.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../p2p_node/data/account/account_info.dart';
@@ -111,7 +112,8 @@ class WifiDirectController extends GetxController {
       case EventType.linkedPeer:
         // incomingConnection = true.obs;
         // connectedPeer = event.message as Peer;
-        wifiDirectConnectionController.handleWifiDirectEvents(event);
+        (wifiDirectConnectionController.connectionRepo as WiFiDirectConnectionRepoImpl)
+            .handleWifiDirectEvents(event);
 
         print('WifiDirectController: linked to ${(event.message as Peer).multiAddress}');
         break;
@@ -120,7 +122,8 @@ class WifiDirectController extends GetxController {
         // incomingConnection = false.obs;
         // outgoingConnection = false.obs;
         // connectedPeer = null;
-        wifiDirectConnectionController.handleWifiDirectEvents(event);
+        (wifiDirectConnectionController.connectionRepo as WiFiDirectConnectionRepoImpl)
+            .handleWifiDirectEvents(event);
 
         print('WifiDirectController: Wifi-direct group stopped');
         break;
@@ -131,7 +134,8 @@ class WifiDirectController extends GetxController {
   }
 
   _messageHandler(HeyoWifiDirectMessage message) {
-    wifiDirectConnectionController.wifiDirectmessageHandler(message);
+    (wifiDirectConnectionController.connectionRepo as WiFiDirectConnectionRepoImpl)
+        .wifiDirectmessageHandler(message);
   }
 
   Future<bool> connectPeer(String coreId, {bool encrypt = true}) async {

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
@@ -21,6 +22,7 @@ import '../../messages/utils/message_from_json.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../notifications/controllers/notifications_controller.dart';
 import '../../shared/data/repository/contact_repository.dart';
+import '../models/data_channel_message_model.dart';
 
 class DataHandler {
   final MessagesRepo messagesRepo;
@@ -66,10 +68,10 @@ class DataHandler {
 
   Future<void> handleReceivedBinaryData({
     required String remoteCoreId,
-    required BinaryFileReceivingState currentWebrtcBinaryState,
+    required BinaryFileReceivingState currentBinaryState,
   }) async {
     await HandleReceivedBinaryData(messagesRepo: messagesRepo, chatId: remoteCoreId)
-        .execute(state: currentWebrtcBinaryState, remoteCoreId: remoteCoreId);
+        .execute(state: currentBinaryState, remoteCoreId: remoteCoreId);
   }
 
   Future<void> saveAndConfirmReceivedMessage({
@@ -237,5 +239,23 @@ class DataHandler {
             : userModel.name,
       );
     }
+  }
+
+  Future<String> getMessageJsonEncode({
+    required String messageId,
+    required ConfirmMessageStatus status,
+    required String remoteCoreId,
+  }) async {
+    final confirmMessageJson = ConfirmMessageModel(
+      messageId: messageId,
+      status: status,
+    ).toJson();
+    final dataChannelMessage = DataChannelMessageModel(
+      message: confirmMessageJson,
+      dataChannelMessagetype: DataChannelMessageType.confirm,
+    );
+    final dataChannelMessageJson = dataChannelMessage.toJson();
+
+    return jsonEncode(dataChannelMessageJson);
   }
 }

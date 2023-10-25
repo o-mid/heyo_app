@@ -20,7 +20,7 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
   });
 
   String currentRemoteId = "";
-  BinaryFileReceivingState? currentWebrtcBinaryState;
+  BinaryFileReceivingState? currentBinaryState;
   final JsonDecoder _decoder = const JsonDecoder();
   late MultipleConnectionHandler multiConnectionHandler;
   // ... fields specific to RTC
@@ -138,13 +138,13 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
     print('handleDataChannelBinary chunk length ${message.chunk.length}');
 
     if (message.chunk.isNotEmpty) {
-      if (currentWebrtcBinaryState == null) {
-        currentWebrtcBinaryState = BinaryFileReceivingState(message.filename, message.meta);
+      if (currentBinaryState == null) {
+        currentBinaryState = BinaryFileReceivingState(message.filename, message.meta);
         print('RECEIVER: New file transfer and State started');
       }
-      currentWebrtcBinaryState!.pendingMessages[message.chunkStart] = message;
+      currentBinaryState!.pendingMessages[message.chunkStart] = message;
       await dataHandler.handleReceivedBinaryData(
-          currentWebrtcBinaryState: currentWebrtcBinaryState!, remoteCoreId: remoteCoreId);
+          currentBinaryState: currentBinaryState!, remoteCoreId: remoteCoreId);
     } else {
       // handle the acknowledge
       print(message.header);
