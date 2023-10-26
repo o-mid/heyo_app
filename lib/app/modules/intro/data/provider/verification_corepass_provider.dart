@@ -98,9 +98,4 @@ class VerificationCorePassProvider
       return false;
     }
   }
-
-  @override
-  void setDelegationStatus({required bool status}) {
-    p2pCommunicator.applyDelegationStatus(status: status);
-  }
 }
