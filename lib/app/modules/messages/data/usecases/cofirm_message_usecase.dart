@@ -1,8 +1,10 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messaging/unified_messaging_controller.dart';
 import '../../../messaging/controllers/common_messaging_controller.dart';
 
-import '../../../messaging/usecases/send_data_channel_message_usecase.dart';
+import '../message_processor.dart';
 import '../models/messages/confirm_message_model.dart';
 
 import '../provider/messages_provider.dart';
@@ -28,9 +30,20 @@ class ConfirmMessage {
           status: status,
         ).toJson();
 
-        SendDataChannelMessage(messagingConnection: messagingConnection).execute(
-            channelMessageType: ChannelMessageType.confirm(message: confirmmessageJson),
-            remoteCoreId: remoteCoreId);
+        // SendDataChannelMessage(messagingConnection: messagingConnection).execute(
+        //     channelMessageType: ChannelMessageType.confirm(message: confirmmessageJson),
+        //     remoteCoreId: remoteCoreId);
+
+        final processor = MessageProcessor();
+        final processedMessage = await processor.getMessageDetails(
+          channelMessageType: ChannelMessageType.confirm(message: confirmmessageJson),
+          remoteCoreId: remoteCoreId,
+        );
+
+        await messagingConnection.sendTextMessage(
+          text: jsonEncode(processedMessage.messageJson),
+          remoteCoreId: remoteCoreId,
+        );
         break;
     }
   }

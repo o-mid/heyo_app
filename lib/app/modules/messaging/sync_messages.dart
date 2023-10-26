@@ -4,7 +4,7 @@ import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart'
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
-import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
+import 'package:heyo/app/modules/messages/data/usecases/send_message.dart';
 import 'package:heyo/app/modules/messages/utils/message_to_send_message_type.dart';
 
 class SyncMessages {
@@ -34,8 +34,8 @@ class SyncMessages {
   _sendUnsentMessages() {
     multipleConnectionHandler.onRTCSessionConnected = (rtcSession) async {
       print("syncMessages: onRTCSessionConnected: ${rtcSession.connectionId} ");
-      List<MessageModel?> unsentMessages = (await messagesRepo
-          .getUnsentMessages(rtcSession.remotePeer.remoteCoreId));
+      List<MessageModel?> unsentMessages =
+          (await messagesRepo.getUnsentMessages(rtcSession.remotePeer.remoteCoreId));
       print("syncMessages: size : ${unsentMessages.length} ");
 
       for (var message in unsentMessages) {
@@ -70,8 +70,7 @@ class SyncMessages {
         for (var value in (await chatHistoryRepo.getAllChats())) {
           print("syncMessages : _initiateConnections : getConnection");
 
-          multipleConnectionHandler.initiateConnections(
-              value.id, selfCoreId);
+          multipleConnectionHandler.initiateConnections(value.id, selfCoreId);
         }
       }
     });

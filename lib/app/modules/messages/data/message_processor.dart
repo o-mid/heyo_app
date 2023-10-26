@@ -1,53 +1,45 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:heyo/app/modules/messaging/usecases/send_binary_data_usecase.dart';
 import 'package:tuple/tuple.dart';
 
-import '../controllers/common_messaging_controller.dart';
-import '../controllers/messaging_connection_controller.dart';
-import '../models/data_channel_message_model.dart';
-import '../unified_messaging_controller.dart';
-import '../utils/binary_file_sending_state.dart';
-import '../utils/channel_message_from_type.dart';
+import '../../messaging/models/data_channel_message_model.dart';
+import '../../messaging/utils/channel_message_from_type.dart';
 
-class SendDataChannelMessage {
-  UnifiedConnectionController messagingConnection;
-
-  SendDataChannelMessage({
-    required this.messagingConnection,
-  });
-
-  Future<void> execute({
+// use this class insted of former SendDataChannelMessage class and execute method
+class MessageProcessor {
+  Future<MessageProcessingResult> getMessageDetails({
     required ChannelMessageType channelMessageType,
     required String remoteCoreId,
   }) async {
     Tuple3<DataChannelMessageModel?, bool, String> channelMessageObject =
         channelmessageFromType(channelMessageType: channelMessageType);
+
     DataChannelMessageModel? msg = channelMessageObject.item1;
     bool isDataBinary = channelMessageObject.item2;
     String messageLocalPath = channelMessageObject.item3;
 
     if (msg == null) {
-      return;
+      throw Exception("Message is null");
     }
 
-    Map<String, dynamic> message = msg.toJson();
-    if (isDataBinary && messageLocalPath.isNotEmpty) {
-      BinaryFileSendingState sendingState = await BinaryFileSendingState.create(
-        file: File(messageLocalPath),
-        meta: msg.message,
-      );
-      await SendBinaryData(sendingState: sendingState, messagingConnection: messagingConnection)
-          .execute(remoteCoreId);
-    } else {
-      await messagingConnection.sendTextMessage(
-        text: jsonEncode(message),
-        remoteCoreId: remoteCoreId,
-      );
-    }
+    Map<String, dynamic> messageJson = msg.toJson();
+
+    return MessageProcessingResult(
+      messageJson: messageJson,
+      isDataBinary: isDataBinary,
+      messageLocalPath: messageLocalPath,
+    );
   }
+}
+
+class MessageProcessingResult {
+  final Map<String, dynamic> messageJson;
+  final bool isDataBinary;
+  final String messageLocalPath;
+
+  MessageProcessingResult({
+    required this.messageJson,
+    required this.isDataBinary,
+    required this.messageLocalPath,
+  });
 }
 
 class ChannelMessageType {

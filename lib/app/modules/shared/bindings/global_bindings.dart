@@ -7,7 +7,6 @@ import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_histo
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
 import 'package:heyo/app/modules/messages/data/usecases/delete_message_usecase.dart';
-import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 import 'package:heyo/app/modules/messaging/sync_messages.dart';
 import 'package:heyo/app/modules/messaging/web_rtc_connection_manager.dart';
@@ -313,10 +312,10 @@ class GlobalBindings extends Bindings {
             appDatabaseProvider: Get.find(),
           ),
         ),
-        sendMessage: SendMessage(),
+        //  sendMessage: SendMessage(),
       ),
     );
-    Get.put(SendMessage());
+    //   Get.put(SendMessage());
     Get.put(UpdateMessage());
     Get.put(DeleteMessage());
     Get.put(ConfirmMessage());

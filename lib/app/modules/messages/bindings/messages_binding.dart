@@ -76,7 +76,8 @@ class MessagesBinding extends Bindings {
             notificationsController:
                 NotificationsController(appNotifications: GlobalBindings.appNotifications),
             connectionType: connectionType,
-          )),
+          ),
+          sendMessageUseCase: Get.find()),
     );
   }
 }

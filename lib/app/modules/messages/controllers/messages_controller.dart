@@ -66,9 +66,11 @@ class MessagesController extends GetxController {
   MessagesController(
       {required this.messageRepository,
       required this.userStateRepository,
-      required this.messagingController}) {
+      required this.messagingController,
+      required this.sendMessageUseCase}) {
     init();
   }
+  final SendMessageUseCase sendMessageUseCase;
   final ConnectionMessageRepository messageRepository;
   final UserStateRepository userStateRepository;
 
@@ -449,22 +451,25 @@ class MessagesController extends GetxController {
   }
 
   Future<void> sendTextMessage() async {
-    await messageRepository.sendTextMessage(
-      sendTextMessageRepoModel: SendTextMessageRepoModel(
-        chatId: chatId,
-        replyingToValue: replyingTo.value,
-        newMessageValue: newMessage.value,
-        remoteCoreId: user.value.walletAddress,
-      ),
-    );
-    // SendMessage().execute(
-    //   sendMessageType: SendMessageType.text(
-    //     text: newMessage.value,
-    //     replyTo: replyingTo.value,
-    //     chatId: chatId,
-    //   ),
+    // SendTextMessageRepoModel(
+    //   chatId: chatId,
+    //   replyingToValue: replyingTo.value,
+    //   newMessageValue: newMessage.value,
     //   remoteCoreId: user.value.walletAddress,
     // );
+    //   final newMessageValue = sendTextMessageRepoModel.newMessageValue;
+    //   final replyingToValue = sendTextMessageRepoModel.replyingToValue;
+    //   final chatId = sendTextMessageRepoModel.chatId;
+    //   final remoteCoreId = sendTextMessageRepoModel.remoteCoreId;
+
+    await sendMessageUseCase.execute(
+      sendMessageType: SendMessageType.text(
+        text: newMessage.value,
+        replyTo: replyingTo.value,
+        chatId: chatId,
+      ),
+      remoteCoreId: user.value.walletAddress,
+    );
 
     textController.clear();
     newMessage.value = "";
