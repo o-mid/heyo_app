@@ -64,18 +64,18 @@ class SyncMessages {
 
   _initiateConnections() async {
     //  wait until getting advertised
-    await p2pState.advertise
-        .waitForResult(condition: (advertise) => advertise == true);
+    // await p2pState.advertise
+    //     .waitForResult(condition: (advertise) => advertise == true);
+    // //
+    // await p2pState.delegationSuccessful
+    //     .waitForResult(condition: (value) => value);
     //
-    await p2pState.delegationSuccessful
-        .waitForResult(condition: (value) => value);
-
-    final selfCoreId = (await accountInfo.getCorePassCoreId())!;
-    multipleConnectionHandler.reset();
-    for (var value in await chatHistoryRepo.getAllChats()) {
-      print('syncMessages : _initiateConnections : getConnection');
-
-      multipleConnectionHandler.initiateConnections(value.id, selfCoreId);
-    }
+    // final selfCoreId = (await accountInfo.getCorePassCoreId())!;
+    // multipleConnectionHandler.reset();
+    // for (var value in await chatHistoryRepo.getAllChats()) {
+    //   print('syncMessages : _initiateConnections : getConnection');
+    //
+    //   multipleConnectionHandler.initiateConnections(value.id, selfCoreId);
+    // }
   }
 }
