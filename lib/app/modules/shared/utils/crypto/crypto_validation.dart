@@ -7,12 +7,8 @@ class CryptoValidation {
   bool validateSignature(
       Uint8List messageHash, Uint8List signedMsg, Uint8List publicKey) {
     try {
-      final extractedSign = <int>[];
-      for (var i = 0; i < 114; i++) {
-        extractedSign.add(signedMsg[i]);
-      }
-      final verifyResult = _ed448Wallet.ed448Verify(
-          publicKey, messageHash, Uint8List.fromList(extractedSign));
+      final verifyResult =
+          _ed448Wallet.ed448Verify(publicKey, messageHash, signedMsg);
       return verifyResult;
     } catch (e) {
       print(e);
