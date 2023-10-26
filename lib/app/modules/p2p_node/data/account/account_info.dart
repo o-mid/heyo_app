@@ -19,4 +19,6 @@ abstract class AccountInfo {
   Future<void> setSignature(String signature);
 
   Future<String?> getSignature();
+
+  Future<String?> getPublicKey();
 }

@@ -1,27 +1,40 @@
+import 'dart:typed_data';
+
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
+import 'package:heyo/app/modules/splash/data/repositoty/splash_repository.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
 class SplashController extends GetxController {
-  SplashController({required this.accountInfo});
+  SplashRepository splashRepository;
+
+  SplashController({required this.accountInfo, required this.splashRepository});
 
   final AccountInfo accountInfo;
 
   //Todo accountInfo
   _checkIfAuthenticated() async {
-    final isLogin = (await accountInfo.getSignature() != null);
-    print("Signature detected");
-    if (isLogin) {
-      await Get.offAllNamed(Routes.HOME);
-    } else {
-      await Get.offAllNamed(Routes.INTRO);
+    final signature = await accountInfo.getSignature();
+    if (signature == null) {
+      await _goToLogin();
+      return;
     }
+    // final publicKey = await accountInfo.getPublicKey();
+    // final localCoreId = await accountInfo.getLocalCoreId();
+    //
+    // final isValid =
+    //     splashRepository.isSignatureValid(localCoreId!, signature, publicKey!);
+    // if (isValid) {
+    await Get.offAllNamed(Routes.HOME);
+    //   return;
+    // } else {
+    //   await _goToLogin();
+    // }
   }
 
   @override
   void onClose() {
-    print("removing native splash");
     FlutterNativeSplash.remove();
     super.onClose();
   }
@@ -30,5 +43,9 @@ class SplashController extends GetxController {
   void onReady() {
     super.onReady();
     _checkIfAuthenticated();
+  }
+
+  Future<void> _goToLogin() async {
+    await Get.offAllNamed(Routes.INTRO);
   }
 }

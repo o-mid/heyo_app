@@ -109,7 +109,7 @@ class AccountRepo implements AccountInfo {
   }
 
   @override
-  Future<String?> getCorePassCoreId() async{
+  Future<String?> getCorePassCoreId() async {
     return localProvider.readFromStorage(COREPASS_ID);
   }
 
@@ -119,15 +119,24 @@ class AccountRepo implements AccountInfo {
   }
 
   @override
-  Future<String?> getSignature() async{
+  Future<String?> getSignature() async {
     return localProvider.readFromStorage(COREPASS_SIGNATURE);
-
   }
 
   @override
-  Future<void> setSignature(String signature) async{
+  Future<void> setSignature(String signature) async {
     await localProvider.saveToStorage(COREPASS_SIGNATURE, signature);
+  }
 
+  @override
+  Future<String?> getPublicKey() async {
+    final prevs = await localProvider.readFromStorage(CRED_KEY_IN_STORE);
+    if (prevs == null) {
+      return null;
+    } else {
+      final previousCreds = ((jsonDecode(prevs) as Map<String, dynamic>));
+      return previousCreds[PUBLIC_KEY] as String?;
+    }
   }
 }
 
