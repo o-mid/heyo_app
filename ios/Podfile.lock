@@ -164,6 +164,8 @@ PODS:
     - FlutterMacOS
   - SwiftyGif (5.4.4)
   - Tangram-es (0.17.1)
+  - uni_links (0.0.1):
+    - Flutter
   - url_launcher_ios (0.0.1):
     - Flutter
   - video_player_avfoundation (0.0.1):
@@ -202,6 +204,7 @@ DEPENDENCIES:
   - record (from `.symlinks/plugins/record/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - uni_links (from `.symlinks/plugins/uni_links/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
@@ -291,6 +294,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/share_plus/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  uni_links:
+    :path: ".symlinks/plugins/uni_links/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player_avfoundation:
@@ -350,11 +355,12 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
   Tangram-es: 628b634f7fc09d2217469b9914de00d9de49ff9d
+  uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
   video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
   WebRTC-SDK: c24d2a6c9f571f2ed42297cb8ffba9557093142b
 
-PODFILE CHECKSUM: 7d817fd1eb55773c212805bd1edea57a416c1414
+PODFILE CHECKSUM: cce70384d2d7b864a84b62cd61ba0a36a825fb32
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.13.0
