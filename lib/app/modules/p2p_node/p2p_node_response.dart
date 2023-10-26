@@ -41,7 +41,8 @@ class P2PNodeResponseStream {
     p2pState.status[event.id]?.value = (event.error == null);
 
     print(
-        '_onNewResponseEvent ${event.name} : ${event.id} : ',);
+      '_onNewResponseEvent ${event.name} : ${event.id} : ',
+    );
 
     p2pState.responses.add(event);
     print("_onNewResponseEvent : eventId is: ${event.id.toString()}");
@@ -49,10 +50,10 @@ class P2PNodeResponseStream {
     print("_onNewResponseEvent : body is: ${event.body.toString()}");
     print("_onNewResponseEvent : error is: ${event.error.toString()}");
 
-    if (event.name == P2PReqResNodeNames.connect && event.error == null && !advertised) {
+    if (event.name == P2PReqResNodeNames.connect &&
+        event.error == null &&
+        !advertised) {
       final info = P2PReqResNodeModel(name: P2PReqResNodeNames.advertise);
-
-
 
       final id = await FlutterP2pCommunicator.sendRequest(info: info);
       /* -------------------------------------------------------------------------- */
@@ -63,14 +64,19 @@ class P2PNodeResponseStream {
 
       await FlutterP2pCommunicator.sendRequest(
           info: P2PReqResNodeModel(name: P2PReqResNodeNames.addrs));
-    } else if (event.name == P2PReqResNodeNames.advertise && event.error == null) {
+    } else if (event.name == P2PReqResNodeNames.advertise &&
+        event.error == null) {
       // now you can start talking or communicating to others
       advertised = true;
       p2pState.advertise.value = true;
-
     } else if (event.name == P2PReqResNodeNames.addrs && event.error == null) {
-      p2pState.address.value =
-          (event.body!["addrs"] as List<dynamic>).map((e) => e.toString()).toList();
+      p2pState.address.value = (event.body!["addrs"] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList();
+    } else if (event.name == P2PReqResNodeNames.addDelegatedCoreID) {
+      p2pState.delegationSuccessful.value = event.error == null;
+      // calling refresh to force putting new value
+      p2pState.delegationSuccessful.refresh();
     }
     if (event.name == P2PReqResNodeNames.peerID && event.error == null) {
       p2pState.peerId.value = event.body!["peerID"].toString();

@@ -77,14 +77,6 @@ class P2PCommunicator {
     return p2pState.trackRequest(id);
   }
 
-  RxBool delegatedIsApplied() {
-    return p2pState.delegationSuccessful;
-  }
-
-  void applyDelegationStatus({required bool status}) {
-    p2pState.delegationSuccessful.value = status;
-  }
-
   Future<bool> addCoreId() async {
     final privateKey = await accountInfo.getPrivateKey();
     final privToAdd = P2PReqResNodeModel(
