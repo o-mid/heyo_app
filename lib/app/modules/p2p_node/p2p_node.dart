@@ -6,6 +6,7 @@ import 'package:flutter_p2p_communicator/model/addr_model.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:flutter_p2p_communicator/utils/constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_request.dart';
@@ -14,6 +15,7 @@ import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:flutter_bip39/bip39.dart';
 import 'package:core_web3dart/src/crypto/formatting.dart';
 import 'package:core_web3dart/web3dart.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class P2PNode {
@@ -91,7 +93,10 @@ class P2PNode {
 
     if (await accountInfo.getSignature() != null) {
       final result = await p2pCommunicator.applyDelegatedAuth();
-      p2pCommunicator.applyDelegationStatus(status: result);
+      if (!result) {
+        await Get.offAllNamed(AppPages.INITIAL);
+        return;
+      }
     }
 
     await Future.forEach(P2P_Nodes, (P2PAddrModel element) async {
