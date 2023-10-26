@@ -119,6 +119,11 @@ class AccountRepo implements AccountInfo {
   }
 
   @override
+  Future<void> removeCorePassCoreId() async {
+    await localProvider.deleteFromStorage(COREPASS_ID);
+  }
+
+  @override
   Future<String?> getSignature() async {
     return localProvider.readFromStorage(COREPASS_SIGNATURE);
   }
@@ -126,6 +131,11 @@ class AccountRepo implements AccountInfo {
   @override
   Future<void> setSignature(String signature) async {
     await localProvider.saveToStorage(COREPASS_SIGNATURE, signature);
+  }
+
+  @override
+  Future<void> removeSignature() async {
+    await localProvider.deleteFromStorage(COREPASS_SIGNATURE);
   }
 
   @override

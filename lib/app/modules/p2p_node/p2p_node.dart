@@ -7,6 +7,7 @@ import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:flutter_p2p_communicator/utils/constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/intro/data/provider/verification_corepass_provider.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_request.dart';
@@ -25,6 +26,7 @@ class P2PNode {
   final P2PState p2pState;
   final Web3Client web3client;
   final P2PCommunicator p2pCommunicator;
+  final VerificationCorePassProvider vcp;
 
   P2PNode({
     required this.accountInfo,
@@ -33,6 +35,7 @@ class P2PNode {
     required this.p2pState,
     required this.web3client,
     required this.p2pCommunicator,
+    required this.vcp,
   });
 
   _setUpP2PNode() async {
@@ -94,6 +97,7 @@ class P2PNode {
     if (await accountInfo.getSignature() != null) {
       final result = await p2pCommunicator.applyDelegatedAuth();
       if (!result) {
+        await vcp.removeDelegatedCredentials();
         await Get.offAllNamed(AppPages.INITIAL);
         return;
       }

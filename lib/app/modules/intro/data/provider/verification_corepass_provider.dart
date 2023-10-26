@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 class VerificationCorePassProvider
     extends VerificationCorePassAbstractProvider {
-  VerificationCorePassProvider({
+    VerificationCorePassProvider({
     required this.accountInfo,
     required this.p2pCommunicator,
     required this.dateTimeUtils,
@@ -98,4 +98,12 @@ class VerificationCorePassProvider
       return false;
     }
   }
+
+  @override
+  Future<void> removeDelegatedCredentials() async{
+    await accountInfo.removeSignature();
+    await accountInfo.removeCorePassCoreId();
+  }
+
+
 }
