@@ -12,6 +12,7 @@ import 'package:heyo/generated/locales.g.dart';
 
 import '../../shared/utils/constants/colors.dart';
 import '../../shared/widgets/connection_status_body.dart';
+import '../connection/connection_repo.dart';
 import '../controllers/common_messaging_controller.dart';
 import '../controllers/messaging_connection_controller.dart';
 
@@ -27,25 +28,25 @@ class DatachannelConnectionStatusWidget extends GetView<UnifiedConnectionControl
     //   frequency: 10,
     //   delayInSeconds: 4,
     // );
-    Rx<DataChannelConnectivityStatus> dataChannelStatus = controller.dataChannelStatus;
+    Rx<ConnectivityStatus> dataChannelStatus = controller.connectionRepo.connectivityStatus;
     return Obx(() {
       Color backgroundColor;
       String title;
       Color titleColor;
       switch (dataChannelStatus.value) {
-        case DataChannelConnectivityStatus.connectionLost:
+        case ConnectivityStatus.connectionLost:
           title = LocaleKeys.DataChannelStatus_ConnectionLost.tr;
           backgroundColor = COLORS.kStatesLightErrorColor;
           titleColor = COLORS.kStatesErrorColor;
           break;
 
-        case DataChannelConnectivityStatus.connecting:
+        case ConnectivityStatus.connecting:
           title = LocaleKeys.DataChannelStatus_connecting.tr;
           backgroundColor = COLORS.kBrightBlueColor;
           titleColor = COLORS.kDarkBlueColor;
           break;
 
-        case DataChannelConnectivityStatus.justConnected:
+        case ConnectivityStatus.justConnected:
           title = LocaleKeys.DataChannelStatus_connected.tr;
           backgroundColor = COLORS.kGreenLighterColor;
           titleColor = COLORS.kStatesSuccessColor;
