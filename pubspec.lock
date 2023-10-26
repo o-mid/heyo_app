@@ -61,10 +61,10 @@ packages:
     dependency: "direct main"
     description:
       name: awesome_notifications
-      sha256: "2b430c75cc879d6cfd52bb6eb2b5c1591ed425347816408cdcbd3f6916bba14c"
+      sha256: "327162c36a1476978f89638741da618cac42356aabc39a5035b6c206d8fca978"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.4+1"
+    version: "0.7.7"
   boolean_selector:
     dependency: transitive
     description:
@@ -391,10 +391,10 @@ packages:
     dependency: transitive
     description:
       name: dio
-      sha256: "7d328c4d898a61efc3cd93655a0955858e29a0aa647f0f9e02d59b3bb275e2e8"
+      sha256: "417e2a6f9d83ab396ec38ff4ea5da6c254da71e4db765ad737a42af6930140b7"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.6"
+    version: "5.3.3"
   ed_screen_recorder:
     dependency: "direct main"
     description:
@@ -467,6 +467,46 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.6.1"
+  firebase_core:
+    dependency: "direct main"
+    description:
+      name: firebase_core
+      sha256: "37299e4907391d7fac8c7ea059bb3292768cc07b72b6c6c777675cc58da2ef4d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.20.0"
+  firebase_core_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_core_platform_interface
+      sha256: c437ae5d17e6b5cc7981cf6fd458a5db4d12979905f9aafd1fea930428a9fe63
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.0"
+  firebase_core_web:
+    dependency: transitive
+    description:
+      name: firebase_core_web
+      sha256: "0631a2ec971dbc540275e2fa00c3a8a2676f0a7adbc3c197d6fba569db689d97"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.8.1"
+  firebase_crashlytics:
+    dependency: "direct main"
+    description:
+      name: firebase_crashlytics
+      sha256: d279ec1a3377df3762778e55ded07fe6d169d216713a44bbc624ae6218e35c3c
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.4.2"
+  firebase_crashlytics_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_crashlytics_platform_interface
+      sha256: "8a82ce2879e359134f5ce786048737b6385a65ec696d68cf0c27134a1c933676"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.6.10"
   fixnum:
     dependency: transitive
     description:
@@ -598,27 +638,35 @@ packages:
     dependency: transitive
     description:
       name: flutter_osm_interface
-      sha256: "2f075459e2558e1645d73b378b85685a42ef0ed7c641f88486f26e0f802a6509"
+      sha256: acf22cf06c3550a565b0d4f63474275f24a1aaad8f32e127d6ea32957a791ef8
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.23"
+    version: "0.6.1"
   flutter_osm_plugin:
     dependency: "direct main"
     description:
       name: flutter_osm_plugin
-      sha256: af6dbcdc42a69be14029f98e9a0fa1bfbcb7541dd05f59134df38440eaa58210
+      sha256: "813b06bc7bd2d205a247edfbf72026cb7b9adfdd29e9ee588cc88e8b75bbf3ff"
       url: "https://pub.dev"
     source: hosted
-    version: "0.34.1+6"
+    version: "0.60.5"
+  flutter_osm_web:
+    dependency: transitive
+    description:
+      name: flutter_osm_web
+      sha256: "9346d3ffd5e79416894ca46257361e2f34e67e483c13fd17d2e27431986c180a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
   flutter_p2p_communicator:
     dependency: "direct main"
     description:
       path: "."
-      ref: "4caa78f9"
-      resolved-ref: "4caa78f944917605255fbd3bf7a4c3c5ee036a9e"
+      ref: HEAD
+      resolved-ref: "06e8bdc491be1312cb048145671b4753311ec92c"
       url: "git@git.energy:corepass/flutter_p2p_communicator.git"
     source: git
-    version: "1.13.4"
+    version: "1.15.1"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -906,10 +954,10 @@ packages:
     dependency: "direct main"
     description:
       name: intl
-      sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
+      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.17.0"
+    version: "0.18.1"
   io:
     dependency: transitive
     description:
@@ -966,6 +1014,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.8"
+  logger:
+    dependency: transitive
+    description:
+      name: logger
+      sha256: "6bbb9d6f7056729537a4309bda2e74e18e5d9f14302489cc1e93f33b3fe32cac"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2+1"
   logging:
     dependency: transitive
     description:
@@ -1350,6 +1406,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.1"
+  routing_client_dart:
+    dependency: transitive
+    description:
+      name: routing_client_dart
+      sha256: "00089e5009dd00b137d6c47c398ce29ce1b53dd3bba5a721499ce185c9301de9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.3"
   rxdart:
     dependency: transitive
     description:
