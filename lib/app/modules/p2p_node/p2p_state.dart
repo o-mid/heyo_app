@@ -45,6 +45,7 @@ class P2PState extends GetxController {
   }
 
   void reset() {
+    delegationSuccessful.value = false;
     advertise.value = false;
     address.value = [];
     peerId.value = "";
