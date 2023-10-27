@@ -59,31 +59,4 @@ class P2PCommunicator {
     return _sendingData(requestModel);
   }
 
-  Future<bool> applyDelegatedAuth() async {
-    final localCoreId = await accountInfo.getLocalCoreId();
-    final delegatedSignature = await accountInfo.getSignature();
-
-    final delegatedAuth = DelegateAuthModel(
-      localCoreId: localCoreId!,
-      delegateName: DelegateName.heyo,
-      delegatedSignature: delegatedSignature!,
-    );
-    final id = await FlutterP2pCommunicator.sendRequest(
-      info: P2PReqResNodeModel(
-        name: P2PReqResNodeNames.addDelegatedCoreID,
-        body: delegatedAuth.toJson(),
-      ),
-    );
-    return p2pState.trackRequest(id);
-  }
-
-  Future<bool> addCoreId() async {
-    final privateKey = await accountInfo.getPrivateKey();
-    final privToAdd = P2PReqResNodeModel(
-        name: P2PReqResNodeNames.addCoreID, body: {"privKey": privateKey});
-
-    final id = await FlutterP2pCommunicator.sendRequest(info: privToAdd);
-
-    return p2pState.trackRequest(id);
-  }
 }

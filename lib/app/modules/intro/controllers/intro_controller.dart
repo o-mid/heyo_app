@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/intro/data/repo/intro_repo.dart';
-import 'package:heyo/app/modules/intro/usecase/verification_with_corepass_use_case.dart';
 import 'package:heyo/app/modules/intro/widgets/verification_loading_dialog.dart';
 import 'package:heyo/app/modules/intro/widgets/verification_bottom_sheet.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';

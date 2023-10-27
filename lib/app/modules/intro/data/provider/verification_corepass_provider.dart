@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/intro/data/provider/verification_corepass_abstract_provider.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
-import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_node_manager.dart';
 import 'package:heyo/app/modules/shared/utils/datetime_utils.dart';
 import 'package:tuple/tuple.dart';
 import 'package:uni_links/uni_links.dart';
@@ -13,13 +13,13 @@ class VerificationCorePassProvider
     extends VerificationCorePassAbstractProvider {
     VerificationCorePassProvider({
     required this.accountInfo,
-    required this.p2pCommunicator,
+    required this.p2pNodeController,
     required this.dateTimeUtils,
   });
 
   StreamSubscription? _urlStream;
   final AccountInfo accountInfo;
-  final P2PCommunicator p2pCommunicator;
+  final P2PNodeController p2pNodeController;
   final DateTimeUtils dateTimeUtils;
 
   @override
@@ -91,18 +91,12 @@ class VerificationCorePassProvider
     try {
       await accountInfo.setSignature(signature.replaceAll('0x', ''));
       await accountInfo.setCorePassCoreId(coreId);
-      final isSignatureValid = await p2pCommunicator.applyDelegatedAuth();
+      final isSignatureValid = await p2pNodeController.applyDelegatedAuth();
       return isSignatureValid;
     } catch (e) {
       debugPrint(e.toString());
       return false;
     }
-  }
-
-  @override
-  Future<void> removeDelegatedCredentials() async{
-    await accountInfo.removeSignature();
-    await accountInfo.removeCorePassCoreId();
   }
 
 

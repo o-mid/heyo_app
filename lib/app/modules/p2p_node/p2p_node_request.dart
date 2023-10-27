@@ -19,7 +19,7 @@ class P2PNodeRequestStream {
   P2PNodeRequestStream(
       {required this.p2pState,
       required this.signaling,
-      required this.multipleConnectionHandler});
+      required this.multipleConnectionHandler,});
 
   void setUp() {
     // listen to the events from the node side
@@ -31,7 +31,7 @@ class P2PNodeRequestStream {
     _nodeRequestSubscription = null;
   }
 
-  _setUpRequestStream() {
+  void _setUpRequestStream() {
     _nodeRequestSubscription ??= FlutterP2pCommunicator.requestStream
         ?.distinct()
         .where((event) => event != null)
@@ -40,7 +40,7 @@ class P2PNodeRequestStream {
     });
   }
 
-  _onNewRequestEvent(P2PReqResNodeModel event) async {
+  void _onNewRequestEvent(P2PReqResNodeModel event) async {
     // 1. prints the event info
     // 2. check if the event is login and if so send a login response
     // 3. check if the event has session and if so convert the incoming request

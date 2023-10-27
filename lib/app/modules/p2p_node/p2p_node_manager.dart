@@ -3,39 +3,45 @@ import 'package:flutter/foundation.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 
+
 class P2PNodeController {
+  P2PNodeController({required this.p2pNode, required this.p2pState}) {
+    init();
+  }
+
   ConnectivityResult? _latestConnectivityStatus;
   final P2PNode p2pNode;
   final P2PState p2pState;
-  P2PNodeController({required this.p2pNode,required this.p2pState}){
-    _init();
-  }
 
-  void _init(){
+  void init() {
     Connectivity().onConnectivityChanged.listen((connectivityResult) async {
-      debugPrint("onConnectivityChanged: $connectivityResult");
+      debugPrint('onConnectivityChanged: $connectivityResult');
       if (connectivityResult == ConnectivityResult.none) {
         p2pState.reset();
-        print("Device not connected to any network");
+        debugPrint('Device not connected to any network');
       } else {
         if (_latestConnectivityStatus != null) {
           _stopP2PNode();
         }
         _setUpP2PNode();
-        print('New networkStatus: $connectivityResult');
+        debugPrint('New networkStatus: $connectivityResult');
         _latestConnectivityStatus = connectivityResult;
       }
     });
   }
 
   void _stopP2PNode() {
-    print("p2p stopNode");
+    debugPrint('p2p stopNode');
     p2pNode.stop();
   }
 
   void _setUpP2PNode() {
-    print("p2p startNode");
+    debugPrint('p2p startNode');
     p2pNode.restart();
+  }
+
+  Future<bool> applyDelegatedAuth() {
+    return p2pNode.applyDelegatedAuth();
   }
 
 }
