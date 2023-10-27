@@ -93,13 +93,14 @@ class GlobalBindings extends Bindings {
     Get
       ..put(P2PState(), permanent: true)
       ..put(P2PCommunicator(p2pState: Get.find(), accountInfo: accountInfo))
-      ..put(Signaling(p2pCommunicator: Get.find()),permanent: true)
+      ..put(Signaling(p2pCommunicator: Get.find()), permanent: true)
       ..put(
-          MultipleConnectionHandler(
-              singleWebRTCConnection: SingleWebRTCConnection(
-                  p2pCommunicator: Get.find(),
-                  webRTCConnectionManager: WebRTCConnectionManager())),
-          permanent: true,)
+        MultipleConnectionHandler(
+            singleWebRTCConnection: SingleWebRTCConnection(
+                p2pCommunicator: Get.find(),
+                webRTCConnectionManager: WebRTCConnectionManager())),
+        permanent: true,
+      )
       ..put(
         P2PNodeRequestStream(
           p2pState: Get.find(),
@@ -114,19 +115,17 @@ class GlobalBindings extends Bindings {
         ),
         permanent: true,
       )
+      ..put(P2PNode(
+        accountInfo: accountInfo,
+        p2pNodeRequestStream: Get.find(),
+        p2pNodeResponseStream: Get.find(),
+        p2pState: Get.find(),
+        web3client: web3Client,
+      ))
       ..put<P2PNodeController>(
-        P2PNodeController(
-            p2pNode: P2PNode(
-              accountInfo: accountInfo,
-              p2pNodeRequestStream: Get.find(),
-              p2pNodeResponseStream: Get.find(),
-              p2pState: Get.find(),
-              web3client: web3Client,
-            ),
-            p2pState: Get.find()),
+        P2PNodeController(p2pNode: Get.find(), p2pState: Get.find()),
         permanent: true,
       )
-
 
       // data base provider dependencies
       ..put(AppDatabaseProvider(accountInfo: accountInfo), permanent: true)
