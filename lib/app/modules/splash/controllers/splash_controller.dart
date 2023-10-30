@@ -20,17 +20,7 @@ class SplashController extends GetxController {
       await _goToLogin();
       return;
     }
-    // final publicKey = await accountInfo.getPublicKey();
-    // final localCoreId = await accountInfo.getLocalCoreId();
-    //
-    // final isValid =
-    //     splashRepository.isSignatureValid(localCoreId!, signature, publicKey!);
-    // if (isValid) {
     await Get.offAllNamed(Routes.HOME);
-    //   return;
-    // } else {
-    //   await _goToLogin();
-    // }
   }
 
   @override
