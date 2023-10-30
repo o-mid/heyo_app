@@ -14,7 +14,7 @@ class IntroBinding extends Bindings {
       () => IntroController(
         introRepo: IntroRepo(
           vcp: VerificationCorePassProvider(
-            accountInfo: GlobalBindings.accountInfo,
+            cryptoInfo: Get.find(),
             dateTimeUtils: DateTimeUtils(),
             p2pNodeController: Get.find(),
           ),

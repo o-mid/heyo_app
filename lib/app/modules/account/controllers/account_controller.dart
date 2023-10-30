@@ -1,16 +1,16 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
+import 'package:heyo/app/modules/shared/data/repository/info/crypto_account_repo.dart';
 
 class AccountController extends GetxController {
-  final AccountInfo accountInfo;
+  final AccountInfoRepository accountInfoRepo;
   final coreId = "".obs;
 
-  AccountController({required this.accountInfo});
+  AccountController({required this.accountInfoRepo});
 
   @override
   void onInit() async {
     super.onInit();
-    coreId.value = (await accountInfo.getCorePassCoreId()) ?? "";
+    coreId.value = (await accountInfoRepo.getUserContactAddress()) ?? "";
   }
 
   @override

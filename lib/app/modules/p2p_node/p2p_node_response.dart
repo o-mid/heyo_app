@@ -3,23 +3,26 @@ import 'dart:convert';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/data/repository/info/crypto_account_repo.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
 
 class P2PNodeResponseStream {
-  StreamSubscription<P2PReqResNodeModel?>? _nodeResponseSubscription;
-  bool advertised = false;
-  final P2PState p2pState;
+  P2PNodeResponseStream(
+      {required this.p2pState, required this.accountInfoRepo});
 
-  P2PNodeResponseStream({required this.p2pState});
+  StreamSubscription<P2PReqResNodeModel?>? _nodeResponseSubscription;
+  bool advertiseRequested = false;
+  final P2PState p2pState;
+  AccountInfoRepository accountInfoRepo;
 
   void setUp() {
     _setUpResponseStream();
   }
 
   void reset() {
-    advertised = false;
+    advertiseRequested = false;
     p2pState.responses = [];
     _nodeResponseSubscription?.cancel();
     _nodeResponseSubscription = null;
@@ -52,7 +55,8 @@ class P2PNodeResponseStream {
 
     if (event.name == P2PReqResNodeNames.connect &&
         event.error == null &&
-        !advertised) {
+        !advertiseRequested) {
+      advertiseRequested = true;
       final info = P2PReqResNodeModel(name: P2PReqResNodeNames.advertise);
 
       final id = await FlutterP2pCommunicator.sendRequest(info: info);
@@ -67,7 +71,6 @@ class P2PNodeResponseStream {
     } else if (event.name == P2PReqResNodeNames.advertise &&
         event.error == null) {
       // now you can start talking or communicating to others
-      advertised = true;
       p2pState.advertise.value = true;
     } else if (event.name == P2PReqResNodeNames.addrs && event.error == null) {
       p2pState.address.value = (event.body!["addrs"] as List<dynamic>)
@@ -80,7 +83,7 @@ class P2PNodeResponseStream {
     }
     if (event.name == P2PReqResNodeNames.peerID && event.error == null) {
       p2pState.peerId.value = event.body!["peerID"].toString();
-      final coreId = (await GlobalBindings.accountInfo.getLocalCoreId())!;
+      final coreId = (await accountInfoRepo.getUserDefaultAddress())!;
       final peerId = p2pState.peerId.value;
       final addressId = jsonEncode(p2pState.address.value);
       print(

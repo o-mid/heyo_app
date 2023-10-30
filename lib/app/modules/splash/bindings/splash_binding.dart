@@ -1,8 +1,6 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_repo.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/web3_keys.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
-import 'package:heyo/app/modules/shared/providers/crypto/crypto_provider.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
 import 'package:heyo/app/modules/shared/utils/crypto/crypto_validation.dart';
 import 'package:heyo/app/modules/splash/data/repositoty/splash_repository.dart';
@@ -14,17 +12,7 @@ class SplashBinding extends Bindings {
   void dependencies() {
     Get.put(
       SplashController(
-        accountInfo: AccountRepo(
-          localProvider: SecureStorageProvider(),
-          cryptographyKeyGenerator: Web3Keys(
-            web3client: GlobalBindings.web3Client,
-          ),
-        ),
-        splashRepository: SplashRepository(
-          cryptoProvider: CryptoProvider(
-            cryptoValidation: CryptoValidation(),
-          ),
-        ),
+        accountInfoRepo: Get.find(),
       ),
     );
   }

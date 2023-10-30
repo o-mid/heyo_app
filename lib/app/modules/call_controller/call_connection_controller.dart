@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
+import 'package:heyo/app/modules/shared/data/repository/info/crypto_account_repo.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
@@ -17,7 +17,7 @@ import '../shared/utils/constants/notifications_constant.dart';
 
 class CallConnectionController extends GetxController {
   final Signaling signaling;
-  final AccountInfo accountInfo;
+  final AccountInfoRepository accountInfoRepo;
   final NotificationsController notificationsController;
   final ContactRepository contactRepository;
   final callState = Rxn<CallState>();
@@ -76,12 +76,12 @@ class CallConnectionController extends GetxController {
 
   CallConnectionController(
       {required this.signaling,
-      required this.accountInfo,
+      required this.accountInfoRepo,
       required this.notificationsController,
       required this.contactRepository});
 
   Future<Session> startCall(String remoteId, String callId, bool isAudioCall) async {
-    String? selfCoreId = await accountInfo.getCorePassCoreId();
+    String? selfCoreId = await accountInfoRepo.getUserContactAddress();
     final session = await signaling.invite(remoteId, 'video', false, selfCoreId!, isAudioCall);
 
     callHistoryState.value =

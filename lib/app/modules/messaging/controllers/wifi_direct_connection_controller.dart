@@ -16,20 +16,27 @@ import '../messaging_session.dart';
 import 'common_messaging_controller.dart';
 
 // Todo :  change this status names if needed base on the connection status of the wifi direct
-enum WifiDirectConnectivityStatus { connectionLost, connecting, justConnected, online }
+enum WifiDirectConnectivityStatus {
+  connectionLost,
+  connecting,
+  justConnected,
+  online
+}
 
-class WifiDirectConnectionController extends CommonMessagingConnectionController {
-  Rx<WifiDirectConnectivityStatus> wifiDirectStatus = WifiDirectConnectivityStatus.connecting.obs;
+class WifiDirectConnectionController
+    extends CommonMessagingConnectionController {
+  Rx<WifiDirectConnectivityStatus> wifiDirectStatus =
+      WifiDirectConnectivityStatus.connecting.obs;
 
   WifiDirectWrapper wifiDirectWrapper = WifiDirectWrapper();
 
   WifiDirectConnectionController({
     required wifiDirectWrapper,
-    required super.accountInfo,
     required super.messagesRepo,
     required super.chatHistoryRepo,
     required super.notificationsController,
     required super.contactRepository,
+    required super.accountInfoRepo,
   });
 
   // TODO since working with HeyoWifiDirectPlugin instance requests usage of streams
@@ -102,19 +109,22 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
   }
 
   @override
-  Future<void> sendTextMessage({required String text, required remoteCoreId}) async {
+  Future<void> sendTextMessage(
+      {required String text, required remoteCoreId}) async {
     // TODO remove debug output
-    print('WifiDirectConnectionController(remoteId $remoteId): sendTextMessage($text)');
+    print(
+        'WifiDirectConnectionController(remoteId $remoteId): sendTextMessage($text)');
 
     // TODO needs to be optimized to remove the redundant null check _heyoWifiDirect
     _initPlugin();
 
-    _heyoWifiDirect!
-        .sendMessage(HeyoWifiDirectMessage(receiverId: remoteId!, isBinary: false, body: text));
+    _heyoWifiDirect!.sendMessage(HeyoWifiDirectMessage(
+        receiverId: remoteId!, isBinary: false, body: text));
   }
 
   @override
-  Future<void> sendBinaryMessage({required Uint8List binary, required remoteCoreId}) async {
+  Future<void> sendBinaryMessage(
+      {required Uint8List binary, required remoteCoreId}) async {
     // TODO remove debug output
 
     DataBinaryMessage sendingMessage = DataBinaryMessage.parse(binary);
@@ -135,7 +145,8 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
   }
 
   eventHandler(WifiDirectEvent event) {
-    print('WifiDirectConnectionController(remoteId $remoteId): WifiDirect event: ${event.type}');
+    print(
+        'WifiDirectConnectionController(remoteId $remoteId): WifiDirect event: ${event.type}');
     switch (event.type) {
       case EventType.linkedPeer:
         remoteId = (event.message as Peer).coreID;
@@ -178,13 +189,15 @@ class WifiDirectConnectionController extends CommonMessagingConnectionController
       'WifiDirectConnectionController(remoteId $remoteId): binary: ${message.isBinary}, from ${message.senderId} to ${message.receiverId}',
     );
 
-    MessageSession session = MessageSession(sid: Constants.coreID, cid: remoteId!, pid: remoteId);
+    MessageSession session =
+        MessageSession(sid: Constants.coreID, cid: remoteId!, pid: remoteId);
 
     message.isBinary
-        ? handleDataChannelBinary(binaryData: message.body as Uint8List, remoteCoreId: session.cid)
+        ? handleDataChannelBinary(
+            binaryData: message.body as Uint8List, remoteCoreId: session.cid)
         : handleDataChannelText(
-            receivedJson:
-                const JsonDecoder().convert(message.body as String) as Map<String, dynamic>,
+            receivedJson: const JsonDecoder().convert(message.body as String)
+                as Map<String, dynamic>,
             remoteCoreId: session.cid,
           );
   }

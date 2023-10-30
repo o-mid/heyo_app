@@ -20,7 +20,8 @@ class UpdateMessage {
       Get.find<CommonMessagingConnectionController>();
 
   Future<void> execute(
-      {required UpdateMessageType updateMessageType, required String remoteCoreId}) async {
+      {required UpdateMessageType updateMessageType,
+      required String remoteCoreId}) async {
     switch (updateMessageType.runtimeType) {
       case UpdateReactions:
         final message = (updateMessageType as UpdateReactions).selectedMessage;
@@ -44,8 +45,10 @@ class UpdateMessage {
     required String chatId,
     required String remoteCoreId,
   }) async {
-    final localCoreID = await messagingConnection.accountInfo.getCorePassCoreId() ?? "";
-    var reaction = message.reactions[emoji] as ReactionModel? ?? ReactionModel();
+    final localCoreID =
+        await messagingConnection.accountInfoRepo.getUserContactAddress() ?? "";
+    var reaction =
+        message.reactions[emoji] as ReactionModel? ?? ReactionModel();
 
     if (reaction.isReactedByMe) {
       reaction.users.removeWhere((element) => element == localCoreID);
@@ -67,13 +70,16 @@ class UpdateMessage {
     );
     await messagesRepo.updateMessage(message: updatedMessage, chatId: chatId);
 
-    var updatedMessageJson =
-        UpdateMessageModel(message: updatedMessage.copyWith(reactions: updatedMessage.reactions))
-            .toJson();
+    var updatedMessageJson = UpdateMessageModel(
+            message:
+                updatedMessage.copyWith(reactions: updatedMessage.reactions))
+        .toJson();
 
-    await SendDataChannelMessage(messagingConnection: messagingConnection).execute(
+    await SendDataChannelMessage(messagingConnection: messagingConnection)
+        .execute(
       remoteCoreId: remoteCoreId,
-      channelMessageType: ChannelMessageType.update(message: updatedMessageJson),
+      channelMessageType:
+          ChannelMessageType.update(message: updatedMessageJson),
     );
   }
 }
