@@ -1,5 +1,5 @@
-import 'package:heyo/app/modules/messaging/usecases/send_data_channel_message_usecase.dart';
 import 'package:tuple/tuple.dart';
+import '../../messages/data/message_processor.dart';
 import '../models/data_channel_message_model.dart';
 
 Tuple3<DataChannelMessageModel?, bool, String> channelmessageFromType(
@@ -8,32 +8,32 @@ Tuple3<DataChannelMessageModel?, bool, String> channelmessageFromType(
   String messageLocalPath = '';
   DataChannelMessageModel? msg;
   switch (channelMessageType.runtimeType) {
-    case SendMessage:
+    case SendMessageType:
       msg = DataChannelMessageModel(
-        message: (channelMessageType as SendMessage).message,
+        message: (channelMessageType as SendMessageType).message,
         dataChannelMessagetype: DataChannelMessageType.message,
       );
       isDataBinary = (channelMessageType).isDataBinary;
       messageLocalPath = (channelMessageType).messageLocalPath;
       break;
 
-    case DeleteMessage:
+    case DeleteMessageType:
       msg = DataChannelMessageModel(
-        message: (channelMessageType as DeleteMessage).message,
+        message: (channelMessageType as DeleteMessageType).message,
         dataChannelMessagetype: DataChannelMessageType.delete,
       );
 
       break;
-    case UpdateMessage:
+    case UpdateMessageType:
       msg = DataChannelMessageModel(
-        message: (channelMessageType as UpdateMessage).message,
+        message: (channelMessageType as DataChannelMessageModel).message,
         dataChannelMessagetype: DataChannelMessageType.update,
       );
       break;
 
-    case ConfirmMessage:
+    case ConfirmMessageType:
       msg = DataChannelMessageModel(
-        message: (channelMessageType as ConfirmMessage).message,
+        message: (channelMessageType as ConfirmMessageType).message,
         dataChannelMessagetype: DataChannelMessageType.confirm,
       );
   }

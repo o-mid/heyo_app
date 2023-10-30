@@ -24,103 +24,103 @@ class UserStates {
   String lastMessagePreview;
 }
 
-class SendTextMessageRepoModel {
-  SendTextMessageRepoModel({
-    required this.newMessageValue,
-    required this.chatId,
-    required this.remoteCoreId,
-    this.replyingToValue,
-  });
-  final String newMessageValue;
-  final ReplyToModel? replyingToValue;
-  final String chatId;
-  final String remoteCoreId;
-}
+// class SendTextMessageRepoModel {
+//   SendTextMessageRepoModel({
+//     required this.newMessageValue,
+//     required this.chatId,
+//     required this.remoteCoreId,
+//     this.replyingToValue,
+//   });
+//   final String newMessageValue;
+//   final ReplyToModel? replyingToValue;
+//   final String chatId;
+//   final String remoteCoreId;
+// }
 
-class SendAudioMessageRepoModel {
-  SendAudioMessageRepoModel({
-    required this.path,
-    required this.duration,
-    required this.chatId,
-    required this.remoteCoreId,
-    this.replyingToValue,
-  });
-  final String path;
-  final int duration;
-  final ReplyToModel? replyingToValue;
-  final String chatId;
-  final String remoteCoreId;
-}
+// class SendAudioMessageRepoModel {
+//   SendAudioMessageRepoModel({
+//     required this.path,
+//     required this.duration,
+//     required this.chatId,
+//     required this.remoteCoreId,
+//     this.replyingToValue,
+//   });
+//   final String path;
+//   final int duration;
+//   final ReplyToModel? replyingToValue;
+//   final String chatId;
+//   final String remoteCoreId;
+// }
 
-class SendLocationMessageRepoModel {
-  SendLocationMessageRepoModel({
-    required this.latitude,
-    required this.longitude,
-    required this.address,
-    required this.chatId,
-    required this.remoteCoreId,
-    this.replyingToValue,
-  });
-  final double latitude;
-  final double longitude;
-  final String address;
-  final ReplyToModel? replyingToValue;
-  final String chatId;
-  final String remoteCoreId;
-}
+// class SendLocationMessageRepoModel {
+//   SendLocationMessageRepoModel({
+//     required this.latitude,
+//     required this.longitude,
+//     required this.address,
+//     required this.chatId,
+//     required this.remoteCoreId,
+//     this.replyingToValue,
+//   });
+//   final double latitude;
+//   final double longitude;
+//   final String address;
+//   final ReplyToModel? replyingToValue;
+//   final String chatId;
+//   final String remoteCoreId;
+// }
 
-class SendLiveLocationRepoModel {
-  SendLiveLocationRepoModel({
-    required this.startLat,
-    required this.startLong,
-    required this.duration,
-    required this.chatId,
-    required this.remoteCoreId,
-    this.replyingToValue,
-  });
-  final double startLat;
-  final double startLong;
-  final Duration duration;
-  final ReplyToModel? replyingToValue;
-  final String chatId;
-  final String remoteCoreId;
-}
+// class SendLiveLocationRepoModel {
+//   SendLiveLocationRepoModel({
+//     required this.startLat,
+//     required this.startLong,
+//     required this.duration,
+//     required this.chatId,
+//     required this.remoteCoreId,
+//     this.replyingToValue,
+//   });
+//   final double startLat;
+//   final double startLong;
+//   final Duration duration;
+//   final ReplyToModel? replyingToValue;
+//   final String chatId;
+//   final String remoteCoreId;
+// }
 
-class SendFileMessageRepoModel {
-  SendFileMessageRepoModel({
-    required this.metadata,
-    required this.chatId,
-    required this.remoteCoreId,
-    this.replyingToValue,
-  });
-  final FileMetaData metadata;
-  final ReplyToModel? replyingToValue;
-  final String chatId;
-  final String remoteCoreId;
-}
+// class SendFileMessageRepoModel {
+//   SendFileMessageRepoModel({
+//     required this.metadata,
+//     required this.chatId,
+//     required this.remoteCoreId,
+//     this.replyingToValue,
+//   });
+//   final FileMetaData metadata;
+//   final ReplyToModel? replyingToValue;
+//   final String chatId;
+//   final String remoteCoreId;
+// }
 
-class DeleteMessageRepoModel {
-  DeleteMessageRepoModel({
-    required this.selectedMessages,
-    required this.chatId,
-    required this.remoteCoreId,
-    required this.deleteForEveryOne,
-  });
-  final List<MessageModel> selectedMessages;
-  final String chatId;
-  final String remoteCoreId;
-  final bool deleteForEveryOne;
-}
+// class DeleteMessageRepoModel {
+//   DeleteMessageRepoModel({
+//     required this.selectedMessages,
+//     required this.chatId,
+//     required this.remoteCoreId,
+//     required this.deleteForEveryOne,
+//   });
+//   final List<MessageModel> selectedMessages;
+//   final String chatId;
+//   final String remoteCoreId;
+//   final bool deleteForEveryOne;
+// }
 
-class UpdateMessageRepoModel {
-  UpdateMessageRepoModel({
-    required this.selectedMessage,
-    required this.emoji,
-    required this.chatId,
-    required this.remoteCoreId,
-  });
-  final MessageModel selectedMessage;
-  final String emoji;
-  final String chatId;
-  final String remoteCoreId;
-}
+// class UpdateMessageRepoModel {
+//   UpdateMessageRepoModel({
+//     required this.selectedMessage,
+//     required this.emoji,
+//     required this.chatId,
+//     required this.remoteCoreId,
+//   });
+//   final MessageModel selectedMessage;
+//   final String emoji;
+//   final String chatId;
+//   final String remoteCoreId;
+// }
