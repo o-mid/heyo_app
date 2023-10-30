@@ -10,8 +10,11 @@ class P2PNodeController {
   ConnectivityResult? _latestConnectivityStatus;
   final P2PNode p2pNode;
   final P2PState p2pState;
+  void Function(P2PReqResNodeModel model)? onNewRequestReceived;
 
-  Future<void> init(void Function(P2PReqResNodeModel model) onNewRequestReceived) async {
+  Future<void> init(
+      void Function(P2PReqResNodeModel model) onNewRequestReceived) async {
+    this.onNewRequestReceived = onNewRequestReceived;
     Connectivity().onConnectivityChanged.listen((connectivityResult) async {
       debugPrint('onConnectivityChanged: $connectivityResult');
       if (connectivityResult == ConnectivityResult.none) {
@@ -21,7 +24,7 @@ class P2PNodeController {
         if (_latestConnectivityStatus != null) {
           _stopP2PNode();
         }
-        _setUpP2PNode(onNewRequestReceived);
+        _setUpP2PNode();
         debugPrint('New networkStatus: $connectivityResult');
         _latestConnectivityStatus = connectivityResult;
       }
@@ -33,9 +36,15 @@ class P2PNodeController {
     p2pNode.stop();
   }
 
-  void _setUpP2PNode(void Function(P2PReqResNodeModel model) onNewRequestReceived) {
+  void _setUpP2PNode() {
     debugPrint('p2p startNode');
-    p2pNode.restart(onNewRequestReceived);
+    p2pNode.restart(onNewRequestReceived!);
+  }
+  void stop(){
+    p2pNode.stop();
+  }
+  void restart(){
+    p2pNode.restart(onNewRequestReceived!);
   }
 
   Future<bool> applyDelegatedAuth() {

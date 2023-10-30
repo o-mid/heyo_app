@@ -61,8 +61,8 @@ class IntroController extends GetxController with WidgetsBindingObserver {
       VerificationBottomSheet(onTap: _corePassVerificationAction),
       isScrollControlled: true,
       backgroundColor: COLORS.kWhiteColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(topRight: Radius.circular(16),topLeft: Radius.circular(16)),
       ),
     );
   }
