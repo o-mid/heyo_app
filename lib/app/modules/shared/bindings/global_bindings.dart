@@ -6,11 +6,14 @@ import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_h
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
+import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
+import 'package:heyo/app/modules/connection/data/libp2p_connection_contractor.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 import 'package:heyo/app/modules/messaging/sync_messages.dart';
 import 'package:heyo/app/modules/messaging/web_rtc_connection_manager.dart';
 import 'package:heyo/app/modules/notifications/controllers/app_notifications.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
 import 'package:heyo/app/modules/shared/controllers/call_history_observer.dart';
 import 'package:heyo/app/modules/shared/controllers/connection_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
@@ -20,7 +23,6 @@ import 'package:heyo/app/modules/shared/controllers/video_message_controller.dar
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_repo.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/web3_keys.dart';
-import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_manager.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_request.dart';
@@ -56,10 +58,6 @@ class GlobalBindings extends Bindings {
   );
 
   // p2p related bindings
-  static P2PState p2pState = P2PState();
-
-  static P2PNodeResponseStream p2pNodeResponseStream =
-      P2PNodeResponseStream(p2pState: p2pState);
 
   static Web3Client web3Client = Web3Client(
     WEB3CLIENT.url,
@@ -67,24 +65,8 @@ class GlobalBindings extends Bindings {
     WEB3CLIENT.username,
     WEB3CLIENT.password,
   );
-  static P2PCommunicator p2pCommunicator = P2PCommunicator(
-    p2pState: p2pState,
-    accountInfo: accountInfo,
-  );
 
 // call related bindings
-  static Signaling signaling = Signaling(p2pCommunicator: p2pCommunicator);
-  static CallConnectionController callConnectionController =
-      CallConnectionController(
-          accountInfo: accountInfo,
-          signaling: signaling,
-          notificationsController:
-              NotificationsController(appNotifications: appNotifications),
-          contactRepository: ContactRepository(
-            cacheContractor: CacheRepository(
-                userProvider: UserProvider(
-                    appDatabaseProvider: Get.find<AppDatabaseProvider>())),
-          ));
 
   static WifiDirectWrapper wifiDirectWrapper = WifiDirectWrapper();
 
@@ -108,168 +90,176 @@ class GlobalBindings extends Bindings {
 
   @override
   void dependencies() {
-    Get.put(
-        MultipleConnectionHandler(
-            singleWebRTCConnection: SingleWebRTCConnection(
-                p2pCommunicator: p2pCommunicator,
-                webRTCConnectionManager: WebRTCConnectionManager())),
-        permanent: true);
-
-    Get.put(
+    Get
+      ..put(P2PState(), permanent: true)
+      ..put(P2PCommunicator(p2pState: Get.find(), accountInfo: accountInfo))
+      ..put(
         P2PNodeRequestStream(
-            p2pState: p2pState,
-            signaling: signaling,
-            multipleConnectionHandler: Get.find()),
-        permanent: true);
-    // data base provider dependencies
-    Get.put(AppDatabaseProvider(accountInfo: accountInfo), permanent: true);
-    Get.put(ContactRepository(
-      cacheContractor: CacheRepository(
-          userProvider: UserProvider(
-              appDatabaseProvider: Get.find<AppDatabaseProvider>())),
-    ));
-    // p2p related dependencies
-    Get.put<P2PNodeController>(
-      P2PNodeController(
-          p2pNode: P2PNode(
-            accountInfo: accountInfo,
-            p2pNodeRequestStream: Get.find(),
-            p2pNodeResponseStream: p2pNodeResponseStream,
-            p2pState: p2pState,
-            web3client: web3Client,
-          ),
-          p2pState: p2pState),
-      permanent: true,
-    );
-
-    // call related dependencies
-    Get.put(CallHistoryObserver(
-      callHistoryRepo: CallHistoryRepo(
-        callHistoryProvider: CallHistoryProvider(
-            appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-      ),
-      callConnectionController: callConnectionController,
-      contactRepository: ContactRepository(
+          p2pState: Get.find(),
+        ),
+        permanent: true,
+      )
+      ..put(
+        P2PNodeResponseStream(
+          p2pState: Get.find(),
+        ),
+        permanent: true,
+      )
+      ..put<P2PNodeController>(
+        P2PNodeController(
+            p2pNode: P2PNode(
+              accountInfo: accountInfo,
+              p2pNodeRequestStream: Get.find(),
+              p2pNodeResponseStream: Get.find(),
+              p2pState: Get.find(),
+              web3client: web3Client,
+            ),
+            p2pState: Get.find(),),
+        permanent: true,
+      )
+      ..put<ConnectionContractor>(
+        LibP2PConnectionContractor(
+          p2pNodeController: Get.find(),
+          p2pCommunicator: Get.find(),
+        ),
+        permanent: true,
+      )
+      ..put(Signaling(connectionContractor: Get.find()), permanent: true)
+      ..put(
+        MultipleConnectionHandler(
+            connectionContractor: Get.find(),
+            singleWebRTCConnection: SingleWebRTCConnection(
+                connectionContractor: Get.find(),
+                webRTCConnectionManager: WebRTCConnectionManager(),),),
+        permanent: true,
+      )
+      // data base provider dependencies
+      ..put(AppDatabaseProvider(accountInfo: accountInfo), permanent: true)
+      ..put(ContactRepository(
         cacheContractor: CacheRepository(
             userProvider: UserProvider(
-                appDatabaseProvider: Get.find<AppDatabaseProvider>())),
-      ),
-    ));
+                appDatabaseProvider: Get.find<AppDatabaseProvider>(),),),
+      ),)
+      // p2p related dependencies
 
-    Get.put(callConnectionController, permanent: true);
+      ..put(
+          CallConnectionController(
+              accountInfo: accountInfo,
+              signaling: Get.find(),
+              notificationsController:
+                  NotificationsController(appNotifications: appNotifications),
+              contactRepository: ContactRepository(
+                cacheContractor: CacheRepository(
+                    userProvider: UserProvider(
+                        appDatabaseProvider: Get.find<AppDatabaseProvider>())),
+              )),
+          permanent: true)
 
-    Get.put(
-      CallsController(
+      // call related dependencies
+      ..put(CallHistoryObserver(
         callHistoryRepo: CallHistoryRepo(
           callHistoryProvider: CallHistoryProvider(
-            appDatabaseProvider: Get.find<AppDatabaseProvider>(),
+              appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+        ),
+        callConnectionController: Get.find(),
+        contactRepository: ContactRepository(
+          cacheContractor: CacheRepository(
+              userProvider: UserProvider(
+                  appDatabaseProvider: Get.find<AppDatabaseProvider>())),
+        ),
+      ))
+      ..put(
+        CallsController(
+          callHistoryRepo: CallHistoryRepo(
+            callHistoryProvider: CallHistoryProvider(
+              appDatabaseProvider: Get.find<AppDatabaseProvider>(),
+            ),
           ),
         ),
-      ),
-    );
+      )
 
-    // messaging related dependencies
+      // messaging related dependencies
 
-    Get.put(ChatsController(
-      chatHistoryRepo: ChatHistoryLocalRepo(
-        chatHistoryProvider: ChatHistoryProvider(
-            appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-      ),
-      messagesRepo: MessagesRepo(
-        messagesProvider: MessagesProvider(
-            appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-      ),
-      contactRepository: Get.find<ContactRepository>()
-    ));
-
-    Get.put(AccountController(accountInfo: accountInfo));
-    Get.put(GlobalMessageController());
-    Get.put(AudioMessageController());
-    Get.put(VideoMessageController());
-    Get.put(LiveLocationController());
-    Get.put(ConnectionController(p2pState: p2pState));
-
-    Get.put(
-      MessagingConnectionController(
-          multipleConnectionHandler: Get.find(),
-          accountInfo: accountInfo,
+      ..put(ChatsController(
+          chatHistoryRepo: ChatHistoryLocalRepo(
+            chatHistoryProvider: ChatHistoryProvider(
+                appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          ),
           messagesRepo: MessagesRepo(
             messagesProvider: MessagesProvider(
                 appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
+          contactRepository: Get.find<ContactRepository>()))
+      ..put(AccountController(accountInfo: accountInfo))
+      ..put(GlobalMessageController())
+      ..put(AudioMessageController())
+      ..put(VideoMessageController())
+      ..put(LiveLocationController())
+      ..put(ConnectionController(p2pState: Get.find()))
+      ..put(
+        MessagingConnectionController(
+            multipleConnectionHandler: Get.find(),
+            accountInfo: accountInfo,
+            messagesRepo: MessagesRepo(
+              messagesProvider: MessagesProvider(
+                  appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+            ),
+            chatHistoryRepo: ChatHistoryLocalRepo(
+              chatHistoryProvider: ChatHistoryProvider(
+                appDatabaseProvider: Get.find<AppDatabaseProvider>(),
+              ),
+            ),
+            notificationsController:
+                NotificationsController(appNotifications: appNotifications),
+            contactRepository: Get.find()),
+        permanent: true,
+      )
+      ..put(
+        wifiDirectConnectionController,
+        permanent: true,
+      )
+
+      // Get.put<AppNotifications>(
+      //   AppNotifications(),
+      //   permanent: true,
+      // );
+
+      ..put<NotificationsController>(
+        NotificationsController(
+          appNotifications: appNotifications,
+        ),
+        permanent: true,
+      )
+      ..put<CommonMessagingConnectionController>(
+          Get.find<MessagingConnectionController>())
+      ..put<ChatHistoryLocalRepo>(ChatHistoryLocalRepo(
+        chatHistoryProvider: ChatHistoryProvider(
+          appDatabaseProvider: Get.find(),
+        ),
+      ))
+      ..put<CallHistoryAbstractRepo>(CallHistoryRepo(
+          callHistoryProvider: CallHistoryProvider(
+              appDatabaseProvider: Get.find<AppDatabaseProvider>())))
+      ..put(UserPreview(
+          contactRepository: Get.find<ContactRepository>(),
+          callHistoryRepo: Get.find<CallHistoryAbstractRepo>(),
+          chatHistoryRepo: Get.find<ChatHistoryLocalRepo>()))
+      ..put<CommonMessagingConnectionController>(
+          Get.find<MessagingConnectionController>())
+      ..put(SyncMessages(
+          p2pState: Get.find(),
+          multipleConnectionHandler: Get.find(),
+          accountInfo: accountInfo,
           chatHistoryRepo: ChatHistoryLocalRepo(
             chatHistoryProvider: ChatHistoryProvider(
               appDatabaseProvider: Get.find<AppDatabaseProvider>(),
             ),
           ),
-          notificationsController:
-              NotificationsController(appNotifications: appNotifications),
-          contactRepository: Get.find()),
-      permanent: true,
-    );
-    Get.put(
-      wifiDirectConnectionController,
-      permanent: true,
-    );
-
-    Get.put<P2PNodeController>(
-      P2PNodeController(
-          p2pNode: P2PNode(
-            accountInfo: accountInfo,
-            p2pNodeRequestStream: Get.find(),
-            p2pNodeResponseStream: p2pNodeResponseStream,
-            p2pState: p2pState,
-            web3client: web3Client,
+          messagesRepo: MessagesRepo(
+            messagesProvider: MessagesProvider(
+              appDatabaseProvider: Get.find(),
+            ),
           ),
-          p2pState: p2pState),
-      permanent: true,
-    );
-    // Get.put<AppNotifications>(
-    //   AppNotifications(),
-    //   permanent: true,
-    // );
-
-    Get.put<NotificationsController>(
-      NotificationsController(
-        appNotifications: appNotifications,
-      ),
-      permanent: true,
-    );
-
-    Get.put<CommonMessagingConnectionController>(
-        Get.find<MessagingConnectionController>());
-
-    Get.put<ChatHistoryLocalRepo>(ChatHistoryLocalRepo(
-      chatHistoryProvider: ChatHistoryProvider(
-        appDatabaseProvider: Get.find(),
-      ),
-    ));
-
-    Get.put<CallHistoryAbstractRepo>(CallHistoryRepo(
-        callHistoryProvider: CallHistoryProvider(
-            appDatabaseProvider: Get.find<AppDatabaseProvider>())));
-
-    Get.put(UserPreview(
-        contactRepository: Get.find<ContactRepository>(),
-        callHistoryRepo: Get.find<CallHistoryAbstractRepo>(),
-        chatHistoryRepo: Get.find<ChatHistoryLocalRepo>()));
-    Get.put<CommonMessagingConnectionController>(
-        Get.find<MessagingConnectionController>());
-
-    Get.put(SyncMessages(
-        p2pState: p2pState,
-        multipleConnectionHandler: Get.find(),
-        accountInfo: accountInfo,
-        chatHistoryRepo: ChatHistoryLocalRepo(
-          chatHistoryProvider: ChatHistoryProvider(
-            appDatabaseProvider: Get.find<AppDatabaseProvider>(),
-          ),
-        ),
-        messagesRepo: MessagesRepo(
-          messagesProvider: MessagesProvider(
-            appDatabaseProvider: Get.find(),
-          ),
-        ),
-        sendMessage: SendMessage()));
+          sendMessage: SendMessage()));
   }
 }

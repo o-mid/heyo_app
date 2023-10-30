@@ -1,20 +1,41 @@
+import 'dart:typed_data';
+
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
+import 'package:heyo/app/modules/splash/data/repositoty/splash_repository.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 
 class SplashController extends GetxController {
-  //TODO: Implement SplashController
+  SplashRepository splashRepository;
 
-  final count = 0.obs;
+  SplashController({required this.accountInfo, required this.splashRepository});
+
+  final AccountInfo accountInfo;
+
+  //Todo accountInfo
+  _checkIfAuthenticated() async {
+    final signature = await accountInfo.getSignature();
+    if (signature == null) {
+      await _goToLogin();
+      return;
+    }
+    await Get.offAllNamed(Routes.HOME);
+  }
+
   @override
-  void onInit() {
-    super.onInit();
+  void onClose() {
+    FlutterNativeSplash.remove();
+    super.onClose();
   }
 
   @override
   void onReady() {
     super.onReady();
+    _checkIfAuthenticated();
   }
 
-  @override
-  void onClose() {}
-  void increment() => count.value++;
+  Future<void> _goToLogin() async {
+    await Get.offAllNamed(Routes.INTRO);
+  }
 }

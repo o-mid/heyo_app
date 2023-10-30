@@ -16,7 +16,7 @@ class ChipWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Chip(
-      backgroundColor: COLORS.KChipColor,
+      backgroundColor: COLORS.kChipColor,
       deleteIcon: const Icon(Icons.close),
       avatar: Container(
         decoration: BoxDecoration(

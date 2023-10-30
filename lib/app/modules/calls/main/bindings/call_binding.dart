@@ -8,7 +8,7 @@ class CallBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<CallController>(
       () => CallController(
-          callConnectionController: GlobalBindings.callConnectionController),
+          callConnectionController: Get.find()),
     );
   }
 }

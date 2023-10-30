@@ -1,13 +1,27 @@
+import 'package:heyo/app/modules/connection/domain/connection_models.dart';
 import 'package:heyo/app/modules/messaging/models.dart';
 import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
+import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
 
 class MultipleConnectionHandler {
   Map<ConnectionId, RTCSession> connections = {};
   final SingleWebRTCConnection singleWebRTCConnection;
   Function(RTCSession)? onNewRTCSessionCreated;
   Function(RTCSession)? onRTCSessionConnected;
+  final ConnectionContractor connectionContractor;
 
-  MultipleConnectionHandler({required this.singleWebRTCConnection});
+  MultipleConnectionHandler(
+      {required this.singleWebRTCConnection,
+      required this.connectionContractor,}) {
+    connectionContractor
+        .getMessageStream()
+        .listen((event) {
+      if (event is ChatMultipleConnectionDataReceived) {
+        onRequestReceived(
+            event.mapData, event.remoteCoreId, event.remotePeerId,);
+      }
+    });
+  }
 
   Future<RTCSession> getConnection(String remoteCoreId) async {
     print("getConnection : $remoteCoreId");
@@ -60,7 +74,8 @@ class MultipleConnectionHandler {
 
   _removePrevConnections(String remoteCoreId, ConnectionId connectionId) {
     var items = connections.values
-        .where((element) => element.remotePeer.remoteCoreId == remoteCoreId &&
+        .where((element) =>
+            element.remotePeer.remoteCoreId == remoteCoreId &&
             element.connectionId != connectionId)
         .toList();
     for (var element in items) {

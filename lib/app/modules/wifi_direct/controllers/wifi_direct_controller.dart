@@ -157,7 +157,7 @@ class WifiDirectController extends GetxController {
   }
 
   Future<void> _setCoreId() async {
-    coreId.value = (await accountInfo.getCoreId()) ?? "";
+    coreId.value = (await accountInfo.getCorePassCoreId()) ?? "";
   }
 
   // this will show a custom UI permission dialog at first and then the default permission dialog for location permission

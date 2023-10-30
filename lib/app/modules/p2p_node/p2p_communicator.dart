@@ -1,15 +1,9 @@
-import 'dart:ffi';
-
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
-import 'package:flutter_p2p_communicator/model/addr_model.dart';
-import 'package:flutter_p2p_communicator/model/login_mode.dart';
+import 'package:flutter_p2p_communicator/model/delegate_auth_model.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:flutter_p2p_communicator/model/signaling_model.dart';
 import 'package:flutter_p2p_communicator/model/transfer_model.dart';
-import 'package:collection/src/iterable_extensions.dart';
-import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
-
 import 'data/account/account_info.dart';
 import 'p2p_state.dart';
 
@@ -19,17 +13,15 @@ class P2PCommunicator {
 
   P2PCommunicator({required this.p2pState, required this.accountInfo});
 
-  Future<bool> _sendingData(SignalingModel model) async {
-    final id = await FlutterP2pCommunicator.sendRequest(
-        info: P2PReqResNodeModel(
-            name: P2PReqResNodeNames.signaling, body: model.toJson(),),);
-    print("P2PCommunicator: sending data start $id");
+  Future<bool> _sendingData(P2PReqResNodeModel model) async {
+    final id = await FlutterP2pCommunicator.sendRequest(info: model);
+    print('P2PCommunicator: sending data start $id');
     return await p2pState.trackRequest(id);
-    print("P2PCommunicator: sending data finish $id");
+    // print("P2PCommunicator: sending data finish $id");
   }
 
-
-  Future<bool> sendSDP(String sdp, String remoteCoreId, String? remotePeerId) async {
+  Future<bool> sendSDP(
+      String sdp, String remoteCoreId, String? remotePeerId) async {
     // seding sdp to remote peer prosess
     // 1. get local core id
     // 2. get the sep hex
@@ -37,22 +29,27 @@ class P2PCommunicator {
     // 4. create p2p login model
     // 5. send login request and track the Request
 
-    final localCoreId = await accountInfo.getCoreId();
-    if (localCoreId == null) throw 'Core id is null!!';
-
+    final localCoreId = await accountInfo.getLocalCoreId();
+    print('Local Core id : ${localCoreId}');
+    print('Remote core id : ${remoteCoreId}');
     final hexSDP = sdp.getHex();
-
-    final p2pSignalingObj = SignalingModel(
+    final requestModel = P2PReqResNodeModel(
+      name: P2PReqResNodeNames.signaling,
+      body: SignalingModel(
         info: P2PTransferModel(
           localCoreID: localCoreId,
-          remoteCoreID: remoteCoreId,
-          remotePeerID: remotePeerId,
+          delegateRemote: DelegateRemoteModel(
+            remoteDelegatedCoreID: remoteCoreId,
+            remoteDelegateName: DelegateName.heyo,
+          ),
         ),
         payload: SignalingPayloadModel(
-            data:hexSDP,),);
+          data: hexSDP,
+        ),
+      ).toJson(),
+    );
 
-
-
-    return _sendingData(p2pSignalingObj);
+    return _sendingData(requestModel);
   }
+
 }
