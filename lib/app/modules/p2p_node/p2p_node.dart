@@ -29,7 +29,8 @@ class P2PNode {
     required this.p2pNodeRequestStream,
     required this.p2pNodeResponseStream,
     required this.p2pState,
-    required this.web3client,});
+    required this.web3client,
+  });
 
   void _setUpP2PNode(void Function(P2PReqResNodeModel model) onNewRequestReceived) async {
     // setup the p2p ResponseStream and RequestStream and listen to them
@@ -92,7 +93,6 @@ class P2PNode {
       if (!result) {
         await accountInfo.removeSignature();
         await accountInfo.removeCorePassCoreId();
-
         await Get.offAllNamed(AppPages.INITIAL);
         return;
       }
@@ -112,15 +112,15 @@ class P2PNode {
 
 // stop P2P node Prosses by reseting the streams and the state and stoping the node
 // by using FlutterP2pCommunicator.stopNode
-  void stop() {
-    _stopP2PNode();
+  Future<void> stop() async {
+    await _stopP2PNode();
     p2pState.reset();
     p2pNodeRequestStream.reset();
     p2pNodeResponseStream.reset();
     //TODO reset values
   }
 
-  void _stopP2PNode() async {
+  Future<void> _stopP2PNode() async {
     await FlutterP2pCommunicator.stopNode();
   }
 
