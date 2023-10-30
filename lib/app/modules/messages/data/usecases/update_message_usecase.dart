@@ -13,16 +13,15 @@ import '../provider/messages_provider.dart';
 import '../repo/messages_abstract_repo.dart';
 import '../repo/messages_repo.dart';
 
-class UpdateMessage {
-  UpdateMessage({required this.processor});
-
+class UpdateMessageUseCase {
+  UpdateMessageUseCase({
+    required this.messagesRepo,
+    required this.messagingConnection,
+    required this.processor,
+  });
+  final MessagesAbstractRepo messagesRepo;
+  final UnifiedConnectionController messagingConnection;
   final MessageProcessor processor;
-  final MessagesAbstractRepo messagesRepo = MessagesRepo(
-    messagesProvider: MessagesProvider(
-      appDatabaseProvider: Get.find(),
-    ),
-  );
-  final UnifiedConnectionController messagingConnection = Get.find<UnifiedConnectionController>();
 
   Future<void> execute(
       {required UpdateMessageType updateMessageType, required String remoteCoreId}) async {

@@ -30,54 +30,58 @@ class MessagesBinding extends Bindings {
 
     Get.lazyPut<MessagesController>(
       () => MessagesController(
-          messageRepository: ConnectionMessageRepositoryImpl(
-            messagesRepo: MessagesRepo(
-              messagesProvider: MessagesProvider(
-                appDatabaseProvider: Get.find(),
-              ),
+        messageRepository: ConnectionMessageRepositoryImpl(
+          messagesRepo: MessagesRepo(
+            messagesProvider: MessagesProvider(
+              appDatabaseProvider: Get.find(),
             ),
           ),
-          userStateRepository: UserStateRepositoryImpl(
-            contactRepository: Get.find(),
-            messagesRepo: MessagesRepo(
-              messagesProvider: MessagesProvider(
-                appDatabaseProvider: Get.find(),
-              ),
-            ),
-            chatHistoryRepo: ChatHistoryLocalRepo(
-              chatHistoryProvider: ChatHistoryProvider(
-                appDatabaseProvider: Get.find(),
-              ),
+        ),
+        userStateRepository: UserStateRepositoryImpl(
+          contactRepository: Get.find(),
+          messagesRepo: MessagesRepo(
+            messagesProvider: MessagesProvider(
+              appDatabaseProvider: Get.find(),
             ),
           ),
-          messagingController: UnifiedConnectionController(
-            messagesRepo: MessagesRepo(
-              messagesProvider: MessagesProvider(
-                appDatabaseProvider: Get.find(),
-              ),
+          chatHistoryRepo: ChatHistoryLocalRepo(
+            chatHistoryProvider: ChatHistoryProvider(
+              appDatabaseProvider: Get.find(),
             ),
-            chatHistoryRepo: ChatHistoryLocalRepo(
-              chatHistoryProvider: ChatHistoryProvider(
-                appDatabaseProvider: Get.find(),
-              ),
-            ),
-            contactRepository: ContactRepository(
-              cacheContractor: CacheRepository(
-                  userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
-            ),
-            accountInfo: AccountRepo(
-              localProvider: SecureStorageProvider(),
-              cryptographyKeyGenerator: Web3Keys(
-                web3client: GlobalBindings.web3Client,
-              ),
-            ),
-            multipleConnectionHandler: GlobalBindings.multipleConnectionHandler,
-            wifiDirectWrapper: GlobalBindings.wifiDirectWrapper,
-            notificationsController:
-                NotificationsController(appNotifications: GlobalBindings.appNotifications),
-            connectionType: connectionType,
           ),
-          sendMessageUseCase: Get.find()),
+        ),
+        messagingController: UnifiedConnectionController(
+          messagesRepo: MessagesRepo(
+            messagesProvider: MessagesProvider(
+              appDatabaseProvider: Get.find(),
+            ),
+          ),
+          chatHistoryRepo: ChatHistoryLocalRepo(
+            chatHistoryProvider: ChatHistoryProvider(
+              appDatabaseProvider: Get.find(),
+            ),
+          ),
+          contactRepository: ContactRepository(
+            cacheContractor: CacheRepository(
+              userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+            ),
+          ),
+          accountInfo: AccountRepo(
+            localProvider: SecureStorageProvider(),
+            cryptographyKeyGenerator: Web3Keys(
+              web3client: GlobalBindings.web3Client,
+            ),
+          ),
+          multipleConnectionHandler: GlobalBindings.multipleConnectionHandler,
+          wifiDirectWrapper: GlobalBindings.wifiDirectWrapper,
+          notificationsController:
+              NotificationsController(appNotifications: GlobalBindings.appNotifications),
+          connectionType: connectionType,
+        ),
+        sendMessageUseCase: Get.find(),
+        updateMessageUseCase: Get.find(),
+        deleteMessageUseCase: Get.find(),
+      ),
     );
   }
 }

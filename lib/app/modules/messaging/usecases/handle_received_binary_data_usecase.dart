@@ -154,7 +154,11 @@ class HandleReceivedBinaryData {
         ),
         chatId: chatId);
 
-    await ConfirmMessage(processor: message_processor.MessageProcessor()).execute(
+    await ConfirmMessageUseCase(
+      processor: message_processor.MessageProcessor(),
+      messagesRepo: messagesRepo,
+      messagingConnection: messagingConnection,
+    ).execute(
         remoteCoreId: remoteCoreId,
         confirmMessageType: ConfirmMessageType.confirmReceivedText(
           chatId: chatId,

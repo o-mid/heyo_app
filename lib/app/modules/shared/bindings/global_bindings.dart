@@ -317,9 +317,5 @@ class GlobalBindings extends Bindings {
         //  sendMessage: SendMessage(),
       ),
     );
-    //   Get.put(SendMessage());
-    Get.put(UpdateMessage(processor: messageProcessor));
-    Get.put(DeleteMessage(processor: messageProcessor));
-    Get.put(ConfirmMessage(processor: messageProcessor));
   }
 }

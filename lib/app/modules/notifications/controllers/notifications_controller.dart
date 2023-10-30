@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/messages/data/message_processor.dart' as message_processor;
 import 'package:heyo/app/modules/notifications/controllers/app_notifications.dart';
 
 import '../../../routes/app_pages.dart';
@@ -178,7 +179,11 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
         final userChatModel = await chatHistoryRepo.getChat(payload.chatId);
         if (userChatModel != null) {
           // Get.find<MessagesController>().initMessagingConnection();
-          await SendMessage().execute(
+          await SendMessageUseCase(
+            messagesRepo: messagesRepo,
+            messagingConnection: Get.find<UnifiedConnectionController>(),
+            processor: message_processor.MessageProcessor(),
+          ).execute(
               sendMessageType: SendMessageType.text(
                 text: message,
                 replyTo: ReplyToModel(

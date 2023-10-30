@@ -12,15 +12,16 @@ import '../models/messages/message_model.dart';
 import '../provider/messages_provider.dart';
 import '../repo/messages_abstract_repo.dart';
 
-class DeleteMessage {
-  DeleteMessage({required this.processor});
-  final MessagesAbstractRepo messagesRepo = MessagesRepo(
-    messagesProvider: MessagesProvider(
-      appDatabaseProvider: Get.find(),
-    ),
-  );
-  final UnifiedConnectionController messagingConnection = Get.find<UnifiedConnectionController>();
+class DeleteMessageUseCase {
+  final MessagesAbstractRepo messagesRepo;
+  final UnifiedConnectionController messagingConnection;
   final MessageProcessor processor;
+
+  DeleteMessageUseCase({
+    required this.messagesRepo,
+    required this.messagingConnection,
+    required this.processor,
+  });
 
   Future<void> execute({
     required DeleteMessageType deleteMessageType,

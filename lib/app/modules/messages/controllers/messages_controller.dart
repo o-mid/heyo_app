@@ -63,14 +63,19 @@ import '../../shared/data/repository/contact_repository.dart';
 import '../domain/connection_message_repository.dart';
 
 class MessagesController extends GetxController {
-  MessagesController(
-      {required this.messageRepository,
-      required this.userStateRepository,
-      required this.messagingController,
-      required this.sendMessageUseCase}) {
+  MessagesController({
+    required this.messageRepository,
+    required this.userStateRepository,
+    required this.messagingController,
+    required this.sendMessageUseCase,
+    required this.updateMessageUseCase,
+    required this.deleteMessageUseCase,
+  }) {
     init();
   }
   final SendMessageUseCase sendMessageUseCase;
+  final UpdateMessageUseCase updateMessageUseCase;
+  final DeleteMessageUseCase deleteMessageUseCase;
   final ConnectionMessageRepository messageRepository;
   final UserStateRepository userStateRepository;
 
@@ -387,21 +392,20 @@ class MessagesController extends GetxController {
   }
 
   Future<void> toggleReaction(MessageModel msg, String emoji) async {
-    await messageRepository.updateReactions(
-      updateMessageRepoModel: UpdateMessageRepoModel(
+    await updateMessageUseCase.execute(
+      remoteCoreId: user.value.walletAddress,
+      updateMessageType: UpdateMessageType.updateReactions(
         selectedMessage: msg,
         emoji: emoji,
         chatId: chatId,
-        remoteCoreId: user.value.walletAddress,
       ),
     );
-
-    // UpdateMessage().execute(
-    //   remoteCoreId: user.value.walletAddress,
-    //   updateMessageType: UpdateMessageType.updateReactions(
+    // await messageRepository.updateReactions(
+    //   updateMessageRepoModel: UpdateMessageRepoModel(
     //     selectedMessage: msg,
     //     emoji: emoji,
     //     chatId: chatId,
+    //     remoteCoreId: user.value.walletAddress,
     //   ),
     // );
   }
@@ -661,40 +665,24 @@ class MessagesController extends GetxController {
   }
 
   Future<void> deleteSelectedForEveryone() async {
-    await messageRepository.deleteMessages(
-      deleteMessageRepoModel: DeleteMessageRepoModel(
-        selectedMessages: selectedMessages,
+    await deleteMessageUseCase.execute(
+      remoteCoreId: user.value.walletAddress,
+      deleteMessageType: DeleteMessageType.forEveryone(
         chatId: chatId,
-        remoteCoreId: user.value.walletAddress,
-        deleteForEveryOne: true,
+        selectedMessages: selectedMessages,
       ),
     );
-    // DeleteMessage().execute(
-    //   remoteCoreId: user.value.walletAddress,
-    //   deleteMessageType: DeleteMessageType.forEveryone(
-    //     chatId: chatId,
-    //     selectedMessages: selectedMessages,
-    //   ),
-    // );
     clearSelected();
   }
 
   Future<void> deleteSelectedForMe() async {
-    await messageRepository.deleteMessages(
-      deleteMessageRepoModel: DeleteMessageRepoModel(
-        selectedMessages: selectedMessages,
+    await deleteMessageUseCase.execute(
+      remoteCoreId: user.value.walletAddress,
+      deleteMessageType: DeleteMessageType.forMe(
         chatId: chatId,
-        remoteCoreId: user.value.walletAddress,
-        deleteForEveryOne: false,
+        selectedMessages: selectedMessages,
       ),
     );
-    // DeleteMessage().execute(
-    //   remoteCoreId: user.value.walletAddress,
-    //   deleteMessageType: DeleteMessageType.forMe(
-    //     chatId: chatId,
-    //     selectedMessages: selectedMessages,
-    //   ),
-    // );
     clearSelected();
   }
 
