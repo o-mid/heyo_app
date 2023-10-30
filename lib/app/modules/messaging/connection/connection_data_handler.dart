@@ -9,6 +9,7 @@ import 'package:heyo/app/modules/messaging/utils/binary_file_receiving_state.dar
 import 'package:heyo/app/modules/notifications/data/models/notifications_payload_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/notifications_constant.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/mocks/random_avatar_icon.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../chats/data/models/chat_model.dart';
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
@@ -74,14 +75,42 @@ class DataHandler {
         .execute(state: currentBinaryState, remoteCoreId: remoteCoreId);
   }
 
-  Future<void> saveAndConfirmReceivedMessage({
+  Future<Tuple3<String, ConfirmMessageStatus, String>> saveReceivedMessage({
     required Map<String, dynamic> receivedMessageJson,
     required String chatId,
   }) async {
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
     MessageModel? _currentMsg =
         await messagesRepo.getMessageById(messageId: receivedMessage.messageId, chatId: chatId);
-    // ... (rest of the implementation)
+
+    bool isNewMessage = (_currentMsg == null);
+
+    if (isNewMessage) {
+      await messagesRepo.createMessage(
+        message: receivedMessage.copyWith(
+          isFromMe: false,
+          status: receivedMessage.status.deliveredStatus(),
+        ),
+        chatId: chatId,
+      );
+    } else {
+      print('Message already exists');
+      await messagesRepo.updateMessage(
+        message: receivedMessage.copyWith(
+          isFromMe: false,
+          status: receivedMessage.status.deliveredStatus(),
+        ),
+        chatId: chatId,
+      );
+    }
+
+    await updateChatRepoAndNotify(
+      receivedMessage: receivedMessage,
+      chatId: chatId,
+      notify: isNewMessage,
+    );
+
+    return Tuple3(receivedMessage.messageId, ConfirmMessageStatus.delivered, chatId);
   }
 
   Future<void> deleteReceivedMessage({

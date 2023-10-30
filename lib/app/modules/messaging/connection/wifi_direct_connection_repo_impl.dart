@@ -9,6 +9,7 @@ import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../chats/data/models/chat_model.dart';
+import '../../messages/data/models/messages/confirm_message_model.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../messaging_session.dart';
 import '../models/data_channel_message_model.dart';
@@ -175,11 +176,15 @@ class WiFiDirectConnectionRepoImpl extends ConnectionRepo {
     DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(receivedJson);
     switch (channelMessage.dataChannelMessagetype) {
       case DataChannelMessageType.message:
-        await dataHandler.saveAndConfirmReceivedMessage(
+        var confirmationValues = await dataHandler.saveReceivedMessage(
           receivedMessageJson: channelMessage.message,
           chatId: remoteCoreId,
         );
-
+        await confirmMessageById(
+          messageId: confirmationValues.item1,
+          status: confirmationValues.item2,
+          remoteCoreId: confirmationValues.item3,
+        );
       case DataChannelMessageType.delete:
         await dataHandler.deleteReceivedMessage(
           receivedDeleteJson: channelMessage.message,
@@ -223,5 +228,23 @@ class WiFiDirectConnectionRepoImpl extends ConnectionRepo {
 
       return;
     }
+  }
+
+  Future<void> confirmMessageById({
+    required String messageId,
+    required ConfirmMessageStatus status,
+    required String remoteCoreId,
+  }) async {
+    Map<String, dynamic> confirmMessageJson =
+        ConfirmMessageModel(messageId: messageId, status: status).toJson();
+
+    DataChannelMessageModel dataChannelMessage = DataChannelMessageModel(
+      message: confirmMessageJson,
+      dataChannelMessagetype: DataChannelMessageType.confirm,
+    );
+
+    Map<String, dynamic> dataChannelMessageJson = dataChannelMessage.toJson();
+
+    await sendTextMessage(text: jsonEncode(dataChannelMessageJson), remoteCoreId: remoteCoreId);
   }
 }

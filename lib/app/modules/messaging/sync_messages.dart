@@ -1,10 +1,10 @@
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
+import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
-import 'package:heyo/app/modules/messages/data/usecases/send_message.dart';
 import 'package:heyo/app/modules/messages/utils/message_to_send_message_type.dart';
 
 class SyncMessages {
@@ -13,7 +13,7 @@ class SyncMessages {
   final AccountInfo accountInfo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final MessagesAbstractRepo messagesRepo;
-  final SendMessage sendMessage;
+  final SendMessageUseCase sendMessageUseCase;
 
   SyncMessages(
       {required this.p2pState,
@@ -21,7 +21,7 @@ class SyncMessages {
       required this.accountInfo,
       required this.chatHistoryRepo,
       required this.messagesRepo,
-      required this.sendMessage}) {
+      required this.sendMessageUseCase}) {
     _init();
   }
 
@@ -49,7 +49,7 @@ class SyncMessages {
           if (sendMessageType != null) {
             print("syncMessages: execute: ${rtcSession.connectionId} ");
 
-            await sendMessage.execute(
+            await sendMessageUseCase.execute(
                 sendMessageType: sendMessageType,
                 remoteCoreId: rtcSession.remotePeer.remoteCoreId,
                 isUpdate: true,

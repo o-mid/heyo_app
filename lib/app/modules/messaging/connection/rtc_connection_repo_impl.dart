@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:heyo/app/modules/messages/data/models/messages/confirm_message_model.dart';
 import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
 import 'package:heyo/app/modules/messaging/models.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 import 'package:heyo/app/modules/messaging/unified_messaging_controller.dart';
 import 'package:heyo/app/modules/messaging/usecases/handle_received_binary_data_usecase.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../wifi_direct/controllers/wifi_direct_wrapper.dart';
 import '../models/data_channel_message_model.dart';
@@ -161,9 +163,14 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
     DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(receivedJson);
     switch (channelMessage.dataChannelMessagetype) {
       case DataChannelMessageType.message:
-        await dataHandler.saveAndConfirmReceivedMessage(
+        var confirmationValues = await dataHandler.saveReceivedMessage(
           receivedMessageJson: channelMessage.message,
           chatId: remoteCoreId,
+        );
+        await confirmMessageById(
+          messageId: confirmationValues.item1,
+          status: confirmationValues.item2,
+          remoteCoreId: confirmationValues.item3,
         );
 
       case DataChannelMessageType.delete:
@@ -184,6 +191,24 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
           chatId: remoteCoreId,
         );
     }
+  }
+
+  Future<void> confirmMessageById({
+    required String messageId,
+    required ConfirmMessageStatus status,
+    required String remoteCoreId,
+  }) async {
+    Map<String, dynamic> confirmMessageJson =
+        ConfirmMessageModel(messageId: messageId, status: status).toJson();
+
+    DataChannelMessageModel dataChannelMessage = DataChannelMessageModel(
+      message: confirmMessageJson,
+      dataChannelMessagetype: DataChannelMessageType.confirm,
+    );
+
+    Map<String, dynamic> dataChannelMessageJson = dataChannelMessage.toJson();
+
+    await sendTextMessage(text: jsonEncode(dataChannelMessageJson), remoteCoreId: remoteCoreId);
   }
 
   Future<void> setConnectivityOnline() async {

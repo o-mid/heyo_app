@@ -38,6 +38,7 @@ import '../../chats/data/repos/chat_history/chat_history_repo.dart';
 import '../../messages/data/provider/messages_provider.dart';
 import '../../messages/data/repo/messages_repo.dart';
 import '../../messages/data/usecases/cofirm_message_usecase.dart';
+import '../../messages/data/usecases/send_message_usecase.dart';
 import '../../messages/data/usecases/update_message_usecase.dart';
 import '../../messaging/controllers/common_messaging_controller.dart';
 import '../../messaging/controllers/messaging_connection_controller.dart';
@@ -299,23 +300,27 @@ class GlobalBindings extends Bindings {
     );
     // Get.put<CommonMessagingConnectionController>(Get.find<MessagingConnectionController>());
 
-    Get.put(
-      SyncMessages(
-        p2pState: p2pState,
-        multipleConnectionHandler: Get.find(),
-        accountInfo: accountInfo,
-        chatHistoryRepo: ChatHistoryLocalRepo(
-          chatHistoryProvider: ChatHistoryProvider(
-            appDatabaseProvider: Get.find<AppDatabaseProvider>(),
-          ),
+    Get.put(SyncMessages(
+      p2pState: p2pState,
+      multipleConnectionHandler: Get.find(),
+      accountInfo: accountInfo,
+      chatHistoryRepo: ChatHistoryLocalRepo(
+        chatHistoryProvider: ChatHistoryProvider(
+          appDatabaseProvider: Get.find<AppDatabaseProvider>(),
         ),
-        messagesRepo: MessagesRepo(
-          messagesProvider: MessagesProvider(
-            appDatabaseProvider: Get.find(),
-          ),
-        ),
-        //  sendMessage: SendMessage(),
       ),
-    );
+      messagesRepo: MessagesRepo(
+        messagesProvider: MessagesProvider(
+          appDatabaseProvider: Get.find(),
+        ),
+      ),
+      sendMessageUseCase: SendMessageUseCase(
+        messagesRepo: MessagesRepo(
+          messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+        ),
+        messagingConnection: unifiedConnectionController,
+        processor: messageProcessor,
+      ),
+    ));
   }
 }
