@@ -12,12 +12,14 @@ import '../repo/messages_abstract_repo.dart';
 import '../repo/messages_repo.dart';
 
 class ConfirmMessage {
+  ConfirmMessage({required this.processor});
   final MessagesAbstractRepo messagesRepo = MessagesRepo(
     messagesProvider: MessagesProvider(
       appDatabaseProvider: Get.find(),
     ),
   );
   final UnifiedConnectionController messagingConnection = Get.find<UnifiedConnectionController>();
+  final MessageProcessor processor;
 
   execute({required ConfirmMessageType confirmMessageType, required String remoteCoreId}) async {
     switch (confirmMessageType.runtimeType) {
@@ -30,11 +32,6 @@ class ConfirmMessage {
           status: status,
         ).toJson();
 
-        // SendDataChannelMessage(messagingConnection: messagingConnection).execute(
-        //     channelMessageType: ChannelMessageType.confirm(message: confirmmessageJson),
-        //     remoteCoreId: remoteCoreId);
-
-        final processor = MessageProcessor();
         final processedMessage = await processor.getMessageDetails(
           channelMessageType: ChannelMessageType.confirm(message: confirmmessageJson),
           remoteCoreId: remoteCoreId,

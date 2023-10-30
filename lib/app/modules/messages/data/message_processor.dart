@@ -47,53 +47,53 @@ class ChannelMessageType {
     required Map<String, dynamic> message,
     required bool isDataBinary,
     required String messageLocalPath,
-  }) = SendMessage;
+  }) = SendMessageType;
 
   factory ChannelMessageType.delete({
     required Map<String, dynamic> message,
-  }) = DeleteMessage;
+  }) = DeleteMessageType;
 
   factory ChannelMessageType.update({
     required Map<String, dynamic> message,
-  }) = UpdateMessage;
+  }) = UpdateMessageType;
 
   factory ChannelMessageType.confirm({
     required Map<String, dynamic> message,
-  }) = UpdateMessage;
+  }) = UpdateMessageType;
 }
 
-class SendMessage implements ChannelMessageType {
+class SendMessageType implements ChannelMessageType {
   final Map<String, dynamic> message;
   final bool isDataBinary;
   final String messageLocalPath;
 
-  SendMessage({
+  SendMessageType({
     required this.message,
     required this.isDataBinary,
     required this.messageLocalPath,
   });
 }
 
-class DeleteMessage implements ChannelMessageType {
+class DeleteMessageType implements ChannelMessageType {
   final Map<String, dynamic> message;
 
-  DeleteMessage({
+  DeleteMessageType({
     required this.message,
   });
 }
 
-class UpdateMessage implements ChannelMessageType {
+class UpdateMessageType implements ChannelMessageType {
   final Map<String, dynamic> message;
 
-  UpdateMessage({
+  UpdateMessageType({
     required this.message,
   });
 }
 
-class ConfirmMessage implements ChannelMessageType {
+class ConfirmMessageType implements ChannelMessageType {
   final Map<String, dynamic> message;
 
-  ConfirmMessage({
+  ConfirmMessageType({
     required this.message,
   });
 }

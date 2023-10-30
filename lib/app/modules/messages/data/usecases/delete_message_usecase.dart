@@ -13,12 +13,14 @@ import '../provider/messages_provider.dart';
 import '../repo/messages_abstract_repo.dart';
 
 class DeleteMessage {
+  DeleteMessage({required this.processor});
   final MessagesAbstractRepo messagesRepo = MessagesRepo(
     messagesProvider: MessagesProvider(
       appDatabaseProvider: Get.find(),
     ),
   );
   final UnifiedConnectionController messagingConnection = Get.find<UnifiedConnectionController>();
+  final MessageProcessor processor;
 
   Future<void> execute({
     required DeleteMessageType deleteMessageType,
@@ -61,11 +63,6 @@ class DeleteMessage {
 
     await messagesRepo.deleteMessages(messageIds: messageIds, chatId: chatId);
 
-    // await SendDataChannelMessage(messagingConnection: messagingConnection).execute(
-    //   channelMessageType: ChannelMessageType.delete(message: deleteMessagesJson),
-    //   remoteCoreId: remoteCoreId,
-    // );
-    final processor = MessageProcessor();
     final processedMessage = await processor.getMessageDetails(
       channelMessageType: ChannelMessageType.delete(message: deleteMessagesJson),
       remoteCoreId: remoteCoreId,

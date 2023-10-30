@@ -18,10 +18,11 @@ import '../models/metadatas/video_metadata.dart';
 import '../repo/messages_abstract_repo.dart';
 
 class SendMessageUseCase {
-  SendMessageUseCase({required this.messagesRepo, required this.messagingConnection});
-
+  SendMessageUseCase(
+      {required this.messagesRepo, required this.messagingConnection, required this.processor});
   final MessagesAbstractRepo messagesRepo;
   final UnifiedConnectionController messagingConnection;
+  final MessageProcessor processor;
 
   execute(
       {required SendMessageType sendMessageType,
@@ -47,7 +48,7 @@ class SendMessageUseCase {
 
     final rawmessageJson = msg.toJson();
 
-    final processedMessage = await MessageProcessor().getMessageDetails(
+    final processedMessage = await processor.getMessageDetails(
       channelMessageType: ChannelMessageType.message(
           message: rawmessageJson, isDataBinary: isDataBinary, messageLocalPath: messageLocalPath),
       remoteCoreId: remoteCoreId,
@@ -55,13 +56,13 @@ class SendMessageUseCase {
     if (isDataBinary && messageLocalPath.isNotEmpty) {
       // Todo: implement sending binary data
 
-      //   BinaryFileSendingState sendingState = await BinaryFileSendingState.create(
-      //     file: File(messageLocalPath),
-      //     meta: processedMessage.messageJson,
-      //   );
-      //   await SendBinaryData(sendingState: sendingState, messagingConnection: messagingConnection)
-      //       .execute(remoteCoreId);
-      //  messagingConnection.sendBinaryMessage(binary: binary, remoteCoreId: remoteCoreId)
+      // BinaryFileSendingState sendingState = await BinaryFileSendingState.create(
+      //   file: File(messageLocalPath),
+      //   meta: processedMessage.messageJson,
+      // );
+      // await SendBinaryData(sendingState: sendingState, messagingConnection: messagingConnection)
+      //     .execute(remoteCoreId);
+      // messagingConnection.sendBinaryMessage(binary: binary, remoteCoreId: remoteCoreId)
     } else {
       await messagingConnection.sendTextMessage(
         text: jsonEncode(processedMessage.messageJson),

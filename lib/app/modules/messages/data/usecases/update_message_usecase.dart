@@ -14,6 +14,9 @@ import '../repo/messages_abstract_repo.dart';
 import '../repo/messages_repo.dart';
 
 class UpdateMessage {
+  UpdateMessage({required this.processor});
+
+  final MessageProcessor processor;
   final MessagesAbstractRepo messagesRepo = MessagesRepo(
     messagesProvider: MessagesProvider(
       appDatabaseProvider: Get.find(),
@@ -78,7 +81,6 @@ class UpdateMessage {
     //   channelMessageType: ChannelMessageType.update(message: updatedMessageJson),
     // );
 
-    final processor = MessageProcessor();
     final processedMessage = await processor.getMessageDetails(
       channelMessageType: ChannelMessageType.update(message: updatedMessageJson),
       remoteCoreId: remoteCoreId,

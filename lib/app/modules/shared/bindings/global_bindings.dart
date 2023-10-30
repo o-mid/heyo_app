@@ -6,6 +6,7 @@ import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_h
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
+import 'package:heyo/app/modules/messages/data/message_processor.dart';
 import 'package:heyo/app/modules/messages/data/usecases/delete_message_usecase.dart';
 import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 import 'package:heyo/app/modules/messaging/sync_messages.dart';
@@ -86,6 +87,7 @@ class GlobalBindings extends Bindings {
       ),
     ),
   );
+  static MessageProcessor messageProcessor = MessageProcessor();
 
   static WifiDirectWrapper wifiDirectWrapper = WifiDirectWrapper();
 
@@ -316,8 +318,8 @@ class GlobalBindings extends Bindings {
       ),
     );
     //   Get.put(SendMessage());
-    Get.put(UpdateMessage());
-    Get.put(DeleteMessage());
-    Get.put(ConfirmMessage());
+    Get.put(UpdateMessage(processor: messageProcessor));
+    Get.put(DeleteMessage(processor: messageProcessor));
+    Get.put(ConfirmMessage(processor: messageProcessor));
   }
 }

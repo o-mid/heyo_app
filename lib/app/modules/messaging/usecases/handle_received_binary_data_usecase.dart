@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/messaging/utils/data_binary_message.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../messages/data/message_processor.dart' as message_processor;
 import '../../messages/data/models/messages/audio_message_model.dart';
 
 import '../../messages/data/models/messages/confirm_message_model.dart';
@@ -153,7 +154,7 @@ class HandleReceivedBinaryData {
         ),
         chatId: chatId);
 
-    await ConfirmMessage().execute(
+    await ConfirmMessage(processor: message_processor.MessageProcessor()).execute(
         remoteCoreId: remoteCoreId,
         confirmMessageType: ConfirmMessageType.confirmReceivedText(
           chatId: chatId,
