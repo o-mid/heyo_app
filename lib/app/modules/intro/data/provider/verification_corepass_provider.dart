@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/intro/data/provider/verification_corepass_abstract_provider.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/crypto_storage_provider.dart';
-import 'package:heyo/app/modules/shared/data/repository/info/crypto_account_repo.dart';
-import 'package:heyo/app/modules/p2p_node/data/repository/info/libp2p_crypto_account_repo.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_manager.dart';
 import 'package:heyo/app/modules/shared/utils/datetime_utils.dart';
 import 'package:tuple/tuple.dart';

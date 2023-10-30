@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguments_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
-import 'package:heyo/app/modules/shared/data/repository/info/crypto_account_repo.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/crypto_account_repo.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
@@ -21,7 +21,7 @@ class NewChatController extends GetxController
   late Animation<double> animation;
   late TextEditingController inputController;
   final ContactRepository contactRepository;
-  final AccountInfoRepository accountInfoRepo;
+  final CryptoAccountRepository accountInfoRepo;
   final inputFocusNode = FocusNode();
   final inputText = "".obs;
   late StreamSubscription _contactasStreamSubscription;

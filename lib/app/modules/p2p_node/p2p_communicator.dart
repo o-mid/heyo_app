@@ -9,13 +9,14 @@ import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:flutter_p2p_communicator/model/signaling_model.dart';
 import 'package:flutter_p2p_communicator/model/transfer_model.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/crypto_account_repo.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 
 import 'p2p_state.dart';
 
 class P2PCommunicator {
   final P2PState p2pState;
-  final AccountInfoRepository accountInfoRepo;
+  final CryptoAccountRepository accountInfoRepo;
 
   P2PCommunicator({required this.p2pState, required this.accountInfoRepo});
 

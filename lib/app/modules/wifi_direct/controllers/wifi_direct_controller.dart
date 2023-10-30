@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/data/repository/info/crypto_account_repo.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/crypto_account_repo.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -14,7 +14,7 @@ import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/repository/contact_repository.dart';
 
 class WifiDirectController extends GetxController {
-  final AccountInfoRepository accountInfoRepo;
+  final CryptoAccountRepository accountInfoRepo;
   final ContactRepository contactRepository;
   HeyoWifiDirect? _heyoWifiDirect;
   bool isLocationPermissionGranted = false;

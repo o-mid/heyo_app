@@ -21,23 +21,24 @@ import 'package:heyo/app/routes/app_pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class P2PNode {
-  final CryptoStorageProvider libp2pCryptoInfoProvider;
-  final AccountCreation libP2PAccountCreation;
+  final CryptoStorageProvider cryptoStorage;
+  final AccountCreation accountCreation;
   final P2PNodeResponseStream p2pNodeResponseStream;
   final P2PNodeRequestStream p2pNodeRequestStream;
   final P2PState p2pState;
   final Web3Client web3client;
 
   P2PNode({
-    required this.libp2pCryptoInfoProvider,
-    required this.libP2PAccountCreation,
+    required this.cryptoStorage,
+    required this.accountCreation,
     required this.p2pNodeRequestStream,
     required this.p2pNodeResponseStream,
     required this.p2pState,
     required this.web3client,
   });
 
-  void _setUpP2PNode(void Function(P2PReqResNodeModel model) onNewRequestReceived) {
+  void _setUpP2PNode(
+      void Function(P2PReqResNodeModel model) onNewRequestReceived) {
     // setup the p2p ResponseStream and RequestStream and listen to them
     _listenToStreams(onNewRequestReceived);
 
@@ -72,18 +73,18 @@ class P2PNode {
         await storage.deleteAll();
       }
     }
-    if (await libp2pCryptoInfoProvider.getLocalCoreId() == null) {
-      final result = await libP2PAccountCreation.createAccount();
-      await libP2PAccountCreation.saveAccount(result);
+    if (await cryptoStorage.getLocalCoreId() == null) {
+      final result = await accountCreation.createAccount();
+      await accountCreation.saveAccount(result);
     }
 
-    var peerSeed = await libp2pCryptoInfoProvider.getP2PSecret();
+    var peerSeed = await cryptoStorage.getP2PSecret();
 
     if (peerSeed == null) {
       final generatedMnemonic =
           await compute(mnemonicToSeed, generateMnemonic());
       peerSeed = bytesToHex(generatedMnemonic.aesKeySeed);
-      await libp2pCryptoInfoProvider.setP2PSecret(peerSeed);
+      await cryptoStorage.setP2PSecret(peerSeed);
     }
     final networkId = await web3client.getNetworkId();
 
@@ -94,11 +95,11 @@ class P2PNode {
 
     await _addCoreId();
 
-    if (await libp2pCryptoInfoProvider.getSignature() != null) {
+    if (await cryptoStorage.getSignature() != null) {
       final result = await applyDelegatedAuth();
       if (!result) {
-        await libp2pCryptoInfoProvider.removeSignature();
-        await libp2pCryptoInfoProvider.removeCorePassCoreId();
+        await cryptoStorage.removeSignature();
+        await cryptoStorage.removeCorePassCoreId();
         await Get.offAllNamed(AppPages.INITIAL);
         return;
       }
@@ -111,7 +112,8 @@ class P2PNode {
     });
   }
 
-  void _listenToStreams(void Function(P2PReqResNodeModel model) onNewRequestReceived) {
+  void _listenToStreams(
+      void Function(P2PReqResNodeModel model) onNewRequestReceived) {
     p2pNodeResponseStream.setUp();
     p2pNodeRequestStream.setUp(onNewRequestReceived);
   }
@@ -131,7 +133,7 @@ class P2PNode {
   }
 
   Future<bool> _addCoreId() async {
-    final privateKey = await libp2pCryptoInfoProvider.getPrivateKey();
+    final privateKey = await cryptoStorage.getPrivateKey();
     final privToAdd = P2PReqResNodeModel(
         name: P2PReqResNodeNames.addCoreID, body: {"privKey": privateKey});
 
@@ -141,8 +143,8 @@ class P2PNode {
   }
 
   Future<bool> applyDelegatedAuth() async {
-    final localCoreId = await libp2pCryptoInfoProvider.getLocalCoreId();
-    final delegatedSignature = await libp2pCryptoInfoProvider.getSignature();
+    final localCoreId = await cryptoStorage.getLocalCoreId();
+    final delegatedSignature = await cryptoStorage.getSignature();
 
     final delegatedAuth = DelegateAuthModel(
       localCoreId: localCoreId!,

@@ -4,7 +4,7 @@ import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
-import 'package:heyo/app/modules/shared/data/repository/info/crypto_account_repo.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/crypto_account_repo.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
@@ -14,7 +14,7 @@ import '../../shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 class NewCallController extends GetxController {
   late TextEditingController inputController;
   final ContactRepository contactRepository;
-  final AccountInfoRepository accountInfoRepo;
+  final CryptoAccountRepository accountInfoRepo;
 
   NewCallController({
     required this.contactRepository,

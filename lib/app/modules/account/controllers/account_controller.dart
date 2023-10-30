@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/data/repository/info/crypto_account_repo.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/crypto_account_repo.dart';
 
 class AccountController extends GetxController {
-  final AccountInfoRepository accountInfoRepo;
+  final CryptoAccountRepository accountInfoRepo;
   final coreId = "".obs;
 
   AccountController({required this.accountInfoRepo});

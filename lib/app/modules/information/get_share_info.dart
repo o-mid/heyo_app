@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:heyo/app/modules/shared/data/repository/info/crypto_account_repo.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/crypto_account_repo.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
 
 class QRInfo {
-  final AccountInfoRepository accountInfoRepo;
+  final CryptoAccountRepository accountInfoRepo;
   final P2PState p2pState;
 
   QRInfo({required this.p2pState, required this.accountInfoRepo});

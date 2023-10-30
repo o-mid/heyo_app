@@ -15,7 +15,7 @@ import 'package:heyo/app/modules/messaging/web_rtc_connection_manager.dart';
 import 'package:heyo/app/modules/notifications/controllers/app_notifications.dart';
 import 'package:heyo/app/modules/shared/providers/account/creation/account_creation.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/crypto_storage_provider.dart';
-import 'package:heyo/app/modules/shared/data/repository/info/crypto_account_repo.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/crypto_account_repo.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
 import 'package:heyo/app/modules/shared/controllers/call_history_observer.dart';
 import 'package:heyo/app/modules/shared/controllers/connection_controller.dart';
@@ -103,8 +103,8 @@ class GlobalBindings extends Bindings {
         cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
         cryptoInfoProvider: Get.find(),
       ))
-      ..put<AccountInfoRepository>(
-        AccountInfoRepository(
+      ..put<CryptoAccountRepository>(
+        CryptoAccountRepository(
           type: '',
           accountCreation: Get.find(),
           cryptoInfoProvider: Get.find(),
@@ -112,31 +112,32 @@ class GlobalBindings extends Bindings {
         permanent: true,
       )
       ..put(P2PState(), permanent: true)
-      ..put(P2PCommunicator(p2pState: Get.find(), accountInfo: accountInfo))
+      ..put(P2PCommunicator(p2pState: Get.find(), accountInfoRepo: Get.find()))
       ..put(
         P2PNodeRequestStream(
           p2pState: Get.find(),
-          signaling: Get.find(),
-          multipleConnectionHandler: Get.find(),
         ),
         permanent: true,
       )
       ..put(
         P2PNodeResponseStream(
           p2pState: Get.find(),
+          accountInfoRepo: Get.find(),
         ),
         permanent: true,
       )
       ..put<P2PNodeController>(
         P2PNodeController(
-            p2pNode: P2PNode(
-              accountInfo: accountInfo,
-              p2pNodeRequestStream: Get.find(),
-              p2pNodeResponseStream: Get.find(),
-              p2pState: Get.find(),
-              web3client: web3Client,
-            ),
-            p2pState: Get.find(),),
+          p2pNode: P2PNode(
+            p2pNodeRequestStream: Get.find(),
+            p2pNodeResponseStream: Get.find(),
+            p2pState: Get.find(),
+            web3client: web3Client,
+            cryptoStorage: Get.find(),
+            accountCreation: Get.find(),
+          ),
+          p2pState: Get.find(),
+        ),
         permanent: true,
       )
       ..put<ConnectionContractor>(
@@ -149,20 +150,26 @@ class GlobalBindings extends Bindings {
       ..put(Signaling(connectionContractor: Get.find()), permanent: true)
       ..put(
         MultipleConnectionHandler(
+          connectionContractor: Get.find(),
+          singleWebRTCConnection: SingleWebRTCConnection(
             connectionContractor: Get.find(),
-            singleWebRTCConnection: SingleWebRTCConnection(
-                connectionContractor: Get.find(),
-                webRTCConnectionManager: WebRTCConnectionManager(),),),
+            webRTCConnectionManager: WebRTCConnectionManager(),
+          ),
+        ),
         permanent: true,
       )
 
       // data base provider dependencies
-      ..put(AppDatabaseProvider(accountInfo: accountInfo), permanent: true)
-      ..put(ContactRepository(
-        cacheContractor: CacheRepository(
+      ..put(AppDatabaseProvider(), permanent: true)
+      ..put(
+        ContactRepository(
+          cacheContractor: CacheRepository(
             userProvider: UserProvider(
-                appDatabaseProvider: Get.find<AppDatabaseProvider>(),),),
-      ),)
+              appDatabaseProvider: Get.find<AppDatabaseProvider>(),
+            ),
+          ),
+        ),
+      )
       // p2p related dependencies
 
       ..put(

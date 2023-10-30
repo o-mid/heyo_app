@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/data/repository/info/crypto_account_repo.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/crypto_account_repo.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
@@ -15,7 +15,7 @@ class P2PNodeResponseStream {
   StreamSubscription<P2PReqResNodeModel?>? _nodeResponseSubscription;
   bool advertiseRequested = false;
   final P2PState p2pState;
-  AccountInfoRepository accountInfoRepo;
+  CryptoAccountRepository accountInfoRepo;
 
   void setUp() {
     _setUpResponseStream();
