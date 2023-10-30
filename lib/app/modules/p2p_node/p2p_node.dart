@@ -4,8 +4,6 @@ import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/addr_model.dart';
 import 'package:flutter_p2p_communicator/model/delegate_auth_model.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
-import 'package:flutter_p2p_communicator/model/signaling_model.dart';
-import 'package:flutter_p2p_communicator/model/transfer_model.dart';
 import 'package:flutter_p2p_communicator/utils/constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
@@ -16,7 +14,6 @@ import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:flutter_bip39/bip39.dart';
 import 'package:core_web3dart/src/crypto/formatting.dart';
 import 'package:core_web3dart/web3dart.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,9 +31,9 @@ class P2PNode {
     required this.p2pState,
     required this.web3client,});
 
-  void _setUpP2PNode() async {
+  void _setUpP2PNode(void Function(P2PReqResNodeModel model) onNewRequestReceived) async {
     // setup the p2p ResponseStream and RequestStream and listen to them
-    _listenToStreams();
+    _listenToStreams(onNewRequestReceived);
 
     // start the p2p node prosses
     _startP2PNode();
@@ -108,9 +105,9 @@ class P2PNode {
     });
   }
 
-  void _listenToStreams() {
+  void _listenToStreams(void Function(P2PReqResNodeModel model) onNewRequestReceived) {
     p2pNodeResponseStream.setUp();
-    p2pNodeRequestStream.setUp();
+    p2pNodeRequestStream.setUp(onNewRequestReceived);
   }
 
 // stop P2P node Prosses by reseting the streams and the state and stoping the node
@@ -155,7 +152,7 @@ class P2PNode {
     return p2pState.trackRequest(id);
   }
 
-  void restart() {
-    _setUpP2PNode();
+  void restart(void Function(P2PReqResNodeModel model) onNewRequestReceived) {
+    _setUpP2PNode(onNewRequestReceived);
   }
 }

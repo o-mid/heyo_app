@@ -6,7 +6,8 @@ import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_h
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
-import 'package:heyo/app/modules/intro/data/provider/verification_corepass_provider.dart';
+import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
+import 'package:heyo/app/modules/connection/data/libp2p_connection_contractor.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 import 'package:heyo/app/modules/messaging/sync_messages.dart';
@@ -31,7 +32,6 @@ import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/providers/database/dao/user_provider.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
 import 'package:core_web3dart/web3dart.dart';
-import 'package:heyo/app/modules/shared/utils/datetime_utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
@@ -93,18 +93,9 @@ class GlobalBindings extends Bindings {
     Get
       ..put(P2PState(), permanent: true)
       ..put(P2PCommunicator(p2pState: Get.find(), accountInfo: accountInfo))
-      ..put(Signaling(p2pCommunicator: Get.find()),permanent: true)
-      ..put(
-          MultipleConnectionHandler(
-              singleWebRTCConnection: SingleWebRTCConnection(
-                  p2pCommunicator: Get.find(),
-                  webRTCConnectionManager: WebRTCConnectionManager())),
-          permanent: true,)
       ..put(
         P2PNodeRequestStream(
           p2pState: Get.find(),
-          signaling: Get.find(),
-          multipleConnectionHandler: Get.find(),
         ),
         permanent: true,
       )
@@ -123,18 +114,32 @@ class GlobalBindings extends Bindings {
               p2pState: Get.find(),
               web3client: web3Client,
             ),
-            p2pState: Get.find()),
+            p2pState: Get.find(),),
         permanent: true,
       )
-
-
+      ..put<ConnectionContractor>(
+        LibP2PConnectionContractor(
+          p2pNodeController: Get.find(),
+          p2pCommunicator: Get.find(),
+        ),
+        permanent: true,
+      )
+      ..put(Signaling(connectionContractor: Get.find()), permanent: true)
+      ..put(
+        MultipleConnectionHandler(
+            connectionContractor: Get.find(),
+            singleWebRTCConnection: SingleWebRTCConnection(
+                connectionContractor: Get.find(),
+                webRTCConnectionManager: WebRTCConnectionManager(),),),
+        permanent: true,
+      )
       // data base provider dependencies
       ..put(AppDatabaseProvider(accountInfo: accountInfo), permanent: true)
       ..put(ContactRepository(
         cacheContractor: CacheRepository(
             userProvider: UserProvider(
-                appDatabaseProvider: Get.find<AppDatabaseProvider>())),
-      ))
+                appDatabaseProvider: Get.find<AppDatabaseProvider>(),),),
+      ),)
       // p2p related dependencies
 
       ..put(
