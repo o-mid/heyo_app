@@ -33,7 +33,7 @@ dependencies:
   image_editor: ^1.0.2
   # flutter_camera:
   #   git:
-  #     url: git@git.energy:heyo/flutter_camera
+  #     url: git@ssh.git.energy:heyo/flutter_camera
   #     ref: development
   #
   photo_manager: ^2.7.1
