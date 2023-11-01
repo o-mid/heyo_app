@@ -16,7 +16,7 @@ enum ConnectionType { RTC, WiFiDirect }
 
 class UnifiedConnectionController {
   final ConnectionType connectionType;
-//   // Shared dependencies
+
   final AccountInfo accountInfo;
   final MessagesRepo messagesRepo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
@@ -54,8 +54,8 @@ class UnifiedConnectionController {
     _initializeBasedOnConnectionType();
   }
 
-  void _initializeBasedOnConnectionType() {
-    final dataHandler = DataHandler(
+  Future<void> _initializeBasedOnConnectionType() async {
+    dataHandler = DataHandler(
       messagesRepo: messagesRepo,
       chatHistoryRepo: chatHistoryRepo,
       notificationsController: notificationsController,
@@ -63,7 +63,7 @@ class UnifiedConnectionController {
     );
 
     connectionRepo = ConnectionRepoFactory.create(connectionType, dataHandler);
-    connectionRepo.initConnection(
+    await connectionRepo.initConnection(
       multipleConnectionHandler: multipleConnectionHandler,
       wifiDirectWrapper: wifiDirectWrapper,
     );
@@ -74,6 +74,10 @@ class UnifiedConnectionController {
       remoteId: remoteId,
       multipleConnectionHandler: multipleConnectionHandler,
     );
+  }
+
+  Future<void> init() async {
+    await _initializeBasedOnConnectionType();
   }
 
   Future<void> sendTextMessage({required String text, required String remoteCoreId}) async {

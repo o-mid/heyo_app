@@ -29,7 +29,7 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
   @override
   Future<void> initMessagingConnection(
       {required String remoteId, MultipleConnectionHandler? multipleConnectionHandler}) async {
-    multiConnectionHandler = multipleConnectionHandler!;
+    this.multiConnectionHandler = multipleConnectionHandler!;
     final rtcSession = await multipleConnectionHandler.getConnection(remoteId);
     currentRemoteId = rtcSession.remotePeer.remoteCoreId;
     print("initMessagingConnection RTCSession Status: ${rtcSession.rtcSessionStatus}");
@@ -38,7 +38,10 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
 
   @override
   Future<void> sendTextMessage({required String text, required String remoteCoreId}) async {
-    RTCSession rtcSession = await multiConnectionHandler.getConnection(remoteCoreId);
+    if (multiConnectionHandler == null) {
+      throw StateError('multiConnectionHandler has not been initialized');
+    }
+    RTCSession rtcSession = await multiConnectionHandler!.getConnection(remoteCoreId);
 
     await dataHandler.createUserChatModel(sessioncid: remoteCoreId);
 
@@ -50,6 +53,9 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
 
   @override
   Future<void> sendBinaryMessage({required Uint8List binary, required String remoteCoreId}) async {
+    if (multiConnectionHandler == null) {
+      throw StateError('multiConnectionHandler has not been initialized');
+    }
     RTCSession rtcSession = await multiConnectionHandler.getConnection(remoteCoreId);
     print(
       "sendTextMessage : ${(rtcSession.isDataChannelConnectionAvailable)} : ${rtcSession.dc?.state} : ${rtcSession.rtcSessionStatus}",
@@ -64,6 +70,10 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
     MultipleConnectionHandler? multipleConnectionHandler,
     WifiDirectWrapper? wifiDirectWrapper,
   }) async {
+    if (multipleConnectionHandler != null) {
+      this.multiConnectionHandler = multipleConnectionHandler;
+    }
+
     multipleConnectionHandler?.onNewRTCSessionCreated = (rtcSession) {
       multiConnectionHandler = multipleConnectionHandler;
       print(

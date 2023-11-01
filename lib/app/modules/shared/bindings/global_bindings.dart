@@ -192,6 +192,37 @@ class GlobalBindings extends Bindings {
         ),
       ),
     );
+    Get.put<SendMessageUseCase>(
+      SendMessageUseCase(
+        messagesRepo: MessagesRepo(
+          messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+        ),
+        messagingConnection: unifiedConnectionController,
+        processor: messageProcessor,
+      ),
+      permanent: true,
+    );
+
+    Get.put<UpdateMessageUseCase>(
+      UpdateMessageUseCase(
+        messagesRepo: MessagesRepo(
+          messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+        ),
+        messagingConnection: unifiedConnectionController,
+        processor: messageProcessor,
+      ),
+      permanent: true,
+    );
+    Get.put<DeleteMessageUseCase>(
+      DeleteMessageUseCase(
+        messagesRepo: MessagesRepo(
+          messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+        ),
+        messagingConnection: unifiedConnectionController,
+        processor: messageProcessor,
+      ),
+      permanent: true,
+    );
 
     Get.put(callConnectionController, permanent: true);
 
@@ -314,13 +345,7 @@ class GlobalBindings extends Bindings {
           appDatabaseProvider: Get.find(),
         ),
       ),
-      sendMessageUseCase: SendMessageUseCase(
-        messagesRepo: MessagesRepo(
-          messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-        ),
-        messagingConnection: unifiedConnectionController,
-        processor: messageProcessor,
-      ),
+      sendMessageUseCase: Get.find<SendMessageUseCase>(),
     ));
   }
 }

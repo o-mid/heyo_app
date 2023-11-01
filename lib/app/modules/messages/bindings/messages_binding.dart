@@ -18,6 +18,9 @@ import '../../shared/data/repository/contact_repository.dart';
 import '../../shared/providers/database/app_database.dart';
 import '../../shared/providers/database/dao/user_provider.dart';
 import '../controllers/messages_controller.dart';
+import '../data/usecases/delete_message_usecase.dart';
+import '../data/usecases/send_message_usecase.dart';
+import '../data/usecases/update_message_usecase.dart';
 
 class MessagesBinding extends Bindings {
   @override
@@ -78,9 +81,9 @@ class MessagesBinding extends Bindings {
               NotificationsController(appNotifications: GlobalBindings.appNotifications),
           connectionType: connectionType,
         ),
-        sendMessageUseCase: Get.find(),
-        updateMessageUseCase: Get.find(),
-        deleteMessageUseCase: Get.find(),
+        sendMessageUseCase: Get.find<SendMessageUseCase>(),
+        updateMessageUseCase: Get.find<UpdateMessageUseCase>(),
+        deleteMessageUseCase: Get.find<DeleteMessageUseCase>(),
       ),
     );
   }
