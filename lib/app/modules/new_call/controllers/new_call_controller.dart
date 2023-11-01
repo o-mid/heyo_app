@@ -47,7 +47,7 @@ class NewCallController extends GetxController {
         (await contactRepository.search(query)).toList();
 
     if (searchedItems.isEmpty) {
-      String? currentUserCoreId = await accountInfo.getCoreId();
+      String? currentUserCoreId = await accountInfo.getCorePassCoreId();
       if (query.isValidCoreId() && currentUserCoreId != query) {
         //its a new user
         //TODO update fields based on correct data

@@ -5,7 +5,7 @@
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
-// ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
+// ignore_for_file: directives_ordering,unnecessary_import
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -43,9 +43,21 @@ class $AssetsPngGen {
   /// File path: assets/png/chain.png
   AssetGenImage get chain => const AssetGenImage('assets/png/chain.png');
 
+  /// File path: assets/png/corePass_logo_circle.png
+  AssetGenImage get corePassLogoCircle =>
+      const AssetGenImage('assets/png/corePass_logo_circle.png');
+
+  /// File path: assets/png/green_checked.png
+  AssetGenImage get greenChecked =>
+      const AssetGenImage('assets/png/green_checked.png');
+
   /// File path: assets/png/group_call.png
   AssetGenImage get groupCall =>
       const AssetGenImage('assets/png/group_call.png');
+
+  /// File path: assets/png/heyo_logo_circle.png
+  AssetGenImage get heyoLogoCircle =>
+      const AssetGenImage('assets/png/heyo_logo_circle.png');
 
   /// File path: assets/png/icon.png
   AssetGenImage get icon => const AssetGenImage('assets/png/icon.png');
@@ -77,29 +89,6 @@ class $AssetsPngGen {
 
   /// File path: assets/png/welcome.png
   AssetGenImage get welcome => const AssetGenImage('assets/png/welcome.png');
-
-  /// List of all assets
-  List<AssetGenImage> get values => [
-        benefits001,
-        benefits002,
-        benefits003,
-        benefits004,
-        callee,
-        caller,
-        callsEmptyState,
-        chain,
-        groupCall,
-        icon,
-        keys,
-        newChatEmptyState,
-        profile1,
-        profile2,
-        profile3,
-        profile4,
-        sadEmoji,
-        splash,
-        welcome
-      ];
 }
 
 class $AssetsSvgGen {
@@ -207,6 +196,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/copy_icon.svg
   SvgGenImage get copyIcon => const SvgGenImage('assets/svg/copy_icon.svg');
 
+  /// File path: assets/svg/corePass_typo.svg
+  SvgGenImage get corePassTypo =>
+      const SvgGenImage('assets/svg/corePass_typo.svg');
+
   /// File path: assets/svg/core_pass_logo.svg
   SvgGenImage get corePassLogo =>
       const SvgGenImage('assets/svg/core_pass_logo.svg');
@@ -291,6 +284,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/location_outlined.svg
   SvgGenImage get locationOutlined =>
       const SvgGenImage('assets/svg/location_outlined.svg');
+
+  /// File path: assets/svg/lock_icon.svg
+  SvgGenImage get lockIcon => const SvgGenImage('assets/svg/lock_icon.svg');
 
   /// File path: assets/svg/luna_connection.svg
   SvgGenImage get lunaConnection =>
@@ -439,6 +435,10 @@ class $AssetsSvgGen {
   /// File path: assets/svg/target.svg
   SvgGenImage get target => const SvgGenImage('assets/svg/target.svg');
 
+  /// File path: assets/svg/two_arrow_icon.svg
+  SvgGenImage get twoArrowIcon =>
+      const SvgGenImage('assets/svg/two_arrow_icon.svg');
+
   /// File path: assets/svg/verified.svg
   SvgGenImage get verified => const SvgGenImage('assets/svg/verified.svg');
 
@@ -467,112 +467,6 @@ class $AssetsSvgGen {
   /// File path: assets/svg/wifi_direct_icon.svg
   SvgGenImage get wifiDirectIcon =>
       const SvgGenImage('assets/svg/wifi_direct_icon.svg');
-
-  /// List of all assets
-  List<SvgGenImage> get values => [
-        incomingCall,
-        missedCall,
-        account,
-        accountFilled,
-        addCircle,
-        addParticipant,
-        addToContactsIcon,
-        arrowIcon,
-        audioCallIcon,
-        blockIcon,
-        blockedUser,
-        bottomsheetHandle,
-        call,
-        callDisconnected,
-        callEnd,
-        callFilled,
-        callIncoming,
-        callOutgoing,
-        cameraIcon,
-        cameraSwitch,
-        camerapermissionIcon,
-        chat,
-        chatOutlined,
-        clearIcon,
-        clock,
-        closeSign,
-        closeSignOutline,
-        contactsIcon,
-        copyIcon,
-        corePassLogo,
-        deleteIcon,
-        docIcon,
-        dotColumn,
-        dotIndicator,
-        doubleTickIcon,
-        editIcon,
-        emojiIcon,
-        failedIcon,
-        fileIcon,
-        filterIcon,
-        folderIcon,
-        forwardIcon,
-        forwardTo,
-        fullScreen,
-        galleryIcon,
-        gpsFixed,
-        heyoLogo,
-        infoIcon,
-        inviteIcon,
-        liveLocation,
-        liveLocationActive,
-        locationIcon,
-        locationFilled,
-        locationOutlined,
-        lunaConnection,
-        mediaAndFiles,
-        mediaAndFilesIcon,
-        moneyIcon,
-        mp3Icon,
-        multipleSelectIcon,
-        muteMicIcon,
-        muteSpeaker,
-        newChat,
-        newGroupIcon,
-        noConnectionWifi,
-        outgoingCall2,
-        outgoingCall,
-        pauseRecordIcon,
-        pauseRecordOutlinedIcon,
-        pdfIcon,
-        personIcon,
-        playIcon,
-        pptxIcon,
-        qrCode,
-        recordIcon,
-        recordVoiceCircleIcon,
-        recordWordIcon,
-        recordWordWithDot,
-        removeContact,
-        replyFilled,
-        replyFilledMirror,
-        replyOutlined,
-        saveToDevice,
-        searchIcon,
-        searchNearby,
-        searchNearbyFilled,
-        sendImageIcon,
-        sendIcon,
-        shareIcon,
-        shareScreen,
-        singleTickIcon,
-        stackHorizontal,
-        stackVertical,
-        target,
-        verified,
-        verifiedWithBluePadding,
-        verticalMenuIcon,
-        videoCallIcon,
-        videoDisabled,
-        volumeUp,
-        wallet,
-        wifiDirectIcon
-      ];
 }
 
 class Assets {
@@ -672,6 +566,8 @@ class SvgGenImage {
     AlignmentGeometry alignment = Alignment.center,
     bool allowDrawingOutsideViewBox = false,
     WidgetBuilder? placeholderBuilder,
+    Color? color,
+    BlendMode colorBlendMode = BlendMode.srcIn,
     String? semanticsLabel,
     bool excludeFromSemantics = false,
     SvgTheme theme = const SvgTheme(),
@@ -699,12 +595,13 @@ class SvgGenImage {
       colorFilter: colorFilter,
       color: color,
       colorBlendMode: colorBlendMode,
+      semanticsLabel: semanticsLabel,
+      excludeFromSemantics: excludeFromSemantics,
       clipBehavior: clipBehavior,
       cacheColorFilter: cacheColorFilter,
+      theme: theme,
     );
   }
 
   String get path => _assetName;
-
-  String get keyName => _assetName;
 }

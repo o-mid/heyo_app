@@ -42,6 +42,8 @@ class HomeView extends GetView<HomeController> {
   HomeView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+
+
     return Obx(
       () => Scaffold(
         body: _pageNavigation[controller.tabIndex.value],

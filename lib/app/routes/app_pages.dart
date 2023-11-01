@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/add_participate/views/add_participate_view.dart';
+import 'package:heyo/app/modules/verified_user/binding/verified_user_binding.dart';
+import 'package:heyo/app/modules/verified_user/views/verified_user_view.dart';
 
 import '../modules/account/views/account_view.dart';
 import '../modules/add_contacts/bindings/add_contacts_binding.dart';
@@ -60,7 +62,7 @@ class AppPages {
   AppPages._();
 
   // Todo :
-  static const INITIAL = Routes.HOME;
+  static const INITIAL = Routes.SPLASH;
 
   static final routes = [
     GetPage(
@@ -267,6 +269,11 @@ class AppPages {
       name: _Paths.ADD_PARTICIPATE,
       page: () => const AddParticipateView(),
       //binding: AddParticipateBinding(),
+    ),
+    GetPage(
+      name: _Paths.VERIFIED_USER,
+      page: () => const VerifiedUserView(),
+      binding: VerifiedUserBinding(),
     ),
   ];
 }

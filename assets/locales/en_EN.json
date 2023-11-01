@@ -6,8 +6,22 @@
       "buttons": {
         "Continue": "Continue with CoreID",
         "Terms": "Terms & Privacy Policy"
-      }
+      },
+      "bottomSheet": {
+        "title": "Verify your identity to continue",
+        "subtitle": "Secure Identity Verification",
+        "header": "Heyo partners with CorePass ID for secure Identity Verification (KYC)",
+        "body": "Data you provide will be processed by CorePass ID and stored on Core Blockchain according to the CorePass ID",
+        "privacyPolicy": " Privacy Policy",
+        "body2": "Because CorePass ID runs on a decentralized technology, only you are owner of your data.",
+        "readMore": "Read more ",
+        "body3": "about CorePass ID.",
+        "buttonTitle": "Proceed to Identity Verification",
+        "poweredBy": "Powered by"
+      },
+      "dialogTitle": "Checking CorePass, whether you are already verified"
     },
+
     "BenefitsPage": {
       "sliders": {
         "title001": "One account \n for all your services",
@@ -65,6 +79,11 @@
         "Continue": "Continue"
       }
     }
+  },
+  "userVerified": {
+    "title": "You’re verified",
+    "subtitle": "You are a verified user. You can start using Heyo",
+    "buttonTitle": "Enter Heyo"
   },
   "HomePage": {
     "title": "Heyo",
