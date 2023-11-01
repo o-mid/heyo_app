@@ -48,7 +48,7 @@ class UpdateMessageUseCase {
     required String chatId,
     required String remoteCoreId,
   }) async {
-    final localCoreID = await messagingConnection.accountInfo.getCoreId() ?? "";
+    final localCoreID = await messagingConnection.accountInfo.getCorePassCoreId() ?? "";
     var reaction = message.reactions[emoji] as ReactionModel? ?? ReactionModel();
 
     if (reaction.isReactedByMe) {

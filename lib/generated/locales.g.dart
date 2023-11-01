@@ -15,6 +15,27 @@ class LocaleKeys {
   static const registration_WelcomePage_buttons_Continue =
       'registration_WelcomePage_buttons_Continue';
   static const registration_WelcomePage_buttons_Terms = 'registration_WelcomePage_buttons_Terms';
+  static const registration_WelcomePage_bottomSheet_title =
+      'registration_WelcomePage_bottomSheet_title';
+  static const registration_WelcomePage_bottomSheet_subtitle =
+      'registration_WelcomePage_bottomSheet_subtitle';
+  static const registration_WelcomePage_bottomSheet_header =
+      'registration_WelcomePage_bottomSheet_header';
+  static const registration_WelcomePage_bottomSheet_body =
+      'registration_WelcomePage_bottomSheet_body';
+  static const registration_WelcomePage_bottomSheet_privacyPolicy =
+      'registration_WelcomePage_bottomSheet_privacyPolicy';
+  static const registration_WelcomePage_bottomSheet_body2 =
+      'registration_WelcomePage_bottomSheet_body2';
+  static const registration_WelcomePage_bottomSheet_readMore =
+      'registration_WelcomePage_bottomSheet_readMore';
+  static const registration_WelcomePage_bottomSheet_body3 =
+      'registration_WelcomePage_bottomSheet_body3';
+  static const registration_WelcomePage_bottomSheet_buttonTitle =
+      'registration_WelcomePage_bottomSheet_buttonTitle';
+  static const registration_WelcomePage_bottomSheet_poweredBy =
+      'registration_WelcomePage_bottomSheet_poweredBy';
+  static const registration_WelcomePage_dialogTitle = 'registration_WelcomePage_dialogTitle';
   static const registration_BenefitsPage_sliders_title001 =
       'registration_BenefitsPage_sliders_title001';
   static const registration_BenefitsPage_sliders_subtitle001 =
@@ -69,6 +90,9 @@ class LocaleKeys {
       'registration_RecoveryMethodPage_buttons_Skip';
   static const registration_RecoveryMethodPage_buttons_Continue =
       'registration_RecoveryMethodPage_buttons_Continue';
+  static const userVerified_title = 'userVerified_title';
+  static const userVerified_subtitle = 'userVerified_subtitle';
+  static const userVerified_buttonTitle = 'userVerified_buttonTitle';
   static const HomePage_title = 'HomePage_title';
   static const HomePage_navbarItems_chats = 'HomePage_navbarItems_chats';
   static const HomePage_navbarItems_calls = 'HomePage_navbarItems_calls';
@@ -293,6 +317,20 @@ class Locales {
         'A truly private messaging app built on a decentralized technology, secured by CorePass.',
     'registration_WelcomePage_buttons_Continue': 'Continue with CoreID',
     'registration_WelcomePage_buttons_Terms': 'Terms & Privacy Policy',
+    'registration_WelcomePage_bottomSheet_title': 'Verify your identity to continue',
+    'registration_WelcomePage_bottomSheet_subtitle': 'Secure Identity Verification',
+    'registration_WelcomePage_bottomSheet_header':
+        'Heyo partners with CorePass ID for secure Identity Verification (KYC)',
+    'registration_WelcomePage_bottomSheet_body':
+        'Data you provide will be processed by CorePass ID and stored on Core Blockchain according to the CorePass ID',
+    'registration_WelcomePage_bottomSheet_privacyPolicy': ' Privacy Policy',
+    'registration_WelcomePage_bottomSheet_body2':
+        'Because CorePass ID runs on a decentralized technology, only you are owner of your data.',
+    'registration_WelcomePage_bottomSheet_readMore': 'Read more ',
+    'registration_WelcomePage_bottomSheet_body3': 'about CorePass ID.',
+    'registration_WelcomePage_bottomSheet_buttonTitle': 'Proceed to Identity Verification',
+    'registration_WelcomePage_bottomSheet_poweredBy': 'Powered by',
+    'registration_WelcomePage_dialogTitle': 'Checking CorePass, whether you are already verified',
     'registration_BenefitsPage_sliders_title001': 'One account \n for all your services',
     'registration_BenefitsPage_sliders_subtitle001':
         'Keep your valuable data safely stored \n and quickly accesible from one place.',
@@ -332,6 +370,9 @@ class Locales {
         'Your CoreID account can be recovered with a private key which you will have to protect with a password and store.',
     'registration_RecoveryMethodPage_buttons_Skip': 'Skip for now',
     'registration_RecoveryMethodPage_buttons_Continue': 'Continue',
+    'userVerified_title': 'You’re verified',
+    'userVerified_subtitle': 'You are a verified user. You can start using Heyo',
+    'userVerified_buttonTitle': 'Enter Heyo',
     'HomePage_title': 'Heyo',
     'HomePage_navbarItems_chats': 'Chats',
     'HomePage_navbarItems_calls': 'Calls',
