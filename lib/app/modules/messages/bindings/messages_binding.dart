@@ -4,6 +4,7 @@ import 'package:heyo/app/modules/messages/data/provider/messages_provider.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_repo.dart';
 import 'package:heyo/app/modules/messages/data/connection_message_repository_impl.dart';
 import 'package:heyo/app/modules/messages/data/user_state_repository_Impl.dart';
+import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 import 'package:heyo/app/modules/notifications/controllers/notifications_controller.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_repo.dart';
 import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart';
@@ -75,7 +76,7 @@ class MessagesBinding extends Bindings {
               web3client: GlobalBindings.web3Client,
             ),
           ),
-          multipleConnectionHandler: GlobalBindings.multipleConnectionHandler,
+          multipleConnectionHandler: Get.find<MultipleConnectionHandler>(),
           wifiDirectWrapper: GlobalBindings.wifiDirectWrapper,
           notificationsController:
               NotificationsController(appNotifications: GlobalBindings.appNotifications),
