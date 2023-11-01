@@ -33,7 +33,7 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
     final rtcSession = await multipleConnectionHandler.getConnection(remoteId);
     currentRemoteId = rtcSession.remotePeer.remoteCoreId;
     print("initMessagingConnection RTCSession Status: ${rtcSession.rtcSessionStatus}");
-    _observeMessagingStatus(rtcSession);
+    await _observeMessagingStatus(rtcSession);
   }
 
   @override
@@ -49,6 +49,7 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
       "sendMessage  : ${rtcSession.connectionId} ${(rtcSession).dc} ${rtcSession.rtcSessionStatus}",
     );
     (rtcSession).dc?.send(RTCDataChannelMessage(text));
+    await _observeMessagingStatus(rtcSession);
   }
 
   @override
@@ -74,17 +75,18 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
       this.multiConnectionHandler = multipleConnectionHandler;
     }
 
-    multipleConnectionHandler?.onNewRTCSessionCreated = (rtcSession) {
+    multipleConnectionHandler?.onNewRTCSessionCreated = (rtcSession) async {
       multiConnectionHandler = multipleConnectionHandler;
       print(
         "onNewRTCSessionCreated : ${rtcSession.connectionId} : ${rtcSession.remotePeer.remoteCoreId} : ${currentRemoteId}",
       );
       if (rtcSession.remotePeer.remoteCoreId == currentRemoteId) {
-        _observeMessagingStatus(rtcSession);
+        await _observeMessagingStatus(rtcSession);
       }
 
       rtcSession.onDataChannel = (dataChannel) {
         print("connectionId ${rtcSession.connectionId} ${rtcSession.dc}");
+        _observeMessagingStatus(rtcSession);
 
         dataChannel.onMessage = (data) async {
           print("onMessageReceived : $data ${rtcSession.connectionId}");
@@ -104,14 +106,14 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
     };
   }
 
-  void _observeMessagingStatus(RTCSession rtcSession) {
-    _applyConnectionStatus(rtcSession.rtcSessionStatus, rtcSession.remotePeer.remoteCoreId);
+  Future<void> _observeMessagingStatus(RTCSession rtcSession) async {
+    await _applyConnectionStatus(rtcSession.rtcSessionStatus, rtcSession.remotePeer.remoteCoreId);
 
     print(
       "onConnectionState for observe ${rtcSession.rtcSessionStatus} ${rtcSession.connectionId}",
     );
-    rtcSession.onNewRTCSessionStatus = (status) {
-      _applyConnectionStatus(status, rtcSession.remotePeer.remoteCoreId);
+    rtcSession.onNewRTCSessionStatus = (status) async {
+      await _applyConnectionStatus(status, rtcSession.remotePeer.remoteCoreId);
     };
   }
 
@@ -123,19 +125,24 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
       case RTCSessionStatus.connected:
         {
           connectivityStatus.value = ConnectivityStatus.justConnected;
+          print(ConnectivityStatus.justConnected);
           await setConnectivityOnline();
+          break;
         }
       case RTCSessionStatus.none:
         {
           connectivityStatus.value = ConnectivityStatus.connecting;
+          break;
         }
       case RTCSessionStatus.connecting:
         {
           connectivityStatus.value = ConnectivityStatus.connecting;
+          break;
         }
       case RTCSessionStatus.failed:
         {
           connectivityStatus.value = ConnectivityStatus.connectionLost;
+          break;
         }
     }
   }

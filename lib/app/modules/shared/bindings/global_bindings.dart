@@ -88,7 +88,7 @@ class GlobalBindings extends Bindings {
       ),
     ),
   );
-  static MessageProcessor messageProcessor = MessageProcessor();
+  MessageProcessor messageProcessor = MessageProcessor();
 
   static WifiDirectWrapper wifiDirectWrapper = WifiDirectWrapper();
 
@@ -141,7 +141,10 @@ class GlobalBindings extends Bindings {
       multipleConnectionHandler,
       permanent: true,
     );
-
+    Get.put(
+      messageProcessor,
+      permanent: true,
+    );
     Get.put(
       P2PNodeRequestStream(
         p2pState: p2pState,
