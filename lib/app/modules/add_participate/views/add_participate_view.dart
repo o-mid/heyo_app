@@ -13,7 +13,7 @@ import 'package:heyo/app/modules/shared/widgets/empty_users_body.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 class AddParticipateView extends GetView<AddParticipateController> {
-  const AddParticipateView({Key? key}) : super(key: key);
+  const AddParticipateView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,29 +28,29 @@ class AddParticipateView extends GetView<AddParticipateController> {
                 children: [
                   CustomSizes.largeSizedBoxHeight,
                   TextfieldAddParticipate(controller),
-                  controller.searchItems.isEmpty
-                      ? EmptyUsersBody(
-                          infoText:
-                              LocaleKeys.newChat_emptyStateTitleContacts.tr,
-                          buttonText: LocaleKeys.newChat_buttons_invite.tr,
-                          onInvite: () => openInviteBottomSheet(
-                            profileLink: controller.profileLink,
-                          ),
-                        )
-                      : SearchInContactsBody(controller),
+                  if (controller.searchItems.isEmpty)
+                    EmptyUsersBody(
+                      infoText: LocaleKeys.newChat_emptyStateTitleContacts.tr,
+                      buttonText: LocaleKeys.newChat_buttons_invite.tr,
+                      onInvite: () => openInviteBottomSheet(
+                        profileLink: controller.profileLink,
+                      ),
+                    )
+                  else
+                    SearchInContactsBody(controller),
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.all(24.0),
+                padding: const EdgeInsets.all(24),
                 child: CustomButton(
-                  title: "Add to Call (${controller.selectedUser.length})",
+                  title: 'Add to Call (${controller.selectedUser.length})',
                   textStyle: TEXTSTYLES.kLinkBig.copyWith(
                     color: COLORS.kWhiteColor,
                   ),
-                  backgroundColor: COLORS.kGreenMainColor,
-                  onTap: controller.selectedUser.isNotEmpty
-                      ? controller.addUsersToCall
-                      : null,
+                  backgroundColor: controller.selectedUser.isEmpty
+                      ? COLORS.kShimmerBase
+                      : COLORS.kGreenMainColor,
+                  onTap: controller.addUsersToCall,
                 ),
               ),
             ],

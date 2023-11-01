@@ -1,9 +1,8 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
-import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/web-rtc/multiple_call_connection_handler.dart';
-import 'package:webrtc_interface/src/media_stream.dart';
 
 class WebRTCCallRepository implements CallRepository {
   WebRTCCallRepository({required this.callConnectionsHandler}) {
@@ -15,19 +14,10 @@ class WebRTCCallRepository implements CallRepository {
         onAddCallStream?.call(
           CallStream(
             coreId: callRTCSession.remotePeer.remoteCoreId,
-            remoteStream: callRTCSession.getStream()!,
+            remoteStream: callRTCSession.getStream(),
           ),
         );
       });
-    //callConnectionsHandler.onChangeParticipateStream = (() {
-    //  onChangeParticipateStream?.call(
-    //    CallParticipantModel(
-    //      name: name,
-    //      iconUrl: iconUrl,
-    //      coreId: coreId,
-    //    ),
-    //  );
-    //});
 
     if (mock) {
       emitMockStream();
@@ -40,48 +30,22 @@ class WebRTCCallRepository implements CallRepository {
   @override
   Function(CallStream callStream)? onAddCallStream;
   @override
-  Function(CallParticipantModel participate)? onChangeParticipateStream;
+  Function(AllParticipantModel participantModel)? onChangeParticipateStream;
 
   bool mock = true;
 
   Future<void> emitMockStream() async {
-    await Future<void>.delayed(const Duration(seconds: 5));
-    onAddCallStream?.call(
-      CallStream(
-        coreId: 'coreId',
-        remoteStream: await _createMockStream(),
-      ),
-    );
-    await Future<void>.delayed(const Duration(seconds: 5));
-    onAddCallStream?.call(
-      CallStream(
-        coreId: 'coreId',
-        remoteStream: await _createMockStream(),
-      ),
-    );
-    //await Future<void>.delayed(const Duration(seconds: 5));
-    //onAddCallStream?.call(
-    //  CallStream(
-    //    coreId: "coreId",
-    //    remoteStream: await _createMockStream(),
-    //  ),
-    //);
-    //await Future<void>.delayed(const Duration(seconds: 5));
-    //onAddCallStream?.call(
-    //  CallStream(
-    //    coreId: "coreId",
-    //    remoteStream: await _createMockStream(),
-    //  ),
-    //);
+    await _createMockStream("coreId");
+    await _createMockStream("coreId1");
   }
 
   @override
   Future<List<CallStream>> getCallStreams() async {
-    if (mock) {
-      return [
-        CallStream(coreId: 'coreId', remoteStream: await _createMockStream()),
-      ];
-    }
+    //if (mock) {
+    //  return [
+    //    CallStream(coreId: 'coreId', remoteStream: await _createMockStream()),
+    //  ];
+    //}
     return callConnectionsHandler
         .getRemoteStreams()
         .map(
@@ -94,25 +58,16 @@ class WebRTCCallRepository implements CallRepository {
   }
 
   @override
-  Future acceptCall(String callId) async {
+  Future<void> acceptCall(String callId) async {
     callConnectionsHandler.accept(callId);
     //Todo: AZ => we don't have coreId in here
     //_addParticipate(coreId);
   }
 
   @override
-  addMember(String coreId) async {
-    callConnectionsHandler.addMember(coreId);
-    if (mock) {
-      //TODO remove Mock
-      onAddCallStream?.call(
-        CallStream(
-          coreId: coreId,
-          remoteStream: await _createMockStream(),
-        ),
-      );
-      await _addParticipate(coreId);
-    }
+  Future<void> addMember(String coreId) async {
+    await callConnectionsHandler.addMember(coreId);
+    _addToAllParticipant(coreId);
   }
 
   @override
@@ -120,6 +75,7 @@ class WebRTCCallRepository implements CallRepository {
     await callConnectionsHandler.close();
     onAddCallStream = null;
     onLocalStream = null;
+    onChangeParticipateStream = null;
   }
 
   @override
@@ -148,18 +104,47 @@ class WebRTCCallRepository implements CallRepository {
     final session =
         await callConnectionsHandler.requestCall(remoteId, isAudioCall);
     //Todo: AZ => we don't have coreId in here
-    //_addParticipate(coreId);
+    //_addToAllParticipant(coreId);
     return session.callId;
   }
 
-  Future<void> _addParticipate(String coreId) async {
+  Future<void> _addToCallStream(String coreId) async {
+    onAddCallStream?.call(
+      CallStream(
+        coreId: coreId,
+        remoteStream: await _createStream('video', false),
+      ),
+    );
+  }
+
+  //Future<void> updateCallHistory({
+  //  required String callId,
+  //  required String coreId,
+  //  required bool isAudioCall,
+  //}) async {
+  //  callConnectionsHandler.onCallStateChange?.call(
+  //    callId,
+  //    [
+  //      CallInfo(
+  //        remotePeer: coreId,
+  //        isAudioCall: isAudioCall,
+  //      ),
+  //    ],
+  //    CallState.callStateConnected,
+  //  );
+  //}
+
+  void _addToAllParticipant(String coreId) {
     const mockProfileImage =
         'https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png';
+
+    //* it will notify the onChangeParticipateStream
     onChangeParticipateStream?.call(
-      CallParticipantModel(
+      AllParticipantModel(
         coreId: coreId,
         name: coreId,
         iconUrl: mockProfileImage,
+        status: AllParticipantStatus.accepted,
       ),
     );
   }
@@ -174,8 +159,13 @@ class WebRTCCallRepository implements CallRepository {
     callConnectionsHandler.rejectIncomingCall(callId);
   }
 
-  Future<MediaStream> _createMockStream() async {
-    return await _createStream('video', false);
+  Future<void> _createMockStream(String coreId) async {
+    await Future<void>.delayed(const Duration(seconds: 3));
+    //* Add participant to bottom sheet (All participant)
+    _addToAllParticipant(coreId);
+    //* Add stream participant to call (connected participant)
+    await _addToCallStream(coreId);
+    //*  update call history for mock
   }
 
   Future<MediaStream> _createStream(String media, bool userScreen) async {

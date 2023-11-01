@@ -1,12 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-//import 'package:get/get.dart';
-
-//import 'package:heyo/app/modules/add_participate/controllers/participate_item_model.dart';
-import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
-
-//import 'package:heyo/app/modules/web-rtc/models.dart';
-//import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 
 abstract class CallRepository {
   MediaStream? getLocalStream();
@@ -17,18 +13,20 @@ abstract class CallRepository {
 
   Function(CallStream callStream)? onAddCallStream;
 
-  Function(CallParticipantModel participate)? onChangeParticipateStream;
+  Function(AllParticipantModel participantModel)? onChangeParticipateStream;
+
+  //void notifyParticipantsChange(AllParticipantModel participant);
 
   //UI events and actions
   void showLocalVideoStream(bool value, String? sessionId, bool sendSignal);
 
   Future<String> startCall(String remoteId, bool isAudioCall);
 
-  Future acceptCall(String callId);
+  Future<void> acceptCall(String callId);
 
   Future<void> endOrCancelCall(String callId);
 
-  addMember(String coreId);
+  Future<void> addMember(String coreId);
 
   void switchCamera();
 

@@ -133,7 +133,8 @@
     "incoming": "Incoming",
     "callDeclined": "Call declined",
     "callCanceled": "Call canceled",
-    "notAnswered": "Not answered"
+    "notAnswered": "Not answered",
+    "callParticipant": "Call participants"
   },
   "CallPage": {
     "participants": "Participants",

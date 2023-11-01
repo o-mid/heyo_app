@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
@@ -9,7 +9,8 @@ import '../../../../generated/locales.g.dart';
 import '../../new_chat/widgets/user_widget.dart';
 
 class RecentContactsWidget extends StatelessWidget {
-  const RecentContactsWidget({Key? key, required this.users, required this.userSelect})
+  const RecentContactsWidget(
+      {Key? key, required this.users, required this.userSelect})
       : super(key: key);
   final Function(UserModel user) userSelect;
   final RxList<UserModel> users;
@@ -27,7 +28,8 @@ class RecentContactsWidget extends StatelessWidget {
             children: [
               Text(
                 LocaleKeys.forwardMassagesPage_recentContacts.tr,
-                style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextBlueColor),
+                style: TEXTSTYLES.kLinkSmall
+                    .copyWith(color: COLORS.kTextBlueColor),
               ),
               CustomSizes.smallSizedBoxHeight,
               ListView.builder(

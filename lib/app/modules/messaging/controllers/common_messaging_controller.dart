@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 
 import '../../../routes/app_pages.dart';
@@ -30,7 +30,12 @@ import '../usecases/handle_received_binary_data_usecase.dart';
 import '../utils/binary_file_receiving_state.dart';
 import '../utils/data_binary_message.dart';
 
-enum DataChannelConnectivityStatus { connectionLost, connecting, justConnected, online }
+enum DataChannelConnectivityStatus {
+  connectionLost,
+  connecting,
+  justConnected,
+  online
+}
 
 /// Declares common entities for using in specific implementations of Internet or Wi-Fi Direct
 /// messaging algorithms.
@@ -95,12 +100,14 @@ abstract class CommonMessagingConnectionController extends GetxController {
   /// Sends text message
   ///
   /// Should be implemented by override in the derived class.
-  Future<void> sendTextMessage({required String text, required String remoteCoreId});
+  Future<void> sendTextMessage(
+      {required String text, required String remoteCoreId});
 
   /// Sends binary message
   ///
   /// Should be implemented by override in the derived class.
-  Future<void> sendBinaryMessage({required Uint8List binary, required String remoteCoreId});
+  Future<void> sendBinaryMessage(
+      {required Uint8List binary, required String remoteCoreId});
 
   // Public methods, that are used by derived classes independently of connection type,
   // are declared and implemented below.
@@ -128,7 +135,8 @@ abstract class CommonMessagingConnectionController extends GetxController {
 
     Map<String, dynamic> dataChannelMessageJson = dataChannelMessage.toJson();
 
-    await sendTextMessage(text: jsonEncode(dataChannelMessageJson), remoteCoreId: remoteCoreId);
+    await sendTextMessage(
+        text: jsonEncode(dataChannelMessageJson), remoteCoreId: remoteCoreId);
   }
 
   /// Handles binary data, received from remote peer.
@@ -146,7 +154,8 @@ abstract class CommonMessagingConnectionController extends GetxController {
         print('RECEIVER: New file transfer and State started');
       }
       currentState!.pendingMessages[message.chunkStart] = message;
-      await HandleReceivedBinaryData(messagesRepo: messagesRepo, chatId: remoteCoreId)
+      await HandleReceivedBinaryData(
+              messagesRepo: messagesRepo, chatId: remoteCoreId)
           .execute(state: currentState!, remoteCoreId: remoteCoreId);
     } else {
       // handle the acknowledge
@@ -161,7 +170,8 @@ abstract class CommonMessagingConnectionController extends GetxController {
     required Map<String, dynamic> receivedJson,
     required String remoteCoreId,
   }) async {
-    DataChannelMessageModel channelMessage = DataChannelMessageModel.fromJson(receivedJson);
+    DataChannelMessageModel channelMessage =
+        DataChannelMessageModel.fromJson(receivedJson);
     switch (channelMessage.dataChannelMessagetype) {
       case DataChannelMessageType.message:
         await saveAndConfirmReceivedMessage(
@@ -199,8 +209,8 @@ abstract class CommonMessagingConnectionController extends GetxController {
   }) async {
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
 // checks for existing messageId in case of msg duplication
-    MessageModel? _currentMsg =
-        await messagesRepo.getMessageById(messageId: receivedMessage.messageId, chatId: chatId);
+    MessageModel? _currentMsg = await messagesRepo.getMessageById(
+        messageId: receivedMessage.messageId, chatId: chatId);
     if (_currentMsg == null) {
       // creates and send delivery confirmtion of msg and push a notification event
       // in case of not existing message
@@ -321,9 +331,11 @@ abstract class CommonMessagingConnectionController extends GetxController {
     required Map<String, dynamic> receivedDeleteJson,
     required String chatId,
   }) async {
-    DeleteMessageModel deleteMessage = DeleteMessageModel.fromJson(receivedDeleteJson);
+    DeleteMessageModel deleteMessage =
+        DeleteMessageModel.fromJson(receivedDeleteJson);
 
-    await messagesRepo.deleteMessages(messageIds: deleteMessage.messageIds, chatId: chatId);
+    await messagesRepo.deleteMessages(
+        messageIds: deleteMessage.messageIds, chatId: chatId);
   }
 
   Future<void> updateReceivedMessage({
@@ -338,8 +350,10 @@ abstract class CommonMessagingConnectionController extends GetxController {
     );
 
     if (currentMessage != null) {
-      final receivedReactions = updateMessage.message.reactions.map((key, value) {
-        ReactionModel? existingReaction = currentMessage.reactions[key] as ReactionModel?;
+      final receivedReactions =
+          updateMessage.message.reactions.map((key, value) {
+        ReactionModel? existingReaction =
+            currentMessage.reactions[key] as ReactionModel?;
         if (existingReaction is ReactionModel) {
           final newValue = value.copyWith(
             isReactedByMe: existingReaction.isReactedByMe,
@@ -365,12 +379,13 @@ abstract class CommonMessagingConnectionController extends GetxController {
     required Map<String, dynamic> receivedconfirmJson,
     required String chatId,
   }) async {
-    ConfirmMessageModel confirmMessage = ConfirmMessageModel.fromJson(receivedconfirmJson);
+    ConfirmMessageModel confirmMessage =
+        ConfirmMessageModel.fromJson(receivedconfirmJson);
 
     final String messageId = confirmMessage.messageId;
     if (confirmMessage.status == ConfirmMessageStatus.delivered) {
-      MessageModel? currentMessage =
-          await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
+      MessageModel? currentMessage = await messagesRepo.getMessageById(
+          messageId: messageId, chatId: chatId);
 
       // check if message is found and update the Message status
       if (currentMessage != null) {
@@ -382,8 +397,10 @@ abstract class CommonMessagingConnectionController extends GetxController {
         }
       }
     } else {
-      final List<MessageModel> messages = await messagesRepo.getMessages(chatId);
-      final index = messages.lastIndexWhere((element) => element.messageId == messageId);
+      final List<MessageModel> messages =
+          await messagesRepo.getMessages(chatId);
+      final index =
+          messages.lastIndexWhere((element) => element.messageId == messageId);
       // print(index);
       // if the message is found create a sublist of messages
       // that the status is not read and are from me
@@ -409,7 +426,8 @@ abstract class CommonMessagingConnectionController extends GetxController {
     }
   }
 
-  confirmReadMessages({required String messageId, required String remoteCoreId}) async {
+  confirmReadMessages(
+      {required String messageId, required String remoteCoreId}) async {
     await confirmMessageById(
       messageId: messageId,
       status: ConfirmMessageStatus.read,

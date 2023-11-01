@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/account/views/account_view.dart';
-import 'package:heyo/app/modules/calls/home/views/calls_view.dart';
+import 'package:heyo/app/modules/calls/call_history/views/call_history_view.dart';
 import 'package:heyo/app/modules/chats/views/chats_view.dart';
 import 'package:heyo/app/modules/home/widgets/new_chat_bottom_sheet.dart';
 import 'package:heyo/app/modules/search_nearby/views/search_nearby_view.dart';
@@ -15,7 +15,7 @@ import '../controllers/home_controller.dart';
 class HomeView extends GetView<HomeController> {
   final _pageNavigation = [
     const ChatsView(),
-    const CallsView(),
+    const CallHistoryView(),
     WalletView(),
     const SearchNearbyView(),
     const AccountView(),

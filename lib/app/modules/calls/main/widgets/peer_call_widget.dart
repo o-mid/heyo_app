@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/calls/main/widgets/call_renderer_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/draggable_video.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/local_participant_model/local_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/transitions_constant.dart';
 
 class PeerCallWidget extends GetView<CallController> {
@@ -15,7 +16,7 @@ class PeerCallWidget extends GetView<CallController> {
     final localParticipate = controller.localParticipate;
     final remoteParticipate = controller.connectedRemoteParticipates;
     return Obx(() {
-      final bool changeCallerWidgetSize = controller.showCallerOptions.value &
+      final changeCallerWidgetSize = controller.showCallerOptions.value &
           controller.isVideoPositionsFlipped.isFalse;
 
       if (remoteParticipate.isEmpty || localParticipate.value == null) {
@@ -27,7 +28,7 @@ class PeerCallWidget extends GetView<CallController> {
           children: [
             //* The remote video that will get whole screen
             CallRendererWidget(
-              participateModel: remoteParticipate.first,
+              participantModel: remoteParticipate.first,
             ),
             //* The local drapable video
             DraggableVideo(
@@ -47,7 +48,8 @@ class PeerCallWidget extends GetView<CallController> {
                     child: Container(
                       margin: const EdgeInsets.all(5),
                       child: CallRendererWidget(
-                        participateModel: localParticipate.value!,
+                        participantModel: localParticipate.value!
+                            .mapToConnectedParticipantModel(),
                       ),
                     ),
                   ),

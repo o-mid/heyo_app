@@ -6,10 +6,10 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
-import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/connected_participate_model.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/local_participate_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/connected_participant_model/connected_participant_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/local_participant_model/local_participant_model.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
@@ -37,14 +37,16 @@ class CallController extends GetxController {
   //* CallViewArgumentsModel will not effect the UI
   late CallViewArgumentsModel args;
 
-  RxList<ConnectedParticipateModel> connectedRemoteParticipates =
-      RxList<ConnectedParticipateModel>();
+  RxList<ConnectedParticipantModel> connectedRemoteParticipates =
+      RxList<ConnectedParticipantModel>();
 
-  Rx<LocalParticipateModel?> localParticipate = Rx(null);
+  Rx<LocalParticipantModel?> localParticipate = Rx(null);
 
-  RxList<CallParticipantModel> participants = RxList<CallParticipantModel>();
+  RxList<AllParticipantModel> participants = RxList<AllParticipantModel>();
 
   final isImmersiveMode = false.obs;
+
+  final isInCall = false.obs;
 
   final isVideoPositionsFlipped = false.obs;
 
@@ -61,10 +63,13 @@ class CallController extends GetxController {
   //final callViewType = CallViewType.stack.obs;
   //late Session session;
 
-  RxList<ConnectedParticipateModel> getAllConnectedParticipate() {
+  RxList<ConnectedParticipantModel> getAllConnectedParticipate() {
     //* Use this item for group call
     //* The first video renderer is the local Renderer,
-    return RxList([localParticipate.value!, ...connectedRemoteParticipates]);
+    return RxList([
+      localParticipate.value!.mapToConnectedParticipantModel(),
+      ...connectedRemoteParticipates,
+    ]);
   }
 
   String getConnectedParticipantsName() {
@@ -78,7 +83,7 @@ class CallController extends GetxController {
 
   Future<void> initLocalRenderer() async {
     final localParticipateCoreId = await accountInfo.getCoreId();
-    localParticipate.value = LocalParticipateModel(
+    localParticipate.value = LocalParticipantModel(
       name: localParticipateCoreId!,
       iconUrl: 'https://avatars.githubusercontent.com/u/7847725?v=4',
       coreId: localParticipateCoreId,
@@ -87,13 +92,14 @@ class CallController extends GetxController {
       videoMode: true.obs,
       callDurationInSecond: 0.obs,
       frondCamera: true.obs,
-      isInCall: false.obs,
     );
 
     if (localParticipate.value!.videoMode.isTrue) {
       final localRenderer = RTCVideoRenderer();
       await localRenderer.initialize();
-      localParticipate.value!.rtcVideoRenderer = localRenderer;
+
+      localParticipate.value =
+          localParticipate.value!.copyWith(rtcVideoRenderer: localRenderer);
 
       callRepository.onLocalStream = (stream) {
         localRenderer.srcObject = stream;
@@ -139,9 +145,7 @@ class CallController extends GetxController {
   Future<void> initCall() async {
     await initLocalRenderer();
 
-
     observeOnChangeParticipate();
-
 
     /*final callStreams = await callRepository.getCallStreams();
     debugPrint('onAddCallStream Callee Set: ${callStreams.length}');
@@ -155,8 +159,6 @@ class CallController extends GetxController {
       //* This mean you join the call (You are callee)
       await inCallSetUp();
     }
-
-
 
     if (callRepository.getLocalStream() != null) {
       localParticipate.value!.rtcVideoRenderer!.srcObject =
@@ -174,7 +176,7 @@ class CallController extends GetxController {
     for (final element in args.members) {
       // TODO(AliAzim): should be check isContact or not
       participants.add(
-        CallParticipantModel(
+        AllParticipantModel(
           name: element.shortenCoreId,
           coreId: element.shortenCoreId,
           iconUrl: 'https://avatars.githubusercontent.com/u/7847725?v=4',
@@ -187,7 +189,7 @@ class CallController extends GetxController {
     await enableWakeScreenLock();
   }
 
-  void _applyCallStreams(List<CallStream> callStreams){
+  void _applyCallStreams(List<CallStream> callStreams) {
     for (final element in callStreams) {
       addRTCRenderer(element);
     }
@@ -201,7 +203,7 @@ class CallController extends GetxController {
       args.isAudioCall,
     );
 
-    localParticipate.value!.isInCall.value = false;
+    isInCall.value = false;
     _playWatingBeep();
   }
 
@@ -213,7 +215,7 @@ class CallController extends GetxController {
     //_remoteRenderers.add(renderer);
     //TODO: The data should return from CallStream,
     // or input of method should be CallItemModel
-    final remoteParticipate = ConnectedParticipateModel(
+    final remoteParticipate = ConnectedParticipantModel(
       audioMode: true.obs,
       videoMode: true.obs,
       coreId: callStream.coreId,
@@ -228,10 +230,9 @@ class CallController extends GetxController {
 
   Future<void> inCallSetUp() async {
     await callRepository.acceptCall(args.callId!);
+    //* I move mock in controller to pass callId
 
-
-
-    localParticipate.value!.isInCall.value = true;
+    isInCall.value = true;
     startCallTimer();
   }
 
@@ -257,9 +258,10 @@ class CallController extends GetxController {
   }
 
   void observeOnChangeParticipate() {
-    callRepository.onChangeParticipateStream = (participates) {
-      debugPrint('Change participate observer...');
-      debugPrint(participates.toString());
+    callRepository.onChangeParticipateStream = (participant) {
+      debugPrint('Change participate observer in Call Controller...');
+      //debugPrint(participant.toString());
+      participants.add(participant);
     };
   }
 
@@ -272,8 +274,8 @@ class CallController extends GetxController {
       debugPrint('onAddCallStream : $callStateView');
       //print("calll ${_remoteRenderers} : $stream");
       //TODO refactor this if related to the call state
-      if (!localParticipate.value!.isInCall.value) {
-        localParticipate.value!.isInCall.value = true;
+      if (!isInCall.value) {
+        isInCall.value = true;
         _stopWatingBeep();
         startCallTimer();
       }
@@ -305,15 +307,13 @@ class CallController extends GetxController {
 
   void pushToAddParticipate() => Get.toNamed(Routes.ADD_PARTICIPATE);
 
-  //void addParticipant(List<ParticipateItem> selectedUsers) {
-  //  for (var element in selectedUsers) {
-  //    debugPrint(element.coreId);
-  //    participants.add(
-  //      CallParticipantModel(user: element.mapToCallUserModel()),
-  //    );
-  //    callRepository.addMember(element.coreId);
-  //  }
-  //}
+  Future<void> addParticipant(List<AllParticipantModel> selectedUsers) async {
+    for (final element in selectedUsers) {
+      debugPrint(element.coreId);
+
+      await callRepository.addMember(element.coreId);
+    }
+  }
 
   // Todo
   void toggleVideo() {
@@ -358,7 +358,7 @@ class CallController extends GetxController {
   }
 
   @override
-  void onClose() async {
+  Future<void> onClose() async {
     stopCallTimer();
 
     await callRepository.closeCall();

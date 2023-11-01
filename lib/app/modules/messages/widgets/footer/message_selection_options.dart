@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/forward_massages/data/models/forward_massages_view_arguments_model..dart';
+import 'package:heyo/app/modules/forward_massages/data/models/forward_massages_view_arguments_model.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';

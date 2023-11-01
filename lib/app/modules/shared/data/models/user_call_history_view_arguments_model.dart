@@ -1,4 +1,4 @@
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 
 class UserCallHistoryViewArgumentsModel {
   final String coreId;

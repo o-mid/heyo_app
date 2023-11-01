@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
 import 'package:heyo/app/modules/shared/data/repository/db/cache_contractor.dart';
 
-import '../../../new_chat/data/models/user_model.dart';
+import '../../../new_chat/data/models/user_model/user_model.dart';
 
 class ContactRepository {
   CacheContractor cacheContractor;
@@ -22,7 +22,10 @@ class ContactRepository {
     List<UserModel> contacts = await getContacts();
     return contacts
         .where((element) =>
-            element.nickname.toString().toLowerCase().contains(query.toLowerCase()) ||
+            element.nickname
+                .toString()
+                .toLowerCase()
+                .contains(query.toLowerCase()) ||
             element.coreId.startsWith(query))
         .toList();
   }

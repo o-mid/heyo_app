@@ -11,13 +11,13 @@ import '../modules/auth/pinCode/bindings/pin_code_binding.dart';
 import '../modules/auth/pinCode/views/pin_code_view.dart';
 import '../modules/auth/sing-up/bindings/sing_up_binding.dart';
 import '../modules/auth/sing-up/views/sing_up_view.dart';
-import '../modules/calls/home/views/calls_view.dart';
+import '../modules/calls/call_history/views/call_history_view.dart';
 import '../modules/calls/incoming_call/bindings/incoming_call_binding.dart';
 import '../modules/calls/incoming_call/views/incoming_call_view.dart';
 import '../modules/calls/main/bindings/call_binding.dart';
 import '../modules/calls/main/views/call_view.dart';
-import '../modules/calls/user_call_history/bindings/user_call_history_binding.dart';
-import '../modules/calls/user_call_history/views/user_call_history_view.dart';
+import '../modules/calls/call_history_detail/bindings/call_history_detail_binding.dart';
+import '../modules/calls/call_history_detail/views/call_history_detail_view.dart';
 import '../modules/contacts/bindings/contacts_binding.dart';
 import '../modules/contacts/views/contacts_view.dart';
 import '../modules/forward_massages/bindings/forward_massages_binding.dart';
@@ -105,7 +105,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CALLS,
-      page: () => CallsView(),
+      page: () => CallHistoryView(),
       transition: TRANSITIONS.navigation_generalPageTransition,
       transitionDuration: TRANSITIONS.navigation_generalPageTransitionDurtion,
       curve: TRANSITIONS.navigation_generalPageTransitionCurve,
@@ -199,8 +199,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.USER_CALL_HISTORY,
-      page: () => UserCallHistoryView(),
-      binding: UserCallHistoryBinding(),
+      page: () => CallHistoryDetailView(),
+      binding: CallHistoryDetailBinding(),
       transition: TRANSITIONS.navigation_generalPageTransition,
       transitionDuration: TRANSITIONS.navigation_generalPageTransitionDurtion,
       curve: TRANSITIONS.navigation_generalPageTransitionCurve,
@@ -266,7 +266,7 @@ class AppPages {
     GetPage(
       name: _Paths.ADD_PARTICIPATE,
       page: () => const AddParticipateView(),
-      binding: AddParticipateBinding(),
+      //binding: AddParticipateBinding(),
     ),
   ];
 }

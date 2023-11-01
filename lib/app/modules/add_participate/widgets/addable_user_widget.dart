@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/add_participate/controllers/add_participate_controller.dart';
-import 'package:heyo/app/modules/add_participate/controllers/participate_item_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
-import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
 class AddableUserWidget extends StatelessWidget {
-  final ParticipateItem user;
-
   const AddableUserWidget({
-    Key? key,
     required this.user,
-  }) : super(key: key);
+    super.key,
+  });
+
+  final AllParticipantModel user;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class AddableUserWidget extends StatelessWidget {
           CustomCircleAvatar(
             url: user.iconUrl,
             size: 48,
-            isOnline: user.isOnline,
+            //isOnline: user.isOnline,
           ),
           CustomSizes.mediumSizedBoxWidth,
           Column(
@@ -47,12 +47,12 @@ class AddableUserWidget extends StatelessWidget {
                     ),
                   ),
                   CustomSizes.smallSizedBoxWidth,
-                  if (user.isVerified) Assets.svg.verifiedWithBluePadding.svg(),
+                  //if (user.isVerified) Assets.svg.verifiedWithBluePadding.svg(),
                 ],
               ),
               const SizedBox(height: 4),
               Text(
-                user.walletAddress.shortenCoreId,
+                user.coreId.shortenCoreId,
                 maxLines: 1,
                 style: TEXTSTYLES.kChatText.copyWith(
                   color: COLORS.kTextBlueColor,

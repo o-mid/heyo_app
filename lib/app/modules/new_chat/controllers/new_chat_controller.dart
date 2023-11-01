@@ -12,10 +12,11 @@ import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../data/models/filter_model.dart';
-import '../data/models/user_model.dart';
+import '../data/models/user_model/user_model.dart';
 import '../widgets/invite_bttom_sheet.dart';
 
-class NewChatController extends GetxController with GetSingleTickerProviderStateMixin {
+class NewChatController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   late AnimationController animController;
   late Animation<double> animation;
   late TextEditingController inputController;
@@ -24,7 +25,8 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
   final inputFocusNode = FocusNode();
   final inputText = "".obs;
   late StreamSubscription _contactasStreamSubscription;
-  NewChatController({required this.contactRepository, required this.accountInfo});
+  NewChatController(
+      {required this.contactRepository, required this.accountInfo});
 
 // in nearby users Tab after 3 seconds the refresh button will be visible
   RxBool refreshBtnVisibility = false.obs;
@@ -87,7 +89,8 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
       name: "Crapps Wallbanger",
       walletAddress: 'CB92...969A',
       coreId: 'CB92...969A',
-      iconUrl: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
+      iconUrl:
+          "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
       nickname: "Nickname",
     ),
     UserModel(
@@ -119,7 +122,8 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
     ),
   ].obs;
 
-  RefreshController refreshController = RefreshController(initialRefresh: false);
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
 
   void onRefresh() async {
     await Future.delayed(const Duration(milliseconds: 1000));
@@ -143,13 +147,15 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
         searchSuggestions.value = newContacts;
       }
     });
-    nearbyUsers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    nearbyUsers
+        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     super.onInit();
   }
 
   void searchUsers(String query) async {
     //TODO icon and chatmodel should be filled with correct data
-    List<UserModel> searchedItems = (await contactRepository.search(query)).toList();
+    List<UserModel> searchedItems =
+        (await contactRepository.search(query)).toList();
 
     if (searchedItems.isEmpty) {
       String? currentUserCoreId = await accountInfo.getCoreId();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
@@ -35,7 +35,8 @@ class ContactsWidget extends StatelessWidget {
                 isTextInputFocused.value
                     ? LocaleKeys.forwardMassagesPage_contacts.tr
                     : LocaleKeys.forwardMassagesPage_OtherContacts.tr,
-                style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextBlueColor),
+                style: TEXTSTYLES.kLinkSmall
+                    .copyWith(color: COLORS.kTextBlueColor),
               ),
               ListView.builder(
                 itemCount: searchSuggestions.length,
@@ -44,11 +45,13 @@ class ContactsWidget extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   //this will grab the current user and
                   // extract the first character from its name
-                  String currentUsernameFirstChar = searchSuggestions[index].name.characters.first;
+                  String currentUsernameFirstChar =
+                      searchSuggestions[index].name.characters.first;
                   //this will grab the next user in the list if its not null and
                   // extract the first character from its name
                   String nextUsernameFirstChar =
-                      searchSuggestions.indexOf(searchSuggestions.last) > index + 1
+                      searchSuggestions.indexOf(searchSuggestions.last) >
+                              index + 1
                           ? searchSuggestions[index + 1].name.characters.first
                           : "";
                   return Padding(
@@ -60,7 +63,11 @@ class ContactsWidget extends StatelessWidget {
                       children: [
                         currentUsernameFirstChar != nextUsernameFirstChar
                             ? ListHeaderWidget(
-                                title: searchSuggestions[index].name.characters.first.toUpperCase())
+                                title: searchSuggestions[index]
+                                    .name
+                                    .characters
+                                    .first
+                                    .toUpperCase())
                             : const SizedBox(),
                         InkWell(
                           borderRadius: BorderRadius.circular(8),
