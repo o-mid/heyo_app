@@ -1,11 +1,11 @@
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/crypto_account_repo.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 
 class SearchContactUserUseCase {
   final ContactRepository contactRepository;
-  final CryptoAccountRepository accountInfoRepo;
+  final AccountRepository accountInfoRepo;
 
   SearchContactUserUseCase({
     required this.accountInfoRepo,
@@ -17,7 +17,7 @@ class SearchContactUserUseCase {
         (await contactRepository.search(query)).toList();
 
     if (searchedItems.isEmpty) {
-      final currentUserCoreId = await accountInfoRepo.getUserContactAddress();
+      final currentUserCoreId = await accountInfoRepo.getUserAddress();
       if (query.isValidCoreId() && currentUserCoreId != query) {
         //its a new user
         //TODO update fields based on correct data

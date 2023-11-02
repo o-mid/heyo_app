@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/crypto_account_repo.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 
 import '../../../routes/app_pages.dart';
@@ -40,7 +40,7 @@ enum DataChannelConnectivityStatus { connectionLost, connecting, justConnected, 
 abstract class CommonMessagingConnectionController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
-  final CryptoAccountRepository accountInfoRepo;
+  final AccountRepository accountInfoRepo;
   BinaryFileReceivingState? currentState;
   final NotificationsController notificationsController;
   final ContactRepository contactRepository;

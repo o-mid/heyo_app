@@ -4,7 +4,7 @@ import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/crypto_account_repo.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
@@ -14,7 +14,7 @@ import '../../shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 class NewCallController extends GetxController {
   late TextEditingController inputController;
   final ContactRepository contactRepository;
-  final CryptoAccountRepository accountInfoRepo;
+  final AccountRepository accountInfoRepo;
 
   NewCallController({
     required this.contactRepository,
@@ -46,7 +46,7 @@ class NewCallController extends GetxController {
     List<UserModel> searchedItems = (await contactRepository.search(query)).toList();
 
     if (searchedItems.isEmpty) {
-      final currentUserCoreId = await accountInfoRepo.getUserContactAddress();
+      final currentUserCoreId = await accountInfoRepo.getUserAddress();
       if (query.isValidCoreId() && currentUserCoreId != query) {
         //its a new user
         //TODO update fields based on correct data

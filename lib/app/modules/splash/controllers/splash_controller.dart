@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/crypto_account_repo.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/splash/data/repositoty/splash_repository.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
@@ -11,7 +11,7 @@ class SplashController extends GetxController {
     required this.accountInfoRepo,
   });
 
-  final CryptoAccountRepository accountInfoRepo;
+  final AccountRepository accountInfoRepo;
 
   //Todo accountInfo
   _checkIfAuthenticated() async {

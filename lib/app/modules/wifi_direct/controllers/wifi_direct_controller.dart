@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/crypto_account_repo.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -14,7 +14,7 @@ import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/repository/contact_repository.dart';
 
 class WifiDirectController extends GetxController {
-  final CryptoAccountRepository accountInfoRepo;
+  final AccountRepository accountInfoRepo;
   final ContactRepository contactRepository;
   HeyoWifiDirect? _heyoWifiDirect;
   bool isLocationPermissionGranted = false;
@@ -161,7 +161,7 @@ class WifiDirectController extends GetxController {
   }
 
   Future<void> _setCoreId() async {
-    coreId.value = (await accountInfoRepo.getUserContactAddress()) ?? "";
+    coreId.value = (await accountInfoRepo.getUserAddress()) ?? "";
   }
 
   // this will show a custom UI permission dialog at first and then the default permission dialog for location permission

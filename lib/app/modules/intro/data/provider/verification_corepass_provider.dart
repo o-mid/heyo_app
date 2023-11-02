@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/intro/data/provider/verification_corepass_abstract_provider.dart';
-import 'package:heyo/app/modules/shared/providers/crypto/storage/crypto_storage_provider.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_manager.dart';
+import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
 import 'package:heyo/app/modules/shared/utils/datetime_utils.dart';
 import 'package:tuple/tuple.dart';
 import 'package:uni_links/uni_links.dart';
@@ -18,7 +18,7 @@ class VerificationCorePassProvider
   });
 
   StreamSubscription? _urlStream;
-  final CryptoStorageProvider cryptoInfo;
+  final LibP2PStorageProvider cryptoInfo;
   final P2PNodeController p2pNodeController;
   final DateTimeUtils dateTimeUtils;
 

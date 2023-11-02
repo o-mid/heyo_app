@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:heyo/app/modules/shared/providers/secure_storage/local_storages_abstract.dart';
-import 'package:heyo/app/modules/shared/providers/crypto/storage/crypto_storage_provider.dart';
 
 String P2P_KEY_IN_STORE = "P2P_KEY_IN_STORE";
 String CRED_KEY_IN_STORE = "CRED_KEY_IN_STORE";
@@ -14,12 +13,11 @@ String ADDRESS = "address";
 String COREPASS_ID = "corePassId";
 String COREPASS_SIGNATURE = "signature";
 
-class Libp2pCryptoStorageProvider extends CryptoStorageProvider {
-  Libp2pCryptoStorageProvider({required this.localProvider});
+class LibP2PStorageProvider {
+  LibP2PStorageProvider({required this.localProvider});
 
   final LocalStorageAbstractProvider localProvider;
 
-  @override
   Future<void> saveCredentials(String coreId, String privateKey, String? aesKey,
       List<String> mneomns, String address, String publicKey) async {
     final credentials = <String, dynamic>{
@@ -34,7 +32,6 @@ class Libp2pCryptoStorageProvider extends CryptoStorageProvider {
         CRED_KEY_IN_STORE, jsonEncode(credentials));
   }
 
-  @override
   Future<String?> getLocalCoreId() async {
     final credentialInLocalStorage =
         await localProvider.readFromStorage(CRED_KEY_IN_STORE);
@@ -47,7 +44,6 @@ class Libp2pCryptoStorageProvider extends CryptoStorageProvider {
     }
   }
 
-  @override
   Future<String?> getPrivateKey() async {
     final prevs = await localProvider.readFromStorage(CRED_KEY_IN_STORE);
     if (prevs == null) {
@@ -58,37 +54,30 @@ class Libp2pCryptoStorageProvider extends CryptoStorageProvider {
     }
   }
 
-  @override
   Future<String?> getCorePassCoreId() async {
     return localProvider.readFromStorage(COREPASS_ID);
   }
 
-  @override
   Future<void> setCorePassCoreId(String coreId) async {
     await localProvider.saveToStorage(COREPASS_ID, coreId);
   }
 
-  @override
   Future<void> removeCorePassCoreId() async {
     await localProvider.deleteFromStorage(COREPASS_ID);
   }
 
-  @override
   Future<String?> getSignature() async {
     return localProvider.readFromStorage(COREPASS_SIGNATURE);
   }
 
-  @override
   Future<void> setSignature(String signature) async {
     await localProvider.saveToStorage(COREPASS_SIGNATURE, signature);
   }
 
-  @override
   Future<void> removeSignature() async {
     await localProvider.deleteFromStorage(COREPASS_SIGNATURE);
   }
 
-  @override
   Future<String?> getPublicKey() async {
     final prevs = await localProvider.readFromStorage(CRED_KEY_IN_STORE);
     if (prevs == null) {

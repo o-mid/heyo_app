@@ -13,11 +13,10 @@ import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 import 'package:heyo/app/modules/messaging/sync_messages.dart';
 import 'package:heyo/app/modules/messaging/web_rtc_connection_manager.dart';
 import 'package:heyo/app/modules/notifications/controllers/app_notifications.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/libp2p_crypto_account_repo.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/app_account_repository.dart';
 import 'package:heyo/app/modules/shared/providers/account/creation/account_creation.dart';
 import 'package:heyo/app/modules/shared/providers/account/creation/libp2p_account_creation.dart';
-import 'package:heyo/app/modules/shared/providers/crypto/storage/crypto_storage_provider.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/crypto_account_repo.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
 import 'package:heyo/app/modules/shared/controllers/call_history_observer.dart';
 import 'package:heyo/app/modules/shared/controllers/connection_controller.dart';
@@ -31,7 +30,7 @@ import 'package:heyo/app/modules/p2p_node/p2p_node_manager.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_request.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
-import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_crypto_storage_provider.dart';
+import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
 import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/providers/database/dao/user_provider.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
@@ -94,8 +93,8 @@ class GlobalBindings extends Bindings {
   @override
   void dependencies() {
     Get
-      ..put<CryptoStorageProvider>(
-        Libp2pCryptoStorageProvider(
+      ..put<LibP2PStorageProvider>(
+        LibP2PStorageProvider(
           localProvider: secureStorageProvider,
         ),
       )
@@ -104,15 +103,18 @@ class GlobalBindings extends Bindings {
         cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
         cryptoInfoProvider: Get.find(),
       ))
-      ..put<CryptoAccountRepository>(
-        LibP2PCryptoAccountRepository(
-          accountCreation: Get.find(),
-          cryptoInfoProvider: Get.find(),
+      ..put<AccountRepository>(
+        AppAccountRepository(
+          libP2PStorageProvider: Get.find(),
+          localStorageProvider: secureStorageProvider,
         ),
         permanent: true,
       )
       ..put(P2PState(), permanent: true)
-      ..put(P2PCommunicator(p2pState: Get.find(), accountInfoRepo: Get.find()))
+      ..put(P2PCommunicator(
+        p2pState: Get.find(),
+        libP2PStorageProvider: Get.find(),
+      ))
       ..put(
         P2PNodeRequestStream(
           p2pState: Get.find(),
@@ -122,7 +124,7 @@ class GlobalBindings extends Bindings {
       ..put(
         P2PNodeResponseStream(
           p2pState: Get.find(),
-          accountInfoRepo: Get.find(),
+          libP2PStorageProvider: Get.find(),
         ),
         permanent: true,
       )
@@ -133,7 +135,7 @@ class GlobalBindings extends Bindings {
             p2pNodeResponseStream: Get.find(),
             p2pState: Get.find(),
             web3client: web3Client,
-            cryptoStorage: Get.find(),
+            libP2PStorageProvider: Get.find(),
             accountCreation: Get.find(),
           ),
           p2pState: Get.find(),

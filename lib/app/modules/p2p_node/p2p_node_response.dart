@@ -3,19 +3,20 @@ import 'dart:convert';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/crypto_account_repo.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
+import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
 import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
 
 class P2PNodeResponseStream {
   P2PNodeResponseStream(
-      {required this.p2pState, required this.accountInfoRepo});
+      {required this.p2pState, required this.libP2PStorageProvider});
 
   StreamSubscription<P2PReqResNodeModel?>? _nodeResponseSubscription;
   bool advertiseRequested = false;
   final P2PState p2pState;
-  CryptoAccountRepository accountInfoRepo;
+  LibP2PStorageProvider libP2PStorageProvider;
 
   void setUp() {
     _setUpResponseStream();
@@ -83,7 +84,7 @@ class P2PNodeResponseStream {
     }
     if (event.name == P2PReqResNodeNames.peerID && event.error == null) {
       p2pState.peerId.value = event.body!["peerID"].toString();
-      final coreId = (await accountInfoRepo.getUserDefaultAddress())!;
+      final coreId = (await libP2PStorageProvider.getLocalCoreId())!;
       final peerId = p2pState.peerId.value;
       final addressId = jsonEncode(p2pState.address.value);
       print(

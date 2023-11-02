@@ -22,6 +22,7 @@ class IntroBinding extends Bindings {
           cryptoAccountRepository: Get.find(),
         ),
         p2pState: Get.find(),
+        appAccountRepository: Get.find(),
       ),
     );
   }
