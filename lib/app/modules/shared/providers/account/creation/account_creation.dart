@@ -5,18 +5,6 @@ import 'package:heyo/app/modules/shared/providers/crypto/storage/crypto_storage_
 import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
 
 abstract class AccountCreation {
-  factory AccountCreation({
-    required String type,
-    required SecureStorageProvider secureStorageProvider,
-    required CryptographyKeyGenerator cryptographyKeyGenerator,
-    required CryptoStorageProvider cryptoInfoProvider,
-  }) {
-    return LibP2PAccountCreation(
-      localProvider: secureStorageProvider,
-      cryptographyKeyGenerator: cryptographyKeyGenerator,
-      cryptoInfoProvider: cryptoInfoProvider,
-    );
-  }
 
   Future<CreateAccountResult> createAccount();
 

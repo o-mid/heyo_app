@@ -3,10 +3,6 @@ import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_
 
 abstract class CryptoStorageProvider {
 
-  factory CryptoStorageProvider(String type,SecureStorageProvider secureStorageProvider){
-    return Libp2pCryptoStorageProvider(localProvider: secureStorageProvider);
-  }
-
   Future<void> saveCredentials(String coreId, String privateKey, String? aesKey,
       List<String> mneomns, String address, String publicKey);
 
