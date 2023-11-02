@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/data/models/account_types.dart';
 import 'package:heyo/app/modules/shared/data/models/create_account_result.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/libp2p_crypto_account_repo.dart';
@@ -6,16 +7,8 @@ import 'package:heyo/app/modules/shared/providers/crypto/storage/crypto_storage_
     as crypto_account;
 
 abstract class CryptoAccountRepository {
-  factory CryptoAccountRepository({
-    required String type,
-    required AccountCreation accountCreation,
-    required crypto_account.CryptoStorageProvider cryptoInfoProvider,
-  }) {
-    return LibP2PCryptoAccountRepository(
-      accountCreation: accountCreation,
-      cryptoInfoProvider: cryptoInfoProvider,
-    );
-  }
+  final isLoggedIn = false.obs;
+
 
   Future<bool> hasAccount();
 
@@ -28,4 +21,8 @@ abstract class CryptoAccountRepository {
   Future<String?> getUserDefaultAddress();
 
   Future<String?> getUserContactAddress();
+
+  RxBool onAccountStateChanged();
+
+  Future<void> logout();
 }
