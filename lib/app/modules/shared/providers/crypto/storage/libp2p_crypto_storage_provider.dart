@@ -14,7 +14,7 @@ String ADDRESS = "address";
 String COREPASS_ID = "corePassId";
 String COREPASS_SIGNATURE = "signature";
 
-class Libp2pCryptoStorageProvider implements CryptoStorageProvider {
+class Libp2pCryptoStorageProvider extends CryptoStorageProvider {
   Libp2pCryptoStorageProvider({required this.localProvider});
 
   final LocalStorageAbstractProvider localProvider;

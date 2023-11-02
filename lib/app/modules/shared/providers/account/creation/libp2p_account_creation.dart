@@ -6,7 +6,7 @@ import 'package:heyo/app/modules/shared/providers/account/creation/account_creat
 import 'package:heyo/app/modules/shared/providers/secure_storage/local_storages_abstract.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/crypto_storage_provider.dart';
 
-class LibP2PAccountCreation implements AccountCreation {
+class LibP2PAccountCreation extends AccountCreation {
   final LocalStorageAbstractProvider localProvider;
   final CryptographyKeyGenerator cryptographyKeyGenerator;
   final CryptoStorageProvider cryptoInfoProvider;
