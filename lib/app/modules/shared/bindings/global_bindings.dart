@@ -36,9 +36,11 @@ import 'package:http/http.dart' as http;
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
 import '../../chats/data/repos/chat_history/chat_history_repo.dart';
+import '../../messages/data/message_processor.dart';
 import '../../messages/data/provider/messages_provider.dart';
 import '../../messages/data/repo/messages_repo.dart';
 import '../../messages/data/usecases/cofirm_message_usecase.dart';
+import '../../messages/data/usecases/delete_message_usecase.dart';
 import '../../messages/data/usecases/send_message_usecase.dart';
 import '../../messages/data/usecases/update_message_usecase.dart';
 import '../../messaging/controllers/common_messaging_controller.dart';
@@ -71,8 +73,6 @@ class GlobalBindings extends Bindings {
   );
 
 // call related bindings
-
-  static WifiDirectWrapper wifiDirectWrapper = WifiDirectWrapper();
 
   static AppNotifications appNotifications = AppNotifications();
 
@@ -220,7 +220,7 @@ class GlobalBindings extends Bindings {
               webRTCConnectionManager: WebRTCConnectionManager(),
             ),
           ),
-          wifiDirectWrapper: wifiDirectWrapper,
+          wifiDirectWrapper: WifiDirectWrapper(),
           notificationsController: NotificationsController(appNotifications: appNotifications),
           connectionType: ConnectionType
               .RTC, // You might want to determine this dynamically based on your app logic
@@ -232,7 +232,39 @@ class GlobalBindings extends Bindings {
       //   AppNotifications(),
       //   permanent: true,
       // );
-
+      ..put<SendMessageUseCase>(
+        SendMessageUseCase(
+          messagesRepo: MessagesRepo(
+            messagesProvider:
+                MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          ),
+          messagingConnection: Get.find<UnifiedConnectionController>(),
+          processor: MessageProcessor(),
+        ),
+        permanent: true,
+      )
+      ..put<UpdateMessageUseCase>(
+        UpdateMessageUseCase(
+          messagesRepo: MessagesRepo(
+            messagesProvider:
+                MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          ),
+          messagingConnection: Get.find<UnifiedConnectionController>(),
+          processor: MessageProcessor(),
+        ),
+        permanent: true,
+      )
+      ..put<DeleteMessageUseCase>(
+        DeleteMessageUseCase(
+          messagesRepo: MessagesRepo(
+            messagesProvider:
+                MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          ),
+          messagingConnection: Get.find<UnifiedConnectionController>(),
+          processor: MessageProcessor(),
+        ),
+        permanent: true,
+      )
       ..put<NotificationsController>(
         NotificationsController(
           appNotifications: appNotifications,
