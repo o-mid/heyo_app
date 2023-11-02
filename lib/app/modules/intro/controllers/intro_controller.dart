@@ -5,15 +5,22 @@ import 'package:heyo/app/modules/intro/data/repo/intro_repo.dart';
 import 'package:heyo/app/modules/intro/widgets/verification_loading_dialog.dart';
 import 'package:heyo/app/modules/intro/widgets/verification_bottom_sheet.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
+import 'package:heyo/app/modules/shared/data/models/account_types.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/app_account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:tuple/tuple.dart';
 
 class IntroController extends GetxController with WidgetsBindingObserver {
   final IntroRepo introRepo;
+  final AccountRepository appAccountRepository;
   final P2PState p2pState;
 
-  IntroController({required this.introRepo, required this.p2pState});
+  IntroController(
+      {required this.appAccountRepository,
+      required this.introRepo,
+      required this.p2pState});
 
   @override
   void onInit() async {
@@ -62,7 +69,8 @@ class IntroController extends GetxController with WidgetsBindingObserver {
       isScrollControlled: true,
       backgroundColor: COLORS.kWhiteColor,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(topRight: Radius.circular(16),topLeft: Radius.circular(16)),
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(16), topLeft: Radius.circular(16)),
       ),
     );
   }
@@ -114,6 +122,7 @@ class IntroController extends GetxController with WidgetsBindingObserver {
       corePassData.item3,
     );
     if (isSuccessfulAndValid) {
+      await appAccountRepository.saveAccountType(AccountTypes.libP2P);
       await Get.offAllNamed(Routes.VERIFIED_USER);
     } else {
       Get.snackbar('Error : ', 'Signature is invalid');
