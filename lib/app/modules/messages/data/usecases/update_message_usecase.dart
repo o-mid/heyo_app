@@ -46,7 +46,7 @@ class UpdateMessage {
     required String remoteCoreId,
   }) async {
     final localCoreID =
-        await messagingConnection.accountInfoRepo.getUserContactAddress() ?? "";
+        await messagingConnection.accountInfoRepo.getUserAddress() ?? "";
     var reaction =
         message.reactions[emoji] as ReactionModel? ?? ReactionModel();
 
