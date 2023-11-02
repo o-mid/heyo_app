@@ -16,7 +16,6 @@ class SplashController extends GetxController {
   //Todo accountInfo
   _checkIfAuthenticated() async {
     final hasAccount = await accountInfoRepo.hasAccount();
-    print('Account validated --- $hasAccount ');
     if (hasAccount == false) {
       await _goToLogin();
       return;
