@@ -82,7 +82,7 @@ class CallController extends GetxController {
   }
 
   Future<void> initLocalRenderer() async {
-    final localParticipateCoreId = await accountInfo.getCoreId();
+    final localParticipateCoreId = await accountInfo.getCorePassCoreId();
     localParticipate.value = LocalParticipantModel(
       name: localParticipateCoreId!,
       iconUrl: 'https://avatars.githubusercontent.com/u/7847725?v=4',

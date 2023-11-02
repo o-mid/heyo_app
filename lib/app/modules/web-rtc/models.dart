@@ -130,7 +130,7 @@ class CallRTCSession {
     onDataChannel?.call(dc!);
   }
 
-  Future<void> createDataChannel({label = 'fileTransfer'}) async {
+  Future<void> createDataChannel({String label = 'fileTransfer'}) async {
     RTCDataChannelInit dataChannelDict = RTCDataChannelInit()
       ..maxRetransmits = 30;
     RTCDataChannel channel =

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
+import 'package:heyo/app/modules/connection/domain/connection_models.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
 import 'package:heyo/app/modules/web-rtc/models.dart';
 import 'package:heyo/app/modules/web-rtc/web_rtc_call_connection_manager.dart';
@@ -16,7 +18,7 @@ const DATA_DESCRIPTION = 'description';
 const CALL_ID = 'call_id';
 
 class SingleCallWebRTCBuilder {
-  final P2PCommunicator p2pCommunicator;
+  final ConnectionContractor connectionContractor;
   final WebRTCCallConnectionManager webRTCConnectionManager;
   final JsonEncoder _encoder = const JsonEncoder();
   final JsonDecoder _decoder = const JsonDecoder();
@@ -25,7 +27,7 @@ class SingleCallWebRTCBuilder {
   Function(MediaStream stream)? onRemoveStream;
 
   SingleCallWebRTCBuilder({
-    required this.p2pCommunicator,
+    required this.connectionContractor,
     required this.webRTCConnectionManager,
   });
 
@@ -172,8 +174,8 @@ class SingleCallWebRTCBuilder {
   Future<bool> _send(
     eventType,
     data,
-    remoteCoreId,
-    remotePeerId,
+    String remoteCoreId,
+    String? remotePeerId,
     connectionId,
   ) async {
     print(
@@ -185,10 +187,9 @@ class SingleCallWebRTCBuilder {
     request["command"] = COMMAND;
     request[CALL_ID] = connectionId;
     print("P2PCommunicator: sendingSDP $remoteCoreId : $eventType");
-    final requestSucceeded = await p2pCommunicator.sendSDP(
+    final requestSucceeded = await connectionContractor.sendMessage(
       _encoder.convert(request),
-      remoteCoreId as String,
-      remotePeerId as String?,
+      RemotePeerData(remoteCoreId: remoteCoreId, remotePeerId: remotePeerId)
     );
     print(
       "P2PCommunicator: sendingSDP $remoteCoreId : $eventType : $requestSucceeded",
