@@ -262,8 +262,8 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "5718445b26cc717a82d9c53734fa6cb9e57a412f"
-      url: "git@git.energy:corepass/core_flutter_lint.git"
+      resolved-ref: "676acc0c94ff82b81209b7bf03175fcac594fc17"
+      url: "git@ssh.git.energy:corepass/core_flutter_lint.git"
     source: git
     version: "1.2.0"
   core_web3dart:
@@ -271,8 +271,8 @@ packages:
     description:
       path: "."
       ref: core-master
-      resolved-ref: "6c74c36e5fa31a294daa3568b128dc5df9888beb"
-      url: "git@git.energy:corepass/core-web3dart.git"
+      resolved-ref: "37386884ba079eb77c0affb8fb4ee80899530990"
+      url: "git@ssh.git.energy:corepass/core-web3dart.git"
     source: git
     version: "2.4.9"
   cross_file:
@@ -493,10 +493,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "06d64a32daca986c1f95be60200349a8e748330a"
-      url: "git@git.energy:corepass/flutter_bip39.git"
+      resolved-ref: "235cf67a42592057e53ec039eda2ddad62988bd6"
+      url: "git@ssh.git.energy:corepass/flutter_bip39.git"
     source: git
-    version: "0.0.1"
+    version: "0.0.4"
   flutter_draggable_gridview:
     dependency: "direct main"
     description:
@@ -511,7 +511,7 @@ packages:
       path: "."
       ref: HEAD
       resolved-ref: bd749d7a76dc43c26f3f5c8e6929266bb32fcc21
-      url: "git@git.energy:mojtabaparvar/flutter_ed448_pure_dart.git"
+      url: "git@ssh.git.energy:mojtabaparvar/flutter_ed448_pure_dart.git"
     source: git
     version: "1.0.0"
   flutter_gen_core:
@@ -623,8 +623,8 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "06e8bdc491be1312cb048145671b4753311ec92c"
-      url: "git@git.energy:corepass/flutter_p2p_communicator.git"
+      resolved-ref: c2cd6455d76b6d55cee6bc296c629c2a60e8166b
+      url: "git@ssh.git.energy:corepass/flutter_p2p_communicator.git"
     source: git
     version: "1.15.1"
   flutter_plugin_android_lifecycle:
@@ -843,7 +843,7 @@ packages:
       path: "."
       ref: HEAD
       resolved-ref: cc36c2b5a01c00fa12a6a9c8df073d4dce08abd9
-      url: "git@git.energy:heyo/heyo_wifi_direct.git"
+      url: "git@ssh.git.energy:heyo/heyo_wifi_direct.git"
     source: git
     version: "0.0.1"
   html:
