@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:heyo/app/modules/intro/data/provider/verification_corepass_abstract_provider.dart';
 import 'package:heyo/app/modules/intro/data/repo/intro_abstract_repo.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/crypto_account_repo.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/providers/store/store_abstract_provider.dart';
 import 'package:tuple/tuple.dart';
 
 class IntroRepo extends IntroAbstractRepo {
   VerificationCorePassAbstractProvider vcp;
   StoreAbstractProvider storeProvider;
-  CryptoAccountRepository cryptoAccountRepository;
+  AccountRepository cryptoAccountRepository;
 
   IntroRepo(
       {required this.vcp,
@@ -35,7 +35,7 @@ class IntroRepo extends IntroAbstractRepo {
     final isSuccessful = await vcp.applyDelegatedCredentials(coreId, signature);
     if (isSuccessful) {
       await vcp.cleanUp();
-      cryptoAccountRepository.isLoggedIn.value = true;
+      cryptoAccountRepository.isLoggedIn.add(true);
     }
     debugPrint('Delegated Credentials Successfully added');
     return isSuccessful;
