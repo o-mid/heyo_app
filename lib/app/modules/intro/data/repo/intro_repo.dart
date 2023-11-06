@@ -8,12 +8,12 @@ import 'package:tuple/tuple.dart';
 class IntroRepo extends IntroAbstractRepo {
   VerificationCorePassAbstractProvider vcp;
   StoreAbstractProvider storeProvider;
-  AccountRepository cryptoAccountRepository;
+  AccountRepository accountRepository;
 
   IntroRepo(
       {required this.vcp,
       required this.storeProvider,
-      required this.cryptoAccountRepository});
+      required this.accountRepository});
 
   @override
   Future<Tuple3<bool, String, String>> retrieveCoreIdFromCorePass() async {

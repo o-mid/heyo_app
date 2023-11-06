@@ -19,7 +19,7 @@ class IntroBinding extends Bindings {
             p2pNodeController: Get.find(),
           ),
           storeProvider: StoreProvider(),
-          cryptoAccountRepository: Get.find(),
+          accountRepository: Get.find(),
         ),
         p2pState: Get.find(),
         appAccountRepository: Get.find(),
