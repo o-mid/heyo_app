@@ -94,7 +94,11 @@ class P2PNode {
       networkId: networkId.toString(),
     );
 
-    await _addCoreId();
+    final coreIdSetResult = await _addCoreId();
+
+    /// if we cannot set core id means go_com is not functional
+    /// no need to continue
+    if (!coreIdSetResult) return;
 
     if (await libP2PStorageProvider.getSignature() != null) {
       final result = await applyDelegatedAuth();
