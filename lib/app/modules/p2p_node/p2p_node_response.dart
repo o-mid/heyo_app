@@ -77,10 +77,6 @@ class P2PNodeResponseStream {
       p2pState.address.value = (event.body!["addrs"] as List<dynamic>)
           .map((e) => e.toString())
           .toList();
-    } else if (event.name == P2PReqResNodeNames.addDelegatedCoreID) {
-      p2pState.delegationSuccessful.value = event.error == null;
-      // calling refresh to force putting new value
-      p2pState.delegationSuccessful.refresh();
     }
     if (event.name == P2PReqResNodeNames.peerID && event.error == null) {
       p2pState.peerId.value = event.body!["peerID"].toString();
