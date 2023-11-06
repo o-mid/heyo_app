@@ -84,7 +84,7 @@ class VerificationCorePassProvider
   }
 
   @override
-  Future<bool> applyDelegatedCredentials(
+  Future<bool> setCredentials(
     String coreId,
     String signature,
   ) async {

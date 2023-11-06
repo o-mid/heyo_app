@@ -122,7 +122,6 @@ class IntroController extends GetxController with WidgetsBindingObserver {
       corePassData.item3,
     );
     if (isSuccessfulAndValid) {
-      await appAccountRepository.saveAccountType(AccountTypes.libP2P);
       await Get.offAllNamed(Routes.VERIFIED_USER);
     } else {
       Get.snackbar('Error : ', 'Signature is invalid');
