@@ -32,10 +32,9 @@ class IntroRepo extends IntroAbstractRepo {
   @override
   Future<bool> applyDelegatedCredentials(
       String coreId, String signature) async {
-    final isSuccessful = await vcp.applyDelegatedCredentials(coreId, signature);
+    final isSuccessful = await vcp.applyD elegatedCredentials(coreId, signature);
     if (isSuccessful) {
       await vcp.cleanUp();
-      cryptoAccountRepository.isLoggedIn.add(true);
     }
     debugPrint('Delegated Credentials Successfully added');
     return isSuccessful;

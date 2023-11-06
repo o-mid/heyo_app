@@ -40,7 +40,9 @@ class AppAccountRepository extends AccountRepository {
     switch (type) {
       case AccountTypes.libP2P:
         final signature = await libP2PStorageProvider.getSignature();
-        return signature != null && signature.isNotEmpty;
+        final isLogin = signature != null && signature.isNotEmpty;
+        isLoggedIn.add(isLogin);
+        return isLogin;
       case null:
         return false;
     }
