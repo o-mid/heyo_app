@@ -177,7 +177,7 @@ class GlobalBindings extends Bindings {
       )
 
       // messaging related dependencies
-
+      ..put(WifiDirectWrapper(), permanent: true)
       ..put(
         ChatsController(
           chatHistoryRepo: ChatHistoryLocalRepo(
@@ -220,7 +220,7 @@ class GlobalBindings extends Bindings {
               webRTCConnectionManager: WebRTCConnectionManager(),
             ),
           ),
-          wifiDirectWrapper: WifiDirectWrapper(),
+          wifiDirectWrapper: Get.find<WifiDirectWrapper>(),
           notificationsController: NotificationsController(appNotifications: appNotifications),
           connectionType: ConnectionType
               .RTC, // You might want to determine this dynamically based on your app logic

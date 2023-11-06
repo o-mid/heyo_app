@@ -9,6 +9,7 @@ import 'package:heyo/app/modules/notifications/controllers/notifications_control
 import 'package:heyo/app/modules/p2p_node/data/account/account_repo.dart';
 import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
+import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
 
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
 import '../../messaging/unified_messaging_controller.dart';
@@ -77,7 +78,7 @@ class MessagesBinding extends Bindings {
             ),
           ),
           multipleConnectionHandler: Get.find<MultipleConnectionHandler>(),
-          wifiDirectWrapper: GlobalBindings.wifiDirectWrapper,
+          wifiDirectWrapper: Get.find<WifiDirectWrapper>(),
           notificationsController:
               NotificationsController(appNotifications: GlobalBindings.appNotifications),
           connectionType: connectionType,
