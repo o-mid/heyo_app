@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/stream.extension.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
 class AccountController extends GetxController {
@@ -15,9 +16,15 @@ class AccountController extends GetxController {
     coreId.value = (await _accountInfoRepo.getUserAddress()) ?? "";
   }
 
-  Future<void> logout() async {
-    await _accountInfoRepo.logout();
-    await Get.offAllNamed(Routes.INTRO);
+  void logout() {
+    _accountInfoRepo.logout().then((value) async {
+      final loggedOut = await _accountInfoRepo
+          .onAccountStateChanged()
+          .waitForResult(condition: (bool value) => value == true);
+      if(loggedOut){
+        await Get.offAllNamed(Routes.INTRO);
+      }
+    });
   }
 
   @override
