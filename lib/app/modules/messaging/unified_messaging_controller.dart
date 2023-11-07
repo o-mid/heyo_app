@@ -7,6 +7,7 @@ import 'package:heyo/app/modules/messages/data/repo/messages_repo.dart';
 import 'package:heyo/app/modules/messaging/connection/connection_data_handler.dart';
 import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
 import 'package:heyo/app/modules/messaging/connection/connection_repo_factory.dart';
+import 'package:heyo/app/modules/messaging/connection/rtc_connection_repo_impl.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 import 'package:heyo/app/modules/notifications/controllers/notifications_controller.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
@@ -17,7 +18,6 @@ import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 enum ConnectionType { RTC, WiFiDirect }
 
 class UnifiedConnectionController {
-  final ConnectionType connectionType;
 
   final AccountInfo accountInfo;
   final MessagesRepo messagesRepo;
@@ -25,7 +25,7 @@ class UnifiedConnectionController {
   final NotificationsController notificationsController;
   final ContactRepository contactRepository;
 
-  final MultipleConnectionHandler? multipleConnectionHandler;
+  final MultipleConnectionHandler multipleConnectionHandler;
   String currentRemoteId = "";
 
   final WifiDirectWrapper? wifiDirectWrapper;
@@ -33,38 +33,28 @@ class UnifiedConnectionController {
 
   String? remoteId;
 
-  late ConnectionRepo connectionRepo;
-  late DataHandler dataHandler;
+  ConnectionRepo connectionRepo;
+  DataHandler dataHandler;
 
   UnifiedConnectionController({
-    required this.connectionType,
     required this.accountInfo,
     required this.messagesRepo,
     required this.chatHistoryRepo,
     required this.notificationsController,
     required this.contactRepository,
-    this.multipleConnectionHandler,
+    required this.multipleConnectionHandler,
+    required this.dataHandler,
+    required this.connectionRepo,
     this.wifiDirectWrapper,
     //... other dependencies
   }) {
-    if (connectionType == ConnectionType.RTC && multipleConnectionHandler == null) {
-      throw ArgumentError("For RTC connection, multipleConnectionHandler is required");
-    }
-    if (connectionType == ConnectionType.WiFiDirect && wifiDirectWrapper == null) {
-      throw ArgumentError("For WiFiDirect connection, wifiDirectWrapper is required");
-    }
+
     _initializeBasedOnConnectionType();
   }
 
   Future<void> _initializeBasedOnConnectionType() async {
-    dataHandler = DataHandler(
-      messagesRepo: messagesRepo,
-      chatHistoryRepo: chatHistoryRepo,
-      notificationsController: notificationsController,
-      contactRepository: contactRepository,
-    );
 
-    connectionRepo = ConnectionRepoFactory.create(connectionType, dataHandler);
+    //ConnectionRepoFactory.create(connectionType, dataHandler);
     await connectionRepo.initConnection(
       multipleConnectionHandler: multipleConnectionHandler,
       wifiDirectWrapper: wifiDirectWrapper,
@@ -91,13 +81,13 @@ class UnifiedConnectionController {
   }
 
   void onClose() {
-    if (connectionType == ConnectionType.RTC) {
+  /*  if (connectionType == ConnectionType.RTC) {
       // Cleanup for RTC, if any
     } else {
       // Cleanup for WiFi Direct
       if (remoteId != null) _heyoWifiDirect?.disconnectPeer(remoteId!);
       remoteId = null;
-    }
+    }*/
   }
 
   Future<void> setConnectivityOnline() async {
