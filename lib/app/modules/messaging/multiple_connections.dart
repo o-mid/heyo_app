@@ -26,7 +26,7 @@ class MultipleConnectionHandler {
   }
 
   Future<RTCSession> getConnection(String remoteCoreId) async {
-    print('getConnection : $remoteCoreId');
+    print("getConnection : $remoteCoreId");
     //TODO debug remove in production
     connections.forEach((key, value) {
       print(

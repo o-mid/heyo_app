@@ -25,58 +25,17 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
   BinaryFileReceivingState? currentBinaryState;
   final JsonDecoder _decoder = const JsonDecoder();
   late MultipleConnectionHandler multiConnectionHandler;
-  // ... fields specific to RTC
-  @override
-  Future<void> initMessagingConnection(
-      {required String remoteId, MultipleConnectionHandler? multipleConnectionHandler}) async {
-    this.multiConnectionHandler = multipleConnectionHandler!;
-    final rtcSession = await multipleConnectionHandler.getConnection(remoteId);
-    currentRemoteId = rtcSession.remotePeer.remoteCoreId;
-    print("initMessagingConnection RTCSession Status: ${rtcSession.rtcSessionStatus}");
-    await _observeMessagingStatus(rtcSession);
-  }
-
-  @override
-  Future<void> sendTextMessage({required String text, required String remoteCoreId}) async {
-    if (multiConnectionHandler == null) {
-      throw StateError('multiConnectionHandler has not been initialized');
-    }
-    RTCSession rtcSession = await multiConnectionHandler!.getConnection(remoteCoreId);
-
-    await dataHandler.createUserChatModel(sessioncid: remoteCoreId);
-
-    print(
-      "sendMessage  : ${rtcSession.connectionId} ${(rtcSession).dc} ${rtcSession.rtcSessionStatus}",
-    );
-    (rtcSession).dc?.send(RTCDataChannelMessage(text));
-    await _observeMessagingStatus(rtcSession);
-  }
-
-  @override
-  Future<void> sendBinaryMessage({required Uint8List binary, required String remoteCoreId}) async {
-    if (multiConnectionHandler == null) {
-      throw StateError('multiConnectionHandler has not been initialized');
-    }
-    RTCSession rtcSession = await multiConnectionHandler.getConnection(remoteCoreId);
-    print(
-      "sendTextMessage : ${(rtcSession.isDataChannelConnectionAvailable)} : ${rtcSession.dc?.state} : ${rtcSession.rtcSessionStatus}",
-    );
-    await dataHandler.createUserChatModel(sessioncid: remoteCoreId);
-
-    await rtcSession.dc?.send(RTCDataChannelMessage.fromBinary(binary));
-  }
-
   @override
   Future<void> initConnection({
     MultipleConnectionHandler? multipleConnectionHandler,
     WifiDirectWrapper? wifiDirectWrapper,
   }) async {
-    if (multipleConnectionHandler != null) {
-      this.multiConnectionHandler = multipleConnectionHandler;
-    }
+    multiConnectionHandler = multipleConnectionHandler!;
+    await listenToRTCSession();
+  }
 
-    multipleConnectionHandler?.onNewRTCSessionCreated = (rtcSession) async {
-      multiConnectionHandler = multipleConnectionHandler;
+  Future<void> listenToRTCSession() async {
+    multiConnectionHandler.onNewRTCSessionCreated = (rtcSession) async {
       print(
         "onNewRTCSessionCreated : ${rtcSession.connectionId} : ${rtcSession.remotePeer.remoteCoreId} : ${currentRemoteId}",
       );
@@ -104,6 +63,47 @@ class RTCConnectionRepoImpl extends ConnectionRepo {
         };
       };
     };
+  }
+
+  @override
+  Future<void> initMessagingConnection(
+      {required String remoteId, MultipleConnectionHandler? multipleConnectionHandler}) async {
+    // multiConnectionHandler = multipleConnectionHandler!;
+    final rtcSession = await multiConnectionHandler.getConnection(remoteId);
+    currentRemoteId = rtcSession.remotePeer.remoteCoreId;
+    print("initMessagingConnection RTCSession Status: ${rtcSession.rtcSessionStatus}");
+
+    await _observeMessagingStatus(rtcSession);
+  }
+
+  @override
+  Future<void> sendTextMessage({required String text, required String remoteCoreId}) async {
+    if (multiConnectionHandler == null) {
+      throw StateError('multiConnectionHandler has not been initialized');
+    }
+    RTCSession rtcSession = await multiConnectionHandler!.getConnection(remoteCoreId);
+
+    await dataHandler.createUserChatModel(sessioncid: remoteCoreId);
+
+    print(
+      "sendMessage  : ${rtcSession.connectionId} ${(rtcSession).dc} ${rtcSession.rtcSessionStatus}",
+    );
+    await (rtcSession).dc?.send(RTCDataChannelMessage(text));
+    print("text sent");
+  }
+
+  @override
+  Future<void> sendBinaryMessage({required Uint8List binary, required String remoteCoreId}) async {
+    if (multiConnectionHandler == null) {
+      throw StateError('multiConnectionHandler has not been initialized');
+    }
+    RTCSession rtcSession = await multiConnectionHandler.getConnection(remoteCoreId);
+    print(
+      "sendTextMessage : ${(rtcSession.isDataChannelConnectionAvailable)} : ${rtcSession.dc?.state} : ${rtcSession.rtcSessionStatus}",
+    );
+    await dataHandler.createUserChatModel(sessioncid: remoteCoreId);
+
+    await rtcSession.dc?.send(RTCDataChannelMessage.fromBinary(binary));
   }
 
   Future<void> _observeMessagingStatus(RTCSession rtcSession) async {
