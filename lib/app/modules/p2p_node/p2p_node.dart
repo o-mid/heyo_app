@@ -32,7 +32,8 @@ class P2PNode {
     required this.web3client,
   });
 
-  void _setUpP2PNode(void Function(P2PReqResNodeModel model) onNewRequestReceived) {
+  void _setUpP2PNode(
+      void Function(P2PReqResNodeModel model) onNewRequestReceived) {
     // setup the p2p ResponseStream and RequestStream and listen to them
     _listenToStreams(onNewRequestReceived);
 
@@ -106,14 +107,15 @@ class P2PNode {
     });
   }
 
-  void _listenToStreams(void Function(P2PReqResNodeModel model) onNewRequestReceived) {
+  void _listenToStreams(
+      void Function(P2PReqResNodeModel model) onNewRequestReceived) {
     p2pNodeResponseStream.setUp();
     p2pNodeRequestStream.setUp(onNewRequestReceived);
   }
 
 // stop P2P node Prosses by reseting the streams and the state and stoping the node
 // by using FlutterP2pCommunicator.stopNode
-  void stop() {
+  Future<void> stop() async {
     _stopP2PNode();
     p2pState.reset();
     p2pNodeRequestStream.reset();
@@ -153,7 +155,7 @@ class P2PNode {
     return p2pState.trackRequest(id);
   }
 
-  void restart(void Function(P2PReqResNodeModel model) onNewRequestReceived) {
+  void restart(void Function(P2PReqResNodeModel model) onNewRequestReceived) async{
     _setUpP2PNode(onNewRequestReceived);
   }
 }
