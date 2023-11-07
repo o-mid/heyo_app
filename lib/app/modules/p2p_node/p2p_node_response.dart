@@ -8,15 +8,21 @@ import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
 import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 
 class P2PNodeResponseStream {
   P2PNodeResponseStream(
-      {required this.p2pState, required this.libP2PStorageProvider});
+      {required this.p2pState,
+      required this.libP2PStorageProvider,
+      required this.accountRepository});
 
   StreamSubscription<P2PReqResNodeModel?>? _nodeResponseSubscription;
   bool advertiseRequested = false;
   final P2PState p2pState;
   LibP2PStorageProvider libP2PStorageProvider;
+  /// temporarily added here since there is nothing to determine this class is in
+  /// data or domain layer
+  AccountRepository accountRepository;
 
   void setUp() {
     _setUpResponseStream();
@@ -73,6 +79,11 @@ class P2PNodeResponseStream {
         event.error == null) {
       // now you can start talking or communicating to others
       p2pState.advertise.value = true;
+    } else if (event.name == P2PReqResNodeNames.addDelegatedCoreID &&
+        event.error != null &&
+        event.error!.contains('invalid')) {
+      await accountRepository.logout();
+      await Get.offAllNamed(AppPages.INITIAL);
     } else if (event.name == P2PReqResNodeNames.addrs && event.error == null) {
       p2pState.address.value = (event.body!["addrs"] as List<dynamic>)
           .map((e) => e.toString())

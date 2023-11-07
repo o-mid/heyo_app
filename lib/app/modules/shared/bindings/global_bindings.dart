@@ -125,6 +125,7 @@ class GlobalBindings extends Bindings {
         P2PNodeResponseStream(
           p2pState: Get.find(),
           libP2PStorageProvider: Get.find(),
+          accountRepository: Get.find(),
         ),
         permanent: true,
       )

@@ -101,13 +101,7 @@ class P2PNode {
     if (!coreIdSetResult) return;
 
     if (await libP2PStorageProvider.getSignature() != null) {
-      final result = await applyDelegatedAuth();
-      if (!result) {
-        await libP2PStorageProvider.removeSignature();
-        await libP2PStorageProvider.removeCorePassCoreId();
-        await Get.offAllNamed(AppPages.INITIAL);
-        return;
-      }
+      await applyDelegatedAuth();
     }
 
     await Future.forEach(P2P_Nodes, (P2PAddrModel element) async {
