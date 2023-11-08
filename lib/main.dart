@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -12,7 +12,6 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'app/modules/shared/utils/constants/strings_constant.dart';
-import 'firebase_options.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +25,7 @@ void main() async {
   // only activate sentry in release mode
   if (kReleaseMode) {
     await SentryFlutter.init(
-          (options) {
+      (options) {
         options
           ..dsn = Platform.isAndroid ? SENTRY_ANDROID_DNS : SENTRY_IOS_DNS
           ..sendDefaultPii = true
@@ -40,6 +39,7 @@ void main() async {
 }
 
 void initApp() {
+
   runApp(
     ScreenUtilInit(
       //  Width and height from figma design
