@@ -17,6 +17,10 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   // only activate sentry in release mode
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   if (kReleaseMode) {
     await SentryFlutter.init(
       (options) {
@@ -31,6 +35,8 @@ void main() async {
     initApp();
   }
 }
+
+
 
 void initApp() {
   runApp(
