@@ -147,6 +147,11 @@ flutter:
   assets:
     - assets/svg/
     - assets/png/
+    - assets/locales/
+    - assets/contracts/
+    - assets/animation/
+    - assets/utils/
+
 
   fonts:
     - family: Inter
