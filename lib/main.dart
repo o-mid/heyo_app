@@ -15,11 +15,12 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  // only activate sentry in release mode
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // only activate sentry in release mode
   if (kReleaseMode) {
     await SentryFlutter.init(
       (options) {
