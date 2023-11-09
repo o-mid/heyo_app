@@ -1,13 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'app/modules/shared/utils/constants/strings_constant.dart';
-import 'firebase_options.dart';
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
