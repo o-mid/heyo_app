@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -15,13 +16,20 @@ import 'app/modules/shared/utils/constants/strings_constant.dart';
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  await SentryFlutter.init(
-    (options) {
-      options.dsn = Platform.isAndroid ? SENTRY_ANDROID_DNS : SENTRY_IOS_DNS;
-    },
-    // Init your App.
-    appRunner: () => initApp(),
-  );
+  // only activate sentry in release mode
+  if (kReleaseMode) {
+    await SentryFlutter.init(
+      (options) {
+        options
+          ..dsn = Platform.isAndroid ? SENTRY_ANDROID_DNS : SENTRY_IOS_DNS
+          ..sendDefaultPii = true
+          ..tracesSampleRate = 0;
+      },
+      appRunner: () => initApp(),
+    );
+  } else {
+    initApp();
+  }
 }
 
 void initApp() {
