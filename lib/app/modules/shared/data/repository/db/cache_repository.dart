@@ -1,5 +1,5 @@
 import 'package:heyo/app/modules/shared/data/repository/db/cache_contractor.dart';
-import 'package:heyo/app/modules/shared/providers/database/dao/user_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provider.dart';
 
 import '../../../../new_chat/data/models/user_model.dart';
 
