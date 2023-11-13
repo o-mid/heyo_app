@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import 'package:heyo/app/modules/chats/widgets/chat_widget.dart';
 import 'package:heyo/app/modules/chats/widgets/delete_all_chats_bottom_sheet.dart';
 import 'package:heyo/app/modules/chats/widgets/delete_chat_dialog.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
@@ -38,6 +39,7 @@ class ChatsController extends GetxController {
   void init() async {
     chats.clear();
     chats.value = await chatHistoryRepo.getAllChats();
+    chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
     await listenToChatsStream();
 
@@ -55,28 +57,63 @@ class ChatsController extends GetxController {
     super.onClose();
   }
 
+  // listenToChatsStream() async {
+  //   Stream<List<ChatModel>> chatsStream = await chatHistoryRepo.getChatsStream();
+  //   _chatsStreamSubscription = chatsStream.listen((newChats) {
+  //     List<ChatModel> chatModel = [];
+
+  //     // newChats.forEach((element) async {
+  //     //   UserModel? userModel = await contactRepository.getContactById(element.id);
+  //     //   var isContact = (userModel != null);
+  //     //   if (isContact) {
+  //     //     chatModel.add(element.copyWith(name: userModel.name));
+  //     //   } else {
+  //     //     chatModel.add(element.copyWith(name: element.id.shortenCoreId));
+  //     //   }
+  //     // });
+
+  //     //chats.value = chatModel;
+
+  //     chats.clear();
+  //     chats.value = newChats;
+  //     chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+  //     chats.refresh();
+  //   });
+  // }
   listenToChatsStream() async {
-    Stream<List<ChatModel>> chatsStream =
-        await chatHistoryRepo.getChatsStream();
+    Stream<List<ChatModel>> chatsStream = await chatHistoryRepo.getChatsStream();
     _chatsStreamSubscription = chatsStream.listen((newChats) {
-      List<ChatModel> chatModel = [];
+      List<ChatModel> removed = [];
+      List<ChatModel> added = [];
 
-      newChats.forEach((element) async {
-        UserModel? userModel =
-            await contactRepository.getContactById(element.id);
-        var isContact = (userModel != null);
-        if (isContact) {
-          chatModel.add(element.copyWith(name: userModel.name));
+      for (var chat in newChats) {
+        // Find and animate added chats
+        if (!chats.any((element) => element.id == chat.id)) {
+          added.add(chat);
         } else {
-          chatModel.add(element.copyWith(name: element.id.shortenCoreId));
+          // Update existing chats
+          int index = chats.indexWhere((element) => element.id == chat.id);
+          chats[index] = chat;
         }
-      });
+      }
 
-      chats.value = chatModel;
-      chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-      chats.refresh();
+      // Find and animate removed chats
+      for (int i = chats.length - 1; i >= 0; i--) {
+        final chat = chats[i];
+        if (!newChats.any((newChat) => newChat.id == chat.id)) {
+          removed.add(chat);
+        }
+      }
+      if (onChatsUpdated != null) {
+        onChatsUpdated!(removed, added);
+      }
     });
+
+    chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    chats.refresh();
   }
+
+  void Function(List<ChatModel> removed, List<ChatModel> added)? onChatsUpdated;
 
   Future deleteChat(ChatModel chat) async {
     await chatHistoryRepo.deleteChat(chat.id);

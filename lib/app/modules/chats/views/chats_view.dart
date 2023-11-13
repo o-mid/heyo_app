@@ -17,6 +17,26 @@ class ChatsView extends GetView<ChatsController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.onChatsUpdated = (removed, added) {
+      for (var chat in added) {
+        final index = controller.chats.length;
+
+        controller.animatedListKey.currentState?.insertItem(index);
+        controller.chats.insert(index, chat);
+      }
+      for (var chat in removed) {
+        final index = controller.chats.indexOf(chat);
+
+        controller.animatedListKey.currentState?.removeItem(
+          index,
+          (context, animation) => _buildRemovedItem(chat, context, animation),
+          duration: const Duration(milliseconds: 300),
+        );
+        controller.chats.removeAt(index);
+      }
+
+      controller.chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    };
     return Scaffold(
       backgroundColor: COLORS.kAppBackground,
       appBar: AppBarWidget(
@@ -40,25 +60,37 @@ class ChatsView extends GetView<ChatsController> {
           ConnectionStatusWidget(),
           Expanded(
             child: Obx(
-              () => _buildChats(controller.chats),
+              () => controller.chats.isEmpty
+                  ? const EmptyChatsWidget()
+                  : SlidableAutoCloseBehavior(
+                      child: AnimatedList(
+                        key: controller.animatedListKey,
+                        initialItemCount: controller.chats.length,
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        itemBuilder: (context, index, animation) {
+                          return SlideTransition(
+                            position: animation.drive(
+                              Tween(begin: Offset(1, 0), end: Offset(0, 0))
+                                  .chain(CurveTween(curve: Curves.easeInOut)),
+                            ),
+                            child: ChatWidget(chat: controller.chats[index]),
+                          );
+                        },
+                      ),
+                    ),
             ),
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildChats(List<ChatModel> chats) {
-    return chats.isEmpty
-        ? const EmptyChatsWidget()
-        : SlidableAutoCloseBehavior(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              itemCount: chats.length,
-              itemBuilder: (context, index) {
-                return ChatWidget(chat: chats[index]);
-              },
-            ),
-          );
-  }
+Widget _buildRemovedItem(ChatModel chat, BuildContext context, Animation<double> animation) {
+  return SizeTransition(
+    sizeFactor: animation,
+    child: ChatWidget(
+      chat: chat,
+    ),
+  );
 }
