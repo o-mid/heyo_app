@@ -19,6 +19,10 @@ import 'package:heyo/app/modules/messages/connection/data/wifi_direct_messaging_
 import 'package:heyo/app/modules/messages/connection/rtc_connection_repo.dart';
 import 'package:heyo/app/modules/messages/connection/web_rtc_connection_manager.dart';
 import 'package:heyo/app/modules/notifications/controllers/app_notifications.dart';
+import 'package:heyo/app/modules/shared/data/providers/network/dio/dio_network_request.dart';
+import 'package:heyo/app/modules/shared/data/providers/network/netowrk_request_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/notifications/app_notification_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/notifications/notification_provider.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/app_account_repository.dart';
 import 'package:heyo/app/modules/shared/providers/account/creation/account_creation.dart';
 import 'package:heyo/app/modules/shared/providers/account/creation/libp2p_account_creation.dart';
@@ -37,9 +41,9 @@ import 'package:heyo/app/modules/p2p_node/p2p_node_request.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
-import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
-import 'package:heyo/app/modules/shared/providers/database/dao/user_provider.dart';
-import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
+import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/secure_storage/secure_storage_provider.dart';
 import 'package:core_web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
@@ -83,6 +87,13 @@ class GlobalBindings extends Bindings {
       ..put<LibP2PStorageProvider>(
         LibP2PStorageProvider(
           localProvider: secureStorageProvider,
+        ),
+      )
+      ..put<NetworkRequest>(DioNetworkRequest(), permanent: true)
+      ..put<NotificationProvider>(
+        AppNotificationProvider(
+          networkRequest: Get.find(),
+          libP2PStorageProvider: Get.find(),
         ),
       )
       ..put<AccountCreation>(LibP2PAccountCreation(
