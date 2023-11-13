@@ -1,26 +1,22 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/locales.g.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
-
-import 'app/modules/shared/utils/constants/strings_constant.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  // only activate sentry in release mode
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // only activate sentry in release mode
   if (kReleaseMode) {
     await SentryFlutter.init(
       (options) {
@@ -35,8 +31,6 @@ void main() async {
     initApp();
   }
 }
-
-
 
 void initApp() {
   runApp(
