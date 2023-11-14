@@ -5,7 +5,7 @@ abstract class VerificationCorePassAbstractProvider {
 
   Future<Tuple2<String, String>> listenForResponse();
 
-  Future<bool> applyDelegatedCredentials(String coreId, String signature);
+  Future<bool> setCredentials(String coreId, String signature);
 
   Future<void> cleanUp();
 }

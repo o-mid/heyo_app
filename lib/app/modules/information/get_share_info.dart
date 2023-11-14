@@ -1,17 +1,17 @@
 import 'dart:convert';
 
-import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
 
 class QRInfo {
-  final AccountInfo accountInfo;
+  final AccountRepository accountInfoRepo;
   final P2PState p2pState;
 
-  QRInfo({required this.p2pState, required this.accountInfo});
+  QRInfo({required this.p2pState, required this.accountInfoRepo});
 
   Future<String> getSharableQr() async {
-    var coreId = await accountInfo.getCorePassCoreId();
+    var coreId = await accountInfoRepo.getUserAddress();
     if (coreId == null) throw 'core Id is null!!';
 
     return coreId +
@@ -22,6 +22,6 @@ class QRInfo {
   }
 
   Future<String?> getCoreId() {
-    return accountInfo.getCorePassCoreId();
+    return accountInfoRepo.getUserAddress();
   }
 }

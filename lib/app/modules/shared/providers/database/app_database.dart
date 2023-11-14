@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/utils/encrypt_codec.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -10,9 +9,7 @@ import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
 class AppDatabaseProvider {
-  final AccountInfo accountInfo;
-
-  AppDatabaseProvider({required this.accountInfo});
+  AppDatabaseProvider();
 
   //for opening database we use completer which uses for transforming sync code into async code and stores a future in itself
   Completer<Database>? _dbOpenCompleter;
@@ -40,7 +37,7 @@ class AppDatabaseProvider {
     // Path with the form: /platform-specific-directory/demo.db
 
     //TODO it should be fixed on production but at this step as we generate a random core id,it produces bugs
-  /*  var password = await accountInfo.getPrivateKey();
+    /*  var password = await accountInfo.getPrivateKey();
     while (password == null) {
       Future.delayed(const Duration(milliseconds: 500));
       password = await accountInfo.getPrivateKey();
@@ -50,7 +47,7 @@ class AppDatabaseProvider {
     final database = await databaseFactoryIo.openDatabase(
       dbPath,
     );
-   /* final database = await databaseFactoryIo.openDatabase(
+    /* final database = await databaseFactoryIo.openDatabase(
       dbPath,
       codec: getEncryptSembastCodec(password: password),
     );*/

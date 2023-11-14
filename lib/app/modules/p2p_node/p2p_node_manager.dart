@@ -40,8 +40,8 @@ class P2PNodeController {
     debugPrint('p2p startNode');
     p2pNode.restart(onNewRequestReceived!);
   }
-  void stop(){
-    p2pNode.stop();
+  Future<void> stop() async{
+    return p2pNode.stop();
   }
   void restart(){
     p2pNode.restart(onNewRequestReceived!);
