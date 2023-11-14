@@ -22,6 +22,7 @@ import '../controllers/messaging_connection_controller.dart';
 import '../unified_messaging_controller.dart';
 import '../utils/binary_file_receiving_state.dart';
 
+/*
 class HandleReceivedBinaryData {
   final MessagesAbstractRepo messagesRepo;
   final UnifiedConnectionController messagingConnection = Get.find<UnifiedConnectionController>();
@@ -169,3 +170,4 @@ class HandleReceivedBinaryData {
     print('RECEIVER: Message saved path: ${newfile.path}');
   }
 }
+*/

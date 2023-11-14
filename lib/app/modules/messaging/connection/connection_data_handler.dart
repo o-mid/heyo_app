@@ -67,13 +67,13 @@ class DataHandler {
     }
   }
 
-  Future<void> handleReceivedBinaryData({
+ /* Future<void> handleReceivedBinaryData({
     required String remoteCoreId,
     required BinaryFileReceivingState currentBinaryState,
   }) async {
     await HandleReceivedBinaryData(messagesRepo: messagesRepo, chatId: remoteCoreId)
         .execute(state: currentBinaryState, remoteCoreId: remoteCoreId);
-  }
+  }*/
 
   Future<Tuple3<String, ConfirmMessageStatus, String>> saveReceivedMessage({
     required Map<String, dynamic> receivedMessageJson,
@@ -279,9 +279,9 @@ class DataHandler {
       messageId: messageId,
       status: status,
     ).toJson();
-    final dataChannelMessage = DataChannelMessageModel(
+    final dataChannelMessage = WrappedMessageModel(
       message: confirmMessageJson,
-      dataChannelMessagetype: DataChannelMessageType.confirm,
+      dataChannelMessagetype: MessageType.confirm,
     );
     final dataChannelMessageJson = dataChannelMessage.toJson();
 

@@ -8,12 +8,13 @@ import '../unified_messaging_controller.dart';
 import '../utils/binary_file_sending_state.dart';
 import '../utils/binary_single_completer.dart';
 
+/*
 class SendBinaryData {
   final BinaryFileSendingState sendingState;
   int maximumMessageSize = 100000;
   SingleCompleter<bool>? messageTimeoutCompleter;
   SendBinaryData({required this.sendingState, required this.messagingConnection});
-  final UnifiedConnectionController messagingConnection;
+  /final UnifiedConnectionController messagingConnection;
 
   execute(String remoteCoreId) async {
     print('SENDER: Sending first chunk...');
@@ -86,3 +87,4 @@ class SendBinaryData {
     }
   }
 }
+*/

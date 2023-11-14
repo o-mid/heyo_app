@@ -9,7 +9,7 @@ class WifiDirectConnectBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<WifiDirectConnectController>(
       () => WifiDirectConnectController(
-        wifiDirectConnectionController: Get.find<UnifiedConnectionController>(),
+        /*wifiDirectConnectionController: Get.find<UnifiedConnectionController>(),*/
       ),
     );
   }

@@ -179,11 +179,8 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
         final userChatModel = await chatHistoryRepo.getChat(payload.chatId);
         if (userChatModel != null) {
           // Get.find<MessagesController>().initMessagingConnection();
-          await SendMessageUseCase(
-            messagesRepo: messagesRepo,
-            messagingConnection: Get.find<UnifiedConnectionController>(),
-            processor: message_processor.MessageProcessor(),
-          ).execute(
+          //TODO farzam reply
+        /*  await sendMessageUseCase.execute(
               sendMessageType: SendMessageType.text(
                 text: message,
                 replyTo: ReplyToModel(
@@ -193,7 +190,7 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
                 ),
                 chatId: payload.chatId,
               ),
-              remoteCoreId: userChatModel.id);
+              remoteCoreId: userChatModel.id);*/
         }
       }
     } else if (receivedAction.buttonKeyPressed == MessagesActionButtons.read.name) {
@@ -206,8 +203,9 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
 
         if (userChatModel != null) {
           // sends the confirm message to the remote side
-          await Get.find<UnifiedConnectionController>().toggleMessageReadConfirm(
-              messageId: payload.messageId, remoteCoreId: userChatModel.id);
+          //todo farzam toggle read
+          /*await Get.find<UnifiedConnectionController>().toggleMessageReadConfirm(
+              messageId: payload.messageId, remoteCoreId: userChatModel.id);*/
           // mark the message as read in the local database
           await messagesRepo.markMessagesAsRead(
               lastReadmessageId: payload.messageId, chatId: payload.chatId);

@@ -2,39 +2,39 @@ import 'package:tuple/tuple.dart';
 import '../../messages/data/message_processor.dart';
 import '../models/data_channel_message_model.dart';
 
-Tuple3<DataChannelMessageModel?, bool, String> channelmessageFromType(
+Tuple3<WrappedMessageModel?, bool, String> channelmessageFromType(
     {required ChannelMessageType channelMessageType}) {
   bool isDataBinary = false;
   String messageLocalPath = '';
-  DataChannelMessageModel? msg;
+  WrappedMessageModel? msg;
   switch (channelMessageType.runtimeType) {
     case SendMessageType:
-      msg = DataChannelMessageModel(
+      msg = WrappedMessageModel(
         message: (channelMessageType as SendMessageType).message,
-        dataChannelMessagetype: DataChannelMessageType.message,
+        dataChannelMessagetype: MessageType.message,
       );
       isDataBinary = (channelMessageType).isDataBinary;
       messageLocalPath = (channelMessageType).messageLocalPath;
       break;
 
     case DeleteMessageType:
-      msg = DataChannelMessageModel(
+      msg = WrappedMessageModel(
         message: (channelMessageType as DeleteMessageType).message,
-        dataChannelMessagetype: DataChannelMessageType.delete,
+        dataChannelMessagetype: MessageType.delete,
       );
 
       break;
     case UpdateMessageType:
-      msg = DataChannelMessageModel(
-        message: (channelMessageType as DataChannelMessageModel).message,
-        dataChannelMessagetype: DataChannelMessageType.update,
+      msg = WrappedMessageModel(
+        message: (channelMessageType as WrappedMessageModel).message,
+        dataChannelMessagetype: MessageType.update,
       );
       break;
 
     case ConfirmMessageType:
-      msg = DataChannelMessageModel(
+      msg = WrappedMessageModel(
         message: (channelMessageType as ConfirmMessageType).message,
-        dataChannelMessagetype: DataChannelMessageType.confirm,
+        dataChannelMessagetype: MessageType.confirm,
       );
   }
 

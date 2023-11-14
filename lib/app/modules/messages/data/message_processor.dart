@@ -9,10 +9,10 @@ class MessageProcessor {
     required ChannelMessageType channelMessageType,
     required String remoteCoreId,
   }) async {
-    Tuple3<DataChannelMessageModel?, bool, String> channelMessageObject =
+    Tuple3<WrappedMessageModel?, bool, String> channelMessageObject =
         channelmessageFromType(channelMessageType: channelMessageType);
 
-    DataChannelMessageModel? msg = channelMessageObject.item1;
+    WrappedMessageModel? msg = channelMessageObject.item1;
     bool isDataBinary = channelMessageObject.item2;
     String messageLocalPath = channelMessageObject.item3;
 

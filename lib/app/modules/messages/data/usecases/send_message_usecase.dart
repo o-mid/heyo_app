@@ -5,6 +5,8 @@ import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.da
 import 'package:heyo/app/modules/messages/data/models/metadatas/image_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
+import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
+import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../../messaging/unified_messaging_controller.dart';
@@ -19,18 +21,22 @@ import '../repo/messages_abstract_repo.dart';
 
 class SendMessageUseCase {
   SendMessageUseCase(
-      {required this.messagesRepo, required this.messagingConnection, required this.processor});
+      {required this.messagesRepo,
+      required this.connectionRepository,
+      required this.processor});
+
   final MessagesAbstractRepo messagesRepo;
-  final UnifiedConnectionController messagingConnection;
   final MessageProcessor processor;
+  final ConnectionRepository connectionRepository;
 
   execute(
-      {required SendMessageType sendMessageType,
+      {required MessageConnectionType messageConnectionType,
+      required SendMessageType sendMessageType,
       required String remoteCoreId,
       bool isUpdate = false,
       MessageModel? messageModel = null}) async {
-    Tuple3<MessageModel?, bool, String> messageObject =
-        messageFromType(messageType: sendMessageType, messageModel: messageModel);
+    Tuple3<MessageModel?, bool, String> messageObject = messageFromType(
+        messageType: sendMessageType, messageModel: messageModel);
     MessageModel? msg = messageObject.item1;
     bool isDataBinary = messageObject.item2;
     String messageLocalPath = messageObject.item3;
@@ -40,17 +46,21 @@ class SendMessageUseCase {
     }
     if (isUpdate) {
       await messagesRepo.updateMessage(
-          message: msg.copyWith(status: MessageStatus.sending), chatId: sendMessageType.chatId);
+          message: msg.copyWith(status: MessageStatus.sending),
+          chatId: sendMessageType.chatId);
     } else {
       await messagesRepo.createMessage(
-          message: msg.copyWith(status: MessageStatus.sending), chatId: sendMessageType.chatId);
+          message: msg.copyWith(status: MessageStatus.sending),
+          chatId: sendMessageType.chatId);
     }
 
     final rawmessageJson = msg.toJson();
 
     final processedMessage = await processor.getMessageDetails(
       channelMessageType: ChannelMessageType.message(
-          message: rawmessageJson, isDataBinary: isDataBinary, messageLocalPath: messageLocalPath),
+          message: rawmessageJson,
+          isDataBinary: isDataBinary,
+          messageLocalPath: messageLocalPath),
       remoteCoreId: remoteCoreId,
     );
     if (isDataBinary && messageLocalPath.isNotEmpty) {
@@ -64,7 +74,8 @@ class SendMessageUseCase {
       //     .execute(remoteCoreId);
       // messagingConnection.sendBinaryMessage(binary: binary, remoteCoreId: remoteCoreId)
     } else {
-      await messagingConnection.sendTextMessage(
+      await connectionRepository.sendTextMessage(
+        messageConnectionType: messageConnectionType,
         text: jsonEncode(processedMessage.messageJson),
         remoteCoreId: remoteCoreId,
       );

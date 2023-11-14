@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
+import 'package:heyo/app/modules/messaging/connection/domain/messaging_connection.dart';
+import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
 import 'package:heyo/app/modules/messaging/unified_messaging_controller.dart';
 import '../../../messaging/controllers/common_messaging_controller.dart';
 
@@ -13,19 +16,23 @@ import '../repo/messages_repo.dart';
 
 class ConfirmMessageUseCase {
   final MessagesAbstractRepo messagesRepo;
-  final UnifiedConnectionController messagingConnection;
+  final ConnectionRepository connectionRepository;
   final MessageProcessor processor;
 
   ConfirmMessageUseCase({
     required this.messagesRepo,
-    required this.messagingConnection,
+    required this.connectionRepository,
     required this.processor,
   });
 
-  execute({required ConfirmMessageType confirmMessageType, required String remoteCoreId}) async {
+  void execute(
+      {required MessageConnectionType messageConnectionType,
+      required ConfirmMessageType confirmMessageType,
+      required String remoteCoreId,}) async {
     switch (confirmMessageType.runtimeType) {
       case ConfirmReceivedText:
-        final String messageId = (confirmMessageType as ConfirmReceivedText).messageId;
+        final String messageId =
+            (confirmMessageType as ConfirmReceivedText).messageId;
         final ConfirmMessageStatus status = (confirmMessageType).status;
 
         Map<String, dynamic> confirmmessageJson = ConfirmMessageModel(
@@ -34,11 +41,13 @@ class ConfirmMessageUseCase {
         ).toJson();
 
         final processedMessage = await processor.getMessageDetails(
-          channelMessageType: ChannelMessageType.confirm(message: confirmmessageJson),
+          channelMessageType:
+              ChannelMessageType.confirm(message: confirmmessageJson),
           remoteCoreId: remoteCoreId,
         );
 
-        await messagingConnection.sendTextMessage(
+        await connectionRepository.sendTextMessage(
+          messageConnectionType: MessageConnectionType.RTC_DATA_CHANNEL,
           text: jsonEncode(processedMessage.messageJson),
           remoteCoreId: remoteCoreId,
         );
@@ -62,6 +71,7 @@ class ConfirmMessageType {
 class ConfirmReceivedText extends ConfirmMessageType {
   final String messageId;
   final ConfirmMessageStatus status;
+
   ConfirmReceivedText({
     required this.messageId,
     required super.chatId,

@@ -18,21 +18,20 @@ import '../../p2p_node/data/account/account_info.dart';
 import '../../shared/data/repository/contact_repository.dart';
 
 class WifiDirectController extends GetxController {
-  final AccountInfo accountInfo;
-  final ContactRepository contactRepository;
+  /*final AccountInfo accountInfo;
+  final ContactRepository contactRepository;*/
   HeyoWifiDirect? _heyoWifiDirect;
   bool isLocationPermissionGranted = false;
   final wifiDirectEnabled = false.obs;
   RxList<UserModel> availableDirectUsers = <UserModel>[].obs;
 
-  UnifiedConnectionController wifiDirectConnectionController;
 
-  WifiDirectController(
+/*  WifiDirectController(
       {required this.accountInfo,
       required this.wifiDirectConnectionController,
       required this.contactRepository}) {
     _heyoWifiDirect = wifiDirectConnectionController.wifiDirectWrapper!.pluginInstance;
-  }
+  }*/
 
   final coreId = "".obs;
   final visibleName = "".obs;
@@ -91,8 +90,8 @@ class WifiDirectController extends GetxController {
 
       _heyoWifiDirect = HeyoWifiDirect(coreID: coreId.value, name: 'name', debugOutputEnable: true);
       // await _heyoWifiDirect!.wifiDirectOn();
-      wifiDirectConnectionController.wifiDirectWrapper!.pluginInstance = _heyoWifiDirect;
-      Get.put(wifiDirectConnectionController);
+    /*  wifiDirectConnectionController.wifiDirectWrapper!.pluginInstance = _heyoWifiDirect;
+      Get.put(wifiDirectConnectionController);*/
     }
   }
 
@@ -112,8 +111,8 @@ class WifiDirectController extends GetxController {
       case EventType.linkedPeer:
         // incomingConnection = true.obs;
         // connectedPeer = event.message as Peer;
-        (wifiDirectConnectionController.connectionRepo as WiFiDirectConnectionRepoImpl)
-            .handleWifiDirectEvents(event);
+        /*(wifiDirectConnectionController.connectionRepo as WiFiDirectConnectionRepoImpl)
+            .handleWifiDirectEvents(event);*/
 
         print('WifiDirectController: linked to ${(event.message as Peer).multiAddress}');
         break;
@@ -122,8 +121,8 @@ class WifiDirectController extends GetxController {
         // incomingConnection = false.obs;
         // outgoingConnection = false.obs;
         // connectedPeer = null;
-        (wifiDirectConnectionController.connectionRepo as WiFiDirectConnectionRepoImpl)
-            .handleWifiDirectEvents(event);
+       /* (wifiDirectConnectionController.connectionRepo as WiFiDirectConnectionRepoImpl)
+            .handleWifiDirectEvents(event);*/
 
         print('WifiDirectController: Wifi-direct group stopped');
         break;
@@ -134,8 +133,8 @@ class WifiDirectController extends GetxController {
   }
 
   _messageHandler(HeyoWifiDirectMessage message) {
-    (wifiDirectConnectionController.connectionRepo as WiFiDirectConnectionRepoImpl)
-        .wifiDirectmessageHandler(message);
+  /*  (wifiDirectConnectionController.connectionRepo as WiFiDirectConnectionRepoImpl)
+        .wifiDirectmessageHandler(message);*/
   }
 
   Future<bool> connectPeer(String coreId, {bool encrypt = true}) async {
@@ -162,7 +161,7 @@ class WifiDirectController extends GetxController {
   }
 
   Future<void> _setCoreId() async {
-    coreId.value = (await accountInfo.getCorePassCoreId()) ?? "";
+    //coreId.value = (await accountInfo.getCorePassCoreId()) ?? "";
   }
 
   // this will show a custom UI permission dialog at first and then the default permission dialog for location permission

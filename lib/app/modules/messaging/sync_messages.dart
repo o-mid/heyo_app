@@ -2,6 +2,7 @@ import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abst
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
+import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
@@ -51,6 +52,7 @@ class SyncMessages {
             print("syncMessages: execute: ${rtcSession.connectionId} ");
 
             await sendMessageUseCase.execute(
+              messageConnectionType: MessageConnectionType.RTC_DATA_CHANNEL,
                 sendMessageType: sendMessageType,
                 remoteCoreId: rtcSession.remotePeer.remoteCoreId,
                 isUpdate: true,

@@ -16,6 +16,7 @@ import '../connection/connection_repo.dart';
 import '../controllers/common_messaging_controller.dart';
 import '../controllers/messaging_connection_controller.dart';
 
+/*
 class DatachannelConnectionStatusWidget extends GetView<UnifiedConnectionController> {
   DatachannelConnectionStatusWidget({Key? key}) : super(key: key);
   final offsetAnimation = Tween<Offset>(
@@ -82,3 +83,4 @@ class DatachannelConnectionStatusWidget extends GetView<UnifiedConnectionControl
     });
   }
 }
+*/

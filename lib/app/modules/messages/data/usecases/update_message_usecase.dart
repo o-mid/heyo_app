@@ -1,30 +1,29 @@
 import 'dart:convert';
-
-import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/update_message_model.dart';
-
-import '../../../messaging/controllers/common_messaging_controller.dart';
-import '../../../messaging/controllers/messaging_connection_controller.dart';
-import '../../../messaging/unified_messaging_controller.dart';
+import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
+import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
+import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import '../message_processor.dart';
 import '../models/messages/message_model.dart';
 import '../models/reaction_model.dart';
-import '../provider/messages_provider.dart';
 import '../repo/messages_abstract_repo.dart';
-import '../repo/messages_repo.dart';
 
 class UpdateMessageUseCase {
-  UpdateMessageUseCase({
-    required this.messagesRepo,
-    required this.messagingConnection,
-    required this.processor,
-  });
+  UpdateMessageUseCase(
+      {required this.messagesRepo,
+      required this.connectionRepository,
+      required this.processor,
+      required this.accountInfo});
+
   final MessagesAbstractRepo messagesRepo;
-  final UnifiedConnectionController messagingConnection;
+  final ConnectionRepository connectionRepository;
   final MessageProcessor processor;
+  final AccountInfo accountInfo;
 
   Future<void> execute(
-      {required UpdateMessageType updateMessageType, required String remoteCoreId}) async {
+      {required MessageConnectionType messageConnectionType,
+      required UpdateMessageType updateMessageType,
+      required String remoteCoreId}) async {
     switch (updateMessageType.runtimeType) {
       case UpdateReactions:
         final message = (updateMessageType as UpdateReactions).selectedMessage;
@@ -32,6 +31,7 @@ class UpdateMessageUseCase {
         final emoji = (updateMessageType).emoji;
 
         await updateReactions(
+          messageConnectionType: messageConnectionType,
           message: message,
           chatId: updateMessageType.chatId,
           emoji: emoji,
@@ -43,13 +43,15 @@ class UpdateMessageUseCase {
   }
 
   Future<void> updateReactions({
+    required MessageConnectionType messageConnectionType,
     required MessageModel message,
     required String emoji,
     required String chatId,
     required String remoteCoreId,
   }) async {
-    final localCoreID = await messagingConnection.accountInfo.getCorePassCoreId() ?? "";
-    var reaction = message.reactions[emoji] as ReactionModel? ?? ReactionModel();
+    final localCoreID = await accountInfo.getCorePassCoreId() ?? "";
+    var reaction =
+        message.reactions[emoji] as ReactionModel? ?? ReactionModel();
 
     if (reaction.isReactedByMe) {
       reaction.users.removeWhere((element) => element == localCoreID);
@@ -71,9 +73,10 @@ class UpdateMessageUseCase {
     );
     await messagesRepo.updateMessage(message: updatedMessage, chatId: chatId);
 
-    var updatedMessageJson =
-        UpdateMessageModel(message: updatedMessage.copyWith(reactions: updatedMessage.reactions))
-            .toJson();
+    var updatedMessageJson = UpdateMessageModel(
+            message:
+                updatedMessage.copyWith(reactions: updatedMessage.reactions))
+        .toJson();
 
     // await SendDataChannelMessage(messagingConnection: messagingConnection).execute(
     //   remoteCoreId: remoteCoreId,
@@ -81,11 +84,13 @@ class UpdateMessageUseCase {
     // );
 
     final processedMessage = await processor.getMessageDetails(
-      channelMessageType: ChannelMessageType.update(message: updatedMessageJson),
+      channelMessageType:
+          ChannelMessageType.update(message: updatedMessageJson),
       remoteCoreId: remoteCoreId,
     );
 
-    await messagingConnection.sendTextMessage(
+    await connectionRepository.sendTextMessage(
+      messageConnectionType: messageConnectionType,
       text: jsonEncode(processedMessage.messageJson),
       remoteCoreId: remoteCoreId,
     );

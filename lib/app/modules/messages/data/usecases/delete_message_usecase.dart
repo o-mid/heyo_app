@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/delete_message_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_repo.dart';
+import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
+import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
 
 import '../../../messaging/controllers/common_messaging_controller.dart';
 import '../../../messaging/controllers/messaging_connection_controller.dart';
@@ -14,16 +16,17 @@ import '../repo/messages_abstract_repo.dart';
 
 class DeleteMessageUseCase {
   final MessagesAbstractRepo messagesRepo;
-  final UnifiedConnectionController messagingConnection;
+  final ConnectionRepository connectionRepository;
   final MessageProcessor processor;
 
   DeleteMessageUseCase({
     required this.messagesRepo,
-    required this.messagingConnection,
+    required this.connectionRepository,
     required this.processor,
   });
 
   Future<void> execute({
+    required MessageConnectionType messageConnectionType,
     required DeleteMessageType deleteMessageType,
     required String remoteCoreId,
   }) async {
@@ -37,6 +40,7 @@ class DeleteMessageUseCase {
         final remoteMessages = (deleteMessageType as DeleteRemoteMessages).selectedMessages;
 
         await deleteRemoteMessages(
+          messageConnectionType: messageConnectionType,
           remoteMessages: remoteMessages,
           chatId: deleteMessageType.chatId,
           remoteCoreId: remoteCoreId,
@@ -54,6 +58,7 @@ class DeleteMessageUseCase {
   }
 
   Future<void> deleteRemoteMessages({
+    required MessageConnectionType messageConnectionType,
     required List<MessageModel> remoteMessages,
     required String chatId,
     required String remoteCoreId,
@@ -69,7 +74,8 @@ class DeleteMessageUseCase {
       remoteCoreId: remoteCoreId,
     );
 
-    await messagingConnection.sendTextMessage(
+    await connectionRepository.sendTextMessage(
+      messageConnectionType: messageConnectionType,
       text: jsonEncode(processedMessage.messageJson),
       remoteCoreId: remoteCoreId,
     );

@@ -5,7 +5,7 @@
 
 // import 'package:flutter_webrtc/flutter_webrtc.dart';
 
-// import 'package:heyo/app/modules/messaging/models.dart';
+// import 'package:heyo/app/modules/messaging/messaging_connections_models.dart';
 // import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 
 // import 'common_messaging_controller.dart';

@@ -3,8 +3,10 @@ import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_repo
 import 'package:heyo/app/modules/messages/data/provider/messages_provider.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_repo.dart';
 import 'package:heyo/app/modules/messages/data/connection_message_repository_impl.dart';
+import 'package:heyo/app/modules/messages/data/usecases/init_message_usecase.dart';
+import 'package:heyo/app/modules/messages/data/usecases/read_message_usecase.dart';
 import 'package:heyo/app/modules/messages/data/user_state_repository_Impl.dart';
-import 'package:heyo/app/modules/messaging/connection/rtc_connection_repo_impl.dart';
+import 'package:heyo/app/modules/messaging/connection/remote_connection_repo.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 import 'package:heyo/app/modules/notifications/controllers/notifications_controller.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_repo.dart';
@@ -30,13 +32,17 @@ class MessagesBinding extends Bindings {
   void dependencies() {
     // Determine the connection type
     final args = Get.arguments as MessagesViewArgumentsModel;
-    final connectionType =
+    // todo farzam
+    /* final connectionType =
         args.connectionType == MessagingConnectionType.internet
             ? ConnectionType.RTC
             : ConnectionType.WiFiDirect;
-
+*/
     Get.lazyPut<MessagesController>(
       () => MessagesController(
+        readMessageUseCase: Get.find(),
+        initMessageUseCase:
+            Get.find(),
         messageRepository: ConnectionMessageRepositoryImpl(
           messagesRepo: MessagesRepo(
             messagesProvider: MessagesProvider(
@@ -57,7 +63,6 @@ class MessagesBinding extends Bindings {
             ),
           ),
         ),
-        messagingController: Get.find(),
         sendMessageUseCase: Get.find<SendMessageUseCase>(),
         updateMessageUseCase: Get.find<UpdateMessageUseCase>(),
         deleteMessageUseCase: Get.find<DeleteMessageUseCase>(),

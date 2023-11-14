@@ -8,11 +8,14 @@ import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
+import 'package:heyo/app/modules/messages/data/usecases/init_message_usecase.dart';
+import 'package:heyo/app/modules/messages/data/usecases/read_message_usecase.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/messages/domain/message_repository_models.dart';
 import 'package:heyo/app/modules/messages/domain/user_state_repository.dart';
 import 'package:heyo/app/modules/messages/utils/extensions/messageModel.extension.dart';
 import 'package:heyo/app/modules/messages/utils/open_camera_for_sending_media_message.dart';
+import 'package:heyo/app/modules/messaging/connection/domain/messaging_connections_models.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:path/path.dart' as path;
@@ -66,20 +69,24 @@ class MessagesController extends GetxController {
   MessagesController({
     required this.messageRepository,
     required this.userStateRepository,
-    required this.messagingController,
+    required this.readMessageUseCase,
     required this.sendMessageUseCase,
     required this.updateMessageUseCase,
     required this.deleteMessageUseCase,
+    required this.initMessageUseCase
   }) {
     init();
   }
+
   final SendMessageUseCase sendMessageUseCase;
   final UpdateMessageUseCase updateMessageUseCase;
   final DeleteMessageUseCase deleteMessageUseCase;
   final ConnectionMessageRepository messageRepository;
   final UserStateRepository userStateRepository;
+  final ReadMessageUseCase readMessageUseCase;
+  final InitMessageUseCase initMessageUseCase;
 
-  final UnifiedConnectionController messagingController;
+  //final UnifiedConnectionController messagingController;
 
   late MessagingConnectionType connectionType;
 
@@ -112,8 +119,8 @@ class MessagesController extends GetxController {
   late ChatModel? chatModel;
   Rx<UserModel> user = UserModel(
     coreId: (Get.arguments as MessagesViewArgumentsModel).coreId,
-    iconUrl:
-        (Get.arguments).iconUrl as String ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
+    iconUrl: (Get.arguments).iconUrl as String ??
+        "https://avatars.githubusercontent.com/u/2345136?v=4",
     name: (Get.arguments as MessagesViewArgumentsModel).coreId.shortenCoreId,
     walletAddress: (Get.arguments).coreId as String,
   ).obs;
@@ -183,35 +190,12 @@ class MessagesController extends GetxController {
   }
 
   Future<void> initMessagingConnection() async {
-    await messagingController.initMessagingConnection(remoteId: user.value.coreId);
-    // switch (connectionType) {
-    //   case MessagingConnectionType.internet:
-    //     // TODO remove debug print
-    //     print('switch to the internet connection messaging');
-    //     messagingConnection = Get.find<MessagingConnectionController>();
-    //     break;
-    //   case MessagingConnectionType.wifiDirect:
-    //     // TODO remove debug print
-    //     print('switch to the wifi-direct connection messaging');
-    //     messagingConnection = Get.find<WifiDirectConnectionController>();
-    //     break;
-    //   default:
-    //     // TODO replace this value to correct if connectionType is unknown (if it possible)
-    //     print('switch to the unknown connection type messaging (internet by default)');
-    //     messagingConnection = Get.find<MessagingConnectionController>();
-    //     break;
-    // }
-
-    // // TODO this is debug test of put instance as CommonMessagingConnectionController
-    // // Put current actual CommonMessagingConnectionController instance to use it in messaging process flow.
-    // Get.delete<CommonMessagingConnectionController>();
-    // Get.put<CommonMessagingConnectionController>(messagingConnection);
-
-    // await messagingConnection.initMessagingConnection(remoteId: user.value.coreId);
+    initMessageUseCase.execute(args.connectionType.map(),args.coreId);
   }
 
   Future<void> _initMessagesStream() async {
-    final messagesStream = await messageRepository.getMessagesStream(coreId: user.value.coreId);
+    final messagesStream =
+        await messageRepository.getMessagesStream(coreId: user.value.coreId);
 
     _messagesStreamSubscription = (messagesStream).listen((newMessages) {
       messages.value = newMessages;
@@ -257,7 +241,8 @@ class MessagesController extends GetxController {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (scrollController.hasClients) {
         final scrollOffset = scrollController.offset;
-        final offsetChange = isKeyboardVisible ? _keyboardHeight : -_keyboardHeight;
+        final offsetChange =
+            isKeyboardVisible ? _keyboardHeight : -_keyboardHeight;
 
         animateToPosition(
           offset: scrollOffset + offsetChange,
@@ -298,8 +283,9 @@ class MessagesController extends GetxController {
         str +
         textController.text.substring(currentPos);
 
-    textController.selection = textController.selection
-        .copyWith(baseOffset: currentPos + str.length, extentOffset: currentPos + str.length);
+    textController.selection = textController.selection.copyWith(
+        baseOffset: currentPos + str.length,
+        extentOffset: currentPos + str.length);
 
     newMessage.value = textController.text;
   }
@@ -308,7 +294,11 @@ class MessagesController extends GetxController {
   // the character before cursor is removed and cursor moves to the correct place.
   void removeCharacterBeforeCursorPosition() {
     final currentPos = textController.selection.base.offset;
-    final prefix = textController.text.substring(0, currentPos).characters.skipLast(1).toString();
+    final prefix = textController.text
+        .substring(0, currentPos)
+        .characters
+        .skipLast(1)
+        .toString();
     final suffix = textController.text.substring(currentPos);
 
     textController
@@ -357,7 +347,8 @@ class MessagesController extends GetxController {
 
   Future<void> _finishMessagesLoading() async {
     // Todo: remove this delay if needed
-    await Future.delayed(TRANSITIONS.messagingPage_closeMessagesLoadingShimmerDurtion, () {
+    await Future.delayed(
+        TRANSITIONS.messagingPage_closeMessagesLoadingShimmerDurtion, () {
       isListLoaded.value = true;
     });
   }
@@ -375,7 +366,8 @@ class MessagesController extends GetxController {
     scrollController.animateTo(
       scrollController.position.minScrollExtent,
       curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
-      duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+      duration:
+          duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
     );
   }
 
@@ -387,12 +379,14 @@ class MessagesController extends GetxController {
     scrollController.animateTo(
       offset,
       curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
-      duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+      duration:
+          duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
     );
   }
 
   Future<void> toggleReaction(MessageModel msg, String emoji) async {
     await updateMessageUseCase.execute(
+      messageConnectionType: args.connectionType.map(),
       remoteCoreId: user.value.walletAddress,
       updateMessageType: UpdateMessageType.updateReactions(
         selectedMessage: msg,
@@ -411,17 +405,18 @@ class MessagesController extends GetxController {
   }
 
   Future<void> toggleMessageReadStatus({required String messageId}) async {
-    await messagingController.toggleMessageReadConfirm(
-      messageId: messageId,
-      remoteCoreId: user.value.walletAddress,
-    );
+    readMessageUseCase.execute(
+        connectionType: args.connectionType.map(),
+        messageId: messageId,
+        remoteCoreId: user.value.walletAddress);
 
     await markMessagesAsReadById(
       lastReadmessageId: messageId,
     );
   }
 
-  Future<void> markMessagesAsReadById({required String lastReadmessageId}) async {
+  Future<void> markMessagesAsReadById(
+      {required String lastReadmessageId}) async {
     await messageRepository.markMessagesAsReadById(
       lastReadmessageId: lastReadmessageId,
       chatId: chatId,
@@ -467,6 +462,7 @@ class MessagesController extends GetxController {
     //   final remoteCoreId = sendTextMessageRepoModel.remoteCoreId;
 
     await sendMessageUseCase.execute(
+      messageConnectionType: args.connectionType.map(),
       sendMessageType: SendMessageType.text(
         text: newMessage.value,
         replyTo: replyingTo.value,
@@ -493,6 +489,7 @@ class MessagesController extends GetxController {
     //   ),
     // );
     await sendMessageUseCase.execute(
+      messageConnectionType: args.connectionType.map(),
       sendMessageType: SendMessageType.audio(
         path: path,
         metadata: AudioMetadata(durationInSeconds: duration),
@@ -512,6 +509,7 @@ class MessagesController extends GetxController {
       return;
     }
     await sendMessageUseCase.execute(
+      messageConnectionType: args.connectionType.map(),
       sendMessageType: SendMessageType.location(
         lat: message.latitude,
         long: message.longitude,
@@ -554,6 +552,7 @@ class MessagesController extends GetxController {
     //   ),
     // );
     sendMessageUseCase.execute(
+      messageConnectionType: args.connectionType.map(),
       sendMessageType: SendMessageType.liveLocation(
         startLat: startLat,
         startLong: startLong,
@@ -577,7 +576,8 @@ class MessagesController extends GetxController {
     scrollController.animateTo(
       scrollController.position.maxScrollExtent,
       curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
-      duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+      duration:
+          duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
     );
   }
 
@@ -614,7 +614,8 @@ class MessagesController extends GetxController {
   }
 
   stopSharingLiveLocation(LiveLocationMessageModel message) {
-    Get.find<LiveLocationController>().removeIdFromSharingList(message.messageId);
+    Get.find<LiveLocationController>()
+        .removeIdFromSharingList(message.messageId);
 
     final index = messages.indexWhere((m) => m.messageId == message.messageId);
 
@@ -666,6 +667,7 @@ class MessagesController extends GetxController {
 
   Future<void> deleteSelectedForEveryone() async {
     await deleteMessageUseCase.execute(
+      messageConnectionType: args.connectionType.map(),
       remoteCoreId: user.value.walletAddress,
       deleteMessageType: DeleteMessageType.forEveryone(
         chatId: chatId,
@@ -677,6 +679,7 @@ class MessagesController extends GetxController {
 
   Future<void> deleteSelectedForMe() async {
     await deleteMessageUseCase.execute(
+      messageConnectionType: args.connectionType.map(),
       remoteCoreId: user.value.walletAddress,
       deleteMessageType: DeleteMessageType.forMe(
         chatId: chatId,
@@ -689,7 +692,8 @@ class MessagesController extends GetxController {
   void copySelectedToClipboard() {
     var text = "";
 
-    if (selectedMessages.length == 1 && selectedMessages.first is TextMessageModel) {
+    if (selectedMessages.length == 1 &&
+        selectedMessages.first is TextMessageModel) {
       text = (selectedMessages.first as TextMessageModel).text;
     } else {
       for (final message in selectedMessages) {
@@ -697,7 +701,8 @@ class MessagesController extends GetxController {
           continue;
         }
 
-        text += "[${message.senderName} - ${message.timestamp.dateInAmPmFormat()}]\n";
+        text +=
+            "[${message.senderName} - ${message.timestamp.dateInAmPmFormat()}]\n";
         text += message.text;
         text += "\n\n";
       }
@@ -988,6 +993,7 @@ class MessagesController extends GetxController {
       result as RxList<FileModel>;
       for (final asset in result) {
         await sendMessageUseCase.execute(
+          messageConnectionType: args.connectionType.map(),
           sendMessageType: SendMessageType.file(
             metadata: FileMetaData(
               extension: asset.extension,
@@ -1122,14 +1128,16 @@ class MessagesController extends GetxController {
         // print("currentItemIndex.value: ${currentRemoteMessagesIndex.value}");
         // print("lastReadRemoteMessagesIndex.value: ${lastReadRemoteMessagesIndex.value}");
 
-        if (currentRemoteMessagesIndex.value > lastReadRemoteMessagesIndex.value) {
+        if (currentRemoteMessagesIndex.value >
+            lastReadRemoteMessagesIndex.value) {
           // print("lastReadRemoteMessagesKey.value ${lastReadRemoteMessagesId.value}");
 
           //  checks if its status is read or not
           // if its not read, it will toogleMessageReadStatus
 
           if (itemStatus != MessageStatus.read) {
-            lastReadRemoteMessagesIndex.value = currentRemoteMessagesIndex.value;
+            lastReadRemoteMessagesIndex.value =
+                currentRemoteMessagesIndex.value;
             lastReadRemoteMessagesId.value = itemMessageId;
             toggleMessageReadStatus(messageId: itemMessageId);
           }
