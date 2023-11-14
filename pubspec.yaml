@@ -29,6 +29,10 @@ dependencies:
   flutter_keyboard_visibility: ^5.3.0
   intl: ^0.18.0
   # extended_image: ^8.0.2
+  core_web3dart:
+    git:
+      url: git@ssh.git.energy:corepass/core-web3dart.git
+      ref: core-master
 
   mobile_scanner: ^2.0.0
   share_plus: ^4.0.8
@@ -143,6 +147,13 @@ flutter:
   assets:
     - assets/svg/
     - assets/png/
+    - assets/svg/
+    - assets/png/
+    - assets/locales/
+    - assets/contracts/
+    - assets/animation/
+    - assets/utils/
+
 
   fonts:
     - family: Inter
