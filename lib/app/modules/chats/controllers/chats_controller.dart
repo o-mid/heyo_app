@@ -36,14 +36,14 @@ class ChatsController extends GetxController {
     super.onInit();
   }
 
-  void init() async {
+  Future<void> init() async {
     chats.clear();
     chats.value = await chatHistoryRepo.getAllChats();
     chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
     await listenToChatsStream();
 
-    // addMockChats();
+    addMockChats();
   }
 
   @override
@@ -57,30 +57,7 @@ class ChatsController extends GetxController {
     super.onClose();
   }
 
-  // listenToChatsStream() async {
-  //   Stream<List<ChatModel>> chatsStream = await chatHistoryRepo.getChatsStream();
-  //   _chatsStreamSubscription = chatsStream.listen((newChats) {
-  //     List<ChatModel> chatModel = [];
-
-  //     // newChats.forEach((element) async {
-  //     //   UserModel? userModel = await contactRepository.getContactById(element.id);
-  //     //   var isContact = (userModel != null);
-  //     //   if (isContact) {
-  //     //     chatModel.add(element.copyWith(name: userModel.name));
-  //     //   } else {
-  //     //     chatModel.add(element.copyWith(name: element.id.shortenCoreId));
-  //     //   }
-  //     // });
-
-  //     //chats.value = chatModel;
-
-  //     chats.clear();
-  //     chats.value = newChats;
-  //     chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-  //     chats.refresh();
-  //   });
-  // }
-  listenToChatsStream() async {
+  Future<void> listenToChatsStream() async {
     Stream<List<ChatModel>> chatsStream = await chatHistoryRepo.getChatsStream();
     _chatsStreamSubscription = chatsStream.listen((newChats) {
       List<ChatModel> removed = [];
@@ -113,9 +90,10 @@ class ChatsController extends GetxController {
     chats.refresh();
   }
 
+  // the callback to be called when chats are updated sent to the view
   void Function(List<ChatModel> removed, List<ChatModel> added)? onChatsUpdated;
 
-  Future deleteChat(ChatModel chat) async {
+  Future<void> deleteChat(ChatModel chat) async {
     await chatHistoryRepo.deleteChat(chat.id);
     await messagesRepo.deleteAllMessages(chat.id);
   }
@@ -132,7 +110,7 @@ class ChatsController extends GetxController {
   void showDeleteAllChatsBottomSheet() {
     openDeleteAllChatsBottomSheet(
       onDelete: () async {
-        for (var element in chats) {
+        for (final element in chats) {
           await messagesRepo.deleteAllMessages(element.id);
         }
         await chatHistoryRepo.deleteAllChats();
@@ -144,7 +122,7 @@ class ChatsController extends GetxController {
 
 // add a single mock chats to the chat history with the given duration
   addMockChats({Duration duration = const Duration(seconds: 5)}) async {
-    List<ChatModel> mockchats = [
+    var mockchats = <ChatModel>[
       ChatModel(
         id: '1',
         isOnline: false,
