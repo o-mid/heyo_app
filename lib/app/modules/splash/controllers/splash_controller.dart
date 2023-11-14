@@ -8,6 +8,8 @@ import 'package:heyo/app/modules/splash/data/repositoty/splash_repository.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
 class SplashController extends GetxController {
+  var isLogin = false;
+
   SplashController({
     required this.accountInfoRepo,
     required this.splashRepository,
@@ -18,7 +20,7 @@ class SplashController extends GetxController {
 
   //Todo accountInfo
   _checkIfAuthenticated() async {
-    final hasAccount = await accountInfoRepo.hasAccount();
+    isLogin = await accountInfoRepo.hasAccount();
     if (hasAccount == false) {
       await _goToLogin();
       return;
@@ -33,10 +35,17 @@ class SplashController extends GetxController {
   }
 
   @override
-  void onReady() {
+  void onReady() async {
     super.onReady();
+    if (await splashRepository.fetchAllRegistries()) {
+      await splashRepository.sendFCMToken();
+    } else {
+      await Get.snackbar(
+        'Registry Retrieval Failed',
+        'Could not fetch registry, Some functionalities may not work properly',
+      ).show();
+    }
     _checkIfAuthenticated();
-    splashRepository.sendFCMToken();
   }
 
   Future<void> _goToLogin() async {
