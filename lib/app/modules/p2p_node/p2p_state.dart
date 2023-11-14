@@ -5,7 +5,6 @@ class P2PState extends GetxController {
   final address = <String>[].obs;
   final peerId = "".obs;
   final advertise = false.obs;
-  final delegationSuccessful = false.obs;
   List<P2PReqResNodeModel> responses = [];
   Map<String, Rxn<bool>> status = {};
 
@@ -45,7 +44,6 @@ class P2PState extends GetxController {
   }
 
   void reset() {
-    delegationSuccessful.value = false;
     advertise.value = false;
     address.value = [];
     peerId.value = "";

@@ -1,14 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:heyo/app/modules/intro/data/provider/verification_corepass_abstract_provider.dart';
 import 'package:heyo/app/modules/intro/data/repo/intro_abstract_repo.dart';
+import 'package:heyo/app/modules/shared/data/models/account_types.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/providers/store/store_abstract_provider.dart';
 import 'package:tuple/tuple.dart';
 
 class IntroRepo extends IntroAbstractRepo {
   VerificationCorePassAbstractProvider vcp;
   StoreAbstractProvider storeProvider;
+  AccountRepository accountRepository;
 
-  IntroRepo({required this.vcp, required this.storeProvider});
+  IntroRepo(
+      {required this.vcp,
+      required this.storeProvider,
+      required this.accountRepository});
 
   @override
   Future<Tuple3<bool, String, String>> retrieveCoreIdFromCorePass() async {
@@ -27,8 +33,11 @@ class IntroRepo extends IntroAbstractRepo {
   @override
   Future<bool> applyDelegatedCredentials(
       String coreId, String signature) async {
-    final isSuccessful = await vcp.applyDelegatedCredentials(coreId, signature);
-    if (isSuccessful) await vcp.cleanUp();
+    final isSuccessful = await vcp.setCredentials(coreId, signature);
+    if (isSuccessful) {
+      await vcp.cleanUp();
+      await accountRepository.saveAccountType(AccountTypes.libP2P);
+    }
     debugPrint('Delegated Credentials Successfully added');
     return isSuccessful;
   }
