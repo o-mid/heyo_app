@@ -17,58 +17,12 @@ class ChatsView extends GetView<ChatsController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.onChatsUpdated = (removed, added) {
-      for (final chat in added) {
-        final index = controller.chats.length;
+    controller.onChatsUpdated = _handleChatsUpdate;
 
-        controller.animatedListKey.currentState?.insertItem(index);
-        controller.chats.insert(index, chat);
-      }
-      for (final chat in removed) {
-        final index = controller.chats.indexOf(chat);
-
-        controller.animatedListKey.currentState?.removeItem(
-          index,
-          (context, animation) => _buildRemovedItem(chat, context, animation),
-          duration: const Duration(milliseconds: 250),
-        );
-        controller.chats.removeAt(index);
-      }
-
-      controller.chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    };
     return Scaffold(
       backgroundColor: COLORS.kAppBackground,
       appBar: _buildAppBar(),
       body: _buildBody(),
-      // body: Column(
-      //   mainAxisSize: MainAxisSize.min,
-      //   children: [
-      //     ConnectionStatusWidget(),
-      //     Expanded(
-      //       child: Obx(
-      //         () => controller.chats.isEmpty
-      //             ? const EmptyChatsWidget()
-      //             : SlidableAutoCloseBehavior(
-      //                 child: AnimatedList(
-      //                   key: controller.animatedListKey,
-      //                   initialItemCount: controller.chats.length,
-      //                   padding: const EdgeInsets.symmetric(vertical: 8),
-      //                   itemBuilder: (context, index, animation) {
-      //                     return SlideTransition(
-      //                       position: animation.drive(
-      //                         Tween(begin: const Offset(1, 0), end: const Offset(0, 0))
-      //                             .chain(CurveTween(curve: Curves.easeInOut)),
-      //                       ),
-      //                       child: ChatWidget(chat: controller.chats[index]),
-      //                     );
-      //                   },
-      //                 ),
-      //               ),
-      //       ),
-      //     ),
-      //   ],
-      // ),
     );
   }
 
@@ -126,16 +80,40 @@ class ChatsView extends GetView<ChatsController> {
       ],
     );
   }
-}
 
-Widget _buildRemovedItem(ChatModel chat, BuildContext context, Animation<double> animation) {
-  return SlideTransition(
-    position: animation.drive(
-      Tween(begin: const Offset(1, 0), end: const Offset(0, 0))
-          .chain(CurveTween(curve: Curves.easeInOut)),
-    ),
-    child: ChatWidget(
-      chat: chat,
-    ),
-  );
+  void _handleChatsUpdate(List<ChatModel> removed, List<ChatModel> added) {
+    _addNewChats(added);
+    _removeChats(removed);
+    controller.chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+  }
+
+  void _addNewChats(List<ChatModel> added) {
+    for (final chat in added) {
+      final index = controller.chats.length;
+      controller.animatedListKey.currentState?.insertItem(
+        index,
+        duration: const Duration(milliseconds: 200),
+      );
+      controller.chats.insert(index, chat);
+    }
+  }
+
+  void _removeChats(List<ChatModel> removed) {
+    for (final chat in removed) {
+      final index = controller.chats.indexOf(chat);
+      controller.animatedListKey.currentState?.removeItem(
+        index,
+        (context, animation) => _buildRemovedItem(chat, animation),
+        duration: const Duration(milliseconds: 200),
+      );
+      controller.chats.removeAt(index);
+    }
+  }
+
+  Widget _buildRemovedItem(ChatModel chat, Animation<double> animation) {
+    return SlideTransition(
+      position: _slideAnimation(animation),
+      child: ChatWidget(chat: chat),
+    );
+  }
 }

@@ -43,7 +43,7 @@ class ChatsController extends GetxController {
 
     await listenToChatsStream();
 
-    addMockChats();
+    // addMockChats();
   }
 
   @override
