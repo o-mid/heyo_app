@@ -41,7 +41,7 @@ class MessageItemWidget extends StatelessWidget {
       }
     }
 
-    Widget messageBody = AutoScrollTag(
+    final Widget messageBody = AutoScrollTag(
       key: Key(message.messageId),
       index: index,
       controller: controller.scrollController,
@@ -57,13 +57,15 @@ class MessageItemWidget extends StatelessWidget {
     );
 
     return VisibilityDetector(
-        key: Key(message.messageId),
-        onVisibilityChanged: (info) => controller.onMessagesItemVisibilityChanged(
-            visibilityInfo: info,
-            itemIndex: index,
-            itemMessageId: message.messageId,
-            itemStatus: message.status,
-            isFromMe: message.isFromMe),
-        child: messageBody);
+      key: Key(message.messageId),
+      onVisibilityChanged: (info) => controller.onMessagesItemVisibilityChanged(
+        visibilityInfo: info,
+        itemIndex: index,
+        itemMessageId: message.messageId,
+        itemStatus: message.status,
+        isFromMe: message.isFromMe,
+      ),
+      child: messageBody,
+    );
   }
 }

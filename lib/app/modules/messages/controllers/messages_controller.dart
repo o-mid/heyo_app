@@ -625,7 +625,7 @@ class MessagesController extends GetxController {
 
     replyingTo.value = ReplyToModel(
       repliedToMessageId: msg.messageId,
-      repliedToName: msg.senderName,
+      repliedToName: msg.isFromMe ? 'me' : msg.senderName,
       repliedToMessage: replyMsg,
     );
 
@@ -1617,6 +1617,7 @@ class MessagesController extends GetxController {
             name: user.value.name,
             lastReadMessageId: lastReadRemoteMessagesId.value,
             isOnline: true,
+            timestamp: messages.last.timestamp,
             scrollPosition: scrollPositionMessagesId.value,
             lastMessage: messages.last.getMessagePreview(),
             notificationCount: unReadMessagesCount),

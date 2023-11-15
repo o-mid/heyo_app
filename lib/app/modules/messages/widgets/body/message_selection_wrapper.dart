@@ -108,7 +108,7 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
                       color: COLORS.kGreenMainColor,
                       width: 3,
                     ),
-                  )
+                  ),
               ],
             ),
           ),

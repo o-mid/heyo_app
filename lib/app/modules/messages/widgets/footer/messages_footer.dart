@@ -59,8 +59,7 @@ class MessagesFooter extends StatelessWidget {
             offstage: !controller.showEmojiPicker.value,
             child: WillPopScope(
               onWillPop: () async {
-                if (controller.showEmojiPicker.value ||
-                    controller.isInRecordMode.isTrue) {
+                if (controller.showEmojiPicker.value || controller.isInRecordMode.isTrue) {
                   controller.showEmojiPicker.value = false;
                   controller.isInRecordMode.value = false;
                   FocusScope.of(context).requestFocus(controller.textFocusNode);
@@ -74,8 +73,7 @@ class MessagesFooter extends StatelessWidget {
                 child: EmojiPicker(
                   onEmojiSelected: (_, Emoji emoji) =>
                       controller.appendAfterCursorPosition(emoji.emoji),
-                  onBackspacePressed:
-                      controller.removeCharacterBeforeCursorPosition,
+                  onBackspacePressed: controller.removeCharacterBeforeCursorPosition,
                 ),
               ),
             ),
