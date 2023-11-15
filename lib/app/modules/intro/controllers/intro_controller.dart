@@ -9,6 +9,7 @@ import 'package:heyo/app/modules/shared/data/models/account_types.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/app_account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:tuple/tuple.dart';
 
@@ -124,7 +125,9 @@ class IntroController extends GetxController with WidgetsBindingObserver {
     if (isSuccessfulAndValid) {
       await Get.offAllNamed(Routes.VERIFIED_USER);
     } else {
-      Get.snackbar('Error : ', 'Signature is invalid');
+      SnackBarWidget.error(
+        message: 'Signature is invalid',
+      );
     }
   }
 }
