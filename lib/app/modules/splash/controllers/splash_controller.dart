@@ -8,7 +8,6 @@ import 'package:heyo/app/modules/splash/data/repositoty/splash_repository.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
 class SplashController extends GetxController {
-  var isLogin = false;
 
   SplashController({
     required this.accountInfoRepo,
@@ -20,7 +19,7 @@ class SplashController extends GetxController {
 
   //Todo accountInfo
   _checkIfAuthenticated() async {
-    isLogin = await accountInfoRepo.hasAccount();
+    final hasAccount = await accountInfoRepo.hasAccount();
     if (hasAccount == false) {
       await _goToLogin();
       return;
