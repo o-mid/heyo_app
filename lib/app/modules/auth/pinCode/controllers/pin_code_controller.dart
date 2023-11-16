@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/auth/pinCode/views/pin_code_view.dart';
+import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 
 import '../../../shared/utils/constants/colors.dart';
 
@@ -50,12 +51,8 @@ class PinCodeController extends GetxController {
       }
       // if the pin code and repeat pin code are not the same
       else {
-        Get.snackbar(
-          'Error',
-          'Pin code is incorrect, please try again.',
-          colorText: COLORS.kStatesErrorColor,
-          snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 2),
+        SnackBarWidget.error(
+          message: 'Pin code is incorrect, please try again.',
         );
         // clear the valtue of pin code input and repeat pin code input
         ClearInput();
