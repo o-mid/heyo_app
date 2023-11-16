@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:heyo/app/modules/shared/data/models/registry_info_model.dart';
 import 'package:heyo/app/modules/shared/data/providers/notifications/notification_provider.dart';
-import 'package:heyo/app/modules/shared/data/providers/registery/registery_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/registry/registery_provider.dart';
 import 'package:heyo/app/modules/splash/data/repositoty/splash_abstract_repository.dart';
 
 class SplashRepository extends SplashAbstractRepository {
