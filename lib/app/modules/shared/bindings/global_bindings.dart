@@ -19,10 +19,14 @@ import 'package:heyo/app/modules/messages/connection/data/wifi_direct_messaging_
 import 'package:heyo/app/modules/messages/connection/rtc_connection_repo.dart';
 import 'package:heyo/app/modules/messages/connection/web_rtc_connection_manager.dart';
 import 'package:heyo/app/modules/notifications/controllers/app_notifications.dart';
+import 'package:heyo/app/modules/shared/data/providers/blockchain/app_blockchain_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/dio/dio_network_request.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/netowrk_request_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/network/network_credentials.dart';
 import 'package:heyo/app/modules/shared/data/providers/notifications/app_notification_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/notifications/notification_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/registry/app_registry_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/registry/registery_provider.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/app_account_repository.dart';
 import 'package:heyo/app/modules/shared/providers/account/creation/account_creation.dart';
 import 'package:heyo/app/modules/shared/providers/account/creation/libp2p_account_creation.dart';
@@ -84,6 +88,13 @@ class GlobalBindings extends Bindings {
   @override
   void dependencies() {
     Get
+      ..put<RegistryProvider>(
+        AppRegistryProvider(
+          blockChainProvider: AppBlockchainProvider(),
+          web3: Web3Client(BLOCKCHAIN_ADDR, http.Client(), '', ''),
+          storageProvider: GlobalBindings.secureStorageProvider,
+        ),
+      )
       ..put<LibP2PStorageProvider>(
         LibP2PStorageProvider(
           localProvider: secureStorageProvider,
@@ -94,6 +105,7 @@ class GlobalBindings extends Bindings {
         AppNotificationProvider(
           networkRequest: Get.find(),
           libP2PStorageProvider: Get.find(),
+          registryProvider: Get.find(),
         ),
       )
       ..put<AccountCreation>(LibP2PAccountCreation(

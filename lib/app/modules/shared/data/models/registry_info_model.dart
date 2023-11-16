@@ -47,67 +47,67 @@ class RegistryInfoModel {
 
   factory RegistryInfoModel.fromJSON(Map<String, dynamic> json) {
     return RegistryInfoModel(
-      proofOfAddressAddress: json["proofOfAddressAddress"].toString(),
-      phoneAddress: json["phoneAddress"].toString(),
-      idCardAddress: json["idCardAddress"].toString(),
-      passportAddress: json["passportAddress"].toString(),
-      driverLicenseAddress: json["driverLicenseAddress"].toString(),
-      residenceAddress: json["residenceAddress"].toString(),
-      emailAddress: json["emailAddress"].toString(),
-      kycTransmitterAddress: json["kycTransmitterAddress"].toString(),
-      kycVaultAddress: json["kycVaultAddress"].toString(),
-      ctnOracleAddress: json["ctnOracleAddress"].toString(),
-      xcbOracleAddress: json["xcbOracleAddress"].toString(),
-      nameServiceAddress: json["nameServiceAddress"].toString(),
-      cTNAddress: json["cTNAddress"].toString(),
-      androidLink: json["androidLink"].toString(),
-      iosLink: json["iosLink"].toString(),
-      isMaintaining: json["isMaintaining"].toString(),
-      latestVersion: json["latestVersion"].toString(),
-      minVersion: json["minVersion"].toString(),
+      proofOfAddressAddress: json['proofOfAddressAddress'].toString(),
+      phoneAddress: json['phoneAddress'].toString(),
+      idCardAddress: json['idCardAddress'].toString(),
+      passportAddress: json['passportAddress'].toString(),
+      driverLicenseAddress: json['driverLicenseAddress'].toString(),
+      residenceAddress: json['residenceAddress'].toString(),
+      emailAddress: json['emailAddress'].toString(),
+      kycTransmitterAddress: json['kycTransmitterAddress'].toString(),
+      kycVaultAddress: json['kycVaultAddress'].toString(),
+      ctnOracleAddress: json['ctnOracleAddress'].toString(),
+      xcbOracleAddress: json['xcbOracleAddress'].toString(),
+      nameServiceAddress: json['nameServiceAddress'].toString(),
+      cTNAddress: json['cTNAddress'].toString(),
+      androidLink: json['androidLink'].toString(),
+      iosLink: json['iosLink'].toString(),
+      isMaintaining: json['isMaintaining'].toString(),
+      latestVersion: json['latestVersion'].toString(),
+      minVersion: json['minVersion'].toString(),
     );
   }
 
   toJSON() => {
-        "phoneAddress": phoneAddress,
-        "proofOfAddressAddress": proofOfAddressAddress,
-        "idCardAddress": idCardAddress,
-        "passportAddress": passportAddress,
-        "driverLicenseAddress": driverLicenseAddress,
-        "residenceAddress": residenceAddress,
-        "emailAddress": emailAddress,
-        "kycTransmitterAddress": kycTransmitterAddress,
-        "kycVaultAddress": kycVaultAddress,
-        "ctnOracleAddress": ctnOracleAddress,
-        "xcbOracleAddress": xcbOracleAddress,
-        "nameServiceAddress": nameServiceAddress,
-        "cTNAddress": cTNAddress,
-        "androidLink": androidLink,
-        "iosLink": iosLink,
-        "isMaintaining": isMaintaining,
-        "latestVersion": latestVersion,
-        "minVersion": minVersion,
+        'phoneAddress': phoneAddress,
+        'proofOfAddressAddress': proofOfAddressAddress,
+        'idCardAddress': idCardAddress,
+        'passportAddress': passportAddress,
+        'driverLicenseAddress': driverLicenseAddress,
+        'residenceAddress': residenceAddress,
+        'emailAddress': emailAddress,
+        'kycTransmitterAddress': kycTransmitterAddress,
+        'kycVaultAddress': kycVaultAddress,
+        'ctnOracleAddress': ctnOracleAddress,
+        'xcbOracleAddress': xcbOracleAddress,
+        'nameServiceAddress': nameServiceAddress,
+        'cTNAddress': cTNAddress,
+        'androidLink': androidLink,
+        'iosLink': iosLink,
+        'isMaintaining': isMaintaining,
+        'latestVersion': latestVersion,
+        'minVersion': minVersion,
       };
 
   factory RegistryInfoModel.fromContractModel(GetAllContractModel result) {
-    final shaAndroidLink = bytesToHex(getSha3ForSC("androidLink"));
-    final shaIOSLink = bytesToHex(getSha3ForSC("iosLink"));
-    final shaisMaintaining = bytesToHex(getSha3ForSC("isMaintaining"));
-    final shalatestVersion = bytesToHex(getSha3ForSC("latestVersion"));
-    final shaminVersion = bytesToHex(getSha3ForSC("minVersion"));
-    final shaemailAddress = bytesToHex(getSha3ForSC("EmailVerifier"));
-    final shaidCardVerif = bytesToHex(getSha3ForSC("IDCardVerifier"));
-    final shakycTransmitter = bytesToHex(getSha3ForSC("KYCTransmitter"));
-    final shapassport = bytesToHex(getSha3ForSC("PassportVerifier"));
-    final shaphone = bytesToHex(getSha3ForSC("PhoneVerifier"));
-    final sharesidence = bytesToHex(getSha3ForSC("ResidencePermitVerifier"));
-    final shactnOracle = bytesToHex(getSha3ForSC("CTNOracle"));
-    final shakycVault = bytesToHex(getSha3ForSC("KYCVault"));
-    final shaxcbOracle = bytesToHex(getSha3ForSC("XCBOracle"));
-    final shanameSer = bytesToHex(getSha3ForSC("NameService"));
-    final shactn = bytesToHex(getSha3ForSC("CTN"));
-    final shadriverLisence = bytesToHex(getSha3ForSC("DriverLicenseVerifier"));
-    final shaproofOfAddress = bytesToHex(getSha3ForSC("AddressVerifier"));
+    final shaAndroidLink = bytesToHex(getSha3ForSC('androidLink'));
+    final shaIOSLink = bytesToHex(getSha3ForSC('iosLink'));
+    final shaisMaintaining = bytesToHex(getSha3ForSC('isMaintaining'));
+    final shalatestVersion = bytesToHex(getSha3ForSC('latestVersion'));
+    final shaminVersion = bytesToHex(getSha3ForSC('minVersion'));
+    final shaemailAddress = bytesToHex(getSha3ForSC('EmailVerifier'));
+    final shaidCardVerif = bytesToHex(getSha3ForSC('IDCardVerifier'));
+    final shakycTransmitter = bytesToHex(getSha3ForSC('KYCTransmitter'));
+    final shapassport = bytesToHex(getSha3ForSC('PassportVerifier'));
+    final shaphone = bytesToHex(getSha3ForSC('PhoneVerifier'));
+    final sharesidence = bytesToHex(getSha3ForSC('ResidencePermitVerifier'));
+    final shactnOracle = bytesToHex(getSha3ForSC('CTNOracle'));
+    final shakycVault = bytesToHex(getSha3ForSC('KYCVault'));
+    final shaxcbOracle = bytesToHex(getSha3ForSC('XCBOracle'));
+    final shanameSer = bytesToHex(getSha3ForSC('NameService'));
+    final shactn = bytesToHex(getSha3ForSC('CTN'));
+    final shadriverLisence = bytesToHex(getSha3ForSC('DriverLicenseVerifier'));
+    final shaproofOfAddress = bytesToHex(getSha3ForSC('AddressVerifier'));
 
     // result is a GetAllContractModel object, in which the first byte array is the shaName and the respective second byte array is the contract address or the string value
     final indexAndroidLink = result.var1.indexOf(shaAndroidLink);
