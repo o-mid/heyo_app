@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:heyo/app/modules/shared/data/models/fcm_register_model.dart';
+import 'package:heyo/app/modules/shared/data/models/notification_type.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/netowrk_request_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/notifications/notification_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/registry/registery_provider.dart';
@@ -37,5 +38,19 @@ class AppNotificationProvider extends NotificationProvider {
       'signature': signature,
     });
     return response.isSuccess();
+  }
+
+  @override
+  Future<bool> sendNotification({
+    required String remoteDelegatedCoreId,
+    required NotificationType notificationType,
+  }) async {
+    final result = await networkRequest
+        .post(path: 'notification-service/notification/send', data: {
+      'coreId': remoteDelegatedCoreId,
+      'notificationType': notificationType.name.toUpperCase(),
+      'senderUsername': 'Johnathan Baby',
+    });
+    return result.isSuccess();
   }
 }
