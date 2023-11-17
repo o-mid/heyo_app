@@ -58,10 +58,7 @@ class IntroController extends GetxController with WidgetsBindingObserver {
     //close the corePass bottom sheet
     Get.back();
     _openLoadingDialog();
-
-    if (await waitUntilCoreIdIsReady()) {
-      await _launchCorePassVerificationProcess();
-    }
+    await _launchCorePassVerificationProcess();
   }
 
   Future<void> openCorePassVerificationBottomSheet() async {
@@ -98,21 +95,6 @@ class IntroController extends GetxController with WidgetsBindingObserver {
       Get.back();
       introRepo.launchStore();
     }
-  }
-
-  Future<bool> waitUntilCoreIdIsReady() async {
-    final jobCompleter = Completer<String>();
-    if (p2pState.peerId.value.isNotEmpty) return true;
-    final listener = p2pState.peerId.listen((value) {
-      if (value.isNotEmpty) {
-        jobCompleter.complete(value);
-      }
-    });
-    await jobCompleter.future;
-
-    /// cancels subscription
-    await listener.cancel();
-    return true;
   }
 
   Future<void> applyAndValidateDelegatedAuth(
