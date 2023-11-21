@@ -6,7 +6,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/confirm_message_m
 import 'package:heyo/app/modules/messages/data/repo/messages_repo.dart';
 import 'package:heyo/app/modules/messaging/connection/connection_data_handler.dart';
 import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
-import 'package:heyo/app/modules/messaging/connection/remote_connection_repo.dart';
+import 'package:heyo/app/modules/messaging/connection/rtc_connection_repo.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 import 'package:heyo/app/modules/notifications/controllers/notifications_controller.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';

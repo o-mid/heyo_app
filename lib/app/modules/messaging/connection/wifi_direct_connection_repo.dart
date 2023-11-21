@@ -15,6 +15,25 @@ import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 import 'package:heyo/app/modules/messaging/utils/binary_file_receiving_state.dart';
 import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
 
+class WifiDirectConnectionRepo extends ConnectionRepository {
+  @override
+  void initConnection(MessageConnectionType messageConnectionType, String remoteId) {
+    // TODO: implement initConnection
+  }
+
+  @override
+  Future<void> sendBinaryMessage({required Uint8List binary, required String remoteCoreId}) {
+    // TODO: implement sendBinaryMessage
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> sendTextMessage({required MessageConnectionType messageConnectionType, required String text, required String remoteCoreId}) {
+    // TODO: implement sendTextMessage
+    throw UnimplementedError();
+  }
+
+}
 /*
 class WiFiDirectConnectionRepoImpl extends ConnectionRepository {
   WiFiDirectConnectionRepoImpl({

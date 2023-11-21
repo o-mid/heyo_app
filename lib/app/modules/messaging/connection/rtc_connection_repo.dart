@@ -8,8 +8,8 @@ import 'package:heyo/app/modules/messaging/models.dart';
 import '../models/data_channel_message_model.dart';
 import '../utils/binary_file_receiving_state.dart';
 
-class RemoteConnectionRepository extends ConnectionRepository {
-  RemoteConnectionRepository({
+class RTCMessagingConnectionRepository extends ConnectionRepository {
+  RTCMessagingConnectionRepository({
     required this.dataHandler,
     required this.dataChannelMessagingConnection,
 

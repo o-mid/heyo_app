@@ -6,7 +6,8 @@ import 'package:heyo/app/modules/messages/data/connection_message_repository_imp
 import 'package:heyo/app/modules/messages/data/usecases/init_message_usecase.dart';
 import 'package:heyo/app/modules/messages/data/usecases/read_message_usecase.dart';
 import 'package:heyo/app/modules/messages/data/user_state_repository_Impl.dart';
-import 'package:heyo/app/modules/messaging/connection/remote_connection_repo.dart';
+import 'package:heyo/app/modules/messaging/connection/data/wifi_direct_messaging_connection.dart';
+import 'package:heyo/app/modules/messaging/connection/rtc_connection_repo.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 import 'package:heyo/app/modules/notifications/controllers/notifications_controller.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_repo.dart';
@@ -33,16 +34,19 @@ class MessagesBinding extends Bindings {
     // Determine the connection type
     final args = Get.arguments as MessagesViewArgumentsModel;
     // todo farzam
-    /* final connectionType =
+    final connectionType =
         args.connectionType == MessagingConnectionType.internet
-            ? ConnectionType.RTC
-            : ConnectionType.WiFiDirect;
-*/
+            ? MessagingConnectionType.internet
+            : MessagingConnectionType.wifiDirect;
+
+
+    if(connectionType==MessagingConnectionType.internet){
+
+    }
     Get.lazyPut<MessagesController>(
       () => MessagesController(
         readMessageUseCase: Get.find(),
-        initMessageUseCase:
-            Get.find(),
+        initMessageUseCase: Get.find(),
         messageRepository: ConnectionMessageRepositoryImpl(
           messagesRepo: MessagesRepo(
             messagesProvider: MessagesProvider(
@@ -63,7 +67,15 @@ class MessagesBinding extends Bindings {
             ),
           ),
         ),
-        sendMessageUseCase: Get.find<SendMessageUseCase>(),
+        sendMessageUseCase: SendMessageUseCase(
+            messagesRepo: Get.find(),
+            connectionRepository:
+                connectionType == MessagingConnectionType.internet
+                    ? RTCMessagingConnectionRepository(
+                        dataHandler: Get.find(),
+                        dataChannelMessagingConnection: Get.find())
+                    : WifiDirectMessagingConnection(),
+            processor: Get.find()),
         updateMessageUseCase: Get.find<UpdateMessageUseCase>(),
         deleteMessageUseCase: Get.find<DeleteMessageUseCase>(),
       ),

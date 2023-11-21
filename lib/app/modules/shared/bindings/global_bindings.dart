@@ -15,7 +15,7 @@ import 'package:heyo/app/modules/messaging/connection/connection_data_handler.da
 import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
 import 'package:heyo/app/modules/messaging/connection/data/data_channel_messaging_connection.dart';
 import 'package:heyo/app/modules/messaging/connection/data/received_messaging_data_processor.dart';
-import 'package:heyo/app/modules/messaging/connection/remote_connection_repo.dart';
+import 'package:heyo/app/modules/messaging/connection/rtc_connection_repo.dart';
 import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 import 'package:heyo/app/modules/messaging/sync_messages.dart';
 import 'package:heyo/app/modules/messaging/web_rtc_connection_manager.dart';
@@ -216,11 +216,12 @@ class GlobalBindings extends Bindings {
           contactRepository: Get.find()))
       ..put(
           DataChannelMessagingConnection(multipleConnectionHandler: Get.find()))
-      ..put(RemoteConnectionRepository(
+      ..put(RTCMessagingConnectionRepository(
           dataHandler: Get.find(), dataChannelMessagingConnection: Get.find()))
-      ..put<ConnectionRepository>(RemoteConnectionRepository(
+      ..put<ConnectionRepository>(RTCMessagingConnectionRepository(
           dataHandler: Get.find(), dataChannelMessagingConnection: Get.find()))
 
+      //TODO omid use case refactoring
       // Get.put<AppNotifications>(
       //   AppNotifications(),
       //   permanent: true,
