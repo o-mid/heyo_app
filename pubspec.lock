@@ -623,10 +623,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: c2cd6455d76b6d55cee6bc296c629c2a60e8166b
+      resolved-ref: "524f24826973678aa0115580b234c442d195afff"
       url: "git@ssh.git.energy:corepass/flutter_p2p_communicator.git"
     source: git
-    version: "1.15.1"
+    version: "1.16.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
