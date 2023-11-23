@@ -1,3 +1,6 @@
+// ignore_for_file: require_trailing_commas
+
+import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
@@ -9,25 +12,41 @@ import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/messages/utils/message_to_send_message_type.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/getx.extension.dart';
 
+import '../messages/data/message_processor.dart' as message_processor;
+import 'connection/connection_repo.dart';
+
 class SyncMessages {
+  SyncMessages({
+    required this.p2pState,
+    required this.multipleConnectionHandler,
+    required this.accountInfo,
+    required this.chatHistoryRepo,
+    required this.messagesRepo,
+    required this.connectionRepository,
+  }) {
+    _init();
+  }
   final P2PState p2pState;
   final MultipleConnectionHandler multipleConnectionHandler;
   final AccountInfo accountInfo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final MessagesAbstractRepo messagesRepo;
-  final SendMessageUseCase sendMessageUseCase;
-
-  SyncMessages(
-      {required this.p2pState,
-      required this.multipleConnectionHandler,
-      required this.accountInfo,
-      required this.chatHistoryRepo,
-      required this.messagesRepo,
-      required this.sendMessageUseCase}) {
-    _init();
+  late SendMessageUseCase sendMessageUseCase;
+  final ConnectionRepository connectionRepository;
+  void initializeSendMessageUseCase() {
+    if (Get.isRegistered<SendMessageUseCase>()) {
+      sendMessageUseCase = Get.find();
+    } else {
+      sendMessageUseCase = SendMessageUseCase(
+        messagesRepo: messagesRepo,
+        connectionRepository: connectionRepository,
+        processor: message_processor.MessageProcessor(),
+      );
+    }
   }
 
   _init() async {
+    initializeSendMessageUseCase();
     _initiateConnections();
 
     _sendUnsentMessages();
@@ -50,9 +69,12 @@ class SyncMessages {
               message.getSendMessageType(rtcSession.remotePeer.remoteCoreId);
           if (sendMessageType != null) {
             print("syncMessages: execute: ${rtcSession.connectionId} ");
-
+            sendMessageUseCase = Get.find();
+            if (sendMessageUseCase == null) {
+              initializeSendMessageUseCase();
+            }
             await sendMessageUseCase.execute(
-              messageConnectionType: MessageConnectionType.RTC_DATA_CHANNEL,
+                messageConnectionType: MessageConnectionType.RTC_DATA_CHANNEL,
                 sendMessageType: sendMessageType,
                 remoteCoreId: rtcSession.remotePeer.remoteCoreId,
                 isUpdate: true,
