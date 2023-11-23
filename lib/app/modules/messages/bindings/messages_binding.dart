@@ -7,6 +7,7 @@ import 'package:heyo/app/modules/messages/data/usecases/init_message_usecase.dar
 import 'package:heyo/app/modules/messages/data/usecases/read_message_usecase.dart';
 import 'package:heyo/app/modules/messages/data/user_state_repository_Impl.dart';
 import 'package:heyo/app/modules/messaging/connection/data/wifi_direct_messaging_connection.dart';
+import 'package:heyo/app/modules/messaging/connection/domain/messaging_connection.dart';
 import 'package:heyo/app/modules/messaging/connection/rtc_connection_repo.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 import 'package:heyo/app/modules/notifications/controllers/notifications_controller.dart';
@@ -16,7 +17,9 @@ import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_
 import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
 
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
+import '../../messaging/connection/connection_repo.dart';
 import '../../messaging/unified_messaging_controller.dart';
+import '../../p2p_node/data/account/account_info.dart';
 import '../../p2p_node/data/key/web3_keys.dart';
 import '../../shared/bindings/global_bindings.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
@@ -24,6 +27,7 @@ import '../../shared/data/repository/contact_repository.dart';
 import '../../shared/providers/database/app_database.dart';
 import '../../shared/providers/database/dao/user_provider.dart';
 import '../controllers/messages_controller.dart';
+import '../data/message_processor.dart';
 import '../data/usecases/delete_message_usecase.dart';
 import '../data/usecases/send_message_usecase.dart';
 import '../data/usecases/update_message_usecase.dart';
@@ -34,15 +38,16 @@ class MessagesBinding extends Bindings {
     // Determine the connection type
     final args = Get.arguments as MessagesViewArgumentsModel;
     // todo farzam
-    final connectionType =
-        args.connectionType == MessagingConnectionType.internet
-            ? MessagingConnectionType.internet
-            : MessagingConnectionType.wifiDirect;
+    final connectionType = args.connectionType == MessagingConnectionType.internet
+        ? MessagingConnectionType.internet
+        : MessagingConnectionType.wifiDirect;
+    final connectionRepository = connectionType == MessagingConnectionType.internet
+        ? RTCMessagingConnectionRepository(
+            dataHandler: Get.find(),
+            dataChannelMessagingConnection: Get.find(),
+          )
+        : WifiDirectMessagingConnection();
 
-
-    if(connectionType==MessagingConnectionType.internet){
-
-    }
     Get.lazyPut<MessagesController>(
       () => MessagesController(
         readMessageUseCase: Get.find(),
@@ -50,7 +55,7 @@ class MessagesBinding extends Bindings {
         messageRepository: ConnectionMessageRepositoryImpl(
           messagesRepo: MessagesRepo(
             messagesProvider: MessagesProvider(
-              appDatabaseProvider: Get.find(),
+              appDatabaseProvider: Get.find<AppDatabaseProvider>(),
             ),
           ),
         ),
@@ -68,16 +73,28 @@ class MessagesBinding extends Bindings {
           ),
         ),
         sendMessageUseCase: SendMessageUseCase(
-            messagesRepo: Get.find(),
-            connectionRepository:
-                connectionType == MessagingConnectionType.internet
-                    ? RTCMessagingConnectionRepository(
-                        dataHandler: Get.find(),
-                        dataChannelMessagingConnection: Get.find())
-                    : WifiDirectMessagingConnection(),
-            processor: Get.find()),
-        updateMessageUseCase: Get.find<UpdateMessageUseCase>(),
-        deleteMessageUseCase: Get.find<DeleteMessageUseCase>(),
+          messagesRepo: Get.find(),
+          connectionRepository: connectionRepository,
+          processor: MessageProcessor(),
+        ),
+        updateMessageUseCase: UpdateMessageUseCase(
+          accountInfo: Get.find<AccountInfo>(),
+          messagesRepo: MessagesRepo(
+            messagesProvider: MessagesProvider(
+              appDatabaseProvider: Get.find<AppDatabaseProvider>(),
+            ),
+          ),
+          connectionRepository: connectionRepository,
+          processor: MessageProcessor(),
+        ),
+        deleteMessageUseCase: DeleteMessageUseCase(
+          messagesRepo: MessagesRepo(
+            messagesProvider:
+                MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          ),
+          connectionRepository: connectionRepository,
+          processor: MessageProcessor(),
+        ),
       ),
     );
   }
