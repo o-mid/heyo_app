@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,11 +24,10 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-
   // only activate sentry in release mode
   if (kReleaseMode) {
     await SentryFlutter.init(
-      (options) {
+          (options) {
         options
           ..dsn = Platform.isAndroid ? SENTRY_ANDROID_DNS : SENTRY_IOS_DNS
           ..sendDefaultPii = true
