@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/notifications/controllers/notifications_controller.dart';
@@ -12,9 +14,14 @@ import 'package:heyo/app/modules/web-rtc/models.dart';
 import 'package:heyo/app/modules/web-rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
-class CallConnectionController {
+import '../notifications/controllers/notifications_controller.dart';
+import '../shared/utils/constants/notifications_constant.dart';
+
+class CallConnectionController extends GetxController {
+  final Signaling signaling;
   final CallConnectionsHandler callConnectionsHandler;
-  final AccountInfo accountInfo;
+
+  final AccountRepository accountInfoRepo;
   final NotificationsController notificationsController;
   final ContactRepository contactRepository;
   final callState = Rxn<CallState>();
@@ -30,10 +37,8 @@ class CallConnectionController {
       callState.value = state;
 
       callHistoryState.value = CallHistoryState(
-        callId: callId,
-        remotes: calls,
-        callHistoryStatus:
-            CallHistoryState.mapCallStateToCallHistoryStatus(state),
+        session: session,
+        callHistoryStatus: CallHistoryState.mapCallStateToCallHistoryStatus(state),
       );
 
       print("Call State changed, state is: $state");
@@ -52,7 +57,7 @@ class CallConnectionController {
 
   CallConnectionController(
       {required this.callConnectionsHandler,
-      required this.accountInfo,
+      required this.accountInfoRepo,
       required this.notificationsController,
       required this.contactRepository}) {
     init();

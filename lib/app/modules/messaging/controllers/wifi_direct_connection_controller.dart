@@ -32,11 +32,11 @@ class WifiDirectConnectionController
 
   WifiDirectConnectionController({
     required wifiDirectWrapper,
-    required super.accountInfo,
     required super.messagesRepo,
     required super.chatHistoryRepo,
     required super.notificationsController,
     required super.contactRepository,
+    required super.accountInfoRepo,
   });
 
   // TODO since working with HeyoWifiDirectPlugin instance requests usage of streams

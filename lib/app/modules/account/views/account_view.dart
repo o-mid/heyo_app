@@ -8,6 +8,7 @@ import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart'
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/appbar_widget.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
+import 'package:heyo/app/modules/shared/widgets/menu_item_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -63,7 +64,7 @@ class AccountView extends GetView<AccountController> {
               thickness: 1,
             ),
             SizedBox(height: 12.h),
-            _buildAccountOption(
+            MenuItem(
               onTap: () {
                 Get.toNamed(Routes.CONTACTS);
               },
@@ -72,6 +73,18 @@ class AccountView extends GetView<AccountController> {
                 color: const Color(0xFF039200),
               ),
               iconBackgroundColor: const Color(0xFFE4FFE4),
+            ),
+            MenuItem(
+              onTap: () {
+                controller.logout();
+              },
+              title: LocaleKeys.AccountPage_logout.tr,
+              icon: Icon(
+                Icons.logout,
+                color: Color(
+                  0xFF039200,
+                ),
+              ),
             ),
           ],
         ),

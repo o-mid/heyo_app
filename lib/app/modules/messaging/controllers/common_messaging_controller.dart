@@ -4,7 +4,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 
 import '../../../routes/app_pages.dart';
@@ -22,7 +23,6 @@ import '../../messages/utils/message_from_json.dart';
 
 import '../../notifications/controllers/notifications_controller.dart';
 import '../../notifications/data/models/notifications_payload_model.dart';
-import '../../p2p_node/data/account/account_info.dart';
 import '../../shared/utils/constants/notifications_constant.dart';
 import '../../shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import '../models/data_channel_message_model.dart';
@@ -45,7 +45,7 @@ enum DataChannelConnectivityStatus {
 abstract class CommonMessagingConnectionController extends GetxController {
   final MessagesAbstractRepo messagesRepo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
-  final AccountInfo accountInfo;
+  final AccountRepository accountInfoRepo;
   BinaryFileReceivingState? currentState;
   final NotificationsController notificationsController;
   final ContactRepository contactRepository;
@@ -66,7 +66,7 @@ abstract class CommonMessagingConnectionController extends GetxController {
   ChatModel? userChatmodel;
 
   CommonMessagingConnectionController({
-    required this.accountInfo,
+    required this.accountInfoRepo,
     required this.messagesRepo,
     required this.chatHistoryRepo,
     required this.notificationsController,

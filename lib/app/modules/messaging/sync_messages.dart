@@ -2,16 +2,15 @@ import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abst
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/messages/utils/message_to_send_message_type.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/getx.extension.dart';
 
 class SyncMessages {
   final P2PState p2pState;
   final MultipleConnectionHandler multipleConnectionHandler;
-  final AccountInfo accountInfo;
+  final AccountRepository accountInfo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final MessagesAbstractRepo messagesRepo;
   final SendMessage sendMessage;

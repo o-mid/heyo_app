@@ -5,15 +5,23 @@ import 'package:heyo/app/modules/intro/data/repo/intro_repo.dart';
 import 'package:heyo/app/modules/intro/widgets/verification_loading_dialog.dart';
 import 'package:heyo/app/modules/intro/widgets/verification_bottom_sheet.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
+import 'package:heyo/app/modules/shared/data/models/account_types.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/app_account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:tuple/tuple.dart';
 
 class IntroController extends GetxController with WidgetsBindingObserver {
   final IntroRepo introRepo;
+  final AccountRepository appAccountRepository;
   final P2PState p2pState;
 
-  IntroController({required this.introRepo, required this.p2pState});
+  IntroController(
+      {required this.appAccountRepository,
+      required this.introRepo,
+      required this.p2pState});
 
   @override
   void onInit() async {
@@ -50,10 +58,7 @@ class IntroController extends GetxController with WidgetsBindingObserver {
     //close the corePass bottom sheet
     Get.back();
     _openLoadingDialog();
-
-    if (await waitUntilCoreIdIsReady()) {
-      await _launchCorePassVerificationProcess();
-    }
+    await _launchCorePassVerificationProcess();
   }
 
   Future<void> openCorePassVerificationBottomSheet() async {
@@ -62,7 +67,8 @@ class IntroController extends GetxController with WidgetsBindingObserver {
       isScrollControlled: true,
       backgroundColor: COLORS.kWhiteColor,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(topRight: Radius.circular(16),topLeft: Radius.circular(16)),
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(16), topLeft: Radius.circular(16)),
       ),
     );
   }
@@ -91,21 +97,6 @@ class IntroController extends GetxController with WidgetsBindingObserver {
     }
   }
 
-  Future<bool> waitUntilCoreIdIsReady() async {
-    final jobCompleter = Completer<String>();
-    if (p2pState.peerId.value.isNotEmpty) return true;
-    final listener = p2pState.peerId.listen((value) {
-      if (value.isNotEmpty) {
-        jobCompleter.complete(value);
-      }
-    });
-    await jobCompleter.future;
-
-    /// cancels subscription
-    await listener.cancel();
-    return true;
-  }
-
   Future<void> applyAndValidateDelegatedAuth(
     Tuple3<bool, String, String> corePassData,
   ) async {
@@ -116,7 +107,9 @@ class IntroController extends GetxController with WidgetsBindingObserver {
     if (isSuccessfulAndValid) {
       await Get.offAllNamed(Routes.VERIFIED_USER);
     } else {
-      Get.snackbar('Error : ', 'Signature is invalid');
+      SnackBarWidget.error(
+        message: 'Signature is invalid',
+      );
     }
   }
 }

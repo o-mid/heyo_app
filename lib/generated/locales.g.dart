@@ -197,6 +197,7 @@ class LocaleKeys {
       'ShareableQrPage_copiedToClipboardText';
   static const AccountPage_appBarTitle = 'AccountPage_appBarTitle';
   static const AccountPage_contacts = 'AccountPage_contacts';
+  static const AccountPage_logout = 'AccountPage_logout';
   static const ContactsPage_appBarTitle = 'ContactsPage_appBarTitle';
   static const ContactsPage_contactListHeader =
       'ContactsPage_contactListHeader';
@@ -525,6 +526,7 @@ class Locales {
     'ShareableQrPage_copiedToClipboardText': 'CoreID copied to clipboard',
     'AccountPage_appBarTitle': 'Account',
     'AccountPage_contacts': 'Contacts',
+    'AccountPage_logout': 'Logout',
     'ContactsPage_appBarTitle': 'Contacts',
     'ContactsPage_contactListHeader': 'Contact List (@count)',
     'NewCallPage_appBarTitle': 'New Call',

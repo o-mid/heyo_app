@@ -29,8 +29,9 @@ class LibP2PConnectionContractor extends ConnectionContractor {
 
   @override
   Future<bool> sendMessage(String data, remoteId) {
-    final remotePeer = remoteId as RemotePeerData;
-    return p2pCommunicator.sendSDP(data, remotePeer.remoteCoreId, remotePeer.remoteCoreId);
+    final remotePeer = remoteId as RemotePeer;
+    return p2pCommunicator.sendSDP(
+        data, remotePeer.remoteCoreId, remotePeer.remoteCoreId);
   }
 
   //unCompleted

@@ -216,8 +216,7 @@ class MessagesController extends GetxController {
     Get.delete<CommonMessagingConnectionController>();
     Get.put<CommonMessagingConnectionController>(messagingConnection);
 
-    await messagingConnection.initMessagingConnection(
-        remoteId: user.value.coreId);
+    await messagingConnection.initMessagingConnection(remoteId: user.value.coreId);
   }
 
   Future<void> _initMessagesStream() async {
@@ -408,12 +407,14 @@ class MessagesController extends GetxController {
     Duration? duration,
     Curve? curve,
   }) {
-    scrollController.animateTo(
-      scrollController.position.minScrollExtent,
-      curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
-      duration:
-          duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
-    );
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        scrollController.position.minScrollExtent,
+        curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
+        duration:
+            duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+      );
+    }
   }
 
   void animateToPosition({
@@ -421,12 +422,14 @@ class MessagesController extends GetxController {
     Duration? duration,
     Curve? curve,
   }) {
-    scrollController.animateTo(
-      offset,
-      curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
-      duration:
-          duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
-    );
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        offset,
+        curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
+        duration:
+            duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+      );
+    }
   }
 
   void toggleReaction(MessageModel msg, String emoji) {
@@ -557,12 +560,14 @@ class MessagesController extends GetxController {
     Duration? duration,
     Curve? curve,
   }) {
-    scrollController.animateTo(
-      scrollController.position.maxScrollExtent,
-      curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
-      duration:
-          duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
-    );
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        scrollController.position.maxScrollExtent,
+        curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
+        duration:
+            duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+      );
+    }
   }
 
   void _postMessageSendOperations() {
@@ -641,7 +646,7 @@ class MessagesController extends GetxController {
 
     replyingTo.value = ReplyToModel(
       repliedToMessageId: msg.messageId,
-      repliedToName: msg.senderName,
+      repliedToName: msg.isFromMe ? 'me' : msg.senderName,
       repliedToMessage: replyMsg,
     );
 
@@ -1682,6 +1687,7 @@ class MessagesController extends GetxController {
             name: user.value.name,
             lastReadMessageId: lastReadRemoteMessagesId.value,
             isOnline: true,
+            timestamp: messages.last.timestamp,
             scrollPosition: scrollPositionMessagesId.value,
             lastMessage: messages.last.getMessagePreview(),
             notificationCount: unReadMessagesCount),

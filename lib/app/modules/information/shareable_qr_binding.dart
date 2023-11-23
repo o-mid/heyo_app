@@ -7,7 +7,7 @@ class ShareableQRBinding extends Bindings {
   @override
   void dependencies() {
     Get.put(ShareableQRController(
-      qrInfo: QRInfo(accountInfo: GlobalBindings.accountInfo, p2pState: Get.find()),
+      qrInfo: QRInfo(accountInfoRepo: Get.find(), p2pState: Get.find()),
     ));
   }
 }

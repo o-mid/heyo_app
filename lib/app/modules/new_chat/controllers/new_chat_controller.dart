@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguments_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
@@ -21,12 +21,13 @@ class NewChatController extends GetxController
   late Animation<double> animation;
   late TextEditingController inputController;
   final ContactRepository contactRepository;
-  final AccountInfo accountInfo;
+  final AccountRepository accountInfoRepo;
   final inputFocusNode = FocusNode();
   final inputText = "".obs;
   late StreamSubscription _contactasStreamSubscription;
+
   NewChatController(
-      {required this.contactRepository, required this.accountInfo});
+      {required this.contactRepository, required this.accountInfoRepo});
 
 // in nearby users Tab after 3 seconds the refresh button will be visible
   RxBool refreshBtnVisibility = false.obs;
@@ -83,6 +84,7 @@ class NewChatController extends GetxController
   }
 
   final String profileLink = "https://heyo.core/m6ljkB4KJ";
+
 // Mock data for the users
   final nearbyUsers = <UserModel>[
     UserModel(
@@ -158,7 +160,7 @@ class NewChatController extends GetxController
         (await contactRepository.search(query)).toList();
 
     if (searchedItems.isEmpty) {
-      String? currentUserCoreId = await accountInfo.getCorePassCoreId();
+      final currentUserCoreId = await accountInfoRepo.getUserAddress();
       if (query.isValidCoreId() && currentUserCoreId != query) {
         //its a new user
         //TODO update fields based on correct data

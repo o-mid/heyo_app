@@ -15,10 +15,11 @@ class MessagesList extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<MessagesController>();
 
+    // ignore: require_trailing_commas
     return GestureDetector(
 
         // when the media Media Glassmorphic is Open tap on the rest of the screen will close it
-        onTap: () => controller.closeMediaGlassmorphic(),
+        onTap: controller.closeMediaGlassmorphic,
         child: const MessagesListViewWidget());
   }
 }

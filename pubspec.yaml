@@ -49,7 +49,6 @@ dependencies:
   flutter_p2p_communicator:
     git:
       url: git@ssh.git.energy:corepass/flutter_p2p_communicator.git
-      ref: master
 
   flutter_bip39:
     git:
@@ -62,7 +61,7 @@ dependencies:
   swipeable_tile: ^2.0.0
   expandable_bottom_sheet: ^1.1.1+1
   reorderables: ^0.5.0
-  file_picker: ^4.6.1
+  file_picker: ^5.0.1
   path_provider: ^2.0.11
   open_file: ^3.2.1
   ed_screen_recorder: ^0.0.10
@@ -88,6 +87,7 @@ dependencies:
   uni_links: ^0.5.1
   flutter_native_splash: ^2.2.19
   flutter_slidable: ^3.0.0
+  sentry_flutter: ^7.12.0
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
 

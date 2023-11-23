@@ -1,3 +1,5 @@
+import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
@@ -5,10 +7,10 @@ import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 
 class SearchContactUserUseCase {
   final ContactRepository contactRepository;
-  final AccountInfo accountInfo;
+  final AccountRepository accountInfoRepo;
 
   SearchContactUserUseCase({
-    required this.accountInfo,
+    required this.accountInfoRepo,
     required this.contactRepository,
   });
 
@@ -17,7 +19,7 @@ class SearchContactUserUseCase {
         (await contactRepository.search(query)).toList();
 
     if (searchedItems.isEmpty) {
-      String? currentUserCoreId = await accountInfo.getCorePassCoreId();
+      final currentUserCoreId = await accountInfoRepo.getUserAddress();
       if (query.isValidCoreId() && currentUserCoreId != query) {
         //its a new user
         //TODO update fields based on correct data

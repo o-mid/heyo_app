@@ -2,21 +2,21 @@ import 'dart:async';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
-import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../generated/assets.gen.dart';
 import '../../../../generated/locales.g.dart';
 import '../../chats/data/models/chat_model.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
+import '../../new_chat/data/models/user_model.dart';
 import '../../new_chat/data/models/user_model/user_model.dart';
 import '../../p2p_node/data/account/account_info.dart';
 import '../../shared/data/repository/contact_repository.dart';
 
 class WifiDirectController extends GetxController {
-  final AccountInfo accountInfo;
+  final AccountRepository accountInfoRepo;
   final ContactRepository contactRepository;
   HeyoWifiDirect? _heyoWifiDirect;
   bool isLocationPermissionGranted = false;
@@ -26,7 +26,7 @@ class WifiDirectController extends GetxController {
   WifiDirectConnectionController wifiDirectConnectionController;
 
   WifiDirectController(
-      {required this.accountInfo,
+      {required this.accountInfoRepo,
       required this.wifiDirectConnectionController,
       required this.contactRepository}) {
     _heyoWifiDirect =
@@ -105,7 +105,6 @@ class WifiDirectController extends GetxController {
     switch (event.type) {
       // Refresh information about wifi-direct available peers
       case EventType.peerListRefresh:
-
         // PeerList peerList = signaling.wifiDirectPlugin.peerList;
         Map<String, Peer> peersAvailable = (event.message as PeerList).peers;
         print(
@@ -164,7 +163,7 @@ class WifiDirectController extends GetxController {
   }
 
   Future<void> _setCoreId() async {
-    coreId.value = (await accountInfo.getCorePassCoreId()) ?? "";
+    coreId.value = (await accountInfoRepo.getUserAddress()) ?? "";
   }
 
   // this will show a custom UI permission dialog at first and then the default permission dialog for location permission

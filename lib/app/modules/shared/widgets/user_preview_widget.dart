@@ -14,6 +14,7 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
+import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
@@ -105,9 +106,9 @@ class UserPreviewWidget extends GetView<UserPreview> {
                       ),
                     );
                   } else {
-                    Get.snackbar(
-                      "Wifi Direct",
-                      "Calling over wifi direct are not supported yet",
+                    SnackBarWidget.info(
+                      title: 'Wifi Direct',
+                      message: 'Calling over wifi direct are not supported yet',
                     );
                   }
                 },
@@ -133,9 +134,9 @@ class UserPreviewWidget extends GetView<UserPreview> {
                       ),
                     );
                   } else {
-                    Get.snackbar(
-                      "Wifi Direct",
-                      "Calling over wifi direct are not supported yet",
+                    SnackBarWidget.info(
+                      title: 'Wifi Direct',
+                      message: 'Calling over wifi direct are not supported yet',
                     );
                   }
                 },

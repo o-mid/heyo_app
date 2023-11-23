@@ -3,23 +3,33 @@ import 'dart:convert';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
+import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
 import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 
 class P2PNodeResponseStream {
-  StreamSubscription<P2PReqResNodeModel?>? _nodeResponseSubscription;
-  bool advertised = false;
-  final P2PState p2pState;
+  P2PNodeResponseStream(
+      {required this.p2pState,
+      required this.libP2PStorageProvider,
+      required this.accountRepository});
 
-  P2PNodeResponseStream({required this.p2pState});
+  StreamSubscription<P2PReqResNodeModel?>? _nodeResponseSubscription;
+  bool advertiseRequested = false;
+  final P2PState p2pState;
+  LibP2PStorageProvider libP2PStorageProvider;
+  /// temporarily added here since there is nothing to determine this class is in
+  /// data or domain layer
+  AccountRepository accountRepository;
 
   void setUp() {
     _setUpResponseStream();
   }
 
   void reset() {
-    advertised = false;
+    advertiseRequested = false;
     p2pState.responses = [];
     _nodeResponseSubscription?.cancel();
     _nodeResponseSubscription = null;
@@ -52,7 +62,8 @@ class P2PNodeResponseStream {
 
     if (event.name == P2PReqResNodeNames.connect &&
         event.error == null &&
-        !advertised) {
+        !advertiseRequested) {
+      advertiseRequested = true;
       final info = P2PReqResNodeModel(name: P2PReqResNodeNames.advertise);
 
       final id = await FlutterP2pCommunicator.sendRequest(info: info);
@@ -67,20 +78,20 @@ class P2PNodeResponseStream {
     } else if (event.name == P2PReqResNodeNames.advertise &&
         event.error == null) {
       // now you can start talking or communicating to others
-      advertised = true;
       p2pState.advertise.value = true;
+    } else if (event.name == P2PReqResNodeNames.addDelegatedCoreID &&
+        event.error != null &&
+        event.error!.contains('invalid')) {
+      await accountRepository.logout();
+      await Get.offAllNamed(AppPages.INITIAL);
     } else if (event.name == P2PReqResNodeNames.addrs && event.error == null) {
       p2pState.address.value = (event.body!["addrs"] as List<dynamic>)
           .map((e) => e.toString())
           .toList();
-    } else if (event.name == P2PReqResNodeNames.addDelegatedCoreID) {
-      p2pState.delegationSuccessful.value = event.error == null;
-      // calling refresh to force putting new value
-      p2pState.delegationSuccessful.refresh();
     }
     if (event.name == P2PReqResNodeNames.peerID && event.error == null) {
       p2pState.peerId.value = event.body!["peerID"].toString();
-      final coreId = (await GlobalBindings.accountInfo.getLocalCoreId())!;
+      final coreId = (await libP2PStorageProvider.getLocalCoreId())!;
       final peerId = p2pState.peerId.value;
       final addressId = jsonEncode(p2pState.address.value);
       print(

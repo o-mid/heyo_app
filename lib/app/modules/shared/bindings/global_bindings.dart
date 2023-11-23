@@ -13,6 +13,10 @@ import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
 import 'package:heyo/app/modules/messaging/sync_messages.dart';
 import 'package:heyo/app/modules/messaging/web_rtc_connection_manager.dart';
 import 'package:heyo/app/modules/notifications/controllers/app_notifications.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/app_account_repository.dart';
+import 'package:heyo/app/modules/shared/providers/account/creation/account_creation.dart';
+import 'package:heyo/app/modules/shared/providers/account/creation/libp2p_account_creation.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
 import 'package:heyo/app/modules/shared/controllers/call_history_observer.dart';
 import 'package:heyo/app/modules/shared/controllers/connection_controller.dart';
@@ -20,14 +24,13 @@ import 'package:heyo/app/modules/shared/controllers/global_message_controller.da
 import 'package:heyo/app/modules/shared/controllers/live_location_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/audio_message_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/video_message_controller.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_repo.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/web3_keys.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_manager.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_request.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
+import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
 import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/providers/database/dao/user_provider.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
@@ -55,10 +58,7 @@ import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 
 class GlobalBindings extends Bindings {
   // accountInfo
-  static AccountInfo accountInfo = AccountRepo(
-    localProvider: SecureStorageProvider(),
-    cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
-  );
+  static SecureStorageProvider secureStorageProvider = SecureStorageProvider();
 
   // p2p related bindings
 
@@ -75,24 +75,47 @@ class GlobalBindings extends Bindings {
 
   static WifiDirectConnectionController wifiDirectConnectionController =
       WifiDirectConnectionController(
-          wifiDirectWrapper: wifiDirectWrapper,
-          accountInfo: accountInfo,
-          messagesRepo: MessagesRepo(
-            messagesProvider: MessagesProvider(
-                appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-          ),
-          chatHistoryRepo: ChatHistoryLocalRepo(
-            chatHistoryProvider: ChatHistoryProvider(
-                appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-          ),
-          notificationsController: Get.find(),
-          contactRepository: Get.find());
+    wifiDirectWrapper: wifiDirectWrapper,
+    messagesRepo: MessagesRepo(
+      messagesProvider: MessagesProvider(
+        appDatabaseProvider: Get.find<AppDatabaseProvider>(),
+      ),
+    ),
+    chatHistoryRepo: ChatHistoryLocalRepo(
+      chatHistoryProvider: ChatHistoryProvider(
+          appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+    ),
+    notificationsController:
+        NotificationsController(appNotifications: appNotifications),
+    contactRepository: Get.find(),
+    accountInfoRepo: Get.find(),
+  );
 
   @override
   void dependencies() {
     Get
+      ..put<LibP2PStorageProvider>(
+        LibP2PStorageProvider(
+          localProvider: secureStorageProvider,
+        ),
+      )
+      ..put<AccountCreation>(LibP2PAccountCreation(
+        localProvider: secureStorageProvider,
+        cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
+        cryptoInfoProvider: Get.find(),
+      ))
+      ..put<AccountRepository>(
+        AppAccountRepository(
+          libP2PStorageProvider: Get.find(),
+          localStorageProvider: secureStorageProvider,
+        ),
+        permanent: true,
+      )
       ..put(P2PState(), permanent: true)
-      ..put(P2PCommunicator(p2pState: Get.find(), accountInfo: accountInfo))
+      ..put(P2PCommunicator(
+        p2pState: Get.find(),
+        libP2PStorageProvider: Get.find(),
+      ))
       ..put(
         P2PNodeRequestStream(
           p2pState: Get.find(),
@@ -102,17 +125,20 @@ class GlobalBindings extends Bindings {
       ..put(
         P2PNodeResponseStream(
           p2pState: Get.find(),
+          libP2PStorageProvider: Get.find(),
+          accountRepository: Get.find(),
         ),
         permanent: true,
       )
       ..put<P2PNodeController>(
         P2PNodeController(
           p2pNode: P2PNode(
-            accountInfo: accountInfo,
             p2pNodeRequestStream: Get.find(),
             p2pNodeResponseStream: Get.find(),
             p2pState: Get.find(),
             web3client: web3Client,
+            libP2PStorageProvider: Get.find(),
+            accountCreation: Get.find(),
           ),
           p2pState: Get.find(),
         ),
@@ -135,8 +161,9 @@ class GlobalBindings extends Bindings {
         ),
         permanent: true,
       )
+
       // data base provider dependencies
-      ..put(AppDatabaseProvider(accountInfo: accountInfo), permanent: true)
+      ..put(AppDatabaseProvider(), permanent: true)
       ..put(
         ContactRepository(
           cacheContractor: CacheRepository(
@@ -169,9 +196,10 @@ class GlobalBindings extends Bindings {
           permanent: true)
       ..put(
           CallConnectionController(
+              accountInfoRepo: Get.find(),
+              notificationsController:
+                  NotificationsController(appNotifications: appNotifications),
               callConnectionsHandler: Get.find(),
-              accountInfo: accountInfo,
-              notificationsController: Get.find(),
               contactRepository: ContactRepository(
                 cacheContractor: CacheRepository(
                     userProvider: UserProvider(
@@ -205,7 +233,7 @@ class GlobalBindings extends Bindings {
                 appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
           contactRepository: Get.find<ContactRepository>()))
-      ..put(AccountController(accountInfo: accountInfo))
+      ..put(AccountController(accountInfoRepo: Get.find()))
       ..put(GlobalMessageController())
       ..put(AudioMessageController())
       ..put(VideoMessageController())
@@ -213,19 +241,21 @@ class GlobalBindings extends Bindings {
       ..put(ConnectionController(p2pState: Get.find()))
       ..put(
         MessagingConnectionController(
-            multipleConnectionHandler: Get.find(),
-            accountInfo: accountInfo,
-            messagesRepo: MessagesRepo(
-              messagesProvider: MessagesProvider(
-                  appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          multipleConnectionHandler: Get.find(),
+          messagesRepo: MessagesRepo(
+            messagesProvider: MessagesProvider(
+                appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          ),
+          chatHistoryRepo: ChatHistoryLocalRepo(
+            chatHistoryProvider: ChatHistoryProvider(
+              appDatabaseProvider: Get.find<AppDatabaseProvider>(),
             ),
-            chatHistoryRepo: ChatHistoryLocalRepo(
-              chatHistoryProvider: ChatHistoryProvider(
-                appDatabaseProvider: Get.find<AppDatabaseProvider>(),
-              ),
-            ),
-            notificationsController: Get.find(),
-            contactRepository: Get.find()),
+          ),
+          notificationsController:
+              NotificationsController(appNotifications: appNotifications),
+          contactRepository: Get.find(),
+          accountInfoRepo: Get.find(),
+        ),
         permanent: true,
       )
       ..put(
@@ -254,7 +284,7 @@ class GlobalBindings extends Bindings {
       ..put(SyncMessages(
           p2pState: Get.find(),
           multipleConnectionHandler: Get.find(),
-          accountInfo: accountInfo,
+          accountInfo: Get.find(),
           chatHistoryRepo: ChatHistoryLocalRepo(
             chatHistoryProvider: ChatHistoryProvider(
               appDatabaseProvider: Get.find<AppDatabaseProvider>(),

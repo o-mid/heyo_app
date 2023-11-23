@@ -7,26 +7,27 @@ import 'package:heyo/app/modules/messages/data/models/messages/live_location_mes
 import 'package:heyo/app/modules/messages/data/models/messages/location_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
+import 'package:heyo/app/modules/messages/widgets/body/message_widget.dart';
+import 'package:heyo/app/modules/messages/widgets/body/reaction_box.dart';
+import 'package:heyo/app/modules/messages/widgets/body/recipient_reply_to_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/body/sender_reply_to_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 
-import 'message_widget.dart';
-import 'reaction_box.dart';
-import 'recipient_reply_to_widget.dart';
-
 class MessageSelectionWrapper extends StatefulWidget {
+  const MessageSelectionWrapper({
+    required this.message,
+    super.key,
+    this.isMockMessage = false,
+    this.iconUrl,
+  });
+
   final MessageModel message;
   final bool isMockMessage;
   final String? iconUrl;
-  const MessageSelectionWrapper({
-    Key? key,
-    required this.message,
-    this.isMockMessage = false,
-    this.iconUrl,
-  }) : super(key: key);
 
   @override
-  State<MessageSelectionWrapper> createState() => _MessageSelectionWrapperState();
+  State<MessageSelectionWrapper> createState() =>
+      _MessageSelectionWrapperState();
 }
 
 class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
@@ -44,9 +45,11 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
         children: [
           if (message.replyTo != null)
             Row(
-              textDirection: message.isFromMe ? TextDirection.rtl : TextDirection.ltr,
+              textDirection:
+                  message.isFromMe ? TextDirection.rtl : TextDirection.ltr,
               children: [
-                if (!message.isFromMe) SizedBox(width: 16.w + 20), // Left padding + profile size
+                if (!message.isFromMe)
+                  SizedBox(width: 16.w + 20), // Left padding + profile size
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
@@ -65,7 +68,8 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
             ),
           GestureDetector(
             key: Key(message.messageId),
-            onLongPress: () => controller.toggleMessageSelection(message.messageId),
+            onLongPress: () =>
+                controller.toggleMessageSelection(message.messageId),
             onTap: controller.selectedMessages.isEmpty
                 ? null
                 : () => controller.toggleMessageSelection(message.messageId),
@@ -76,7 +80,9 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
                 // Material is used because if container is given color, it will
                 // hide the reaction widget borders
                 Material(
-                  color: message.isSelected ? COLORS.kGreenLighterColor : Colors.transparent,
+                  color: message.isSelected
+                      ? COLORS.kGreenLighterColor
+                      : Colors.transparent,
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 4.h),
                     child: MessageWidget(
@@ -92,7 +98,10 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
                 Positioned(
                   top: -4.h,
                   child: AnimatedScale(
-                    scale: message.isSelected && controller.selectedMessages.length == 1 ? 1 : 0,
+                    scale: message.isSelected &&
+                            controller.selectedMessages.length == 1
+                        ? 1
+                        : 0,
                     duration: const Duration(milliseconds: 200),
                     child: ReactionBox(
                       message: message,
@@ -108,7 +117,7 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
                       color: COLORS.kGreenMainColor,
                       width: 3,
                     ),
-                  )
+                  ),
               ],
             ),
           ),
