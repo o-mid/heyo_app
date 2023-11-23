@@ -9,6 +9,7 @@ class HomeBinding extends Bindings {
     Get.lazyPut<HomeController>(
       () => HomeController(
         p2pState: Get.find(),
+        connectionContractor: Get.find(),
       ),
     );
   }

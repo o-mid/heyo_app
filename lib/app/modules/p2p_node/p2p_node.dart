@@ -49,7 +49,7 @@ class P2PNode {
     _startP2PNode();
   }
 
-  void _startP2PNode() async {
+  Future<void> initNode() async {
     // start P2P node Prosses
 
     // 1. check if account is created and if not create it and save it in storage
@@ -89,10 +89,15 @@ class P2PNode {
       peerSeed = bytesToHex(generatedMnemonic.aesKeySeed);
       await libP2PStorageProvider.setP2PSecret(peerSeed);
     }
+  }
+
+  void _startP2PNode() async {
+    final peerSeed = await libP2PStorageProvider.getP2PSecret();
+
     final networkId = await web3client.getNetworkId();
 
     await FlutterP2pCommunicator.startNode(
-      peerSeed: peerSeed,
+      peerSeed: peerSeed!,
       enableStaticRelays: true,
       networkId: networkId.toString(),
     );

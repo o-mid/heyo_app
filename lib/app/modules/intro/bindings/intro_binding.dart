@@ -9,8 +9,8 @@ import 'package:heyo/app/modules/shared/utils/datetime_utils.dart';
 class IntroBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<IntroController>(
-      () => IntroController(
+    Get.put<IntroController>(
+      IntroController(
         introRepo: IntroRepo(
           vcp: VerificationCorePassProvider(
             cryptoInfo: Get.find(),
@@ -19,6 +19,7 @@ class IntroBinding extends Bindings {
           ),
           storeProvider: StoreProvider(),
           accountRepository: Get.find(),
+          connectionContractor: Get.find(),
         ),
         p2pState: Get.find(),
         appAccountRepository: Get.find(),

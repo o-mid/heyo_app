@@ -12,6 +12,7 @@ class SplashBinding extends Bindings {
           notificationProvider: Get.find(),
           registryProvider: Get.find(),
         ),
+        connectionContractor: Get.find(),
       ),
     );
   }
