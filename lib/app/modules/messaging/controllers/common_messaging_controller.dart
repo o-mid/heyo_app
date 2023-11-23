@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 

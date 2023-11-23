@@ -10,9 +10,7 @@ import '../../../../generated/assets.gen.dart';
 import '../../../../generated/locales.g.dart';
 import '../../chats/data/models/chat_model.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
-import '../../new_chat/data/models/user_model.dart';
 import '../../new_chat/data/models/user_model/user_model.dart';
-import '../../p2p_node/data/account/account_info.dart';
 import '../../shared/data/repository/contact_repository.dart';
 
 class WifiDirectController extends GetxController {

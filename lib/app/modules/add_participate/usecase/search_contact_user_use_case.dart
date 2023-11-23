@@ -1,7 +1,5 @@
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 

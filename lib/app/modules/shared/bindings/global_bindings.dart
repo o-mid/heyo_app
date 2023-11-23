@@ -86,7 +86,7 @@ class GlobalBindings extends Bindings {
           appDatabaseProvider: Get.find<AppDatabaseProvider>()),
     ),
     notificationsController:
-        NotificationsController(appNotifications: appNotifications),
+        Get.find(),
     contactRepository: Get.find(),
     accountInfoRepo: Get.find(),
   );
@@ -198,7 +198,7 @@ class GlobalBindings extends Bindings {
           CallConnectionController(
               accountInfoRepo: Get.find(),
               notificationsController:
-                  NotificationsController(appNotifications: appNotifications),
+                  Get.find(),
               callConnectionsHandler: Get.find(),
               contactRepository: ContactRepository(
                 cacheContractor: CacheRepository(
@@ -252,7 +252,7 @@ class GlobalBindings extends Bindings {
             ),
           ),
           notificationsController:
-              NotificationsController(appNotifications: appNotifications),
+              Get.find(),
           contactRepository: Get.find(),
           accountInfoRepo: Get.find(),
         ),

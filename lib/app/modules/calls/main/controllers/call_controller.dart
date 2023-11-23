@@ -10,10 +10,10 @@ import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/connected_participant_model/connected_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/local_participant_model/local_participant_model.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 //import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/routes/app_pages.dart';
@@ -32,7 +32,7 @@ class CallController extends GetxController {
   });
 
   final CallRepository callRepository;
-  final AccountInfo accountInfo;
+  final AccountRepository accountInfo;
 
   //* CallViewArgumentsModel will not effect the UI
   late CallViewArgumentsModel args;
@@ -82,7 +82,7 @@ class CallController extends GetxController {
   }
 
   Future<void> initLocalRenderer() async {
-    final localParticipateCoreId = await accountInfo.getCorePassCoreId();
+    final localParticipateCoreId = await accountInfo.getUserAddress();
     localParticipate.value = LocalParticipantModel(
       name: localParticipateCoreId!,
       iconUrl: 'https://avatars.githubusercontent.com/u/7847725?v=4',
