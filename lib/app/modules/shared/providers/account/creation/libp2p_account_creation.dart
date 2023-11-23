@@ -10,12 +10,12 @@ import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_
 class LibP2PAccountCreation extends AccountCreation {
   final LocalStorageAbstractProvider localProvider;
   final CryptographyKeyGenerator cryptographyKeyGenerator;
-  final LibP2PStorageProvider cryptoInfoProvider;
+  final LibP2PStorageProvider libp2pStorage;
 
   LibP2PAccountCreation({
     required this.localProvider,
     required this.cryptographyKeyGenerator,
-    required this.cryptoInfoProvider,
+    required this.libp2pStorage,
   });
 
   @override
@@ -26,7 +26,7 @@ class LibP2PAccountCreation extends AccountCreation {
 
   @override
   Future<void> saveAccount(CreateAccountResult accountResult) async {
-    await cryptoInfoProvider.saveCredentials(
+    await libp2pStorage.saveCredentials(
       accountResult.coreId,
       accountResult.privateKey,
       null,
