@@ -105,11 +105,13 @@ class P2PNode {
       await applyDelegatedAuth();
     }
 
-    await Future.forEach(P2P_Nodes, (P2PAddrModel element) async {
+    //await Future.forEach(P2P_Nodes, (P2PAddrModel element) async {
       final info = P2PReqResNodeModel(
-          name: P2PReqResNodeNames.connect, body: element.toJson());
+          name: P2PReqResNodeNames.connect, body: P2PAddrModel(
+        id: "12D3KooWQa4YvzS24mdJWBCk19pSoYLpxQbfx7vYp5pE1MYoDBGX",addrs:["/ip4/65.109.230.224/tcp/4001"]
+      ).toJson());
       await FlutterP2pCommunicator.sendRequest(info: info);
-    });
+  //  });
   }
 
   void _listenToStreams(
