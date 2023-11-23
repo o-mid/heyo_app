@@ -40,8 +40,8 @@ class P2PNode {
     required this.web3client,
   });
 
-  void _setUpP2PNode(
-      void Function(P2PReqResNodeModel model) onNewRequestReceived) {
+  Future<void> _setUpP2PNode(
+      void Function(P2PReqResNodeModel model) onNewRequestReceived) async {
     // setup the p2p ResponseStream and RequestStream and listen to them
     _listenToStreams(onNewRequestReceived);
 
