@@ -20,6 +20,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   // only activate sentry in release mode
   if (kReleaseMode) {
     await SentryFlutter.init(
