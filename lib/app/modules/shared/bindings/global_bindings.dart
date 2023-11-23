@@ -111,7 +111,7 @@ class GlobalBindings extends Bindings {
       ..put<AccountCreation>(LibP2PAccountCreation(
         localProvider: secureStorageProvider,
         cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
-        cryptoInfoProvider: Get.find(),
+        libp2pStorage: Get.find(),
       ))
       ..put<AccountRepository>(
         AppAccountRepository(
