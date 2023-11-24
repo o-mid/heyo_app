@@ -22,7 +22,7 @@ class SyncMessages {
     required this.accountInfo,
     required this.chatHistoryRepo,
     required this.messagesRepo,
-    required this.connectionRepository,
+    required this.sendMessageUseCase,
   }) {
     _init();
   }
@@ -31,28 +31,15 @@ class SyncMessages {
   final AccountInfo accountInfo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final MessagesAbstractRepo messagesRepo;
-  late SendMessageUseCase sendMessageUseCase;
-  final ConnectionRepository connectionRepository;
-  void initializeSendMessageUseCase() {
-    if (Get.isRegistered<SendMessageUseCase>()) {
-      sendMessageUseCase = Get.find();
-    } else {
-      sendMessageUseCase = SendMessageUseCase(
-        messagesRepo: messagesRepo,
-        connectionRepository: connectionRepository,
-        processor: message_processor.MessageProcessor(),
-      );
-    }
-  }
+  final SendMessageUseCase sendMessageUseCase;
 
   _init() async {
-    initializeSendMessageUseCase();
     _initiateConnections();
 
     _sendUnsentMessages();
   }
 
-  _sendUnsentMessages() {
+  void _sendUnsentMessages() {
     multipleConnectionHandler.onRTCSessionConnected = (rtcSession) async {
       print("syncMessages: onRTCSessionConnected: ${rtcSession.connectionId} ");
       List<MessageModel?> unsentMessages =
@@ -69,10 +56,7 @@ class SyncMessages {
               message.getSendMessageType(rtcSession.remotePeer.remoteCoreId);
           if (sendMessageType != null) {
             print("syncMessages: execute: ${rtcSession.connectionId} ");
-            sendMessageUseCase = Get.find();
-            if (sendMessageUseCase == null) {
-              initializeSendMessageUseCase();
-            }
+
             await sendMessageUseCase.execute(
                 messageConnectionType: MessageConnectionType.RTC_DATA_CHANNEL,
                 sendMessageType: sendMessageType,

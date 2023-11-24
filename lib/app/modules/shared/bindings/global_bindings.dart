@@ -244,8 +244,6 @@ class GlobalBindings extends Bindings {
       //   permanent: true,
       // );
 
-      ..put(ReadMessageUseCase(dataHandler: Get.find(), connectionRepository: Get.find()))
-      ..put(InitMessageUseCase(connectionRepository: Get.find()))
       ..put<NotificationsController>(
         NotificationsController(
           appNotifications: appNotifications,
@@ -293,7 +291,14 @@ class GlobalBindings extends Bindings {
               messagesProvider:
                   MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
             ),
-            connectionRepository: Get.find(),
+            sendMessageUseCase: SendMessageUseCase(
+              messagesRepo: MessagesRepo(
+                messagesProvider:
+                    MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+              ),
+              connectionRepository: Get.find<RTCMessagingConnectionRepository>(),
+              processor: MessageProcessor(),
+            ),
           ),
         ),
       );
