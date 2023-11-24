@@ -91,7 +91,7 @@ class P2PNode {
 
     await FlutterP2pCommunicator.startNode(
       peerSeed: peerSeed,
-      enableStaticRelays: false,
+      enableStaticRelays: true,
       networkId: networkId.toString(),
     );
 
