@@ -15,12 +15,8 @@ class MessagesView extends GetView<MessagesController> {
 
   @override
   Widget build(BuildContext context) {
-    // This call allows us to get an instance of the CommonMessagingConnectionController class here
-    // before the call of DatachannelConnectionStatusWidget, to prevent a "CommonMessagingConnectionController" not found error.
-    // controller.initMessagingConnection();
-
-    return Scaffold(
-      appBar: const MessagingAppBar(),
+    return const Scaffold(
+      appBar: MessagingAppBar(),
       backgroundColor: COLORS.kAppBackground,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -28,7 +24,7 @@ class MessagesView extends GetView<MessagesController> {
           Expanded(
             child: Stack(
               alignment: Alignment.center,
-              children: const [
+              children: [
                 MessagesList(),
                 Positioned(
                   bottom: 0,
@@ -37,7 +33,7 @@ class MessagesView extends GetView<MessagesController> {
               ],
             ),
           ),
-          const MessagesFooter(),
+          MessagesFooter(),
         ],
       ),
     );

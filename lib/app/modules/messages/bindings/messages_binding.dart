@@ -50,8 +50,9 @@ class MessagesBinding extends Bindings {
 
     Get.lazyPut<MessagesController>(
       () => MessagesController(
-        readMessageUseCase: Get.find(),
-        initMessageUseCase: Get.find(),
+        readMessageUseCase:
+            ReadMessageUseCase(dataHandler: Get.find(), connectionRepository: connectionRepository),
+        initMessageUseCase: InitMessageUseCase(connectionRepository: connectionRepository),
         messageRepository: ConnectionMessageRepositoryImpl(
           messagesRepo: MessagesRepo(
             messagesProvider: MessagesProvider(

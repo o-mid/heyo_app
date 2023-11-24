@@ -25,8 +25,8 @@ class MessageItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MessagesController>();
-    final MessageModel message = controller.messages[index];
-    final MessageModel? prevMessage = (index > 0) ? controller.messages[index - 1] : null;
+    final message = controller.messages[index];
+    final prevMessage = (index > 0) ? controller.messages[index - 1] : null;
 
     return VisibilityDetector(
       key: Key(message.messageId),

@@ -22,9 +22,10 @@ class MessagesListViewWidget extends StatelessWidget {
         children: [
           // show loading widget if list is not loaded and scrolled to the saved state
 
-          controller.isListLoaded.value
-              ? const SizedBox.shrink()
-              : const Center(child: MessagesLoadingWidget()),
+          if (controller.isListLoaded.value)
+            const SizedBox.shrink()
+          else
+            const Center(child: MessagesLoadingWidget()),
 
           // show list of messages after list is loaded
           Opacity(

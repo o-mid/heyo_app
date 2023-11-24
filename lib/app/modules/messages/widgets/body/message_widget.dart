@@ -23,14 +23,15 @@ class MessageWidget extends StatelessWidget {
     List<Widget> children = [];
 
     if (!message.isFromMe) {
-      children.add(CustomSizes.mediumSizedBoxWidth);
-      children.add(
-        CustomCircleAvatar(
-          url: iconUrl ?? "",
-          size: 20,
-          isMockData: isMockMessage,
-        ),
-      );
+      children
+        ..add(CustomSizes.mediumSizedBoxWidth)
+        ..add(
+          CustomCircleAvatar(
+            url: iconUrl ?? "",
+            size: 20,
+            isMockData: isMockMessage,
+          ),
+        );
     }
 
     children.add(
