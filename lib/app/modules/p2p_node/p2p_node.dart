@@ -108,7 +108,7 @@ class P2PNode {
     //await Future.forEach(P2P_Nodes, (P2PAddrModel element) async {
       final info = P2PReqResNodeModel(
           name: P2PReqResNodeNames.connect, body: P2PAddrModel(
-        id: "12D3KooWQa4YvzS24mdJWBCk19pSoYLpxQbfx7vYp5pE1MYoDBGX",addrs:["/ip4/65.109.230.224/tcp/4001"]
+        id: "12D3KooWCcNM1EXZ3kPpKJHnbCBqCyoAME87JNw53zJUoUqrzF2x",addrs:["/ip4/65.109.230.224/tcp/4001"]
       ).toJson());
       await FlutterP2pCommunicator.sendRequest(info: info);
   //  });
