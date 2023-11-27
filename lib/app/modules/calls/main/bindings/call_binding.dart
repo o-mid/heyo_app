@@ -9,7 +9,6 @@ class CallBinding extends Bindings {
     Get.lazyPut<CallController>(
       () => CallController(
         callConnectionController: Get.find(),
-        notificationProvider: Get.find(),
       ),
     );
   }
