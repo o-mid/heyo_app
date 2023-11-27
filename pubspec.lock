@@ -622,11 +622,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: master
-      resolved-ref: c2cd6455d76b6d55cee6bc296c629c2a60e8166b
+      ref: "1aa733cb"
+      resolved-ref: "1aa733cb4658896e018a9c0d0ecd38bc55da1a4f"
       url: "git@ssh.git.energy:corepass/flutter_p2p_communicator.git"
     source: git
-    version: "1.15.1"
+    version: "1.16.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
