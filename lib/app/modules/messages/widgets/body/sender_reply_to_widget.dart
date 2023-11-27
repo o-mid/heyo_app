@@ -44,7 +44,9 @@ class SenderReplyToWidget extends StatelessWidget {
             height: 40.h,
             decoration: BoxDecoration(
               color: COLORS.kAppBackground,
-              borderRadius: BorderRadius.only(topRight: Radius.circular(4.w)),
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(8.w),
+              ),
             ),
           ),
         ),
@@ -99,7 +101,7 @@ class SenderReplyToWidget extends StatelessWidget {
                 ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
           ],
         ),
       ],

@@ -11,7 +11,6 @@ import 'package:heyo/app/modules/messaging/connection/domain/messaging_connectio
 import 'package:heyo/app/modules/messaging/connection/rtc_connection_repo.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 import 'package:heyo/app/modules/notifications/controllers/notifications_controller.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_repo.dart';
 import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
 import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
@@ -19,11 +18,11 @@ import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dar
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
 import '../../messaging/connection/connection_repo.dart';
 import '../../messaging/unified_messaging_controller.dart';
-import '../../p2p_node/data/account/account_info.dart';
 import '../../p2p_node/data/key/web3_keys.dart';
 import '../../shared/bindings/global_bindings.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../../shared/data/repository/contact_repository.dart';
+import '../../shared/data/repository/crypto_account/account_repository.dart';
 import '../../shared/providers/database/app_database.dart';
 import '../../shared/providers/database/dao/user_provider.dart';
 import '../controllers/messages_controller.dart';
@@ -79,7 +78,7 @@ class MessagesBinding extends Bindings {
           processor: MessageProcessor(),
         ),
         updateMessageUseCase: UpdateMessageUseCase(
-          accountInfo: Get.find<AccountInfo>(),
+          accountInfo: Get.find<AccountRepository>(),
           messagesRepo: MessagesRepo(
             messagesProvider: MessagesProvider(
               appDatabaseProvider: Get.find<AppDatabaseProvider>(),

@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/messaging/unified_messaging_controller.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
-import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../generated/assets.gen.dart';
@@ -14,7 +13,6 @@ import '../../chats/data/models/chat_model.dart';
 import '../../messaging/connection/wifi_direct_connection_repo.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../../new_chat/data/models/user_model.dart';
-import '../../p2p_node/data/account/account_info.dart';
 import '../../shared/data/repository/contact_repository.dart';
 
 class WifiDirectController extends GetxController {
@@ -24,7 +22,6 @@ class WifiDirectController extends GetxController {
   bool isLocationPermissionGranted = false;
   final wifiDirectEnabled = false.obs;
   RxList<UserModel> availableDirectUsers = <UserModel>[].obs;
-
 
 /*  WifiDirectController(
       {required this.accountInfo,
@@ -90,7 +87,7 @@ class WifiDirectController extends GetxController {
 
       _heyoWifiDirect = HeyoWifiDirect(coreID: coreId.value, name: 'name', debugOutputEnable: true);
       // await _heyoWifiDirect!.wifiDirectOn();
-    /*  wifiDirectConnectionController.wifiDirectWrapper!.pluginInstance = _heyoWifiDirect;
+      /*  wifiDirectConnectionController.wifiDirectWrapper!.pluginInstance = _heyoWifiDirect;
       Get.put(wifiDirectConnectionController);*/
     }
   }
@@ -101,7 +98,6 @@ class WifiDirectController extends GetxController {
     switch (event.type) {
       // Refresh information about wifi-direct available peers
       case EventType.peerListRefresh:
-
         // PeerList peerList = signaling.wifiDirectPlugin.peerList;
         Map<String, Peer> peersAvailable = (event.message as PeerList).peers;
         print('WifiDirectController: peerListRefresh: ${peersAvailable.toString()}');
@@ -121,7 +117,7 @@ class WifiDirectController extends GetxController {
         // incomingConnection = false.obs;
         // outgoingConnection = false.obs;
         // connectedPeer = null;
-       /* (wifiDirectConnectionController.connectionRepo as WiFiDirectConnectionRepoImpl)
+        /* (wifiDirectConnectionController.connectionRepo as WiFiDirectConnectionRepoImpl)
             .handleWifiDirectEvents(event);*/
 
         print('WifiDirectController: Wifi-direct group stopped');
@@ -133,7 +129,7 @@ class WifiDirectController extends GetxController {
   }
 
   _messageHandler(HeyoWifiDirectMessage message) {
-  /*  (wifiDirectConnectionController.connectionRepo as WiFiDirectConnectionRepoImpl)
+    /*  (wifiDirectConnectionController.connectionRepo as WiFiDirectConnectionRepoImpl)
         .wifiDirectmessageHandler(message);*/
   }
 

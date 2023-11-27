@@ -10,6 +10,7 @@ import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.da
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
+import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 import '../../../../generated/assets.gen.dart';
@@ -45,12 +46,13 @@ class UserPreviewWidget extends GetView<UserPreview> {
             children: [
               Text(
                 user.name,
-                style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+                style: TEXTSTYLES.kHeaderLarge
+                    .copyWith(color: COLORS.kDarkBlueColor),
               ),
               CustomSizes.smallSizedBoxWidth,
               user.isVerified
-                  ? Assets.svg.verifiedWithBluePadding
-                      .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
+                  ? Assets.svg.verifiedWithBluePadding.svg(
+                      alignment: Alignment.center, height: 24.w, width: 24.w)
                   : const SizedBox(),
             ],
           ),
@@ -71,13 +73,15 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.back();
                     print('UserPreviewWidget isWifiDirect $isWifiDirect');
                     isWifiDirect
-                        ? Get.toNamed(Routes.WIFI_DIRECT_CONNECT, arguments: user)
+                        ? Get.toNamed(Routes.WIFI_DIRECT_CONNECT,
+                            arguments: user)
                         : Get.toNamed(
                             Routes.MESSAGES,
                             arguments: MessagesViewArgumentsModel(
                                 coreId: user.coreId,
                                 iconUrl: user.iconUrl,
-                                connectionType: MessagingConnectionType.internet),
+                                connectionType:
+                                    MessagingConnectionType.internet),
                           );
                   }
                 },
@@ -102,7 +106,10 @@ class UserPreviewWidget extends GetView<UserPreview> {
                           isAudioCall: true),
                     );
                   } else {
-                    Get.snackbar("Wifi Direct", "Calling over wifi direct are not supported yet");
+                    SnackBarWidget.info(
+                      title: 'Wifi Direct',
+                      message: 'Calling over wifi direct are not supported yet',
+                    );
                   }
                 },
                 backgroundColor: COLORS.kBrightBlueColor,
@@ -127,9 +134,9 @@ class UserPreviewWidget extends GetView<UserPreview> {
                       ),
                     );
                   } else {
-                    Get.snackbar(
-                      "Wifi Direct",
-                      "Calling over wifi direct are not supported yet",
+                    SnackBarWidget.info(
+                      title: 'Wifi Direct',
+                      message: 'Calling over wifi direct are not supported yet',
                     );
                   }
                 },
@@ -174,8 +181,10 @@ class UserPreviewWidget extends GetView<UserPreview> {
                             ),
                           );
                         },
-                        icon: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
-                        title: LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
+                        icon: Assets.svg.addToContactsIcon
+                            .svg(width: 20, height: 20),
+                        title:
+                            LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
                       )
                     : _buildIconTextButton(
                         onPressed: () async {
@@ -186,12 +195,15 @@ class UserPreviewWidget extends GetView<UserPreview> {
                             if (result is bool && result == true) {
                               print("result   $result");
 
-                              await controller.deleteContact(user.walletAddress);
+                              await controller
+                                  .deleteContact(user.walletAddress);
                             }
                           });
                         },
-                        icon: Assets.svg.removeContact.svg(width: 20, height: 20),
-                        title: LocaleKeys.newChat_userBottomSheet_RemoveFromContacts.tr,
+                        icon:
+                            Assets.svg.removeContact.svg(width: 20, height: 20),
+                        title: LocaleKeys
+                            .newChat_userBottomSheet_RemoveFromContacts.tr,
                       ),
                 _buildIconTextButton(
                   onPressed: () {
@@ -199,7 +211,8 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.rawSnackbar(
                       messageText: Text(
                         "Blocking feature is in development phase",
-                        style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kDarkBlueColor),
+                        style: TEXTSTYLES.kBodySmall
+                            .copyWith(color: COLORS.kDarkBlueColor),
                         textAlign: TextAlign.center,
                       ),
                       //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),

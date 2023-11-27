@@ -3,7 +3,6 @@ import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dar
 
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../../messaging/unified_messaging_controller.dart';
-import '../../p2p_node/data/account/account_repo.dart';
 import '../../p2p_node/data/key/web3_keys.dart';
 import '../../shared/bindings/global_bindings.dart';
 import '../../shared/data/repository/contact_repository.dart';
@@ -18,7 +17,7 @@ class WifiDirectBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<WifiDirectController>(
       () => WifiDirectController(
-        /*accountInfo: AccountRepo(
+          /*accountInfo: AccountRepo(
           localProvider: SecureStorageProvider(),
           cryptographyKeyGenerator: Web3Keys(web3client: GlobalBindings.web3Client),
         ),
@@ -27,7 +26,7 @@ class WifiDirectBinding extends Bindings {
           cacheContractor: CacheRepository(
               userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
         ),*/
-      ),
+          ),
     );
   }
 }

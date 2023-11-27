@@ -1,16 +1,30 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/stream.extension.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 
 class AccountController extends GetxController {
-  final AccountInfo accountInfo;
+  final AccountRepository _accountInfoRepo;
   final coreId = "".obs;
 
-  AccountController({required this.accountInfo});
+  AccountController({required AccountRepository accountInfoRepo})
+      : _accountInfoRepo = accountInfoRepo;
 
   @override
   void onInit() async {
     super.onInit();
-    coreId.value = (await accountInfo.getCorePassCoreId()) ?? "";
+    coreId.value = (await _accountInfoRepo.getUserAddress()) ?? "";
+  }
+
+  void logout() {
+    _accountInfoRepo.logout().then((value) async {
+      final loggedOut = await _accountInfoRepo
+          .onAccountStateChanged()
+          .waitForResult(condition: (bool value) => value == true);
+      if(loggedOut){
+        await Get.offAllNamed(Routes.INTRO);
+      }
+    });
   }
 
   @override

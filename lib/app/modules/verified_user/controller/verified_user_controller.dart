@@ -9,7 +9,7 @@ class VerifiedUserController extends GetxController {
   VerifiedUserController({required this.p2pNode});
 
   @override
-  void onInit()  {
+  void onInit() {
     p2pNode.stop().then((value) => p2pNode.restart());
     super.onInit();
   }

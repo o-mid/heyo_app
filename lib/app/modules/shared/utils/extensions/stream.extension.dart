@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 
-extension ResultListener<X> on Rx<X> {
+extension ResultListener<X> on Stream<X> {
   Future<X> waitForResult({required bool Function(X value) condition}) async {
     final jobCompleter = Completer<X>();
     final listener = listen((p0) {

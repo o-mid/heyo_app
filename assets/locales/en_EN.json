@@ -21,7 +21,6 @@
       },
       "dialogTitle": "Checking CorePass, whether you are already verified"
     },
-
     "BenefitsPage": {
       "sliders": {
         "title001": "One account \n for all your services",
@@ -33,7 +32,6 @@
         "title004": "Keep your earnings \n in a safe place",
         "subtitle004": "CorePass comes with an integrated \n cryptocurrency wallet to keep your \n savings safe and secure."
       },
-
       "divider": "OR",
       "footer": "Your data will be safely verified by",
       "buttons": {
@@ -183,7 +181,8 @@
   },
   "AccountPage": {
     "appBarTitle": "Account",
-    "contacts": "Contacts"
+    "contacts": "Contacts",
+    "logout": "Logout"
   },
   "ContactsPage": {
     "appBarTitle": "Contacts",
@@ -348,7 +347,6 @@
     "updating": "Updating chats",
     "backOnline": "Back online"
   },
-
   "DataChannelStatus": {
     "connecting": "Connecting...",
     "connected": "Connected",

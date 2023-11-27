@@ -7,6 +7,9 @@ import 'package:heyo/app/modules/messages/data/models/messages/live_location_mes
 import 'package:heyo/app/modules/messages/data/models/messages/location_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
+import 'package:heyo/app/modules/messages/widgets/body/message_widget.dart';
+import 'package:heyo/app/modules/messages/widgets/body/reaction_box.dart';
+import 'package:heyo/app/modules/messages/widgets/body/recipient_reply_to_widget.dart';
 import 'package:heyo/app/modules/messages/widgets/body/sender_reply_to_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 
@@ -15,15 +18,16 @@ import 'reaction_box.dart';
 import 'recipient_reply_to_widget.dart';
 
 class MessageSelectionWrapper extends StatelessWidget {
+  const MessageSelectionWrapper({
+    required this.message,
+    super.key,
+    this.isMockMessage = false,
+    this.iconUrl,
+  });
+
   final MessageModel message;
   final bool isMockMessage;
   final String? iconUrl;
-  const MessageSelectionWrapper({
-    Key? key,
-    required this.message,
-    this.isMockMessage = false,
-    this.iconUrl,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +100,7 @@ class MessageSelectionWrapper extends StatelessWidget {
                       color: COLORS.kGreenMainColor,
                       width: 3,
                     ),
-                  )
+                  ),
               ],
             ),
           ),

@@ -10,9 +10,7 @@ import 'beginning_of_messages_header_widget.dart';
 import 'message_item_widget.dart';
 
 class MessagesListViewWidget extends StatelessWidget {
-  const MessagesListViewWidget({
-    super.key,
-  });
+  const MessagesListViewWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

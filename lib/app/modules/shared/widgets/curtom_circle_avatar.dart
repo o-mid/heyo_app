@@ -3,17 +3,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 
 class CustomCircleAvatar extends StatelessWidget {
+  const CustomCircleAvatar({
+    required this.url,
+    required this.size,
+    super.key,
+    this.isOnline = false,
+    this.isMockData = false,
+  });
+
   final String url;
   final double size;
   final bool isOnline;
   final bool isMockData;
-  const CustomCircleAvatar({
-    Key? key,
-    required this.url,
-    required this.size,
-    this.isOnline = false,
-    this.isMockData = false,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,14 +28,8 @@ class CustomCircleAvatar extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: !isMockData || url.isNotEmpty
-              ? Image.network(
-                  url,
-                )
-              : Expanded(
-                  child: Container(
-                    color: Colors.grey,
-                  ),
-                ),
+              ? Image.network(url)
+              : Container(color: Colors.grey),
         ),
 
         // The two following widgets are to show a green online badge on chat icon

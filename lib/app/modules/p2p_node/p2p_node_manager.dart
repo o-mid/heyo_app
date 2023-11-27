@@ -12,8 +12,7 @@ class P2PNodeController {
   final P2PState p2pState;
   void Function(P2PReqResNodeModel model)? onNewRequestReceived;
 
-  Future<void> init(
-      void Function(P2PReqResNodeModel model) onNewRequestReceived) async {
+  Future<void> init(void Function(P2PReqResNodeModel model) onNewRequestReceived) async {
     this.onNewRequestReceived = onNewRequestReceived;
     Connectivity().onConnectivityChanged.listen((connectivityResult) async {
       debugPrint('onConnectivityChanged: $connectivityResult');
@@ -45,7 +44,7 @@ class P2PNodeController {
     return p2pNode.stop();
   }
 
-  Future<void> restart() async{
+  Future<void> restart() async {
     return p2pNode.restart(onNewRequestReceived!);
   }
 

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/intro/data/provider/verification_corepass_abstract_provider.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_manager.dart';
+import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
 import 'package:heyo/app/modules/shared/utils/datetime_utils.dart';
 import 'package:tuple/tuple.dart';
 import 'package:uni_links/uni_links.dart';
@@ -11,20 +11,20 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 class VerificationCorePassProvider
     extends VerificationCorePassAbstractProvider {
-    VerificationCorePassProvider({
-    required this.accountInfo,
+  VerificationCorePassProvider({
+    required this.cryptoInfo,
     required this.p2pNodeController,
     required this.dateTimeUtils,
   });
 
   StreamSubscription? _urlStream;
-  final AccountInfo accountInfo;
+  final LibP2PStorageProvider cryptoInfo;
   final P2PNodeController p2pNodeController;
   final DateTimeUtils dateTimeUtils;
 
   @override
   Future<bool> launchVerificationProcess() async {
-    final heyoId = await accountInfo.getLocalCoreId();
+    final heyoId = await cryptoInfo.getLocalCoreId();
 
     /// This only uses while just to make sure node is started and advertised successfully
     // while (heyoId == null) {
@@ -84,13 +84,13 @@ class VerificationCorePassProvider
   }
 
   @override
-  Future<bool> applyDelegatedCredentials(
+  Future<bool> setCredentials(
     String coreId,
     String signature,
   ) async {
     try {
-      await accountInfo.setSignature(signature.replaceAll('0x', ''));
-      await accountInfo.setCorePassCoreId(coreId);
+      await cryptoInfo.setSignature(signature.replaceAll('0x', ''));
+      await cryptoInfo.setCorePassCoreId(coreId);
       final isSignatureValid = await p2pNodeController.applyDelegatedAuth();
       return isSignatureValid;
     } catch (e) {
@@ -98,6 +98,4 @@ class VerificationCorePassProvider
       return false;
     }
   }
-
-
 }

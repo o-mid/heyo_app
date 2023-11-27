@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:heyo/app/modules/messages/data/models/messages/update_message_model.dart';
 import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
 import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import '../message_processor.dart';
 import '../models/messages/message_model.dart';
 import '../models/reaction_model.dart';
@@ -18,7 +18,7 @@ class UpdateMessageUseCase {
   final MessagesAbstractRepo messagesRepo;
   final ConnectionRepository connectionRepository;
   final MessageProcessor processor;
-  final AccountInfo accountInfo;
+  final AccountRepository accountInfo;
 
   Future<void> execute(
       {required MessageConnectionType messageConnectionType,
@@ -49,9 +49,8 @@ class UpdateMessageUseCase {
     required String chatId,
     required String remoteCoreId,
   }) async {
-    final localCoreID = await accountInfo.getCorePassCoreId() ?? "";
-    var reaction =
-        message.reactions[emoji] as ReactionModel? ?? ReactionModel();
+    final localCoreID = await accountInfo.getUserAddress() ?? "";
+    var reaction = message.reactions[emoji] as ReactionModel? ?? ReactionModel();
 
     if (reaction.isReactedByMe) {
       reaction.users.removeWhere((element) => element == localCoreID);
@@ -73,10 +72,9 @@ class UpdateMessageUseCase {
     );
     await messagesRepo.updateMessage(message: updatedMessage, chatId: chatId);
 
-    var updatedMessageJson = UpdateMessageModel(
-            message:
-                updatedMessage.copyWith(reactions: updatedMessage.reactions))
-        .toJson();
+    var updatedMessageJson =
+        UpdateMessageModel(message: updatedMessage.copyWith(reactions: updatedMessage.reactions))
+            .toJson();
 
     // await SendDataChannelMessage(messagingConnection: messagingConnection).execute(
     //   remoteCoreId: remoteCoreId,
@@ -84,8 +82,7 @@ class UpdateMessageUseCase {
     // );
 
     final processedMessage = await processor.getMessageDetails(
-      channelMessageType:
-          ChannelMessageType.update(message: updatedMessageJson),
+      channelMessageType: ChannelMessageType.update(message: updatedMessageJson),
       remoteCoreId: remoteCoreId,
     );
 
