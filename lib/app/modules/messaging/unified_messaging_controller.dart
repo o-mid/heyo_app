@@ -9,7 +9,6 @@ import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
 import 'package:heyo/app/modules/messaging/connection/rtc_connection_repo.dart';
 import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 import 'package:heyo/app/modules/notifications/controllers/notifications_controller.dart';
-import 'package:heyo/app/modules/p2p_node/data/account/account_info.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
