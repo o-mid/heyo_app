@@ -64,9 +64,11 @@ class P2PNodeResponseStream {
         event.error == null &&
         !advertiseRequested) {
       advertiseRequested = true;
-      final info = P2PReqResNodeModel(name: P2PReqResNodeNames.advertise);
 
+      final info = P2PReqResNodeModel(name: P2PReqResNodeNames.advertise);
+      Future.delayed(const Duration(seconds: 1),() async{
       final id = await FlutterP2pCommunicator.sendRequest(info: info);
+      });
       /* -------------------------------------------------------------------------- */
       /*                                  get addrs                                 */
       /* -------------------------------------------------------------------------- */
