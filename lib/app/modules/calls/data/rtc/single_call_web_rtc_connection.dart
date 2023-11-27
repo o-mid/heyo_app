@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
 import 'package:heyo/app/modules/connection/domain/connection_models.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
-import 'package:heyo/app/modules/web-rtc/models.dart';
+import 'package:heyo/app/modules/calls/data/models.dart';
 import 'package:heyo/app/modules/web-rtc/web_rtc_call_connection_manager.dart';
 
 import 'package:flutter_webrtc/flutter_webrtc.dart';

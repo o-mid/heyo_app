@@ -1,6 +1,6 @@
 import 'package:heyo/app/modules/messaging/models.dart';
-import 'package:heyo/app/modules/web-rtc/models.dart';
-import 'package:heyo/app/modules/web-rtc/multiple_call_connection_handler.dart';
+import 'package:heyo/app/modules/calls/data/models.dart';
+import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
 
 enum CallHistoryStatus {
   nop,

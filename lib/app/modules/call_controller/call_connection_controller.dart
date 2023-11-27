@@ -7,8 +7,8 @@ import 'package:heyo/app/modules/notifications/controllers/notifications_control
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
-import 'package:heyo/app/modules/web-rtc/models.dart';
-import 'package:heyo/app/modules/web-rtc/multiple_call_connection_handler.dart';
+import 'package:heyo/app/modules/calls/data/models.dart';
+import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
 import '../notifications/controllers/notifications_controller.dart';

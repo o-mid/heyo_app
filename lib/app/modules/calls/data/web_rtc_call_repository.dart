@@ -2,7 +2,7 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
-import 'package:heyo/app/modules/web-rtc/multiple_call_connection_handler.dart';
+import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
 
 class WebRTCCallRepository implements CallRepository {
   WebRTCCallRepository({required this.callConnectionsHandler}) {

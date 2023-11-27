@@ -2,8 +2,8 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
 import 'package:heyo/app/modules/connection/domain/connection_models.dart';
-import 'package:heyo/app/modules/web-rtc/models.dart';
-import 'package:heyo/app/modules/web-rtc/single_call_web_rtc_connection.dart';
+import 'package:heyo/app/modules/calls/data/models.dart';
+import 'package:heyo/app/modules/calls/data/rtc/single_call_web_rtc_connection.dart';
 
 enum CallState {
   callStateNew,
