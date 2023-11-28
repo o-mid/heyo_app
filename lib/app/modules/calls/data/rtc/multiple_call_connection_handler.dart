@@ -50,9 +50,10 @@ class CallConnectionsHandler {
 
   Function(AllParticipantModel participate)? onChangeParticipateStream;
 
-  CallConnectionsHandler(
-      {required this.singleCallWebRTCBuilder,
-      required this.callStatusDataStore,});
+  CallConnectionsHandler({
+    required this.singleCallWebRTCBuilder,
+    required this.callStatusDataStore,
+  });
 
   final CallStatusDataStore callStatusDataStore;
   Function(CallId callId, List<CallInfo> callInfo, CallState state)?
@@ -82,14 +83,14 @@ class CallConnectionsHandler {
     String remoteCoreId,
     bool isAudioCall,
   ) async {
-    CallId callId = generateCallId();
-    callStatusDataStore.currentCall = CurrentCall(callId: callId, activeSessions: []);
-    CallRTCSession callRTCSession = await _createSession(
+    final callId = callStatusDataStore.makeCall().callId;
+    await _createLocalStream();
+    final callRTCSession = await _createSession(
       RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
       isAudioCall,
     );
     singleCallWebRTCBuilder.requestSession(callRTCSession, []);
-    CallInfo callInfo = CallInfo(
+    final callInfo = CallInfo(
       remotePeer: RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
       isAudioCall: isAudioCall,
     );
@@ -100,15 +101,18 @@ class CallConnectionsHandler {
     return callRTCSession;
   }
 
-  Future<CallRTCSession> _createSession(
-    RemotePeer remotePeer,
-    bool isAudioCall,
-  ) async {
+  Future<void> _createLocalStream() async {
     if (_localStream == null) {
       _localStream = await singleCallWebRTCBuilder.createStream('video', false);
       onLocalStream?.call(_localStream!);
     }
-    CallRTCSession callRTCSession = await singleCallWebRTCBuilder.createSession(
+  }
+
+  Future<CallRTCSession> _createSession(
+    RemotePeer remotePeer,
+    bool isAudioCall,
+  ) async {
+    final callRTCSession = await singleCallWebRTCBuilder.createSession(
       callStatusDataStore.currentCall!.callId,
       remotePeer,
       _localStream!,
@@ -117,27 +121,18 @@ class CallConnectionsHandler {
     callRTCSession.onAddRemoteStream = (stream) {
       onAddRemoteStream?.call(callRTCSession);
     };
-    callStatusDataStore.currentCall!.activeSessions.add(callRTCSession);
+    callStatusDataStore.addSession(callRTCSession);
     return callRTCSession;
-  }
-
-  CallRTCSession? _getConnection(String remoteCoreId, CallId callId) {
-    for (var value in callStatusDataStore.currentCall!.activeSessions) {
-      if (value.callId == callId &&
-          value.remotePeer.remoteCoreId == remoteCoreId) {
-        return value;
-      }
-    }
-    return null;
   }
 
   Future<void> accept(CallId callId) async {
     print("accepttt ${callStatusDataStore.incomingCalls}");
     if (callStatusDataStore.incomingCalls?.callId == callId) {
-      callStatusDataStore.currentCall = CurrentCall(callId: callId, activeSessions: []);
+      callStatusDataStore.makeCallByCallId(callId);
       callStatusDataStore.incomingCalls!.remotePeers.forEach((element) async {
         print("accept ${element.remotePeer.remoteCoreId}");
-        CallRTCSession callRTCSession =
+        await _createLocalStream();
+        final callRTCSession =
             await _createSession(element.remotePeer, element.isAudioCall);
         singleCallWebRTCBuilder.startSession(callRTCSession);
       });
@@ -164,7 +159,7 @@ class CallConnectionsHandler {
     _localStream?.getTracks().forEach((element) async {
       await element.stop();
     });
-    _localStream?.dispose();
+    await _localStream?.dispose();
     _localStream = null;
   }
 
@@ -183,20 +178,20 @@ class CallConnectionsHandler {
 
   void onCallCandidateReceived(
       CallId callId, RemotePeer remotePeer, dynamic data) {
-    CallRTCSession rtcSession =
-        _getConnection(remotePeer.remoteCoreId, callId)!;
+    final rtcSession =
+        callStatusDataStore.getConnection(remotePeer.remoteCoreId, callId)!;
     rtcSession.remotePeer.remotePeerId ??= remotePeer.remotePeerId;
 
-    var candidateMap = data[CallSignalingCommands.candidate];
+    final candidateMap = data[CallSignalingCommands.candidate];
     singleCallWebRTCBuilder.onCandidateReceived(rtcSession, candidateMap);
   }
 
   void onCallAnswerReceived(
       CallId callId, RemotePeer remotePeer, dynamic data) {
-    CallRTCSession rtcSession =
-        _getConnection(remotePeer.remoteCoreId, callId)!;
+    final rtcSession =
+        callStatusDataStore.getConnection(remotePeer.remoteCoreId, callId)!;
     rtcSession.remotePeer.remotePeerId ??= remotePeer.remotePeerId;
-    var description = data[DATA_DESCRIPTION];
+    final description = data[DATA_DESCRIPTION];
     singleCallWebRTCBuilder.onAnswerReceived(rtcSession, description);
   }
 
@@ -206,8 +201,8 @@ class CallConnectionsHandler {
     dynamic data,
   ) {
     final description = data[DATA_DESCRIPTION];
-    CallRTCSession rtcSession =
-        _getConnection(remotePeer.remoteCoreId, callId)!;
+    final rtcSession =
+        callStatusDataStore.getConnection(remotePeer.remoteCoreId, callId)!;
     rtcSession.remotePeer.remotePeerId ??= remotePeer.remotePeerId;
 
     onCallStateChange?.call(
@@ -243,38 +238,12 @@ class CallConnectionsHandler {
 
   void peerClosedCamera(String sessionId) {}
 
-  Future<MediaStream> _createStream(String media, bool userScreen) async {
-    final Map<String, dynamic> mediaConstraints = {
-      'audio': true,
-      'video': userScreen
-          ? true
-          : {
-              'mandatory': {
-                'minWidth': '640',
-                // Provide your own width, height and frame rate here
-                'minHeight': '480',
-                'minFrameRate': '30',
-              },
-              'facingMode': 'user',
-              'optional': [],
-            },
-    };
-
-    MediaStream stream = userScreen
-        ? await RTCFactoryNative.instance.navigator.mediaDevices
-            .getDisplayMedia(mediaConstraints)
-        : await RTCFactoryNative.instance.navigator.mediaDevices
-            .getUserMedia(mediaConstraints);
-    _localStream = stream;
-    onLocalStream?.call(stream);
-    return stream;
-  }
 
   Future<void> onCallRequestRejected(mapData, RemotePeer remotePeer) async {
     String callId = mapData[CALL_ID] as String;
     if (callStatusDataStore.currentCall != null) {
-      CallRTCSession? callRTCSession =
-          _getConnection(remotePeer.remoteCoreId, callId);
+      final callRTCSession =
+          callStatusDataStore.getConnection(remotePeer.remoteCoreId, callId);
       if (callRTCSession != null) {
         //TODO update based on..
         onCallStateChange?.call(
@@ -328,7 +297,8 @@ class CallConnectionsHandler {
         ),
       );
     }
-    callStatusDataStore.incomingCalls = IncomingCalls(callId: callId, remotePeers: remotePeers);
+    callStatusDataStore.incomingCalls =
+        IncomingCalls(callId: callId, remotePeers: remotePeers);
 
     onCallStateChange?.call(callId, [callInfo], CallState.callStateNew);
 
