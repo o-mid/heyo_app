@@ -15,6 +15,12 @@
 // import '../messaging_session.dart';
 // import 'common_messaging_controller.dart';
 
+
+// sholud be removed after implimenting wifi direct messaging 
+
+
+
+
 // // Todo :  change this status names if needed base on the connection status of the wifi direct
 // enum WifiDirectConnectivityStatus { connectionLost, connecting, justConnected, online }
 

@@ -17,6 +17,7 @@ import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dar
 
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
 import '../../messaging/connection/connection_repo.dart';
+import '../../messaging/connection/wifi_direct_connection_repo.dart';
 import '../../messaging/unified_messaging_controller.dart';
 import '../../p2p_node/data/key/web3_keys.dart';
 import '../../shared/bindings/global_bindings.dart';
@@ -45,7 +46,10 @@ class MessagesBinding extends Bindings {
             dataHandler: Get.find(),
             dataChannelMessagingConnection: Get.find(),
           )
-        : WifiDirectMessagingConnection();
+        : WifiDirectConnectionRepository(
+            dataHandler: Get.find(),
+            wifiDirectMessagingConnection: Get.find(),
+          );
 
     Get.lazyPut<MessagesController>(
       () => MessagesController(

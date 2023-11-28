@@ -15,7 +15,20 @@ import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 import 'package:heyo/app/modules/messaging/utils/binary_file_receiving_state.dart';
 import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
 
-class WifiDirectConnectionRepo extends ConnectionRepository {
+import 'connection_data_handler.dart';
+import 'data/wifi_direct_messaging_connection.dart';
+
+class WifiDirectConnectionRepository extends ConnectionRepository {
+  WifiDirectConnectionRepository({
+    required this.dataHandler,
+    required this.wifiDirectMessagingConnection,
+  });
+  final DataHandler dataHandler;
+  final WifiDirectMessagingConnection wifiDirectMessagingConnection;
+
+  // TODO: Implement initConnection for Wi-Fi Direct. This should include initializing the Wi-Fi Direct connection based on the provided MessageConnectionType
+  //and remoteId, similar to how RTC data channel connections are handled in RTCMessagingConnectionRepository.
+
   @override
   void initConnection(MessageConnectionType messageConnectionType, String remoteId) {
     // TODO: implement initConnection
@@ -27,12 +40,15 @@ class WifiDirectConnectionRepo extends ConnectionRepository {
     throw UnimplementedError();
   }
 
+// TODO: Implement sendTextMessage for Wi-Fi Direct. This should involve sending text messages over a Wi-Fi Direct connection
   @override
-  Future<void> sendTextMessage({required MessageConnectionType messageConnectionType, required String text, required String remoteCoreId}) {
+  Future<void> sendTextMessage(
+      {required MessageConnectionType messageConnectionType,
+      required String text,
+      required String remoteCoreId}) {
     // TODO: implement sendTextMessage
     throw UnimplementedError();
   }
-
 }
 /*
 class WiFiDirectConnectionRepoImpl extends ConnectionRepository {

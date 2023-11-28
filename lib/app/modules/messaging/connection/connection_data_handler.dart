@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:flutter/widgets.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
-import 'package:heyo/app/modules/messaging/usecases/handle_received_binary_data_usecase.dart';
 import 'package:heyo/app/modules/messaging/utils/binary_file_receiving_state.dart';
 import 'package:heyo/app/modules/notifications/data/models/notifications_payload_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/notifications_constant.dart';
@@ -67,7 +66,7 @@ class DataHandler {
     }
   }
 
- /* Future<void> handleReceivedBinaryData({
+  /* Future<void> handleReceivedBinaryData({
     required String remoteCoreId,
     required BinaryFileReceivingState currentBinaryState,
   }) async {

@@ -12,7 +12,6 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
   RTCMessagingConnectionRepository({
     required this.dataHandler,
     required this.dataChannelMessagingConnection,
-
   });
 
   String currentRemoteId = "";
@@ -21,42 +20,40 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
   final DataHandler dataHandler;
   final DataChannelMessagingConnection dataChannelMessagingConnection;
 
-
   @override
-  Future<void> sendTextMessage(
-      {required String text, required String remoteCoreId, required MessageConnectionType messageConnectionType,
-      }) async {
+  Future<void> sendTextMessage({
+    required String text,
+    required String remoteCoreId,
+    required MessageConnectionType messageConnectionType,
+  }) async {
     await dataHandler.createUserChatModel(sessioncid: remoteCoreId);
     if (messageConnectionType == MessageConnectionType.RTC_DATA_CHANNEL) {
       await dataChannelMessagingConnection.sendMessage(
         DataChannelConnectionSendData(
-          remoteCoreId: remoteCoreId, message: text,),);
-    } else {
-
-    }
+          remoteCoreId: remoteCoreId,
+          message: text,
+        ),
+      );
+    } else {}
   }
 
   @override
-  Future<void> sendBinaryMessage(
-      {required Uint8List binary, required String remoteCoreId}) async {
+  Future<void> sendBinaryMessage({required Uint8List binary, required String remoteCoreId}) async {
     await dataHandler.createUserChatModel(sessioncid: remoteCoreId);
   }
 
   Future<void> _observeMessagingStatus(RTCSession rtcSession) async {
-    await _applyConnectionStatus(
-        rtcSession.rtcSessionStatus, rtcSession.remotePeer.remoteCoreId);
+    await _applyConnectionStatus(rtcSession.rtcSessionStatus, rtcSession.remotePeer.remoteCoreId);
 
     print(
-      "onConnectionState for observe ${rtcSession.rtcSessionStatus} ${rtcSession
-          .connectionId}",
+      "onConnectionState for observe ${rtcSession.rtcSessionStatus} ${rtcSession.connectionId}",
     );
     rtcSession.onNewRTCSessionStatus = (status) async {
       await _applyConnectionStatus(status, rtcSession.remotePeer.remoteCoreId);
     };
   }
 
-  Future<void> _applyConnectionStatus(RTCSessionStatus status,
-      String remoteCoreId) async {
+  Future<void> _applyConnectionStatus(RTCSessionStatus status, String remoteCoreId) async {
     if (currentRemoteId != remoteCoreId) {
       return;
     }
@@ -89,52 +86,7 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
   @override
   void initConnection(MessageConnectionType messageConnectionType, String remoteId) {
     if (messageConnectionType == MessageConnectionType.RTC_DATA_CHANNEL) {
-      dataChannelMessagingConnection.init(
-          WebRTCConnectionInitData(remoteId: remoteId));
-    } else if (messageConnectionType == MessageConnectionType.WIFI_DIRECT) {
-
-    }
+      dataChannelMessagingConnection.init(WebRTCConnectionInitData(remoteId: remoteId));
+    } else if (messageConnectionType == MessageConnectionType.WIFI_DIRECT) {}
   }
 }
-
-
-
-/*  /// Handles binary data, received from remote peer.
-  Future<void> handleDataChannelBinary({
-    required Uint8List binaryData,
-    required String remoteCoreId,
-  }) async {
-    DataBinaryMessage message = DataBinaryMessage.parse(binaryData);
-    print('handleDataChannelBinary header ${message.header.toString()}');
-    print('handleDataChannelBinary chunk length ${message.chunk.length}');
-
-    if (message.chunk.isNotEmpty) {
-      if (currentBinaryState == null) {
-        currentBinaryState = BinaryFileReceivingState(message.filename, message.meta);
-        print('RECEIVER: New file transfer and State started');
-      }
-      currentBinaryState!.pendingMessages[message.chunkStart] = message;
-      await dataHandler.handleReceivedBinaryData(
-          currentBinaryState: currentBinaryState!, remoteCoreId: remoteCoreId);
-    } else {
-      // handle the acknowledge
-      print(message.header);
-
-      return;
-    }
-  }
-
-
-  Future<void> setConnectivityOnline() async {
-    await Future.delayed(const Duration(seconds: 2), () {
-      connectivityStatus.value = ConnectivityStatus.online;
-    });
-  }
-
-  @override
-  void initConnection(MessageConnectionType messageConnectionType, String remoteId) {
-    // TODO: implement initConnection
-  }
-}
-
- */
