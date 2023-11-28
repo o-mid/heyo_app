@@ -1,7 +1,7 @@
 import 'package:heyo/app/modules/messages/data/models/messages/confirm_message_model.dart';
-import 'package:heyo/app/modules/messaging/connection/connection_data_handler.dart';
-import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
-import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
+import 'package:heyo/app/modules/messages/connection/connection_data_handler.dart';
+import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
+import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
 
 class ReadMessageUseCase {
   ReadMessageUseCase({required this.dataHandler, required this.connectionRepository});

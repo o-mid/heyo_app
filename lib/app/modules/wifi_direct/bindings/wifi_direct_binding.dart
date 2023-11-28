@@ -1,8 +1,7 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
 
-import '../../messaging/controllers/wifi_direct_connection_controller.dart';
-import '../../messaging/unified_messaging_controller.dart';
+import '../../messages/connection/wifi_direct_connection_controller.dart';
 import '../../p2p_node/data/key/web3_keys.dart';
 import '../../shared/bindings/global_bindings.dart';
 import '../../shared/data/repository/contact_repository.dart';

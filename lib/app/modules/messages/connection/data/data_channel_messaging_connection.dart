@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:heyo/app/modules/messaging/connection/domain/messaging_connection.dart';
-import 'package:heyo/app/modules/messaging/connection/domain/messaging_connections_models.dart';
-import 'package:heyo/app/modules/messaging/multiple_connections.dart';
+import 'package:heyo/app/modules/messages/connection/domain/messaging_connection.dart';
+import 'package:heyo/app/modules/messages/connection/domain/messaging_connections_models.dart';
+
+import '../multiple_connections.dart';
 
 class DataChannelMessagingConnection extends MessagingConnection {
   DataChannelMessagingConnection({required this.multipleConnectionHandler}) {
@@ -11,8 +12,7 @@ class DataChannelMessagingConnection extends MessagingConnection {
 
   final MultipleConnectionHandler multipleConnectionHandler;
   final JsonDecoder _decoder = const JsonDecoder();
-  final StreamController<MessagingConnectionReceivedData>
-      _receivedDataStreamController =
+  final StreamController<MessagingConnectionReceivedData> _receivedDataStreamController =
       StreamController<MessagingConnectionReceivedData>.broadcast();
 
   final StreamController<MessagingConnectionStatus> _connectionStatusStream =
@@ -47,8 +47,7 @@ class DataChannelMessagingConnection extends MessagingConnection {
   @override
   Future<void> sendMessage(MessagingConnectionSendData sendData) async {
     final data = sendData as DataChannelConnectionSendData;
-    (await multipleConnectionHandler.getConnection(data.remoteCoreId))
-        .send(sendData.message);
+    (await multipleConnectionHandler.getConnection(data.remoteCoreId)).send(sendData.message);
   }
 
   @override

@@ -6,19 +6,17 @@ import 'package:heyo/app/modules/messages/data/connection_message_repository_imp
 import 'package:heyo/app/modules/messages/data/usecases/init_message_usecase.dart';
 import 'package:heyo/app/modules/messages/data/usecases/read_message_usecase.dart';
 import 'package:heyo/app/modules/messages/data/user_state_repository_Impl.dart';
-import 'package:heyo/app/modules/messaging/connection/data/wifi_direct_messaging_connection.dart';
-import 'package:heyo/app/modules/messaging/connection/domain/messaging_connection.dart';
-import 'package:heyo/app/modules/messaging/connection/rtc_connection_repo.dart';
-import 'package:heyo/app/modules/messaging/multiple_connections.dart';
+import 'package:heyo/app/modules/messages/connection/data/wifi_direct_messaging_connection.dart';
+import 'package:heyo/app/modules/messages/connection/domain/messaging_connection.dart';
+import 'package:heyo/app/modules/messages/connection/rtc_connection_repo.dart';
 import 'package:heyo/app/modules/notifications/controllers/notifications_controller.dart';
 import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart';
 import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
 import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
 
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
-import '../../messaging/connection/connection_repo.dart';
-import '../../messaging/connection/wifi_direct_connection_repo.dart';
-import '../../messaging/unified_messaging_controller.dart';
+import '../connection/connection_repo.dart';
+import '../connection/wifi_direct_connection_repo.dart';
 import '../../p2p_node/data/key/web3_keys.dart';
 import '../../shared/bindings/global_bindings.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';

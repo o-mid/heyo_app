@@ -1,7 +1,7 @@
-import 'package:heyo/app/modules/messaging/connection/domain/messaging_connection.dart';
-import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
+import 'package:heyo/app/modules/messages/connection/domain/messaging_connection.dart';
+import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
-import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
+import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
 
 class MessagingConnectionReceivedData {
   MessagingConnectionReceivedData({
@@ -20,12 +20,7 @@ sealed class MessagingConnectionInitialData {
 
 sealed class MessagingConnectionSendData {}
 
-enum MessagingConnectionStatus {
-  connectionLost,
-  connecting,
-  justConnected,
-  online
-}
+enum MessagingConnectionStatus { connectionLost, connecting, justConnected, online }
 
 class WebRTCConnectionInitData extends MessagingConnectionInitialData {
   WebRTCConnectionInitData({required super.remoteId});

@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:flutter/widgets.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
-import 'package:heyo/app/modules/messaging/utils/binary_file_receiving_state.dart';
 import 'package:heyo/app/modules/notifications/data/models/notifications_payload_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/notifications_constant.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/mocks/random_avatar_icon.dart';
@@ -12,17 +11,17 @@ import 'package:tuple/tuple.dart';
 
 import '../../chats/data/models/chat_model.dart';
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
-import '../../messages/data/models/messages/confirm_message_model.dart';
-import '../../messages/data/models/messages/delete_message_model.dart';
-import '../../messages/data/models/messages/message_model.dart';
-import '../../messages/data/models/messages/update_message_model.dart';
-import '../../messages/data/models/reaction_model.dart';
-import '../../messages/data/repo/messages_repo.dart';
-import '../../messages/utils/message_from_json.dart';
+import '../data/models/messages/confirm_message_model.dart';
+import '../data/models/messages/delete_message_model.dart';
+import '../data/models/messages/message_model.dart';
+import '../data/models/messages/update_message_model.dart';
+import '../data/models/reaction_model.dart';
+import '../data/repo/messages_repo.dart';
+import '../utils/message_from_json.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../notifications/controllers/notifications_controller.dart';
 import '../../shared/data/repository/contact_repository.dart';
-import '../models/data_channel_message_model.dart';
+import 'models/data_channel_message_model.dart';
 
 class DataHandler {
   final MessagesRepo messagesRepo;

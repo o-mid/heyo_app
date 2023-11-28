@@ -1,13 +1,12 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/messaging/connection/wifi_direct_connection_provider.dart';
+import 'package:heyo/app/modules/messages/connection/wifi_direct_connection_provider.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 
 import '../../../routes/app_pages.dart';
-import '../../messaging/controllers/wifi_direct_connection_controller.dart';
-import '../../messaging/unified_messaging_controller.dart';
+import '../../messages/connection/wifi_direct_connection_controller.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
 
 class WifiDirectConnectController extends GetxController {
@@ -18,7 +17,7 @@ class WifiDirectConnectController extends GetxController {
   late StreamSubscription _eventListener;
   late UserModel user;
 
- /* WifiDirectConnectController({required this.wifiDirectConnectionController,required this.wifiDirectConnectionProvider}) {
+  /* WifiDirectConnectController({required this.wifiDirectConnectionController,required this.wifiDirectConnectionProvider}) {
     //_pluginInstance = wifiDirectConnectionController.wifiDirectWrapper!.pluginInstance!;
   }*/
 
@@ -28,7 +27,7 @@ class WifiDirectConnectController extends GetxController {
   void onInit() {
     super.onInit();
 
-   /* _eventListener = wifiDirectConnectionController
+    /* _eventListener = wifiDirectConnectionController
         .wifiDirectWrapper!.pluginInstance!.consumerEventSource.stream
         .listen((event) => eventHandler(event));
     user = Get.arguments as UserModel;*/

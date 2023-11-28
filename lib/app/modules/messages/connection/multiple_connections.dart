@@ -1,7 +1,7 @@
 import 'package:heyo/app/modules/connection/domain/connection_models.dart';
-import 'package:heyo/app/modules/messaging/models.dart';
-import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
+import 'package:heyo/app/modules/messages/connection/models/models.dart';
 import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
+import 'package:heyo/app/modules/messages/connection/single_webrtc_connection.dart';
 
 class MultipleConnectionHandler {
   Map<ConnectionId, RTCSession> connections = {};

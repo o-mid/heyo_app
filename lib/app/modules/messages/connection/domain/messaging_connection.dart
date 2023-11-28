@@ -1,4 +1,4 @@
-import 'package:heyo/app/modules/messaging/connection/domain/messaging_connections_models.dart';
+import 'package:heyo/app/modules/messages/connection/domain/messaging_connections_models.dart';
 
 abstract class MessagingConnection {
   void init(MessagingConnectionInitialData initialData);

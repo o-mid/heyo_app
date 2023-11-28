@@ -1,7 +1,7 @@
 import 'package:tuple/tuple.dart';
 
-import '../../messaging/models/data_channel_message_model.dart';
-import '../../messaging/utils/channel_message_from_type.dart';
+import '../connection/models/data_channel_message_model.dart';
+import '../utils/channel_message_from_type.dart';
 
 // use this class insted of former SendDataChannelMessage class and execute method
 class MessageProcessor {

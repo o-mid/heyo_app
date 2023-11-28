@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:heyo/app/modules/messaging/connection/domain/messaging_connection.dart';
-import 'package:heyo/app/modules/messaging/connection/domain/messaging_connections_models.dart';
-import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
+import 'package:heyo/app/modules/messages/connection/domain/messaging_connection.dart';
+import 'package:heyo/app/modules/messages/connection/domain/messaging_connections_models.dart';
+import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
 
 import '../connection_repo.dart';
 

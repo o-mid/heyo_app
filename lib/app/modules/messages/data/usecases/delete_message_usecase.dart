@@ -3,10 +3,9 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/delete_message_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_repo.dart';
-import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
-import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
+import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
+import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
 
-import '../../../messaging/unified_messaging_controller.dart';
 import '../message_processor.dart';
 import '../models/messages/message_model.dart';
 import '../provider/messages_provider.dart';

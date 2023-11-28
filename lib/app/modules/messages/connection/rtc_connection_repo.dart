@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:heyo/app/modules/messaging/connection/connection_data_handler.dart';
-import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
-import 'package:heyo/app/modules/messaging/connection/data/data_channel_messaging_connection.dart';
-import 'package:heyo/app/modules/messaging/connection/domain/messaging_connections_models.dart';
-import 'package:heyo/app/modules/messaging/models.dart';
-import '../models/data_channel_message_model.dart';
+import 'package:heyo/app/modules/messages/connection/connection_data_handler.dart';
+import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
+import 'package:heyo/app/modules/messages/connection/data/data_channel_messaging_connection.dart';
+import 'package:heyo/app/modules/messages/connection/domain/messaging_connections_models.dart';
+import 'package:heyo/app/modules/messages/connection/models/models.dart';
 import '../utils/binary_file_receiving_state.dart';
+import 'models/data_channel_message_model.dart';
 
 class RTCMessagingConnectionRepository extends ConnectionRepository {
   RTCMessagingConnectionRepository({

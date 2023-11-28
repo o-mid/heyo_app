@@ -7,7 +7,7 @@ import 'package:heyo/app/modules/messages/widgets/body/media_glassmorphic_widget
 import 'package:heyo/app/modules/messages/widgets/body/messages_list.dart';
 import 'package:heyo/app/modules/messages/widgets/footer/messages_footer.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
-import '../../messaging/widgets/datachannel_connection_status.dart';
+import '../widgets/app_bar/datachannel_connection_status.dart';
 import '../controllers/messages_controller.dart';
 
 class MessagesView extends GetView<MessagesController> {

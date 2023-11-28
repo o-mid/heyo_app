@@ -4,15 +4,14 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/messaging/unified_messaging_controller.dart';
 
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/constants/transitions_constant.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-import '../../shared/utils/constants/colors.dart';
-import '../../shared/widgets/connection_status_body.dart';
-import '../connection/connection_repo.dart';
+import '../../../shared/utils/constants/colors.dart';
+import '../../../shared/widgets/connection_status_body.dart';
+import '../../connection/connection_repo.dart';
 
 /*
 class DatachannelConnectionStatusWidget extends GetView<UnifiedConnectionController> {

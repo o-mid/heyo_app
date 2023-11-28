@@ -5,12 +5,10 @@ import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.da
 import 'package:heyo/app/modules/messages/data/models/metadatas/image_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
-import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
-import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
+import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
+import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
 import 'package:tuple/tuple.dart';
 
-import '../../../messaging/unified_messaging_controller.dart';
-import '../../../messaging/utils/binary_file_sending_state.dart';
 import '../../utils/message_from_type.dart';
 import '../message_processor.dart';
 import '../models/messages/message_model.dart';

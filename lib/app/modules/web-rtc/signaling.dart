@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
 import 'package:heyo/app/modules/connection/domain/connection_models.dart';
-import 'package:heyo/app/modules/messaging/models.dart';
+import 'package:heyo/app/modules/messages/connection/models/models.dart';
 
 enum CallState {
   callStateNew,
@@ -17,11 +17,12 @@ enum CallState {
 }
 
 class Session {
-  Session(
-      {required this.sid,
-      required this.cid,
-      required this.pid,
-      this.isAudioCall = false,});
+  Session({
+    required this.sid,
+    required this.cid,
+    required this.pid,
+    this.isAudioCall = false,
+  });
 
   final String cid;
   final String sid;
@@ -58,12 +59,10 @@ class Signaling {
   Function(MediaStream stream)? onLocalStream;
   Function(Session session, MediaStream stream)? onAddRemoteStream;
   Function(Session session, MediaStream stream)? onRemoveRemoteStream;
-  Function(Session session, RTCDataChannel dc, RTCDataChannelMessage data)?
-      onDataChannelMessage;
+  Function(Session session, RTCDataChannel dc, RTCDataChannelMessage data)? onDataChannelMessage;
   Function(Session session, RTCDataChannel dc)? onDataChannel;
 
-  String get sdpSemantics =>
-      WebRTC.platformIsWindows ? 'plan-b' : 'unified-plan';
+  String get sdpSemantics => WebRTC.platformIsWindows ? 'plan-b' : 'unified-plan';
 
   final Map<String, dynamic> _iceServers = {
     'iceServers': [
@@ -135,8 +134,7 @@ class Signaling {
     String selfId,
     bool isAudioCall,
   ) async {
-    final sessionId =
-        '$selfId-$coreId-${DateTime.now().millisecondsSinceEpoch}';
+    final sessionId = '$selfId-$coreId-${DateTime.now().millisecondsSinceEpoch}';
 
     var session = await _createSession(
       null,
@@ -225,16 +223,14 @@ class Signaling {
     bye(session);
   }
 
-  void onMessage(Map<String, dynamic> mapData, String remoteCoreId,
-      String remotePeerId) async {
+  void onMessage(Map<String, dynamic> mapData, String remoteCoreId, String remotePeerId) async {
     Map<String, dynamic> data = mapData['data'] as Map<String, dynamic>;
     print("onMessage, type: ${mapData['type']}");
 
     switch (mapData['type']) {
       case 'offer':
         {
-          Map<String, dynamic> description =
-              data['description'] as Map<String, dynamic>;
+          Map<String, dynamic> description = data['description'] as Map<String, dynamic>;
           var media = data['media'] as String;
           var sessionId = data['session_id'] as String;
           var session = _sessions[sessionId];
@@ -250,8 +246,7 @@ class Signaling {
           );
           _sessions[sessionId] = newSession;
           await newSession.pc?.setRemoteDescription(
-            RTCSessionDescription(
-                description['sdp'] as String, description['type'] as String),
+            RTCSessionDescription(description['sdp'] as String, description['type'] as String),
           );
           // await _createAnswer(newSession, media);
 
@@ -273,8 +268,7 @@ class Signaling {
           var sessionId = data['session_id'];
           var session = _sessions[sessionId] as Session?;
           await session?.pc?.setRemoteDescription(
-            RTCSessionDescription(
-                description['sdp'] as String, description['type'] as String),
+            RTCSessionDescription(description['sdp'] as String, description['type'] as String),
           );
           onCallStateChange?.call(session!, CallState.callStateConnected);
         }
@@ -385,9 +379,8 @@ class Signaling {
     required bool screenSharing,
     required bool isAudioCall,
   }) async {
-    var newSession = session ??
-        Session(
-            sid: sessionId, cid: coreId, pid: peerId, isAudioCall: isAudioCall);
+    var newSession =
+        session ?? Session(sid: sessionId, cid: coreId, pid: peerId, isAudioCall: isAudioCall);
     if (media != 'data') {
       _localStream = await createStream(media, screenSharing);
     }
@@ -474,18 +467,15 @@ class Signaling {
     onDataChannel?.call(session, channel);
   }
 
-  Future<void> _createDataChannel(Session session,
-      {label = 'fileTransfer'}) async {
+  Future<void> _createDataChannel(Session session, {label = 'fileTransfer'}) async {
     var dataChannelDict = RTCDataChannelInit()..maxRetransmits = 30;
-    var channel =
-        await session.pc!.createDataChannel(label as String, dataChannelDict);
+    var channel = await session.pc!.createDataChannel(label as String, dataChannelDict);
     _addDataChannel(session, channel);
   }
 
   Future<void> _createOffer(Session session, String media) async {
     try {
-      var s =
-          await session.pc!.createOffer(media == 'data' ? _dcConstraints : {});
+      var s = await session.pc!.createOffer(media == 'data' ? _dcConstraints : {});
       await session.pc!.setLocalDescription(s);
       _send(
         'offer',
@@ -506,8 +496,7 @@ class Signaling {
 
   Future<void> _createAnswer(Session session, String media) async {
     try {
-      var s =
-          await session.pc!.createAnswer(media == 'data' ? _dcConstraints : {});
+      var s = await session.pc!.createAnswer(media == 'data' ? _dcConstraints : {});
       await session.pc!.setLocalDescription(s);
       _send(
         'answer',
@@ -530,7 +519,8 @@ class Signaling {
     request["data"] = data;
     request["command"] = "call";
     debugPrint("Sending Request : " + request.toString());
-    connectionContractor.sendMessage(_encoder.convert(request), RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: remotePeerId));
+    connectionContractor.sendMessage(_encoder.convert(request),
+        RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: remotePeerId));
   }
 
   Future<void> _cleanSessions() async {

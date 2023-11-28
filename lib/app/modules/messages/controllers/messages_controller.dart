@@ -15,7 +15,7 @@ import 'package:heyo/app/modules/messages/domain/message_repository_models.dart'
 import 'package:heyo/app/modules/messages/domain/user_state_repository.dart';
 import 'package:heyo/app/modules/messages/utils/extensions/messageModel.extension.dart';
 import 'package:heyo/app/modules/messages/utils/open_camera_for_sending_media_message.dart';
-import 'package:heyo/app/modules/messaging/connection/domain/messaging_connections_models.dart';
+import 'package:heyo/app/modules/messages/connection/domain/messaging_connections_models.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:path/path.dart' as path;
@@ -50,8 +50,7 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
-import '../../messaging/controllers/wifi_direct_connection_controller.dart';
-import '../../messaging/unified_messaging_controller.dart';
+import '../connection/wifi_direct_connection_controller.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../share_files/models/file_model.dart';
 import '../../shared/utils/constants/colors.dart';

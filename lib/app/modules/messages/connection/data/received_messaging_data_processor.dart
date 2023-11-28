@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:heyo/app/modules/messages/data/models/messages/confirm_message_model.dart';
-import 'package:heyo/app/modules/messaging/connection/connection_data_handler.dart';
-import 'package:heyo/app/modules/messaging/connection/data/data_channel_messaging_connection.dart';
-import 'package:heyo/app/modules/messaging/connection/domain/messaging_connections_models.dart';
-import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
+import 'package:heyo/app/modules/messages/connection/connection_data_handler.dart';
+import 'package:heyo/app/modules/messages/connection/data/data_channel_messaging_connection.dart';
+import 'package:heyo/app/modules/messages/connection/domain/messaging_connections_models.dart';
+import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
 
 class ReceivedMessageDataProcessor {
   ReceivedMessageDataProcessor({
@@ -39,8 +39,7 @@ class ReceivedMessageDataProcessor {
       {required Map<String, dynamic> receivedJson,
       required String remoteCoreId,
       required MessageConnectionType messageConnectionType}) async {
-    WrappedMessageModel wrappedMessageModel =
-        WrappedMessageModel.fromJson(receivedJson);
+    WrappedMessageModel wrappedMessageModel = WrappedMessageModel.fromJson(receivedJson);
 
     switch (wrappedMessageModel.dataChannelMessagetype) {
       case MessageType.message:
@@ -81,8 +80,7 @@ class ReceivedMessageDataProcessor {
     required String remoteCoreId,
     required MessageConnectionType messageConnectionType,
   }) async {
-    final confirmMessageJson =
-        ConfirmMessageModel(messageId: messageId, status: status).toJson();
+    final confirmMessageJson = ConfirmMessageModel(messageId: messageId, status: status).toJson();
 
     final wrappedMessageModel = WrappedMessageModel(
       message: confirmMessageJson,

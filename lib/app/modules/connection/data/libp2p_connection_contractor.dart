@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
-import 'package:heyo/app/modules/messaging/models.dart';
+import 'package:heyo/app/modules/messages/connection/models/models.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_node_manager.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
@@ -30,8 +30,7 @@ class LibP2PConnectionContractor extends ConnectionContractor {
   @override
   Future<bool> sendMessage(String data, remoteId) {
     final remotePeer = remoteId as RemotePeer;
-    return p2pCommunicator.sendSDP(
-        data, remotePeer.remoteCoreId, remotePeer.remoteCoreId);
+    return p2pCommunicator.sendSDP(data, remotePeer.remoteCoreId, remotePeer.remoteCoreId);
   }
 
   //unCompleted
@@ -52,9 +51,7 @@ class LibP2PConnectionContractor extends ConnectionContractor {
     debugPrint("_onNewRequestEvent: body is: ${event.body}");
     debugPrint("_onNewRequestEvent: error is: ${event.error}");
 
-    if (event.name == P2PReqResNodeNames.signaling &&
-        event.error == null &&
-        event.body != null) {
+    if (event.name == P2PReqResNodeNames.signaling && event.error == null && event.body != null) {
       await FlutterP2pCommunicator.sendResponse(
         info: P2PReqResNodeModel(
           name: P2PReqResNodeNames.signaling,
@@ -65,15 +62,13 @@ class LibP2PConnectionContractor extends ConnectionContractor {
 
       //
       // MARK: here we are telling the sending party that everything is ok and the req was received
-      final remoteCoreId = (event.body!['info']
-          as Map<String, dynamic>)['remoteDelegatedCoreID'] as String;
+      final remoteCoreId =
+          (event.body!['info'] as Map<String, dynamic>)['remoteDelegatedCoreID'] as String;
 
-      final remotePeerId = (event.body!['info']
-          as Map<String, dynamic>)['remotePeerID'] as String;
+      final remotePeerId = (event.body!['info'] as Map<String, dynamic>)['remotePeerID'] as String;
 
       if ((event.body!['payload'] as Map<String, dynamic>)['data'] != null) {
-        final request =
-            (event.body!['payload'] as Map<String, dynamic>)['data'] as String;
+        final request = (event.body!['payload'] as Map<String, dynamic>)['data'] as String;
         // if session is not null then we have a request
         await onRequestReceived(
           request.convertHexToString(),

@@ -11,15 +11,13 @@ import 'package:heyo/app/modules/connection/data/libp2p_connection_contractor.da
 import 'package:heyo/app/modules/messages/data/usecases/init_message_usecase.dart';
 import 'package:heyo/app/modules/messages/data/usecases/read_message_usecase.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
-import 'package:heyo/app/modules/messaging/connection/connection_data_handler.dart';
-import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
-import 'package:heyo/app/modules/messaging/connection/data/data_channel_messaging_connection.dart';
-import 'package:heyo/app/modules/messaging/connection/data/received_messaging_data_processor.dart';
-import 'package:heyo/app/modules/messaging/connection/data/wifi_direct_messaging_connection.dart';
-import 'package:heyo/app/modules/messaging/connection/rtc_connection_repo.dart';
-import 'package:heyo/app/modules/messaging/single_webrtc_connection.dart';
-import 'package:heyo/app/modules/messaging/sync_messages.dart';
-import 'package:heyo/app/modules/messaging/web_rtc_connection_manager.dart';
+import 'package:heyo/app/modules/messages/connection/connection_data_handler.dart';
+import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
+import 'package:heyo/app/modules/messages/connection/data/data_channel_messaging_connection.dart';
+import 'package:heyo/app/modules/messages/connection/data/received_messaging_data_processor.dart';
+import 'package:heyo/app/modules/messages/connection/data/wifi_direct_messaging_connection.dart';
+import 'package:heyo/app/modules/messages/connection/rtc_connection_repo.dart';
+import 'package:heyo/app/modules/messages/connection/web_rtc_connection_manager.dart';
 import 'package:heyo/app/modules/notifications/controllers/app_notifications.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/app_account_repository.dart';
 import 'package:heyo/app/modules/shared/providers/account/creation/account_creation.dart';
@@ -47,6 +45,9 @@ import 'package:http/http.dart' as http;
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
 import '../../chats/data/repos/chat_history/chat_history_repo.dart';
+import '../../messages/connection/multiple_connections.dart';
+import '../../messages/connection/single_webrtc_connection.dart';
+import '../../messages/connection/sync_messages.dart';
 import '../../messages/data/message_processor.dart';
 import '../../messages/data/provider/messages_provider.dart';
 import '../../messages/data/repo/messages_abstract_repo.dart';
@@ -61,7 +62,6 @@ import '../data/repository/contact_repository.dart';
 import '../data/repository/db/cache_contractor.dart';
 import '../data/repository/db/cache_repository.dart';
 import '../utils/constants/web3client_constant.dart';
-import 'package:heyo/app/modules/messaging/multiple_connections.dart';
 
 class GlobalBindings extends Bindings {
   // accountInfo

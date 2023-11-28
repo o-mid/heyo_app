@@ -1,6 +1,6 @@
 import 'package:tuple/tuple.dart';
 import '../../messages/data/message_processor.dart';
-import '../models/data_channel_message_model.dart';
+import '../connection/models/data_channel_message_model.dart';
 
 Tuple3<WrappedMessageModel?, bool, String> channelmessageFromType(
     {required ChannelMessageType channelMessageType}) {
