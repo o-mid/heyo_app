@@ -150,10 +150,6 @@ class MessagesController extends GetxController {
     connectionType = args.connectionType;
 
     chatId = user.value.coreId;
-
-    // UserModel? userModel = await contactRepository.getContactById(user.value.coreId);
-    // //Todo: check the following line
-    // _userModel = user.value.copyWith(isContact: (userModel != null));
   }
 
   Future<void> _getUserContact() async {
@@ -384,14 +380,6 @@ class MessagesController extends GetxController {
         chatId: chatId,
       ),
     );
-    // await messageRepository.updateReactions(
-    //   updateMessageRepoModel: UpdateMessageRepoModel(
-    //     selectedMessage: msg,
-    //     emoji: emoji,
-    //     chatId: chatId,
-    //     remoteCoreId: user.value.walletAddress,
-    //   ),
-    // );
   }
 
   Future<void> toggleMessageReadStatus({required String messageId}) async {
@@ -439,17 +427,6 @@ class MessagesController extends GetxController {
   }
 
   Future<void> sendTextMessage() async {
-    // SendTextMessageRepoModel(
-    //   chatId: chatId,
-    //   replyingToValue: replyingTo.value,
-    //   newMessageValue: newMessage.value,
-    //   remoteCoreId: user.value.walletAddress,
-    // );
-    //   final newMessageValue = sendTextMessageRepoModel.newMessageValue;
-    //   final replyingToValue = sendTextMessageRepoModel.replyingToValue;
-    //   final chatId = sendTextMessageRepoModel.chatId;
-    //   final remoteCoreId = sendTextMessageRepoModel.remoteCoreId;
-
     await sendMessageUseCase.execute(
       messageConnectionType: args.connectionType.map(),
       sendMessageType: SendMessageType.text(
@@ -466,17 +443,7 @@ class MessagesController extends GetxController {
     _postMessageSendOperations();
   }
 
-//TODO
   Future<void> sendAudioMessage(String path, int duration) async {
-    // await messageRepository.sendAudioMessage(
-    //   sendAudioMessageRepoModel: SendAudioMessageRepoModel(
-    //     path: path,
-    //     duration: duration,
-    //     replyingToValue: replyingTo.value,
-    //     chatId: chatId,
-    //     remoteCoreId: user.value.walletAddress,
-    //   ),
-    // );
     await sendMessageUseCase.execute(
       messageConnectionType: args.connectionType.map(),
       sendMessageType: SendMessageType.audio(
@@ -491,7 +458,6 @@ class MessagesController extends GetxController {
     _postMessageSendOperations();
   }
 
-//TODO
   Future<void> sendLocationMessage() async {
     final message = locationMessage.value;
     if (message == null) {
@@ -508,16 +474,6 @@ class MessagesController extends GetxController {
       ),
       remoteCoreId: user.value.walletAddress,
     );
-    // await messageRepository.sendLocationMessage(
-    //   sendLocationMessageRepoModel: SendLocationMessageRepoModel(
-    //     latitude: message.latitude,
-    //     longitude: message.longitude,
-    //     address: message.address,
-    //     replyingToValue: replyingTo.value,
-    //     chatId: chatId,
-    //     remoteCoreId: user.value.walletAddress,
-    //   ),
-    // );
 
     locationMessage.value = null;
 
@@ -530,16 +486,6 @@ class MessagesController extends GetxController {
     required double startLat,
     required double startLong,
   }) async {
-    // await messageRepository.sendLiveLocation(
-    //   sendLiveLocationRepoModel: SendLiveLocationRepoModel(
-    //     startLat: startLat,
-    //     startLong: startLong,
-    //     duration: duration,
-    //     replyingToValue: replyingTo.value,
-    //     chatId: chatId,
-    //     remoteCoreId: user.value.walletAddress,
-    //   ),
-    // );
     sendMessageUseCase.execute(
       messageConnectionType: args.connectionType.map(),
       sendMessageType: SendMessageType.liveLocation(
@@ -553,9 +499,6 @@ class MessagesController extends GetxController {
     );
 
     _postMessageSendOperations();
-
-    // Todo (libp2p): send message
-    // Get.find<LiveLocationController>().startSharing(message.messageId, duration);
   }
 
   void animateToTop({
@@ -743,76 +686,7 @@ class MessagesController extends GetxController {
 
   //TODO ramin, i think they can be moved in a helper class, wee need to discuss further
   Future<void> openCameraPicker(BuildContext context) async {
-    try {
-      // await openCameraForSendingMediaMessage(
-      //   context,
-      //   receiverName: user.value.name,
-      //   onEntitySaving: (CameraPickerViewType viewType, File file) async {
-      //     AssetEntity? entity;
-
-      //     switch (viewType) {
-      //       case CameraPickerViewType.image:
-      //         final String filePath = file.path;
-      //         entity = await PhotoManager.editor.saveImageWithPath(
-      //           filePath,
-      //           title: path.basename(filePath),
-      //         );
-
-      //         if (entity == null) {
-      //           break;
-      //         }
-      //         await SendMessage().execute(
-      //             sendMessageType: SendMessageType.image(
-      //               path: file.path,
-      //               metadata: ImageMetadata(
-      //                 height: entity.height.toDouble(),
-      //                 width: entity.width.toDouble(),
-      //               ),
-      //               replyTo: replyingTo.value,
-      //               chatId: chatId,
-      //             ),
-      //             remoteCoreId: user.value.walletAddress);
-
-      //         break;
-      //       case CameraPickerViewType.video:
-      //         entity = await PhotoManager.editor.saveVideo(
-      //           File(file.path),
-      //           title: path.basename(file.path),
-      //         );
-
-      //         if (entity == null) {
-      //           break;
-      //         }
-
-      //         await SendMessage().execute(
-      //             sendMessageType: SendMessageType.video(
-      //               path: file.path,
-      //               metadata: VideoMetadata(
-      //                 durationInSeconds: entity.videoDuration.inSeconds,
-      //                 height: entity.height.toDouble(),
-      //                 width: entity.width.toDouble(),
-      //                 isLocal: true,
-      //                 thumbnailBytes: await entity.thumbnailData,
-      //                 thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
-      //               ),
-      //               replyTo: replyingTo.value,
-      //               chatId: chatId,
-      //             ),
-      //             remoteCoreId: user.value.walletAddress);
-
-      //         break;
-      //     }
-
-      //     Get.until((route) => Get.currentRoute == Routes.MESSAGES);
-
-      //     mediaGlassmorphicChangeState();
-      //     messages.refresh();
-      //     WidgetsBinding.instance.addPostFrameCallback((_) {
-      //       animateToBottom();
-      //     });
-      //   },
-      // );
-    } catch (e) {
+    try {} catch (e) {
       if (kDebugMode) {
         print(e);
       }
@@ -841,135 +715,6 @@ class MessagesController extends GetxController {
     bool closeMediaGlassmorphic = false,
   }) async {
     if (closeMediaGlassmorphic) mediaGlassmorphicChangeState();
-
-    // List? tempImages = [];
-    // for (final element in result) {
-    //   if (element["type"] == "image") {
-    //     tempImages.add(ImageMessageModel(
-    //       messageId: "${messages.lastIndexOf(messages.last) + 1}",
-    //       isLocal: true,
-    //       metadata: ImageMetadata(
-    //         height: element["height"].toDouble(),
-    //         width: element["width"].toDouble(),
-    //       ),
-    //       senderAvatar: '',
-    //       senderName: '',
-    //       isFromMe: true,
-    //       status: MessageStatus.sending,
-    //       chatId: chatId,
-    //       timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-    //       url: element["path"],
-    //     ));
-    //   } else if (element["type"] == "video") {
-    //     Uint8List thumbnailBytes = await element["thumbnail"];
-    //     tempImages.add(VideoMessageModel(
-    //       messageId: "${messages.lastIndexOf(messages.last) + 1}",
-    //       chatId: chatId,
-    //       metadata: VideoMetadata(
-    //         durationInSeconds: element["videoDuration"].inSeconds,
-    //         height: double.parse(element["height"].toString()),
-    //         width: double.parse(element["width"].toString()),
-    //         isLocal: true,
-    //         thumbnailBytes: thumbnailBytes,
-    //         thumbnailUrl: "https://mixkit.imgix.net/static/home/video-thumb3.png",
-    //       ),
-    //       url: element["path"],
-    //       timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-    //       senderName: '',
-    //       senderAvatar: '',
-    //       isFromMe: true,
-    //       status: MessageStatus.sending,
-    //       type: MessageContentType.video,
-    //     ));
-    //   }
-    // }
-    // if (tempImages.length > 1) {
-    //   messages.add(MultiMediaMessageModel(
-    //     mediaList: tempImages,
-    //     messageId: "${messages.lastIndexOf(messages.last) + 1}",
-    //     chatId: chatId,
-    //     senderAvatar: '',
-    //     senderName: '',
-    //     isFromMe: true,
-    //     status: MessageStatus.sending,
-    //     timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-    //   ));
-    // } else {
-    //   result.forEach((asset) async {
-    //     switch (asset["type"]) {
-    //       case "image":
-    //         {
-    //           messages.add(
-    //             ImageMessageModel(
-    //                 messageId: "${messages.lastIndexOf(messages.last) + 1}",
-    //                 chatId: chatId,
-    //                 isLocal: true,
-    //                 metadata: ImageMetadata(
-    //                   height: double.parse(asset["height"].toString()),
-    //                   width: double.parse(asset["width"].toString()),
-    //                 ),
-    //                 senderAvatar: '',
-    //                 senderName: '',
-    //                 isFromMe: true,
-    //                 status: MessageStatus.sending,
-    //                 timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-    //                 url: asset["path"]),
-    //           );
-    //         }
-    //         break;
-
-    //       case "video":
-    //         {
-    //           messages.add(
-    //             VideoMessageModel(
-    //               messageId: "${messages.lastIndexOf(messages.last) + 1}",
-    //               chatId: chatId,
-    //               metadata: VideoMetadata(
-    //                 durationInSeconds: asset["videoDuration"].inSeconds,
-    //                 height: double.parse(asset["height"].toString()),
-    //                 width: double.parse(asset["width"].toString()),
-    //                 isLocal: true,
-    //                 thumbnailBytes: await asset["thumbnail"],
-    //                 thumbnailUrl: '',
-    //               ),
-    //               url: asset["path"],
-    //               timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-    //               senderName: '',
-    //               senderAvatar: '',
-    //               isFromMe: true,
-    //               status: MessageStatus.sending,
-    //             ),
-    //           );
-    //         }
-    //         break;
-    //       case "text":
-    //         {
-    //           messages.add(
-    //             TextMessageModel(
-    //               messageId: "${messages.lastIndexOf(messages.last) + 1}",
-    //               chatId: chatId,
-    //               text: asset["value"],
-    //               timestamp: DateTime.now().subtract(const Duration(hours: 1, minutes: 49)),
-    //               senderName: '',
-    //               senderAvatar: '',
-    //               isFromMe: true,
-    //               status: MessageStatus.sending,
-    //             ),
-    //           );
-    //         }
-    //         break;
-
-    //       default:
-    //         break;
-    //     }
-    //   });
-    // }
-
-    // mediaGlassmorphicChangeState();
-    // messages.refresh();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   animateToBottom();
-    // });
   }
 
   Future<void> openFiles() async {

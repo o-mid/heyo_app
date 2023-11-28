@@ -84,8 +84,6 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
 
   @override
   void initConnection(MessageConnectionType messageConnectionType, String remoteId) {
-    if (messageConnectionType == MessageConnectionType.RTC_DATA_CHANNEL) {
-      dataChannelMessagingConnection.init(WebRTCConnectionInitData(remoteId: remoteId));
-    } else if (messageConnectionType == MessageConnectionType.WIFI_DIRECT) {}
+    dataChannelMessagingConnection.init(WebRTCConnectionInitData(remoteId: remoteId));
   }
 }
