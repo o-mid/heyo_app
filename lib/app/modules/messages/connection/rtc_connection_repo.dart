@@ -27,14 +27,13 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
     required MessageConnectionType messageConnectionType,
   }) async {
     await dataHandler.createUserChatModel(sessioncid: remoteCoreId);
-    if (messageConnectionType == MessageConnectionType.RTC_DATA_CHANNEL) {
-      await dataChannelMessagingConnection.sendMessage(
-        DataChannelConnectionSendData(
-          remoteCoreId: remoteCoreId,
-          message: text,
-        ),
-      );
-    } else {}
+
+    await dataChannelMessagingConnection.sendMessage(
+      DataChannelConnectionSendData(
+        remoteCoreId: remoteCoreId,
+        message: text,
+      ),
+    );
   }
 
   @override
