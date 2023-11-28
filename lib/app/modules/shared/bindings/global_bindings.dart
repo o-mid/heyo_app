@@ -3,6 +3,7 @@ import 'package:heyo/app/modules/account/controllers/account_controller.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/modules/calls/call_history/controllers/call_history_controller.dart';
 import 'package:heyo/app/modules/calls/data/call_requests_processor.dart';
+import 'package:heyo/app/modules/calls/data/call_status_data_store.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
@@ -189,6 +190,7 @@ class GlobalBindings extends Bindings {
           )))
       ..put(
           CallConnectionsHandler(
+            callStatusDataStore: CallStatusDataStore(),
               singleCallWebRTCBuilder: SingleCallWebRTCBuilder(
                   connectionContractor: Get.find(),
                   webRTCConnectionManager: WebRTCCallConnectionManager(),),),

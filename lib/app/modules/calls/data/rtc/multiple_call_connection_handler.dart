@@ -1,9 +1,9 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:heyo/app/modules/calls/data/call_status_data_store.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
-import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
-import 'package:heyo/app/modules/connection/domain/connection_models.dart';
 import 'package:heyo/app/modules/calls/data/models.dart';
 import 'package:heyo/app/modules/calls/data/rtc/single_call_web_rtc_connection.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 
 enum CallState {
   callStateNew,
@@ -46,24 +46,20 @@ class CallConnectionsHandler {
   SingleCallWebRTCBuilder singleCallWebRTCBuilder;
   MediaStream? _localStream;
   Function(MediaStream stream)? onLocalStream;
-  IncomingCalls? _incomingCalls;
   Function(CallRTCSession callRTCSession)? onAddRemoteStream;
 
   Function(AllParticipantModel participate)? onChangeParticipateStream;
 
   CallConnectionsHandler(
       {required this.singleCallWebRTCBuilder,
-      }) {
-  }
+      required this.callStatusDataStore,});
 
+  final CallStatusDataStore callStatusDataStore;
   Function(CallId callId, List<CallInfo> callInfo, CallState state)?
       onCallStateChange;
 
-  CurrentCall? _currentCall;
-  RequestedCalls? requestedCalls;
-
   Future<void> addMember(String remoteCoreId) async {
-    _currentCall!.activeSessions.forEach((element) {
+    callStatusDataStore.currentCall!.activeSessions.forEach((element) {
       singleCallWebRTCBuilder.addMemberEvent(remoteCoreId, element);
     });
     //TODO refactor isAudio
@@ -72,11 +68,11 @@ class CallConnectionsHandler {
         remoteCoreId: remoteCoreId,
         remotePeerId: null,
       ),
-      _currentCall!.activeSessions.first.isAudioCall,
+      callStatusDataStore.currentCall!.activeSessions.first.isAudioCall,
     );
     singleCallWebRTCBuilder.requestSession(
       callRTCSession,
-      _currentCall!.activeSessions
+      callStatusDataStore.currentCall!.activeSessions
           .map((e) => e.remotePeer.remoteCoreId)
           .toList(),
     );
@@ -87,7 +83,7 @@ class CallConnectionsHandler {
     bool isAudioCall,
   ) async {
     CallId callId = generateCallId();
-    _currentCall = CurrentCall(callId: callId, activeSessions: []);
+    callStatusDataStore.currentCall = CurrentCall(callId: callId, activeSessions: []);
     CallRTCSession callRTCSession = await _createSession(
       RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
       isAudioCall,
@@ -113,7 +109,7 @@ class CallConnectionsHandler {
       onLocalStream?.call(_localStream!);
     }
     CallRTCSession callRTCSession = await singleCallWebRTCBuilder.createSession(
-      _currentCall!.callId,
+      callStatusDataStore.currentCall!.callId,
       remotePeer,
       _localStream!,
       isAudioCall,
@@ -121,12 +117,12 @@ class CallConnectionsHandler {
     callRTCSession.onAddRemoteStream = (stream) {
       onAddRemoteStream?.call(callRTCSession);
     };
-    _currentCall!.activeSessions.add(callRTCSession);
+    callStatusDataStore.currentCall!.activeSessions.add(callRTCSession);
     return callRTCSession;
   }
 
   CallRTCSession? _getConnection(String remoteCoreId, CallId callId) {
-    for (var value in _currentCall!.activeSessions) {
+    for (var value in callStatusDataStore.currentCall!.activeSessions) {
       if (value.callId == callId &&
           value.remotePeer.remoteCoreId == remoteCoreId) {
         return value;
@@ -136,10 +132,10 @@ class CallConnectionsHandler {
   }
 
   Future<void> accept(CallId callId) async {
-    print("accepttt ${_incomingCalls}");
-    if (_incomingCalls?.callId == callId) {
-      _currentCall = CurrentCall(callId: callId, activeSessions: []);
-      _incomingCalls!.remotePeers.forEach((element) async {
+    print("accepttt ${callStatusDataStore.incomingCalls}");
+    if (callStatusDataStore.incomingCalls?.callId == callId) {
+      callStatusDataStore.currentCall = CurrentCall(callId: callId, activeSessions: []);
+      callStatusDataStore.incomingCalls!.remotePeers.forEach((element) async {
         print("accept ${element.remotePeer.remoteCoreId}");
         CallRTCSession callRTCSession =
             await _createSession(element.remotePeer, element.isAudioCall);
@@ -150,20 +146,20 @@ class CallConnectionsHandler {
   }
 
   Future<void> reject(String callId) async {
-    if (_currentCall?.callId == callId) {
-      _currentCall?.activeSessions.forEach((element) {
+    if (callStatusDataStore.currentCall?.callId == callId) {
+      callStatusDataStore.currentCall?.activeSessions.forEach((element) {
         singleCallWebRTCBuilder.reject(callId, element.remotePeer);
       });
     }
   }
 
   Future<void> close() async {
-    if (_currentCall != null) {
-      for (var element in _currentCall!.activeSessions) {
+    if (callStatusDataStore.currentCall != null) {
+      for (var element in callStatusDataStore.currentCall!.activeSessions) {
         await element.dispose();
       }
-      _currentCall!.activeSessions.clear();
-      _currentCall = null;
+      callStatusDataStore.currentCall!.activeSessions.clear();
+      callStatusDataStore.currentCall = null;
     }
     _localStream?.getTracks().forEach((element) async {
       await element.stop();
@@ -172,16 +168,15 @@ class CallConnectionsHandler {
     _localStream = null;
   }
 
-
   void onNewMemberEventReceived(CallId callId, dynamic data) async {
     final member = data[CallSignalingCommands.newMember] as String;
-    if (callId == _currentCall?.callId) {
+    if (callId == callStatusDataStore.currentCall?.callId) {
       CallRTCSession callRTCSession = await _createSession(
         RemotePeer(
           remoteCoreId: member,
           remotePeerId: null,
         ),
-        _currentCall!.activeSessions.first.isAudioCall,
+        callStatusDataStore.currentCall!.activeSessions.first.isAudioCall,
       );
     }
   }
@@ -277,7 +272,7 @@ class CallConnectionsHandler {
 
   Future<void> onCallRequestRejected(mapData, RemotePeer remotePeer) async {
     String callId = mapData[CALL_ID] as String;
-    if (_currentCall != null) {
+    if (callStatusDataStore.currentCall != null) {
       CallRTCSession? callRTCSession =
           _getConnection(remotePeer.remoteCoreId, callId);
       if (callRTCSession != null) {
@@ -293,19 +288,19 @@ class CallConnectionsHandler {
           CallState.callStateBye,
         );
         await callRTCSession.dispose();
-        _currentCall?.activeSessions.removeWhere(
+        callStatusDataStore.currentCall?.activeSessions.removeWhere(
           (element) =>
               element.remotePeer.remoteCoreId == remotePeer.remoteCoreId,
         );
       }
     }
-    if (_incomingCalls != null) {
+    if (callStatusDataStore.incomingCalls != null) {
       onCallStateChange?.call(
         callId,
-        [_incomingCalls!.remotePeers.first],
+        [callStatusDataStore.incomingCalls!.remotePeers.first],
         CallState.callStateBye,
       );
-      _incomingCalls = null;
+      callStatusDataStore.incomingCalls = null;
     }
   }
 
@@ -333,7 +328,7 @@ class CallConnectionsHandler {
         ),
       );
     }
-    _incomingCalls = IncomingCalls(callId: callId, remotePeers: remotePeers);
+    callStatusDataStore.incomingCalls = IncomingCalls(callId: callId, remotePeers: remotePeers);
 
     onCallStateChange?.call(callId, [callInfo], CallState.callStateNew);
 
@@ -341,18 +336,18 @@ class CallConnectionsHandler {
   }
 
   void rejectIncomingCall(String callId) {
-    if (_incomingCalls?.callId == callId) {
-      _incomingCalls?.remotePeers.forEach((element) {
+    if (callStatusDataStore.incomingCalls?.callId == callId) {
+      callStatusDataStore.incomingCalls?.remotePeers.forEach((element) {
         print("rejectcd 2");
 
         singleCallWebRTCBuilder.reject(callId, element.remotePeer);
       });
-      _incomingCalls = null;
+      callStatusDataStore.incomingCalls = null;
     }
   }
 
   List<CallRTCSession> getRemoteStreams() {
-    return _currentCall!.activeSessions;
+    return callStatusDataStore.currentCall!.activeSessions;
   }
 
   MediaStream? getLocalStream() {

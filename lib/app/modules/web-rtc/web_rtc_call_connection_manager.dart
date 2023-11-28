@@ -58,7 +58,7 @@ class WebRTCCallConnectionManager {
   }) {
     pc.onTrack = (event) {
       print(
-          "DEBUG race : On track stream: ${event.streams.length} :${event.streams[0].id} : track id : ${event.track.id}");
+          "DEBUG race : On track stream: ${event.streams.length} :${event.streams[0].id} : track id : ${event.track.id} : ${event.track.kind}");
       if (event.track.kind == 'video') {
         onAddRemoteStream?.call(event.streams[0]);
       }
