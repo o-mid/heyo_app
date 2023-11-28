@@ -6,8 +6,6 @@ import 'package:heyo/app/modules/messages/data/repo/messages_repo.dart';
 import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
 import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
 
-import '../../../messaging/controllers/common_messaging_controller.dart';
-import '../../../messaging/controllers/messaging_connection_controller.dart';
 import '../../../messaging/unified_messaging_controller.dart';
 import '../message_processor.dart';
 import '../models/messages/message_model.dart';

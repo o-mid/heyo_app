@@ -10,7 +10,6 @@ import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dar
 import 'package:tuple/tuple.dart';
 
 import '../../../messaging/unified_messaging_controller.dart';
-import '../../../messaging/usecases/send_binary_data_usecase.dart';
 import '../../../messaging/utils/binary_file_sending_state.dart';
 import '../../utils/message_from_type.dart';
 import '../message_processor.dart';
@@ -21,9 +20,7 @@ import '../repo/messages_abstract_repo.dart';
 
 class SendMessageUseCase {
   SendMessageUseCase(
-      {required this.messagesRepo,
-      required this.connectionRepository,
-      required this.processor});
+      {required this.messagesRepo, required this.connectionRepository, required this.processor});
 
   final MessagesAbstractRepo messagesRepo;
   final MessageProcessor processor;
@@ -35,8 +32,8 @@ class SendMessageUseCase {
       required String remoteCoreId,
       bool isUpdate = false,
       MessageModel? messageModel = null}) async {
-    Tuple3<MessageModel?, bool, String> messageObject = messageFromType(
-        messageType: sendMessageType, messageModel: messageModel);
+    Tuple3<MessageModel?, bool, String> messageObject =
+        messageFromType(messageType: sendMessageType, messageModel: messageModel);
     MessageModel? msg = messageObject.item1;
     bool isDataBinary = messageObject.item2;
     String messageLocalPath = messageObject.item3;
@@ -46,21 +43,17 @@ class SendMessageUseCase {
     }
     if (isUpdate) {
       await messagesRepo.updateMessage(
-          message: msg.copyWith(status: MessageStatus.sending),
-          chatId: sendMessageType.chatId);
+          message: msg.copyWith(status: MessageStatus.sending), chatId: sendMessageType.chatId);
     } else {
       await messagesRepo.createMessage(
-          message: msg.copyWith(status: MessageStatus.sending),
-          chatId: sendMessageType.chatId);
+          message: msg.copyWith(status: MessageStatus.sending), chatId: sendMessageType.chatId);
     }
 
     final rawmessageJson = msg.toJson();
 
     final processedMessage = await processor.getMessageDetails(
       channelMessageType: ChannelMessageType.message(
-          message: rawmessageJson,
-          isDataBinary: isDataBinary,
-          messageLocalPath: messageLocalPath),
+          message: rawmessageJson, isDataBinary: isDataBinary, messageLocalPath: messageLocalPath),
       remoteCoreId: remoteCoreId,
     );
     if (isDataBinary && messageLocalPath.isNotEmpty) {

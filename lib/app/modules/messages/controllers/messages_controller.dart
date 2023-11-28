@@ -50,8 +50,6 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
-import '../../messaging/controllers/common_messaging_controller.dart';
-import '../../messaging/controllers/messaging_connection_controller.dart';
 import '../../messaging/controllers/wifi_direct_connection_controller.dart';
 import '../../messaging/unified_messaging_controller.dart';
 import '../../new_chat/data/models/user_model.dart';

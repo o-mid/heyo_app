@@ -19,7 +19,6 @@ import '../../messages/data/provider/messages_provider.dart';
 import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/data/repo/messages_repo.dart';
 import '../../messages/data/usecases/send_message_usecase.dart';
-import '../../messaging/controllers/common_messaging_controller.dart';
 import '../../messaging/unified_messaging_controller.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
@@ -180,7 +179,7 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
         if (userChatModel != null) {
           // Get.find<MessagesController>().initMessagingConnection();
           //TODO farzam reply
-        /*  await sendMessageUseCase.execute(
+          /*  await sendMessageUseCase.execute(
               sendMessageType: SendMessageType.text(
                 text: message,
                 replyTo: ReplyToModel(

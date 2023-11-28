@@ -5,7 +5,6 @@ import 'package:heyo/app/modules/messaging/connection/connection_repo.dart';
 import 'package:heyo/app/modules/messaging/connection/domain/messaging_connection.dart';
 import 'package:heyo/app/modules/messaging/models/data_channel_message_model.dart';
 import 'package:heyo/app/modules/messaging/unified_messaging_controller.dart';
-import '../../../messaging/controllers/common_messaging_controller.dart';
 
 import '../message_processor.dart';
 import '../models/messages/confirm_message_model.dart';
@@ -25,14 +24,14 @@ class ConfirmMessageUseCase {
     required this.processor,
   });
 
-  void execute(
-      {required MessageConnectionType messageConnectionType,
-      required ConfirmMessageType confirmMessageType,
-      required String remoteCoreId,}) async {
+  void execute({
+    required MessageConnectionType messageConnectionType,
+    required ConfirmMessageType confirmMessageType,
+    required String remoteCoreId,
+  }) async {
     switch (confirmMessageType.runtimeType) {
       case ConfirmReceivedText:
-        final String messageId =
-            (confirmMessageType as ConfirmReceivedText).messageId;
+        final String messageId = (confirmMessageType as ConfirmReceivedText).messageId;
         final ConfirmMessageStatus status = (confirmMessageType).status;
 
         Map<String, dynamic> confirmmessageJson = ConfirmMessageModel(
@@ -41,8 +40,7 @@ class ConfirmMessageUseCase {
         ).toJson();
 
         final processedMessage = await processor.getMessageDetails(
-          channelMessageType:
-              ChannelMessageType.confirm(message: confirmmessageJson),
+          channelMessageType: ChannelMessageType.confirm(message: confirmmessageJson),
           remoteCoreId: remoteCoreId,
         );
 
