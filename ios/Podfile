@@ -56,6 +56,16 @@ post_install do |installer|
       config.build_settings['ONLY_ACTIVE_ARCH']='NO'
       config.build_settings['ENABLE_BITCODE'] = 'NO'
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
+
+      #
+      # In Xcode 15 Apple changed the variable which points to the
+      # default toolchain location to $TOOLCHAIN_DIR from $DT_TOOLCHAIN_DIR.
+      # If some project/target used $DT_TOOLCHAIN_DIR then it need to be replace by $TOOLCHAIN_DIR.
+      # It can be deleted after cocoapods fix this issue
+      xcconfig_path = config.base_configuration_reference.real_path
+      xcconfig = File.read(xcconfig_path)
+      xcconfig_mod = xcconfig.gsub(/DT_TOOLCHAIN_DIR/, "TOOLCHAIN_DIR")
+      File.open(xcconfig_path, "w") { |file| file << xcconfig_mod }
       
       # You can enable the permissions needed here. For example to enable camera
       # permission, just remove the `#` character in front so it looks like this:
