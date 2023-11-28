@@ -60,7 +60,7 @@ import '../../shared/utils/scroll_to_index.dart';
 import '../data/usecases/delete_message_usecase.dart';
 import '../data/usecases/update_message_usecase.dart';
 import '../../shared/data/repository/contact_repository.dart';
-import '../domain/connection_message_repository.dart';
+import '../domain/message_repository.dart';
 
 class MessagesController extends GetxController {
   MessagesController(
@@ -77,7 +77,7 @@ class MessagesController extends GetxController {
   final SendMessageUseCase sendMessageUseCase;
   final UpdateMessageUseCase updateMessageUseCase;
   final DeleteMessageUseCase deleteMessageUseCase;
-  final ConnectionMessageRepository messageRepository;
+  final MessageRepository messageRepository;
   final UserStateRepository userStateRepository;
   final ReadMessageUseCase readMessageUseCase;
   final InitMessageUseCase initMessageUseCase;

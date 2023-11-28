@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_repo.dart';
 import 'package:heyo/app/modules/messages/data/provider/messages_provider.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_repo.dart';
-import 'package:heyo/app/modules/messages/data/connection_message_repository_impl.dart';
+import 'package:heyo/app/modules/messages/data/message_repository_impl.dart';
 import 'package:heyo/app/modules/messages/data/usecases/init_message_usecase.dart';
 import 'package:heyo/app/modules/messages/data/usecases/read_message_usecase.dart';
 import 'package:heyo/app/modules/messages/data/user_state_repository_Impl.dart';
@@ -54,7 +54,7 @@ class MessagesBinding extends Bindings {
         readMessageUseCase:
             ReadMessageUseCase(dataHandler: Get.find(), connectionRepository: connectionRepository),
         initMessageUseCase: InitMessageUseCase(connectionRepository: connectionRepository),
-        messageRepository: ConnectionMessageRepositoryImpl(
+        messageRepository: MessageRepositoryImpl(
           messagesRepo: MessagesRepo(
             messagesProvider: MessagesProvider(
               appDatabaseProvider: Get.find<AppDatabaseProvider>(),
