@@ -1,29 +1,34 @@
+// ignore_for_file: require_trailing_commas
+
+import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
-import 'package:heyo/app/modules/messaging/multiple_connections.dart';
+import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
+import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
-import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/messages/utils/message_to_send_message_type.dart';
 
+import 'multiple_connections.dart';
+
 class SyncMessages {
+  SyncMessages({
+    required this.p2pState,
+    required this.multipleConnectionHandler,
+    required this.accountInfo,
+    required this.chatHistoryRepo,
+    required this.messagesRepo,
+    required this.sendMessageUseCase,
+  }) {
+    _init();
+  }
   final P2PState p2pState;
   final MultipleConnectionHandler multipleConnectionHandler;
   final AccountRepository accountInfo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final MessagesAbstractRepo messagesRepo;
-  final SendMessage sendMessage;
-
-  SyncMessages(
-      {required this.p2pState,
-      required this.multipleConnectionHandler,
-      required this.accountInfo,
-      required this.chatHistoryRepo,
-      required this.messagesRepo,
-      required this.sendMessage}) {
-    _init();
-  }
+  final SendMessageUseCase sendMessageUseCase;
 
   _init() async {
     _initiateConnections();
@@ -31,11 +36,11 @@ class SyncMessages {
     _sendUnsentMessages();
   }
 
-  _sendUnsentMessages() {
+  void _sendUnsentMessages() {
     multipleConnectionHandler.onRTCSessionConnected = (rtcSession) async {
       print("syncMessages: onRTCSessionConnected: ${rtcSession.connectionId} ");
-      List<MessageModel?> unsentMessages = (await messagesRepo
-          .getUnsentMessages(rtcSession.remotePeer.remoteCoreId));
+      List<MessageModel?> unsentMessages =
+          (await messagesRepo.getUnsentMessages(rtcSession.remotePeer.remoteCoreId));
       print("syncMessages: size : ${unsentMessages.length} ");
 
       for (var message in unsentMessages) {
@@ -49,7 +54,8 @@ class SyncMessages {
           if (sendMessageType != null) {
             print("syncMessages: execute: ${rtcSession.connectionId} ");
 
-            await sendMessage.execute(
+            await sendMessageUseCase.execute(
+                messageConnectionType: MessageConnectionType.RTC_DATA_CHANNEL,
                 sendMessageType: sendMessageType,
                 remoteCoreId: rtcSession.remotePeer.remoteCoreId,
                 isUpdate: true,

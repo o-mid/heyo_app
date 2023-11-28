@@ -1,35 +1,40 @@
-enum DataChannelMessageType {
+enum MessageConnectionType { WIFI_DIRECT, RTC_DATA_CHANNEL }
+
+
+enum MessageType {
   message,
   update,
   delete,
   confirm,
 }
 
-class DataChannelMessageModel {
+class WrappedMessageModel {
   static const dataChannelMessagetypeSerializedName = "dataChannelMessagetype";
   static const messageSerializedName = "message";
 
-  final DataChannelMessageType dataChannelMessagetype;
+  final MessageType dataChannelMessagetype;
   Map<String, dynamic> message;
 
-  DataChannelMessageModel({
+  WrappedMessageModel({
     required this.dataChannelMessagetype,
     required this.message,
   });
 
-  DataChannelMessageModel copyWith({
-    final DataChannelMessageType? dataChannelMessagetype,
+  WrappedMessageModel copyWith({
+    final MessageType? dataChannelMessagetype,
     Map<String, dynamic>? message,
   }) {
-    return DataChannelMessageModel(
-      dataChannelMessagetype: dataChannelMessagetype ?? this.dataChannelMessagetype,
+    return WrappedMessageModel(
+      dataChannelMessagetype:
+          dataChannelMessagetype ?? this.dataChannelMessagetype,
       message: message ?? this.message,
     );
   }
 
-  factory DataChannelMessageModel.fromJson(Map<String, dynamic> json) => DataChannelMessageModel(
-        dataChannelMessagetype:
-            DataChannelMessageType.values.byName(json[dataChannelMessagetypeSerializedName]),
+  factory WrappedMessageModel.fromJson(Map<String, dynamic> json) =>
+      WrappedMessageModel(
+        dataChannelMessagetype: MessageType.values
+            .byName(json[dataChannelMessagetypeSerializedName] as String),
         message: json[messageSerializedName] as Map<String, dynamic>,
       );
 

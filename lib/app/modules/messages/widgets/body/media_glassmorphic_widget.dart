@@ -11,236 +11,119 @@ import '../../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../../shared/widgets/circular_media_icon_button.dart';
 import '../../controllers/messages_controller.dart';
 
-class MediaGlassmorphic extends StatelessWidget {
-  const MediaGlassmorphic({Key? key}) : super(key: key);
+class MediaGlassmorphicWidget extends StatelessWidget {
+  const MediaGlassmorphicWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MessagesController>();
+
     return Obx(() {
       return AnimatedSwitcher(
         duration: const Duration(milliseconds: 50),
         reverseDuration: const Duration(milliseconds: 150),
-        child: controller.isMediaGlassmorphicOpen.value
-            ? Column(
-                children: [
-                  GlassmorphicContainer(
-                    width: 290.w,
-                    height: 156.h,
-                    borderRadius: 8.r,
-                    blur: 36,
-                    border: 0,
-                    linearGradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        const Color(0xFF466087).withOpacity(0.05),
-                        const Color(0xFF466087).withOpacity(0.05),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            CircularMediaIconButton(
-                              backgroundColor: const Color(0xffFFB500),
-                              // Todo : camera onPressed:
-                              onPressed: () async {
-                                // Todo : remove this when the feature is ready
-                                Get.rawSnackbar(
-                                  messageText: Text(
-                                    "Sending Media feature is in development phase",
-                                    style: TEXTSTYLES.kBodySmall
-                                        .copyWith(color: COLORS.kGreenMainColor),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
-                                  backgroundColor: COLORS.kAppBackground,
-                                  snackPosition: SnackPosition.TOP,
-                                  snackStyle: SnackStyle.FLOATING,
-                                  margin: const EdgeInsets.only(top: 20),
-                                  boxShadows: [
-                                    BoxShadow(
-                                      color: const Color(0xFF466087).withOpacity(0.1),
-                                      offset: const Offset(0, 3),
-                                      blurRadius: 10,
-                                    ),
-                                  ],
-                                  borderRadius: 8,
-                                );
-                                // controller.pick(context);
-                              },
-                              padding: 18,
-                              child: Assets.svg.cameraIcon.svg(
-                                height: 20.w,
-                                width: 20.w,
-                              ),
-                            ),
-                            CircularMediaIconButton(
-                              backgroundColor: const Color(0xff16B4F2),
-                              onPressed: () {
-                                // Todo : remove this when the feature is ready
-                                Get.rawSnackbar(
-                                  messageText: Text(
-                                    "Sending Media feature is in development phase",
-                                    style: TEXTSTYLES.kBodySmall
-                                        .copyWith(color: COLORS.kGreenMainColor),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
-                                  backgroundColor: COLORS.kAppBackground,
-                                  snackPosition: SnackPosition.TOP,
-                                  snackStyle: SnackStyle.FLOATING,
-                                  margin: const EdgeInsets.only(top: 20),
-                                  boxShadows: [
-                                    BoxShadow(
-                                      color: const Color(0xFF466087).withOpacity(0.1),
-                                      offset: const Offset(0, 3),
-                                      blurRadius: 10,
-                                    ),
-                                  ],
-                                  borderRadius: 8,
-                                );
-                                //  controller.openGallery();
-                              },
-                              padding: 18,
-                              child: Assets.svg.galleryIcon.svg(
-                                height: 20.w,
-                                width: 20.w,
-                              ),
-                            ),
-                            CircularMediaIconButton(
-                              backgroundColor: const Color(0xff7E3CF9),
-                              // location onPressed:
-                              onPressed: () {
-                                Get.toNamed(Routes.SHARE_LOCATION);
-                              },
-                              padding: 18,
-                              child: Assets.svg.locationIcon.svg(
-                                height: 20.w,
-                                width: 20.w,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            CircularMediaIconButton(
-                              backgroundColor: const Color(0xffF93C53),
-                              //TODO  file onPressed:
-                              onPressed: () {
-                                // Todo : remove this when the feature is ready
-                                Get.rawSnackbar(
-                                  messageText: Text(
-                                    "Sending Files feature is in development phase",
-                                    style: TEXTSTYLES.kBodySmall
-                                        .copyWith(color: COLORS.kGreenMainColor),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
-                                  backgroundColor: COLORS.kAppBackground,
-                                  snackPosition: SnackPosition.TOP,
-                                  snackStyle: SnackStyle.FLOATING,
-                                  margin: const EdgeInsets.only(top: 20),
-                                  boxShadows: [
-                                    BoxShadow(
-                                      color: const Color(0xFF466087).withOpacity(0.1),
-                                      offset: const Offset(0, 3),
-                                      blurRadius: 10,
-                                    ),
-                                  ],
-                                  borderRadius: 8,
-                                );
-                                //  controller.openFiles();
-                              },
-
-                              padding: 18,
-                              child: Assets.svg.fileIcon.svg(
-                                height: 20.w,
-                                width: 20.w,
-                              ),
-                            ),
-                            CircularMediaIconButton(
-                              backgroundColor: const Color(0xff00B4B5),
-                              // TODO :money onPressed:
-                              onPressed: () {
-                                // Todo : remove this when the feature is ready
-                                Get.rawSnackbar(
-                                  messageText: Text(
-                                    "Sending Money feature is in development phase",
-                                    style: TEXTSTYLES.kBodySmall
-                                        .copyWith(color: COLORS.kGreenMainColor),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
-                                  backgroundColor: COLORS.kAppBackground,
-                                  snackPosition: SnackPosition.TOP,
-                                  snackStyle: SnackStyle.FLOATING,
-                                  margin: const EdgeInsets.only(top: 20),
-                                  boxShadows: [
-                                    BoxShadow(
-                                      color: const Color(0xFF466087).withOpacity(0.1),
-                                      offset: const Offset(0, 3),
-                                      blurRadius: 10,
-                                    ),
-                                  ],
-                                  borderRadius: 8,
-                                );
-                                return;
-                              },
-                              padding: 18,
-                              child: Assets.svg.moneyIcon.svg(
-                                height: 20.w,
-                                width: 20.w,
-                              ),
-                            ),
-                            CircularMediaIconButton(
-                              backgroundColor: const Color(0xff003EB5),
-                              // TODO : Person onPressed:
-                              onPressed: () {
-                                Get.rawSnackbar(
-                                  messageText: Text(
-                                    "Account Sharing is in development phase",
-                                    style: TEXTSTYLES.kBodySmall
-                                        .copyWith(color: COLORS.kGreenMainColor),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
-                                  backgroundColor: COLORS.kAppBackground,
-                                  snackPosition: SnackPosition.TOP,
-                                  snackStyle: SnackStyle.FLOATING,
-                                  margin: const EdgeInsets.only(top: 20),
-                                  boxShadows: [
-                                    BoxShadow(
-                                      color: const Color(0xFF466087).withOpacity(0.1),
-                                      offset: const Offset(0, 3),
-                                      blurRadius: 10,
-                                    ),
-                                  ],
-                                  borderRadius: 8,
-                                );
-                                return;
-                              },
-                              padding: 18,
-                              child: Assets.svg.personIcon.svg(
-                                height: 20.w,
-                                width: 20.w,
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  CustomSizes.mediumSizedBoxHeight,
-                ],
-              )
-            : const SizedBox(),
+        child: controller.isMediaGlassmorphicOpen.value ? _buildMediaContainer() : const SizedBox(),
       );
     });
+  }
+
+  Widget _buildMediaContainer() {
+    return GlassmorphicContainer(
+      width: 290.w,
+      height: 156.h,
+      borderRadius: 8.r,
+      blur: 36,
+      border: 0,
+      linearGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          const Color(0xFF466087).withOpacity(0.05),
+          const Color(0xFF466087).withOpacity(0.05),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildMediaRow([
+            _buildMediaButton(
+              backgroundColor: const Color(0xffFFB500),
+              icon: Assets.svg.cameraIcon.svg(height: 20.w, width: 20.w),
+              onPressed: () => _showDevelopmentSnackbar("Sending Media feature"),
+            ),
+            _buildMediaButton(
+              backgroundColor: const Color(0xff16B4F2),
+              icon: Assets.svg.galleryIcon.svg(height: 20.w, width: 20.w),
+              onPressed: () => _showDevelopmentSnackbar("Sending Media feature"),
+            ),
+            _buildMediaButton(
+              backgroundColor: const Color(0xff7E3CF9),
+              icon: Assets.svg.locationIcon.svg(height: 20.w, width: 20.w),
+              onPressed: () => Get.toNamed(Routes.SHARE_LOCATION),
+            ),
+          ]),
+          _buildMediaRow([
+            _buildMediaButton(
+              backgroundColor: const Color(0xffF93C53),
+              icon: Assets.svg.fileIcon.svg(height: 20.w, width: 20.w),
+              onPressed: () => _showDevelopmentSnackbar("Sending Files feature"),
+            ),
+            _buildMediaButton(
+              backgroundColor: const Color(0xff00B4B5),
+              icon: Assets.svg.moneyIcon.svg(height: 20.w, width: 20.w),
+              onPressed: () => _showDevelopmentSnackbar("Sending Money feature"),
+            ),
+            _buildMediaButton(
+              backgroundColor: const Color(0xff003EB5),
+              icon: Assets.svg.personIcon.svg(height: 20.w, width: 20.w),
+              onPressed: () => _showDevelopmentSnackbar("Account Sharing feature"),
+            ),
+          ]),
+        ],
+      ),
+    );
+  }
+
+  Row _buildMediaRow(List<Widget> children) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: children,
+    );
+  }
+
+  CircularMediaIconButton _buildMediaButton({
+    required Color backgroundColor,
+    required Widget icon,
+    required VoidCallback onPressed,
+  }) {
+    return CircularMediaIconButton(
+      backgroundColor: backgroundColor,
+      onPressed: onPressed,
+      padding: 18,
+      child: icon,
+    );
+  }
+
+  void _showDevelopmentSnackbar(String featureName) {
+    Get.rawSnackbar(
+      messageText: Text(
+        "$featureName is in development phase",
+        style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kGreenMainColor),
+        textAlign: TextAlign.center,
+      ),
+      backgroundColor: COLORS.kAppBackground,
+      snackPosition: SnackPosition.TOP,
+      snackStyle: SnackStyle.FLOATING,
+      margin: const EdgeInsets.only(top: 20),
+      boxShadows: [
+        BoxShadow(
+          color: const Color(0xFF466087).withOpacity(0.1),
+          offset: const Offset(0, 3),
+          blurRadius: 10,
+        ),
+      ],
+      borderRadius: 8,
+    );
   }
 }

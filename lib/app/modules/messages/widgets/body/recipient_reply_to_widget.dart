@@ -14,9 +14,6 @@ class RecipientReplyTo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final replyTo = message.replyTo;
-    if (replyTo == null) {
-      return const SizedBox.shrink();
-    }
 
     return Stack(
       children: [
@@ -75,7 +72,7 @@ class RecipientReplyTo extends StatelessWidget {
                         ),
                         CustomSizes.smallSizedBoxWidth,
                         Text(
-                          replyTo.repliedToName,
+                          replyTo?.repliedToName ?? "",
                           style: TEXTSTYLES.kBodyTag.copyWith(
                             color: COLORS.kDarkBlueColor,
                             fontWeight: FONTS.SemiBold,
@@ -85,7 +82,7 @@ class RecipientReplyTo extends StatelessWidget {
                     ),
                     SizedBox(height: 2.h),
                     Text(
-                      replyTo.repliedToMessage,
+                      replyTo?.repliedToMessage ?? "",
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TEXTSTYLES.kBodyTag.copyWith(

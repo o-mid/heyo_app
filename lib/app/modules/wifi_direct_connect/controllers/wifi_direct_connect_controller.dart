@@ -1,25 +1,25 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/messages/connection/wifi_direct_connection_provider.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 
 import '../../../routes/app_pages.dart';
-import '../../messaging/controllers/wifi_direct_connection_controller.dart';
+import '../../messages/connection/wifi_direct_connection_controller.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
 
 class WifiDirectConnectController extends GetxController {
   //TODO: Implement WifiDirectConnectController
 
-  WifiDirectConnectionController wifiDirectConnectionController;
-
+  late WifiDirectConnectionProvider wifiDirectConnectionProvider;
   late HeyoWifiDirect _pluginInstance;
   late StreamSubscription _eventListener;
   late UserModel user;
 
-  WifiDirectConnectController({required this.wifiDirectConnectionController}) {
-    _pluginInstance = wifiDirectConnectionController.wifiDirectWrapper.pluginInstance!;
-  }
+  /* WifiDirectConnectController({required this.wifiDirectConnectionController,required this.wifiDirectConnectionProvider}) {
+    //_pluginInstance = wifiDirectConnectionController.wifiDirectWrapper!.pluginInstance!;
+  }*/
 
   Rx<PeerStatus> connectionStatus = PeerStatus.statusUnknown.obs;
 
@@ -27,10 +27,10 @@ class WifiDirectConnectController extends GetxController {
   void onInit() {
     super.onInit();
 
-    _eventListener = wifiDirectConnectionController
-        .wifiDirectWrapper.pluginInstance!.consumerEventSource.stream
-        .listen((event) => _eventHandler(event));
-    user = Get.arguments as UserModel;
+    /* _eventListener = wifiDirectConnectionController
+        .wifiDirectWrapper!.pluginInstance!.consumerEventSource.stream
+        .listen((event) => eventHandler(event));
+    user = Get.arguments as UserModel;*/
   }
 
   Future<bool> startConnection() async {
@@ -43,7 +43,7 @@ class WifiDirectConnectController extends GetxController {
     return true;
   }
 
-  void _eventHandler(WifiDirectEvent event) {
+  void eventHandler(WifiDirectEvent event) {
     print('WifiDirectConnectController: WifiDirect event: ${event.type}, ${event.dateTime}');
 
     switch (event.type) {

@@ -2,34 +2,32 @@ import 'dart:async';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../generated/assets.gen.dart';
 import '../../../../generated/locales.g.dart';
 import '../../chats/data/models/chat_model.dart';
-import '../../messaging/controllers/wifi_direct_connection_controller.dart';
+import '../../messages/connection/wifi_direct_connection_repo.dart';
+import '../../messages/connection/wifi_direct_connection_controller.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/repository/contact_repository.dart';
 
 class WifiDirectController extends GetxController {
-  final AccountRepository accountInfoRepo;
-  final ContactRepository contactRepository;
+  /*final AccountInfo accountInfo;
+  final ContactRepository contactRepository;*/
   HeyoWifiDirect? _heyoWifiDirect;
   bool isLocationPermissionGranted = false;
   final wifiDirectEnabled = false.obs;
   RxList<UserModel> availableDirectUsers = <UserModel>[].obs;
 
-  WifiDirectConnectionController wifiDirectConnectionController;
-
-  WifiDirectController(
-      {required this.accountInfoRepo,
+/*  WifiDirectController(
+      {required this.accountInfo,
       required this.wifiDirectConnectionController,
       required this.contactRepository}) {
-    _heyoWifiDirect =
-        wifiDirectConnectionController.wifiDirectWrapper.pluginInstance;
-  }
+    _heyoWifiDirect = wifiDirectConnectionController.wifiDirectWrapper!.pluginInstance;
+  }*/
 
   final coreId = "".obs;
   final visibleName = "".obs;
@@ -48,16 +46,15 @@ class WifiDirectController extends GetxController {
     print(
         "WifiDirectController: onInit(). Is _heyoWifiDirect.consumerEventSource.hasListener -> ${_heyoWifiDirect?.consumerEventSource.hasListener}");
 
-    _eventListener = _heyoWifiDirect!.consumerEventSource.stream
-        .listen((event) => _eventHandler(event));
-    _messageListener = _heyoWifiDirect!.tcpMessage.stream
-        .listen((message) => _messageHandler(message));
+    _eventListener =
+        _heyoWifiDirect!.consumerEventSource.stream.listen((event) => eventHandler(event));
+    _messageListener =
+        _heyoWifiDirect!.tcpMessage.stream.listen((message) => _messageHandler(message));
     await wifiDirectOn();
     wifiDirectEnabled.value = await _heyoWifiDirect!.isWifiDirectEnabled();
 
     //TODO remove debug print
-    print(
-        "WifiDirectController: onInit() wifiDirectEnabled value $wifiDirectEnabled");
+    print("WifiDirectController: onInit() wifiDirectEnabled value $wifiDirectEnabled");
 
     super.onInit();
   }
@@ -87,43 +84,40 @@ class WifiDirectController extends GetxController {
 
       visibleName.value = "name";
 
-      _heyoWifiDirect = HeyoWifiDirect(
-          coreID: coreId.value, name: 'name', debugOutputEnable: true);
+      _heyoWifiDirect = HeyoWifiDirect(coreID: coreId.value, name: 'name', debugOutputEnable: true);
       // await _heyoWifiDirect!.wifiDirectOn();
-      wifiDirectConnectionController.wifiDirectWrapper.pluginInstance =
-          _heyoWifiDirect;
-      Get.put(wifiDirectConnectionController);
+      /*  wifiDirectConnectionController.wifiDirectWrapper!.pluginInstance = _heyoWifiDirect;
+      Get.put(wifiDirectConnectionController);*/
     }
   }
 
-  _eventHandler(WifiDirectEvent event) {
-    print(
-        'WifiDirectController: WifiDirect event: ${event.type}, ${event.dateTime}');
+  eventHandler(WifiDirectEvent event) {
+    print('WifiDirectController: WifiDirect event: ${event.type}, ${event.dateTime}');
 
     switch (event.type) {
       // Refresh information about wifi-direct available peers
       case EventType.peerListRefresh:
         // PeerList peerList = signaling.wifiDirectPlugin.peerList;
         Map<String, Peer> peersAvailable = (event.message as PeerList).peers;
-        print(
-            'WifiDirectController: peerListRefresh: ${peersAvailable.toString()}');
+        print('WifiDirectController: peerListRefresh: ${peersAvailable.toString()}');
         _peersToUsers(peersAvailable);
         break;
 
       case EventType.linkedPeer:
         // incomingConnection = true.obs;
         // connectedPeer = event.message as Peer;
-        wifiDirectConnectionController.eventHandler(event);
+        /*(wifiDirectConnectionController.connectionRepo as WiFiDirectConnectionRepoImpl)
+            .handleWifiDirectEvents(event);*/
 
-        print(
-            'WifiDirectController: linked to ${(event.message as Peer).multiAddress}');
+        print('WifiDirectController: linked to ${(event.message as Peer).multiAddress}');
         break;
 
       case EventType.groupStopped:
         // incomingConnection = false.obs;
         // outgoingConnection = false.obs;
         // connectedPeer = null;
-        wifiDirectConnectionController.eventHandler(event);
+        /* (wifiDirectConnectionController.connectionRepo as WiFiDirectConnectionRepoImpl)
+            .handleWifiDirectEvents(event);*/
 
         print('WifiDirectController: Wifi-direct group stopped');
         break;
@@ -134,7 +128,8 @@ class WifiDirectController extends GetxController {
   }
 
   _messageHandler(HeyoWifiDirectMessage message) {
-    wifiDirectConnectionController.messageHandler(message);
+    /*  (wifiDirectConnectionController.connectionRepo as WiFiDirectConnectionRepoImpl)
+        .wifiDirectmessageHandler(message);*/
   }
 
   Future<bool> connectPeer(String coreId, {bool encrypt = true}) async {
@@ -161,7 +156,7 @@ class WifiDirectController extends GetxController {
   }
 
   Future<void> _setCoreId() async {
-    coreId.value = (await accountInfoRepo.getUserAddress()) ?? "";
+    //coreId.value = (await accountInfo.getCorePassCoreId()) ?? "";
   }
 
   // this will show a custom UI permission dialog at first and then the default permission dialog for location permission

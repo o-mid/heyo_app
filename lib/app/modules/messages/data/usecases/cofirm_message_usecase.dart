@@ -1,23 +1,33 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
-import '../../../messaging/controllers/common_messaging_controller.dart';
-import '../../../messaging/controllers/messaging_connection_controller.dart';
-import '../../../messaging/usecases/send_data_channel_message_usecase.dart';
+import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
+import 'package:heyo/app/modules/messages/connection/domain/messaging_connection.dart';
+import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
+
+import '../message_processor.dart';
 import '../models/messages/confirm_message_model.dart';
 
 import '../provider/messages_provider.dart';
 import '../repo/messages_abstract_repo.dart';
 import '../repo/messages_repo.dart';
 
-class ConfirmMessage {
-  final MessagesAbstractRepo messagesRepo = MessagesRepo(
-    messagesProvider: MessagesProvider(
-      appDatabaseProvider: Get.find(),
-    ),
-  );
-  final CommonMessagingConnectionController messagingConnection =
-      Get.find<CommonMessagingConnectionController>();
+class ConfirmMessageUseCase {
+  final MessagesAbstractRepo messagesRepo;
+  final ConnectionRepository connectionRepository;
+  final MessageProcessor processor;
 
-  execute({required ConfirmMessageType confirmMessageType,required String remoteCoreId}) async {
+  ConfirmMessageUseCase({
+    required this.messagesRepo,
+    required this.connectionRepository,
+    required this.processor,
+  });
+
+  void execute({
+    required MessageConnectionType messageConnectionType,
+    required ConfirmMessageType confirmMessageType,
+    required String remoteCoreId,
+  }) async {
     switch (confirmMessageType.runtimeType) {
       case ConfirmReceivedText:
         final String messageId = (confirmMessageType as ConfirmReceivedText).messageId;
@@ -28,9 +38,15 @@ class ConfirmMessage {
           status: status,
         ).toJson();
 
-        SendDataChannelMessage(messagingConnection: messagingConnection).execute(
+        final processedMessage = await processor.getMessageDetails(
           channelMessageType: ChannelMessageType.confirm(message: confirmmessageJson),
-          remoteCoreId: remoteCoreId
+          remoteCoreId: remoteCoreId,
+        );
+
+        await connectionRepository.sendTextMessage(
+          messageConnectionType: MessageConnectionType.RTC_DATA_CHANNEL,
+          text: jsonEncode(processedMessage.messageJson),
+          remoteCoreId: remoteCoreId,
         );
         break;
     }
@@ -52,6 +68,7 @@ class ConfirmMessageType {
 class ConfirmReceivedText extends ConfirmMessageType {
   final String messageId;
   final ConfirmMessageStatus status;
+
   ConfirmReceivedText({
     required this.messageId,
     required super.chatId,

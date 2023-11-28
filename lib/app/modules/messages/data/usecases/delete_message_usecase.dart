@@ -1,24 +1,29 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/delete_message_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_repo.dart';
+import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
+import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
 
-import '../../../messaging/controllers/common_messaging_controller.dart';
-import '../../../messaging/controllers/messaging_connection_controller.dart';
-import '../../../messaging/usecases/send_data_channel_message_usecase.dart';
+import '../message_processor.dart';
 import '../models/messages/message_model.dart';
 import '../provider/messages_provider.dart';
 import '../repo/messages_abstract_repo.dart';
 
-class DeleteMessage {
-  final MessagesAbstractRepo messagesRepo = MessagesRepo(
-    messagesProvider: MessagesProvider(
-      appDatabaseProvider: Get.find(),
-    ),
-  );
-  final CommonMessagingConnectionController messagingConnection =
-      Get.find<CommonMessagingConnectionController>();
+class DeleteMessageUseCase {
+  final MessagesAbstractRepo messagesRepo;
+  final ConnectionRepository connectionRepository;
+  final MessageProcessor processor;
+
+  DeleteMessageUseCase({
+    required this.messagesRepo,
+    required this.connectionRepository,
+    required this.processor,
+  });
 
   Future<void> execute({
+    required MessageConnectionType messageConnectionType,
     required DeleteMessageType deleteMessageType,
     required String remoteCoreId,
   }) async {
@@ -32,6 +37,7 @@ class DeleteMessage {
         final remoteMessages = (deleteMessageType as DeleteRemoteMessages).selectedMessages;
 
         await deleteRemoteMessages(
+          messageConnectionType: messageConnectionType,
           remoteMessages: remoteMessages,
           chatId: deleteMessageType.chatId,
           remoteCoreId: remoteCoreId,
@@ -49,6 +55,7 @@ class DeleteMessage {
   }
 
   Future<void> deleteRemoteMessages({
+    required MessageConnectionType messageConnectionType,
     required List<MessageModel> remoteMessages,
     required String chatId,
     required String remoteCoreId,
@@ -59,8 +66,14 @@ class DeleteMessage {
 
     await messagesRepo.deleteMessages(messageIds: messageIds, chatId: chatId);
 
-    await SendDataChannelMessage(messagingConnection: messagingConnection).execute(
+    final processedMessage = await processor.getMessageDetails(
       channelMessageType: ChannelMessageType.delete(message: deleteMessagesJson),
+      remoteCoreId: remoteCoreId,
+    );
+
+    await connectionRepository.sendTextMessage(
+      messageConnectionType: messageConnectionType,
+      text: jsonEncode(processedMessage.messageJson),
       remoteCoreId: remoteCoreId,
     );
   }
