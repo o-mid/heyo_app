@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -49,7 +51,10 @@ class MessageItemWidget extends StatelessWidget {
       child: Column(
         children: [
           _buildDateHeader(message, prevMessage),
-          MessageSelectionWrapper(message: message),
+          MessageSelectionWrapper(
+            message: message,
+            iconUrl: controller.user.value.iconUrl,
+          ),
         ],
       ),
     );
