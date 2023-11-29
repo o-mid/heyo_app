@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
@@ -63,19 +62,7 @@ class P2PNode {
     // 5. get the privateKey and send it to the FlutterP2pCommunicator.sendRequest
 
     // 6. send the P2P_Nodes to the FlutterP2pCommunicator.sendRequest
-    // checks if Platform isIOS and if it's the first run of the app clears the Keychain
-    if (Platform.isIOS) {
-      // remove secure storage data on IOS manually,
-      // because it's not cleaned after the app uninstall
-      final prefs = await SharedPreferences.getInstance();
 
-      if (prefs.getBool('first_run') ?? true) {
-        // sets a key-value pair of first run in IOS NSUserDefaults with shared_preferences
-        await prefs.setBool('first_run', false);
-        const storage = FlutterSecureStorage();
-        await storage.deleteAll();
-      }
-    }
     if (await libP2PStorageProvider.getLocalCoreId() == null) {
       final result = await accountCreation.createAccount();
       await accountCreation.saveAccount(result);

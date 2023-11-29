@@ -39,6 +39,7 @@ class SplashController extends GetxController {
   @override
   void onReady() async {
     super.onReady();
+    await splashRepository.checkFirstRunIos();
     if (await splashRepository.fetchAllRegistries() == false) {
       unawaited(
         SnackBarWidget.error(
