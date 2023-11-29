@@ -6,24 +6,6 @@ import 'package:core_web3dart/web3dart.dart';
 import 'package:heyo/app/modules/shared/data/models/get_all_contract_model.dart';
 
 class RegistryInfoModel {
-  final String phoneAddress;
-  final String idCardAddress;
-  final String passportAddress;
-  final String driverLicenseAddress;
-  final String proofOfAddressAddress;
-  final String residenceAddress;
-  final String emailAddress;
-  final String kycTransmitterAddress;
-  final String kycVaultAddress;
-  final String ctnOracleAddress;
-  final String xcbOracleAddress;
-  final String nameServiceAddress;
-  final String cTNAddress;
-  final String androidLink;
-  final String iosLink;
-  final String isMaintaining;
-  final String latestVersion;
-  final String minVersion;
 
   RegistryInfoModel(
       {required this.phoneAddress,
@@ -67,27 +49,6 @@ class RegistryInfoModel {
       minVersion: json['minVersion'].toString(),
     );
   }
-
-  toJSON() => {
-        'phoneAddress': phoneAddress,
-        'proofOfAddressAddress': proofOfAddressAddress,
-        'idCardAddress': idCardAddress,
-        'passportAddress': passportAddress,
-        'driverLicenseAddress': driverLicenseAddress,
-        'residenceAddress': residenceAddress,
-        'emailAddress': emailAddress,
-        'kycTransmitterAddress': kycTransmitterAddress,
-        'kycVaultAddress': kycVaultAddress,
-        'ctnOracleAddress': ctnOracleAddress,
-        'xcbOracleAddress': xcbOracleAddress,
-        'nameServiceAddress': nameServiceAddress,
-        'cTNAddress': cTNAddress,
-        'androidLink': androidLink,
-        'iosLink': iosLink,
-        'isMaintaining': isMaintaining,
-        'latestVersion': latestVersion,
-        'minVersion': minVersion,
-      };
 
   factory RegistryInfoModel.fromContractModel(GetAllContractModel result) {
     final shaAndroidLink = bytesToHex(getSha3ForSC('androidLink'));
@@ -168,6 +129,45 @@ class RegistryInfoModel {
       minVersion: minVersion,
     );
   }
+  final String phoneAddress;
+  final String idCardAddress;
+  final String passportAddress;
+  final String driverLicenseAddress;
+  final String proofOfAddressAddress;
+  final String residenceAddress;
+  final String emailAddress;
+  final String kycTransmitterAddress;
+  final String kycVaultAddress;
+  final String ctnOracleAddress;
+  final String xcbOracleAddress;
+  final String nameServiceAddress;
+  final String cTNAddress;
+  final String androidLink;
+  final String iosLink;
+  final String isMaintaining;
+  final String latestVersion;
+  final String minVersion;
+
+  toJSON() => {
+        'phoneAddress': phoneAddress,
+        'proofOfAddressAddress': proofOfAddressAddress,
+        'idCardAddress': idCardAddress,
+        'passportAddress': passportAddress,
+        'driverLicenseAddress': driverLicenseAddress,
+        'residenceAddress': residenceAddress,
+        'emailAddress': emailAddress,
+        'kycTransmitterAddress': kycTransmitterAddress,
+        'kycVaultAddress': kycVaultAddress,
+        'ctnOracleAddress': ctnOracleAddress,
+        'xcbOracleAddress': xcbOracleAddress,
+        'nameServiceAddress': nameServiceAddress,
+        'cTNAddress': cTNAddress,
+        'androidLink': androidLink,
+        'iosLink': iosLink,
+        'isMaintaining': isMaintaining,
+        'latestVersion': latestVersion,
+        'minVersion': minVersion,
+      };
 }
 
 Uint8List getSha3ForSC(String name) {

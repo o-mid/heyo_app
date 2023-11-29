@@ -31,12 +31,15 @@ class AppNotificationProvider extends NotificationProvider {
       fcmToken: fcmToken,
       privateKey: privateKey,
     );
+
     if (signature == null) return false;
+
     final response = await networkRequest
         .post(path: 'notification-service/user/register', data: {
       'fcmToken': fcmToken,
       'signature': signature,
     });
+    
     return response.isSuccess();
   }
 

@@ -13,10 +13,7 @@ class SplashRepository extends SplashAbstractRepository {
     required this.registryProvider,
   });
 
-  @override
-  Future<bool> sendFCMToken() async {
-    return notificationProvider.pushFCMToken();
-  }
+
 
   @override
   Future<bool> fetchAllRegistries() async {

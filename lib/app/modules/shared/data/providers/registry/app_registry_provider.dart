@@ -69,8 +69,6 @@ class AppRegistryProvider extends RegistryProvider {
 
     final registryInfo = await getRegistry();
 
-    print('KYC ADDRESS : ${registryInfo.kycTransmitterAddress}');
-
     final domain = {
       'name': 'NotificationServer',
       'version': '1',

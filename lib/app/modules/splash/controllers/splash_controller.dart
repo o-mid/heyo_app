@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/app/modules/splash/data/repositoty/splash_repository.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
@@ -37,13 +39,14 @@ class SplashController extends GetxController {
   @override
   void onReady() async {
     super.onReady();
-    if (await splashRepository.fetchAllRegistries()) {
-      await splashRepository.sendFCMToken();
-    } else {
-      await Get.snackbar(
-        'Registry Retrieval Failed',
-        'Could not fetch registry, Some functionalities may not work properly',
-      ).show();
+    if (await splashRepository.fetchAllRegistries() == false) {
+      unawaited(
+        SnackBarWidget.error(
+          message:
+              'Could not fetch registry, Some functionalities may not work properly',
+          title: 'Registry Retrieval Failed',
+        ).show(),
+      );
     }
     _checkIfAuthenticated();
   }
