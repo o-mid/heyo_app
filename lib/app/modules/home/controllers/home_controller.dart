@@ -18,13 +18,13 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
+    homeRepository.sendFCMToken();
     connectionContractor.start();
     super.onInit();
   }
 
   @override
   void onReady() {
-    homeRepository.sendFCMToken();
     super.onReady();
   }
 
