@@ -7,6 +7,7 @@ import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:flutter_p2p_communicator/utils/constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/p2p_node/models.dart';
 import 'package:heyo/app/modules/shared/providers/account/creation/account_creation.dart';
 import 'package:heyo/app/modules/shared/providers/account/creation/libp2p_account_creation.dart';
 
@@ -106,9 +107,7 @@ class P2PNode {
     //await Future.forEach(P2P_Nodes, (P2PAddrModel element) async {
     final info = P2PReqResNodeModel(
         name: P2PReqResNodeNames.connect,
-        body: P2PAddrModel(
-            id: "12D3KooWCcNM1EXZ3kPpKJHnbCBqCyoAME87JNw53zJUoUqrzF2x",
-            addrs: ["/ip4/65.109.230.224/tcp/4001"]).toJson());
+        body: libP2PNode.toJson());
     await FlutterP2pCommunicator.sendRequest(info: info);
     //  });
   }
