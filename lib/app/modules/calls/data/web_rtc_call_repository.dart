@@ -32,7 +32,7 @@ class WebRTCCallRepository implements CallRepository {
   @override
   Function(AllParticipantModel participantModel)? onChangeParticipateStream;
 
-  bool mock = false;
+  bool mock = true;
 
   Future<void> emitMockStream() async {
     await _createMockStream("coreId");

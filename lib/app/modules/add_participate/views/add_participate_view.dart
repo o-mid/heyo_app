@@ -24,7 +24,7 @@ class AddParticipateView extends GetView<AddParticipateController> {
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [
-              Column(
+              ListView(
                 children: [
                   CustomSizes.largeSizedBoxHeight,
                   TextfieldAddParticipate(controller),
