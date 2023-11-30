@@ -52,14 +52,11 @@ import '../../messages/data/message_processor.dart';
 import '../../messages/data/provider/messages_provider.dart';
 import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/data/repo/messages_repo.dart';
-import '../../messages/data/usecases/delete_message_usecase.dart';
-import '../../messages/data/usecases/update_message_usecase.dart';
 
 import '../../notifications/controllers/notifications_controller.dart';
 import '../../wifi_direct/controllers/wifi_direct_wrapper.dart';
 import '../controllers/user_preview_controller.dart';
 import '../data/repository/contact_repository.dart';
-import '../data/repository/db/cache_contractor.dart';
 import '../data/repository/db/cache_repository.dart';
 import '../utils/constants/web3client_constant.dart';
 
