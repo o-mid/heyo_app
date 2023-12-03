@@ -227,6 +227,7 @@
       "shareLink": "Share link"
     }
   },
+
   "MessagesPage": {
     "textFieldHint": "Chat",
     "endToEndEncryptedMessaging": "Any messages you exchange are fully encrypted and can only be read by you and @name",
@@ -359,5 +360,23 @@
   },
   "addParticipate": {
     "appbarTitle": "Add Participate"
+  },
+  "newGroupChat": {
+    "GroupChatAppBar": "Select members",
+    "Selected": "Selected",
+    "slider": {
+      "contacts": "Contacts",
+      "nearbyUsers": "Nearby users"
+    },
+    "usernameInputFiled": "Type Username or coreID",
+    "emptyStateTitleContacts": "You don’t have any contacts yet. \n You can invite them now.",
+    "emptyStateTitleNearbyUsers": "No users were found nearby",
+    "usernameInput": "Type Username or Core ID",
+    "searchResults": "Search results",
+
+    "inviteBottomSheet": {
+      "inviteYourFriend": "Invite your friend to Heyo!",
+      "shareLink": "Share link"
+    }
   }
 }
