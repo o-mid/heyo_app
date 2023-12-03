@@ -34,6 +34,7 @@ abstract class Routes {
   static const WIFI_DIRECT_CONNECT = _Paths.WIFI_DIRECT_CONNECT;
   static const ADD_PARTICIPATE = _Paths.ADD_PARTICIPATE;
   static const VERIFIED_USER = _Paths.VERIFIED_USER;
+  static const NEW_GROUP_CHAT = _Paths.NEW_GROUP_CHAT;
 }
 
 abstract class _Paths {
@@ -69,4 +70,5 @@ abstract class _Paths {
   static const WIFI_DIRECT_CONNECT = '/wifi-direct-connect';
   static const ADD_PARTICIPATE = '/add-participate';
   static const VERIFIED_USER = '/verified-user';
+  static const NEW_GROUP_CHAT = '/new-group-chat';
 }
