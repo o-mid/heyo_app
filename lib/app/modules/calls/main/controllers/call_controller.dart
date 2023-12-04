@@ -164,7 +164,7 @@ class CallController extends GetxController {
       localParticipate.value!.rtcVideoRenderer!.srcObject =
           callRepository.getLocalStream();
     }
-
+    print("Call type ${(args.isAudioCall)}");
     if (args.isAudioCall) {
       //callerVideoEnabled.value = false;
       //calleeVideoEnabled.value = false;
@@ -229,7 +229,7 @@ class CallController extends GetxController {
   }
 
   Future<void> inCallSetUp() async {
-    await callRepository.acceptCall(args.callId!);
+   // await callRepository.acceptCall(args.callId!);
     //* I move mock in controller to pass callId
 
     isInCall.value = true;
