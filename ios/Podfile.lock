@@ -74,7 +74,7 @@ PODS:
     - Flutter
   - geolocator_apple (1.2.0):
     - Flutter
-  - GoogleDataTransport (9.2.5):
+  - GoogleDataTransport (9.3.0):
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
@@ -346,7 +346,7 @@ SPEC CHECKSUMS:
   flutter_webrtc: 55df3aaa802114dad390191a46c2c8d535751268
   gallery_saver: 9fc173c9f4fcc48af53b2a9ebea1b643255be542
   geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
-  GoogleDataTransport: 54dee9d48d14580407f8f5fbf2f496e92437a2f2
+  GoogleDataTransport: 57c22343ab29bc686febbf7cbb13bad167c2d8fe
   GoogleMLKit: 0017a6a8372e1a182139b9def4d89be5d87ca5a7
   GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
   GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34
