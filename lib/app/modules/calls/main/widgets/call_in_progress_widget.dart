@@ -6,7 +6,7 @@ import 'package:heyo/app/modules/calls/main/widgets/group_call_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/peer_call_widget.dart';
 
 class CallInProgressWidget extends GetView<CallController> {
-  const CallInProgressWidget({Key? key}) : super(key: key);
+  const CallInProgressWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

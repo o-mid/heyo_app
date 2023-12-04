@@ -84,7 +84,7 @@ class CallController extends GetxController {
   Future<void> initLocalRenderer() async {
     final localParticipateCoreId = await accountInfo.getUserAddress();
     localParticipate.value = LocalParticipantModel(
-      name: localParticipateCoreId!,
+      name: localParticipateCoreId!.shortenCoreId,
       iconUrl: 'https://avatars.githubusercontent.com/u/7847725?v=4',
       coreId: localParticipateCoreId,
       // TODO(AliAzim): audio & video mode should be get from the call.
@@ -229,7 +229,7 @@ class CallController extends GetxController {
   }
 
   Future<void> inCallSetUp() async {
-   // await callRepository.acceptCall(args.callId!);
+    // await callRepository.acceptCall(args.callId!);
     //* I move mock in controller to pass callId
 
     isInCall.value = true;
