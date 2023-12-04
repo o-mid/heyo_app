@@ -2,9 +2,8 @@ class CallViewArgumentsModel {
 
   CallViewArgumentsModel({
     required this.callId,
-    required this.isAudioCall, required this.members, this.enableVideo = false,
+    required this.isAudioCall, required this.members,
   });
-  final bool enableVideo;
   final String? callId;
   final bool isAudioCall;
   final List<String> members;

@@ -64,7 +64,6 @@ class CallHistorySingleParticipantWidget
                       Routes.CALL,
                       arguments: CallViewArgumentsModel(
                         callId: null,
-                        enableVideo: false,
                         isAudioCall: true,
                         members: [controller.args.coreId],
                       ),
@@ -81,7 +80,6 @@ class CallHistorySingleParticipantWidget
                       arguments: CallViewArgumentsModel(
                         callId: null,
                         members: [controller.args.coreId],
-                        enableVideo: true,
                         isAudioCall: false,
                       ),
                     ),

@@ -128,9 +128,9 @@ class CallConnectionsHandler {
   Future<void> accept(CallId callId) async {
     print("accepttt ${callStatusDataStore.incomingCalls}");
     if (callStatusDataStore.incomingCalls?.callId == callId) {
-      callStatusDataStore.makeCallByCallId(callId);
+      callStatusDataStore.makeCallByIncomingCall();
       callStatusDataStore.incomingCalls!.remotePeers.forEach((element) async {
-        print("accept ${element.remotePeer.remoteCoreId}");
+        print("accept ${element.remotePeer.remoteCoreId} ${element.isAudioCall}");
         await _createLocalStream();
         final callRTCSession =
             await _createSession(element.remotePeer, element.isAudioCall);
@@ -308,8 +308,6 @@ class CallConnectionsHandler {
   void rejectIncomingCall(String callId) {
     if (callStatusDataStore.incomingCalls?.callId == callId) {
       callStatusDataStore.incomingCalls?.remotePeers.forEach((element) {
-        print("rejectcd 2");
-
         singleCallWebRTCBuilder.reject(callId, element.remotePeer);
       });
       callStatusDataStore.incomingCalls = null;

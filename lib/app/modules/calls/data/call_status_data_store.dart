@@ -21,8 +21,8 @@ class CallStatusDataStore {
     currentCall = CurrentCall(callId: callId, activeSessions: []);
     return currentCall!;
   }
-  CurrentCall makeCallByCallId(CallId callId) {
-    currentCall = CurrentCall(callId: callId, activeSessions: []);
+  CurrentCall makeCallByIncomingCall() {
+    currentCall = CurrentCall(callId: incomingCalls!.callId, activeSessions: []);
     return currentCall!;
   }
 

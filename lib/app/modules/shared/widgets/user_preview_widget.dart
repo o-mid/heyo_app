@@ -101,7 +101,6 @@ class UserPreviewWidget extends GetView<UserPreview> {
                         callId: null,
                         // convert userModel to callUserModel
                         members: [user.toCallUserModel().coreId],
-                        enableVideo: false,
                         isAudioCall: true,
                       ),
                     );
@@ -129,7 +128,6 @@ class UserPreviewWidget extends GetView<UserPreview> {
                         callId: null,
                         // convert userModel to callUserModel
                         members: [user.toCallUserModel().coreId],
-                        enableVideo: true,
                         isAudioCall: false,
                       ),
                     );

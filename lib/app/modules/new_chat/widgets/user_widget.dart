@@ -91,7 +91,6 @@ class UserWidget extends StatelessWidget {
                   // convert userModel to callUserModel
                   members: [user.toCallUserModel().coreId],
                   callId: null,
-                  enableVideo: true,
                   isAudioCall: false,
                 ),
               );

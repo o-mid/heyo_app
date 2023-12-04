@@ -60,7 +60,6 @@ class IncomingCallController extends GetxController {
       Routes.CALL,
       arguments: CallViewArgumentsModel(
         callId: args.callId,
-        enableVideo: args.isAudioCall ? false : true,
         isAudioCall: args.isAudioCall,
         members: args.members,
       ),
