@@ -67,7 +67,7 @@ class ContactList extends GetView<NewGroupChatController> {
                   onTap: () {
                     controller.inputFocusNode.unfocus();
                     controller.handleItemTap(
-                      suggestedUser.coreId,
+                      suggestedUser,
                     );
                     // Get.find<UserPreview>().openUserPreview(
                     //   userModel: contacts[index],

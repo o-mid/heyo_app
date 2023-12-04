@@ -20,22 +20,38 @@ class NewGroupChatView extends GetView<NewGroupChatController> {
   const NewGroupChatView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: COLORS.kGreenMainColor,
-        elevation: 0,
-        centerTitle: false,
-        title: Text(
-          LocaleKeys.newGroupChat_GroupChatAppBar.tr,
-          style: const TextStyle(
-            fontWeight: FONTS.Bold,
-            fontFamily: FONTS.interFamily,
+    return Obx(() {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: COLORS.kGreenMainColor,
+          elevation: 0,
+          centerTitle: false,
+          title: Text(
+            controller.selectedCoreids.isEmpty
+                ? LocaleKeys.newGroupChat_GroupChatAppBar.tr
+                : '${controller.selectedCoreids.length} ${LocaleKeys.newGroupChat_Selected.tr}',
+            style: const TextStyle(
+              fontWeight: FONTS.Bold,
+              fontFamily: FONTS.interFamily,
+            ),
+          ),
+          automaticallyImplyLeading: true,
+        ),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(
+            bottom: 24,
+          ),
+          child: FloatingActionButton(
+            onPressed: () {},
+            backgroundColor:
+                controller.selectedCoreids.length <= 1 ? Colors.grey : COLORS.kGreenMainColor,
+            child: Assets.svg.arrowIcon.svg(
+              width: 20.w,
+              color: COLORS.kWhiteColor,
+            ),
           ),
         ),
-        automaticallyImplyLeading: true,
-      ),
-      body: Obx(() {
-        return SingleChildScrollView(
+        body: SingleChildScrollView(
           child: Column(
             children: [
               CustomSizes.largeSizedBoxHeight,
@@ -84,8 +100,8 @@ class NewGroupChatView extends GetView<NewGroupChatController> {
                 ),
             ],
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 }
