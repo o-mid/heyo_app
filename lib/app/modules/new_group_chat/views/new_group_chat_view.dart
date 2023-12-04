@@ -14,6 +14,7 @@ import '../../shared/utils/constants/colors.dart';
 import '../../shared/utils/constants/fonts.dart';
 import '../../shared/widgets/contact_list_with_header.dart';
 import '../controllers/new_group_chat_controller.dart';
+import '../widgets/contact_list.dart';
 
 class NewGroupChatView extends GetView<NewGroupChatController> {
   const NewGroupChatView({Key? key}) : super(key: key);
@@ -74,7 +75,7 @@ class NewGroupChatView extends GetView<NewGroupChatController> {
                     CustomSizes.largeSizedBoxHeight,
                     Padding(
                       padding: CustomSizes.mainContentPadding,
-                      child: ContactListWithHeader(
+                      child: ContactList(
                         contacts: controller.searchSuggestions,
                         searchMode: controller.inputController.text.isNotEmpty,
                       ),

@@ -19,6 +19,8 @@ class NewGroupChatController extends GetxController {
   RxBool isTextInputFocused = false.obs;
   RxList<UserModel> searchSuggestions = <UserModel>[].obs;
   final String profileLink = "https://heyo.core/m6ljkB4KJ";
+  RxList<String> selectedCoreids = <String>[].obs;
+
   NewGroupChatController({required this.contactRepository, required this.accountInfoRepo});
   final count = 0.obs;
   @override
@@ -108,6 +110,14 @@ class NewGroupChatController extends GetxController {
       inputController.text = coreId;
     } catch (e) {
       return;
+    }
+  }
+
+  void handleItemTap(String coreId) {
+    if (selectedCoreids.value.contains(coreId)) {
+      selectedCoreids.remove(coreId);
+    } else {
+      selectedCoreids.add(coreId);
     }
   }
 }
