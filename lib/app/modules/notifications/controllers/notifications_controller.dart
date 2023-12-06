@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/data/message_processor.dart' as message_processor;
 import 'package:heyo/app/modules/notifications/controllers/app_notifications.dart';
+import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../calls/incoming_call/controllers/incoming_call_controller.dart';
@@ -67,18 +68,19 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
     );
   }
 
-  Future<void> receivedMessageNotify(
-      {required String channelKey,
-      String? title,
-      String? body,
-      String? groupKey,
-      String? summary,
-      String? icon,
-      String? largeIcon,
-      String? bigPicture,
-      String? customSound,
-      Map<String, String?>? payload,
-      required String chatId}) async {
+  Future<void> receivedMessageNotify({
+    required String channelKey,
+    String? title,
+    String? body,
+    String? groupKey,
+    String? summary,
+    String? icon,
+    String? largeIcon,
+    String? bigPicture,
+    String? customSound,
+    Map<String, String?>? payload,
+    required String chatId,
+  }) async {
 // pushes the notification only if the the receiver user is not at the chat screen with the sender of the message
 
     if (Get.currentRoute == Routes.MESSAGES &&
@@ -206,12 +208,16 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
               messageId: payload.messageId, remoteCoreId: userChatModel.id);*/
           // mark the message as read in the local database
           await messagesRepo.markMessagesAsRead(
-              lastReadmessageId: payload.messageId, chatId: payload.chatId);
+            lastReadmessageId: payload.messageId,
+            chatId: payload.chatId,
+          );
           // update the chat history in the local database
-          await chatHistoryRepo.updateChat(userChatModel.copyWith(
-            lastReadMessageId: payload.messageId,
-            notificationCount: 0,
-          ));
+          await chatHistoryRepo.updateChat(
+            userChatModel.copyWith(
+              lastReadMessageId: payload.messageId,
+              notificationCount: 0,
+            ),
+          );
         }
       }
     } else {
@@ -221,11 +227,16 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
             NotificationsPayloadModel.fromJson(receivedAction.payload as Map<String, dynamic>);
         final userChatModel = await chatHistoryRepo.getChat(payload.chatId);
         if (userChatModel != null) {
-          Get.toNamed(
+          await Get.toNamed(
             Routes.MESSAGES,
             arguments: MessagesViewArgumentsModel(
               coreId: userChatModel.id,
               iconUrl: userChatModel.icon,
+              participants: [
+                MessagingParticipantModel(
+                  coreId: userChatModel.id,
+                ),
+              ],
             ),
           );
         }

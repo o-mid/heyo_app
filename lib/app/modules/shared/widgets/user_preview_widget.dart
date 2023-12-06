@@ -19,6 +19,7 @@ import '../../contacts/widgets/removeContactsDialog.dart';
 import '../../shared/data/models/add_contacts_view_arguments_model.dart';
 import '../../shared/utils/constants/textStyles.dart';
 import '../controllers/user_preview_controller.dart';
+import '../data/models/messaging_participant_model.dart';
 import '../utils/constants/colors.dart';
 import '../utils/screen-utils/sizing/custom_sizes.dart';
 import 'curtom_circle_avatar.dart';
@@ -46,13 +47,12 @@ class UserPreviewWidget extends GetView<UserPreview> {
             children: [
               Text(
                 user.name,
-                style: TEXTSTYLES.kHeaderLarge
-                    .copyWith(color: COLORS.kDarkBlueColor),
+                style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
               ),
               CustomSizes.smallSizedBoxWidth,
               user.isVerified
-                  ? Assets.svg.verifiedWithBluePadding.svg(
-                      alignment: Alignment.center, height: 24.w, width: 24.w)
+                  ? Assets.svg.verifiedWithBluePadding
+                      .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
                   : const SizedBox(),
             ],
           ),
@@ -73,15 +73,18 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.back();
                     print('UserPreviewWidget isWifiDirect $isWifiDirect');
                     isWifiDirect
-                        ? Get.toNamed(Routes.WIFI_DIRECT_CONNECT,
-                            arguments: user)
+                        ? Get.toNamed(Routes.WIFI_DIRECT_CONNECT, arguments: user)
                         : Get.toNamed(
                             Routes.MESSAGES,
                             arguments: MessagesViewArgumentsModel(
                                 coreId: user.coreId,
                                 iconUrl: user.iconUrl,
-                                connectionType:
-                                    MessagingConnectionType.internet),
+                                connectionType: MessagingConnectionType.internet,
+                                participants: [
+                                  MessagingParticipantModel(
+                                    coreId: user.coreId,
+                                  )
+                                ]),
                           );
                   }
                 },
@@ -181,10 +184,8 @@ class UserPreviewWidget extends GetView<UserPreview> {
                             ),
                           );
                         },
-                        icon: Assets.svg.addToContactsIcon
-                            .svg(width: 20, height: 20),
-                        title:
-                            LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
+                        icon: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
+                        title: LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
                       )
                     : _buildIconTextButton(
                         onPressed: () async {
@@ -195,15 +196,12 @@ class UserPreviewWidget extends GetView<UserPreview> {
                             if (result is bool && result == true) {
                               print("result   $result");
 
-                              await controller
-                                  .deleteContact(user.walletAddress);
+                              await controller.deleteContact(user.walletAddress);
                             }
                           });
                         },
-                        icon:
-                            Assets.svg.removeContact.svg(width: 20, height: 20),
-                        title: LocaleKeys
-                            .newChat_userBottomSheet_RemoveFromContacts.tr,
+                        icon: Assets.svg.removeContact.svg(width: 20, height: 20),
+                        title: LocaleKeys.newChat_userBottomSheet_RemoveFromContacts.tr,
                       ),
                 _buildIconTextButton(
                   onPressed: () {
@@ -211,8 +209,7 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.rawSnackbar(
                       messageText: Text(
                         "Blocking feature is in development phase",
-                        style: TEXTSTYLES.kBodySmall
-                            .copyWith(color: COLORS.kDarkBlueColor),
+                        style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kDarkBlueColor),
                         textAlign: TextAlign.center,
                       ),
                       //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),

@@ -11,6 +11,7 @@ import '../../calls/shared/data/repos/call_history/call_history_abstract_repo.da
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
+import '../../shared/data/models/messaging_participant_model.dart';
 
 class AddContactsController extends GetxController {
   late AddContactsViewArgumentsModel args;
@@ -107,6 +108,11 @@ class AddContactsController extends GetxController {
         arguments: MessagesViewArgumentsModel(
           coreId: userModel.coreId,
           iconUrl: userModel.iconUrl,
+          participants: [
+            MessagingParticipantModel(
+              coreId: userModel.coreId,
+            ),
+          ],
         ));
   }
 

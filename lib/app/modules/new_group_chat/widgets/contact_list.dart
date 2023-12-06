@@ -69,9 +69,6 @@ class ContactList extends GetView<NewGroupChatController> {
                     controller.handleItemTap(
                       suggestedUser,
                     );
-                    // Get.find<UserPreview>().openUserPreview(
-                    //   userModel: contacts[index],
-                    // );
                   },
                   child: Obx(() {
                     return Row(

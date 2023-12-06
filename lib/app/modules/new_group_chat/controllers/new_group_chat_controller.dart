@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 
@@ -83,20 +84,20 @@ class NewGroupChatController extends GetxController {
 
   Future<void> processSearchResults(List<UserModel> results, String query) async {
     if (results.isEmpty && query.isValidCoreId()) {
-      handleEmptySearchResults(query);
+      await handleEmptySearchResults(query);
     } else {
       searchSuggestions.value = results;
     }
     searchSuggestions.sort((a, b) => a.name.compareTo(b.name));
   }
 
-  void handleEmptySearchResults(String query) async {
+  Future<void> handleEmptySearchResults(String query) async {
     final currentUserCoreId = await accountInfoRepo.getUserAddress();
     if (currentUserCoreId != query) {
       // Add logic for new user
       searchSuggestions.value = [
         UserModel(
-          name: 'unknown',
+          name: 'Unknown',
           iconUrl: (mockIconUrls..shuffle()).first,
           walletAddress: query,
           coreId: query,
@@ -197,6 +198,8 @@ class NewGroupChatController extends GetxController {
         coreId: selectedCoreids.value.first,
         iconUrl: mockIconUrls.first,
         connectionType: MessagingConnectionType.internet,
+        participants:
+            selectedCoreids.map((element) => MessagingParticipantModel(coreId: element)).toList(),
       ),
     );
   }
