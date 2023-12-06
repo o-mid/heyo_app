@@ -44,7 +44,9 @@ class CallHistoryProvider implements CallHistoryAbstractProvider {
   Future<List<CallHistoryModel>> getAllCalls() async {
     final records = await _store.find(
       await _db,
-      finder: Finder(sortOrders: [SortOrder('date', false)]),
+      finder: Finder(
+        sortOrders: [SortOrder('startDate', false)],
+      ),
     );
 
     return records.map((e) => CallHistoryModel.fromJson(e.value)).toList();
@@ -89,7 +91,7 @@ class CallHistoryProvider implements CallHistoryAbstractProvider {
   @override
   Future<Stream<List<CallHistoryModel>>> getCallsStream() async {
     final query = _store.query(
-      finder: Finder(sortOrders: [SortOrder('date', false)]),
+      finder: Finder(sortOrders: [SortOrder('startDate', false)]),
     );
 
     return query.onSnapshots(await _db).transform(

@@ -15,13 +15,12 @@ import 'package:heyo/app/modules/shared/widgets/slidable_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
-class CallLogWidget extends StatelessWidget {
+class CallLogWidget extends GetView<CallHistoryController> {
   const CallLogWidget({required this.call, super.key});
   final CallHistoryModel call;
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<CallHistoryController>();
     return InkWell(
       onTap: () {
         //TODO:(Aliazim) add index while pushing

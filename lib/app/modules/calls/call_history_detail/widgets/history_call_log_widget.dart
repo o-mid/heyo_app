@@ -21,14 +21,16 @@ class HistoryCallLogWidget extends StatelessWidget {
           children: [
             Text(
               _callTitle(),
-              style:
-                  TEXTSTYLES.kChatName.copyWith(color: COLORS.kDarkBlueColor),
+              style: TEXTSTYLES.kChatName.copyWith(
+                color: COLORS.kDarkBlueColor,
+              ),
             ),
             const Spacer(),
             Text(
               _callStatus(),
-              style:
-                  TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
+              style: TEXTSTYLES.kBodySmall.copyWith(
+                color: COLORS.kTextBlueColor,
+              ),
             ),
           ],
         ),
