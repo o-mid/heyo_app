@@ -622,8 +622,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "1aa733cb"
-      resolved-ref: "1aa733cb4658896e018a9c0d0ecd38bc55da1a4f"
+      ref: c8dcc0e8
+      resolved-ref: c8dcc0e8faa3046cfb734bcc09460cae538ac419
       url: "git@ssh.git.energy:corepass/flutter_p2p_communicator.git"
     source: git
     version: "1.16.0"

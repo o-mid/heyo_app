@@ -63,15 +63,7 @@ class P2PNodeResponseStream {
     print("_onNewResponseEvent : body is: ${event.body.toString()}");
     print("_onNewResponseEvent : error is: ${event.error.toString()}");
 
-    if (event.name == P2PReqResNodeNames.connect && event.error != null) {
-      Future.delayed(const Duration(seconds: 2), () async {
-        final info = P2PReqResNodeModel(
-          name: P2PReqResNodeNames.connect,
-          body: libP2PNode.toJson(),
-        );
-        await FlutterP2pCommunicator.sendRequest(info: info);
-      });
-    }
+
 
     if (event.name == P2PReqResNodeNames.connect &&
         event.error == null &&
