@@ -39,8 +39,7 @@ class P2PNode {
     required this.web3client,
   });
 
-  Future<void> _setUpP2PNode(
-      void Function(P2PReqResNodeModel model) onNewRequestReceived) async {
+  void _setUpP2PNode(void Function(P2PReqResNodeModel model) onNewRequestReceived) {
     // setup the p2p ResponseStream and RequestStream and listen to them
     _listenToStreams(onNewRequestReceived);
 
@@ -48,7 +47,7 @@ class P2PNode {
     _startP2PNode();
   }
 
-  Future<void> initNode() async {
+  void _startP2PNode() async {
     // start P2P node Prosses
 
     // 1. check if account is created and if not create it and save it in storage
