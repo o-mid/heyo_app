@@ -1,20 +1,25 @@
 import 'dart:async';
+import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 
+import '../../../routes/app_pages.dart';
 import '../../new_chat/data/models/user_model.dart';
+import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../../shared/data/repository/contact_repository.dart';
 import '../../shared/data/repository/crypto_account/account_repository.dart';
+import '../../shared/utils/constants/colors.dart';
+import '../../shared/utils/constants/textStyles.dart';
 
 class NewGroupChatController extends GetxController {
   final ContactRepository contactRepository;
   final AccountRepository accountInfoRepo;
   final inputFocusNode = FocusNode();
   final inputText = "".obs;
-  late StreamSubscription _contactasStreamSubscription;
+  late StreamSubscription _contactsStreamSubscription;
   late TextEditingController inputController;
   RxBool isTextInputFocused = false.obs;
   RxList<UserModel> searchSuggestions = <UserModel>[].obs;
@@ -25,7 +30,7 @@ class NewGroupChatController extends GetxController {
   final count = 0.obs;
   @override
   Future<void> onInit() async {
-    inputController = TextEditingController();
+    await setupInputController();
     await _listenToContacts();
     super.onInit();
   }
@@ -39,29 +44,30 @@ class NewGroupChatController extends GetxController {
   @override
   void onClose() async {
     inputController.dispose();
-    _contactasStreamSubscription.cancel();
+    await _contactsStreamSubscription.cancel();
     await _clearSearchSuggestions();
     super.onClose();
   }
 
-  Future<void> _listenToContacts() async {
-    inputController.addListener(() {
+  Future<void> setupInputController() async {
+    inputController = TextEditingController();
+    inputController.addListener(() async {
       inputText.value = inputController.text;
-      _searchUsers(inputController.text);
+      await _searchUsers(inputController.text);
     });
+  }
 
-    _contactasStreamSubscription =
-        (await contactRepository.getContactsStream()).listen((newContacts) {
-      // remove the deleted contacts from the list
+  Future<void> _listenToContacts() async {
+    _contactsStreamSubscription =
+        (await contactRepository.getContactsStream()).listen(_updateSearchSuggestions);
+  }
 
-      if (inputText.value == "") {
-        searchSuggestions
-          ..value = newContacts
-          ..sort((a, b) {
-            return a.name.compareTo(b.name);
-          });
-      }
-    });
+  void _updateSearchSuggestions(List<UserModel> newContacts) {
+    if (inputText.value.isEmpty) {
+      searchSuggestions
+        ..value = newContacts
+        ..sort((a, b) => a.name.compareTo(b.name));
+    }
   }
 
   List<String> mockIconUrls = [
@@ -70,64 +76,66 @@ class NewGroupChatController extends GetxController {
     "https://avatars.githubusercontent.com/u/7847725?v=4",
     "https://avatars.githubusercontent.com/u/9947725?v=4",
   ];
-
-  void _searchUsers(String query) async {
-    List<UserModel> searchedItems = (await contactRepository.search(query)).toList();
-
-    if (searchedItems.isEmpty) {
-      final currentUserCoreId = await accountInfoRepo.getUserAddress();
-      if (query.isValidCoreId() && currentUserCoreId != query) {
-        //its a new user
-        //TODO update fields based on correct data
-        searchSuggestions.value = [
-          UserModel(
-            name: 'unknown',
-            iconUrl: (mockIconUrls..shuffle()).first,
-            walletAddress: query,
-            coreId: query,
-          )
-        ];
-      } else {
-        searchSuggestions.value = [];
-      }
-    } else {
-      searchSuggestions.value = searchedItems;
-    }
-    searchSuggestions
-      ..sort((a, b) {
-        return a.name.compareTo(b.name);
-      })
-      ..refresh();
+  Future<void> _searchUsers(String query) async {
+    final searchedItems = (await contactRepository.search(query)).toList();
+    await processSearchResults(searchedItems, query);
   }
 
-  handleScannedValue(String? barcodeValue) {
-    // TODO: Implement the right filter logic for QRCode
-    if (barcodeValue == null) {
-      // Todo(qr)
-      return;
+  Future<void> processSearchResults(List<UserModel> results, String query) async {
+    if (results.isEmpty && query.isValidCoreId()) {
+      handleEmptySearchResults(query);
+    } else {
+      searchSuggestions.value = results;
     }
-    try {
-      final coreId = barcodeValue.getCoreId();
+    searchSuggestions.sort((a, b) => a.name.compareTo(b.name));
+  }
 
-      Get.back();
-      isTextInputFocused.value = true;
-      // this will set the input field to the scanned value and serach for users
-      inputController.text = coreId;
-    } catch (e) {
-      return;
+  void handleEmptySearchResults(String query) async {
+    final currentUserCoreId = await accountInfoRepo.getUserAddress();
+    if (currentUserCoreId != query) {
+      // Add logic for new user
+      searchSuggestions.value = [
+        UserModel(
+          name: 'unknown',
+          iconUrl: (mockIconUrls..shuffle()).first,
+          walletAddress: query,
+          coreId: query,
+        ),
+      ];
+    } else {
+      searchSuggestions.clear();
     }
+  }
+
+  void handleScannedValue(String? barcodeValue) {
+    if (barcodeValue == null) return;
+    final coreId = barcodeValue.getCoreId();
+    _updateInputField(coreId);
+  }
+
+  void _updateInputField(String coreId) {
+    Get.back();
+    isTextInputFocused.value = true;
+    inputController.text = coreId;
   }
 
   Future<void> handleItemTap(UserModel user) async {
-    if (selectedCoreids.value.contains(user.coreId)) {
+    updateSelectedCoreIds(user);
+    await updateContactRepository(user);
+  }
+
+  void updateSelectedCoreIds(UserModel user) {
+    if (selectedCoreids.contains(user.coreId)) {
       selectedCoreids.remove(user.coreId);
     } else {
-      await contactRepository.getContactById(user.coreId).then((value) {
-        if (value == null) {
-          contactRepository.addContact(user);
-        }
-      });
       selectedCoreids.add(user.coreId);
+    }
+  }
+
+  Future<void> updateContactRepository(UserModel user) async {
+    final contact = await contactRepository.getContactById(user.coreId);
+    if (contact == null) {
+      await contactRepository.addContact(user);
     }
   }
 
@@ -169,10 +177,47 @@ class NewGroupChatController extends GetxController {
   }
 
   Future<void> _clearSearchSuggestions() async {
-    searchSuggestions.forEach(
-      (element) async {
-        await contactRepository.deleteContactById(element.coreId);
-      },
+    for (final element in searchSuggestions) {
+      await contactRepository.deleteContactById(element.coreId);
+    }
+  }
+
+  void handleFabOnpressed() {
+    if (selectedCoreids.length <= 1) {
+      _showMembersSnackbar();
+    } else {
+      _navigateToMessages();
+    }
+  }
+
+  void _navigateToMessages() {
+    Get.toNamed(
+      Routes.MESSAGES,
+      arguments: MessagesViewArgumentsModel(
+        coreId: selectedCoreids.value.first,
+        iconUrl: mockIconUrls.first,
+        connectionType: MessagingConnectionType.internet,
+      ),
+    );
+  }
+
+  void _showMembersSnackbar() {
+    Get.rawSnackbar(
+      messageText: Text(
+        'Select two or more members to start a group chat.',
+        style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kGreenMainColor),
+        textAlign: TextAlign.center,
+      ),
+      backgroundColor: COLORS.kAppBackground,
+      margin: const EdgeInsets.only(bottom: 16),
+      boxShadows: [
+        BoxShadow(
+          color: const Color(0xFF466087).withOpacity(0.1),
+          offset: const Offset(0, 3),
+          blurRadius: 10,
+        ),
+      ],
+      borderRadius: 8,
     );
   }
 }
