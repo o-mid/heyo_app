@@ -229,7 +229,7 @@ class CallController extends GetxController {
   }
 
   Future<void> inCallSetUp() async {
-    // await callRepository.acceptCall(args.callId!);
+     await callRepository.acceptCall(args.callId!);
     //* I move mock in controller to pass callId
 
     isInCall.value = true;
