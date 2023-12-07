@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
+import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
@@ -48,18 +49,16 @@ class CallHistoryObserver extends GetxController {
         case CallHistoryStatus.ringing:
           {
             await _createMissedCallRecord(
-              state.remotes.first.remotePeer.remoteCoreId,
-              state.callId,
-              state.remotes.first.isAudioCall ? CallType.audio : CallType.video,
+              callInfo: state.remotes.first,
+              callId: state.callId,
             );
             break;
           }
         case CallHistoryStatus.invite:
           {
             await _createOutgoingNotAnsweredRecord(
-              state.remotes.first.remotePeer.remoteCoreId,
-              state.callId,
-              state.remotes.first.isAudioCall ? CallType.audio : CallType.video,
+              callInfo: state.remotes.first,
+              callId: state.callId,
             );
             break;
           }
@@ -142,12 +141,13 @@ class CallHistoryObserver extends GetxController {
     return null;
   }
 
-  Future<void> _createMissedCallRecord(
-    String coreId,
-    String callId,
-    CallType type,
-  ) async {
-    final callParticipant = await _getUserFromCoreId(coreId);
+  Future<void> _createMissedCallRecord({
+    required CallInfo callInfo,
+    required String callId,
+  }) async {
+    final callParticipant = await _getUserFromCoreId(
+      callInfo.remotePeer.remoteCoreId,
+    );
 
     final callHistory = CallHistoryModel(
       participants: [callParticipant],
@@ -155,18 +155,19 @@ class CallHistoryObserver extends GetxController {
       startDate: DateTime.now(),
       callId: callId,
       coreId: callParticipant.coreId,
-      type: type,
+      type: callInfo.isAudioCall ? CallType.audio : CallType.video,
     );
 
     await callHistoryRepo.addCallToHistory(callHistory);
   }
 
-  Future<void> _createOutgoingNotAnsweredRecord(
-    String coreId,
-    String callId,
-    CallType type,
-  ) async {
-    final callParticipant = await _getUserFromCoreId(coreId);
+  Future<void> _createOutgoingNotAnsweredRecord({
+    required CallInfo callInfo,
+    required String callId,
+  }) async {
+    final callParticipant = await _getUserFromCoreId(
+      callInfo.remotePeer.remoteCoreId,
+    );
 
     final callHistory = CallHistoryModel(
       participants: [callParticipant],
@@ -174,7 +175,7 @@ class CallHistoryObserver extends GetxController {
       startDate: DateTime.now(),
       callId: callId,
       coreId: callParticipant.coreId,
-      type: type,
+      type: callInfo.isAudioCall ? CallType.audio : CallType.video,
     );
 
     await callHistoryRepo.addCallToHistory(callHistory);
