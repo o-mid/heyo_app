@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -16,38 +18,39 @@ import 'message_selection_wrapper.dart';
 
 class MessageItemWidget extends StatelessWidget {
   const MessageItemWidget({
-    super.key,
+    Key? key,
     required this.index,
-  });
+  }) : super(key: key);
 
   final int index;
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MessagesController>();
+    final message = controller.messages[index];
+    final prevMessage = (index > 0) ? controller.messages[index - 1] : null;
 
-    final prevMessage = index < 1 ? null : controller.messages[index - 1];
+    return VisibilityDetector(
+      key: Key(message.messageId),
+      onVisibilityChanged: (info) => controller.onMessagesItemVisibilityChanged(
+          visibilityInfo: info,
+          itemIndex: index,
+          itemMessageId: message.messageId,
+          itemStatus: message.status,
+          isFromMe: message.isFromMe),
+      child: _buildMessageBody(controller, message, prevMessage),
+    );
+  }
 
-    final MessageModel message = controller.messages[index];
-
-    // Adds date header at beginning of new messages in a certain date
-    Widget dateHeader() {
-      if (prevMessage == null || !prevMessage.timestamp.isSameDate(message.timestamp)) {
-        return MessagesDateHeaderWidget(
-          headerValue: message.timestamp.differenceFromNow(),
-        );
-      } else {
-        return const SizedBox();
-      }
-    }
-
-    final Widget messageBody = AutoScrollTag(
+  Widget _buildMessageBody(
+      MessagesController controller, MessageModel message, MessageModel? prevMessage) {
+    return AutoScrollTag(
       key: Key(message.messageId),
       index: index,
       controller: controller.scrollController,
       child: Column(
         children: [
-          dateHeader(),
+          _buildDateHeader(message, prevMessage),
           MessageSelectionWrapper(
             message: message,
             iconUrl: controller.user.value.iconUrl,
@@ -55,17 +58,14 @@ class MessageItemWidget extends StatelessWidget {
         ],
       ),
     );
+  }
 
-    return VisibilityDetector(
-      key: Key(message.messageId),
-      onVisibilityChanged: (info) => controller.onMessagesItemVisibilityChanged(
-        visibilityInfo: info,
-        itemIndex: index,
-        itemMessageId: message.messageId,
-        itemStatus: message.status,
-        isFromMe: message.isFromMe,
-      ),
-      child: messageBody,
-    );
+  Widget _buildDateHeader(MessageModel message, MessageModel? prevMessage) {
+    if (prevMessage == null || !prevMessage.timestamp.isSameDate(message.timestamp)) {
+      return MessagesDateHeaderWidget(
+        headerValue: message.timestamp.differenceFromNow(),
+      );
+    }
+    return const SizedBox();
   }
 }

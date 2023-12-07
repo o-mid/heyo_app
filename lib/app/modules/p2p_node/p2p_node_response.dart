@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
+import 'package:flutter_p2p_communicator/model/addr_model.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/p2p_node/models.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
@@ -20,6 +22,7 @@ class P2PNodeResponseStream {
   bool advertiseRequested = false;
   final P2PState p2pState;
   LibP2PStorageProvider libP2PStorageProvider;
+
   /// temporarily added here since there is nothing to determine this class is in
   /// data or domain layer
   AccountRepository accountRepository;
@@ -60,14 +63,16 @@ class P2PNodeResponseStream {
     print("_onNewResponseEvent : body is: ${event.body.toString()}");
     print("_onNewResponseEvent : error is: ${event.error.toString()}");
 
+
+
     if (event.name == P2PReqResNodeNames.connect &&
         event.error == null &&
         !advertiseRequested) {
       advertiseRequested = true;
 
       final info = P2PReqResNodeModel(name: P2PReqResNodeNames.advertise);
-      Future.delayed(const Duration(seconds: 1),() async{
-      final id = await FlutterP2pCommunicator.sendRequest(info: info);
+      Future.delayed(const Duration(seconds: 1), () async {
+        final id = await FlutterP2pCommunicator.sendRequest(info: info);
       });
       /* -------------------------------------------------------------------------- */
       /*                                  get addrs                                 */

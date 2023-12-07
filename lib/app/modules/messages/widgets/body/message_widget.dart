@@ -18,34 +18,44 @@ class MessageWidget extends StatelessWidget {
   final String? iconUrl;
   final bool isMockMessage;
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (!message.isFromMe) CustomSizes.mediumSizedBoxWidth,
-        if (!message.isFromMe)
+  List<Widget> _buildChildren() {
+    List<Widget> children = [];
+
+    if (!message.isFromMe) {
+      children
+        ..add(CustomSizes.mediumSizedBoxWidth)
+        ..add(
           CustomCircleAvatar(
             url: iconUrl ?? '',
             size: 20,
             isMockData: isMockMessage,
           ),
-        Expanded(
-          child: Column(
-            children: [
-              MessageHeaderWidget(
-                message: message,
-                isMockMessage: isMockMessage,
-              ),
-              SizedBox(height: 4.h),
-              MessageBodyWidget(
-                message: message,
-                isMockMessage: isMockMessage,
-              ),
-            ],
-          ),
+        );
+    }
+
+    children.add(
+      Expanded(
+        child: Column(
+          children: [
+            MessageHeaderWidget(message: message, isMockMessage: isMockMessage),
+            SizedBox(height: 4.h),
+            MessageBodyWidget(
+              message: message,
+              isMockMessage: isMockMessage,
+            ),
+          ],
         ),
-      ],
+      ),
+    );
+
+    return children;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: _buildChildren(),
     );
   }
 }

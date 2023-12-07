@@ -15,62 +15,70 @@ class MessagesFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MessagesController>();
-    return Obx(() {
-      return Column(
+
+    return Obx(
+      () => Column(
         children: [
-          if (controller.replyingTo.value != null)
-            ReplyingToWidget(
-              clearReplyTo: controller.clearReplyTo,
-              replyingTo: controller.replyingTo.value!,
-            ),
-
-          // Chat Text Field
-          Container(
-            color: COLORS.KChatFooterGrey,
-            child: AnimatedSwitcher(
-              transitionBuilder: (child, animation) => SizeTransition(
-                axis: Axis.vertical,
-                axisAlignment: 0,
-                sizeFactor: animation,
-                child: child,
-              ),
-              switchInCurve: TRANSITIONS.messagingPage_openRecordModeCurve,
-              switchOutCurve: TRANSITIONS.messagingPage_closeRecordModeCurve,
-              reverseDuration: TRANSITIONS.messagingPage_closeRecordModeDurtion,
-              duration: TRANSITIONS.messagingPage_openRecordModeDurtion,
-              child: controller.isInRecordMode.isTrue
-                  ? const VoiceRecorderWidget()
-                  : const MessagesActiveBoxWidget(),
-            ),
-          ),
-
-          // Emoji Picker (Hidden by default)
-
-          Offstage(
-            offstage: !controller.showEmojiPicker.value,
-            child: WillPopScope(
-              onWillPop: () async {
-                if (controller.showEmojiPicker.value || controller.isInRecordMode.isTrue) {
-                  controller.showEmojiPicker.value = false;
-                  controller.isInRecordMode.value = false;
-                  FocusScope.of(context).requestFocus(controller.textFocusNode);
-
-                  return false;
-                }
-                return true;
-              },
-              child: SizedBox(
-                height: 250,
-                child: EmojiPicker(
-                  onEmojiSelected: (_, Emoji emoji) =>
-                      controller.appendAfterCursorPosition(emoji.emoji),
-                  onBackspacePressed: controller.removeCharacterBeforeCursorPosition,
-                ),
-              ),
-            ),
-          ),
+          _buildReplyingToWidget(controller),
+          _buildChatTextField(controller),
+          _buildEmojiPicker(controller, context),
         ],
-      );
-    });
+      ),
+    );
+  }
+
+  Widget _buildReplyingToWidget(MessagesController controller) {
+    if (controller.replyingTo.value == null) return const SizedBox.shrink();
+
+    return ReplyingToWidget(
+      clearReplyTo: controller.clearReplyTo,
+      replyingTo: controller.replyingTo.value!,
+    );
+  }
+
+  Widget _buildChatTextField(MessagesController controller) {
+    return Container(
+      color: COLORS.KChatFooterGrey,
+      child: AnimatedSwitcher(
+        transitionBuilder: (child, animation) => SizeTransition(
+          axis: Axis.vertical,
+          axisAlignment: 0,
+          sizeFactor: animation,
+          child: child,
+        ),
+        switchInCurve: TRANSITIONS.messagingPage_openRecordModeCurve,
+        switchOutCurve: TRANSITIONS.messagingPage_closeRecordModeCurve,
+        reverseDuration: TRANSITIONS.messagingPage_closeRecordModeDurtion,
+        duration: TRANSITIONS.messagingPage_openRecordModeDurtion,
+        child: controller.isInRecordMode.isTrue
+            ? const VoiceRecorderWidget()
+            : const MessagesActiveBoxWidget(),
+      ),
+    );
+  }
+
+  Widget _buildEmojiPicker(MessagesController controller, BuildContext context) {
+    return Offstage(
+      offstage: !controller.showEmojiPicker.value,
+      child: WillPopScope(
+        onWillPop: () async {
+          if (controller.showEmojiPicker.value || controller.isInRecordMode.isTrue) {
+            controller.showEmojiPicker.value = false;
+            controller.isInRecordMode.value = false;
+            FocusScope.of(context).requestFocus(controller.textFocusNode);
+
+            return false;
+          }
+          return true;
+        },
+        child: SizedBox(
+          height: 250,
+          child: EmojiPicker(
+            onEmojiSelected: (_, Emoji emoji) => controller.appendAfterCursorPosition(emoji.emoji),
+            onBackspacePressed: controller.removeCharacterBeforeCursorPosition,
+          ),
+        ),
+      ),
+    );
   }
 }

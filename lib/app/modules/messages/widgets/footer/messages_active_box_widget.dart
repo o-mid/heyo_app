@@ -24,8 +24,7 @@ class MessagesActiveBoxWidget extends StatelessWidget {
           if (controller.selectedMessages.isNotEmpty) {
             return MessageSelectionOptions(
               showReply: controller.selectedMessages.length == 1,
-              showCopy: !controller.selectedMessages
-                  .any((m) => m is! TextMessageModel),
+              showCopy: !controller.selectedMessages.any((m) => m is! TextMessageModel),
               selectedMessages: controller.selectedMessages,
             );
           } else if (controller.locationMessage.value != null) {

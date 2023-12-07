@@ -1,36 +1,37 @@
-import 'package:get/get.dart';
-import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
-import 'package:heyo/app/modules/messages/data/models/metadatas/audio_metadata.dart';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:heyo/app/modules/messages/data/models/metadatas/file_metadata.dart';
 import 'package:heyo/app/modules/messages/data/models/metadatas/image_metadata.dart';
-import 'package:heyo/app/modules/messages/data/models/metadatas/video_metadata.dart';
+import 'package:heyo/app/modules/messages/data/models/reaction_model.dart';
 import 'package:heyo/app/modules/messages/data/models/reply_to_model.dart';
-import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
-import 'package:heyo/app/modules/messaging/controllers/common_messaging_controller.dart';
+import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
+import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
 import 'package:tuple/tuple.dart';
-import '../../../messaging/usecases/send_data_channel_message_usecase.dart';
-import '../../utils/message_from_type.dart';
-import '../models/reaction_model.dart';
-import '../provider/messages_provider.dart';
-import '../repo/messages_repo.dart';
 
-class SendMessage {
-  final MessagesAbstractRepo messagesRepo = MessagesRepo(
-    messagesProvider: MessagesProvider(
-      appDatabaseProvider: Get.find(),
-    ),
-  );
-  final CommonMessagingConnectionController messagingConnection =
-      Get.find<CommonMessagingConnectionController>();
+import '../../utils/message_from_type.dart';
+import '../message_processor.dart';
+import '../models/messages/message_model.dart';
+import '../models/metadatas/audio_metadata.dart';
+import '../models/metadatas/video_metadata.dart';
+import '../repo/messages_abstract_repo.dart';
+
+class SendMessageUseCase {
+  SendMessageUseCase(
+      {required this.messagesRepo, required this.connectionRepository, required this.processor});
+
+  final MessagesAbstractRepo messagesRepo;
+  final MessageProcessor processor;
+  final ConnectionRepository connectionRepository;
 
   execute(
-      {required SendMessageType sendMessageType,
+      {required MessageConnectionType messageConnectionType,
+      required SendMessageType sendMessageType,
       required String remoteCoreId,
       bool isUpdate = false,
       MessageModel? messageModel = null}) async {
-
     Tuple3<MessageModel?, bool, String> messageObject =
-        messageFromType(messageType: sendMessageType,messageModel: messageModel);
+        messageFromType(messageType: sendMessageType, messageModel: messageModel);
     MessageModel? msg = messageObject.item1;
     bool isDataBinary = messageObject.item2;
     String messageLocalPath = messageObject.item3;
@@ -39,25 +40,37 @@ class SendMessage {
       return;
     }
     if (isUpdate) {
-       await messagesRepo.updateMessage(
-        message: msg.copyWith(status: MessageStatus.sending), chatId: sendMessageType.chatId);
-
+      await messagesRepo.updateMessage(
+          message: msg.copyWith(status: MessageStatus.sending), chatId: sendMessageType.chatId);
     } else {
       await messagesRepo.createMessage(
-          message: msg.copyWith(status: MessageStatus.sending),
-          chatId: sendMessageType.chatId);
+          message: msg.copyWith(status: MessageStatus.sending), chatId: sendMessageType.chatId);
     }
 
-    Map<String, dynamic> messageJson = msg.toJson();
-    await SendDataChannelMessage(messagingConnection: messagingConnection)
-        .execute(
+    final rawmessageJson = msg.toJson();
+
+    final processedMessage = await processor.getMessageDetails(
       channelMessageType: ChannelMessageType.message(
-          message: messageJson,
-          isDataBinary: isDataBinary,
-          messageLocalPath: messageLocalPath),
+          message: rawmessageJson, isDataBinary: isDataBinary, messageLocalPath: messageLocalPath),
       remoteCoreId: remoteCoreId,
     );
+    if (isDataBinary && messageLocalPath.isNotEmpty) {
+      // Todo: implement sending binary data
 
+      // BinaryFileSendingState sendingState = await BinaryFileSendingState.create(
+      //   file: File(messageLocalPath),
+      //   meta: processedMessage.messageJson,
+      // );
+      // await SendBinaryData(sendingState: sendingState, messagingConnection: messagingConnection)
+      //     .execute(remoteCoreId);
+      // messagingConnection.sendBinaryMessage(binary: binary, remoteCoreId: remoteCoreId)
+    } else {
+      await connectionRepository.sendTextMessage(
+        messageConnectionType: messageConnectionType,
+        text: jsonEncode(processedMessage.messageJson),
+        remoteCoreId: remoteCoreId,
+      );
+    }
   }
 }
 

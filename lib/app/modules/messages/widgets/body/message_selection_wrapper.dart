@@ -13,7 +13,11 @@ import 'package:heyo/app/modules/messages/widgets/body/recipient_reply_to_widget
 import 'package:heyo/app/modules/messages/widgets/body/sender_reply_to_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 
-class MessageSelectionWrapper extends StatefulWidget {
+import 'message_widget.dart';
+import 'reaction_box.dart';
+import 'recipient_reply_to_widget.dart';
+
+class MessageSelectionWrapper extends StatelessWidget {
   const MessageSelectionWrapper({
     required this.message,
     super.key,
@@ -26,18 +30,7 @@ class MessageSelectionWrapper extends StatefulWidget {
   final String? iconUrl;
 
   @override
-  State<MessageSelectionWrapper> createState() =>
-      _MessageSelectionWrapperState();
-}
-
-class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
-    with AutomaticKeepAliveClientMixin {
-  @override
   Widget build(BuildContext context) {
-    super.build(context);
-
-    final message = widget.message;
-    final isMockMessage = widget.isMockMessage;
     final controller = Get.find<MessagesController>();
 
     return Obx(() {
@@ -45,11 +38,9 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
         children: [
           if (message.replyTo != null)
             Row(
-              textDirection:
-                  message.isFromMe ? TextDirection.rtl : TextDirection.ltr,
+              textDirection: message.isFromMe ? TextDirection.rtl : TextDirection.ltr,
               children: [
-                if (!message.isFromMe)
-                  SizedBox(width: 16.w + 20), // Left padding + profile size
+                if (!message.isFromMe) SizedBox(width: 16.w + 20), // Left padding + profile size
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
@@ -68,8 +59,7 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
             ),
           GestureDetector(
             key: Key(message.messageId),
-            onLongPress: () =>
-                controller.toggleMessageSelection(message.messageId),
+            onLongPress: () => controller.toggleMessageSelection(message.messageId),
             onTap: controller.selectedMessages.isEmpty
                 ? null
                 : () => controller.toggleMessageSelection(message.messageId),
@@ -80,17 +70,13 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
                 // Material is used because if container is given color, it will
                 // hide the reaction widget borders
                 Material(
-                  color: message.isSelected
-                      ? COLORS.kGreenLighterColor
-                      : Colors.transparent,
+                  color: message.isSelected ? COLORS.kGreenLighterColor : Colors.transparent,
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 4.h),
                     child: MessageWidget(
                       message: message,
-                      iconUrl: widget.iconUrl,
+                      iconUrl: iconUrl,
                       isMockMessage: isMockMessage,
-                      // showTimeAndProfile: index == controller.messages.length - 1 ||
-                      //     controller.messages[index + 1].senderName != message.senderName,
                     ),
                   ),
                 ),
@@ -98,10 +84,7 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
                 Positioned(
                   top: -4.h,
                   child: AnimatedScale(
-                    scale: message.isSelected &&
-                            controller.selectedMessages.length == 1
-                        ? 1
-                        : 0,
+                    scale: message.isSelected && controller.selectedMessages.length == 1 ? 1 : 0,
                     duration: const Duration(milliseconds: 200),
                     child: ReactionBox(
                       message: message,
@@ -125,11 +108,4 @@ class _MessageSelectionWrapperState extends State<MessageSelectionWrapper>
       );
     });
   }
-
-  @override
-  bool get wantKeepAlive =>
-      widget.message is VideoMessageModel ||
-      widget.message is AudioMessageModel ||
-      widget.message is LiveLocationMessageModel ||
-      widget.message is LocationMessageModel;
 }

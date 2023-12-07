@@ -17,8 +17,12 @@ import 'video_message_player.dart';
 class MultiMediaMessageWidget extends StatelessWidget {
   final MultiMediaMessageModel message;
   final int showMediaLimitCount;
-  const MultiMediaMessageWidget({Key? key, required this.message, this.showMediaLimitCount = 6})
-      : super(key: key);
+
+  const MultiMediaMessageWidget({
+    Key? key,
+    required this.message,
+    this.showMediaLimitCount = 6,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,95 +40,84 @@ class MultiMediaMessageWidget extends StatelessWidget {
         ),
         itemCount: isMoreThanLimit ? showMediaLimitCount : message.mediaList.length,
         itemBuilder: (context, index) {
-          bool isMediaLocal;
-          bool isMediaVideo = message.mediaList[index].type == MessageContentType.video;
-          isMediaVideo
-              ? isMediaLocal = (message.mediaList[index] as VideoMessageModel).metadata.isLocal
-              : isMediaLocal = (message.mediaList[index] as ImageMessageModel).isLocal;
+          final content = message.mediaList[index];
           return GestureDetector(
-            onTap: () {
-              Get.toNamed(Routes.MEDIA_VIEW,
-                  arguments: MediaViewArgumentsModel(
-                    mediaList: message.mediaList,
-                    isMultiMessage: true,
-                    multiMessage: message,
-                    activeIndex: index,
-                  ));
-            },
+            onTap: () => _handleMediaTap(index),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.r),
               child: SizedBox(
                 width: 133.w,
                 height: 133.w,
                 child: isMoreThanLimit && index == showMediaLimitCount - 1
-                    ? Stack(
-                        alignment: Alignment.center,
-                        fit: StackFit.passthrough,
-                        children: [
-                          ImageFiltered(
-                            imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                            child: isMediaVideo
-                                ? (message.mediaList[index] as VideoMessageModel).metadata.isLocal
-                                    ? Image.memory(
-                                        (message.mediaList[index] as VideoMessageModel)
-                                            .metadata
-                                            .thumbnailBytes!,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Image.network(
-                                        (message.mediaList[index] as VideoMessageModel)
-                                            .metadata
-                                            .thumbnailUrl,
-                                        fit: BoxFit.cover,
-                                      )
-                                : isMediaLocal
-                                    ? Image.file(
-                                        File(message.mediaList[index].url.toString()),
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Image.network(
-                                        message.mediaList[index].url.toString(),
-                                      ),
-                          ),
-                          Center(
-                            child: Text(
-                              '+${message.mediaList.length - showMediaLimitCount}',
-                              style: TEXTSTYLES.kHeaderDisplay.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    : isMediaVideo
-                        ? VideoMessagePlayer(
-                            message: message.mediaList[index] as VideoMessageModel,
-                            isMultiMessage: true,
-                            multiMessageOnTap: () {
-                              Get.toNamed(Routes.MEDIA_VIEW,
-                                  arguments: MediaViewArgumentsModel(
-                                    mediaList: message.mediaList,
-                                    isMultiMessage: true,
-                                    multiMessage: message,
-                                    activeIndex: index,
-                                  ));
-                            },
-                          )
-                        : isMediaLocal
-                            ? Image.file(
-                                File(message.mediaList[index].url.toString()),
-                                fit: BoxFit.cover,
-                              )
-                            : Image.network(
-                                message.mediaList[index].url.toString(),
-                                fit: BoxFit.cover,
-                              ),
+                    ? _buildMoreOverlay(content)
+                    : _buildMediaContent(content),
               ),
             ),
           );
         },
       ),
     );
+  }
+
+  void _handleMediaTap(int index) {
+    Get.toNamed(Routes.MEDIA_VIEW,
+        arguments: MediaViewArgumentsModel(
+          mediaList: message.mediaList,
+          isMultiMessage: true,
+          multiMessage: message,
+          activeIndex: index,
+        ));
+  }
+
+  Widget _buildMoreOverlay(dynamic content) {
+    return Stack(
+      alignment: Alignment.center,
+      fit: StackFit.passthrough,
+      children: [
+        _buildBlurredMediaBackground(content),
+        Center(
+          child: Text(
+            '+${message.mediaList.length - showMediaLimitCount}',
+            style: TEXTSTYLES.kHeaderDisplay.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBlurredMediaBackground(dynamic content) {
+    if (content.type == MessageContentType.video) {
+      final videoContent = content as VideoMessageModel;
+      return videoContent.metadata.isLocal
+          ? Image.memory(
+              videoContent.metadata.thumbnailBytes!,
+              fit: BoxFit.cover,
+            )
+          : Image.network(
+              videoContent.metadata.thumbnailUrl,
+              fit: BoxFit.cover,
+            );
+    } else {
+      return (content as ImageMessageModel).isLocal
+          ? Image.file(File(content.url), fit: BoxFit.cover)
+          : Image.network(content.url);
+    }
+  }
+
+  Widget _buildMediaContent(dynamic content) {
+    if (content.type == MessageContentType.video) {
+      return VideoMessagePlayer(
+        message: content as VideoMessageModel,
+        isMultiMessage: true,
+        multiMessageOnTap: () => _handleMediaTap(message.mediaList.indexOf(content)),
+      );
+    } else {
+      return (content as ImageMessageModel).isLocal
+          ? Image.file(File(content.url), fit: BoxFit.cover)
+          : Image.network(content.url, fit: BoxFit.cover);
+    }
   }
 }

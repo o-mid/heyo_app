@@ -33,6 +33,7 @@ import 'location/live_location_message_widget.dart';
 class MessageBodyWidget extends StatelessWidget {
   final MessageModel message;
   final bool isMockMessage;
+
   const MessageBodyWidget({
     Key? key,
     required this.message,
@@ -53,9 +54,7 @@ class MessageBodyWidget extends StatelessWidget {
               children: [
                 Container(
                   margin: EdgeInsets.only(bottom: 4.h),
-                  child: _MessageContent(
-                    message: message,
-                  ),
+                  child: _MessageContent(message: message),
                 ),
                 if (message.reactions.isNotEmpty) ReactionsWidget(message: message),
               ],
@@ -70,90 +69,95 @@ class MessageBodyWidget extends StatelessWidget {
 
 class _MessageContent extends StatelessWidget {
   final MessageModel message;
-  const _MessageContent({
-    Key? key,
-    required this.message,
-  }) : super(key: key);
+
+  const _MessageContent({Key? key, required this.message}) : super(key: key);
+
+  Color get backgroundColor =>
+      message.isFromMe ? COLORS.kGreenMainColor : COLORS.kPinCodeDeactivateColor;
+
+  Color get textColor => message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor;
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor =
-        message.isFromMe ? COLORS.kGreenMainColor : COLORS.kPinCodeDeactivateColor;
-    final textColor = message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor;
-
     switch (message.runtimeType) {
       case TextMessageModel:
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          child: Text(
-            (message as TextMessageModel).text,
-            textDirection: TextDirection.ltr,
-            style: TEXTSTYLES.kChatText.copyWith(color: textColor),
-          ),
-        );
+        return _buildTextMessage(message as TextMessageModel);
       case ImageMessageModel:
-        return GestureDetector(
-          onTap: () {
-            List<dynamic> mediaList = [message];
-            Get.toNamed(Routes.MEDIA_VIEW,
-                arguments: MediaViewArgumentsModel(
-                  mediaList: mediaList,
-                  activeIndex: 0,
-                  isMultiMessage: false,
-                ));
-          },
-          child: LayoutBuilder(builder: (context, constraints) {
-            final mWidth = (message as ImageMessageModel).metadata.width;
-            final mHeight = (message as ImageMessageModel).metadata.height;
-            final width = min(mWidth, constraints.maxWidth);
-            final height = width * (mHeight / mWidth);
-            return SizedBox(
-              width: width,
-              height: height,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.r),
-                child: (message as ImageMessageModel).isLocal
-                    ? Image.file(File((message as ImageMessageModel).url))
-                    : Image.network((message as ImageMessageModel).url),
-              ),
-            );
-          }),
-        );
+        return _buildImageMessage(message as ImageMessageModel);
       case VideoMessageModel:
-        return VideoMessagePlayer(
-          message: message as VideoMessageModel,
-        );
+        return VideoMessagePlayer(message: message as VideoMessageModel);
       case AudioMessageModel:
-        return AudioMessagePlayer(
-          message: message as AudioMessageModel,
-          backgroundColor: backgroundColor,
-          textColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kDarkBlueColor,
-          iconColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
-          activeSliderColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
-          inactiveSliderColor: message.isFromMe
-              ? COLORS.kWhiteColor.withOpacity(0.2)
-              : COLORS.kDarkBlueColor.withOpacity(0.2),
-        );
+        return _buildAudioMessage(message as AudioMessageModel);
       case LocationMessageModel:
-        return LocationMessageWidget(
-          message: message as LocationMessageModel,
-        );
+        return LocationMessageWidget(message: message as LocationMessageModel);
       case LiveLocationMessageModel:
         return LiveLocationMessageWidget(message: message as LiveLocationMessageModel);
       case CallMessageModel:
         return CallMessageWidget(message: message as CallMessageModel);
       case FileMessageModel:
         return FileMessageWidget(message: message as FileMessageModel);
-
       case MultiMediaMessageModel:
         return MultiMediaMessageWidget(message: message as MultiMediaMessageModel);
-
       default:
         return const SizedBox.shrink();
     }
+  }
+
+  Widget _buildTextMessage(TextMessageModel message) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+      child: Text(
+        message.text,
+        textDirection: TextDirection.ltr,
+        style: TEXTSTYLES.kChatText.copyWith(color: textColor),
+      ),
+    );
+  }
+
+  Widget _buildImageMessage(ImageMessageModel message) {
+    return GestureDetector(
+      onTap: () {
+        List<dynamic> mediaList = [message];
+        Get.toNamed(Routes.MEDIA_VIEW,
+            arguments: MediaViewArgumentsModel(
+              mediaList: mediaList,
+              activeIndex: 0,
+              isMultiMessage: false,
+            ));
+      },
+      child: LayoutBuilder(builder: (context, constraints) {
+        final mWidth = message.metadata.width;
+        final mHeight = message.metadata.height;
+        final width = min(mWidth, constraints.maxWidth);
+        final height = width * (mHeight / mWidth);
+        return SizedBox(
+          width: width,
+          height: height,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8.r),
+            child: (message as ImageMessageModel).isLocal
+                ? Image.file(File((message as ImageMessageModel).url))
+                : Image.network((message as ImageMessageModel).url),
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget _buildAudioMessage(AudioMessageModel message) {
+    return AudioMessagePlayer(
+      message: message,
+      backgroundColor: backgroundColor,
+      textColor: textColor,
+      iconColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
+      activeSliderColor: message.isFromMe ? COLORS.kWhiteColor : COLORS.kGreenMainColor,
+      inactiveSliderColor: message.isFromMe
+          ? COLORS.kWhiteColor.withOpacity(0.2)
+          : COLORS.kDarkBlueColor.withOpacity(0.2),
+    );
   }
 }

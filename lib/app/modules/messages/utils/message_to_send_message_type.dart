@@ -6,7 +6,8 @@ import 'package:heyo/app/modules/messages/data/models/messages/location_message_
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
-import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
+
+import '../data/usecases/send_message_usecase.dart';
 
 extension mapToSendMessageType on MessageModel {
   SendMessageType? getSendMessageType(String chatId) {

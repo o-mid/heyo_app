@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:flutter_p2p_communicator/utils/constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/p2p_node/models.dart';
 import 'package:heyo/app/modules/shared/providers/account/creation/account_creation.dart';
 import 'package:heyo/app/modules/shared/providers/account/creation/libp2p_account_creation.dart';
 
@@ -105,13 +107,28 @@ class P2PNode {
       await applyDelegatedAuth();
     }
 
-    //await Future.forEach(P2P_Nodes, (P2PAddrModel element) async {
-      final info = P2PReqResNodeModel(
-          name: P2PReqResNodeNames.connect, body: P2PAddrModel(
-        id: "12D3KooWCcNM1EXZ3kPpKJHnbCBqCyoAME87JNw53zJUoUqrzF2x",addrs:["/ip4/65.109.230.224/tcp/4001"]
-      ).toJson());
-      await FlutterP2pCommunicator.sendRequest(info: info);
-  //  });
+    _applyConnectRequest();
+  }
+
+  Future<void> _applyConnectRequest() async {
+    await Future.forEach(libP2PNodes, (P2PAddrModel element) async {
+      unawaited(_sendConnectRequest(element));
+    });
+  }
+
+  Future<void> _sendConnectRequest(P2PAddrModel element) async {
+    final info = P2PReqResNodeModel(
+      name: P2PReqResNodeNames.connect,
+      body: element.toJson(),
+    );
+
+    final result = await p2pState
+        .trackRequest(await FlutterP2pCommunicator.sendRequest(info: info));
+    if (result != true) {
+      Future.delayed(const Duration(seconds: 4), () async {
+        unawaited(_sendConnectRequest(element));
+      });
+    }
   }
 
   void _listenToStreams(
@@ -162,7 +179,8 @@ class P2PNode {
     return p2pState.trackRequest(id);
   }
 
-  void restart(void Function(P2PReqResNodeModel model) onNewRequestReceived) {
+  void restart(
+      void Function(P2PReqResNodeModel model) onNewRequestReceived) async {
     _setUpP2PNode(onNewRequestReceived);
   }
 }

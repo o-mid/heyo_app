@@ -237,6 +237,8 @@
     "replyToImage": "Image",
     "replyToVideo": "Video",
     "replyToAudio": "Audio",
+    "replyToMultiMedia": "Multi Media",
+    "replyToLocation": "Location",
     "forwarded": "Forwarded",
     "sharedLocation": "Shared location",
     "sharingLiveLocation": "Sharing live location",

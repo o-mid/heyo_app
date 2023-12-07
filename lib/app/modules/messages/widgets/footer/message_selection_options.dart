@@ -18,59 +18,71 @@ class MessageSelectionOptions extends StatelessWidget {
   final bool showForward;
   final bool showDelete;
   final RxList<MessageModel> selectedMessages;
-  const MessageSelectionOptions(
-      {Key? key,
-      this.showReply = true,
-      this.showCopy = true,
-      this.showForward = true,
-      this.showDelete = true,
-      required this.selectedMessages})
-      : super(key: key);
+
+  const MessageSelectionOptions({
+    Key? key,
+    this.showReply = true,
+    this.showCopy = true,
+    this.showForward = true,
+    this.showDelete = true,
+    required this.selectedMessages,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MessagesController>();
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            if (showReply)
-              _buildOption(
-                Assets.svg.replyOutlined,
-                LocaleKeys.reply.tr,
-                onTap: controller.replyTo,
-              ),
-            if (showCopy)
-              _buildOption(
-                Assets.svg.copyIcon,
-                LocaleKeys.copy.tr,
-                onTap: controller.copySelectedToClipboard,
-              ),
-            if (showForward)
-              _buildOption(
-                Assets.svg.forwardIcon,
-                LocaleKeys.forward.tr,
-                onTap: (() => Get.toNamed(Routes.FORWARD_MASSAGES,
-                    arguments: ForwardMassagesArgumentsModel(
-                      selectedMessages: selectedMessages,
-                    ))),
-              ),
-            if (showDelete)
-              _buildOption(
-                Assets.svg.deleteIcon,
-                LocaleKeys.delete.tr,
-                onTap: controller.showDeleteSelectedDialog,
-              ),
-          ],
+          children: _buildOptionsList(controller),
         ),
       ],
     );
   }
 
-  Widget _buildOption(SvgGenImage icon, String text, {Function()? onTap}) {
+  List<Widget> _buildOptionsList(MessagesController controller) {
+    return [
+      if (showReply)
+        _buildOption(
+          Assets.svg.replyOutlined,
+          LocaleKeys.reply.tr,
+          onTap: controller.replyTo,
+        ),
+      if (showCopy)
+        _buildOption(
+          Assets.svg.copyIcon,
+          LocaleKeys.copy.tr,
+          onTap: controller.copySelectedToClipboard,
+        ),
+      if (showForward)
+        _buildOption(
+          Assets.svg.forwardIcon,
+          LocaleKeys.forward.tr,
+          onTap: () => Get.toNamed(
+            Routes.FORWARD_MASSAGES,
+            arguments: ForwardMassagesArgumentsModel(
+              selectedMessages: selectedMessages,
+            ),
+          ),
+        ),
+      if (showDelete)
+        _buildOption(
+          Assets.svg.deleteIcon,
+          LocaleKeys.delete.tr,
+          onTap: controller.showDeleteSelectedDialog,
+        ),
+    ];
+  }
+
+  Widget _buildOption(
+    SvgGenImage icon,
+    String text, {
+    Function()? onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Column(

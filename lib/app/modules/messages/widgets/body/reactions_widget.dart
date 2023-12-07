@@ -9,6 +9,7 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 
 class ReactionsWidget extends StatelessWidget {
   final MessageModel message;
+
   const ReactionsWidget({Key? key, required this.message}) : super(key: key);
 
   @override
@@ -16,51 +17,64 @@ class ReactionsWidget extends StatelessWidget {
     return Wrap(
       spacing: 4.w,
       runSpacing: 4.h,
-      children: message.reactions.keys
-          .map((k) => _buildReaction(k, message.reactions[k] as ReactionModel))
-          .toList(),
+      children: _buildReactionsList(),
     );
   }
 
-  Widget _buildReaction(String emoji, ReactionModel reaction) {
+  List<Widget> _buildReactionsList() {
+    return message.reactions.keys
+        .map((emoji) => _buildReaction(emoji, message.reactions[emoji] as ReactionModel))
+        .where((widget) => widget != null)
+        .cast<Widget>()
+        .toList();
+  }
+
+  Widget? _buildReaction(String emoji, ReactionModel reaction) {
     if (reaction.users.isEmpty) {
-      return const SizedBox.shrink();
+      return null;
     }
+
+    final bool isReactedByMe = reaction.isReactedByMe;
 
     return Ink(
       decoration: BoxDecoration(
-        color: reaction.isReactedByMe ? COLORS.kGreenLighterColor : null,
+        color: isReactedByMe ? COLORS.kGreenLighterColor : null,
         border: Border.all(
-          color: reaction.isReactedByMe ? COLORS.kGreenMainColor : COLORS.kPinCodeDeactivateColor,
+          color: isReactedByMe ? COLORS.kGreenMainColor : COLORS.kPinCodeDeactivateColor,
           width: 1.w,
         ),
         borderRadius: BorderRadius.circular(4.w),
       ),
       child: InkWell(
-        onTap: () {
-          Get.find<MessagesController>().toggleReaction(message, emoji);
-        },
+        onTap: () => _handleReactionTap(emoji),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                emoji,
-                style: TEXTSTYLES.kReactionEmoji,
-              ),
-              if (reaction.users.length > 1) SizedBox(width: 4.w),
-              if (reaction.users.length > 1)
-                Text(
-                  reaction.users.length.toString(),
-                  style: TEXTSTYLES.kReactionNumber.copyWith(
-                    color: reaction.isReactedByMe ? COLORS.kGreenMainColor : COLORS.kTextBlueColor,
-                  ),
-                ),
+              Text(emoji, style: TEXTSTYLES.kReactionEmoji),
+              if (reaction.users.length > 1) ..._buildReactionCount(reaction),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _handleReactionTap(String emoji) {
+    Get.find<MessagesController>().toggleReaction(message, emoji);
+  }
+
+  List<Widget> _buildReactionCount(ReactionModel reaction) {
+    final isReactedByMe = reaction.isReactedByMe;
+    return [
+      SizedBox(width: 4.w),
+      Text(
+        reaction.users.length.toString(),
+        style: TEXTSTYLES.kReactionNumber.copyWith(
+          color: isReactedByMe ? COLORS.kGreenMainColor : COLORS.kTextBlueColor,
+        ),
+      ),
+    ];
   }
 }
