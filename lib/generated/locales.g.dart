@@ -381,6 +381,12 @@ class LocaleKeys {
   static const wifiDirect_availablePeers = 'wifiDirect_availablePeers';
   static const addParticipate_appbarTitle = 'addParticipate_appbarTitle';
   static const newGroupChat_GroupChatAppBar = 'newGroupChat_GroupChatAppBar';
+  static const newGroupChat_CreateGroup = 'newGroupChat_CreateGroup';
+  static const newGroupChat_Settings_title = 'newGroupChat_Settings_title';
+  static const newGroupChat_Settings_addMember =
+      'newGroupChat_Settings_addMember';
+  static const newGroupChat_GroupMembers = 'newGroupChat_GroupMembers';
+  static const newGroupChat_GroupName = 'newGroupChat_GroupName';
   static const newGroupChat_Selected = 'newGroupChat_Selected';
   static const newGroupChat_slider_contacts = 'newGroupChat_slider_contacts';
   static const newGroupChat_slider_nearbyUsers =
@@ -687,6 +693,11 @@ class Locales {
     'wifiDirect_availablePeers': 'Available Peers',
     'addParticipate_appbarTitle': 'Add Participate',
     'newGroupChat_GroupChatAppBar': 'Select members',
+    'newGroupChat_CreateGroup': 'Create group',
+    'newGroupChat_Settings_title': 'Settings',
+    'newGroupChat_Settings_addMember': 'Allow others to add group members',
+    'newGroupChat_GroupMembers': 'Group members',
+    'newGroupChat_GroupName': 'Group name',
     'newGroupChat_Selected': 'Selected',
     'newGroupChat_slider_contacts': 'Contacts',
     'newGroupChat_slider_nearbyUsers': 'Nearby users',

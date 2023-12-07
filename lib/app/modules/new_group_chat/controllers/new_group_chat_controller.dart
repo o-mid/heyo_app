@@ -19,10 +19,15 @@ class NewGroupChatController extends GetxController {
   final ContactRepository contactRepository;
   final AccountRepository accountInfoRepo;
   final inputFocusNode = FocusNode();
+  final confirmationScreenInputFocusNode = FocusNode();
+  final showConfirmationScreen = false.obs;
   final inputText = "".obs;
+  final confirmationInputText = "".obs;
   late StreamSubscription _contactsStreamSubscription;
   late TextEditingController inputController;
+  late TextEditingController confirmationScreenInputController;
   RxBool isTextInputFocused = false.obs;
+  RxBool isconfirmationTextInputFocused = false.obs;
   RxList<UserModel> searchSuggestions = <UserModel>[].obs;
   final String profileLink = "https://heyo.core/m6ljkB4KJ";
   RxList<String> selectedCoreids = <String>[].obs;
@@ -45,6 +50,7 @@ class NewGroupChatController extends GetxController {
   @override
   void onClose() async {
     inputController.dispose();
+    confirmationScreenInputController.dispose();
     await _contactsStreamSubscription.cancel();
     await _clearSearchSuggestions();
     super.onClose();
@@ -52,9 +58,14 @@ class NewGroupChatController extends GetxController {
 
   Future<void> setupInputController() async {
     inputController = TextEditingController();
+    confirmationScreenInputController = TextEditingController();
+
     inputController.addListener(() async {
       inputText.value = inputController.text;
       await _searchUsers(inputController.text);
+    });
+    confirmationScreenInputController.addListener(() {
+      confirmationInputText.value = confirmationScreenInputController.text;
     });
   }
 

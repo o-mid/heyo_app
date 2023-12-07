@@ -363,6 +363,13 @@
   },
   "newGroupChat": {
     "GroupChatAppBar": "Select members",
+    "CreateGroup": "Create group",
+    "Settings": {
+      "title": "Settings",
+      "addMember": "Allow others to add group members"
+    },
+    "GroupMembers": "Group members",
+    "GroupName": "Group name",
     "Selected": "Selected",
     "slider": {
       "contacts": "Contacts",

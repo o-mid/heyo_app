@@ -15,6 +15,8 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 import '../../shared/utils/screen-utils/inputs/custom_text_field.dart';
+import '../../shared/widgets/curtom_circle_avatar.dart';
+import '../../shared/widgets/curtom_circle_button.dart';
 
 class NewGroupChatView extends GetView<NewGroupChatController> {
   const NewGroupChatView({super.key});
@@ -61,14 +63,22 @@ class NewGroupChatView extends GetView<NewGroupChatController> {
   }
 
   Widget _buildbody() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          CustomSizes.largeSizedBoxHeight,
-          _buildSearchInput(),
-          if (controller.searchSuggestions.isEmpty) _buildEmptyUsersBody() else _buildContactList(),
-        ],
-      ),
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      child: !controller.showConfirmationScreen.value
+          ? _groupConfirmationWidget()
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  CustomSizes.largeSizedBoxHeight,
+                  _buildSearchInput(),
+                  if (controller.searchSuggestions.isEmpty)
+                    _buildEmptyUsersBody()
+                  else
+                    _buildContactList(),
+                ],
+              ),
+            ),
     );
   }
 
@@ -114,6 +124,50 @@ class NewGroupChatView extends GetView<NewGroupChatController> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _groupConfirmationWidget() {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          CustomSizes.largeSizedBoxHeight,
+          Padding(
+            padding: CustomSizes.mainContentPadding,
+            child: Row(
+              children: [
+                CustomCircleButton(
+                  icon: Assets.svg.cameraIcon.svg(),
+                  onPressed: null,
+                  size: 48,
+                ),
+                CustomSizes.mediumSizedBoxWidth,
+                Expanded(
+                  child: FocusScope(
+                    child: Focus(
+                      onFocusChange: (focus) =>
+                          controller.isconfirmationTextInputFocused.value = focus,
+                      focusNode: controller.confirmationScreenInputFocusNode,
+                      child: CustomTextField(
+                          textController: controller.confirmationScreenInputController,
+                          labelText: LocaleKeys.newGroupChat_GroupName.tr,
+                          rightWidget: InkWell(
+                            onTap: () {
+                              controller.confirmationScreenInputController.clear();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(14.0),
+                              child: Assets.svg.closeSign.svg(color: COLORS.kDarkBlueColor),
+                            ),
+                          )),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
