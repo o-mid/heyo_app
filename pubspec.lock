@@ -622,8 +622,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "1aa733cb"
-      resolved-ref: "1aa733cb4658896e018a9c0d0ecd38bc55da1a4f"
+      ref: c8dcc0e8
+      resolved-ref: c8dcc0e8faa3046cfb734bcc09460cae538ac419
       url: "git@ssh.git.energy:corepass/flutter_p2p_communicator.git"
     source: git
     version: "1.16.0"
@@ -1078,14 +1078,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.2"
-  osm_nominatim:
-    dependency: "direct main"
-    description:
-      name: osm_nominatim
-      sha256: "0e3b2a5bc0e40ae09d64475287de1f46564abe4e218cd2c506ef0bc0bcf85212"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   package_config:
     dependency: transitive
     description:

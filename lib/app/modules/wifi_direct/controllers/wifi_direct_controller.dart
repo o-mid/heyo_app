@@ -2,17 +2,12 @@ import 'dart:async';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../generated/assets.gen.dart';
 import '../../../../generated/locales.g.dart';
-import '../../chats/data/models/chat_model.dart';
-import '../../messages/connection/wifi_direct_connection_repo.dart';
-import '../../messages/connection/wifi_direct_connection_controller.dart';
-import '../../new_chat/data/models/user_model.dart';
-import '../../shared/data/repository/contact_repository.dart';
 
 class WifiDirectController extends GetxController {
   /*final AccountInfo accountInfo;

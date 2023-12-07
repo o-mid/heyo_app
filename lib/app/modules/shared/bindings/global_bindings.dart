@@ -169,15 +169,7 @@ class GlobalBindings extends Bindings {
       ..put(AppNotifications(), permanent: true)
       ..put(NotificationsController(
           appNotifications: Get.find(),
-          chatHistoryRepo: ChatHistoryLocalRepo(
-            chatHistoryProvider: ChatHistoryProvider(
-                appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-          ),
-          messagesRepo: MessagesRepo(
-            messagesProvider: MessagesProvider(
-              appDatabaseProvider: Get.find(),
-            ),
-          )))
+          ))
       ..put(
           CallConnectionsHandler(
             callStatusDataStore: CallStatusDataStore(),
@@ -213,7 +205,7 @@ class GlobalBindings extends Bindings {
             ),
           ),
         ),
-      ))
+      )
 
       // messaging related dependencies
       ..put(
@@ -330,8 +322,7 @@ class GlobalBindings extends Bindings {
               connectionRepository: Get.find<RTCMessagingConnectionRepository>(),
               processor: MessageProcessor(),
             ),
-          ),
-          sendMessage: SendMessage()));
+          ),));
 
     Get.put(
       CallHistoryController(
@@ -342,7 +333,5 @@ class GlobalBindings extends Bindings {
         ),
       ),
     );
-        ),
-      );
   }
 }
