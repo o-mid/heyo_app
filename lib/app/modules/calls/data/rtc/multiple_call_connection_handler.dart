@@ -61,6 +61,7 @@ class CallConnectionsHandler {
 
   Future<void> addMember(String remoteCoreId) async {
     callStatusDataStore.currentCall!.activeSessions.forEach((element) {
+      print("addMemberEvent : $remoteCoreId");
       singleCallWebRTCBuilder.addMemberEvent(remoteCoreId, element);
     });
     //TODO refactor isAudio
@@ -130,7 +131,8 @@ class CallConnectionsHandler {
     if (callStatusDataStore.incomingCalls?.callId == callId) {
       callStatusDataStore.makeCallByIncomingCall();
       callStatusDataStore.incomingCalls!.remotePeers.forEach((element) async {
-        print("accept ${element.remotePeer.remoteCoreId} ${element.isAudioCall}");
+        print(
+            "accept ${element.remotePeer.remoteCoreId} ${element.isAudioCall}");
         await _createLocalStream();
         final callRTCSession =
             await _createSession(element.remotePeer, element.isAudioCall);
@@ -164,11 +166,11 @@ class CallConnectionsHandler {
   }
 
   void onNewMemberEventReceived(CallId callId, dynamic data) async {
-    final member = data[CallSignalingCommands.newMember] as String;
+    final member = data["newMemer"] as Map<String,dynamic>;
     if (callId == callStatusDataStore.currentCall?.callId) {
       CallRTCSession callRTCSession = await _createSession(
         RemotePeer(
-          remoteCoreId: member,
+          remoteCoreId: member["member"] as String,
           remotePeerId: null,
         ),
         callStatusDataStore.currentCall!.activeSessions.first.isAudioCall,
@@ -237,7 +239,6 @@ class CallConnectionsHandler {
   void peerOpendCamera(String sessionId) {}
 
   void peerClosedCamera(String sessionId) {}
-
 
   Future<void> onCallRequestRejected(mapData, RemotePeer remotePeer) async {
     String callId = mapData[CALL_ID] as String;

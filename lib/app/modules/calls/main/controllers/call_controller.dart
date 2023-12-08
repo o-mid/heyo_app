@@ -147,9 +147,6 @@ class CallController extends GetxController {
 
     observeOnChangeParticipate();
 
-    /*final callStreams = await callRepository.getCallStreams();
-    debugPrint('onAddCallStream Callee Set: ${callStreams.length}');
-    _applyCallStreams(callStreams);*/
     observeSignalingStreams();
 
     if (args.callId == null) {

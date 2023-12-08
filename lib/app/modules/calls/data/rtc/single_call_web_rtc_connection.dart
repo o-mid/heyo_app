@@ -218,7 +218,7 @@ class SingleCallWebRTCBuilder {
     _send(
       CallSignalingCommands.newMember,
       {
-        CallSignalingCommands.newMember: {member},
+        CallSignalingCommands.newMember: {'member':member},
       },
       rtcSession.remotePeer.remoteCoreId,
       rtcSession.remotePeer.remotePeerId,
