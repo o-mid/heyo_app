@@ -82,6 +82,14 @@ class CallController extends GetxController {
   }
 
   Future<void> initLocalRenderer() async {
+
+    // TODO check
+    final isAudioCall=args.isAudioCall;
+    if(isAudioCall){
+      // hide localRender
+    }else {
+      //show
+    }
     final localParticipateCoreId = await accountInfo.getUserAddress();
     localParticipate.value = LocalParticipantModel(
       name: localParticipateCoreId!.shortenCoreId,
@@ -143,6 +151,7 @@ class CallController extends GetxController {
   }
 
   Future<void> initCall() async {
+    // check isAudioCall for toggle show video
     await initLocalRenderer();
 
     observeOnChangeParticipate();
@@ -314,6 +323,7 @@ class CallController extends GetxController {
 
   // Todo
   void toggleVideo() {
+    //show or hide localRender
     //callerVideoEnabled.value = !callerVideoEnabled.value;
     localParticipate.value!.videoMode.value =
         !localParticipate.value!.videoMode.value;
