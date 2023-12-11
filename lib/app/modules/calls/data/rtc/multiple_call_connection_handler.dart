@@ -137,9 +137,14 @@ class CallConnectionsHandler {
         final callRTCSession =
             await _createSession(element.remotePeer, element.isAudioCall);
         singleCallWebRTCBuilder.startSession(callRTCSession);
+
       });
+      onCallStateChange?.call(
+        callId,
+        callStatusDataStore.incomingCalls!.remotePeers,
+        CallState.callStateConnected,
+      );
     }
-    // singleCallWebRTCBuilder.startSession(rtcSession)
   }
 
   Future<void> reject(String callId) async {
@@ -196,6 +201,7 @@ class CallConnectionsHandler {
     final description = data[DATA_DESCRIPTION];
     singleCallWebRTCBuilder.onAnswerReceived(rtcSession, description);
   }
+
 
   void onCallOfferReceived(
     CallId callId,
