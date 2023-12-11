@@ -16,13 +16,15 @@ import '../../shared/utils/constants/colors.dart';
 import '../../shared/utils/constants/textStyles.dart';
 
 class NewGroupChatController extends GetxController {
+  NewGroupChatController({required this.contactRepository, required this.accountInfoRepo});
+
   final ContactRepository contactRepository;
   final AccountRepository accountInfoRepo;
   final inputFocusNode = FocusNode();
   final confirmationScreenInputFocusNode = FocusNode();
   final showConfirmationScreen = false.obs;
-  final inputText = "".obs;
-  final confirmationInputText = "".obs;
+  final inputText = ''.obs;
+  final confirmationInputText = ''.obs;
   late StreamSubscription _contactsStreamSubscription;
   late TextEditingController inputController;
   late TextEditingController confirmationScreenInputController;
@@ -30,11 +32,9 @@ class NewGroupChatController extends GetxController {
   RxBool isTextInputFocused = false.obs;
   RxBool isconfirmationTextInputFocused = false.obs;
   RxList<UserModel> searchSuggestions = <UserModel>[].obs;
-  final String profileLink = "https://heyo.core/m6ljkB4KJ";
+  final String profileLink = 'https://heyo.core/m6ljkB4KJ';
   RxList<UserModel> selectedCoreids = <UserModel>[].obs;
 
-  NewGroupChatController({required this.contactRepository, required this.accountInfoRepo});
-  final count = 0.obs;
   @override
   Future<void> onInit() async {
     await setupInputController();
@@ -83,12 +83,6 @@ class NewGroupChatController extends GetxController {
     }
   }
 
-  List<String> mockIconUrls = [
-    "https://avatars.githubusercontent.com/u/6644146?v=4",
-    "https://avatars.githubusercontent.com/u/7844146?v=4",
-    "https://avatars.githubusercontent.com/u/7847725?v=4",
-    "https://avatars.githubusercontent.com/u/9947725?v=4",
-  ];
   Future<void> _searchUsers(String query) async {
     final searchedItems = (await contactRepository.search(query)).toList();
     await processSearchResults(searchedItems, query);
@@ -152,43 +146,6 @@ class NewGroupChatController extends GetxController {
     }
   }
 
-  Future<void> _addMockUsers() async {
-    final _mockUsers = <UserModel>[
-      UserModel(
-        name: "Crapps",
-        walletAddress: 'CB92...969A',
-        coreId: 'CB92969A',
-        iconUrl: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
-        nickname: "Nickname",
-      ),
-      UserModel(
-        name: "Fancy",
-        walletAddress: 'CB21...C325',
-        coreId: 'CB21C325',
-        iconUrl: "https://avatars.githubusercontent.com/u/6634136?v=4",
-        isOnline: true,
-        isVerified: true,
-      ),
-      UserModel(
-        name: "manly",
-        walletAddress: 'CB42...324E',
-        coreId: 'CB42324E',
-        iconUrl: "https://avatars.githubusercontent.com/u/9801359?v=4",
-        isOnline: true,
-      ),
-    ].obs;
-
-    for (int i = 0; i < _mockUsers.length; i++) {
-      await Future.delayed(const Duration(seconds: 3), () async {
-        if (searchSuggestions.any((element) => element.coreId == _mockUsers[i].coreId)) {
-          return;
-        } else {
-          await contactRepository.addContact(_mockUsers[i]);
-        }
-      });
-    }
-  }
-
   Future<void> _clearSearchSuggestions() async {
     for (final element in searchSuggestions) {
       await contactRepository.deleteContactById(element.coreId);
@@ -224,15 +181,25 @@ class NewGroupChatController extends GetxController {
     );
   }
 
-  void _showMembersSnackbar() {
+  void handleAllowMembersOnTap(bool value) {
+    allowAddingMembers.value = value;
+  }
+
+  void handleGroupChatPhotoOnTap() {
+    _showDevelopmentSnackbar('Adding group chat avatar');
+  }
+
+  void _showDevelopmentSnackbar(String featureName) {
     Get.rawSnackbar(
       messageText: Text(
-        'Select two or more members to start a group chat.',
+        '$featureName is in development phase',
         style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kGreenMainColor),
         textAlign: TextAlign.center,
       ),
       backgroundColor: COLORS.kAppBackground,
-      margin: const EdgeInsets.only(bottom: 16),
+      snackPosition: SnackPosition.TOP,
+      snackStyle: SnackStyle.FLOATING,
+      margin: const EdgeInsets.only(top: 20),
       boxShadows: [
         BoxShadow(
           color: const Color(0xFF466087).withOpacity(0.1),
@@ -244,7 +211,74 @@ class NewGroupChatController extends GetxController {
     );
   }
 
-  void handleAllowMembersOnTap(bool value) {
-    allowAddingMembers.value = value;
+  void _showMembersSnackbar() {
+    Get.rawSnackbar(
+      messageText: Text(
+        'Select two or more members to start a group chat.',
+        style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kGreenMainColor),
+        textAlign: TextAlign.center,
+      ),
+      backgroundColor: COLORS.kAppBackground,
+      snackPosition: SnackPosition.TOP,
+      snackStyle: SnackStyle.FLOATING,
+      margin: const EdgeInsets.only(top: 20),
+      boxShadows: [
+        BoxShadow(
+          color: const Color(0xFF466087).withOpacity(0.1),
+          offset: const Offset(0, 3),
+          blurRadius: 10,
+        ),
+      ],
+      borderRadius: 8,
+    );
   }
+
+  Future<bool> handleConfirmationWidgetPop() async {
+    showConfirmationScreen.value = false;
+    inputFocusNode.requestFocus();
+    return false;
+  }
+
+  Future<void> _addMockUsers() async {
+    final _mockUsers = <UserModel>[
+      UserModel(
+        name: 'Crapps',
+        walletAddress: 'CB92...969A',
+        coreId: 'CB92969A',
+        iconUrl: 'https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png',
+        nickname: 'Nickname',
+      ),
+      UserModel(
+        name: 'Fancy',
+        walletAddress: 'CB21...C325',
+        coreId: 'CB21C325',
+        iconUrl: 'https://avatars.githubusercontent.com/u/6634136?v=4',
+        isOnline: true,
+        isVerified: true,
+      ),
+      UserModel(
+        name: 'manly',
+        walletAddress: 'CB42...324E',
+        coreId: 'CB42324E',
+        iconUrl: 'https://avatars.githubusercontent.com/u/9801359?v=4',
+        isOnline: true,
+      ),
+    ].obs;
+    await Future.delayed(const Duration(seconds: 2), () async {
+      for (var i = 0; i < _mockUsers.length; i++) {
+        if (searchSuggestions.any((element) => element.coreId == _mockUsers[i].coreId)) {
+          return;
+        } else {
+          await contactRepository.addContact(_mockUsers[i]);
+        }
+      }
+    });
+  }
+
+  List<String> mockIconUrls = [
+    'https://avatars.githubusercontent.com/u/6644146?v=4',
+    'https://avatars.githubusercontent.com/u/7844146?v=4',
+    'https://avatars.githubusercontent.com/u/7847725?v=4',
+    'https://avatars.githubusercontent.com/u/9947725?v=4',
+  ];
 }

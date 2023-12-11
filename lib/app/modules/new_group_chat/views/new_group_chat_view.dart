@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/new_group_chat/widgets/group_confirmation_widget.dart';
 
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
@@ -10,7 +11,7 @@ import 'package:heyo/app/modules/shared/widgets/empty_users_body.dart';
 import 'package:heyo/app/modules/shared/widgets/contact_list_with_header.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
 import 'package:heyo/app/modules/add_participate/widgets/invite_bttom_sheet.dart';
-import 'package:heyo/app/modules/new_group_chat/widgets/contact_list.dart';
+import 'package:heyo/app/modules/new_group_chat/widgets/contact_list_widget.dart';
 import 'package:heyo/app/modules/new_group_chat/controllers/new_group_chat_controller.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -59,7 +60,9 @@ class NewGroupChatView extends GetView<NewGroupChatController> {
         onPressed: controller.handleFabOnpressed,
         backgroundColor:
             controller.selectedCoreids.length <= 1 ? Colors.grey : COLORS.kGreenMainColor,
-        child: Assets.svg.arrowIcon.svg(width: 20.w, color: COLORS.kWhiteColor),
+        child: controller.showConfirmationScreen.value
+            ? Assets.svg.singleTickIcon.svg(width: 20.w, color: COLORS.kWhiteColor)
+            : Assets.svg.arrowIcon.svg(width: 20.w, color: COLORS.kWhiteColor),
       ),
     );
   }
@@ -67,166 +70,17 @@ class NewGroupChatView extends GetView<NewGroupChatController> {
   Widget _buildbody() {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
-      child: controller.showConfirmationScreen.value
-          ? _groupConfirmationWidget()
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  CustomSizes.largeSizedBoxHeight,
-                  _buildSearchInput(),
-                  if (controller.searchSuggestions.isEmpty)
-                    _buildEmptyUsersBody()
-                  else
-                    _buildContactList(),
-                ],
-              ),
-            ),
+      child: controller.showConfirmationScreen.value ? GroupConfirmationWidget() : _bodyWidget(),
     );
   }
 
-  Widget _groupConfirmationWidget() {
+  Widget _bodyWidget() {
     return SingleChildScrollView(
       child: Column(
         children: [
           CustomSizes.largeSizedBoxHeight,
-          Padding(
-            padding: CustomSizes.mainContentPadding,
-            child: Row(
-              children: [
-                CustomCircleButton(
-                  icon: Assets.svg.cameraIcon.svg(),
-                  onPressed: null,
-                  size: 48,
-                ),
-                CustomSizes.mediumSizedBoxWidth,
-                Expanded(
-                  child: FocusScope(
-                    child: Focus(
-                      onFocusChange: (focus) =>
-                          controller.isconfirmationTextInputFocused.value = focus,
-                      focusNode: controller.confirmationScreenInputFocusNode,
-                      child: CustomTextField(
-                        textController: controller.confirmationScreenInputController,
-                        labelText: LocaleKeys.newGroupChat_GroupName.tr,
-                        rightWidget: InkWell(
-                          onTap: () {
-                            controller.confirmationScreenInputController.clear();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(14.0),
-                            child: Assets.svg.closeSign.svg(color: COLORS.kDarkBlueColor),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          CustomSizes.smallSizedBoxHeight,
-          const Divider(thickness: 8, color: COLORS.kBrightBlueColor),
-          CustomSizes.smallSizedBoxHeight,
-          Padding(
-            padding: CustomSizes.contentPaddingWidth,
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    LocaleKeys.newGroupChat_Settings_title.tr,
-                    style: TEXTSTYLES.kLinkSmall.copyWith(
-                      color: COLORS.kTextSoftBlueColor,
-                    ),
-                  ),
-                ),
-                CustomSizes.smallSizedBoxHeight,
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    LocaleKeys.newGroupChat_Settings_addMember.tr,
-                    style: TEXTSTYLES.kBodyBasic.copyWith(
-                      color: COLORS.kCallPageDarkBlue,
-                    ),
-                  ),
-                  value: controller.allowAddingMembers.value,
-                  onChanged: controller.handleAllowMembersOnTap,
-                ),
-                CustomSizes.smallSizedBoxHeight,
-              ],
-            ),
-          ),
-          const Divider(thickness: 8, color: COLORS.kBrightBlueColor),
-          Padding(
-            padding: CustomSizes.contentPaddingWidth,
-            child: Column(
-              children: [
-                CustomSizes.smallSizedBoxHeight,
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    LocaleKeys.newGroupChat_GroupMembers.tr,
-                    style: TEXTSTYLES.kLinkSmall.copyWith(
-                      color: COLORS.kTextSoftBlueColor,
-                    ),
-                  ),
-                ),
-                CustomSizes.smallSizedBoxHeight,
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: controller.selectedCoreids.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(8),
-                      onTap: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            CustomCircleAvatar(
-                              url: controller.selectedCoreids[index].iconUrl,
-                              size: 48,
-                              isOnline: controller.selectedCoreids[index].isOnline,
-                            ),
-                            CustomSizes.mediumSizedBoxWidth,
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      controller.selectedCoreids[index].name,
-                                      style: TEXTSTYLES.kChatName
-                                          .copyWith(color: COLORS.kDarkBlueColor),
-                                    ),
-                                    CustomSizes.smallSizedBoxWidth,
-                                    if (controller.selectedCoreids[index].isVerified)
-                                      Assets.svg.verifiedWithBluePadding.svg(),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  controller.selectedCoreids[index].walletAddress.shortenCoreId,
-                                  maxLines: 1,
-                                  style:
-                                      TEXTSTYLES.kChatText.copyWith(color: COLORS.kTextBlueColor),
-                                ),
-                              ],
-                            ),
-                            const Spacer(),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
+          _buildSearchInput(),
+          if (controller.searchSuggestions.isEmpty) _buildEmptyUsersBody() else _buildContactList(),
         ],
       ),
     );
@@ -268,10 +122,7 @@ class NewGroupChatView extends GetView<NewGroupChatController> {
         CustomSizes.largeSizedBoxHeight,
         Padding(
           padding: CustomSizes.mainContentPadding,
-          child: ContactList(
-            contacts: controller.searchSuggestions,
-            searchMode: controller.inputController.text.isNotEmpty,
-          ),
+          child: ContactListWidget(),
         ),
       ],
     );
