@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
@@ -39,7 +40,8 @@ class P2PNode {
     required this.web3client,
   });
 
-  void _setUpP2PNode(void Function(P2PReqResNodeModel model) onNewRequestReceived) {
+  void _setUpP2PNode(
+      void Function(P2PReqResNodeModel model) onNewRequestReceived) {
     // setup the p2p ResponseStream and RequestStream and listen to them
     _listenToStreams(onNewRequestReceived);
 
@@ -82,7 +84,8 @@ class P2PNode {
     var peerSeed = await libP2PStorageProvider.getP2PSecret();
 
     if (peerSeed == null) {
-      final generatedMnemonic = await compute(mnemonicToSeed, generateMnemonic());
+      final generatedMnemonic =
+          await compute(mnemonicToSeed, generateMnemonic());
       peerSeed = bytesToHex(generatedMnemonic.aesKeySeed);
       await libP2PStorageProvider.setP2PSecret(peerSeed);
     }
@@ -104,15 +107,32 @@ class P2PNode {
       await applyDelegatedAuth();
     }
 
-    //await Future.forEach(P2P_Nodes, (P2PAddrModel element) async {
-    final info = P2PReqResNodeModel(
-        name: P2PReqResNodeNames.connect,
-        body: libP2PNode.toJson());
-    await FlutterP2pCommunicator.sendRequest(info: info);
-    //  });
+    _applyConnectRequest();
   }
 
-  void _listenToStreams(void Function(P2PReqResNodeModel model) onNewRequestReceived) {
+  Future<void> _applyConnectRequest() async {
+    await Future.forEach(libP2PNodes, (P2PAddrModel element) async {
+      unawaited(_sendConnectRequest(element));
+    });
+  }
+
+  Future<void> _sendConnectRequest(P2PAddrModel element) async {
+    final info = P2PReqResNodeModel(
+      name: P2PReqResNodeNames.connect,
+      body: element.toJson(),
+    );
+
+    final result = await p2pState
+        .trackRequest(await FlutterP2pCommunicator.sendRequest(info: info));
+    if (result != true) {
+      Future.delayed(const Duration(seconds: 4), () async {
+        unawaited(_sendConnectRequest(element));
+      });
+    }
+  }
+
+  void _listenToStreams(
+      void Function(P2PReqResNodeModel model) onNewRequestReceived) {
     p2pNodeResponseStream.setUp();
     p2pNodeRequestStream.setUp(onNewRequestReceived);
   }
@@ -133,8 +153,8 @@ class P2PNode {
 
   Future<bool> _addCoreId() async {
     final privateKey = await libP2PStorageProvider.getPrivateKey();
-    final privToAdd =
-        P2PReqResNodeModel(name: P2PReqResNodeNames.addCoreID, body: {"privKey": privateKey});
+    final privToAdd = P2PReqResNodeModel(
+        name: P2PReqResNodeNames.addCoreID, body: {"privKey": privateKey});
 
     final id = await FlutterP2pCommunicator.sendRequest(info: privToAdd);
 
@@ -159,7 +179,8 @@ class P2PNode {
     return p2pState.trackRequest(id);
   }
 
-  void restart(void Function(P2PReqResNodeModel model) onNewRequestReceived) async {
+  void restart(
+      void Function(P2PReqResNodeModel model) onNewRequestReceived) async {
     _setUpP2PNode(onNewRequestReceived);
   }
 }

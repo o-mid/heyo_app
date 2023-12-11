@@ -48,7 +48,7 @@ dependencies:
   flutter_p2p_communicator:
     git:
       url: git@ssh.git.energy:corepass/flutter_p2p_communicator.git
-      ref: 1aa733cb
+      ref: 28d6bc8a
 
   flutter_bip39:
     git:
