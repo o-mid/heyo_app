@@ -39,7 +39,7 @@ class CallRTCSession {
   CallId callId;
   RemotePeer remotePeer;
   Function(MediaStream mediaStream)? onAddRemoteStream;
-
+  Function(MediaStream stream)? onRemoveRemoteStream;
   MediaStream? _stream;
 
   setRemoteStream(MediaStream mediaStream) {
@@ -78,6 +78,9 @@ class CallRTCSession {
       if (isConnectionStable()) {
         _setPeerCandidates();
       }
+    };
+    pc!.onRemoveStream = (stream) {
+      onRemoveRemoteStream?.call(stream);
     };
   }
 
