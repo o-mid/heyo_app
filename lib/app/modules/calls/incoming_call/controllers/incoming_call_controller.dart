@@ -52,7 +52,7 @@ class IncomingCallController extends GetxController {
     Get.back();
   }
 
-  void acceptCall() async {
+  Future<void> acceptCall() async {
     _stopRingtone();
     //await callRepository.acceptCall(args.callId);
     //TODO farzam, accept

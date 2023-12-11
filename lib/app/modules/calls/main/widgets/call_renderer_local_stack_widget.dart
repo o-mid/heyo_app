@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/connected_participant_model/connected_participant_model.dart';
+import 'package:get/get.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/local_participant_model/local_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
@@ -13,7 +14,7 @@ class CallRendererLocalStackWidget extends StatelessWidget {
     super.key,
   });
 
-  final ConnectedParticipantModel participantModel;
+  final LocalParticipantModel participantModel;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class CallRendererLocalStackWidget extends StatelessWidget {
         ),
       ),
       // TODO(AliAzim): the condition for voice and video call should add in here.
-      child: !participantModel.videoMode.value
+      child: participantModel.videoMode.isTrue
           ? RTCVideoView(
               participantModel.rtcVideoRenderer!,
               objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,

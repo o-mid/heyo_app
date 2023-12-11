@@ -82,14 +82,13 @@ class CallController extends GetxController {
   }
 
   Future<void> initLocalRenderer() async {
-
     // TODO check
-    final isAudioCall=args.isAudioCall;
-    if(isAudioCall){
-      // hide localRender
-    }else {
-      //show
-    }
+    //final isAudioCall = args.isAudioCall;
+    //if(isAudioCall){
+    //  //* hide localRender
+    //}else {
+    //  //* show
+    //}
     final localParticipateCoreId = await accountInfo.getUserAddress();
     localParticipate.value = LocalParticipantModel(
       name: localParticipateCoreId!.shortenCoreId,
@@ -235,7 +234,7 @@ class CallController extends GetxController {
   }
 
   Future<void> inCallSetUp() async {
-     await callRepository.acceptCall(args.callId!);
+    await callRepository.acceptCall(args.callId!);
     //* I move mock in controller to pass callId
 
     isInCall.value = true;

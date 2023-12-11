@@ -6,7 +6,6 @@ import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/calls/main/widgets/call_renderer_local_stack_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/call_renderer_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/draggable_video.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/local_participant_model/local_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/transitions_constant.dart';
 
 class PeerCallWidget extends GetView<CallController> {
@@ -32,31 +31,31 @@ class PeerCallWidget extends GetView<CallController> {
               participantModel: remoteParticipate.first,
             ),
             //* The local drapable video
-            DraggableVideo(
-              child: AnimatedSize(
-                clipBehavior: Clip.hardEdge,
-                curve: TRANSITIONS.callPage_DraggableVideoAnimatedSizeCurve,
-                alignment: Alignment.bottomLeft,
-                duration: controller.callerScaleDuration,
-                reverseDuration: controller.callerScaleReverseDuration,
-                child: SizedBox(
-                  width: changeCallerWidgetSize ? 200.w : 120.w,
-                  height: changeCallerWidgetSize ? 250.h : 170.h,
-                  child: GestureDetector(
-                    //TODO: AliAzim => check if we need this onTap & onDoubleTap or not
-                    onTap: controller.changeCallerOptions,
-                    onDoubleTap: controller.flipVideoPositions,
-                    child: Container(
-                      margin: const EdgeInsets.all(5),
-                      child: CallRendererLocalStackWidget(
-                        participantModel: localParticipate.value!
-                            .mapToConnectedParticipantModel(),
+            if (localParticipate.value!.videoMode.isTrue)
+              DraggableVideo(
+                child: AnimatedSize(
+                  clipBehavior: Clip.hardEdge,
+                  curve: TRANSITIONS.callPage_DraggableVideoAnimatedSizeCurve,
+                  alignment: Alignment.bottomLeft,
+                  duration: controller.callerScaleDuration,
+                  reverseDuration: controller.callerScaleReverseDuration,
+                  child: SizedBox(
+                    width: changeCallerWidgetSize ? 200.w : 120.w,
+                    height: changeCallerWidgetSize ? 250.h : 170.h,
+                    child: GestureDetector(
+                      //TODO: AliAzim => check if we need this onTap & onDoubleTap or not
+                      onTap: controller.changeCallerOptions,
+                      onDoubleTap: controller.flipVideoPositions,
+                      child: Container(
+                        margin: const EdgeInsets.all(5),
+                        child: CallRendererLocalStackWidget(
+                          participantModel: localParticipate.value!,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
           ],
         ),
       );
