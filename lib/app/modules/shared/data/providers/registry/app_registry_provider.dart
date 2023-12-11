@@ -2,39 +2,30 @@ import 'dart:convert';
 
 import 'package:core_web3dart/crypto.dart';
 import 'package:core_web3dart/web3dart.dart';
-import 'package:heyo/app/modules/shared/data/models/get_all_contract_model.dart';
 import 'package:heyo/app/modules/shared/data/models/registry_info_model.dart';
 import 'package:heyo/app/modules/shared/data/providers/blockchain/blockchain_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/network_credentials.dart';
 import 'package:heyo/app/modules/shared/data/providers/registry/registery_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/secure_storage/secure_storage_provider.dart';
+import 'package:heyo/contracts/Registry.g.dart';
 
 String REGISTRY_MODEL = 'registry_model';
 
 class AppRegistryProvider extends RegistryProvider {
   AppRegistryProvider({
     required this.blockChainProvider,
-    required this.web3,
     required this.storageProvider,
+    required this.registry,
   });
 
+  final Registry registry;
   final BlockchainProvider blockChainProvider;
-  final Web3Client web3;
   final SecureStorageProvider storageProvider;
 
-  Future<DeployedContract> get loadedContract async => blockChainProvider
-      .loadContract(REGISTERY_ADDR, registeryContractAsset, 'Registery');
-
   @override
-  Future<GetAllContractModel> getAll() async {
-    final registeryContract = await loadedContract;
-    final response = await blockChainProvider.queryContract(
-      'getAll',
-      [],
-      registeryContract,
-      web3,
-    );
-    return GetAllContractModel(response);
+  Future<GetAll> getAll() async {
+    final response = await registry.getAll();
+    return response;
   }
 
   @override
@@ -93,7 +84,7 @@ class AppRegistryProvider extends RegistryProvider {
     try {
       final eipMessage = EIP712().getMessageForSign(typedData: fcmToSign);
       final sigMsg =
-          signWithPrivKey(hexToBytes(eipMessage), hexToBytes(privateKey));
+      signWithPrivKey(hexToBytes(eipMessage), hexToBytes(privateKey));
       return bytesToHex(sigMsg, include0x: true);
     } catch (e, s) {
       throw Exception(e);

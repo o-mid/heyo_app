@@ -3,10 +3,9 @@ import 'dart:typed_data';
 
 import 'package:core_web3dart/crypto.dart';
 import 'package:core_web3dart/web3dart.dart';
-import 'package:heyo/app/modules/shared/data/models/get_all_contract_model.dart';
+import 'package:heyo/contracts/Registry.g.dart';
 
 class RegistryInfoModel {
-
   RegistryInfoModel(
       {required this.phoneAddress,
       required this.idCardAddress,
@@ -50,7 +49,8 @@ class RegistryInfoModel {
     );
   }
 
-  factory RegistryInfoModel.fromContractModel(GetAllContractModel result) {
+  factory RegistryInfoModel.fromContractModel(GetAll rawModel) {
+    final result = rawModel.var1.map(bytesToHex).toList();
     final shaAndroidLink = bytesToHex(getSha3ForSC('androidLink'));
     final shaIOSLink = bytesToHex(getSha3ForSC('iosLink'));
     final shaisMaintaining = bytesToHex(getSha3ForSC('isMaintaining'));
@@ -71,42 +71,42 @@ class RegistryInfoModel {
     final shaproofOfAddress = bytesToHex(getSha3ForSC('AddressVerifier'));
 
     // result is a GetAllContractModel object, in which the first byte array is the shaName and the respective second byte array is the contract address or the string value
-    final indexAndroidLink = result.var1.indexOf(shaAndroidLink);
-    final androidLink = utf8.decode(result.var2[indexAndroidLink]);
-    final indexIOSLink = result.var1.indexOf(shaIOSLink);
-    final iosLink = utf8.decode(result.var2[indexIOSLink]);
-    final indexIsMaintaining = result.var1.indexOf(shaisMaintaining);
-    final isMaintaining = utf8.decode(result.var2[indexIsMaintaining]);
-    final indexLatestVersion = result.var1.indexOf(shalatestVersion);
-    final latestVersion = utf8.decode(result.var2[indexLatestVersion]);
-    final indexMinVersion = result.var1.indexOf(shaminVersion);
-    final minVersion = utf8.decode(result.var2[indexMinVersion]);
-    final indexEmailAddress = result.var1.indexOf(shaemailAddress);
-    final emailAddress = utf8.decode(result.var2[indexEmailAddress]);
-    final indexIdCardVerif = result.var1.indexOf(shaidCardVerif);
-    final idCardAddress = utf8.decode(result.var2[indexIdCardVerif]);
-    final indexKycTransmitter = result.var1.indexOf(shakycTransmitter);
-    final kycTransmitterAddress = utf8.decode(result.var2[indexKycTransmitter]);
-    final indexPassport = result.var1.indexOf(shapassport);
-    final passportAddress = utf8.decode(result.var2[indexPassport]);
-    final indexPhone = result.var1.indexOf(shaphone);
-    final phoneAddress = utf8.decode(result.var2[indexPhone]);
-    final indexResidence = result.var1.indexOf(sharesidence);
-    final residenceAddress = utf8.decode(result.var2[indexResidence]);
-    final indexCtnOracle = result.var1.indexOf(shactnOracle);
-    final ctnOracleAddress = utf8.decode(result.var2[indexCtnOracle]);
-    final indexKycVault = result.var1.indexOf(shakycVault);
-    final kycVaultAddress = utf8.decode(result.var2[indexKycVault]);
-    final indexXcbOracle = result.var1.indexOf(shaxcbOracle);
-    final xcbOracleAddress = utf8.decode(result.var2[indexXcbOracle]);
-    final indexNameService = result.var1.indexOf(shanameSer);
-    final nameServiceAddress = utf8.decode(result.var2[indexNameService]);
-    final indexCtn = result.var1.indexOf(shactn);
-    final cTNAddress = utf8.decode(result.var2[indexCtn]);
-    final indexDriverLicense = result.var1.indexOf(shadriverLisence);
-    final driverLicenseAddress = utf8.decode(result.var2[indexDriverLicense]);
-    final indexProofOfAddress = result.var1.indexOf(shaproofOfAddress);
-    final proofOfAddressAddress = utf8.decode(result.var2[indexProofOfAddress]);
+    final indexAndroidLink = result.indexOf(shaAndroidLink);
+    final androidLink = utf8.decode(rawModel.var2[indexAndroidLink]);
+    final indexIOSLink = result.indexOf(shaIOSLink);
+    final iosLink = utf8.decode(rawModel.var2[indexIOSLink]);
+    final indexIsMaintaining = result.indexOf(shaisMaintaining);
+    final isMaintaining = utf8.decode(rawModel.var2[indexIsMaintaining]);
+    final indexLatestVersion = result.indexOf(shalatestVersion);
+    final latestVersion = utf8.decode(rawModel.var2[indexLatestVersion]);
+    final indexMinVersion = result.indexOf(shaminVersion);
+    final minVersion = utf8.decode(rawModel.var2[indexMinVersion]);
+    final indexEmailAddress = result.indexOf(shaemailAddress);
+    final emailAddress = utf8.decode(rawModel.var2[indexEmailAddress]);
+    final indexIdCardVerif = result.indexOf(shaidCardVerif);
+    final idCardAddress = utf8.decode(rawModel.var2[indexIdCardVerif]);
+    final indexKycTransmitter = result.indexOf(shakycTransmitter);
+    final kycTransmitterAddress = utf8.decode(rawModel.var2[indexKycTransmitter]);
+    final indexPassport = result.indexOf(shapassport);
+    final passportAddress = utf8.decode(rawModel.var2[indexPassport]);
+    final indexPhone = result.indexOf(shaphone);
+    final phoneAddress = utf8.decode(rawModel.var2[indexPhone]);
+    final indexResidence = result.indexOf(sharesidence);
+    final residenceAddress = utf8.decode(rawModel.var2[indexResidence]);
+    final indexCtnOracle = result.indexOf(shactnOracle);
+    final ctnOracleAddress = utf8.decode(rawModel.var2[indexCtnOracle]);
+    final indexKycVault = result.indexOf(shakycVault);
+    final kycVaultAddress = utf8.decode(rawModel.var2[indexKycVault]);
+    final indexXcbOracle = result.indexOf(shaxcbOracle);
+    final xcbOracleAddress = utf8.decode(rawModel.var2[indexXcbOracle]);
+    final indexNameService = result.indexOf(shanameSer);
+    final nameServiceAddress = utf8.decode(rawModel.var2[indexNameService]);
+    final indexCtn = result.indexOf(shactn);
+    final cTNAddress = utf8.decode(rawModel.var2[indexCtn]);
+    final indexDriverLicense = result.indexOf(shadriverLisence);
+    final driverLicenseAddress = utf8.decode(rawModel.var2[indexDriverLicense]);
+    final indexProofOfAddress = result.indexOf(shaproofOfAddress);
+    final proofOfAddressAddress = utf8.decode(rawModel.var2[indexProofOfAddress]);
 
     return RegistryInfoModel(
       proofOfAddressAddress: XCBAddress.fromHex(proofOfAddressAddress).hexNo0x,
@@ -129,6 +129,7 @@ class RegistryInfoModel {
       minVersion: minVersion,
     );
   }
+
   final String phoneAddress;
   final String idCardAddress;
   final String passportAddress;

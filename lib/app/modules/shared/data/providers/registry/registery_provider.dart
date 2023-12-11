@@ -1,8 +1,8 @@
-import 'package:heyo/app/modules/shared/data/models/get_all_contract_model.dart';
 import 'package:heyo/app/modules/shared/data/models/registry_info_model.dart';
+import 'package:heyo/contracts/Registry.g.dart';
 
 abstract class RegistryProvider {
-  Future<GetAllContractModel> getAll();
+  Future<GetAll> getAll();
 
   Future<void> saveRegistry(RegistryInfoModel registryInfoModel);
 
