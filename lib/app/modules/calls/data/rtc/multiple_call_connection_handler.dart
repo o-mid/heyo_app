@@ -301,9 +301,9 @@ class CallConnectionsHandler {
     callStatusDataStore.incomingCalls =
         IncomingCalls(callId: callId, remotePeers: remotePeers);
 
-    onCallStateChange?.call(callId, [callInfo], CallState.callStateNew);
+    onCallStateChange?.call(callId, remotePeers, CallState.callStateNew);
 
-    onCallStateChange?.call(callId, [callInfo], CallState.callStateRinging);
+    onCallStateChange?.call(callId, remotePeers, CallState.callStateRinging);
   }
 
   void rejectIncomingCall(String callId) {
