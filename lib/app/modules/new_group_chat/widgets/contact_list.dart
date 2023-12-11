@@ -106,7 +106,7 @@ class ContactList extends GetView<NewGroupChatController> {
                           ],
                         ),
                         const Spacer(),
-                        if (controller.selectedCoreids.value.contains(suggestedUser.coreId))
+                        if (controller.selectedCoreids.value.contains(suggestedUser))
                           const Icon(Icons.check_circle, color: COLORS.kGreenMainColor)
                         else
                           const Icon(Icons.circle_outlined, color: Colors.grey),

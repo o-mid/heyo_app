@@ -26,11 +26,12 @@ class NewGroupChatController extends GetxController {
   late StreamSubscription _contactsStreamSubscription;
   late TextEditingController inputController;
   late TextEditingController confirmationScreenInputController;
+  RxBool allowAddingMembers = false.obs;
   RxBool isTextInputFocused = false.obs;
   RxBool isconfirmationTextInputFocused = false.obs;
   RxList<UserModel> searchSuggestions = <UserModel>[].obs;
   final String profileLink = "https://heyo.core/m6ljkB4KJ";
-  RxList<String> selectedCoreids = <String>[].obs;
+  RxList<UserModel> selectedCoreids = <UserModel>[].obs;
 
   NewGroupChatController({required this.contactRepository, required this.accountInfoRepo});
   final count = 0.obs;
@@ -132,15 +133,15 @@ class NewGroupChatController extends GetxController {
   }
 
   Future<void> handleItemTap(UserModel user) async {
-    updateSelectedCoreIds(user);
+    await updateSelectedCoreIds(user);
     await updateContactRepository(user);
   }
 
-  void updateSelectedCoreIds(UserModel user) {
-    if (selectedCoreids.contains(user.coreId)) {
-      selectedCoreids.remove(user.coreId);
+  Future<void> updateSelectedCoreIds(UserModel user) async {
+    if (selectedCoreids.any((element) => element.coreId == user.coreId)) {
+      selectedCoreids.removeWhere((element) => element.coreId == user.coreId);
     } else {
-      selectedCoreids.add(user.coreId);
+      selectedCoreids.add(user);
     }
   }
 
@@ -197,20 +198,28 @@ class NewGroupChatController extends GetxController {
   void handleFabOnpressed() {
     if (selectedCoreids.length <= 1) {
       _showMembersSnackbar();
+    } else if (showConfirmationScreen.value == false) {
+      _showConfirmationScreen();
     } else {
       _navigateToMessages();
     }
+  }
+
+  void _showConfirmationScreen() {
+    showConfirmationScreen.value = true;
+    confirmationScreenInputFocusNode.requestFocus();
   }
 
   void _navigateToMessages() {
     Get.toNamed(
       Routes.MESSAGES,
       arguments: MessagesViewArgumentsModel(
-        coreId: selectedCoreids.value.first,
+        coreId: selectedCoreids.first.coreId,
         iconUrl: mockIconUrls.first,
         connectionType: MessagingConnectionType.internet,
-        participants:
-            selectedCoreids.map((element) => MessagingParticipantModel(coreId: element)).toList(),
+        participants: selectedCoreids
+            .map((element) => MessagingParticipantModel(coreId: element.coreId))
+            .toList(),
       ),
     );
   }
@@ -233,5 +242,9 @@ class NewGroupChatController extends GetxController {
       ],
       borderRadius: 8,
     );
+  }
+
+  void handleAllowMembersOnTap(bool value) {
+    allowAddingMembers.value = value;
   }
 }
