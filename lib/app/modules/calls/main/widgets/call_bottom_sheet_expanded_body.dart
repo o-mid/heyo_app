@@ -90,7 +90,7 @@ class CallBottomSheetExpandedBody extends GetView<CallController> {
                   return Row(
                     children: [
                       CustomCircleAvatar(
-                        coreId: controller.participants[index].user.coreId,
+                        coreId: controller.participants[index].coreId,
                         size: 40,
                       ),
                       CustomSizes.mediumSizedBoxWidth,

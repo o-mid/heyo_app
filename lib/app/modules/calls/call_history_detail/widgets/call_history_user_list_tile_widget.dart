@@ -26,7 +26,7 @@ class CallHistoryUserListTileWidget extends StatelessWidget {
       ),
       child: ListTile(
         leading: CustomCircleAvatar(
-          url: iconUrl,
+          coreId: coreId,
           size: 42,
         ),
         title: Text(name),

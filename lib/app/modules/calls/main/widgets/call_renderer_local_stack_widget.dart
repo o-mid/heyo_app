@@ -41,7 +41,7 @@ class CallRendererLocalStackWidget extends StatelessWidget {
                     Column(
                       children: [
                         CustomCircleAvatar(
-                          url: participantModel.iconUrl,
+                          coreId: participantModel.coreId,
                           size: 48,
                         ),
                         SizedBox(height: 24.h),

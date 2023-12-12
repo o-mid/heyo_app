@@ -32,7 +32,6 @@ class CallRendererWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CalleeOrCallerInfoWidget(
-                      iconUrl: participantModel.iconUrl,
                       name: participantModel.name,
                       coreId: participantModel.coreId,
                     ),

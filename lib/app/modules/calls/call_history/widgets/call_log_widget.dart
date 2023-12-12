@@ -40,7 +40,7 @@ class CallLogWidget extends GetView<CallHistoryController> {
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
           child: Row(
             children: [
-              CustomCircleAvatar(coreId: call.user.coreId, size: 40),
+              CustomCircleAvatar(coreId: call.coreId, size: 40),
               CustomSizes.mediumSizedBoxWidth,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

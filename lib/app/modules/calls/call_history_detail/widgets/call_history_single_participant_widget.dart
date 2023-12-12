@@ -33,7 +33,7 @@ class CallHistorySingleParticipantWidget
             children: [
               SizedBox(height: 40.h),
               CustomCircleAvatar(
-                url: controller.participants[0]!.iconUrl,
+                coreId: controller.participants[0]!.coreId,
                 size: 64,
               ),
               CustomSizes.mediumSizedBoxHeight,
@@ -96,11 +96,13 @@ class CallHistorySingleParticipantWidget
                       Get.toNamed(
                         Routes.MESSAGES,
                         arguments: MessagesViewArgumentsModel(
-                          coreId: controller.participants[0]!.coreId,
-                          iconUrl: controller.participants[0]!.iconUrl,
-                          connectionType: MessagingConnectionType.internet,
-                          participants: [MessagingParticipantModel(coreId: controller.participants[0]!.coreId)]
-                        ),
+                            coreId: controller.participants[0]!.coreId,
+                            iconUrl: controller.participants[0]!.iconUrl,
+                            connectionType: MessagingConnectionType.internet,
+                            participants: [
+                              MessagingParticipantModel(
+                                  coreId: controller.participants[0]!.coreId)
+                            ]),
                       );
                     },
                     icon: Assets.svg.chatOutlined

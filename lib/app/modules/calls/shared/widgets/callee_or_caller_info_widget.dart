@@ -7,13 +7,11 @@ import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 
 class CalleeOrCallerInfoWidget extends StatelessWidget {
   const CalleeOrCallerInfoWidget({
-    required this.iconUrl,
     required this.name,
     required this.coreId,
     super.key,
   });
 
-  final String iconUrl;
   final String name;
   final String coreId;
 

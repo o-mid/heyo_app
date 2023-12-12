@@ -35,7 +35,7 @@ class CallHistoryMultiParticipantWidget
               SizedBox(height: 40.h),
               // TODO(AliAzim): it should change to current user or summery of group call.
               CustomCircleAvatar(
-                url: controller.participants[0].iconUrl,
+                coreId: controller.participants[0].coreId,
                 size: 64,
               ),
               CustomSizes.mediumSizedBoxHeight,
