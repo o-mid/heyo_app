@@ -45,7 +45,7 @@ class AddContactsView extends GetView<AddContactsController> {
                 children: [
                   CustomSizes.largeSizedBoxHeight,
                   CustomCircleAvatar(
-                    url: controller.user.value.iconUrl,
+                    coreId: controller.user.value.coreId,
                     size: 64,
                   ),
                   CustomSizes.mediumSizedBoxHeight,
@@ -56,8 +56,7 @@ class AddContactsView extends GetView<AddContactsController> {
                         controller.nickname.value.isEmpty
                             ? controller.user.value.name
                             : controller.nickname.value,
-                        style: TEXTSTYLES.kHeaderLarge
-                            .copyWith(color: COLORS.kDarkBlueColor),
+                        style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
                       ),
                       CustomSizes.smallSizedBoxWidth,
                       controller.user.value.isVerified

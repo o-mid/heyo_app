@@ -15,12 +15,12 @@ import 'package:heyo/generated/locales.g.dart';
 import '../../../new_chat/data/models/user_model.dart';
 
 class BeginningOfMessagesHeaderWidget extends StatelessWidget {
-  final String iconUrl;
   final String userName;
+  final String coreId;
 
   const BeginningOfMessagesHeaderWidget({
     Key? key,
-    required this.iconUrl,
+    required this.coreId,
     required this.userName,
   }) : super(key: key);
 
@@ -55,7 +55,7 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
   }
 
   Widget _buildUserAvatar() {
-    return CustomCircleAvatar(url: iconUrl, size: 64);
+    return CustomCircleAvatar(coreId: coreId, size: 64);
   }
 
   Widget _buildUserNameRow() {

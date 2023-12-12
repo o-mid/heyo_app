@@ -23,7 +23,7 @@ class IncomingCallView extends GetView<IncomingCallController> {
         children: [
           SizedBox(height: 105.h),
           CalleeOrCallerInfoWidget(
-              iconUrl: controller.caller.iconUrl,
+              coreId: controller.caller.coreId,
               name: controller.caller.name,
               isContact: controller.caller.isContact,
               shortenCoreId: controller.caller.coreId.shortenCoreId),

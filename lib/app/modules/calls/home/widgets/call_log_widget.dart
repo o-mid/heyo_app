@@ -42,7 +42,7 @@ class CallLogWidget extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
           child: Row(
             children: [
-              CustomCircleAvatar(url: call.user.iconUrl, size: 40),
+              CustomCircleAvatar(coreId: call.user.coreId, size: 40),
               CustomSizes.mediumSizedBoxWidth,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

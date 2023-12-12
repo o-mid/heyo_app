@@ -7,14 +7,14 @@ import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart'
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 
 class CalleeOrCallerInfoWidget extends StatelessWidget {
-  final String iconUrl;
+  final String coreId;
   final String name;
   final String shortenCoreId;
   final bool isContact;
 
   const CalleeOrCallerInfoWidget({
     Key? key,
-    required this.iconUrl,
+    required this.coreId,
     required this.name,
     required this.shortenCoreId,
     required this.isContact,
@@ -25,7 +25,7 @@ class CalleeOrCallerInfoWidget extends StatelessWidget {
     return Column(
       children: [
         CustomCircleAvatar(
-          url: iconUrl,
+          coreId: coreId,
           size: 64,
         ),
         SizedBox(height: 24.h),

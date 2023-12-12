@@ -52,7 +52,7 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
             return Column(
               children: [
                 SizedBox(height: 40.h),
-                CustomCircleAvatar(url: controller.user.value.iconUrl, size: 64),
+                CustomCircleAvatar(coreId: controller.user.value.coreId, size: 64),
                 CustomSizes.mediumSizedBoxHeight,
                 GestureDetector(
                   onTap: () => controller.saveCoreIdToClipboard(),

@@ -40,7 +40,7 @@ class UserPreviewWidget extends GetView<UserPreview> {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomSizes.largeSizedBoxHeight,
-          CustomCircleAvatar(url: user.iconUrl, size: 64),
+          CustomCircleAvatar(coreId: user.coreId, size: 64),
           CustomSizes.mediumSizedBoxHeight,
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
