@@ -89,6 +89,7 @@ class MessagesController extends GetxController {
   final _globalMessageController = Get.find<GlobalMessageController>();
   double _keyboardHeight = 0;
   late String chatId;
+  late String firstCoreId;
 
   late TextEditingController textController;
   late AutoScrollController scrollController;
@@ -114,17 +115,20 @@ class MessagesController extends GetxController {
 
   late ChatModel? chatModel;
   Rx<UserModel> user = UserModel(
-    coreId: (Get.arguments as MessagesViewArgumentsModel).coreId,
+    coreId: (Get.arguments as MessagesViewArgumentsModel).participants.first.coreId,
     iconUrl:
         (Get.arguments).iconUrl as String ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
-    name: (Get.arguments as MessagesViewArgumentsModel).coreId.shortenCoreId,
-    walletAddress: (Get.arguments).coreId as String,
+    name: (Get.arguments as MessagesViewArgumentsModel).participants.first.coreId.shortenCoreId,
+    walletAddress:
+        (Get.arguments as MessagesViewArgumentsModel).participants.first.coreId as String,
   ).obs;
+
   final FocusNode textFocusNode = FocusNode();
 
   final isListLoaded = false.obs;
 
   Future<void> init() async {
+    firstCoreId = user.value.coreId;
     _initMessagesArguments();
 
     _initUiControllers();
@@ -155,8 +159,8 @@ class MessagesController extends GetxController {
   Future<void> _getUserContact() async {
     user.value = await userStateRepository.getUserContact(
       userInstance: UserInstance(
-        coreId: args.coreId,
-        iconUrl: args.iconUrl,
+        coreId: user.value.coreId,
+        iconUrl: user.value.iconUrl,
       ),
     );
     user.refresh();
@@ -182,7 +186,7 @@ class MessagesController extends GetxController {
   }
 
   Future<void> initMessagingConnection() async {
-    initMessageUseCase.execute(args.connectionType.map(), args.coreId);
+    initMessageUseCase.execute(args.connectionType.map(), user.value.coreId);
   }
 
   Future<void> _initMessagesStream() async {
@@ -878,7 +882,7 @@ class MessagesController extends GetxController {
 
   Future<void> _saveUserStates() async {
     await userStateRepository.saveUserStates(
-      userInstance: UserInstance(coreId: args.coreId, iconUrl: args.iconUrl),
+      userInstance: UserInstance(coreId: user.value.coreId, iconUrl: user.value.iconUrl),
       userStates: UserStates(
         chatId: chatId,
         lastReadRemoteMessagesId: lastReadRemoteMessagesId.value,

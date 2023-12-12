@@ -9,15 +9,12 @@ class MessagesViewArgumentsModel {
   final List<MessageModel>? forwardedMessages;
   final MessageSession? session;
   final MessagingConnectionType connectionType;
-  final String coreId;
-  final String? iconUrl;
+
   final List<MessagingParticipantModel> participants;
   MessagesViewArgumentsModel({
-    required this.coreId,
     required this.participants,
     this.forwardedMessages,
     this.session,
-    this.iconUrl,
     this.connectionType = MessagingConnectionType.internet,
   });
 }

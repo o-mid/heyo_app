@@ -77,8 +77,6 @@ class UserPreviewWidget extends GetView<UserPreview> {
                         : Get.toNamed(
                             Routes.MESSAGES,
                             arguments: MessagesViewArgumentsModel(
-                                coreId: user.coreId,
-                                iconUrl: user.iconUrl,
                                 connectionType: MessagingConnectionType.internet,
                                 participants: [
                                   MessagingParticipantModel(

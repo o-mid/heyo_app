@@ -230,8 +230,6 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
           await Get.toNamed(
             Routes.MESSAGES,
             arguments: MessagesViewArgumentsModel(
-              coreId: userChatModel.id,
-              iconUrl: userChatModel.icon,
               participants: [
                 MessagingParticipantModel(
                   coreId: userChatModel.id,

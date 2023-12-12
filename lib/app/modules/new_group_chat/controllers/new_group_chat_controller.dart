@@ -171,8 +171,6 @@ class NewGroupChatController extends GetxController {
     Get.toNamed(
       Routes.MESSAGES,
       arguments: MessagesViewArgumentsModel(
-        coreId: selectedCoreids.first.coreId,
-        iconUrl: mockIconUrls.first,
         connectionType: MessagingConnectionType.internet,
         participants: selectedCoreids
             .map((element) => MessagingParticipantModel(coreId: element.coreId))

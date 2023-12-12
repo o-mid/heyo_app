@@ -37,8 +37,7 @@ class ChatWidget extends GetView<ChatsController> {
           onTap: () {
             Get.toNamed(
               Routes.MESSAGES,
-              arguments:
-                  MessagesViewArgumentsModel(iconUrl: chat.icon, coreId: chat.id, participants: [
+              arguments: MessagesViewArgumentsModel(participants: [
                 MessagingParticipantModel(
                   coreId: chat.id,
                 )

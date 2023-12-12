@@ -113,8 +113,6 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                         Get.toNamed(
                           Routes.MESSAGES,
                           arguments: MessagesViewArgumentsModel(
-                            coreId: controller.user.value.coreId,
-                            iconUrl: controller.user.value.iconUrl,
                             connectionType: MessagingConnectionType.internet,
                             participants: [
                               MessagingParticipantModel(

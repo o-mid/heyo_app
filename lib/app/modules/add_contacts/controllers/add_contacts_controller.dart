@@ -106,8 +106,6 @@ class AddContactsController extends GetxController {
 
     Get.offNamedUntil(Routes.MESSAGES, ModalRoute.withName(Routes.HOME),
         arguments: MessagesViewArgumentsModel(
-          coreId: userModel.coreId,
-          iconUrl: userModel.iconUrl,
           participants: [
             MessagingParticipantModel(
               coreId: userModel.coreId,
