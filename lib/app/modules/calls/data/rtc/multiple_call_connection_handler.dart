@@ -60,10 +60,10 @@ class CallConnectionsHandler {
       onCallStateChange;
 
   Future<void> addMember(String remoteCoreId) async {
-    callStatusDataStore.currentCall!.activeSessions.forEach((element) {
+    for (var element in callStatusDataStore.currentCall!.activeSessions) {
       print("addMemberEvent : $remoteCoreId");
       singleCallWebRTCBuilder.addMemberEvent(remoteCoreId, element);
-    });
+    }
     //TODO refactor isAudio
     final callRTCSession = await _createSession(
       RemotePeer(
@@ -132,13 +132,14 @@ class CallConnectionsHandler {
       callStatusDataStore.makeCallByIncomingCall();
       await _createLocalStream();
 
-      callStatusDataStore.incomingCalls!.remotePeers.forEach((element) async {
+      for (final element in callStatusDataStore.incomingCalls!.remotePeers) {
         print(
             "accept ${element.remotePeer.remoteCoreId} ${element.isAudioCall}");
         final callRTCSession =
             await _createSession(element.remotePeer, element.isAudioCall);
         singleCallWebRTCBuilder.startSession(callRTCSession);
-      });
+      }
+
       onCallStateChange?.call(
         callId,
         callStatusDataStore.incomingCalls!.remotePeers,
@@ -149,31 +150,32 @@ class CallConnectionsHandler {
 
   Future<void> reject(String callId) async {
     if (callStatusDataStore.currentCall?.callId == callId) {
-      callStatusDataStore.currentCall?.activeSessions.forEach((element) {
+      for (final element in callStatusDataStore.currentCall!.activeSessions) {
         singleCallWebRTCBuilder.reject(callId, element.remotePeer);
-      });
+      }
     }
   }
 
   Future<void> close() async {
-    _localStream?.getTracks().forEach((element) async {
-      await element.stop();
-    });
-    await _localStream?.dispose();
-    _localStream = null;
+    if (_localStream != null) {
+      for (final element in _localStream!.getTracks()) {
+        await element.stop();
+      }
+      await _localStream?.dispose();
+      _localStream = null;
+    }
 
     if (callStatusDataStore.currentCall != null) {
-      for (var element in callStatusDataStore.currentCall!.activeSessions) {
+      for (final element in callStatusDataStore.currentCall!.activeSessions) {
         await element.dispose();
       }
       callStatusDataStore.currentCall!.activeSessions.clear();
       callStatusDataStore.currentCall = null;
     }
-
   }
 
   void onNewMemberEventReceived(CallId callId, dynamic data) async {
-    final member = data["newMemer"] as Map<String,dynamic>;
+    final member = data["newMemer"] as Map<String, dynamic>;
     if (callId == callStatusDataStore.currentCall?.callId) {
       await _createSession(
         RemotePeer(
@@ -203,7 +205,6 @@ class CallConnectionsHandler {
     final description = data[DATA_DESCRIPTION];
     singleCallWebRTCBuilder.onAnswerReceived(rtcSession, description);
   }
-
 
   void onCallOfferReceived(
     CallId callId,
@@ -316,9 +317,9 @@ class CallConnectionsHandler {
 
   void rejectIncomingCall(String callId) {
     if (callStatusDataStore.incomingCalls?.callId == callId) {
-      callStatusDataStore.incomingCalls?.remotePeers.forEach((element) {
+      for (final element in callStatusDataStore.incomingCalls!.remotePeers) {
         singleCallWebRTCBuilder.reject(callId, element.remotePeer);
-      });
+      }
       callStatusDataStore.incomingCalls = null;
     }
   }
