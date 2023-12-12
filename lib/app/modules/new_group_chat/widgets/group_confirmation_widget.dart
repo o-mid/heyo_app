@@ -147,7 +147,7 @@ class GroupConfirmationWidget extends StatelessWidget {
                   child: Row(
                     children: [
                       CustomCircleAvatar(
-                        url: controller.selectedCoreids[index].iconUrl,
+                        coreId: controller.selectedCoreids[index].coreId,
                         size: 48,
                         isOnline: controller.selectedCoreids[index].isOnline,
                       ),

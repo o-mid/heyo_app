@@ -84,7 +84,7 @@ class ContactListWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CustomCircleAvatar(
-                url: suggestedUser.iconUrl,
+                coreId: suggestedUser.coreId,
                 size: 48,
                 isOnline: suggestedUser.isOnline,
               ),

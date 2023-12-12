@@ -50,7 +50,7 @@ class ChatWidget extends GetView<ChatsController> {
             child: Row(
               children: [
                 CustomCircleAvatar(
-                  url: chat.icon,
+                  coreId: chat.id,
                   size: 48,
                   isOnline: chat.isOnline,
                 ),
