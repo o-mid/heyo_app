@@ -130,14 +130,14 @@ class CallConnectionsHandler {
     print("accepttt ${callStatusDataStore.incomingCalls}");
     if (callStatusDataStore.incomingCalls?.callId == callId) {
       callStatusDataStore.makeCallByIncomingCall();
+      await _createLocalStream();
+
       callStatusDataStore.incomingCalls!.remotePeers.forEach((element) async {
         print(
             "accept ${element.remotePeer.remoteCoreId} ${element.isAudioCall}");
-        await _createLocalStream();
         final callRTCSession =
             await _createSession(element.remotePeer, element.isAudioCall);
         singleCallWebRTCBuilder.startSession(callRTCSession);
-
       });
       onCallStateChange?.call(
         callId,
