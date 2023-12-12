@@ -148,7 +148,6 @@ flutter:
     - assets/svg/
     - assets/png/
     - assets/locales/
-    - assets/contracts/
 
 
   fonts:

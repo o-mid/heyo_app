@@ -1,11 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/cryptography_key_generator.dart';
 import 'package:heyo/app/modules/shared/data/models/create_account_result.dart';
 import 'package:heyo/app/modules/shared/data/providers/secure_storage/local_storages_abstract.dart';
 import 'package:heyo/app/modules/shared/providers/account/creation/account_creation.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
-
 
 class LibP2PAccountCreation extends AccountCreation {
   final LocalStorageAbstractProvider localProvider;
@@ -20,7 +18,7 @@ class LibP2PAccountCreation extends AccountCreation {
 
   @override
   Future<CreateAccountResult> createAccount() async {
-    final result = await compute(_createAccount, null);
+    final result = compute((message) => _createAccount(), null);
     return result;
   }
 
@@ -36,7 +34,7 @@ class LibP2PAccountCreation extends AccountCreation {
     );
   }
 
-  Future<CreateAccountResult> _createAccount(_) async {
+  Future<CreateAccountResult> _createAccount() async {
     // generate the mnemonic from the cryptographyKeyGenerator
     final phrases = cryptographyKeyGenerator.generate_mnemonic();
     // generate the private key from the cryptographyKeyGenerator using the mnemonic and a password
@@ -57,5 +55,3 @@ class LibP2PAccountCreation extends AccountCreation {
     );
   }
 }
-
-
