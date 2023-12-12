@@ -98,10 +98,9 @@ class _DefaultAppBar extends StatelessWidget {
             ),
           ),
           CustomCircleAvatar(
-            url: controller.user.value.iconUrl,
-            size: 32,
-            isOnline: controller.user.value.isOnline,
-          ),
+              coreId: controller.user.value.coreId,
+              size: 32,
+              isOnline: controller.user.value.isOnline),
           CustomSizes.smallSizedBoxWidth,
           GestureDetector(
             onDoubleTap: controller.saveCoreIdToClipboard,

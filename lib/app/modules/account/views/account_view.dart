@@ -42,21 +42,19 @@ class AccountView extends GetView<AccountController> {
                 SizedBox(width: 23.w),
               ],
             ),
-            const CustomCircleAvatar(
-              url: "https://avatars.githubusercontent.com/u/6645136?v=4",
+            CustomCircleAvatar(
+              coreId: controller.coreId.value,
               size: 64,
             ),
             CustomSizes.mediumSizedBoxHeight,
             Text(
               "Scrambled Gurgle",
-              style: TEXTSTYLES.kHeaderLarge
-                  .copyWith(color: COLORS.kDarkBlueColor),
+              style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
             ),
             SizedBox(height: 4.h),
             Text(
               controller.coreId.value.shortenCoreId,
-              style: TEXTSTYLES.kBodySmall
-                  .copyWith(color: COLORS.kTextSoftBlueColor),
+              style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
             ),
             SizedBox(height: 60.h),
             const Divider(
@@ -125,14 +123,12 @@ class AccountView extends GetView<AccountController> {
                 children: [
                   Text(
                     title,
-                    style: TEXTSTYLES.kLinkBig
-                        .copyWith(color: COLORS.kDarkBlueColor),
+                    style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
                   ),
                   if (subtitle != null)
                     Text(
                       subtitle,
-                      style: TEXTSTYLES.kBodySmall
-                          .copyWith(color: COLORS.kTextSoftBlueColor),
+                      style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
                     ),
                 ],
               ),

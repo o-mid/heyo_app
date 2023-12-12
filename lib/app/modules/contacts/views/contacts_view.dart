@@ -117,7 +117,7 @@ class ContactsView extends GetView<ContactsController> {
         margin: EdgeInsets.symmetric(horizontal: 10.w),
         child: Row(
           children: [
-            CustomCircleAvatar(url: contact.iconUrl, size: 40),
+            CustomCircleAvatar(coreId: contact.coreId, size: 40),
             CustomSizes.mediumSizedBoxWidth,
             Expanded(
               child: Column(

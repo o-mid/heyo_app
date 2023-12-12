@@ -21,7 +21,6 @@ class CallRingingWidget extends StatelessWidget {
           SizedBox(height: 105.h),
           CalleeOrCallerInfoWidget(
             coreId: user.coreId,
-            iconUrl: user.iconUrl,
             name: user.name,
           ),
           SizedBox(height: 40.h),

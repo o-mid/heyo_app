@@ -22,7 +22,7 @@ class CalleeOrCallerInfoWidget extends StatelessWidget {
     return Column(
       children: [
         CustomCircleAvatar(
-          url: iconUrl,
+          coreId: coreId,
           size: 64,
         ),
         SizedBox(height: 24.h),

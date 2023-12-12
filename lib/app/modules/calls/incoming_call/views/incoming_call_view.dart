@@ -26,7 +26,6 @@ class IncomingCallView extends GetView<IncomingCallController> {
               controller.incomingCallers.length == 1
                   ? CalleeOrCallerInfoWidget(
                       coreId: controller.incomingCallers.first.coreId,
-                      iconUrl: controller.incomingCallers.first.iconUrl,
                       name: controller.incomingCallers.first.name,
                     )
                   : MultipleCallerInfoWidget(

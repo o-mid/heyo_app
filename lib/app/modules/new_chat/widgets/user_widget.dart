@@ -30,7 +30,7 @@ class UserWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         CustomCircleAvatar(
-          url: user.iconUrl,
+          coreId: user.coreId,
           size: 48,
           isOnline: user.isOnline,
         ),
@@ -44,9 +44,7 @@ class UserWidget extends StatelessWidget {
               children: [
                 Text(
                   user.name,
-                  style: TEXTSTYLES.kChatName.copyWith(
-                    color: COLORS.kDarkBlueColor,
-                  ),
+                  style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kDarkBlueColor),
                 ),
                 CustomSizes.smallSizedBoxWidth,
                 if (user.isVerified) Assets.svg.verifiedWithBluePadding.svg(),
@@ -56,9 +54,7 @@ class UserWidget extends StatelessWidget {
             Text(
               user.walletAddress.shortenCoreId,
               maxLines: 1,
-              style: TEXTSTYLES.kChatText.copyWith(
-                color: COLORS.kTextBlueColor,
-              ),
+              style: TEXTSTYLES.kChatText.copyWith(color: COLORS.kTextBlueColor),
             ),
           ],
         ),
