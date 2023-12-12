@@ -156,6 +156,12 @@ class CallConnectionsHandler {
   }
 
   Future<void> close() async {
+    _localStream?.getTracks().forEach((element) async {
+      await element.stop();
+    });
+    await _localStream?.dispose();
+    _localStream = null;
+
     if (callStatusDataStore.currentCall != null) {
       for (var element in callStatusDataStore.currentCall!.activeSessions) {
         await element.dispose();
@@ -163,17 +169,13 @@ class CallConnectionsHandler {
       callStatusDataStore.currentCall!.activeSessions.clear();
       callStatusDataStore.currentCall = null;
     }
-    _localStream?.getTracks().forEach((element) async {
-      await element.stop();
-    });
-    await _localStream?.dispose();
-    _localStream = null;
+
   }
 
   void onNewMemberEventReceived(CallId callId, dynamic data) async {
     final member = data["newMemer"] as Map<String,dynamic>;
     if (callId == callStatusDataStore.currentCall?.callId) {
-      CallRTCSession callRTCSession = await _createSession(
+      await _createSession(
         RemotePeer(
           remoteCoreId: member["member"] as String,
           remotePeerId: null,
