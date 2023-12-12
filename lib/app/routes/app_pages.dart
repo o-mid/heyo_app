@@ -1,12 +1,10 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/add_participate/views/add_participate_view.dart';
-import 'package:heyo/app/modules/verified_user/binding/verified_user_binding.dart';
-import 'package:heyo/app/modules/verified_user/views/verified_user_view.dart';
 
 import '../modules/account/views/account_view.dart';
 import '../modules/add_contacts/bindings/add_contacts_binding.dart';
 import '../modules/add_contacts/views/add_contacts_view.dart';
 import '../modules/add_participate/bindings/add_participate_binding.dart';
+import '../modules/add_participate/views/add_participate_view.dart';
 import '../modules/auth/generatePrivateKeys/bindings/generate_private_keys_binding.dart';
 import '../modules/auth/generatePrivateKeys/views/generate_private_keys_view.dart';
 import '../modules/auth/pinCode/bindings/pin_code_binding.dart';
@@ -40,6 +38,8 @@ import '../modules/new_call/bindings/new_call_binding.dart';
 import '../modules/new_call/views/new_call_view.dart';
 import '../modules/new_chat/bindings/new_chat_binding.dart';
 import '../modules/new_chat/views/new_chat_view.dart';
+import '../modules/new_group_chat/bindings/new_group_chat_binding.dart';
+import '../modules/new_group_chat/views/new_group_chat_view.dart';
 import '../modules/search_nearby/bindings/search_nearby_binding.dart';
 import '../modules/search_nearby/views/search_nearby_view.dart';
 import '../modules/share_files/bindings/share_files_binding.dart';
@@ -49,6 +49,8 @@ import '../modules/share_location/views/share_location_view.dart';
 import '../modules/shared/utils/constants/transitions_constant.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
+import '../modules/verified_user/binding/verified_user_binding.dart';
+import '../modules/verified_user/views/verified_user_view.dart';
 import '../modules/wallet/bindings/wallet_binding.dart';
 import '../modules/wallet/views/wallet_view.dart';
 import '../modules/wifi_direct/bindings/wifi_direct_binding.dart';
@@ -274,6 +276,11 @@ class AppPages {
       name: _Paths.VERIFIED_USER,
       page: () => const VerifiedUserView(),
       binding: VerifiedUserBinding(),
+    ),
+    GetPage(
+      name: _Paths.NEW_GROUP_CHAT,
+      page: () => const NewGroupChatView(),
+      binding: NewGroupChatBinding(),
     ),
   ];
 }

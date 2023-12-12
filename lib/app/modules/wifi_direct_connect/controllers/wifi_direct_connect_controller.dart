@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/messages/connection/wifi_direct_connection_provider.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 
 import '../../../routes/app_pages.dart';
@@ -101,6 +102,11 @@ class WifiDirectConnectController extends GetxController {
                 coreId: user.coreId,
                 iconUrl: user.iconUrl,
                 connectionType: MessagingConnectionType.wifiDirect,
+                participants: [
+                  MessagingParticipantModel(
+                    coreId: user.coreId,
+                  ),
+                ],
               ),
             );
         });
@@ -119,6 +125,11 @@ class WifiDirectConnectController extends GetxController {
                 coreId: user.coreId,
                 iconUrl: user.iconUrl,
                 connectionType: MessagingConnectionType.wifiDirect,
+                participants: [
+                  MessagingParticipantModel(
+                    coreId: user.coreId,
+                  ),
+                ],
               ),
             );
         });
