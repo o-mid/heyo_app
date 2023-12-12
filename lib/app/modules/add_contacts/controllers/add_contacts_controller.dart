@@ -9,12 +9,6 @@ import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_mode
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/routes/app_pages.dart';
-
-import '../../../routes/app_pages.dart';
-import '../../calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
-import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
-import '../../new_chat/data/models/user_model.dart';
-import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../../shared/data/models/messaging_participant_model.dart';
 
 class AddContactsController extends GetxController {

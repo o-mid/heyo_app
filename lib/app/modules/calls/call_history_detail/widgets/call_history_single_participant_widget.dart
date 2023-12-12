@@ -5,6 +5,7 @@ import 'package:heyo/app/modules/calls/call_history_detail/controllers/call_hist
 import 'package:heyo/app/modules/calls/call_history_detail/widgets/history_call_log_widget.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
@@ -98,6 +99,7 @@ class CallHistorySingleParticipantWidget
                           coreId: controller.participants[0]!.coreId,
                           iconUrl: controller.participants[0]!.iconUrl,
                           connectionType: MessagingConnectionType.internet,
+                          participants: [MessagingParticipantModel(coreId: controller.participants[0]!.coreId)]
                         ),
                       );
                     },

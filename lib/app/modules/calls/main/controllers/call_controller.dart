@@ -119,12 +119,12 @@ class CallController extends GetxController {
   void message() {
     Get.toNamed(Routes.MESSAGES,
         arguments: MessagesViewArgumentsModel(
-          coreId: args.user.coreId,
-          iconUrl: args.user.iconUrl,
+          coreId: args.members.first,
+          iconUrl: "",
           connectionType: MessagingConnectionType.internet,
           participants: [
             MessagingParticipantModel(
-              coreId: args.user.coreId,
+              coreId: args.members.first,
             ),
           ],
         ));
