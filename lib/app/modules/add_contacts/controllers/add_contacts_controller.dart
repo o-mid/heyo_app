@@ -10,6 +10,13 @@ import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart'
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
+import '../../../routes/app_pages.dart';
+import '../../calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
+import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import '../../new_chat/data/models/user_model.dart';
+import '../../shared/data/models/messages_view_arguments_model.dart';
+import '../../shared/data/models/messaging_participant_model.dart';
+
 class AddContactsController extends GetxController {
   AddContactsController({
     required this.contactRepository,
@@ -102,14 +109,16 @@ class AddContactsController extends GetxController {
     await _updateChatHistory(userModel: userModel);
     await _updateCallHistory(userModel: userModel);
 
-    Get.offNamedUntil(
-      Routes.MESSAGES,
-      ModalRoute.withName(Routes.HOME),
-      arguments: MessagesViewArgumentsModel(
-        coreId: userModel.coreId,
-        iconUrl: userModel.iconUrl,
-      ),
-    );
+    Get.offNamedUntil(Routes.MESSAGES, ModalRoute.withName(Routes.HOME),
+        arguments: MessagesViewArgumentsModel(
+          coreId: userModel.coreId,
+          iconUrl: userModel.iconUrl,
+          participants: [
+            MessagingParticipantModel(
+              coreId: userModel.coreId,
+            ),
+          ],
+        ));
   }
 
   Future<void> _updateChatHistory({required UserModel userModel}) async {

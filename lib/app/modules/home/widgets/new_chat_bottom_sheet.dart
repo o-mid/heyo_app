@@ -136,7 +136,12 @@ void openNewChatBottomSheet() {
               padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
             ),
             //Todo: Start new group onPressed
-            onPressed: () {},
+            onPressed: () {
+              Get.back();
+              Get.toNamed(
+                Routes.NEW_GROUP_CHAT,
+              );
+            },
             child: Row(
               children: [
                 Container(

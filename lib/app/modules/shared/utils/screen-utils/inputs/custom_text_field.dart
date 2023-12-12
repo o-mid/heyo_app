@@ -74,12 +74,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
     } else {
       controller.value = TextEditingValue(text: widget.initialValue);
       controller.selection = controller.selection.copyWith(
-          baseOffset: widget.initialValue.length,
-          extentOffset: widget.initialValue.length);
+          baseOffset: widget.initialValue.length, extentOffset: widget.initialValue.length);
       controller.addListener(() {
-        widget.onChanged == null
-            ? null
-            : widget.onChanged!((controller.value.text));
+        widget.onChanged == null ? null : widget.onChanged!((controller.value.text));
       });
     }
   }
@@ -118,8 +115,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             width: widget.heightType == CustomTextFieldHeight.Small ? 1 : 2.0));
 
     OutlineInputBorder unFocusedBorder = OutlineInputBorder(
-        gapPadding: 11,
-        borderSide: BorderSide(color: COLORS.kTextSoftBlueColor, width: 1.0));
+        gapPadding: 11, borderSide: BorderSide(color: COLORS.kTextSoftBlueColor, width: 1.0));
 
     iconColor = widget.hasError
         ? COLORS.kStatesErrorColor

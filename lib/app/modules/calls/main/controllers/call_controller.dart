@@ -18,6 +18,7 @@ import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart'
 //import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:wakelock/wakelock.dart';
+import '../../../shared/data/models/messaging_participant_model.dart';
 
 //enum CallViewType {
 //  stack,
@@ -116,15 +117,17 @@ class CallController extends GetxController {
   }
 
   void message() {
-    //TODO shoud passed correct coreId
-    Get.toNamed(
-      Routes.MESSAGES,
-      arguments: MessagesViewArgumentsModel(
-        coreId: '',
-        iconUrl: '',
-        connectionType: MessagingConnectionType.internet,
-      ),
-    );
+    Get.toNamed(Routes.MESSAGES,
+        arguments: MessagesViewArgumentsModel(
+          coreId: args.user.coreId,
+          iconUrl: args.user.iconUrl,
+          connectionType: MessagingConnectionType.internet,
+          participants: [
+            MessagingParticipantModel(
+              coreId: args.user.coreId,
+            ),
+          ],
+        ));
   }
 
   @override
@@ -352,8 +355,7 @@ class CallController extends GetxController {
 
   //void updateCallViewType(CallViewType type) => callViewType.value = type;
 
-  void flipVideoPositions() =>
-      isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
+  void flipVideoPositions() => isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   Future<void> disposeRTCRender() async {
     for (var participate in connectedRemoteParticipates) {

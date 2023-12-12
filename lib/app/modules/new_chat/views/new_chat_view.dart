@@ -334,8 +334,7 @@ class _Contacts extends StatelessWidget {
               padding: CustomSizes.mainContentPadding,
               child: FocusScope(
                 child: Focus(
-                  onFocusChange: (focus) =>
-                      controller.isTextInputFocused.value = focus,
+                  onFocusChange: (focus) => controller.isTextInputFocused.value = focus,
                   focusNode: controller.inputFocusNode,
                   child: CustomTextField(
                     textController: controller.inputController,
@@ -345,23 +344,22 @@ class _Contacts extends StatelessWidget {
                         width: 20.w,
                         fit: BoxFit.fitWidth,
                       ),
-                      onPressed: () => {
-                        openQrScannerBottomSheet(controller.handleScannedValue)
-                      },
+                      onPressed: () => {openQrScannerBottomSheet(controller.handleScannedValue)},
                     ),
                   ),
                 ),
               ),
             ),
-            controller.searchSuggestions.isEmpty
-                ? EmptyUsersBody(
-                    infoText: LocaleKeys.newChat_emptyStateTitleContacts.tr,
-                    buttonText: LocaleKeys.newChat_buttons_invite.tr,
-                    onInvite: () => openInviteBottomSheet(
-                      profileLink: controller.profileLink,
-                    ),
-                  )
-                : _SearchInContactsBody(controller: controller),
+            if (controller.searchSuggestions.isEmpty)
+              EmptyUsersBody(
+                infoText: LocaleKeys.newChat_emptyStateTitleContacts.tr,
+                buttonText: LocaleKeys.newChat_buttons_invite.tr,
+                onInvite: () => openInviteBottomSheet(
+                  profileLink: controller.profileLink,
+                ),
+              )
+            else
+              _SearchInContactsBody(controller: controller),
           ],
         ),
       );
