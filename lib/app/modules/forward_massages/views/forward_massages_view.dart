@@ -15,6 +15,8 @@ import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
+import '../../shared/data/models/messaging_participant_model.dart';
+
 class ForwardMassagesView extends GetView<ForwardMassagesController> {
   @override
   Widget build(BuildContext context) {
@@ -49,8 +51,7 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                   padding: CustomSizes.contentPaddingWidth,
                   child: FocusScope(
                     child: Focus(
-                      onFocusChange: (focus) =>
-                          controller.isTextInputFocused.value = focus,
+                      onFocusChange: (focus) => controller.isTextInputFocused.value = focus,
                       child: CustomTextField(
                         textController: controller.inputController,
                         labelText: LocaleKeys.forwardMassagesPage_textInput.tr,
@@ -118,9 +119,7 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    LocaleKeys
-                                            .forwardMassagesPage_bottomBar_forwardTO
-                                            .tr +
+                                    LocaleKeys.forwardMassagesPage_bottomBar_forwardTO.tr +
                                         controller.selectedUserName.value,
                                     style: TEXTSTYLES.kChatText.copyWith(
                                       color: COLORS.kDarkBlueColor,
@@ -128,11 +127,8 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                                     ),
                                   ),
                                   Text(
-                                    controller.selectedMessages.length
-                                            .toString() +
-                                        LocaleKeys
-                                            .forwardMassagesPage_bottomBar_messages
-                                            .tr,
+                                    controller.selectedMessages.length.toString() +
+                                        LocaleKeys.forwardMassagesPage_bottomBar_messages.tr,
                                     style: TEXTSTYLES.kChatText.copyWith(
                                       color: COLORS.kTextBlueColor,
                                     ),
@@ -147,11 +143,14 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                                     Routes.MESSAGES,
                                     ModalRoute.withName(Routes.HOME),
                                     arguments: MessagesViewArgumentsModel(
-                                      coreId: controller.selectedUser!.coreId,
-                                      iconUrl: controller.selectedUser!.iconUrl,
-                                      forwardedMessages:
-                                          controller.selectedMessages,
-                                    ),
+                                        coreId: controller.selectedUser!.coreId,
+                                        iconUrl: controller.selectedUser!.iconUrl,
+                                        forwardedMessages: controller.selectedMessages,
+                                        participants: [
+                                          MessagingParticipantModel(
+                                            coreId: controller.selectedUser!.coreId,
+                                          )
+                                        ]),
                                   );
                                 }
                               },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:intl/intl.dart';
 
 import 'package:heyo/app/modules/shared/widgets/slidable_widget.dart';
@@ -36,10 +37,12 @@ class ChatWidget extends GetView<ChatsController> {
           onTap: () {
             Get.toNamed(
               Routes.MESSAGES,
-              arguments: MessagesViewArgumentsModel(
-                iconUrl: chat.icon,
-                coreId: chat.id,
-              ),
+              arguments:
+                  MessagesViewArgumentsModel(iconUrl: chat.icon, coreId: chat.id, participants: [
+                MessagingParticipantModel(
+                  coreId: chat.id,
+                )
+              ]),
             );
           },
           child: Padding(
@@ -65,9 +68,8 @@ class ChatWidget extends GetView<ChatsController> {
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontFamily: FONTS.interFamily,
-                                  fontWeight: chat.notificationCount > 0
-                                      ? FONTS.Bold
-                                      : FONTS.Medium,
+                                  fontWeight:
+                                      chat.notificationCount > 0 ? FONTS.Bold : FONTS.Medium,
                                 ),
                               ),
                               const SizedBox(width: 6),
@@ -83,8 +85,7 @@ class ChatWidget extends GetView<ChatsController> {
                                 ? DateFormat.Hm().format(chat.timestamp)
                                 : DateHelpers(chat.timestamp).isYesterday()
                                     ? LocaleKeys.yesterday.tr
-                                    : DateFormat('d/m/yy')
-                                        .format(chat.timestamp),
+                                    : DateFormat('d/m/yy').format(chat.timestamp),
                             style: TextStyle(
                               fontFamily: FONTS.interFamily,
                               fontWeight: FONTS.Medium,
@@ -106,9 +107,7 @@ class ChatWidget extends GetView<ChatsController> {
                                 color: chat.notificationCount > 0
                                     ? COLORS.kDarkBlueColor
                                     : COLORS.kTextSoftBlueColor,
-                                fontWeight: chat.notificationCount > 0
-                                    ? FONTS.SemiBold
-                                    : null,
+                                fontWeight: chat.notificationCount > 0 ? FONTS.SemiBold : null,
                               ),
                             ),
                           ),

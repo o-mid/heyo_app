@@ -15,6 +15,7 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 import '../../../../routes/app_pages.dart';
+import '../../../shared/data/models/messaging_participant_model.dart';
 import '../controllers/user_call_history_controller.dart';
 
 class UserCallHistoryView extends GetView<UserCallHistoryController> {
@@ -78,11 +79,12 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                       onPressed: () => Get.toNamed(
                         Routes.CALL,
                         arguments: CallViewArgumentsModel(
-                            session: null,
-                            callId: null,
-                            user: controller.user.value,
-                            enableVideo: false,
-                            isAudioCall: true),
+                          session: null,
+                          callId: null,
+                          user: controller.user.value,
+                          enableVideo: false,
+                          isAudioCall: true,
+                        ),
                       ),
                       icon: Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor),
                     ),
@@ -93,11 +95,12 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                       onPressed: () => Get.toNamed(
                         Routes.CALL,
                         arguments: CallViewArgumentsModel(
-                            session: null,
-                            callId: null,
-                            user: controller.user.value,
-                            enableVideo: true,
-                            isAudioCall: false),
+                          session: null,
+                          callId: null,
+                          user: controller.user.value,
+                          enableVideo: true,
+                          isAudioCall: false,
+                        ),
                       ),
                       icon: Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
                     ),
@@ -110,9 +113,15 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                         Get.toNamed(
                           Routes.MESSAGES,
                           arguments: MessagesViewArgumentsModel(
-                              coreId: controller.user.value.coreId,
-                              iconUrl: controller.user.value.iconUrl,
-                              connectionType: MessagingConnectionType.internet),
+                            coreId: controller.user.value.coreId,
+                            iconUrl: controller.user.value.iconUrl,
+                            connectionType: MessagingConnectionType.internet,
+                            participants: [
+                              MessagingParticipantModel(
+                                coreId: controller.user.value.coreId,
+                              ),
+                            ],
+                          ),
                         );
                       },
                       icon: Assets.svg.chatOutlined.svg(color: COLORS.kDarkBlueColor),
