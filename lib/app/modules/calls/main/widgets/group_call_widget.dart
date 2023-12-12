@@ -24,23 +24,21 @@ class GroupCallWidget extends GetView<CallController> {
         return const Center(child: Text('No remote videos available.'));
       }
 
-      return Column(
+      return Stack(
         children: [
-          Expanded(
-            child: GridView.builder(
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: remoteParticipate.length == 2 ? 1 : 2,
-                childAspectRatio: ScreenUtil.defaultSize.aspectRatio *
-                    (remoteParticipate.length == 2 ? 2 : 1),
-              ),
-              itemCount: remoteParticipate.length,
-              itemBuilder: (context, index) {
-                return CallRendererWidget(
-                  participantModel: remoteParticipate[index],
-                );
-              },
+          GridView.builder(
+            shrinkWrap: true,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: remoteParticipate.length == 2 ? 1 : 2,
+              childAspectRatio: ScreenUtil.defaultSize.aspectRatio *
+                  (remoteParticipate.length == 2 ? 2 : 1),
             ),
+            itemCount: remoteParticipate.length,
+            itemBuilder: (context, index) {
+              return CallRendererWidget(
+                participantModel: remoteParticipate[index],
+              );
+            },
           ),
           DraggableVideo(
             child: AnimatedSize(
