@@ -9,13 +9,11 @@ class CustomCircleAvatar extends StatelessWidget {
     required this.size,
     super.key,
     this.isOnline = false,
-    this.isMockData = false,
   });
 
   final String coreId;
   final double size;
   final bool isOnline;
-  final bool isMockData;
 
   @override
   Widget build(BuildContext context) {
