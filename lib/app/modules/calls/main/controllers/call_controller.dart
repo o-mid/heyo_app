@@ -112,6 +112,11 @@ class CallController extends GetxController {
       callRepository.onLocalStream = (stream) {
         localRenderer.srcObject = stream;
         updateCallerVideoWidget();
+
+        if (args.isAudioCall) {
+          callRepository.showLocalVideoStream(false, '', false);
+        }
+
       };
     }
   }
@@ -173,11 +178,6 @@ class CallController extends GetxController {
           callRepository.getLocalStream();
     }
     print("Call type ${(args.isAudioCall)}");
-    if (args.isAudioCall) {
-      //callerVideoEnabled.value = false;
-      //calleeVideoEnabled.value = false;
-      callRepository.showLocalVideoStream(false, '', false);
-    }
 
     //* adding participate into bottom sheet
     // TODO(AliAzim): This list will be change in future
