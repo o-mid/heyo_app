@@ -64,8 +64,7 @@ class CallHistoryObserver extends GetxController {
           }
         case CallHistoryStatus.connected:
           {
-            final call = await callHistoryRepo
-                .getOneCall(state.remotes.first.remotePeer.remoteCoreId);
+            final call = await callHistoryRepo.getOneCall(state.callId);
             if (call == null) {
               return;
             }
@@ -190,14 +189,13 @@ class CallHistoryObserver extends GetxController {
       return;
     }
     //TODO:(Aliazim) update model why delete and create !?
-    await callHistoryRepo.deleteOneCall(callId);
+    //await callHistoryRepo.deleteOneCall(callId);
     //TODO:(Aliazim) change call histoy model
-    await callHistoryRepo.addCallToHistory(
-      call.copyWith(
-        status: status!,
-        endDate: DateTime.now(),
-      ),
+    final newCall = call.copyWith(
+      status: status!,
+      endDate: DateTime.now(),
     );
+    await callHistoryRepo.updateCall(newCall);
   }
 
   Future<CallHistoryParticipantModel> _getUserFromCoreId(String coreId) async {

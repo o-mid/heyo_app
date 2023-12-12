@@ -56,7 +56,7 @@ class CallHistoryProvider implements CallHistoryAbstractProvider {
   Future<CallHistoryModel?> getOneCall(String callId) async {
     final records = await _store.find(
       await _db,
-      finder: Finder(filter: Filter.equals('id', callId)),
+      finder: Finder(filter: Filter.equals('callId', callId)),
     );
 
     if (records.isEmpty) {
@@ -106,12 +106,16 @@ class CallHistoryProvider implements CallHistoryAbstractProvider {
 
   @override
   Future<void> updateCall(CallHistoryModel call) async {
-    await _store.update(
-      await _db,
-      call.toJson(),
-      finder: Finder(
-        filter: Filter.equals('callId', call.callId),
-      ),
-    );
+    try {
+      await _store.update(
+        await _db,
+        call.toJson(),
+        finder: Finder(
+          filter: Filter.equals('callId', call.callId),
+        ),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }
