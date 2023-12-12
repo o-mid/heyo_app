@@ -225,7 +225,7 @@ class CallController extends GetxController {
     // or input of method should be CallItemModel
     final remoteParticipate = ConnectedParticipantModel(
       audioMode: true.obs,
-      videoMode: true.obs,
+      videoMode: (!callStream.isAudioCall).obs,
       coreId: callStream.coreId,
       name: callStream.coreId.shortenCoreId,
       iconUrl: 'https://avatars.githubusercontent.com/u/6645136?v=4',

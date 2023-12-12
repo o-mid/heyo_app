@@ -15,6 +15,7 @@ class WebRTCCallRepository implements CallRepository {
           CallStream(
             coreId: callRTCSession.remotePeer.remoteCoreId,
             remoteStream: callRTCSession.getStream(),
+            isAudioCall: callRTCSession.isAudioCall
           ),
         );
       });
@@ -52,6 +53,7 @@ class WebRTCCallRepository implements CallRepository {
           (e) => CallStream(
             coreId: e.remotePeer.remoteCoreId,
             remoteStream: e.getStream(),
+            isAudioCall: e.isAudioCall,
           ),
         )
         .toList();
@@ -113,6 +115,7 @@ class WebRTCCallRepository implements CallRepository {
       CallStream(
         coreId: coreId,
         remoteStream: await _createStream('video', false),
+        isAudioCall: false,
       ),
     );
   }
