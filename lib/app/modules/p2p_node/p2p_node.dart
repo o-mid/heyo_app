@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
@@ -47,7 +48,7 @@ class P2PNode {
     _startP2PNode();
   }
 
-  void _startP2PNode() async {
+  Future<void> initNode() async {
     // start P2P node Prosses
 
     // 1. check if account is created and if not create it and save it in storage
