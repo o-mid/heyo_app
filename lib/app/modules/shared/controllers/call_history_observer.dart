@@ -188,7 +188,7 @@ class CallHistoryObserver extends GetxController {
     if (call == null) {
       return;
     }
-    //TODO:(Aliazim) update model why delete and create !?
+
     //await callHistoryRepo.deleteOneCall(callId);
     //TODO:(Aliazim) change call histoy model
     final newCall = call.copyWith(

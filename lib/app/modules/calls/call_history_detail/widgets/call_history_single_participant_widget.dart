@@ -33,14 +33,14 @@ class CallHistorySingleParticipantWidget
             children: [
               SizedBox(height: 40.h),
               CustomCircleAvatar(
-                url: controller.participants[0]!.iconUrl,
+                url: controller.participants[0].iconUrl,
                 size: 64,
               ),
               CustomSizes.mediumSizedBoxHeight,
               GestureDetector(
                 onTap: () => controller.saveCoreIdToClipboard(),
                 child: Text(
-                  controller.participants[0]!.name,
+                  controller.participants[0].name,
                   style: TEXTSTYLES.kHeaderLarge
                       .copyWith(color: COLORS.kDarkBlueColor),
                 ),
@@ -49,7 +49,7 @@ class CallHistorySingleParticipantWidget
               GestureDetector(
                 onTap: () => controller.saveCoreIdToClipboard(),
                 child: Text(
-                  controller.participants[0]!.coreId.shortenCoreId,
+                  controller.participants[0].coreId.shortenCoreId,
                   style: TEXTSTYLES.kBodySmall
                       .copyWith(color: COLORS.kTextSoftBlueColor),
                 ),
@@ -96,11 +96,13 @@ class CallHistorySingleParticipantWidget
                       Get.toNamed(
                         Routes.MESSAGES,
                         arguments: MessagesViewArgumentsModel(
-                          coreId: controller.participants[0]!.coreId,
-                          iconUrl: controller.participants[0]!.iconUrl,
-                          connectionType: MessagingConnectionType.internet,
-                          participants: [MessagingParticipantModel(coreId: controller.participants[0]!.coreId)]
-                        ),
+                            coreId: controller.participants[0].coreId,
+                            iconUrl: controller.participants[0].iconUrl,
+                            connectionType: MessagingConnectionType.internet,
+                            participants: [
+                              MessagingParticipantModel(
+                                  coreId: controller.participants[0].coreId)
+                            ]),
                       );
                     },
                     icon: Assets.svg.chatOutlined
