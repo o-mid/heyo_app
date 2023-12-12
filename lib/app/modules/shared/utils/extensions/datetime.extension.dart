@@ -23,7 +23,7 @@ extension DateTimeExtension on DateTime {
 
   String formattedDifference(DateTime? endTime) {
     if (endTime == null) {
-      return DateFormat('yyyy-MM-dd, hh:mm a').format(this);
+      return DateFormat('d MMMM, hh:mm').format(this);
     }
 
     final difference = endTime.difference(this);

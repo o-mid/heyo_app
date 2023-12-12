@@ -40,7 +40,7 @@ class CallHistorySingleParticipantWidget
               GestureDetector(
                 onTap: () => controller.saveCoreIdToClipboard(),
                 child: Text(
-                  controller.participants[0]!.name,
+                  controller.participants[0].name,
                   style: TEXTSTYLES.kHeaderLarge
                       .copyWith(color: COLORS.kDarkBlueColor),
                 ),
@@ -49,7 +49,7 @@ class CallHistorySingleParticipantWidget
               GestureDetector(
                 onTap: () => controller.saveCoreIdToClipboard(),
                 child: Text(
-                  controller.participants[0]!.coreId.shortenCoreId,
+                  controller.participants[0].coreId.shortenCoreId,
                   style: TEXTSTYLES.kBodySmall
                       .copyWith(color: COLORS.kTextSoftBlueColor),
                 ),

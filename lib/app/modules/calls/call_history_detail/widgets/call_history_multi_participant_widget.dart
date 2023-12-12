@@ -98,13 +98,15 @@ class CallHistoryMultiParticipantWidget
                       Get.toNamed(
                         Routes.MESSAGES,
                         arguments: MessagesViewArgumentsModel(
-                            coreId: controller.participants[0].coreId,
-                            iconUrl: controller.participants[0].iconUrl,
-                            connectionType: MessagingConnectionType.internet,
-                            participants: [
-                              MessagingParticipantModel(
-                                  coreId: controller.participants[0].coreId)
-                            ]),
+                          coreId: controller.participants[0].coreId,
+                          iconUrl: controller.participants[0].iconUrl,
+                          connectionType: MessagingConnectionType.internet,
+                          participants: [
+                            MessagingParticipantModel(
+                              coreId: controller.participants[0].coreId,
+                            ),
+                          ],
+                        ),
                       );
                     },
                     icon: Assets.svg.chatOutlined
