@@ -88,9 +88,10 @@ class CallHistoryObserver extends GetxController {
               return;
             }
 
-            final startTime = _callStartTimestamps[call.callId];
+            final startTime = _callStartTimestamps[state.callId];
 
             if (startTime == null) {
+              //* This means the call did not connected
               await _updateCallStatusAndEndTime(
                 callId: call.callId,
                 status: _determineCallStatusFromPrevAndHistory(
@@ -98,12 +99,13 @@ class CallHistoryObserver extends GetxController {
                   state.callHistoryStatus,
                 ),
               );
-              return;
+            } else {
+              //* This means the call connected
+              await _updateCallStatusAndEndTime(
+                callId: call.callId,
+              );
             }
 
-            await _updateCallStatusAndEndTime(
-              callId: call.callId,
-            );
             break;
           }
         case CallHistoryStatus.initial:
@@ -189,13 +191,15 @@ class CallHistoryObserver extends GetxController {
       return;
     }
 
-    //await callHistoryRepo.deleteOneCall(callId);
-    //TODO:(Aliazim) change call histoy model
-    final newCall = call.copyWith(
-      status: status!,
-      endDate: DateTime.now(),
-    );
-    await callHistoryRepo.updateCall(newCall);
+    final updateCall = status == null
+        ? call.copyWith(
+            endDate: DateTime.now(),
+          )
+        : call.copyWith(
+            status: status,
+            endDate: DateTime.now(),
+          );
+    await callHistoryRepo.updateCall(updateCall);
   }
 
   Future<CallHistoryParticipantModel> _getUserFromCoreId(String coreId) async {

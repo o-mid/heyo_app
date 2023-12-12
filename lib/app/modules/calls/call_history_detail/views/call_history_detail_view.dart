@@ -34,7 +34,7 @@ class CallHistoryDetailView extends GetView<CallHistoryDetailController> {
         ],
       ),
       body: Obx(() {
-        if (controller.participants.length > 2) {
+        if (controller.participants.length < 2) {
           return const CallHistorySingleParticipantWidget();
         } else {
           return const CallHistoryMultiParticipantWidget();
