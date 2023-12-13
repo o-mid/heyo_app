@@ -9,7 +9,6 @@ part 'local_participant_model.freezed.dart';
 class LocalParticipantModel with _$LocalParticipantModel {
   const factory LocalParticipantModel({
     required String name,
-    required String iconUrl,
     required String coreId,
     required RxBool audioMode,
     required RxBool videoMode,
@@ -26,7 +25,6 @@ extension ConnectedParticipateMapper on LocalParticipantModel {
     return ConnectedParticipantModel(
       name: name,
       coreId: coreId,
-      iconUrl: iconUrl,
       audioMode: audioMode,
       videoMode: videoMode,
       rtcVideoRenderer: rtcVideoRenderer,

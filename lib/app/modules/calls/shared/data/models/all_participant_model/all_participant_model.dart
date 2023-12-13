@@ -17,7 +17,6 @@ class AllParticipantModel with _$AllParticipantModel {
   @JsonSerializable(explicitToJson: true)
   const factory AllParticipantModel({
     required String name,
-    required String iconUrl,
     required String coreId,
     @Default(AllParticipantStatus.calling) AllParticipantStatus status,
   }) = _AllParticipantModel;
@@ -31,7 +30,6 @@ extension UserModelMapper on UserModel {
     return AllParticipantModel(
       name: name,
       coreId: coreId,
-      iconUrl: iconUrl,
     );
   }
 }

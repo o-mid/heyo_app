@@ -21,7 +21,6 @@ AllParticipantModel _$AllParticipantModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$AllParticipantModel {
   String get name => throw _privateConstructorUsedError;
-  String get iconUrl => throw _privateConstructorUsedError;
   String get coreId => throw _privateConstructorUsedError;
   AllParticipantStatus get status => throw _privateConstructorUsedError;
 
@@ -37,11 +36,7 @@ abstract class $AllParticipantModelCopyWith<$Res> {
           AllParticipantModel value, $Res Function(AllParticipantModel) then) =
       _$AllParticipantModelCopyWithImpl<$Res, AllParticipantModel>;
   @useResult
-  $Res call(
-      {String name,
-      String iconUrl,
-      String coreId,
-      AllParticipantStatus status});
+  $Res call({String name, String coreId, AllParticipantStatus status});
 }
 
 /// @nodoc
@@ -58,7 +53,6 @@ class _$AllParticipantModelCopyWithImpl<$Res, $Val extends AllParticipantModel>
   @override
   $Res call({
     Object? name = null,
-    Object? iconUrl = null,
     Object? coreId = null,
     Object? status = null,
   }) {
@@ -66,10 +60,6 @@ class _$AllParticipantModelCopyWithImpl<$Res, $Val extends AllParticipantModel>
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconUrl: null == iconUrl
-          ? _value.iconUrl
-          : iconUrl // ignore: cast_nullable_to_non_nullable
               as String,
       coreId: null == coreId
           ? _value.coreId
@@ -91,11 +81,7 @@ abstract class _$$AllParticipantModelImplCopyWith<$Res>
       __$$AllParticipantModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String name,
-      String iconUrl,
-      String coreId,
-      AllParticipantStatus status});
+  $Res call({String name, String coreId, AllParticipantStatus status});
 }
 
 /// @nodoc
@@ -110,7 +96,6 @@ class __$$AllParticipantModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? name = null,
-    Object? iconUrl = null,
     Object? coreId = null,
     Object? status = null,
   }) {
@@ -118,10 +103,6 @@ class __$$AllParticipantModelImplCopyWithImpl<$Res>
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconUrl: null == iconUrl
-          ? _value.iconUrl
-          : iconUrl // ignore: cast_nullable_to_non_nullable
               as String,
       coreId: null == coreId
           ? _value.coreId
@@ -141,7 +122,6 @@ class __$$AllParticipantModelImplCopyWithImpl<$Res>
 class _$AllParticipantModelImpl implements _AllParticipantModel {
   const _$AllParticipantModelImpl(
       {required this.name,
-      required this.iconUrl,
       required this.coreId,
       this.status = AllParticipantStatus.calling});
 
@@ -151,8 +131,6 @@ class _$AllParticipantModelImpl implements _AllParticipantModel {
   @override
   final String name;
   @override
-  final String iconUrl;
-  @override
   final String coreId;
   @override
   @JsonKey()
@@ -160,7 +138,7 @@ class _$AllParticipantModelImpl implements _AllParticipantModel {
 
   @override
   String toString() {
-    return 'AllParticipantModel(name: $name, iconUrl: $iconUrl, coreId: $coreId, status: $status)';
+    return 'AllParticipantModel(name: $name, coreId: $coreId, status: $status)';
   }
 
   @override
@@ -169,14 +147,13 @@ class _$AllParticipantModelImpl implements _AllParticipantModel {
         (other.runtimeType == runtimeType &&
             other is _$AllParticipantModelImpl &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.iconUrl, iconUrl) || other.iconUrl == iconUrl) &&
             (identical(other.coreId, coreId) || other.coreId == coreId) &&
             (identical(other.status, status) || other.status == status));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name, iconUrl, coreId, status);
+  int get hashCode => Object.hash(runtimeType, name, coreId, status);
 
   @JsonKey(ignore: true)
   @override
@@ -196,7 +173,6 @@ class _$AllParticipantModelImpl implements _AllParticipantModel {
 abstract class _AllParticipantModel implements AllParticipantModel {
   const factory _AllParticipantModel(
       {required final String name,
-      required final String iconUrl,
       required final String coreId,
       final AllParticipantStatus status}) = _$AllParticipantModelImpl;
 
@@ -205,8 +181,6 @@ abstract class _AllParticipantModel implements AllParticipantModel {
 
   @override
   String get name;
-  @override
-  String get iconUrl;
   @override
   String get coreId;
   @override

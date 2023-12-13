@@ -117,10 +117,10 @@ packages:
     dependency: "direct dev"
     description:
       name: build_runner
-      sha256: "10c6bcdbf9d049a0b666702cf1cee4ddfdc38f02a19d35ae392863b47519848b"
+      sha256: "67d591d602906ef9201caf93452495ad1812bea2074f04e25dbd7c133785821b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.6"
+    version: "2.4.7"
   build_runner_core:
     dependency: transitive
     description:
@@ -412,14 +412,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.3.3"
-  ed_screen_recorder:
-    dependency: "direct main"
-    description:
-      name: ed_screen_recorder
-      sha256: ac41454ddf453115de011423fffa50da4bc0b83ce7452f83044f30436a6b9d57
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.13"
   emoji_picker_flutter:
     dependency: "direct main"
     description:

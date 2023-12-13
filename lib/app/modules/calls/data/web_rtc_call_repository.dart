@@ -146,7 +146,6 @@ class WebRTCCallRepository implements CallRepository {
       AllParticipantModel(
         coreId: coreId,
         name: coreId,
-        iconUrl: mockProfileImage,
         status: AllParticipantStatus.accepted,
       ),
     );

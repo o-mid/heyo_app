@@ -20,7 +20,7 @@ class SelectedUserChip extends StatelessWidget {
               children: controller.selectedUser.map(
                 (user) {
                   return ChipWidget(
-                    avatarUrl: user.iconUrl,
+                    coreId: user.coreId,
                     label: user.name,
                     onDelete: () {
                       //* Remove the user from the list

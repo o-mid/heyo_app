@@ -9,7 +9,6 @@ part 'connected_participant_model.freezed.dart';
 abstract class ConnectedParticipantModel with _$ConnectedParticipantModel {
   const factory ConnectedParticipantModel({
     required String name,
-    required String iconUrl,
     required String coreId,
     //@RxBoolConverter() required bool audioMode,
     //@RxBoolConverter() required bool videoMode,

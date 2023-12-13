@@ -64,14 +64,6 @@ class CallController extends GetxController {
   //final callViewType = CallViewType.stack.obs;
   //late Session session;
 
-  RxList<ConnectedParticipantModel> getAllConnectedParticipate() {
-    //* Use this item for group call
-    //* The first video renderer is the local Renderer,
-    return RxList([
-      localParticipate.value!.mapToConnectedParticipantModel(),
-      ...connectedRemoteParticipates,
-    ]);
-  }
 
   String getConnectedParticipantsName() {
     //* This item will loop all call connected user
@@ -93,11 +85,10 @@ class CallController extends GetxController {
     final localParticipateCoreId = await accountInfo.getUserAddress();
     localParticipate.value = LocalParticipantModel(
       name: localParticipateCoreId!.shortenCoreId,
-      iconUrl: 'https://avatars.githubusercontent.com/u/7847725?v=4',
       coreId: localParticipateCoreId,
       // TODO(AliAzim): audio & video mode should be get from the call.
       audioMode: true.obs,
-      videoMode: true.obs,
+      videoMode: (!args.isAudioCall).obs,
       callDurationInSecond: 0.obs,
       frondCamera: true.obs,
     );
@@ -114,7 +105,9 @@ class CallController extends GetxController {
         updateCallerVideoWidget();
 
         if (args.isAudioCall) {
-          callRepository.showLocalVideoStream(false, '', false);
+          callRepository.showLocalVideoStream(false, '', true);
+        }else {
+          callRepository.showLocalVideoStream(true, '', true);
         }
 
       };
@@ -187,7 +180,6 @@ class CallController extends GetxController {
         AllParticipantModel(
           name: element.shortenCoreId,
           coreId: element.shortenCoreId,
-          iconUrl: 'https://avatars.githubusercontent.com/u/7847725?v=4',
         ),
       );
     }
@@ -228,7 +220,6 @@ class CallController extends GetxController {
       videoMode: (!callStream.isAudioCall).obs,
       coreId: callStream.coreId,
       name: callStream.coreId.shortenCoreId,
-      iconUrl: 'https://avatars.githubusercontent.com/u/6645136?v=4',
       stream: callStream.remoteStream,
       rtcVideoRenderer: renderer,
     );

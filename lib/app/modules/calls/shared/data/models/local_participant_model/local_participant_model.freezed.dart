@@ -17,7 +17,6 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$LocalParticipantModel {
   String get name => throw _privateConstructorUsedError;
-  String get iconUrl => throw _privateConstructorUsedError;
   String get coreId => throw _privateConstructorUsedError;
   RxBool get audioMode => throw _privateConstructorUsedError;
   RxBool get videoMode => throw _privateConstructorUsedError;
@@ -40,7 +39,6 @@ abstract class $LocalParticipantModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String name,
-      String iconUrl,
       String coreId,
       RxBool audioMode,
       RxBool videoMode,
@@ -66,7 +64,6 @@ class _$LocalParticipantModelCopyWithImpl<$Res,
   @override
   $Res call({
     Object? name = null,
-    Object? iconUrl = null,
     Object? coreId = null,
     Object? audioMode = null,
     Object? videoMode = null,
@@ -80,10 +77,6 @@ class _$LocalParticipantModelCopyWithImpl<$Res,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconUrl: null == iconUrl
-          ? _value.iconUrl
-          : iconUrl // ignore: cast_nullable_to_non_nullable
               as String,
       coreId: null == coreId
           ? _value.coreId
@@ -132,7 +125,6 @@ abstract class _$$LocalParticipantModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {String name,
-      String iconUrl,
       String coreId,
       RxBool audioMode,
       RxBool videoMode,
@@ -156,7 +148,6 @@ class __$$LocalParticipantModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? name = null,
-    Object? iconUrl = null,
     Object? coreId = null,
     Object? audioMode = null,
     Object? videoMode = null,
@@ -170,10 +161,6 @@ class __$$LocalParticipantModelImplCopyWithImpl<$Res>
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconUrl: null == iconUrl
-          ? _value.iconUrl
-          : iconUrl // ignore: cast_nullable_to_non_nullable
               as String,
       coreId: null == coreId
           ? _value.coreId
@@ -216,7 +203,6 @@ class __$$LocalParticipantModelImplCopyWithImpl<$Res>
 class _$LocalParticipantModelImpl implements _LocalParticipantModel {
   const _$LocalParticipantModelImpl(
       {required this.name,
-      required this.iconUrl,
       required this.coreId,
       required this.audioMode,
       required this.videoMode,
@@ -228,8 +214,6 @@ class _$LocalParticipantModelImpl implements _LocalParticipantModel {
 
   @override
   final String name;
-  @override
-  final String iconUrl;
   @override
   final String coreId;
   @override
@@ -250,7 +234,7 @@ class _$LocalParticipantModelImpl implements _LocalParticipantModel {
 
   @override
   String toString() {
-    return 'LocalParticipantModel(name: $name, iconUrl: $iconUrl, coreId: $coreId, audioMode: $audioMode, videoMode: $videoMode, frondCamera: $frondCamera, callDurationInSecond: $callDurationInSecond, status: $status, stream: $stream, rtcVideoRenderer: $rtcVideoRenderer)';
+    return 'LocalParticipantModel(name: $name, coreId: $coreId, audioMode: $audioMode, videoMode: $videoMode, frondCamera: $frondCamera, callDurationInSecond: $callDurationInSecond, status: $status, stream: $stream, rtcVideoRenderer: $rtcVideoRenderer)';
   }
 
   @override
@@ -259,7 +243,6 @@ class _$LocalParticipantModelImpl implements _LocalParticipantModel {
         (other.runtimeType == runtimeType &&
             other is _$LocalParticipantModelImpl &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.iconUrl, iconUrl) || other.iconUrl == iconUrl) &&
             (identical(other.coreId, coreId) || other.coreId == coreId) &&
             (identical(other.audioMode, audioMode) ||
                 other.audioMode == audioMode) &&
@@ -279,7 +262,6 @@ class _$LocalParticipantModelImpl implements _LocalParticipantModel {
   int get hashCode => Object.hash(
       runtimeType,
       name,
-      iconUrl,
       coreId,
       audioMode,
       videoMode,
@@ -300,7 +282,6 @@ class _$LocalParticipantModelImpl implements _LocalParticipantModel {
 abstract class _LocalParticipantModel implements LocalParticipantModel {
   const factory _LocalParticipantModel(
       {required final String name,
-      required final String iconUrl,
       required final String coreId,
       required final RxBool audioMode,
       required final RxBool videoMode,
@@ -312,8 +293,6 @@ abstract class _LocalParticipantModel implements LocalParticipantModel {
 
   @override
   String get name;
-  @override
-  String get iconUrl;
   @override
   String get coreId;
   @override

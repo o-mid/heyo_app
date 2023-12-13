@@ -17,7 +17,6 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ConnectedParticipantModel {
   String get name => throw _privateConstructorUsedError;
-  String get iconUrl => throw _privateConstructorUsedError;
   String get coreId =>
       throw _privateConstructorUsedError; //@RxBoolConverter() required bool audioMode,
 //@RxBoolConverter() required bool videoMode,
@@ -40,7 +39,6 @@ abstract class $ConnectedParticipantModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String name,
-      String iconUrl,
       String coreId,
       RxBool audioMode,
       RxBool videoMode,
@@ -64,7 +62,6 @@ class _$ConnectedParticipantModelCopyWithImpl<$Res,
   @override
   $Res call({
     Object? name = null,
-    Object? iconUrl = null,
     Object? coreId = null,
     Object? audioMode = null,
     Object? videoMode = null,
@@ -76,10 +73,6 @@ class _$ConnectedParticipantModelCopyWithImpl<$Res,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconUrl: null == iconUrl
-          ? _value.iconUrl
-          : iconUrl // ignore: cast_nullable_to_non_nullable
               as String,
       coreId: null == coreId
           ? _value.coreId
@@ -120,7 +113,6 @@ abstract class _$$ConnectedParticipantModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {String name,
-      String iconUrl,
       String coreId,
       RxBool audioMode,
       RxBool videoMode,
@@ -143,7 +135,6 @@ class __$$ConnectedParticipantModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? name = null,
-    Object? iconUrl = null,
     Object? coreId = null,
     Object? audioMode = null,
     Object? videoMode = null,
@@ -155,10 +146,6 @@ class __$$ConnectedParticipantModelImplCopyWithImpl<$Res>
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconUrl: null == iconUrl
-          ? _value.iconUrl
-          : iconUrl // ignore: cast_nullable_to_non_nullable
               as String,
       coreId: null == coreId
           ? _value.coreId
@@ -193,7 +180,6 @@ class __$$ConnectedParticipantModelImplCopyWithImpl<$Res>
 class _$ConnectedParticipantModelImpl implements _ConnectedParticipantModel {
   const _$ConnectedParticipantModelImpl(
       {required this.name,
-      required this.iconUrl,
       required this.coreId,
       required this.audioMode,
       required this.videoMode,
@@ -203,8 +189,6 @@ class _$ConnectedParticipantModelImpl implements _ConnectedParticipantModel {
 
   @override
   final String name;
-  @override
-  final String iconUrl;
   @override
   final String coreId;
 //@RxBoolConverter() required bool audioMode,
@@ -223,7 +207,7 @@ class _$ConnectedParticipantModelImpl implements _ConnectedParticipantModel {
 
   @override
   String toString() {
-    return 'ConnectedParticipantModel(name: $name, iconUrl: $iconUrl, coreId: $coreId, audioMode: $audioMode, videoMode: $videoMode, status: $status, stream: $stream, rtcVideoRenderer: $rtcVideoRenderer)';
+    return 'ConnectedParticipantModel(name: $name, coreId: $coreId, audioMode: $audioMode, videoMode: $videoMode, status: $status, stream: $stream, rtcVideoRenderer: $rtcVideoRenderer)';
   }
 
   @override
@@ -232,7 +216,6 @@ class _$ConnectedParticipantModelImpl implements _ConnectedParticipantModel {
         (other.runtimeType == runtimeType &&
             other is _$ConnectedParticipantModelImpl &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.iconUrl, iconUrl) || other.iconUrl == iconUrl) &&
             (identical(other.coreId, coreId) || other.coreId == coreId) &&
             (identical(other.audioMode, audioMode) ||
                 other.audioMode == audioMode) &&
@@ -245,7 +228,7 @@ class _$ConnectedParticipantModelImpl implements _ConnectedParticipantModel {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, name, iconUrl, coreId, audioMode,
+  int get hashCode => Object.hash(runtimeType, name, coreId, audioMode,
       videoMode, status, stream, rtcVideoRenderer);
 
   @JsonKey(ignore: true)
@@ -259,7 +242,6 @@ class _$ConnectedParticipantModelImpl implements _ConnectedParticipantModel {
 abstract class _ConnectedParticipantModel implements ConnectedParticipantModel {
   const factory _ConnectedParticipantModel(
           {required final String name,
-          required final String iconUrl,
           required final String coreId,
           required final RxBool audioMode,
           required final RxBool videoMode,
@@ -270,8 +252,6 @@ abstract class _ConnectedParticipantModel implements ConnectedParticipantModel {
 
   @override
   String get name;
-  @override
-  String get iconUrl;
   @override
   String get coreId;
   @override //@RxBoolConverter() required bool audioMode,
