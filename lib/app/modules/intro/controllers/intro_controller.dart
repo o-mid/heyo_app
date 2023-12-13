@@ -42,16 +42,16 @@ class IntroController extends GetxController with WidgetsBindingObserver {
       debugPrint('app is resumed');
       // Add 2 seconds timer so if the user is in resume and
       // no incoming link arrived, we dispose the stream
-      // Timer(
-      //   const Duration(seconds: 2),
-      //   () async {
-      //     //close the loading modal
-      //     if (Get.isDialogOpen == true) {
-      //       Get.back();
-      //       debugPrint("Verification not complete");
-      //     }
-      //   },
-      // );
+      Timer(
+        const Duration(seconds: 2),
+        () async {
+          //close the loading modal
+          if (Get.isDialogOpen == true) {
+            Get.back();
+            debugPrint("Verification not complete");
+          }
+        },
+      );
     }
   }
 
@@ -85,7 +85,9 @@ class IntroController extends GetxController with WidgetsBindingObserver {
   }
 
   Future<void> _launchCorePassVerificationProcess() async {
-    /// wait for getting local core id from p2pCom
+    /// lets first create account and core id
+    await introRepo.initConnectionContractor();
+
     // Launch corePass application
     final corePassData = await introRepo.retrieveCoreIdFromCorePass();
     // check if it was successful

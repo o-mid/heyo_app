@@ -21,7 +21,6 @@ class IntroRepo extends IntroAbstractRepo {
 
   @override
   Future<Tuple3<bool, String, String>> retrieveCoreIdFromCorePass() async {
-    await connectionContractor.init();
 
     final isLaunched = await vcp.launchVerificationProcess();
 
@@ -46,4 +45,7 @@ class IntroRepo extends IntroAbstractRepo {
     debugPrint('Delegated Credentials Successfully added');
     return isSuccessful;
   }
+
+  @override
+  Future<void> initConnectionContractor() => connectionContractor.init();
 }
