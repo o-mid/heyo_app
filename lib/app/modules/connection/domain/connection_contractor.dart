@@ -3,7 +3,8 @@ import 'package:heyo/app/modules/connection/domain/connection_models.dart';
 
 abstract class ConnectionContractor {
 
-  void init();
+  Future<void> init();
+  void start();
 
   Stream<ConnectionRequestReceived> getMessageStream();
 

@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_beep/flutter_beep.dart';
+
 import 'package:ed_screen_recorder/ed_screen_recorder.dart';
+import 'package:flutter_beep/flutter_beep.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
@@ -9,13 +9,13 @@ import 'package:heyo/app/modules/calls/main/data/models/call_participant_model.d
 import 'package:heyo/app/modules/calls/main/widgets/record_call_dialog.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
-import 'package:heyo/app/routes/app_pages.dart';
 
-import '../../../shared/data/models/messaging_participant_model.dart';
 
 enum CallViewType {
   stack,

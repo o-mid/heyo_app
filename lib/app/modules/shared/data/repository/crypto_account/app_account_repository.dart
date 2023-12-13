@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:ffi';
 
 import 'package:heyo/app/modules/shared/data/models/account_types.dart';
+import 'package:heyo/app/modules/shared/data/providers/secure_storage/local_storages_abstract.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
-import 'package:heyo/app/modules/shared/providers/secure_storage/local_storages_abstract.dart';
 import 'package:heyo/app/modules/shared/utils/crypto/crypto_validation.dart';
 
 const String ACCOUNT_TYPE = 'account_type';

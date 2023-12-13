@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "102729752748",
+    "project_id": "heyo-app-398212",
+    "storage_bucket": "heyo-app-398212.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102729752748:android:7739093e059f46bbdd7f09",
+        "android_client_info": {
+          "package_name": "mobi.heyo.messenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "102729752748-9a0spv425ldqjh02ji0ia00ht1j20rsp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1HE_xw3DxBv0iRNZlvhZjZZeIkSdJ_ug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "102729752748-9a0spv425ldqjh02ji0ia00ht1j20rsp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

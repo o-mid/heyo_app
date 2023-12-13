@@ -15,9 +15,7 @@ class LibP2PConnectionContractor extends ConnectionContractor {
   LibP2PConnectionContractor({
     required this.p2pNodeController,
     required this.p2pCommunicator,
-  }) {
-    init();
-  }
+  });
 
   final JsonDecoder _decoder = const JsonDecoder();
 
@@ -36,8 +34,13 @@ class LibP2PConnectionContractor extends ConnectionContractor {
   //unCompleted
 
   @override
-  void init() {
-    p2pNodeController.init(_onNewRequestEvent);
+  Future<void> init() {
+    return p2pNodeController.init();
+  }
+
+  @override
+  void start() {
+    p2pNodeController.start(_onNewRequestEvent);
   }
 
   Future<void> _onNewRequestEvent(P2PReqResNodeModel event) async {

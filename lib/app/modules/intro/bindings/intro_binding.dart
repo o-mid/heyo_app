@@ -3,15 +3,14 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/intro/controllers/intro_controller.dart';
 import 'package:heyo/app/modules/intro/data/provider/verification_corepass_provider.dart';
 import 'package:heyo/app/modules/intro/data/repo/intro_repo.dart';
-import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
-import 'package:heyo/app/modules/shared/providers/store/store_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/store/store_provider.dart';
 import 'package:heyo/app/modules/shared/utils/datetime_utils.dart';
 
 class IntroBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<IntroController>(
-      () => IntroController(
+    Get.put<IntroController>(
+      IntroController(
         introRepo: IntroRepo(
           vcp: VerificationCorePassProvider(
             cryptoInfo: Get.find(),
@@ -20,6 +19,7 @@ class IntroBinding extends Bindings {
           ),
           storeProvider: StoreProvider(),
           accountRepository: Get.find(),
+          connectionContractor: Get.find(),
         ),
         p2pState: Get.find(),
         appAccountRepository: Get.find(),
