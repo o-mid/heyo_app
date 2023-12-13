@@ -26,7 +26,7 @@ class SplashRepository extends SplashAbstractRepository {
   }
 
   @override
-  Future<void> checkFirstRunIos() async {
+  Future<void> removeStorageOnFirstRun() async {
     // checks if Platform isIOS and if it's the first run of the app clears the Keychain
     if (Platform.isIOS) {
       // remove secure storage data on IOS manually,
