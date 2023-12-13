@@ -42,16 +42,6 @@ class IntroController extends GetxController with WidgetsBindingObserver {
       debugPrint('app is resumed');
       // Add 2 seconds timer so if the user is in resume and
       // no incoming link arrived, we dispose the stream
-      Timer(
-        const Duration(seconds: 2),
-        () async {
-          //close the loading modal
-          if (Get.isDialogOpen == true) {
-            Get.back();
-            debugPrint("Verification not complete");
-          }
-        },
-      );
     }
   }
 
