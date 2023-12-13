@@ -20,7 +20,6 @@ import 'package:heyo/app/modules/messages/connection/data/wifi_direct_messaging_
 import 'package:heyo/app/modules/messages/connection/rtc_connection_repo.dart';
 import 'package:heyo/app/modules/messages/connection/web_rtc_connection_manager.dart';
 import 'package:heyo/app/modules/notifications/controllers/app_notifications.dart';
-import 'package:heyo/app/modules/shared/data/providers/blockchain/app_blockchain_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/dio/dio_network_request.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/netowrk_request_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/network_credentials.dart';

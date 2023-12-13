@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:core_web3dart/crypto.dart';
 import 'package:core_web3dart/web3dart.dart';
 import 'package:heyo/app/modules/shared/data/models/registry_info_model.dart';
-import 'package:heyo/app/modules/shared/data/providers/blockchain/blockchain_provider.dart';
-import 'package:heyo/app/modules/shared/data/providers/network/network_credentials.dart';
 import 'package:heyo/app/modules/shared/data/providers/registry/registery_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/secure_storage/secure_storage_provider.dart';
 import 'package:heyo/contracts/Registry.g.dart';
@@ -82,7 +80,7 @@ class AppRegistryProvider extends RegistryProvider {
     try {
       final eipMessage = EIP712().getMessageForSign(typedData: fcmToSign);
       final sigMsg =
-      signWithPrivKey(hexToBytes(eipMessage), hexToBytes(privateKey));
+          signWithPrivKey(hexToBytes(eipMessage), hexToBytes(privateKey));
       return bytesToHex(sigMsg, include0x: true);
     } catch (e, s) {
       throw Exception(e);
