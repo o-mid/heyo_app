@@ -16,6 +16,7 @@ import 'package:heyo/app/modules/messages/domain/user_state_repository.dart';
 import 'package:heyo/app/modules/messages/utils/extensions/messageModel.extension.dart';
 import 'package:heyo/app/modules/messages/utils/open_camera_for_sending_media_message.dart';
 import 'package:heyo/app/modules/messages/connection/domain/messaging_connections_models.dart';
+import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:path/path.dart' as path;
@@ -116,19 +117,21 @@ class MessagesController extends GetxController {
   late ChatModel? chatModel;
   Rx<UserModel> user = UserModel(
     coreId: (Get.arguments as MessagesViewArgumentsModel).participants.first.coreId,
-    iconUrl:
-        (Get.arguments).iconUrl as String ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
+    iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
     name: (Get.arguments as MessagesViewArgumentsModel).participants.first.coreId.shortenCoreId,
     walletAddress:
         (Get.arguments as MessagesViewArgumentsModel).participants.first.coreId as String,
   ).obs;
+
+  RxList<MessagingParticipantModel> participants =
+      (Get.arguments as MessagesViewArgumentsModel).participants.obs;
 
   final FocusNode textFocusNode = FocusNode();
 
   final isListLoaded = false.obs;
 
   Future<void> init() async {
-    firstCoreId = user.value.coreId;
+    firstCoreId = participants.first.coreId;
     _initMessagesArguments();
 
     _initUiControllers();

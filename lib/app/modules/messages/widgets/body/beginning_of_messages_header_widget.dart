@@ -15,13 +15,13 @@ import 'package:heyo/generated/locales.g.dart';
 import '../../../new_chat/data/models/user_model.dart';
 
 class BeginningOfMessagesHeaderWidget extends StatelessWidget {
-  final String userName;
-  final String coreId;
+  final String chatName;
+  final List<String> participantsCoreIds;
 
   const BeginningOfMessagesHeaderWidget({
     Key? key,
-    required this.coreId,
-    required this.userName,
+    required this.participantsCoreIds,
+    required this.chatName,
   }) : super(key: key);
 
   @override
@@ -55,7 +55,22 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
   }
 
   Widget _buildUserAvatar() {
-    return CustomCircleAvatar(coreId: coreId, size: 64);
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 62,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: participantsCoreIds.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                return CustomCircleAvatar(coreId: participantsCoreIds[index], size: 62);
+              },
+            ),
+          ),
+        ]);
   }
 
   Widget _buildUserNameRow() {
@@ -63,7 +78,7 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          userName,
+          chatName,
           style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
         ),
         CustomSizes.smallSizedBoxWidth,
@@ -95,7 +110,9 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
   Widget _buildEncryptedMessagingText() {
     return Text(
       LocaleKeys.MessagesPage_endToEndEncryptedMessaging.trParams(
-        {"name": userName},
+        {
+          "name": chatName,
+        },
       ),
       style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
       textAlign: TextAlign.center,

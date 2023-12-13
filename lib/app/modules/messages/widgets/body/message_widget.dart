@@ -9,13 +9,11 @@ import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 class MessageWidget extends StatelessWidget {
   const MessageWidget({
     required this.message,
-    required this.iconUrl,
     super.key,
     this.isMockMessage = false,
   });
 
   final MessageModel message;
-  final String? iconUrl;
   final bool isMockMessage;
 
   List<Widget> _buildChildren() {
