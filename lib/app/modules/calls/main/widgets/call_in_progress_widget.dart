@@ -10,12 +10,15 @@ class CallInProgressWidget extends GetView<CallController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      if (controller.isGroupCall.isTrue) {
-        return const GroupCallWidget();
-      } else {
-        return const PeerCallWidget();
-      }
-    });
+    return GestureDetector(
+      onTap: () => controller.switchFullSCreenMode(),
+      child: Obx(() {
+        if (controller.isGroupCall.value) {
+          return const GroupCallWidget();
+        } else {
+          return const PeerCallWidget();
+        }
+      }),
+    );
   }
 }

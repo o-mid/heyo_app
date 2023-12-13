@@ -14,11 +14,11 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 class CallBottomSheetExpandedBody extends GetView<CallController> {
-  const CallBottomSheetExpandedBody({Key? key}) : super(key: key);
+  const CallBottomSheetExpandedBody({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return ColoredBox(
       color: COLORS.kCallPageDarkBlue,
       child: Column(
         children: [
@@ -32,7 +32,6 @@ class CallBottomSheetExpandedBody extends GetView<CallController> {
           //  icon: Assets.svg.shareScreen.svg(color: COLORS.kWhiteColor),
           //  backgroundColor: COLORS.kCallPageDarkGrey,
           //),
-
           /// The following three are only here to match the top row which has four buttons
           //Opacity(
           //  opacity: 0,

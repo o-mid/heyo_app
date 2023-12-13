@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
@@ -27,6 +28,8 @@ class GroupCallWidget extends GetView<CallController> {
       return Stack(
         children: [
           GridView.builder(
+            padding: const EdgeInsets.only(top: 8),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: remoteParticipate.length == 2 ? 1 : 2,
@@ -37,6 +40,9 @@ class GroupCallWidget extends GetView<CallController> {
             itemBuilder: (context, index) {
               return CallRendererWidget(
                 participantModel: remoteParticipate[index],
+                objectFit: remoteParticipate.length == 2
+                    ? RTCVideoViewObjectFit.RTCVideoViewObjectFitContain
+                    : RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
               );
             },
           ),
@@ -64,9 +70,6 @@ class GroupCallWidget extends GetView<CallController> {
               ),
             ),
           ),
-          //* This sizeBox is because of call bottom sheet header
-          //TODO: AliAzim => It should be removed for ImmersiveMode
-          SizedBox(height: 70.h),
         ],
       );
     });

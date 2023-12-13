@@ -13,12 +13,12 @@ import 'package:heyo/app/modules/calls/shared/data/models/local_participant_mode
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 //import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:wakelock/wakelock.dart';
-import '../../../shared/data/models/messaging_participant_model.dart';
 
 //enum CallViewType {
 //  stack,
@@ -26,7 +26,7 @@ import '../../../shared/data/models/messaging_participant_model.dart';
 //  row,
 //}
 
-class CallController extends GetxController {
+class CallController extends GetxController with GetTickerProviderStateMixin {
   CallController({
     required this.callRepository,
     required this.accountInfo,
@@ -45,7 +45,7 @@ class CallController extends GetxController {
 
   RxList<AllParticipantModel> participants = RxList<AllParticipantModel>();
 
-  final isImmersiveMode = false.obs;
+  final fullScreenMode = false.obs;
 
   final isInCall = false.obs;
 
@@ -56,6 +56,8 @@ class CallController extends GetxController {
   final Stopwatch stopwatch = Stopwatch();
   Timer? callTimer;
 
+  late final AnimationController animationController;
+
   //final micEnabled = true.obs;
   //final callerVideoEnabled = false.obs;
   //final isInCall = true.obs;
@@ -64,6 +66,14 @@ class CallController extends GetxController {
   //final callViewType = CallViewType.stack.obs;
   //late Session session;
 
+  //RxList<ConnectedParticipantModel> getAllConnectedParticipate() {
+  //  //* Use this item for group call
+  //  //* The first video renderer is the local Renderer,
+  //  return RxList([
+  //    localParticipate.value!.mapToConnectedParticipantModel(),
+  //    ...connectedRemoteParticipates,
+  //  ]);
+  //}
 
   String getConnectedParticipantsName() {
     //* This item will loop all call connected user
@@ -106,10 +116,9 @@ class CallController extends GetxController {
 
         if (args.isAudioCall) {
           callRepository.showLocalVideoStream(false, '', true);
-        }else {
+        } else {
           callRepository.showLocalVideoStream(true, '', true);
         }
-
       };
     }
   }
@@ -133,6 +142,10 @@ class CallController extends GetxController {
     super.onInit();
     args = Get.arguments as CallViewArgumentsModel;
     initCall();
+    animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
   }
 
   void startCallTimer() {
@@ -341,12 +354,13 @@ class CallController extends GetxController {
   }
 
   void toggleImmersiveMode() {
-    isImmersiveMode.value = !isImmersiveMode.value;
+    fullScreenMode.value = !fullScreenMode.value;
   }
 
   //void updateCallViewType(CallViewType type) => callViewType.value = type;
 
-  void flipVideoPositions() => isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
+  void flipVideoPositions() =>
+      isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   Future<void> disposeRTCRender() async {
     for (var participate in connectedRemoteParticipates) {
@@ -365,6 +379,7 @@ class CallController extends GetxController {
     await disposeRTCRender();
     _stopWatingBeep();
     await disableWakeScreenLock();
+    animationController.dispose();
   }
 
   void reorderParticipants(int oldIndex, int newIndex) {
@@ -427,4 +442,6 @@ class CallController extends GetxController {
       coreId: args.members.first,
     );
   }
+
+  void switchFullSCreenMode() => fullScreenMode.value = !fullScreenMode.value;
 }

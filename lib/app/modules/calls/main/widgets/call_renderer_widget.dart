@@ -5,25 +5,25 @@ import 'package:heyo/app/modules/calls/shared/widgets/callee_or_caller_info_widg
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 
 class CallRendererWidget extends StatelessWidget {
-  const CallRendererWidget({required this.participantModel, super.key});
+  const CallRendererWidget({
+    required this.participantModel,
+    this.objectFit = RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+    super.key,
+  });
 
   final ConnectedParticipantModel participantModel;
+  final RTCVideoViewObjectFit objectFit;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: COLORS.kCallPageDarkGrey,
-        border: Border.all(
-          color: Colors.black54,
-          width: 0.5,
-        ),
-      ),
-      // TODO(AliAzim): the condition for voice and video call should add in here.
+      padding: const EdgeInsets.all(8),
+      decoration: const BoxDecoration(color: COLORS.kCallPageDarkGrey),
       child: participantModel.videoMode.value
           ? RTCVideoView(
               participantModel.rtcVideoRenderer!,
-              objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+              objectFit: objectFit,
+              mirror: true,
             )
           : Row(
               mainAxisAlignment: MainAxisAlignment.center,

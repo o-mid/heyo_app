@@ -15,7 +15,6 @@ class CallBottomSheetHeader extends GetView<CallController> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.only(bottom: 24.h),
       decoration: BoxDecoration(
         color: COLORS.kCallPageDarkBlue,
         borderRadius: BorderRadius.circular(20.r).copyWith(
@@ -88,6 +87,7 @@ class CallBottomSheetHeader extends GetView<CallController> {
               ],
             ),
           ),
+          CustomSizes.largeSizedBoxHeight,
         ],
       ),
     );
