@@ -55,7 +55,7 @@ dependencies:
   flutter_p2p_communicator:
     git:
       url: git@ssh.git.energy:corepass/flutter_p2p_communicator.git
-      ref: 28d6bc8a
+      ref: 0c20b1d6
 
   core_blockies:
     git: git@ssh.git.energy:corepass/core-blockies.git
