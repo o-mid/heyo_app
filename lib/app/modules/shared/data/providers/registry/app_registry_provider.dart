@@ -13,13 +13,11 @@ String REGISTRY_MODEL = 'registry_model';
 
 class AppRegistryProvider extends RegistryProvider {
   AppRegistryProvider({
-    required this.blockChainProvider,
     required this.storageProvider,
     required this.registry,
   });
 
   final Registry registry;
-  final BlockchainProvider blockChainProvider;
   final SecureStorageProvider storageProvider;
 
   @override
