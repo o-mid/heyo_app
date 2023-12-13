@@ -5,6 +5,7 @@ import 'package:heyo/app/modules/intro/data/provider/verification_corepass_abstr
 import 'package:heyo/app/modules/p2p_node/p2p_node_manager.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
 import 'package:heyo/app/modules/shared/utils/datetime_utils.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/stream.extension.dart';
 import 'package:tuple/tuple.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -33,7 +34,7 @@ class VerificationCorePassProvider
     // App scheme for corePass
     final uri =
         'corepass:sign/?data=$heyoId&conn=heyo://auth&dl=${dateTimeUtils.getCurrentTimeInSeconds(300)}&type=app-link';
-
+    print('Launching : $uri');
     try {
       await launchUrlString(uri);
       debugPrint('The app is installed on the device.');
@@ -46,16 +47,11 @@ class VerificationCorePassProvider
 
   @override
   Future<Tuple2<String, String>> listenForResponse() async {
-    final taskCompleter = Completer<Tuple2<String, String>>();
-    _urlStream = linkStream.listen((event) {
-      if (event != null) {
-        final dataTuple = _checkUri(event);
-        if (dataTuple != null) {
-          taskCompleter.complete(dataTuple);
-        }
-      }
-    });
-    return taskCompleter.future;
+    final rawData = await linkStream.waitForResult(
+        condition: (String? value) => value != null && value.isNotEmpty);
+    final analyzedData = _extractUri(rawData!);
+
+    return analyzedData!;
   }
 
   @override
@@ -64,7 +60,7 @@ class VerificationCorePassProvider
     _urlStream = null;
   }
 
-  Tuple2<String, String>? _checkUri(String deepLink) {
+  Tuple2<String, String>? _extractUri(String deepLink) {
     final result = Uri.parse(deepLink).queryParameters;
 
     if (_checkUriIsInvalid(result)) return null;
@@ -89,10 +85,10 @@ class VerificationCorePassProvider
     String signature,
   ) async {
     try {
+
       await cryptoInfo.setSignature(signature.replaceAll('0x', ''));
       await cryptoInfo.setCorePassCoreId(coreId);
-      final isSignatureValid = await p2pNodeController.applyDelegatedAuth();
-      return isSignatureValid;
+      return true;
     } catch (e) {
       debugPrint(e.toString());
       return false;

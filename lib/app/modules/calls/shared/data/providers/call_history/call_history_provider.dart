@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_abstract_provider.dart';
-import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
+import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
 
 class CallHistoryProvider implements CallHistoryAbstractProvider {

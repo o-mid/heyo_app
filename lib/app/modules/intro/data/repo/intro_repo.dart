@@ -1,23 +1,27 @@
 import 'package:flutter/cupertino.dart';
+import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
 import 'package:heyo/app/modules/intro/data/provider/verification_corepass_abstract_provider.dart';
 import 'package:heyo/app/modules/intro/data/repo/intro_abstract_repo.dart';
 import 'package:heyo/app/modules/shared/data/models/account_types.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
-import 'package:heyo/app/modules/shared/providers/store/store_abstract_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/store/store_abstract_provider.dart';
 import 'package:tuple/tuple.dart';
 
 class IntroRepo extends IntroAbstractRepo {
   VerificationCorePassAbstractProvider vcp;
   StoreAbstractProvider storeProvider;
   AccountRepository accountRepository;
+  ConnectionContractor connectionContractor;
 
   IntroRepo(
-      {required this.vcp,
+      {required this.connectionContractor,
+      required this.vcp,
       required this.storeProvider,
       required this.accountRepository});
 
   @override
   Future<Tuple3<bool, String, String>> retrieveCoreIdFromCorePass() async {
+
     final isLaunched = await vcp.launchVerificationProcess();
 
     /// in this case, we should launch appstore to download corepass
@@ -41,4 +45,7 @@ class IntroRepo extends IntroAbstractRepo {
     debugPrint('Delegated Credentials Successfully added');
     return isSuccessful;
   }
+
+  @override
+  Future<void> initConnectionContractor() => connectionContractor.init();
 }

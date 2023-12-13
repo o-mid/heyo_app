@@ -1,10 +1,9 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
+import 'package:heyo/app/modules/new_group_chat/controllers/new_group_chat_controller.dart';
+import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
+import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provider.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart';
-import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
-import 'package:heyo/app/modules/shared/providers/database/dao/user_provider.dart';
-import '../controllers/new_group_chat_controller.dart';
 
 class NewGroupChatBinding extends Bindings {
   @override
@@ -14,7 +13,9 @@ class NewGroupChatBinding extends Bindings {
         accountInfoRepo: Get.find(),
         contactRepository: ContactRepository(
           cacheContractor: CacheRepository(
-            userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+            userProvider: UserProvider(
+              appDatabaseProvider: Get.find<AppDatabaseProvider>(),
+            ),
           ),
         ),
       ),

@@ -1,5 +1,4 @@
-# package Better Player needs to be atleast 11.0
-# see https://jhomlala.github.io/betterplayer/#/install for more info
+# Uncomment this line to define a global platform for your project
  platform :ios, '14.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
@@ -33,7 +32,11 @@ target 'Runner' do
   use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  target 'RunnerTests' do
+    inherit! :search_paths
+  end
 end
+
 post_install do |installer|
 
 
@@ -129,7 +132,6 @@ post_install do |installer|
 
     end
     # End of the permission_handler configuration
-    
+
   end
-  
 end

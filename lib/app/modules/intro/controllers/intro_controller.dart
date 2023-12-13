@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
 import 'package:heyo/app/modules/intro/data/repo/intro_repo.dart';
 import 'package:heyo/app/modules/intro/widgets/verification_loading_dialog.dart';
 import 'package:heyo/app/modules/intro/widgets/verification_bottom_sheet.dart';
@@ -24,7 +25,7 @@ class IntroController extends GetxController with WidgetsBindingObserver {
       required this.p2pState});
 
   @override
-  void onInit() async {
+  Future<void> onInit() async {
     WidgetsBinding.instance.addObserver(this);
     super.onInit();
   }
@@ -41,16 +42,6 @@ class IntroController extends GetxController with WidgetsBindingObserver {
       debugPrint('app is resumed');
       // Add 2 seconds timer so if the user is in resume and
       // no incoming link arrived, we dispose the stream
-      Timer(
-        const Duration(seconds: 2),
-        () async {
-          //close the loading modal
-          if (Get.isDialogOpen == true) {
-            Get.back();
-            debugPrint("Verification not complete");
-          }
-        },
-      );
     }
   }
 
@@ -84,12 +75,14 @@ class IntroController extends GetxController with WidgetsBindingObserver {
   }
 
   Future<void> _launchCorePassVerificationProcess() async {
-    /// wait for getting local core id from p2pCom
+    /// lets first create account and core id
+    await introRepo.initConnectionContractor();
+
     // Launch corePass application
     final corePassData = await introRepo.retrieveCoreIdFromCorePass();
     // check if it was successful
     if (corePassData.item1) {
-      await applyAndValidateDelegatedAuth(corePassData);
+      await saveDelegatedAuth(corePassData);
     } else {
       // close dialog
       Get.back();
@@ -97,7 +90,7 @@ class IntroController extends GetxController with WidgetsBindingObserver {
     }
   }
 
-  Future<void> applyAndValidateDelegatedAuth(
+  Future<void> saveDelegatedAuth(
     Tuple3<bool, String, String> corePassData,
   ) async {
     final isSuccessfulAndValid = await introRepo.applyDelegatedCredentials(
