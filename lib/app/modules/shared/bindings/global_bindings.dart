@@ -102,7 +102,6 @@ class GlobalBindings extends Bindings {
       )
       ..put<RegistryProvider>(
         AppRegistryProvider(
-          blockChainProvider: AppBlockchainProvider(),
           storageProvider: GlobalBindings.secureStorageProvider,
           registry: Get.find(),
         ),
