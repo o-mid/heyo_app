@@ -1,10 +1,8 @@
 import 'dart:async';
-
-import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
 
-import '../../../../new_chat/data/models/user_model/user_model.dart';
 
 class UserProvider {
   final AppDatabaseProvider appDatabaseProvider;

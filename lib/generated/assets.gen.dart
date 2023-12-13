@@ -11,6 +11,16 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
 
+class $AssetsLocalesGen {
+  const $AssetsLocalesGen();
+
+  /// File path: assets/locales/en_EN.json
+  String get enEN => 'assets/locales/en_EN.json';
+
+  /// List of all assets
+  List<String> get values => [enEN];
+}
+
 class $AssetsPngGen {
   const $AssetsPngGen();
 
@@ -607,6 +617,7 @@ class $AssetsSvgGen {
 class Assets {
   Assets._();
 
+  static const $AssetsLocalesGen locales = $AssetsLocalesGen();
   static const $AssetsPngGen png = $AssetsPngGen();
   static const $AssetsSvgGen svg = $AssetsSvgGen();
 }

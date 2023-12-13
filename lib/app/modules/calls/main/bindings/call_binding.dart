@@ -8,13 +8,11 @@ import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/web3_keys.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
+import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
+import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provider.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/app_account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart';
-import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
-import 'package:heyo/app/modules/shared/providers/database/dao/user_provider.dart';
-import 'package:heyo/app/modules/shared/providers/secure_storage/secure_storage_provider.dart';
+
 
 class CallBinding extends Bindings {
   @override
