@@ -26,9 +26,8 @@ class MessageWidget extends StatelessWidget {
         ..add(CustomSizes.mediumSizedBoxWidth)
         ..add(
           CustomCircleAvatar(
-            coreId: message.chatId,
             size: 20,
-            isMockData: isMockMessage,
+            coreId: message.chatId,
           ),
         );
     }
