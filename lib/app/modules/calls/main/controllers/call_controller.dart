@@ -166,7 +166,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       //* This mean you join the call (You are callee)
       await inCallSetUp();
     }
-    await observeSignalingStreams();
+    await observeRemoteStreams();
 
     print("Call type ${(args.isAudioCall)}");
 
@@ -186,11 +186,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     await enableWakeScreenLock();
   }
 
-  void _applyCallStreams(List<CallStream> callStreams) {
-    for (final element in callStreams) {
-      addRTCRenderer(element);
-    }
-  }
 
   late String requestedCallId;
 
@@ -203,7 +198,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     isInCall.value = false;
     _playWatingBeep();
   }
-
+  
+  //TODO farzam refacor
   streamUpdated(
     CallStream callStream,
     int index,
@@ -212,9 +208,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     final renderer = RTCVideoRenderer();
     await renderer.initialize();
     renderer.srcObject = callStream.remoteStream;
-    //_remoteRenderers.add(renderer);
-    //TODO: The data should return from CallStream,
-    // or input of method should be CallItemModel
     final remoteParticipate = ConnectedParticipantModel(
       audioMode: true.obs,
       videoMode: (!callStream.isAudioCall).obs,
@@ -227,6 +220,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     connectedRemoteParticipates.refresh();
   }
 
+  //TODO farzam refacor
   Future<void> addRTCRenderer(CallStream callStream) async {
     // TODO(AliAzim): condition should be add to check if video is enable or not
     var isRemoteAvailable = false;
@@ -275,11 +269,9 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     };
   }
 
-  Future<void> observeSignalingStreams() async {
-    print("getCallllSteree");
+  Future<void> observeRemoteStreams() async {
     final callStreams = await callRepository.getCallStreams();
-    print("getCallllSteree calll ${callStreams.length}");
-    for (var element in callStreams) {
+    for (final element in callStreams) {
       await addRTCRenderer(element);
     }
     callRepository.onAddCallStream = (callStateView) {
@@ -329,14 +321,9 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   // Todo
   void toggleVideo() {
-    //show or hide localRender
-    //callerVideoEnabled.value = !callerVideoEnabled.value;
     bool videoMode = !localParticipate.value!.videoMode.value;
     localParticipate.value!.videoMode.value = videoMode;
-
     callRepository.showLocalVideoStream(videoMode, true);
-    //todo farzam
-    //  callConnectionController.showLocalVideoStream(callerVideoEnabled.value, session.sid, true);
   }
 
   void switchCamera() {
@@ -445,8 +432,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     );
   }
 
-  //TODO
-  _applyInCallStatus() {}
+
 
   void switchFullSCreenMode() => fullScreenMode.value = !fullScreenMode.value;
 }
