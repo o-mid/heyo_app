@@ -54,7 +54,7 @@ class IncomingCallController extends GetxController {
 
   Future<void> acceptCall() async {
     _stopRingtone();
-    //await callRepository.acceptCall(args.callId);
+    await callRepository.acceptCall(args.callId);
     //TODO farzam, accept
     Get.offNamed(
       Routes.CALL,

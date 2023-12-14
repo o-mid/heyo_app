@@ -13,10 +13,9 @@ class WebRTCCallRepository implements CallRepository {
       ..onAddRemoteStream = ((callRTCSession) {
         onAddCallStream?.call(
           CallStream(
-            coreId: callRTCSession.remotePeer.remoteCoreId,
-            remoteStream: callRTCSession.getStream(),
-            isAudioCall: callRTCSession.isAudioCall
-          ),
+              coreId: callRTCSession.remotePeer.remoteCoreId,
+              remoteStream: callRTCSession.getStream(),
+              isAudioCall: callRTCSession.isAudioCall),
         );
       });
 
@@ -63,7 +62,7 @@ class WebRTCCallRepository implements CallRepository {
 
   @override
   Future<void> acceptCall(String callId) async {
-    callConnectionsHandler.accept(callId);
+    await callConnectionsHandler.accept(callId);
     //Todo: AZ => we don't have coreId in here
     //_addParticipate(coreId);
   }
@@ -98,8 +97,8 @@ class WebRTCCallRepository implements CallRepository {
   }
 
   @override
-  void showLocalVideoStream(bool value, String? sessionId, bool sendSignal) {
-    callConnectionsHandler.showLocalVideoStream(value);
+  void showLocalVideoStream(bool value, bool sendSignal) {
+    callConnectionsHandler.showLocalVideoStream(value, sendSignal);
     //TODO signaling
   }
 

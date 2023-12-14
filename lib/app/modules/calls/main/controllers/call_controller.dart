@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/connected_participant_model/connected_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/local_participant_model/local_participant_model.dart';
@@ -16,7 +17,6 @@ import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_mode
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
-//import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -58,6 +58,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   late final AnimationController animationController;
 
+  final localRenderer = RTCVideoRenderer();
+
   //final micEnabled = true.obs;
   //final callerVideoEnabled = false.obs;
   //final isInCall = true.obs;
@@ -85,13 +87,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   }
 
   Future<void> initLocalRenderer() async {
-    // TODO check
-    //final isAudioCall = args.isAudioCall;
-    //if(isAudioCall){
-    //  //* hide localRender
-    //}else {
-    //  //* show
-    //}
+    await localRenderer.initialize();
+
     final localParticipateCoreId = await accountInfo.getUserAddress();
     localParticipate.value = LocalParticipantModel(
       name: localParticipateCoreId!.shortenCoreId,
@@ -101,26 +98,19 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       videoMode: (!args.isAudioCall).obs,
       callDurationInSecond: 0.obs,
       frondCamera: true.obs,
+      rtcVideoRenderer: localRenderer,
     );
 
-    if (localParticipate.value!.videoMode.isTrue) {
-      final localRenderer = RTCVideoRenderer();
-      await localRenderer.initialize();
-
-      localParticipate.value =
-          localParticipate.value!.copyWith(rtcVideoRenderer: localRenderer);
-
-      callRepository.onLocalStream = (stream) {
-        localRenderer.srcObject = stream;
-        updateCallerVideoWidget();
-
-        if (args.isAudioCall) {
-          callRepository.showLocalVideoStream(false, '', true);
-        } else {
-          callRepository.showLocalVideoStream(true, '', true);
-        }
-      };
+    if (callRepository.getLocalStream() != null) {
+      _applyLocalStream(callRepository.getLocalStream()!);
     }
+    callRepository.onLocalStream = _applyLocalStream;
+  }
+
+  void _applyLocalStream(MediaStream stream) {
+    localParticipate.value!.rtcVideoRenderer!.srcObject = stream;
+    updateCallerVideoWidget();
+    callRepository.showLocalVideoStream(!args.isAudioCall, false);
   }
 
   void message() {
@@ -169,8 +159,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
     observeOnChangeParticipate();
 
-    observeSignalingStreams();
-
     if (args.callId == null) {
       //* This means you start the call (you are caller)
       await startCalling();
@@ -178,11 +166,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       //* This mean you join the call (You are callee)
       await inCallSetUp();
     }
+    await observeSignalingStreams();
 
-    if (callRepository.getLocalStream() != null) {
-      localParticipate.value!.rtcVideoRenderer!.srcObject =
-          callRepository.getLocalStream();
-    }
     print("Call type ${(args.isAudioCall)}");
 
     //* adding participate into bottom sheet
@@ -198,7 +183,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     }
 
     updateCallerVideoWidget();
-    observeCallStates();
     await enableWakeScreenLock();
   }
 
@@ -220,8 +204,43 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     _playWatingBeep();
   }
 
+  streamUpdated(
+    CallStream callStream,
+    int index,
+    ConnectedParticipantModel connectedParticipantModel,
+  ) async {
+    final renderer = RTCVideoRenderer();
+    await renderer.initialize();
+    renderer.srcObject = callStream.remoteStream;
+    //_remoteRenderers.add(renderer);
+    //TODO: The data should return from CallStream,
+    // or input of method should be CallItemModel
+    final remoteParticipate = ConnectedParticipantModel(
+      audioMode: true.obs,
+      videoMode: (!callStream.isAudioCall).obs,
+      coreId: callStream.coreId,
+      name: callStream.coreId.shortenCoreId,
+      stream: callStream.remoteStream,
+      rtcVideoRenderer: renderer,
+    );
+    connectedRemoteParticipates[index] = remoteParticipate;
+    connectedRemoteParticipates.refresh();
+  }
+
   Future<void> addRTCRenderer(CallStream callStream) async {
     // TODO(AliAzim): condition should be add to check if video is enable or not
+    var isRemoteAvailable = false;
+    for (int index = 0; index < connectedRemoteParticipates.length; index++) {
+      if (connectedRemoteParticipates[index].coreId == callStream.coreId) {
+        isRemoteAvailable = true;
+        streamUpdated(callStream, index, connectedRemoteParticipates[index]);
+        break;
+      }
+    }
+
+    if (isRemoteAvailable) {
+      return;
+    }
     final renderer = RTCVideoRenderer();
     await renderer.initialize();
     renderer.srcObject = callStream.remoteStream;
@@ -241,32 +260,11 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   }
 
   Future<void> inCallSetUp() async {
-    await callRepository.acceptCall(args.callId!);
+    //await callRepository.acceptCall(args.callId!);
     //* I move mock in controller to pass callId
 
     isInCall.value = true;
     startCallTimer();
-  }
-
-  void observeCallStates() {
-    //TODO it requires another logic
-    /* callRepository.callState.listen((state) {
-      if (state == CallState.callStateConnected) {
-        isInCall.value = true;
-        _stopWatingBeep();
-        startCallTimer();
-      } else if (state == CallState.callStateBye) {
-        print("call_state : callStateBYE ");
-
-        _stopWatingBeep();
-      } else if (state == CallState.callStateOpendCamera) {
-        calleeVideoEnabled.value = true;
-        updateCalleeVideoWidget();
-      } else if (state == CallState.callStateClosedCamera) {
-        calleeVideoEnabled.value = false;
-        resetCallView();
-      }
-    });*/
   }
 
   void observeOnChangeParticipate() {
@@ -277,11 +275,13 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     };
   }
 
-  void observeSignalingStreams() {
-    //todo remove stream logic!
-    /* callRepository.onRemoveRemoteStream =((stream){
-      _remoteRenderers.srcObject = null;
-    });*/
+  Future<void> observeSignalingStreams() async {
+    print("getCallllSteree");
+    final callStreams = await callRepository.getCallStreams();
+    print("getCallllSteree calll ${callStreams.length}");
+    for (var element in callStreams) {
+      await addRTCRenderer(element);
+    }
     callRepository.onAddCallStream = (callStateView) {
       debugPrint('onAddCallStream : $callStateView');
       //print("calll ${_remoteRenderers} : $stream");
@@ -331,8 +331,10 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   void toggleVideo() {
     //show or hide localRender
     //callerVideoEnabled.value = !callerVideoEnabled.value;
-    localParticipate.value!.videoMode.value =
-        !localParticipate.value!.videoMode.value;
+    bool videoMode = !localParticipate.value!.videoMode.value;
+    localParticipate.value!.videoMode.value = videoMode;
+
+    callRepository.showLocalVideoStream(videoMode, true);
     //todo farzam
     //  callConnectionController.showLocalVideoStream(callerVideoEnabled.value, session.sid, true);
   }
@@ -442,6 +444,9 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       coreId: args.members.first,
     );
   }
+
+  //TODO
+  _applyInCallStatus() {}
 
   void switchFullSCreenMode() => fullScreenMode.value = !fullScreenMode.value;
 }

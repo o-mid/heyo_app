@@ -1,9 +1,9 @@
+import 'dart:async';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/calls/data/call_status_data_store.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/calls/data/models.dart';
 import 'package:heyo/app/modules/calls/data/rtc/single_call_web_rtc_connection.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 
 enum CallState {
   callStateNew,
@@ -127,17 +127,17 @@ class CallConnectionsHandler {
   }
 
   Future<void> accept(CallId callId) async {
-    print("accepttt ${callStatusDataStore.incomingCalls}");
+    print('accept ${callStatusDataStore.incomingCalls}');
     if (callStatusDataStore.incomingCalls?.callId == callId) {
       callStatusDataStore.makeCallByIncomingCall();
       await _createLocalStream();
 
       for (final element in callStatusDataStore.incomingCalls!.remotePeers) {
         print(
-            "accept ${element.remotePeer.remoteCoreId} ${element.isAudioCall}");
+            'accept ${element.remotePeer.remoteCoreId} ${element.isAudioCall}',);
         final callRTCSession =
             await _createSession(element.remotePeer, element.isAudioCall);
-        singleCallWebRTCBuilder.startSession(callRTCSession);
+        unawaited(singleCallWebRTCBuilder.startSession(callRTCSession));
       }
 
       onCallStateChange?.call(
@@ -239,7 +239,7 @@ class CallConnectionsHandler {
     }
   }
 
-  void showLocalVideoStream(bool value) {
+  void showLocalVideoStream(bool value,bool sendSignal) {
     if (_localStream != null) {
       _localStream!.getVideoTracks()[0].enabled = value;
     }
