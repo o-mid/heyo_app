@@ -27,8 +27,8 @@ class CallLogWidget extends GetView<CallHistoryController> {
         Get.toNamed(
           Routes.USER_CALL_HISTORY,
           arguments: UserCallHistoryViewArgumentsModel(
-            coreId: call.participants[0].coreId,
-            iconUrl: call.participants[0].iconUrl,
+            callId: call.callId,
+            participants: call.participants.map((e) => e.coreId).toList(),
           ),
         );
       },

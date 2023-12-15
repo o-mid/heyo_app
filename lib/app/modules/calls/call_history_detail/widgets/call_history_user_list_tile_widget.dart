@@ -5,14 +5,12 @@ import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 
 class CallHistoryUserListTileWidget extends StatelessWidget {
   const CallHistoryUserListTileWidget({
-    required this.iconUrl,
     required this.coreId,
     required this.name,
     required this.trailing,
     super.key,
   });
 
-  final String iconUrl;
   final String coreId;
   final String name;
   final String trailing;

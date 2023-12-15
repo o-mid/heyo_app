@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/calls/call_history_detail/controllers/models/call_history_detail_participant_model.dart';
 
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
@@ -24,7 +25,7 @@ class CallHistoryDetailController extends GetxController {
   late UserCallHistoryViewArgumentsModel args;
   final calls = <CallHistoryModel>[].obs;
 
-  RxList<CallHistoryParticipantModel> participants = RxList();
+  RxList<CallHistoryDetailParticipantModel> participants = RxList();
 
   @override
   Future<void> onInit() async {
@@ -35,24 +36,23 @@ class CallHistoryDetailController extends GetxController {
   }
 
   Future<void> getParticipantCallHistory() async {
-    calls.value = await callHistoryRepo.getCallsFromUserId(args.coreId);
+    calls.value =
+        await callHistoryRepo.getCallsFromUserId(args.participants[0]);
   }
 
   Future<void> _getUserInfo() async {
-    //TODO(AliAzim): the argument should return list of participant(coreId list)
-    for (final participant in [args]) {
+    for (final participant in args.participants) {
       final checkContactAvailability = await contactAvailabilityUseCase.execute(
-        coreId: participant.coreId,
-        iconUrl: participant.iconUrl,
+        coreId: participant,
       );
       participants.add(
-        checkContactAvailability.mapToCallHistoryParticipantModel(),
+        checkContactAvailability.mapToHistoryParticipantModel(),
       );
     }
   }
 
   Future<void> saveCoreIdToClipboard() async {
-    final remoteCoreId = args.coreId;
+    final remoteCoreId = args.participants[0];
     print('Core ID : $remoteCoreId');
     await Clipboard.setData(ClipboardData(text: remoteCoreId));
     Get.rawSnackbar(

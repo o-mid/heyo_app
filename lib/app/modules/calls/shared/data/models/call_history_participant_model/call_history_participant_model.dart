@@ -17,7 +17,6 @@ class CallHistoryParticipantModel with _$CallHistoryParticipantModel {
   @JsonSerializable(explicitToJson: true)
   const factory CallHistoryParticipantModel({
     required String name,
-    required String iconUrl,
     required String coreId,
     required DateTime startDate,
     DateTime? endDate,
@@ -34,7 +33,6 @@ extension UserModelMapper on UserModel {
     return CallHistoryParticipantModel(
       name: name,
       coreId: coreId,
-      iconUrl: iconUrl,
       startDate: DateTime.now(),
     );
   }

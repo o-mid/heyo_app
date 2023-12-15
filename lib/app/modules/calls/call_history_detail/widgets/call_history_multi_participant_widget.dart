@@ -68,7 +68,7 @@ class CallHistoryMultiParticipantWidget
                       arguments: CallViewArgumentsModel(
                         callId: null,
                         isAudioCall: true,
-                        members: [controller.args.coreId],
+                        members: controller.args.participants,
                       ),
                     ),
                     icon: Assets.svg.audioCallIcon
@@ -82,7 +82,7 @@ class CallHistoryMultiParticipantWidget
                       Routes.CALL,
                       arguments: CallViewArgumentsModel(
                         callId: null,
-                        members: [controller.args.coreId],
+                        members: controller.args.participants,
                         isAudioCall: false,
                       ),
                     ),
@@ -99,7 +99,6 @@ class CallHistoryMultiParticipantWidget
                         Routes.MESSAGES,
                         arguments: MessagesViewArgumentsModel(
                           coreId: controller.participants[0].coreId,
-                          iconUrl: controller.participants[0].iconUrl,
                           connectionType: MessagingConnectionType.internet,
                           participants: [
                             MessagingParticipantModel(
@@ -129,7 +128,6 @@ class CallHistoryMultiParticipantWidget
               CustomSizes.smallSizedBoxHeight,
               ...controller.participants.map((participant) {
                 return CallHistoryUserListTileWidget(
-                  iconUrl: participant.iconUrl,
                   coreId: participant.coreId,
                   name: participant.name,
                   trailing: participant.startDate

@@ -13,9 +13,10 @@ class WebRTCCallRepository implements CallRepository {
       ..onAudioStateChanged = (callRTCSession) {
         onAddCallStream?.call(
           CallStream(
-              coreId: callRTCSession.remotePeer.remoteCoreId,
-              remoteStream: callRTCSession.getStream(),
-              isAudioCall: callRTCSession.isAudioCall,),
+            coreId: callRTCSession.remotePeer.remoteCoreId,
+            remoteStream: callRTCSession.getStream(),
+            isAudioCall: callRTCSession.isAudioCall,
+          ),
         );
       }
       ..onAddRemoteStream = ((callRTCSession) {
@@ -23,7 +24,7 @@ class WebRTCCallRepository implements CallRepository {
           CallStream(
               coreId: callRTCSession.remotePeer.remoteCoreId,
               remoteStream: callRTCSession.getStream(),
-              isAudioCall: callRTCSession.isAudioCall,),
+              isAudioCall: callRTCSession.isAudioCall),
         );
       });
 

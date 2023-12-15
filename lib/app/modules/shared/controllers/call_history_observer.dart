@@ -72,6 +72,13 @@ class CallHistoryObserver extends GetxController {
             /// store the time call started
             _callStartTimestamps[state.callId] = DateTime.now();
 
+            if (call.participants.isNotEmpty) {
+              await _addMemberToCallHistory(
+                callHistoryModel: call,
+                callHistoryState: state,
+              );
+            }
+
             await _updateCallStatusAndEndTime(
               callId: call.callId,
               status: call.status == CallStatus.incomingMissed
@@ -202,6 +209,52 @@ class CallHistoryObserver extends GetxController {
     await callHistoryRepo.updateCall(updateCall);
   }
 
+  Future<void> _addMemberToCallHistory({
+    required CallHistoryModel callHistoryModel,
+    required CallHistoryState callHistoryState,
+  }) async {
+    //* Check if the new user save to contact or not
+    final callParticipant = await _getUserFromCoreId(
+      callHistoryState.remotes.first.remotePeer.remoteCoreId,
+    );
+
+    //* Check if the new user is in call or not
+    var isInCall = false;
+    var currentParticipantList = callHistoryModel.participants;
+    for (var i = 0; i < currentParticipantList.length; i++) {
+      if (currentParticipantList[i].coreId == callParticipant.coreId) {
+        // TODO(AliAzim): update the data.
+        //* The user is already in call
+        isInCall = true;
+      }
+    }
+
+    if (!isInCall) {
+      currentParticipantList = [
+        ...currentParticipantList,
+        callParticipant.copyWith(
+          status: CallHistoryParticipantStatus.accepted,
+        ),
+      ];
+    } else {
+      currentParticipantList
+        //* remove the participant from list
+        ..removeWhere(
+          (element) => element.coreId == callParticipant.coreId,
+        )
+        //* add participant with accepted status
+        ..add(
+          callParticipant.copyWith(
+            status: CallHistoryParticipantStatus.accepted,
+          ),
+        );
+    }
+    final updateCall = callHistoryModel.copyWith(
+      participants: currentParticipantList,
+    );
+    await callHistoryRepo.updateCall(updateCall);
+  }
+
   Future<CallHistoryParticipantModel> _getUserFromCoreId(String coreId) async {
     final user = await contactRepository.getContactById(coreId);
     CallHistoryParticipantModel callHistoryParticipant;
@@ -211,7 +264,6 @@ class CallHistoryObserver extends GetxController {
     } else {
       callHistoryParticipant = CallHistoryParticipantModel(
         name: coreId.shortenCoreId,
-        iconUrl: 'https://avatars.githubusercontent.com/u/6645136?v=4',
         coreId: coreId,
         startDate: DateTime.now(),
       );

@@ -66,7 +66,7 @@ class CallHistorySingleParticipantWidget
                       arguments: CallViewArgumentsModel(
                         callId: null,
                         isAudioCall: true,
-                        members: [controller.args.coreId],
+                        members: controller.args.participants,
                       ),
                     ),
                     icon: Assets.svg.audioCallIcon
@@ -80,7 +80,7 @@ class CallHistorySingleParticipantWidget
                       Routes.CALL,
                       arguments: CallViewArgumentsModel(
                         callId: null,
-                        members: [controller.args.coreId],
+                        members: controller.args.participants,
                         isAudioCall: false,
                       ),
                     ),
@@ -96,13 +96,14 @@ class CallHistorySingleParticipantWidget
                       Get.toNamed(
                         Routes.MESSAGES,
                         arguments: MessagesViewArgumentsModel(
-                            coreId: controller.participants[0]!.coreId,
-                            iconUrl: controller.participants[0]!.iconUrl,
-                            connectionType: MessagingConnectionType.internet,
-                            participants: [
-                              MessagingParticipantModel(
-                                  coreId: controller.participants[0]!.coreId)
-                            ]),
+                          coreId: controller.participants[0]!.coreId,
+                          connectionType: MessagingConnectionType.internet,
+                          participants: [
+                            MessagingParticipantModel(
+                              coreId: controller.participants[0].coreId,
+                            ),
+                          ],
+                        ),
                       );
                     },
                     icon: Assets.svg.chatOutlined

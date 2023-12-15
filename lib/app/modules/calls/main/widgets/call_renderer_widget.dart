@@ -17,7 +17,6 @@ class CallRendererWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
       decoration: const BoxDecoration(color: COLORS.kCallPageDarkGrey),
       child: participantModel.videoMode.value
           ? RTCVideoView(

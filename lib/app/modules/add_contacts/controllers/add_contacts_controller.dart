@@ -106,7 +106,6 @@ class AddContactsController extends GetxController {
     Get.offNamedUntil(Routes.MESSAGES, ModalRoute.withName(Routes.HOME),
         arguments: MessagesViewArgumentsModel(
           coreId: userModel.coreId,
-          iconUrl: userModel.iconUrl,
           participants: [
             MessagingParticipantModel(
               coreId: userModel.coreId,
@@ -143,7 +142,6 @@ class AddContactsController extends GetxController {
 
         final updatedParticipant = call.participants[index].copyWith(
           name: userModel.name,
-          iconUrl: userModel.iconUrl,
         );
 
         // Create a copy of the list

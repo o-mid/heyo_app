@@ -22,7 +22,6 @@ CallHistoryParticipantModel _$CallHistoryParticipantModelFromJson(
 /// @nodoc
 mixin _$CallHistoryParticipantModel {
   String get name => throw _privateConstructorUsedError;
-  String get iconUrl => throw _privateConstructorUsedError;
   String get coreId => throw _privateConstructorUsedError;
   DateTime get startDate => throw _privateConstructorUsedError;
   DateTime? get endDate => throw _privateConstructorUsedError;
@@ -44,7 +43,6 @@ abstract class $CallHistoryParticipantModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String name,
-      String iconUrl,
       String coreId,
       DateTime startDate,
       DateTime? endDate,
@@ -66,7 +64,6 @@ class _$CallHistoryParticipantModelCopyWithImpl<$Res,
   @override
   $Res call({
     Object? name = null,
-    Object? iconUrl = null,
     Object? coreId = null,
     Object? startDate = null,
     Object? endDate = freezed,
@@ -76,10 +73,6 @@ class _$CallHistoryParticipantModelCopyWithImpl<$Res,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconUrl: null == iconUrl
-          ? _value.iconUrl
-          : iconUrl // ignore: cast_nullable_to_non_nullable
               as String,
       coreId: null == coreId
           ? _value.coreId
@@ -112,7 +105,6 @@ abstract class _$$CallHistoryParticipantModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {String name,
-      String iconUrl,
       String coreId,
       DateTime startDate,
       DateTime? endDate,
@@ -133,7 +125,6 @@ class __$$CallHistoryParticipantModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? name = null,
-    Object? iconUrl = null,
     Object? coreId = null,
     Object? startDate = null,
     Object? endDate = freezed,
@@ -143,10 +134,6 @@ class __$$CallHistoryParticipantModelImplCopyWithImpl<$Res>
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconUrl: null == iconUrl
-          ? _value.iconUrl
-          : iconUrl // ignore: cast_nullable_to_non_nullable
               as String,
       coreId: null == coreId
           ? _value.coreId
@@ -175,7 +162,6 @@ class _$CallHistoryParticipantModelImpl
     implements _CallHistoryParticipantModel {
   const _$CallHistoryParticipantModelImpl(
       {required this.name,
-      required this.iconUrl,
       required this.coreId,
       required this.startDate,
       this.endDate,
@@ -188,8 +174,6 @@ class _$CallHistoryParticipantModelImpl
   @override
   final String name;
   @override
-  final String iconUrl;
-  @override
   final String coreId;
   @override
   final DateTime startDate;
@@ -201,7 +185,7 @@ class _$CallHistoryParticipantModelImpl
 
   @override
   String toString() {
-    return 'CallHistoryParticipantModel(name: $name, iconUrl: $iconUrl, coreId: $coreId, startDate: $startDate, endDate: $endDate, status: $status)';
+    return 'CallHistoryParticipantModel(name: $name, coreId: $coreId, startDate: $startDate, endDate: $endDate, status: $status)';
   }
 
   @override
@@ -210,7 +194,6 @@ class _$CallHistoryParticipantModelImpl
         (other.runtimeType == runtimeType &&
             other is _$CallHistoryParticipantModelImpl &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.iconUrl, iconUrl) || other.iconUrl == iconUrl) &&
             (identical(other.coreId, coreId) || other.coreId == coreId) &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
@@ -220,8 +203,8 @@ class _$CallHistoryParticipantModelImpl
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, name, iconUrl, coreId, startDate, endDate, status);
+  int get hashCode =>
+      Object.hash(runtimeType, name, coreId, startDate, endDate, status);
 
   @JsonKey(ignore: true)
   @override
@@ -242,7 +225,6 @@ abstract class _CallHistoryParticipantModel
     implements CallHistoryParticipantModel {
   const factory _CallHistoryParticipantModel(
           {required final String name,
-          required final String iconUrl,
           required final String coreId,
           required final DateTime startDate,
           final DateTime? endDate,
@@ -254,8 +236,6 @@ abstract class _CallHistoryParticipantModel
 
   @override
   String get name;
-  @override
-  String get iconUrl;
   @override
   String get coreId;
   @override

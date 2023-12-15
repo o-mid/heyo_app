@@ -368,7 +368,9 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     stopCallTimer();
 
     await callRepository.closeCall();
-    await localParticipate.value!.rtcVideoRenderer!.dispose();
+    if (localParticipate.value != null) {
+      await localParticipate.value!.rtcVideoRenderer!.dispose();
+    }
     await disposeRTCRender();
     _stopWatingBeep();
     await disableWakeScreenLock();
