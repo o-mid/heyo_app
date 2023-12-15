@@ -186,7 +186,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     await enableWakeScreenLock();
   }
 
-
   late String requestedCallId;
 
   Future<void> startCalling() async {
@@ -198,58 +197,68 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     isInCall.value = false;
     _playWatingBeep();
   }
-  
+
   //TODO farzam refacor
-  streamUpdated(
+  void streamUpdated(
     CallStream callStream,
     int index,
     ConnectedParticipantModel connectedParticipantModel,
   ) async {
-    final renderer = RTCVideoRenderer();
-    await renderer.initialize();
-    renderer.srcObject = callStream.remoteStream;
-    final remoteParticipate = ConnectedParticipantModel(
-      audioMode: true.obs,
-      videoMode: (!callStream.isAudioCall).obs,
-      coreId: callStream.coreId,
-      name: callStream.coreId.shortenCoreId,
-      stream: callStream.remoteStream,
-      rtcVideoRenderer: renderer,
-    );
-    connectedRemoteParticipates[index] = remoteParticipate;
+    if (connectedParticipantModel.rtcVideoRenderer == null) {
+      final renderer = RTCVideoRenderer();
+      await renderer.initialize();
+      renderer.srcObject = callStream.remoteStream;
+      final remoteParticipate = ConnectedParticipantModel(
+        audioMode: true.obs,
+        videoMode: (!callStream.isAudioCall).obs,
+        coreId: callStream.coreId,
+        name: callStream.coreId.shortenCoreId,
+        stream: callStream.remoteStream,
+        rtcVideoRenderer: renderer,
+      );
+      connectedRemoteParticipates[index] = remoteParticipate;
+    } else {
+      connectedRemoteParticipates[index].videoMode.value =
+          !callStream.isAudioCall;
+    }
     connectedRemoteParticipates.refresh();
   }
 
   //TODO farzam refacor
-  Future<void> addRTCRenderer(CallStream callStream) async {
+  Future<void> createConnectedParticipantModel(CallStream callStream) async {
+    RTCVideoRenderer? renderer;
+    if (callStream.remoteStream != null) {
+      renderer = RTCVideoRenderer();
+      await renderer.initialize();
+      renderer.srcObject = callStream.remoteStream;
+    }
+    connectedRemoteParticipates.add( ConnectedParticipantModel(
+      audioMode: true.obs,
+      videoMode: (renderer==null)? false.obs: (!callStream.isAudioCall).obs,
+      coreId: callStream.coreId,
+      name: callStream.coreId.shortenCoreId,
+      stream: callStream.remoteStream,
+      rtcVideoRenderer: renderer,
+    ),);
+  }
+
+  Future<void> onNewParticipateReceived(CallStream callStream) async {
     // TODO(AliAzim): condition should be add to check if video is enable or not
     var isRemoteAvailable = false;
-    for (int index = 0; index < connectedRemoteParticipates.length; index++) {
+    for (var index = 0; index < connectedRemoteParticipates.length; index++) {
       if (connectedRemoteParticipates[index].coreId == callStream.coreId) {
         isRemoteAvailable = true;
         streamUpdated(callStream, index, connectedRemoteParticipates[index]);
         break;
       }
     }
-
     if (isRemoteAvailable) {
       return;
     }
-    final renderer = RTCVideoRenderer();
-    await renderer.initialize();
-    renderer.srcObject = callStream.remoteStream;
-    //_remoteRenderers.add(renderer);
-    //TODO: The data should return from CallStream,
-    // or input of method should be CallItemModel
-    final remoteParticipate = ConnectedParticipantModel(
-      audioMode: true.obs,
-      videoMode: (!callStream.isAudioCall).obs,
-      coreId: callStream.coreId,
-      name: callStream.coreId.shortenCoreId,
-      stream: callStream.remoteStream,
-      rtcVideoRenderer: renderer,
-    );
-    connectedRemoteParticipates.add(remoteParticipate);
+    await createConnectedParticipantModel(callStream);
+    //connectedRemoteParticipates.refresh();
+
+
     //updateCalleeVideoWidget();
   }
 
@@ -271,8 +280,9 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   Future<void> observeRemoteStreams() async {
     final callStreams = await callRepository.getCallStreams();
+    print("hbgkbj ${callStreams.length}");
     for (final element in callStreams) {
-      await addRTCRenderer(element);
+      await createConnectedParticipantModel(element);
     }
     callRepository.onAddCallStream = (callStateView) {
       debugPrint('onAddCallStream : $callStateView');
@@ -284,7 +294,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
         startCallTimer();
       }
 
-      addRTCRenderer(callStateView);
+      onNewParticipateReceived(callStateView);
     };
   }
 
@@ -431,8 +441,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       coreId: args.members.first,
     );
   }
-
-
 
   void switchFullSCreenMode() => fullScreenMode.value = !fullScreenMode.value;
 }
