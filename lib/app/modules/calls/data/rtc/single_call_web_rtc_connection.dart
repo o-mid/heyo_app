@@ -225,4 +225,16 @@ class SingleCallWebRTCBuilder {
       rtcSession.callId,
     );
   }
+
+  void updateCamera(bool value, CallRTCSession callRTCSession) {
+    _send(
+      CallSignalingCommands.cameraStateChanged,
+      {
+        CallSignalingCommands.cameraStateChanged: {'cameraStateChanged':value},
+      },
+      callRTCSession.remotePeer.remoteCoreId,
+      callRTCSession.remotePeer.remotePeerId,
+      callRTCSession.callId,
+    );
+  }
 }

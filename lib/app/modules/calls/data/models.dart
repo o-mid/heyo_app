@@ -6,10 +6,8 @@ class CallSignalingCommands {
   static const answer = 'answer';
   static const request = 'request';
   static const reject = 'reject';
-  static const cameraOpen = 'cameraOpen';
-  static const cameraClosed = 'cameraClosed';
   static const newMember = 'newMemer';
-
+  static const cameraStateChanged = 'cameraStateChanged';
 }
 
 CallId generateCallId() {
@@ -26,11 +24,12 @@ class RemotePeer {
 typedef CallId = String;
 
 class CallRTCSession {
-  CallRTCSession(
-      {required this.callId,
-      required this.remotePeer,
-      required this.onConnectionFailed,
-      required this.isAudioCall,});
+  CallRTCSession({
+    required this.callId,
+    required this.remotePeer,
+    required this.onConnectionFailed,
+    required this.isAudioCall,
+  });
 
   final bool isAudioCall;
 
@@ -46,7 +45,8 @@ class CallRTCSession {
     _stream = mediaStream;
     onAddRemoteStream?.call(_stream!);
   }
-  MediaStream? getStream(){
+
+  MediaStream? getStream() {
     return _stream;
   }
 
@@ -97,7 +97,7 @@ class CallRTCSession {
     }
   }
 
-   Future<void> dispose() async {
+  Future<void> dispose() async {
     await _pc?.dispose();
   }
 }

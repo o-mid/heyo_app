@@ -239,9 +239,14 @@ class CallConnectionsHandler {
     }
   }
 
-  void showLocalVideoStream(bool value,bool sendSignal) {
+  void showLocalVideoStream(bool videMode,bool sendSignal) {
+    if(sendSignal){
+      for (var element in callStatusDataStore.currentCall!.activeSessions) {
+        singleCallWebRTCBuilder.updateCamera(videMode,element);
+      }
+    }
     if (_localStream != null) {
-      _localStream!.getVideoTracks()[0].enabled = value;
+      _localStream!.getVideoTracks()[0].enabled = videMode;
     }
   }
 
@@ -330,5 +335,13 @@ class CallConnectionsHandler {
 
   MediaStream? getLocalStream() {
     return _localStream;
+  }
+
+  void onCameraStateChanged(String callId, data, RemotePeer remotePeer) {
+    final cameraState = data["cameraStateChanged"] as Map<String, dynamic>;
+    print("onCameraStateChangedddd ${cameraState}");
+    if (callId == callStatusDataStore.currentCall?.callId) {
+
+    }
   }
 }

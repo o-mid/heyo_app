@@ -18,7 +18,7 @@ abstract class CallRepository {
   //void notifyParticipantsChange(AllParticipantModel participant);
 
   //UI events and actions
-  void showLocalVideoStream(bool value,bool sendSignal);
+  void showLocalVideoStream(bool videMode,bool sendSignal);
 
   Future<String> startCall(String remoteId, bool isAudioCall);
 

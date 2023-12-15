@@ -97,8 +97,8 @@ class WebRTCCallRepository implements CallRepository {
   }
 
   @override
-  void showLocalVideoStream(bool value, bool sendSignal) {
-    callConnectionsHandler.showLocalVideoStream(value, sendSignal);
+  void showLocalVideoStream(bool videMode, bool sendSignal) {
+    callConnectionsHandler.showLocalVideoStream(videMode, sendSignal);
     //TODO signaling
   }
 

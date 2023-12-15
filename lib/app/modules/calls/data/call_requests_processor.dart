@@ -4,9 +4,10 @@ import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
 import 'package:heyo/app/modules/connection/domain/connection_models.dart';
 
 class CallRequestsProcessor {
-  CallRequestsProcessor(
-      {required this.connectionContractor,
-      required this.callConnectionsHandler,}) {
+  CallRequestsProcessor({
+    required this.connectionContractor,
+    required this.callConnectionsHandler,
+  }) {
     connectionContractor.getMessageStream().listen((event) {
       if (event is CallConnectionDataReceived) {
         onRequestReceived(
@@ -88,6 +89,14 @@ class CallRequestsProcessor {
       case CallSignalingCommands.newMember:
         {
           callConnectionsHandler.onNewMemberEventReceived(callId, data);
+        }
+      case CallSignalingCommands.cameraStateChanged:
+        {
+          callConnectionsHandler.onCameraStateChanged(
+              callId,
+              data,
+              RemotePeer(
+                  remoteCoreId: remoteCoreId, remotePeerId: remotePeerId),);
         }
     }
   }
