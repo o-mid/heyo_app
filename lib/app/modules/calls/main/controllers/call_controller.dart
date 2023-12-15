@@ -204,7 +204,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     int index,
     ConnectedParticipantModel connectedParticipantModel,
   ) async {
-    if (connectedParticipantModel.rtcVideoRenderer == null) {
+    if (connectedParticipantModel.rtcVideoRenderer == null && callStream.remoteStream!=null) {
       final renderer = RTCVideoRenderer();
       await renderer.initialize();
       renderer.srcObject = callStream.remoteStream;
@@ -221,7 +221,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       connectedRemoteParticipates[index].videoMode.value =
           !callStream.isAudioCall;
     }
-    connectedRemoteParticipates.refresh();
   }
 
   //TODO farzam refacor
