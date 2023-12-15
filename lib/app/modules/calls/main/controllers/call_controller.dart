@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/connected_participant_model/connected_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/local_participant_model/local_participant_model.dart';
@@ -218,12 +217,10 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       );
       connectedRemoteParticipates[index] = remoteParticipate;
     } else {
-      connectedRemoteParticipates[index].videoMode.value =
-          !callStream.isAudioCall;
+      connectedRemoteParticipates[index] =connectedRemoteParticipates[index].copyWith(videoMode: (!callStream.isAudioCall).obs);
     }
   }
 
-  //TODO farzam refacor
   Future<void> createConnectedParticipantModel(CallStream callStream) async {
     RTCVideoRenderer? renderer;
     if (callStream.remoteStream != null) {
@@ -255,8 +252,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       return;
     }
     await createConnectedParticipantModel(callStream);
-    //connectedRemoteParticipates.refresh();
-
 
     //updateCalleeVideoWidget();
   }

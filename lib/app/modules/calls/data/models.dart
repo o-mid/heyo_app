@@ -31,7 +31,12 @@ class CallRTCSession {
     required this.isAudioCall,
   });
 
-  final bool isAudioCall;
+  bool isAudioCall;
+
+  void setCameraState(bool isAudio) {
+    isAudioCall = isAudio;
+    onCameraStateChanged?.call();
+  }
 
   Function(CallId, String) onConnectionFailed;
 
@@ -39,6 +44,7 @@ class CallRTCSession {
   RemotePeer remotePeer;
   Function(MediaStream mediaStream)? onAddRemoteStream;
   Function(MediaStream stream)? onRemoveRemoteStream;
+  Function()? onCameraStateChanged;
   MediaStream? _stream;
 
   setRemoteStream(MediaStream mediaStream) {
@@ -80,6 +86,7 @@ class CallRTCSession {
       }
     };
     pc!.onRemoveStream = (stream) {
+      print("PC : onRemoveStream");
       onRemoveRemoteStream?.call(stream);
     };
   }

@@ -49,6 +49,7 @@ class CallConnectionsHandler {
   Function(CallRTCSession callRTCSession)? onAddRemoteStream;
 
   Function(AllParticipantModel participate)? onChangeParticipateStream;
+  Function(CallRTCSession callRTCSession)? onAudioStateChanged;
 
   CallConnectionsHandler({
     required this.singleCallWebRTCBuilder,
@@ -119,8 +120,11 @@ class CallConnectionsHandler {
       _localStream!,
       isAudioCall,
     );
-    callRTCSession.onAddRemoteStream = (stream) {
+    callRTCSession..onAddRemoteStream = (stream) {
       onAddRemoteStream?.call(callRTCSession);
+    }
+    ..onCameraStateChanged=(){
+      onAudioStateChanged?.call(callRTCSession);
     };
     callStatusDataStore.addSession(callRTCSession);
     return callRTCSession;
@@ -134,7 +138,8 @@ class CallConnectionsHandler {
 
       for (final element in callStatusDataStore.incomingCalls!.remotePeers) {
         print(
-            'accept ${element.remotePeer.remoteCoreId} ${element.isAudioCall}',);
+          'accept ${element.remotePeer.remoteCoreId} ${element.isAudioCall}',
+        );
         final callRTCSession =
             await _createSession(element.remotePeer, element.isAudioCall);
         unawaited(singleCallWebRTCBuilder.startSession(callRTCSession));
@@ -239,10 +244,10 @@ class CallConnectionsHandler {
     }
   }
 
-  void showLocalVideoStream(bool videMode,bool sendSignal) {
-    if(sendSignal){
+  void showLocalVideoStream(bool videMode, bool sendSignal) {
+    if (sendSignal) {
       for (var element in callStatusDataStore.currentCall!.activeSessions) {
-        singleCallWebRTCBuilder.updateCamera(videMode,element);
+        singleCallWebRTCBuilder.updateCamera(videMode, element);
       }
     }
     if (_localStream != null) {
@@ -339,9 +344,13 @@ class CallConnectionsHandler {
 
   void onCameraStateChanged(String callId, data, RemotePeer remotePeer) {
     final cameraState = data["cameraStateChanged"] as Map<String, dynamic>;
-    print("onCameraStateChangedddd ${cameraState}");
     if (callId == callStatusDataStore.currentCall?.callId) {
-
+      final isVideMode = cameraState["cameraStateChanged"] as bool;
+      callStatusDataStore.currentCall?.activeSessions.forEach((element) {
+        if(element.remotePeer.remoteCoreId==remotePeer.remoteCoreId){
+          element.setCameraState(!isVideMode);
+        }
+      });
     }
   }
 }

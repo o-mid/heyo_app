@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/p2p_node/models.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
-import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
 import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
 import 'package:heyo/app/routes/app_pages.dart';
@@ -63,10 +62,10 @@ class P2PNodeResponseStream {
     );
 
     p2pState.responses.add(event);
-    print("_onNewResponseEvent : eventId is: ${event.id.toString()}");
-    print("_onNewResponseEvent : eventName is: ${event.name.toString()}");
-    print("_onNewResponseEvent : body is: ${event.body.toString()}");
-    print("_onNewResponseEvent : error is: ${event.error.toString()}");
+    print('_onNewResponseEvent : eventId is: ${event.id.toString()}');
+    print('_onNewResponseEvent : eventName is: ${event.name.toString()}');
+    print('_onNewResponseEvent : body is: ${event.body.toString()}');
+    print('_onNewResponseEvent : error is: ${event.error.toString()}');
 
     if (event.name == P2PReqResNodeNames.connect &&
         event.error == null &&
