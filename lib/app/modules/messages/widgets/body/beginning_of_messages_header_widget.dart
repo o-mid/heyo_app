@@ -35,8 +35,8 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
           _buildUserAvatar(),
           CustomSizes.mediumSizedBoxHeight,
           _buildUserNameRow(),
-          SizedBox(height: 4.h),
-          _buildCoreIdText(),
+          //    SizedBox(height: 4.h),
+          //  _buildCoreIdText(),
           CustomSizes.mediumSizedBoxHeight,
           _buildEncryptedMessagingText(),
         ],
@@ -47,7 +47,6 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
   BoxDecoration _containerDecoration() {
     return BoxDecoration(
       border: Border.all(
-        width: 1,
         color: COLORS.kPinCodeDeactivateColor,
       ),
       borderRadius: BorderRadius.circular(8),
@@ -55,35 +54,97 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
   }
 
   Widget _buildUserAvatar() {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 62,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: participantsCoreIds.length,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return CustomCircleAvatar(coreId: participantsCoreIds[index], size: 62);
-              },
-            ),
-          ),
-        ]);
+    if (participantsCoreIds.length > 1) {
+      return _buildUserAvatarsStack();
+    } else {
+      return CustomCircleAvatar(coreId: participantsCoreIds[0], size: 62);
+    }
+    // return Row(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   crossAxisAlignment: CrossAxisAlignment.center,
+    //   children: [
+    //     SizedBox(
+    //       height: 62,
+    //       child: ListView.builder(
+    //         shrinkWrap: true,
+    //         itemCount: participantsCoreIds.length,
+    //         scrollDirection: Axis.horizontal,
+    //         itemBuilder: (context, index) {
+    //           return CustomCircleAvatar(coreId: participantsCoreIds[index], size: 62);
+    //         },
+    //       ),
+    //     ),
+    //   ],
+    // );
   }
 
   Widget _buildUserNameRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
+    if (participantsCoreIds.length > 1) {
+      return Align(
+        child: Text(
           chatName,
           style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
         ),
-        CustomSizes.smallSizedBoxWidth,
-        _buildVerifiedIcon(),
-      ],
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            chatName,
+            style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+          ),
+          CustomSizes.smallSizedBoxWidth,
+          _buildVerifiedIcon(),
+        ],
+      );
+    }
+  }
+
+  Widget _buildUserAvatarsStack() {
+    var avatarWidgets = <Widget>[];
+    const double size = 60; // Avatar size
+    const double overlap = 10; // Overlap between avatars
+    double totalWidth = 0.0; // Total width to avoid exceeding stack bounds
+
+    for (var i = 0; i < participantsCoreIds.length; i++) {
+      final leftPosition = i * (size - overlap);
+      totalWidth = leftPosition + size;
+
+      avatarWidgets.add(
+        Positioned(
+          left: leftPosition,
+          child: CustomCircleAvatar(coreId: participantsCoreIds[i], size: size),
+        ),
+      );
+    }
+
+    // Check if extra avatar indicator is needed
+    if (participantsCoreIds.length > 4) {
+      avatarWidgets.add(
+        Positioned(
+          left: totalWidth,
+          child: SizedBox(
+            width: size,
+            height: size,
+            child: Center(
+              child: Text(
+                '+${participantsCoreIds.length - 4}',
+                style: TEXTSTYLES.kHeaderMedium.copyWith(color: COLORS.kDarkBlueColor),
+              ),
+            ),
+          ),
+        ),
+      );
+      totalWidth += size;
+    }
+    return SizedBox(
+      width: totalWidth + overlap,
+      height: size + overlap,
+      child: Stack(
+        alignment: Alignment.center,
+        children: avatarWidgets,
+      ),
     );
   }
 

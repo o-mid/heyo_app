@@ -126,6 +126,8 @@ class MessagesController extends GetxController {
   RxList<MessagingParticipantModel> participants =
       (Get.arguments as MessagesViewArgumentsModel).participants.obs;
 
+  final isGroupChat = (Get.arguments as MessagesViewArgumentsModel).participants.length > 1;
+
   final FocusNode textFocusNode = FocusNode();
 
   final isListLoaded = false.obs;

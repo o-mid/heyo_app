@@ -18,6 +18,7 @@ import 'package:get/get.dart';
 import '../../../../routes/app_pages.dart';
 import '../../../shared/data/models/add_contacts_view_arguments_model.dart';
 import '../../../shared/data/models/messages_view_arguments_model.dart';
+import '../../../shared/widgets/stacked_avatars_widget.dart';
 
 class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MessagingAppBar({
@@ -95,10 +96,17 @@ class _DefaultAppBar extends StatelessWidget {
               color: COLORS.kWhiteColor,
             ),
           ),
-          CustomCircleAvatar(
-              coreId: controller.user.value.coreId,
-              size: 32,
-              isOnline: controller.user.value.isOnline),
+          if (controller.isGroupChat)
+            StackedAvatars(
+              avatarSize: 24,
+              coreId1: controller.participants.first.coreId,
+              coreId2: controller.participants.last.coreId,
+            )
+          else
+            CustomCircleAvatar(
+                coreId: controller.user.value.coreId,
+                size: 32,
+                isOnline: controller.user.value.isOnline),
           CustomSizes.smallSizedBoxWidth,
           GestureDetector(
             onDoubleTap: controller.saveCoreIdToClipboard,
