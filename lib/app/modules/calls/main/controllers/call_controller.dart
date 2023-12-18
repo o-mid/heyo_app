@@ -278,7 +278,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     for (final element in callStreams) {
       await createConnectedParticipantModel(element);
     }
-    callRepository.onAddCallStream = (callStateView) {
+    callRepository.onCallStreamReceived = (callStateView) {
       debugPrint('onAddCallStream : $callStateView');
       //print("calll ${_remoteRenderers} : $stream");
       //TODO refactor this if related to the call state

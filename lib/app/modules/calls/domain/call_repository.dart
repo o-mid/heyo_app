@@ -11,7 +11,7 @@ abstract class CallRepository {
 
   Future<List<CallStream>> getCallStreams();
 
-  Function(CallStream callStream)? onAddCallStream;
+  Function(CallStream callStream)? onCallStreamReceived;
 
   Function(AllParticipantModel participantModel)? onChangeParticipateStream;
 

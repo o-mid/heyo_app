@@ -11,7 +11,7 @@ class WebRTCCallRepository implements CallRepository {
         onLocalStream?.call(stream);
       }
       ..onAudioStateChanged = (callRTCSession) {
-        onAddCallStream?.call(
+        onCallStreamReceived?.call(
           CallStream(
             coreId: callRTCSession.remotePeer.remoteCoreId,
             remoteStream: callRTCSession.getStream(),
@@ -20,7 +20,7 @@ class WebRTCCallRepository implements CallRepository {
         );
       }
       ..onAddRemoteStream = ((callRTCSession) {
-        onAddCallStream?.call(
+        onCallStreamReceived?.call(
           CallStream(
               coreId: callRTCSession.remotePeer.remoteCoreId,
               remoteStream: callRTCSession.getStream(),
@@ -37,7 +37,7 @@ class WebRTCCallRepository implements CallRepository {
   @override
   Function(MediaStream stream)? onLocalStream;
   @override
-  Function(CallStream callStream)? onAddCallStream;
+  Function(CallStream callStream)? onCallStreamReceived;
   @override
   Function(AllParticipantModel participantModel)? onChangeParticipateStream;
 
@@ -85,7 +85,7 @@ class WebRTCCallRepository implements CallRepository {
   @override
   Future<void> closeCall() async {
     await callConnectionsHandler.close();
-    onAddCallStream = null;
+    onCallStreamReceived = null;
     onLocalStream = null;
     onChangeParticipateStream = null;
   }
@@ -121,7 +121,7 @@ class WebRTCCallRepository implements CallRepository {
   }
 
   Future<void> _addToCallStream(String coreId) async {
-    onAddCallStream?.call(
+    onCallStreamReceived?.call(
       CallStream(
         coreId: coreId,
         remoteStream: await _createStream('video', false),
