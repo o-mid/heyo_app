@@ -113,61 +113,16 @@ class _DefaultAppBar extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Text(
-                        controller.user.value.name,
-                        style: TEXTSTYLES.kButtonBasic.copyWith(
-                          color: COLORS.kWhiteColor,
-                          height: 1,
-                        ),
-                      ),
-                      SizedBox(width: 5.w),
-                      if (controller.user.value.isVerified)
-                        Assets.svg.verified.svg(
-                          width: 12.w,
-                          height: 12.w,
-                          color: COLORS.kWhiteColor,
-                        ),
-                    ],
-                  ),
+                _BuildChatName(
+                  name: controller.user.value.name,
+                  isVerified: controller.user.value.isVerified,
                 ),
-                if (controller.user.value.isOnline)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        LocaleKeys.MessagesPage_onlineVia.tr,
-                        style: TEXTSTYLES.kBodyTag.copyWith(
-                          color: COLORS.kWhiteColor,
-                          fontWeight: FONTS.Regular,
-                        ),
-                      ),
-                      SizedBox(width: 4.w),
-                      controller.connectionType == MessagingConnectionType.internet
-                          ? Icon(
-                              Icons.wifi,
-                              size: 12.w,
-                              color: COLORS.kWhiteColor,
-                            )
-                          : Assets.svg.wifiDirectIcon.svg(
-                              height: 10.w,
-                              fit: BoxFit.contain,
-                              alignment: Alignment.center,
-                              color: COLORS.kWhiteColor,
-                            ),
-                    ],
-                  ),
-                if (controller.user.value.isOnline == false)
-                  Text(
-                    LocaleKeys.offline.tr,
-                    style: TEXTSTYLES.kBodyTag.copyWith(
-                      color: COLORS.kWhiteColor,
-                      fontWeight: FONTS.Regular,
-                    ),
-                  ),
+                _BuildUserStatus(
+                  isGroupChat: controller.isGroupChat,
+                  membersCount: controller.participants.length,
+                  isOnline: controller.user.value.isOnline,
+                  connectionType: controller.connectionType,
+                ),
               ],
             ),
           ),
@@ -218,6 +173,106 @@ class _DefaultAppBar extends StatelessWidget {
         ],
       );
     });
+  }
+}
+
+class _BuildUserStatus extends StatelessWidget {
+  final MessagingConnectionType connectionType;
+  final bool isOnline;
+  final bool isGroupChat;
+  final int membersCount;
+
+  const _BuildUserStatus({
+    required this.isOnline,
+    required this.isGroupChat,
+    required this.membersCount,
+    this.connectionType = MessagingConnectionType.internet,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (isGroupChat) {
+      return Text(
+        membersCount.toString() + " " + "members",
+        style: TEXTSTYLES.kBodyTag.copyWith(
+          color: COLORS.kWhiteColor,
+          fontWeight: FONTS.Regular,
+          fontSize: 12.0.sp,
+        ),
+      );
+    } else {
+      if (isOnline) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              LocaleKeys.MessagesPage_onlineVia.tr,
+              style: TEXTSTYLES.kBodyTag.copyWith(
+                color: COLORS.kWhiteColor,
+                fontWeight: FONTS.Regular,
+              ),
+            ),
+            SizedBox(width: 4.w),
+            if (connectionType == MessagingConnectionType.internet)
+              Icon(
+                Icons.wifi,
+                size: 12.w,
+                color: COLORS.kWhiteColor,
+              )
+            else
+              Assets.svg.wifiDirectIcon.svg(
+                height: 10.w,
+                fit: BoxFit.contain,
+                alignment: Alignment.center,
+                color: COLORS.kWhiteColor,
+              ),
+          ],
+        );
+      } else {
+        return Text(
+          LocaleKeys.offline.tr,
+          style: TEXTSTYLES.kBodyTag.copyWith(
+            color: COLORS.kWhiteColor,
+            fontWeight: FONTS.Regular,
+          ),
+        );
+      }
+    }
+  }
+}
+
+class _BuildChatName extends StatelessWidget {
+  final String name;
+  final bool isVerified;
+  _BuildChatName({
+    required this.name,
+    Key? key,
+    this.isVerified = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Row(
+        children: [
+          Text(
+            name,
+            style: TEXTSTYLES.kButtonBasic.copyWith(
+              color: COLORS.kWhiteColor,
+              height: 1,
+            ),
+          ),
+          SizedBox(width: 5.w),
+          if (isVerified)
+            Assets.svg.verified.svg(
+              width: 12.w,
+              height: 12.w,
+              color: COLORS.kWhiteColor,
+            ),
+        ],
+      ),
+    );
   }
 }
 
