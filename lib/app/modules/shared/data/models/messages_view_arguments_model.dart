@@ -9,12 +9,14 @@ class MessagesViewArgumentsModel {
   final List<MessageModel>? forwardedMessages;
   final MessageSession? session;
   final MessagingConnectionType connectionType;
+  final String chatName;
 
   final List<MessagingParticipantModel> participants;
   MessagesViewArgumentsModel({
     required this.participants,
     this.forwardedMessages,
     this.session,
+    this.chatName = '',
     this.connectionType = MessagingConnectionType.internet,
   });
 }

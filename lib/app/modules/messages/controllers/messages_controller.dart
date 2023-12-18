@@ -126,6 +126,8 @@ class MessagesController extends GetxController {
   RxList<MessagingParticipantModel> participants =
       (Get.arguments as MessagesViewArgumentsModel).participants.obs;
 
+  final chatName = (Get.arguments as MessagesViewArgumentsModel).chatName.obs;
+
   final isGroupChat = (Get.arguments as MessagesViewArgumentsModel).participants.length > 1;
 
   final FocusNode textFocusNode = FocusNode();
@@ -134,6 +136,9 @@ class MessagesController extends GetxController {
 
   Future<void> init() async {
     firstCoreId = participants.first.coreId;
+    if (chatName.value.isEmpty) {
+      chatName.value = user.value.name;
+    }
     _initMessagesArguments();
 
     _initUiControllers();
@@ -799,7 +804,7 @@ class MessagesController extends GetxController {
 
       chatModel = ChatModel(
         id: user.value.coreId,
-        name: user.value.name,
+        name: chatName.value,
         icon: user.value.iconUrl,
         lastMessage: "",
         timestamp: DateTime.now(),

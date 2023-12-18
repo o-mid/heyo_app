@@ -114,7 +114,7 @@ class _DefaultAppBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _BuildChatName(
-                  name: controller.user.value.name,
+                  name: controller.chatName.value,
                   isVerified: controller.user.value.isVerified,
                 ),
                 _BuildUserStatus(

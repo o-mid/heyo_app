@@ -59,7 +59,9 @@ class NewGroupChatView extends GetView<NewGroupChatController> {
       child: FloatingActionButton(
         onPressed: controller.handleFabOnpressed,
         backgroundColor:
-            controller.selectedCoreids.length <= 1 ? Colors.grey : COLORS.kGreenMainColor,
+            controller.selectedCoreids.length <= 1 || controller.confirmationInputText.isEmpty
+                ? Colors.grey
+                : COLORS.kGreenMainColor,
         child: controller.showConfirmationScreen.value
             ? Assets.svg.singleTickIcon.svg(width: 20.w, color: COLORS.kWhiteColor)
             : Assets.svg.arrowIcon.svg(width: 20.w, color: COLORS.kWhiteColor),

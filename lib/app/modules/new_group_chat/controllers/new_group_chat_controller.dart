@@ -157,6 +157,8 @@ class NewGroupChatController extends GetxController {
       _showMembersSnackbar();
     } else if (showConfirmationScreen.value == false) {
       _showConfirmationScreen();
+    } else if (confirmationInputText.value.isEmpty) {
+      _showGroupNameSnackbar();
     } else {
       _navigateToMessages();
     }
@@ -167,7 +169,7 @@ class NewGroupChatController extends GetxController {
     confirmationScreenInputFocusNode.requestFocus();
   }
 
-  void _navigateToMessages() {
+  _navigateToMessages() {
     Get.toNamed(
       Routes.MESSAGES,
       arguments: MessagesViewArgumentsModel(
@@ -175,6 +177,7 @@ class NewGroupChatController extends GetxController {
         participants: selectedCoreids
             .map((element) => MessagingParticipantModel(coreId: element.coreId))
             .toList(),
+        chatName: confirmationInputText.value,
       ),
     );
   }
@@ -213,6 +216,28 @@ class NewGroupChatController extends GetxController {
     Get.rawSnackbar(
       messageText: Text(
         'Select two or more members to start a group chat.',
+        style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kGreenMainColor),
+        textAlign: TextAlign.center,
+      ),
+      backgroundColor: COLORS.kAppBackground,
+      snackPosition: SnackPosition.TOP,
+      snackStyle: SnackStyle.FLOATING,
+      margin: const EdgeInsets.only(top: 20),
+      boxShadows: [
+        BoxShadow(
+          color: const Color(0xFF466087).withOpacity(0.1),
+          offset: const Offset(0, 3),
+          blurRadius: 10,
+        ),
+      ],
+      borderRadius: 8,
+    );
+  }
+
+  void _showGroupNameSnackbar() {
+    Get.rawSnackbar(
+      messageText: Text(
+        'Add group name to start a group chat.',
         style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kGreenMainColor),
         textAlign: TextAlign.center,
       ),
