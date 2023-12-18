@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/call_history/widgets/call_log_widget.dart';
+import 'package:heyo/app/modules/calls/call_history/widgets/call_history_list_tile_widget.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/delete_all_calls_bottom_sheet.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/delete_call_history_dialog.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
@@ -80,7 +80,7 @@ class CallHistoryController extends GetxController {
       index,
       (context, animation) => SizeTransition(
         sizeFactor: animation,
-        child: CallLogWidget(call: call),
+        child: CallHistoryListTitleWidget(call: call),
       ),
     );
   }

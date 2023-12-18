@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/call_history/controllers/call_history_controller.dart';
+import 'package:heyo/app/modules/calls/call_history/widgets/group_call_circle_avatar.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/widgets/call_status_icon_and_date.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
@@ -15,23 +16,20 @@ import 'package:heyo/app/modules/shared/widgets/slidable_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
-class CallLogWidget extends GetView<CallHistoryController> {
-  const CallLogWidget({required this.call, super.key});
+class CallHistoryListTitleWidget extends GetView<CallHistoryController> {
+  const CallHistoryListTitleWidget({required this.call, super.key});
   final CallHistoryModel call;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        //TODO:(Aliazim) add index while pushing
-        Get.toNamed(
-          Routes.USER_CALL_HISTORY,
-          arguments: UserCallHistoryViewArgumentsModel(
-            callId: call.callId,
-            participants: call.participants.map((e) => e.coreId).toList(),
-          ),
-        );
-      },
+      onTap: () => Get.toNamed(
+        Routes.USER_CALL_HISTORY,
+        arguments: UserCallHistoryViewArgumentsModel(
+          callId: call.callId,
+          participants: call.participants.map((e) => e.coreId).toList(),
+        ),
+      ),
       child: SlidableWidget(
         key: Key(call.callId),
         onDismissed: () => controller.deleteCall(call),
@@ -40,7 +38,12 @@ class CallLogWidget extends GetView<CallHistoryController> {
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
           child: Row(
             children: [
-              CustomCircleAvatar(coreId: call.coreId, size: 40),
+              if (call.participants.length == 1)
+                CustomCircleAvatar(coreId: call.coreId, size: 40)
+              else
+                GroupCallCircleAvatar(
+                  participants: call.participants.map((e) => e.coreId).toList(),
+                ),
               CustomSizes.mediumSizedBoxWidth,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
