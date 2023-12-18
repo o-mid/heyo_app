@@ -235,7 +235,11 @@ class CallConnectionsHandler {
     singleCallWebRTCBuilder.onOfferReceived(rtcSession, description);
   }
 
-  void switchCamera() {}
+  void switchCamera() {
+    if (_localStream != null) {
+      Helper.switchCamera(_localStream!.getVideoTracks()[0]);
+    }
+  }
 
   void muteMic() {
     if (_localStream != null) {
