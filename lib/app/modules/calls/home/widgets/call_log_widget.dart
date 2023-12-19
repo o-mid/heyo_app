@@ -30,7 +30,7 @@ class CallLogWidget extends StatelessWidget {
           Routes.USER_CALL_HISTORY,
           arguments: UserCallHistoryViewArgumentsModel(
             coreId: call.user.coreId,
-            iconUrl: call.user.iconUrl,
+            iconUrl: call.user.coreId,
           ),
         );
       },

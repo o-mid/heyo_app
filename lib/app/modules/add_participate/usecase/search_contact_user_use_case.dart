@@ -13,8 +13,7 @@ class SearchContactUserUseCase {
   });
 
   Future<List<UserModel>> execute(String query) async {
-    List<UserModel> searchedItems =
-        (await contactRepository.search(query)).toList();
+    List<UserModel> searchedItems = (await contactRepository.search(query)).toList();
 
     if (searchedItems.isEmpty) {
       final currentUserCoreId = await accountInfoRepo.getUserAddress();
@@ -24,7 +23,6 @@ class SearchContactUserUseCase {
         return [
           UserModel(
             name: 'unknown',
-            iconUrl: "https://avatars.githubusercontent.com/u/9801359?v=4",
             walletAddress: query,
             coreId: query,
           )

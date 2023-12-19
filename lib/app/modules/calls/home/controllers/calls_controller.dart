@@ -42,8 +42,7 @@ class CallsController extends GetxController {
 
   void init() async {
     calls.value = await callHistoryRepo.getAllCalls();
-    _callsStreamSubscription =
-        (await callHistoryRepo.getCallsStream()).listen((newCalls) {
+    _callsStreamSubscription = (await callHistoryRepo.getCallsStream()).listen((newCalls) {
       // remove the deleted calls
       for (int i = 0; i < calls.length; i++) {
         if (!newCalls.any((call) => call.id == calls[i].id)) {
@@ -91,39 +90,33 @@ class CallsController extends GetxController {
   void _addMockData() {
     final uBoiled = UserModel(
       name: "Boiled Dealmaker",
-      iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
       isVerified: true,
       walletAddress: "CB11${List.generate(11, (index) => index).join()}14AB",
       coreId: "CB11${List.generate(11, (index) => index).join()}14AB",
     );
     final uCrapps = UserModel(
       name: "Crapps Wallbanger",
-      iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
       walletAddress: "CB11${List.generate(11, (index) => index).join()}49BB",
       coreId: "CB11${List.generate(11, (index) => index).join()}49BB",
     );
     final uFancy = UserModel(
       name: "Fancy Potato",
-      iconUrl: "https://avatars.githubusercontent.com/u/6644146?v=4",
       walletAddress: "CB11${List.generate(11, (index) => index).join()}11FE",
       coreId: "CB11${List.generate(11, (index) => index).join()}11FE",
     );
     final uOckerito = UserModel(
       name: "Ockerito Fazola",
       isVerified: true,
-      iconUrl: "https://avatars.githubusercontent.com/u/7844146?v=4",
       walletAddress: "CB11${List.generate(11, (index) => index).join()}5A5D",
       coreId: "CB11${List.generate(11, (index) => index).join()}5A5D",
     );
     final uUnchained = UserModel(
       name: "Unchained Banana",
-      iconUrl: "https://avatars.githubusercontent.com/u/7847725?v=4",
       walletAddress: "CB11${List.generate(11, (index) => index).join()}44AC",
       coreId: "CB11${List.generate(11, (index) => index).join()}44AC",
     );
     final uSwagger = UserModel(
       name: "Swagger Uncut",
-      iconUrl: "https://avatars.githubusercontent.com/u/9947725?v=4",
       walletAddress: "CB11${List.generate(11, (index) => index).join()}532A",
       coreId: "CB11${List.generate(11, (index) => index).join()}532A",
     );

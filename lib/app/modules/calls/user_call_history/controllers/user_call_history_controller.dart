@@ -25,8 +25,6 @@ class UserCallHistoryController extends GetxController {
   final calls = <CallModel>[].obs;
   Rx<UserModel> user = UserModel(
     coreId: (Get.arguments as UserCallHistoryViewArgumentsModel).coreId,
-    iconUrl: (Get.arguments as UserCallHistoryViewArgumentsModel).iconUrl ??
-        "https://avatars.githubusercontent.com/u/2345136?v=4",
     name: (Get.arguments as UserCallHistoryViewArgumentsModel).coreId.shortenCoreId,
     walletAddress: (Get.arguments).coreId as String,
     isBlocked: false,
@@ -51,7 +49,6 @@ class UserCallHistoryController extends GetxController {
     if (createdUser == null) {
       createdUser = UserModel(
         coreId: args.coreId,
-        iconUrl: args.iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
         name: args.coreId.shortenCoreId,
         isOnline: true,
         isContact: false,

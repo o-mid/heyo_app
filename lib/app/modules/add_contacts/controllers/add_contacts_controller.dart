@@ -22,8 +22,6 @@ class AddContactsController extends GetxController {
 
   Rx<UserModel> user = UserModel(
     coreId: (Get.arguments as AddContactsViewArgumentsModel).coreId,
-    iconUrl: (Get.arguments as AddContactsViewArgumentsModel).iconUrl ??
-        "https://avatars.githubusercontent.com/u/2345136?v=4",
     name: (Get.arguments as AddContactsViewArgumentsModel).coreId.shortenCoreId,
     walletAddress: (Get.arguments).coreId as String,
     isBlocked: false,
@@ -78,7 +76,6 @@ class AddContactsController extends GetxController {
     if (createdUser == null) {
       createdUser = UserModel(
         coreId: args.coreId,
-        iconUrl: args.iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
         name: args.coreId.shortenCoreId,
         isOnline: true,
         isContact: false,
