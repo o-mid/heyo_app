@@ -32,12 +32,16 @@ class CallHistoryProvider implements CallHistoryAbstractProvider {
 
   @override
   Future<void> deleteOne(String callId) async {
-    await _store.delete(
-      await _db,
-      finder: Finder(
-        filter: Filter.equals('id', callId),
-      ),
-    );
+    try {
+      await _store.delete(
+        await _db,
+        finder: Finder(
+          filter: Filter.equals('callId', callId),
+        ),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   @override
