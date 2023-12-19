@@ -1,3 +1,5 @@
+import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
+
 /// [ChatModel] document structure :
 
 /// |      Variable        |    Data Type  |                         Description                        | Default Value ((N/A) = required)|
@@ -24,6 +26,7 @@ class ChatModel {
   static const notificationCountSerializedName = 'notificationCount';
   static const lastReadMessageIdSerializedName = 'lastReadMessageId';
   static const scrollPositionSerializedName = "scrollPosition";
+  static const participantsSerializedName = "participants";
 
   final String id;
   final String name;
@@ -35,6 +38,7 @@ class ChatModel {
   final int notificationCount;
   final String scrollPosition;
   final String lastReadMessageId;
+  final List<MessagingParticipantModel> participants;
 
   ChatModel({
     required this.id,
@@ -48,6 +52,7 @@ class ChatModel {
     // should be required after implementing the feature and refactoring
     this.scrollPosition = '',
     required this.lastReadMessageId,
+    required this.participants,
   });
 
   factory ChatModel.fromJson(Map<String, dynamic> json) => ChatModel(
@@ -61,6 +66,9 @@ class ChatModel {
         notificationCount: json[notificationCountSerializedName] as int,
         lastReadMessageId: json[lastReadMessageIdSerializedName] as String,
         scrollPosition: json[scrollPositionSerializedName] as String,
+        participants: (json[participantsSerializedName] as List<dynamic>)
+            .map((e) => MessagingParticipantModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -74,6 +82,7 @@ class ChatModel {
         notificationCountSerializedName: notificationCount,
         lastReadMessageIdSerializedName: lastReadMessageId,
         scrollPositionSerializedName: scrollPosition,
+        participantsSerializedName: participants.map((e) => e.toJson()).toList(),
       };
 
   ChatModel copyWith({
@@ -88,6 +97,7 @@ class ChatModel {
     int? notificationCount,
     String? scrollPosition,
     String? lastReadMessageId,
+    List<MessagingParticipantModel>? participants,
   }) {
     return ChatModel(
       id: id ?? this.id,
@@ -100,6 +110,7 @@ class ChatModel {
       notificationCount: notificationCount ?? this.notificationCount,
       scrollPosition: scrollPosition ?? this.scrollPosition,
       lastReadMessageId: lastReadMessageId ?? this.lastReadMessageId,
+      participants: participants ?? this.participants,
     );
   }
 }

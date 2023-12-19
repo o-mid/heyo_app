@@ -4,6 +4,7 @@ import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/domain/user_state_repository.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
@@ -71,7 +72,7 @@ class UserStateRepositoryImpl implements UserStateRepository {
     final ChatModel? chatModel = await chatHistoryRepo.getChat(chatId);
 
     if (chatModel == null) {
-      ChatModel updatedChatModel = ChatModel(
+      final updatedChatModel = ChatModel(
         id: chatId,
         icon: user.iconUrl,
         name: user.name,
@@ -81,6 +82,11 @@ class UserStateRepositoryImpl implements UserStateRepository {
         lastMessage: lastMessagePreview,
         notificationCount: unReadMessagesCount,
         timestamp: lastMessageTimestamp,
+        participants: [
+          MessagingParticipantModel(
+            coreId: user.coreId,
+          ),
+        ],
       );
       await chatHistoryRepo.updateChat(updatedChatModel);
     } else {

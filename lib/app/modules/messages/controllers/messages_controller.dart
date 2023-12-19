@@ -803,15 +803,19 @@ class MessagesController extends GetxController {
       print("ListLoaded");
 
       chatModel = ChatModel(
-        id: user.value.coreId,
-        name: chatName.value,
-        icon: user.value.iconUrl,
-        lastMessage: "",
-        timestamp: DateTime.now(),
-        isOnline: true,
-        isVerified: true,
-        lastReadMessageId: lastReadRemoteMessagesId.value,
-      );
+          id: user.value.coreId,
+          name: chatName.value,
+          icon: user.value.iconUrl,
+          lastMessage: "",
+          timestamp: DateTime.now(),
+          isOnline: true,
+          isVerified: true,
+          lastReadMessageId: lastReadRemoteMessagesId.value,
+          participants: [
+            MessagingParticipantModel(
+              coreId: user.value.coreId,
+            ),
+          ]);
     }
   }
 

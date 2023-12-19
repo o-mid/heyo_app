@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/notifications/data/models/notifications_payload_model.dart';
+import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/notifications_constant.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import 'package:tuple/tuple.dart';
@@ -50,6 +51,11 @@ class DataHandler {
       lastReadMessageId: "",
       isVerified: true,
       timestamp: DateTime.now(),
+      participants: [
+        MessagingParticipantModel(
+          coreId: sessioncid,
+        ),
+      ],
     );
     final currentChatModel = await chatHistoryRepo.getChat(userChatModel.id);
 

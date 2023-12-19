@@ -13,6 +13,8 @@ import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
+import '../../shared/data/models/messaging_participant_model.dart';
+
 class ChatsController extends GetxController {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final MessagesAbstractRepo messagesRepo;
@@ -131,6 +133,11 @@ class ChatsController extends GetxController {
         lastMessage: "",
         lastReadMessageId: "",
         timestamp: DateTime.now(),
+        participants: [
+          MessagingParticipantModel(
+            coreId: '1',
+          ),
+        ],
       ),
       ChatModel(
         id: '2',
@@ -140,6 +147,11 @@ class ChatsController extends GetxController {
         lastMessage: "",
         lastReadMessageId: "",
         timestamp: DateTime.now(),
+        participants: [
+          MessagingParticipantModel(
+            coreId: '2',
+          ),
+        ],
       ),
       ChatModel(
         id: '3',
@@ -150,6 +162,11 @@ class ChatsController extends GetxController {
         lastReadMessageId: "",
         isVerified: true,
         timestamp: DateTime.now(),
+        participants: [
+          MessagingParticipantModel(
+            coreId: '3',
+          ),
+        ],
       ),
       ChatModel(
         id: '4',
@@ -159,6 +176,11 @@ class ChatsController extends GetxController {
         lastMessage: "",
         lastReadMessageId: "",
         timestamp: DateTime.now(),
+        participants: [
+          MessagingParticipantModel(
+            coreId: '4',
+          ),
+        ],
       ),
       ChatModel(
         id: '5',
@@ -169,6 +191,11 @@ class ChatsController extends GetxController {
         lastReadMessageId: "",
         isVerified: true,
         timestamp: DateTime.now(),
+        participants: [
+          MessagingParticipantModel(
+            coreId: '5',
+          ),
+        ],
       ),
     ];
 
