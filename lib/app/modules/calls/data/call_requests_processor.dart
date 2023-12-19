@@ -1,4 +1,4 @@
-import 'package:heyo/app/modules/calls/data/models.dart';
+import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
 import 'package:heyo/app/modules/connection/domain/connection_models.dart';

@@ -1,3 +1,4 @@
+import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
 
 enum CallHistoryStatus {

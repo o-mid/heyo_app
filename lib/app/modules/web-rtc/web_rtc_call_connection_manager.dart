@@ -1,6 +1,8 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 class WebRTCCallConnectionManager {
+
+  WebRTCCallConnectionManager();
   String sdpSemantics = 'unified-plan';
 
   static const Map<String, dynamic> iceServers = {
@@ -44,66 +46,9 @@ class WebRTCCallConnectionManager {
     'optional': [],
   };
 
-  WebRTCCallConnectionManager();
-
-  void setListeners(
-    MediaStream? localStream,
-    RTCPeerConnection pc, {
-    Function(RTCDataChannel dataChannel)? onAddDataChannel,
-    Function(MediaStream mediaStream)? onAddRemoteStream,
-    Function(RTCPeerConnectionState connectionState)?
-        onConnectionStateChangeStage,
-    Function(RTCIceCandidate candidate)? onIceCandidate,
-    Function(MediaStream mediaStream)? onRemoveStream,
-  }) {
-    pc.onTrack = (event) {
-      print(
-          "DEBUG race : On track stream: ${event.streams.length} :${event.streams[0].id} : track id : ${event.track.id} : ${event.track.kind}");
-      if (event.track.kind == 'video') {
-        onAddRemoteStream?.call(event.streams[0]);
-      }
-      event.track.onUnMute = () {
-        print(
-            "DEBUG race : On UnMuted ${event.track.kind} --- ${event.track.id}");
-      };
-      event.track.onMute = () {
-        print("DEBUG race : Muted ${event.track.kind} --- ${event.track.id}");
-      };
-    };
-    localStream!.getTracks().forEach((track) {
-      print(
-          "DEBUG race : Add track to localStream $track : ${track.id} : ${track.kind}");
-      pc.addTrack(track, localStream);
-    });
-    pc.onDataChannel = (channel) {
-      onAddDataChannel?.call(channel);
-    };
-    pc.onConnectionState = (state) => onConnectionStateChangeStage?.call(state);
-    pc.onIceGatheringState = (RTCIceGatheringState state) {
-      print("On ICE gathering state changed => ${state}");
-    };
-    pc.onIceConnectionState = (RTCIceConnectionState state) {
-      print("On ICE connection state changed => ${state}");
-    };
-
-    pc.onRenegotiationNeeded = () {
-      print("renogottionnnn neeeded");
-    };
-    pc.onIceCandidate = (candidate) {
-
-      onIceCandidate?.call(candidate);
-    };
-    pc.onIceGatheringState = (RTCIceGatheringState state) {
-      print("On ICE gathering state changed => ${state}");
-    };
-    pc.onRemoveStream = (stream) {
-      onRemoveStream?.call(stream);
-    };
-  }
-
   Future<RTCSessionDescription> setupUpOffer(
       RTCPeerConnection pc, String media) async {
-    RTCSessionDescription sessionDescription =
+    final sessionDescription =
         await pc.createOffer(media == 'data' ? dcConstraints : {});
     await pc.setLocalDescription(sessionDescription);
     return sessionDescription;
@@ -111,14 +56,14 @@ class WebRTCCallConnectionManager {
 
   Future<RTCSessionDescription> setupAnswer(
       RTCPeerConnection pc, String media) async {
-    RTCSessionDescription sessionDescription =
+    final sessionDescription =
         await pc.createAnswer(media == 'data' ? dcConstraints : {});
     await pc.setLocalDescription(sessionDescription);
     return sessionDescription;
   }
 
   Future<RTCPeerConnection> createRTCPeerConnection() async {
-    RTCPeerConnection pc = await createPeerConnection({
+    final pc = await createPeerConnection({
       ...iceServers,
       ...{'sdpSemantics': sdpSemantics}
     }, config);
@@ -127,7 +72,7 @@ class WebRTCCallConnectionManager {
 
 
   Future<MediaStream> createStream(String media, bool userScreen) async {
-    final Map<String, dynamic> mediaConstraints = {
+    final mediaConstraints = <String, dynamic>{
       'audio': true,
       'video': userScreen
           ? true
@@ -143,7 +88,7 @@ class WebRTCCallConnectionManager {
       }
     };
 
-    MediaStream stream = userScreen
+    final stream = userScreen
         ? await RTCFactoryNative.instance.navigator.mediaDevices
         .getDisplayMedia(mediaConstraints)
         : await RTCFactoryNative.instance.navigator.mediaDevices
