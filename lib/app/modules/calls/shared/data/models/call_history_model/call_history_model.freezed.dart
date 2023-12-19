@@ -21,7 +21,6 @@ CallHistoryModel _$CallHistoryModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$CallHistoryModel {
   String get callId => throw _privateConstructorUsedError;
-  String get coreId => throw _privateConstructorUsedError;
   CallType get type => throw _privateConstructorUsedError;
   CallStatus get status => throw _privateConstructorUsedError;
   List<CallHistoryParticipantModel> get participants =>
@@ -43,7 +42,6 @@ abstract class $CallHistoryModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String callId,
-      String coreId,
       CallType type,
       CallStatus status,
       List<CallHistoryParticipantModel> participants,
@@ -65,7 +63,6 @@ class _$CallHistoryModelCopyWithImpl<$Res, $Val extends CallHistoryModel>
   @override
   $Res call({
     Object? callId = null,
-    Object? coreId = null,
     Object? type = null,
     Object? status = null,
     Object? participants = null,
@@ -76,10 +73,6 @@ class _$CallHistoryModelCopyWithImpl<$Res, $Val extends CallHistoryModel>
       callId: null == callId
           ? _value.callId
           : callId // ignore: cast_nullable_to_non_nullable
-              as String,
-      coreId: null == coreId
-          ? _value.coreId
-          : coreId // ignore: cast_nullable_to_non_nullable
               as String,
       type: null == type
           ? _value.type
@@ -115,7 +108,6 @@ abstract class _$$CallHistoryModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {String callId,
-      String coreId,
       CallType type,
       CallStatus status,
       List<CallHistoryParticipantModel> participants,
@@ -135,7 +127,6 @@ class __$$CallHistoryModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? callId = null,
-    Object? coreId = null,
     Object? type = null,
     Object? status = null,
     Object? participants = null,
@@ -146,10 +137,6 @@ class __$$CallHistoryModelImplCopyWithImpl<$Res>
       callId: null == callId
           ? _value.callId
           : callId // ignore: cast_nullable_to_non_nullable
-              as String,
-      coreId: null == coreId
-          ? _value.coreId
-          : coreId // ignore: cast_nullable_to_non_nullable
               as String,
       type: null == type
           ? _value.type
@@ -181,7 +168,6 @@ class __$$CallHistoryModelImplCopyWithImpl<$Res>
 class _$CallHistoryModelImpl implements _CallHistoryModel {
   const _$CallHistoryModelImpl(
       {required this.callId,
-      required this.coreId,
       required this.type,
       required this.status,
       required final List<CallHistoryParticipantModel> participants,
@@ -194,8 +180,6 @@ class _$CallHistoryModelImpl implements _CallHistoryModel {
 
   @override
   final String callId;
-  @override
-  final String coreId;
   @override
   final CallType type;
   @override
@@ -215,7 +199,7 @@ class _$CallHistoryModelImpl implements _CallHistoryModel {
 
   @override
   String toString() {
-    return 'CallHistoryModel(callId: $callId, coreId: $coreId, type: $type, status: $status, participants: $participants, startDate: $startDate, endDate: $endDate)';
+    return 'CallHistoryModel(callId: $callId, type: $type, status: $status, participants: $participants, startDate: $startDate, endDate: $endDate)';
   }
 
   @override
@@ -224,7 +208,6 @@ class _$CallHistoryModelImpl implements _CallHistoryModel {
         (other.runtimeType == runtimeType &&
             other is _$CallHistoryModelImpl &&
             (identical(other.callId, callId) || other.callId == callId) &&
-            (identical(other.coreId, coreId) || other.coreId == coreId) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.status, status) || other.status == status) &&
             const DeepCollectionEquality()
@@ -236,7 +219,7 @@ class _$CallHistoryModelImpl implements _CallHistoryModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, callId, coreId, type, status,
+  int get hashCode => Object.hash(runtimeType, callId, type, status,
       const DeepCollectionEquality().hash(_participants), startDate, endDate);
 
   @JsonKey(ignore: true)
@@ -257,7 +240,6 @@ class _$CallHistoryModelImpl implements _CallHistoryModel {
 abstract class _CallHistoryModel implements CallHistoryModel {
   const factory _CallHistoryModel(
       {required final String callId,
-      required final String coreId,
       required final CallType type,
       required final CallStatus status,
       required final List<CallHistoryParticipantModel> participants,
@@ -269,8 +251,6 @@ abstract class _CallHistoryModel implements CallHistoryModel {
 
   @override
   String get callId;
-  @override
-  String get coreId;
   @override
   CallType get type;
   @override

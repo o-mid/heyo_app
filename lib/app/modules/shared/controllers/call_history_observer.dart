@@ -162,7 +162,6 @@ class CallHistoryObserver extends GetxController {
       status: CallStatus.incomingMissed,
       startDate: DateTime.now(),
       callId: callId,
-      coreId: callParticipant.coreId,
       type: callInfo.isAudioCall ? CallType.audio : CallType.video,
     );
 
@@ -182,7 +181,6 @@ class CallHistoryObserver extends GetxController {
       status: CallStatus.outgoingNotAnswered,
       startDate: DateTime.now(),
       callId: callId,
-      coreId: callParticipant.coreId,
       type: callInfo.isAudioCall ? CallType.audio : CallType.video,
     );
 

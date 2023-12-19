@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/call_history/controllers/call_history_controller.dart';
+import 'package:heyo/app/modules/calls/call_history/widgets/call_history_avatar_widget.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/group_call_circle_avatar.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/widgets/call_status_icon_and_date.dart';
@@ -38,37 +39,30 @@ class CallHistoryListTitleWidget extends GetView<CallHistoryController> {
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
           child: Row(
             children: [
-              if (call.participants.length == 1)
-                CustomCircleAvatar(coreId: call.coreId, size: 40)
-              else
-                GroupCallCircleAvatar(
-                  participants: call.participants.map((e) => e.coreId).toList(),
-                ),
+              CallHistoryAvatarWidget(callHistoryModel: call),
               CustomSizes.mediumSizedBoxWidth,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        call.coreId.shortenCoreId,
-                        style: TEXTSTYLES.kChatName.copyWith(
-                          color: COLORS.kDarkBlueColor,
-                        ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      [...call.participants, ...call.participants]
+                          .map((element) => element.name)
+                          .toList()
+                          .join(', '),
+                      style: TEXTSTYLES.kChatName.copyWith(
+                        color: COLORS.kDarkBlueColor,
                       ),
-                      SizedBox(width: 8.w),
-                      //if (call.participants[0].isVerified)
-                      //  Assets.svg.verifiedWithBluePadding.svg(
-                      //    width: 16.w,
-                      //    height: 16.w,
-                      //  ),
-                    ],
-                  ),
-                  SizedBox(height: 4.h),
-                  CallStatusIconAndDate(call: call),
-                ],
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                    SizedBox(height: 4.h),
+                    CallStatusIconAndDate(call: call),
+                  ],
+                ),
               ),
-              const Spacer(),
+              //const Spacer(),
+              CustomSizes.mediumSizedBoxWidth,
               _buildCallTypeIcon(),
             ],
           ),
