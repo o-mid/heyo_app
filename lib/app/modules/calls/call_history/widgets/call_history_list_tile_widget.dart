@@ -4,15 +4,12 @@ import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/call_history/controllers/call_history_controller.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/call_history_avatar_widget.dart';
-import 'package:heyo/app/modules/calls/call_history/widgets/group_call_circle_avatar.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/widgets/call_status_icon_and_date.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
-import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/app/modules/shared/widgets/slidable_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
