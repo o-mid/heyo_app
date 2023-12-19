@@ -46,7 +46,7 @@ class CallHistoryListTitleWidget extends GetView<CallHistoryController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      [...call.participants, ...call.participants]
+                      call.participants
                           .map((element) => element.name)
                           .toList()
                           .join(', '),
