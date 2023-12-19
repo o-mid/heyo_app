@@ -98,7 +98,7 @@ class CallHistoryObserver extends GetxController {
             final startTime = _callStartTimestamps[state.callId];
 
             if (startTime == null) {
-              //* This means the call did not connected
+              //* This means the user reject the call
               await _updateCallStatusAndEndTime(
                 callId: call.callId,
                 status: _determineCallStatusFromPrevAndHistory(
@@ -107,7 +107,7 @@ class CallHistoryObserver extends GetxController {
                 ),
               );
             } else {
-              //* This means the call connected
+              //* This means the call end after duration
               await _updateCallStatusAndEndTime(
                 callId: call.callId,
               );
@@ -207,6 +207,26 @@ class CallHistoryObserver extends GetxController {
     await callHistoryRepo.updateCall(updateCall);
   }
 
+  //Future<void> _connectedCallHistory({
+  //  required String callId,
+  //  CallStatus? status,
+  //}) async {
+  //  final call = await callHistoryRepo.getOneCall(callId);
+  //  if (call == null) {
+  //    return;
+  //  }
+
+  //  final updateCall = status == null
+  //      ? call.copyWith(
+  //          endDate: DateTime.now(),
+  //        )
+  //      : call.copyWith(
+  //          status: status,
+  //          endDate: DateTime.now(),
+  //        );
+  //  await callHistoryRepo.updateCall(updateCall);
+  //}
+
   Future<void> _addMemberToCallHistory({
     required CallHistoryModel callHistoryModel,
     required CallHistoryState callHistoryState,
@@ -218,7 +238,7 @@ class CallHistoryObserver extends GetxController {
 
     //* Check if the new user is in call or not
     var isInCall = false;
-    var currentParticipantList = callHistoryModel.participants;
+    var currentParticipantList = [...callHistoryModel.participants];
     for (var i = 0; i < currentParticipantList.length; i++) {
       if (currentParticipantList[i].coreId == callParticipant.coreId) {
         // TODO(AliAzim): update the data.
