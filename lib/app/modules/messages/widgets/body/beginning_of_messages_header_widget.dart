@@ -35,8 +35,6 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
           _buildUserAvatar(),
           CustomSizes.mediumSizedBoxHeight,
           _buildUserNameRow(),
-          //    SizedBox(height: 4.h),
-          //  _buildCoreIdText(),
           CustomSizes.mediumSizedBoxHeight,
           _buildEncryptedMessagingText(),
         ],
@@ -59,23 +57,6 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
     } else {
       return CustomCircleAvatar(coreId: participantsCoreIds[0], size: 62);
     }
-    // return Row(
-    //   mainAxisAlignment: MainAxisAlignment.center,
-    //   crossAxisAlignment: CrossAxisAlignment.center,
-    //   children: [
-    //     SizedBox(
-    //       height: 62,
-    //       child: ListView.builder(
-    //         shrinkWrap: true,
-    //         itemCount: participantsCoreIds.length,
-    //         scrollDirection: Axis.horizontal,
-    //         itemBuilder: (context, index) {
-    //           return CustomCircleAvatar(coreId: participantsCoreIds[index], size: 62);
-    //         },
-    //       ),
-    //     ),
-    //   ],
-    // );
   }
 
   Widget _buildUserNameRow() {
@@ -108,15 +89,16 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
     double totalWidth = 0.0; // Total width to avoid exceeding stack bounds
 
     for (var i = 0; i < participantsCoreIds.length; i++) {
-      final leftPosition = i * (size - overlap);
-      totalWidth = leftPosition + size;
-
-      avatarWidgets.add(
-        Positioned(
-          left: leftPosition,
-          child: CustomCircleAvatar(coreId: participantsCoreIds[i], size: size),
-        ),
-      );
+      if (i <= 3) {
+        final leftPosition = i * (size - overlap);
+        totalWidth = leftPosition + size;
+        avatarWidgets.add(
+          Positioned(
+            left: leftPosition,
+            child: CustomCircleAvatar(coreId: participantsCoreIds[i], size: size),
+          ),
+        );
+      }
     }
 
     // Check if extra avatar indicator is needed
@@ -138,12 +120,14 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
       );
       totalWidth += size;
     }
-    return SizedBox(
-      width: totalWidth + overlap,
-      height: size + overlap,
-      child: Stack(
-        alignment: Alignment.center,
-        children: avatarWidgets,
+    return Align(
+      child: SizedBox(
+        width: totalWidth + overlap,
+        height: size + overlap,
+        child: Stack(
+          alignment: Alignment.center,
+          children: avatarWidgets,
+        ),
       ),
     );
   }
