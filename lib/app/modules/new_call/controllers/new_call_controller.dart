@@ -53,7 +53,6 @@ class NewCallController extends GetxController {
         searchSuggestions.value = [
           UserModel(
             name: 'unknown',
-            iconUrl: getMockIconUrl(),
             walletAddress: query,
             coreId: query,
           )

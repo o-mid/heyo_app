@@ -181,7 +181,6 @@ class CallHistoryObserver extends GetxController {
     UserModel? user = await contactRepository.getContactById(coreId);
     user ??= UserModel(
       name: "${coreId.characters.take(4).string}...${coreId.characters.takeLast(4).string}",
-      iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
       isVerified: true,
       walletAddress: coreId,
       coreId: coreId,

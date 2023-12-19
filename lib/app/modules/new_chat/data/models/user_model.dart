@@ -15,7 +15,6 @@ import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 
 class UserModel {
   static const nameSerializedName = 'name';
-  static const iconUrlSerializedName = 'iconUrl';
   static const walletAddressSerializedName = 'walletAddress';
   static const nicknameSerializedName = 'nickname';
   static const isVerifiedSerializedName = 'isVerified';
@@ -26,7 +25,6 @@ class UserModel {
   static const coreIdSerializedName = 'coreId';
 
   String name;
-  String iconUrl;
   String walletAddress;
   String nickname;
   bool isOnline;
@@ -37,7 +35,6 @@ class UserModel {
 
   UserModel({
     required this.name,
-    required this.iconUrl,
     required this.walletAddress,
     this.isContact = false,
     this.isOnline = false,
@@ -49,7 +46,6 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         name: json[nameSerializedName],
-        iconUrl: json[iconUrlSerializedName],
         walletAddress: json[walletAddressSerializedName],
         nickname: json[nicknameSerializedName],
         isVerified: json[isVerifiedSerializedName] as bool,
@@ -61,7 +57,6 @@ class UserModel {
 
   Map<String, dynamic> toJson() => {
         nameSerializedName: name,
-        iconUrlSerializedName: iconUrl,
         walletAddressSerializedName: walletAddress,
         nicknameSerializedName: nickname,
         isVerifiedSerializedName: isVerified,
@@ -85,7 +80,6 @@ class UserModel {
   }) {
     return UserModel(
       name: name ?? this.name,
-      iconUrl: icon ?? this.iconUrl,
       walletAddress: walletAddress ?? this.walletAddress,
       nickname: nickname ?? this.nickname,
       isOnline: isOnline ?? this.isOnline,

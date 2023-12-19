@@ -25,14 +25,13 @@ class UserStateRepositoryImpl implements UserStateRepository {
   @override
   Future<UserModel> getUserContact({required UserInstance userInstance}) async {
     final String coreId = userInstance.coreId;
-    final String? iconUrl = userInstance.iconUrl;
+
     // check if user is already in contact
     UserModel? createdUser = await contactRepository.getContactById(coreId);
 
     if (createdUser == null) {
       createdUser = UserModel(
         coreId: coreId,
-        iconUrl: iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
         name: coreId.shortenCoreId,
         isOnline: true,
         isContact: false,
@@ -74,7 +73,6 @@ class UserStateRepositoryImpl implements UserStateRepository {
     if (chatModel == null) {
       final updatedChatModel = ChatModel(
         id: chatId,
-        icon: user.iconUrl,
         name: user.name,
         lastReadMessageId: lastReadRemoteMessagesId,
         isOnline: true,
@@ -92,7 +90,6 @@ class UserStateRepositoryImpl implements UserStateRepository {
     } else {
       await chatHistoryRepo.updateChat(
         chatModel.copyWith(
-            icon: user.iconUrl,
             name: user.name,
             lastReadMessageId: lastReadRemoteMessagesId,
             isOnline: true,

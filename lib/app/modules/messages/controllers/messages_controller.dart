@@ -117,7 +117,6 @@ class MessagesController extends GetxController {
   late ChatModel? chatModel;
   Rx<UserModel> user = UserModel(
     coreId: (Get.arguments as MessagesViewArgumentsModel).participants.first.coreId,
-    iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
     name: (Get.arguments as MessagesViewArgumentsModel).participants.first.coreId.shortenCoreId,
     walletAddress:
         (Get.arguments as MessagesViewArgumentsModel).participants.first.coreId as String,
@@ -170,7 +169,6 @@ class MessagesController extends GetxController {
     user.value = await userStateRepository.getUserContact(
       userInstance: UserInstance(
         coreId: user.value.coreId,
-        iconUrl: user.value.iconUrl,
       ),
     );
     user.refresh();
@@ -805,7 +803,6 @@ class MessagesController extends GetxController {
       chatModel = ChatModel(
           id: user.value.coreId,
           name: chatName.value,
-          icon: user.value.iconUrl,
           lastMessage: "",
           timestamp: DateTime.now(),
           isOnline: true,
@@ -896,7 +893,9 @@ class MessagesController extends GetxController {
 
   Future<void> _saveUserStates() async {
     await userStateRepository.saveUserStates(
-      userInstance: UserInstance(coreId: user.value.coreId, iconUrl: user.value.iconUrl),
+      userInstance: UserInstance(
+        coreId: user.value.coreId,
+      ),
       userStates: UserStates(
         chatId: chatId,
         lastReadRemoteMessagesId: lastReadRemoteMessagesId.value,

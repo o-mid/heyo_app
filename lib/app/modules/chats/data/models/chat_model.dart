@@ -18,7 +18,7 @@ class ChatModel {
   static const idSerializedName = 'id';
   static const coreIdSerializedName = 'coreId';
   static const nameSerializedName = 'name';
-  static const iconSerializedName = 'icon';
+
   static const lastMessageSerializedName = 'lastMessage';
   static const timestampSerializedName = 'timestamp';
   static const isOnlineSerializedName = 'isOnline';
@@ -30,7 +30,7 @@ class ChatModel {
 
   final String id;
   final String name;
-  final String icon;
+
   final String lastMessage;
   final DateTime timestamp;
   final bool isOnline;
@@ -43,7 +43,6 @@ class ChatModel {
   ChatModel({
     required this.id,
     required this.name,
-    required this.icon,
     required this.lastMessage,
     required this.timestamp,
     this.isOnline = false,
@@ -58,7 +57,6 @@ class ChatModel {
   factory ChatModel.fromJson(Map<String, dynamic> json) => ChatModel(
         id: json[idSerializedName] as String,
         name: json[nameSerializedName] as String,
-        icon: json[iconSerializedName] as String,
         lastMessage: json[lastMessageSerializedName] as String,
         timestamp: DateTime.parse(json[timestampSerializedName] as String),
         isOnline: json[isOnlineSerializedName] as bool,
@@ -74,7 +72,6 @@ class ChatModel {
   Map<String, dynamic> toJson() => {
         idSerializedName: id,
         nameSerializedName: name,
-        iconSerializedName: icon,
         lastMessageSerializedName: lastMessage,
         timestampSerializedName: timestamp.toIso8601String(),
         isOnlineSerializedName: isOnline,
@@ -102,7 +99,6 @@ class ChatModel {
     return ChatModel(
       id: id ?? this.id,
       name: name ?? this.name,
-      icon: icon ?? this.icon,
       lastMessage: lastMessage ?? this.lastMessage,
       timestamp: timestamp ?? this.timestamp,
       isOnline: isOnline ?? this.isOnline,

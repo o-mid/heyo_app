@@ -128,7 +128,6 @@ class ChatsController extends GetxController {
       ChatModel(
         id: '1',
         isOnline: false,
-        icon: "",
         name: "John ",
         lastMessage: "",
         lastReadMessageId: "",
@@ -142,7 +141,6 @@ class ChatsController extends GetxController {
       ChatModel(
         id: '2',
         isOnline: true,
-        icon: "",
         name: "emmy",
         lastMessage: "",
         lastReadMessageId: "",
@@ -156,7 +154,6 @@ class ChatsController extends GetxController {
       ChatModel(
         id: '3',
         isOnline: false,
-        icon: "",
         name: "dow",
         lastMessage: "",
         lastReadMessageId: "",
@@ -171,7 +168,6 @@ class ChatsController extends GetxController {
       ChatModel(
         id: '4',
         isOnline: true,
-        icon: "",
         name: "docs",
         lastMessage: "",
         lastReadMessageId: "",
@@ -185,7 +181,6 @@ class ChatsController extends GetxController {
       ChatModel(
         id: '5',
         isOnline: false,
-        icon: "",
         name: "joseef boran",
         lastMessage: "",
         lastReadMessageId: "",

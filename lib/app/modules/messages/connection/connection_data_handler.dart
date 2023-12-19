@@ -46,7 +46,6 @@ class DataHandler {
       name: (userModel == null)
           ? "${sessioncid.characters.take(4).string}...${sessioncid.characters.takeLast(4).string}"
           : userModel.name,
-      icon: getMockIconUrl(),
       lastMessage: "",
       lastReadMessageId: "",
       isVerified: true,

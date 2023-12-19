@@ -104,7 +104,6 @@ class NewGroupChatController extends GetxController {
       searchSuggestions.value = [
         UserModel(
           name: 'Unknown',
-          iconUrl: (mockIconUrls..shuffle()).first,
           walletAddress: query,
           coreId: query,
         ),
@@ -269,14 +268,12 @@ class NewGroupChatController extends GetxController {
         name: 'Crapps',
         walletAddress: 'CB92...969A',
         coreId: 'CB92969A',
-        iconUrl: 'https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png',
         nickname: 'Nickname',
       ),
       UserModel(
         name: 'Fancy',
         walletAddress: 'CB21...C325',
         coreId: 'CB21C325',
-        iconUrl: 'https://avatars.githubusercontent.com/u/6634136?v=4',
         isOnline: true,
         isVerified: true,
       ),
@@ -284,21 +281,18 @@ class NewGroupChatController extends GetxController {
         name: 'manly',
         walletAddress: 'CB42...324E',
         coreId: 'CB42324E',
-        iconUrl: 'https://avatars.githubusercontent.com/u/9801359?v=4',
         isOnline: true,
       ),
       UserModel(
         name: 'jack',
         walletAddress: 'CB92...969A',
         coreId: 'CB43269A',
-        iconUrl: 'https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png',
         nickname: 'Nickname',
       ),
       UserModel(
         name: 'james',
         walletAddress: 'CB21...C325',
         coreId: 'CBwe2325',
-        iconUrl: 'https://avatars.githubusercontent.com/u/6634136?v=4',
         isOnline: true,
         isVerified: true,
       ),
@@ -306,7 +300,6 @@ class NewGroupChatController extends GetxController {
         name: 'Aren',
         walletAddress: 'CB42...324E',
         coreId: 'CB4dsw24E',
-        iconUrl: 'https://avatars.githubusercontent.com/u/9801359?v=4',
         isOnline: true,
       ),
     ].obs;
