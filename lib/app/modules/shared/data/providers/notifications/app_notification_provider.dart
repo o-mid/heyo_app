@@ -33,7 +33,8 @@ class AppNotificationProvider extends NotificationProvider {
     );
 
     if (signature == null) return false;
-
+    print("$fcmToken");
+    print("$signature");
     final response = await networkRequest
         .post(path: 'notification-service/user/register', data: {
       'fcmToken': fcmToken,
