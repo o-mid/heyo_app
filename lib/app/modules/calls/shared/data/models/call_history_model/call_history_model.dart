@@ -26,7 +26,6 @@ abstract class CallHistoryModel implements _$CallHistoryModel {
   @JsonSerializable(explicitToJson: true)
   const factory CallHistoryModel({
     required String callId,
-    required String coreId,
     required CallType type,
     required CallStatus status,
     required List<CallHistoryParticipantModel> participants,

@@ -10,7 +10,6 @@ _$CallHistoryModelImpl _$$CallHistoryModelImplFromJson(
         Map<String, dynamic> json) =>
     _$CallHistoryModelImpl(
       callId: json['callId'] as String,
-      coreId: json['coreId'] as String,
       type: $enumDecode(_$CallTypeEnumMap, json['type']),
       status: $enumDecode(_$CallStatusEnumMap, json['status']),
       participants: (json['participants'] as List<dynamic>)
@@ -27,7 +26,6 @@ Map<String, dynamic> _$$CallHistoryModelImplToJson(
         _$CallHistoryModelImpl instance) =>
     <String, dynamic>{
       'callId': instance.callId,
-      'coreId': instance.coreId,
       'type': _$CallTypeEnumMap[instance.type]!,
       'status': _$CallStatusEnumMap[instance.status]!,
       'participants': instance.participants.map((e) => e.toJson()).toList(),
