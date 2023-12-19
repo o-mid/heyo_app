@@ -124,7 +124,7 @@ class P2PNode {
   }
 
   void _listenToStreams(
-      void Function(P2PReqResNodeModel model) onNewRequestReceived) {
+      void Function(P2PReqResNodeModel model) onNewRequestReceived,) {
     p2pNodeResponseStream.setUp();
     p2pNodeRequestStream.setUp(onNewRequestReceived);
   }
@@ -171,7 +171,7 @@ class P2PNode {
     return p2pState.trackRequest(id);
   }
 
-  void restart(
+  Future<void> restart(
       void Function(P2PReqResNodeModel model) onNewRequestReceived) async {
     _setUpP2PNode(onNewRequestReceived);
   }
