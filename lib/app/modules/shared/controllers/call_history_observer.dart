@@ -65,27 +65,7 @@ class CallHistoryObserver extends GetxController {
           }
         case CallHistoryStatus.connected:
           {
-            final call = await callHistoryRepo.getOneCall(state.callId);
-            if (call == null) {
-              return;
-            }
-
-            /// store the time call started
-            _callStartTimestamps[state.callId] = DateTime.now();
-
-            if (call.participants.isNotEmpty) {
-              await _addMemberToCallHistory(
-                callHistoryModel: call,
-                callHistoryState: state,
-              );
-            }
-
-            await _updateCallStatusAndEndTime(
-              callId: call.callId,
-              status: call.status == CallStatus.incomingMissed
-                  ? CallStatus.incomingAnswered
-                  : CallStatus.outgoingAnswered,
-            );
+            await _connectedCallHistory(state: state);
             break;
           }
         case CallHistoryStatus.byeSent:
@@ -100,7 +80,7 @@ class CallHistoryObserver extends GetxController {
 
             if (startTime == null) {
               //* This means the user reject the call
-              await _updateCallStatusAndEndTime(
+              await _endOrRejectCall(
                 callId: call.callId,
                 status: _determineCallStatusFromPrevAndHistory(
                   call.status,
@@ -109,7 +89,7 @@ class CallHistoryObserver extends GetxController {
               );
             } else {
               //* This means the call end after duration
-              await _updateCallStatusAndEndTime(
+              await _endOrRejectCall(
                 callId: call.callId,
               );
             }
@@ -188,7 +168,7 @@ class CallHistoryObserver extends GetxController {
     await callHistoryRepo.addCallToHistory(callHistory);
   }
 
-  Future<void> _updateCallStatusAndEndTime({
+  Future<void> _endOrRejectCall({
     required String callId,
     CallStatus? status,
   }) async {
@@ -208,25 +188,34 @@ class CallHistoryObserver extends GetxController {
     await callHistoryRepo.updateCall(updateCall);
   }
 
-  //Future<void> _connectedCallHistory({
-  //  required String callId,
-  //  CallStatus? status,
-  //}) async {
-  //  final call = await callHistoryRepo.getOneCall(callId);
-  //  if (call == null) {
-  //    return;
-  //  }
+  Future<void> _connectedCallHistory({
+    required CallHistoryState state,
+  }) async {
+    final call = await callHistoryRepo.getOneCall(state.callId);
+    if (call == null) {
+      return;
+    }
 
-  //  final updateCall = status == null
-  //      ? call.copyWith(
-  //          endDate: DateTime.now(),
-  //        )
-  //      : call.copyWith(
-  //          status: status,
-  //          endDate: DateTime.now(),
-  //        );
-  //  await callHistoryRepo.updateCall(updateCall);
-  //}
+    final status = call.status == CallStatus.incomingMissed
+        ? CallStatus.incomingAnswered
+        : CallStatus.outgoingAnswered;
+
+    /// store the time call started
+    _callStartTimestamps[state.callId] = DateTime.now();
+
+    if (call.participants.isNotEmpty) {
+      await _addMemberToCallHistory(
+        callHistoryModel: call,
+        callHistoryState: state,
+      );
+    }
+
+    final updateCall = call.copyWith(
+      status: status,
+      endDate: DateTime.now(),
+    );
+    await callHistoryRepo.updateCall(updateCall);
+  }
 
   Future<void> _addMemberToCallHistory({
     required CallHistoryModel callHistoryModel,
