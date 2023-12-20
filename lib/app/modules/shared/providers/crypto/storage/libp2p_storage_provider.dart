@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:heyo/app/modules/shared/providers/secure_storage/local_storages_abstract.dart';
+import 'package:heyo/app/modules/shared/data/providers/secure_storage/local_storages_abstract.dart';
+
 
 String P2P_KEY_IN_STORE = "P2P_KEY_IN_STORE";
 String CRED_KEY_IN_STORE = "CRED_KEY_IN_STORE";

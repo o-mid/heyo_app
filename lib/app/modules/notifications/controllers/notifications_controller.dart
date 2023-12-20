@@ -22,7 +22,7 @@ import '../../messages/data/repo/messages_repo.dart';
 import '../../messages/data/usecases/send_message_usecase.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
-import '../../shared/providers/database/app_database.dart';
+import '../../shared/data/providers/database/app_database.dart';
 import '../../shared/utils/constants/colors.dart';
 import '../../shared/utils/constants/notifications_constant.dart';
 import '../../shared/utils/permission_flow.dart';

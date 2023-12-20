@@ -12,43 +12,45 @@ class P2PNodeController {
   final P2PState p2pState;
   void Function(P2PReqResNodeModel model)? onNewRequestReceived;
 
-  Future<void> init(void Function(P2PReqResNodeModel model) onNewRequestReceived) async {
+  Future<void> init() async {
+    return p2pNode.initNode();
+  }
+
+  Future<void> start(
+    void Function(P2PReqResNodeModel model) onNewRequestReceived,
+  ) async {
     this.onNewRequestReceived = onNewRequestReceived;
+    final connectionStatus = await Connectivity().checkConnectivity();
+    startNode(connectionStatus);
+    // this only calls startNode when status gets changed.
     Connectivity().onConnectivityChanged.listen((connectivityResult) async {
       debugPrint('onConnectivityChanged: $connectivityResult');
-      if (connectivityResult == ConnectivityResult.none) {
-        p2pState.reset();
-        debugPrint('Device not connected to any network');
-      } else {
-        if (_latestConnectivityStatus != null) {
-          _stopP2PNode();
-        }
-        _setUpP2PNode();
-        debugPrint('New networkStatus: $connectivityResult');
-        _latestConnectivityStatus = connectivityResult;
-      }
+      startNode(connectionStatus);
     });
   }
 
-  void _stopP2PNode() {
+  void startNode(ConnectivityResult connectionStatus) async{
+    if (connectionStatus == ConnectivityResult.none) {
+      p2pState.reset();
+      await _stopP2PNode();
+      debugPrint('Device not connected to any network');
+    } else {
+      if (_latestConnectivityStatus != null) {
+        await _stopP2PNode();
+      }
+      _setUpP2PNode();
+      debugPrint('New networkStatus: $connectionStatus');
+      _latestConnectivityStatus = connectionStatus;
+    }
+  }
+
+  Future<void> _stopP2PNode() async {
     debugPrint('p2p stopNode');
-    p2pNode.stop();
+    await p2pNode.stop();
   }
 
   void _setUpP2PNode() {
     debugPrint('p2p startNode');
     p2pNode.restart(onNewRequestReceived!);
-  }
-
-  Future<void> stop() async {
-    return p2pNode.stop();
-  }
-
-  Future<void> restart() async {
-    return p2pNode.restart(onNewRequestReceived!);
-  }
-
-  Future<bool> applyDelegatedAuth() {
-    return p2pNode.applyDelegatedAuth();
   }
 }

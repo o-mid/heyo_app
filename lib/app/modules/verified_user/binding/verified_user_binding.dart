@@ -6,7 +6,7 @@ class VerifiedUserBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<VerifiedUserController>(
-      () => VerifiedUserController(p2pNode: Get.find()),
+      () => VerifiedUserController(),
     );
   }
 }

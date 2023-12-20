@@ -5,7 +5,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/message_model.dar
 import 'package:heyo/app/modules/messages/data/provider/messages_abstract_provider.dart';
 import 'package:heyo/app/modules/messages/data/usecases/update_message_usecase.dart';
 import 'package:heyo/app/modules/messages/utils/message_from_json.dart';
-import 'package:heyo/app/modules/shared/providers/database/app_database.dart';
+import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/utils/value_utils.dart';
 

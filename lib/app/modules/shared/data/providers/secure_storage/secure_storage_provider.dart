@@ -1,5 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:heyo/app/modules/shared/providers/secure_storage/local_storages_abstract.dart';
+import 'package:heyo/app/modules/shared/data/providers/secure_storage/local_storages_abstract.dart';
 
 class SecureStorageProvider implements LocalStorageAbstractProvider {
   // Create storage

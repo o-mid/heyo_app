@@ -40,8 +40,7 @@ class P2PNode {
     required this.web3client,
   });
 
-  void _setUpP2PNode(
-      void Function(P2PReqResNodeModel model) onNewRequestReceived) {
+  void _setUpP2PNode(void Function(P2PReqResNodeModel model) onNewRequestReceived) {
     // setup the p2p ResponseStream and RequestStream and listen to them
     _listenToStreams(onNewRequestReceived);
 
@@ -49,7 +48,7 @@ class P2PNode {
     _startP2PNode();
   }
 
-  void _startP2PNode() async {
+  Future<void> initNode() async {
     // start P2P node Prosses
 
     // 1. check if account is created and if not create it and save it in storage
@@ -63,19 +62,7 @@ class P2PNode {
     // 5. get the privateKey and send it to the FlutterP2pCommunicator.sendRequest
 
     // 6. send the P2P_Nodes to the FlutterP2pCommunicator.sendRequest
-    // checks if Platform isIOS and if it's the first run of the app clears the Keychain
-    if (Platform.isIOS) {
-      // remove secure storage data on IOS manually,
-      // because it's not cleaned after the app uninstall
-      final prefs = await SharedPreferences.getInstance();
 
-      if (prefs.getBool('first_run') ?? true) {
-        // sets a key-value pair of first run in IOS NSUserDefaults with shared_preferences
-        await prefs.setBool('first_run', false);
-        const storage = FlutterSecureStorage();
-        await storage.deleteAll();
-      }
-    }
     if (await libP2PStorageProvider.getLocalCoreId() == null) {
       final result = await accountCreation.createAccount();
       await accountCreation.saveAccount(result);
@@ -89,10 +76,15 @@ class P2PNode {
       peerSeed = bytesToHex(generatedMnemonic.aesKeySeed);
       await libP2PStorageProvider.setP2PSecret(peerSeed);
     }
+  }
+
+  void _startP2PNode() async {
+    final peerSeed = await libP2PStorageProvider.getP2PSecret();
+
     final networkId = await web3client.getNetworkId();
 
     await FlutterP2pCommunicator.startNode(
-      peerSeed: peerSeed,
+      peerSeed: peerSeed!,
       enableStaticRelays: true,
       networkId: networkId.toString(),
     );
@@ -132,7 +124,7 @@ class P2PNode {
   }
 
   void _listenToStreams(
-      void Function(P2PReqResNodeModel model) onNewRequestReceived) {
+      void Function(P2PReqResNodeModel model) onNewRequestReceived,) {
     p2pNodeResponseStream.setUp();
     p2pNodeRequestStream.setUp(onNewRequestReceived);
   }
@@ -179,7 +171,7 @@ class P2PNode {
     return p2pState.trackRequest(id);
   }
 
-  void restart(
+  Future<void> restart(
       void Function(P2PReqResNodeModel model) onNewRequestReceived) async {
     _setUpP2PNode(onNewRequestReceived);
   }

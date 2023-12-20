@@ -13,17 +13,18 @@ import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
 class P2PNodeResponseStream {
-  P2PNodeResponseStream(
-      {required this.p2pState,
-      required this.libP2PStorageProvider,
-      required this.accountRepository}) {
+  P2PNodeResponseStream({
+    required this.p2pState,
+    required this.libP2PStorageProvider,
+    required this.accountRepository,
+  }) {
     _checkAddressJob();
   }
 
   StreamSubscription<P2PReqResNodeModel?>? _nodeResponseSubscription;
   bool advertiseRequested = false;
   final P2PState p2pState;
-  bool isP2PRunning = false;
+  bool shouldCheckAddrs = false;
   LibP2PStorageProvider libP2PStorageProvider;
 
   /// temporarily added here since there is nothing to determine this class is in
@@ -31,12 +32,11 @@ class P2PNodeResponseStream {
   AccountRepository accountRepository;
 
   void setUp() {
-    isP2PRunning = true;
     _setUpResponseStream();
   }
 
   void reset() {
-    isP2PRunning = false;
+    shouldCheckAddrs = false;
     advertiseRequested = false;
     p2pState.responses = [];
     _nodeResponseSubscription?.cancel();
@@ -68,11 +68,7 @@ class P2PNodeResponseStream {
     print("_onNewResponseEvent : body is: ${event.body.toString()}");
     print("_onNewResponseEvent : error is: ${event.error.toString()}");
 
-    if (event.name == P2PReqResNodeNames.connect &&
-        event.error == null &&
-        !advertiseRequested) {
-      advertiseRequested = true;
-
+    if (event.name == P2PReqResNodeNames.connect && event.error == null) {
       final info = P2PReqResNodeModel(name: P2PReqResNodeNames.advertise);
       Future.delayed(const Duration(seconds: 1), () async {
         final id = await FlutterP2pCommunicator.sendRequest(info: info);
@@ -85,6 +81,7 @@ class P2PNodeResponseStream {
 
       await FlutterP2pCommunicator.sendRequest(
           info: P2PReqResNodeModel(name: P2PReqResNodeNames.addrs));
+      shouldCheckAddrs = true;
     } else if (event.name == P2PReqResNodeNames.advertise &&
         event.error == null) {
       // now you can start talking or communicating to others
@@ -112,9 +109,10 @@ class P2PNodeResponseStream {
 
   Future<void> _checkAddressJob() async {
     return Future.delayed(const Duration(seconds: 15), () async {
-      if (isP2PRunning) {
+      if (shouldCheckAddrs) {
         await FlutterP2pCommunicator.sendRequest(
-            info: P2PReqResNodeModel(name: P2PReqResNodeNames.addrs));
+          info: P2PReqResNodeModel(name: P2PReqResNodeNames.addrs),
+        );
       }
       _checkAddressJob();
     });
