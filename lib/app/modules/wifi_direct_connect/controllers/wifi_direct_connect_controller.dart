@@ -102,6 +102,7 @@ class WifiDirectConnectController extends GetxController {
                 participants: [
                   MessagingParticipantModel(
                     coreId: user.coreId,
+                    chatId: user.coreId,
                   ),
                 ],
               ),
@@ -122,6 +123,7 @@ class WifiDirectConnectController extends GetxController {
                 participants: [
                   MessagingParticipantModel(
                     coreId: user.coreId,
+                    chatId: user.coreId,
                   ),
                 ],
               ),

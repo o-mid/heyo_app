@@ -40,6 +40,7 @@ class ChatWidget extends GetView<ChatsController> {
               arguments: MessagesViewArgumentsModel(participants: [
                 MessagingParticipantModel(
                   coreId: chat.id,
+                  chatId: chat.id,
                 )
               ]),
             );

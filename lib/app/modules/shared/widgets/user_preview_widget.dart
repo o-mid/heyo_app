@@ -81,6 +81,7 @@ class UserPreviewWidget extends GetView<UserPreview> {
                                 participants: [
                                   MessagingParticipantModel(
                                     coreId: user.coreId,
+                                    chatId: user.coreId,
                                   )
                                 ]),
                           );

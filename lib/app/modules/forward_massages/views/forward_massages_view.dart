@@ -147,6 +147,7 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                                         participants: [
                                           MessagingParticipantModel(
                                             coreId: controller.selectedUser!.coreId,
+                                            chatId: controller.selectedUser!.coreId,
                                           )
                                         ]),
                                   );

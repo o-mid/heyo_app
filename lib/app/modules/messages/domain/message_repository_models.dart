@@ -11,15 +11,18 @@ class UserInstance {
 }
 
 class UserStates {
-  UserStates(
-      {required this.lastReadRemoteMessagesId,
-      required this.scrollPositionMessagesId,
-      required this.chatId,
-      required this.lastMessagePreview,
-      required this.lastMessageTimestamp});
+  UserStates({
+    required this.lastReadRemoteMessagesId,
+    required this.scrollPositionMessagesId,
+    required this.chatId,
+    required this.lastMessagePreview,
+    required this.lastMessageTimestamp,
+    required this.chatName,
+  });
   String lastReadRemoteMessagesId;
   String scrollPositionMessagesId;
   String chatId;
+  String chatName;
 
   DateTime lastMessageTimestamp;
   String lastMessagePreview;

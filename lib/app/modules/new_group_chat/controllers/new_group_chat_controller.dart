@@ -8,6 +8,7 @@ import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart'
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 
 import '../../../routes/app_pages.dart';
+import '../../messages/utils/chat_Id_generator.dart';
 import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../../shared/data/repository/contact_repository.dart';
@@ -169,13 +170,20 @@ class NewGroupChatController extends GetxController {
   }
 
   Future<void> _navigateToMessages() async {
+    final chatId = ChatIdGenerator.generate();
+
     await Get.offNamedUntil(
       Routes.MESSAGES,
       ModalRoute.withName(Routes.HOME),
       arguments: MessagesViewArgumentsModel(
         connectionType: MessagingConnectionType.internet,
         participants: selectedCoreids
-            .map((element) => MessagingParticipantModel(coreId: element.coreId))
+            .map(
+              (element) => MessagingParticipantModel(
+                coreId: element.coreId,
+                chatId: chatId,
+              ),
+            )
             .toList(),
         chatName: confirmationInputText.value,
       ),

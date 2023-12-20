@@ -117,6 +117,7 @@ class UserCallHistoryView extends GetView<UserCallHistoryController> {
                             participants: [
                               MessagingParticipantModel(
                                 coreId: controller.user.value.coreId,
+                                chatId: controller.user.value.coreId,
                               ),
                             ],
                           ),

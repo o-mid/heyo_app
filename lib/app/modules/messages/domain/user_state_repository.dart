@@ -9,7 +9,7 @@ abstract class UserStateRepository {
   Future<UserModel> getUserContact({required UserInstance userInstance});
 
   Future<void> saveUserStates({
-    required UserInstance userInstance,
+    required List<UserInstance> userInstances,
     required UserStates userStates,
   });
 

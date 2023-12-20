@@ -106,6 +106,7 @@ class AddContactsController extends GetxController {
           participants: [
             MessagingParticipantModel(
               coreId: userModel.coreId,
+              chatId: userModel.coreId,
             ),
           ],
         ));

@@ -125,6 +125,17 @@ class MessagesController extends GetxController {
   RxList<MessagingParticipantModel> participants =
       (Get.arguments as MessagesViewArgumentsModel).participants.obs;
 
+  RxList<UserModel> users = (Get.arguments as MessagesViewArgumentsModel)
+      .participants
+      .map((participant) {
+        return UserModel(
+          coreId: participant.coreId,
+          name: participant.coreId.shortenCoreId,
+          walletAddress: participant.coreId,
+        );
+      })
+      .toList()
+      .obs;
   final chatName = (Get.arguments as MessagesViewArgumentsModel).chatName.obs;
 
   final isGroupChat = (Get.arguments as MessagesViewArgumentsModel).participants.length > 1;
@@ -162,7 +173,15 @@ class MessagesController extends GetxController {
 
     connectionType = args.connectionType;
 
-    chatId = user.value.coreId;
+    chatId = _setChatId();
+  }
+
+  String _setChatId() {
+    if (isGroupChat) {
+      return participants.first.chatId;
+    } else {
+      return user.value.coreId;
+    }
   }
 
   Future<void> _getUserContact() async {
@@ -811,6 +830,7 @@ class MessagesController extends GetxController {
           participants: [
             MessagingParticipantModel(
               coreId: user.value.coreId,
+              chatId: chatId,
             ),
           ]);
     }
@@ -893,11 +913,14 @@ class MessagesController extends GetxController {
 
   Future<void> _saveUserStates() async {
     await userStateRepository.saveUserStates(
-      userInstance: UserInstance(
-        coreId: user.value.coreId,
-      ),
+      userInstances: participants
+          .map((e) => UserInstance(
+                coreId: e.coreId,
+              ))
+          .toList(),
       userStates: UserStates(
         chatId: chatId,
+        chatName: chatName.value,
         lastReadRemoteMessagesId: lastReadRemoteMessagesId.value,
         scrollPositionMessagesId: scrollPositionMessagesId.value,
         lastMessageTimestamp: messages.last.timestamp,

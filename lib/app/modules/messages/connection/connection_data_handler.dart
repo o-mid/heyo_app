@@ -53,6 +53,7 @@ class DataHandler {
       participants: [
         MessagingParticipantModel(
           coreId: sessioncid,
+          chatId: sessioncid,
         ),
       ],
     );

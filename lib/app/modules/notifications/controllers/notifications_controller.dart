@@ -233,6 +233,7 @@ class NotificationsController extends GetxController with WidgetsBindingObserver
               participants: [
                 MessagingParticipantModel(
                   coreId: userChatModel.id,
+                  chatId: userChatModel.id,
                 ),
               ],
             ),

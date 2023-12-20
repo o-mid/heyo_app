@@ -45,12 +45,14 @@ class UserStateRepositoryImpl implements UserStateRepository {
 
   @override
   Future<void> saveUserStates({
-    required UserInstance userInstance,
+    required List<UserInstance> userInstances,
     required UserStates userStates,
   }) async {
     // final String coreId = userInstance.coreId;
 
     // final String? iconUrl = userInstance.iconUrl;
+
+    final String chatName = userStates.chatName;
 
     final String lastReadRemoteMessagesId = userStates.lastReadRemoteMessagesId;
 
@@ -62,7 +64,18 @@ class UserStateRepositoryImpl implements UserStateRepository {
 
     final String lastMessagePreview = userStates.lastMessagePreview;
 
-    final UserModel user = await getUserContact(userInstance: userInstance);
+    List<MessagingParticipantModel> participants = [];
+    final List<UserModel> users = [];
+
+    for (final element in userInstances) {
+      participants.add(MessagingParticipantModel(
+        coreId: element.coreId,
+        chatId: userStates.chatId,
+      ));
+      users.add(await getUserContact(userInstance: element));
+    }
+
+    // final UserModel user = await getUserContact(userInstance: userInstance);
     // saves the last read message index in the user preferences repo
     // print("saving lastReadRemoteMessagesId.value: ${lastReadRemoteMessagesId}");
     // print("saving scrollPositionMessagesId.value: ${scrollPositionMessagesId}");
@@ -73,24 +86,20 @@ class UserStateRepositoryImpl implements UserStateRepository {
     if (chatModel == null) {
       final updatedChatModel = ChatModel(
         id: chatId,
-        name: user.name,
+        name: chatName,
         lastReadMessageId: lastReadRemoteMessagesId,
         isOnline: true,
         scrollPosition: scrollPositionMessagesId,
         lastMessage: lastMessagePreview,
         notificationCount: unReadMessagesCount,
         timestamp: lastMessageTimestamp,
-        participants: [
-          MessagingParticipantModel(
-            coreId: user.coreId,
-          ),
-        ],
+        participants: participants,
       );
       await chatHistoryRepo.updateChat(updatedChatModel);
     } else {
       await chatHistoryRepo.updateChat(
         chatModel.copyWith(
-            name: user.name,
+            name: chatName,
             lastReadMessageId: lastReadRemoteMessagesId,
             isOnline: true,
             scrollPosition: scrollPositionMessagesId,

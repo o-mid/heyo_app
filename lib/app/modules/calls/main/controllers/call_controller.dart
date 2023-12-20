@@ -86,6 +86,7 @@ class CallController extends GetxController {
           participants: [
             MessagingParticipantModel(
               coreId: args.user.coreId,
+              chatId: args.user.coreId,
             ),
           ],
         ));
