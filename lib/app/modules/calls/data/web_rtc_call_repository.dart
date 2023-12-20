@@ -114,7 +114,7 @@ class WebRTCCallRepository implements CallRepository {
   @override
   Future<String> startCall(String remoteId, bool isAudioCall) async {
     final session =
-        await callConnectionsHandler.requestCall(remoteId, isAudioCall);
+        await callConnectionsHandler.createCall(remoteId, isAudioCall);
     //Todo: AZ => we don't have coreId in here
     //_addToAllParticipant(coreId);
     return session.callId;

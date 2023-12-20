@@ -55,7 +55,7 @@ class CallConnectionsHandler {
     );
   }
 
-  Future<CallRTCSession> requestCall(
+  Future<CallRTCSession> createCall(
     String remoteCoreId,
     bool isAudioCall,
   ) async {
