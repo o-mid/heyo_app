@@ -5,6 +5,7 @@ import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 import 'package:heyo/app/modules/calls/data/rtc/session/call_rtc_session.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/calls/data/rtc/single_call_web_rtc_connection.dart';
+import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 
 enum CallState {
   callStateNew,
@@ -15,6 +16,7 @@ enum CallState {
   callStateBusy
 }
 
+enum CallHistoryStatus { incoming, calling, connected, left, end }
 
 class CallConnectionsHandler {
   SingleCallWebRTCBuilder singleCallWebRTCBuilder;
@@ -33,6 +35,9 @@ class CallConnectionsHandler {
   final CallStatusDataStore callStatusDataStore;
   Function(CallId callId, List<CallInfo> callInfo, CallState state)?
       onCallStateChange;
+
+  Function(CallId callId, CallInfo callInfo, CallHistoryStatus status)?
+      onCallHistoryStatusEvent;
 
   Future<void> addMember(String remoteCoreId) async {
     for (var element in callStatusDataStore.currentCall!.sessions) {
@@ -72,6 +77,8 @@ class CallConnectionsHandler {
     );
     onCallStateChange?.call(callId, [callInfo], CallState.callStateNew);
     onCallStateChange?.call(callId, [callInfo], CallState.callStateInvite);
+
+    onCallHistoryStatusEvent?.call(callId, callInfo, CallHistoryStatus.calling);
     //generate a connectionId
     //send requestCall
     return callRTCSession;
@@ -94,12 +101,19 @@ class CallConnectionsHandler {
       _localStream!,
       isAudioCall,
     );
-    callRTCSession..onAddRemoteStream = (stream) {
-      onAddRemoteStream?.call(callRTCSession);
-    }
-    ..onCameraStateChanged=(){
-      onAudioStateChanged?.call(callRTCSession);
-    };
+    callRTCSession
+      ..onAddRemoteStream = (stream) {
+        //TODO refactor
+        onCallHistoryStatusEvent?.call(
+            callRTCSession.callId,
+            CallInfo(remotePeer: remotePeer, isAudioCall: isAudioCall),
+            CallHistoryStatus.connected);
+
+        onAddRemoteStream?.call(callRTCSession);
+      }
+      ..onCameraStateChanged = () {
+        onAudioStateChanged?.call(callRTCSession);
+      };
     callStatusDataStore.addSession(callRTCSession);
     return callRTCSession;
   }
@@ -300,6 +314,9 @@ class CallConnectionsHandler {
     callStatusDataStore.incomingCalls =
         IncomingCalls(callId: callId, remotePeers: remotePeers);
 
+    onCallHistoryStatusEvent?.call(
+        callId, callInfo, CallHistoryStatus.incoming);
+
     onCallStateChange?.call(callId, remotePeers, CallState.callStateNew);
 
     onCallStateChange?.call(callId, remotePeers, CallState.callStateRinging);
@@ -327,7 +344,7 @@ class CallConnectionsHandler {
     if (callId == callStatusDataStore.currentCall?.callId) {
       final isVideMode = cameraState["cameraStateChanged"] as bool;
       callStatusDataStore.currentCall?.sessions.forEach((element) {
-        if(element.remotePeer.remoteCoreId==remotePeer.remoteCoreId){
+        if (element.remotePeer.remoteCoreId == remotePeer.remoteCoreId) {
           element.setCameraState(!isVideMode);
         }
       });

@@ -1,7 +1,7 @@
 import 'package:flutter_p2p_communicator/utils/constants.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/account/controllers/account_controller.dart';
-import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
+import 'package:heyo/app/modules/calls/data/call_status_observer.dart';
 import 'package:heyo/app/modules/calls/call_history/controllers/call_history_controller.dart';
 import 'package:heyo/app/modules/calls/data/call_requests_processor.dart';
 import 'package:heyo/app/modules/calls/data/call_status_data_store.dart';
@@ -213,7 +213,7 @@ class GlobalBindings extends Bindings {
       ..put(CallRequestsProcessor(
           connectionContractor: Get.find(), callConnectionsHandler: Get.find(),),)
       ..put(
-          CallConnectionController(
+          CallStatusObserver(
               accountInfoRepo: Get.find(),
               notificationsController: Get.find(),
               callConnectionsHandler: Get.find(),
@@ -231,7 +231,7 @@ class GlobalBindings extends Bindings {
             callHistoryProvider: CallHistoryProvider(
                 appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
-          callConnectionController: Get.find(),
+          callStatusObserver: Get.find(),
           contactRepository: ContactRepository(
             cacheContractor: CacheRepository(
               userProvider: UserProvider(

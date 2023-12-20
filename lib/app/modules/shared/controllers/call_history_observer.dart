@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
+import 'package:heyo/app/modules/calls/data/call_status_observer.dart';
 import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
@@ -14,12 +14,12 @@ import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart'
 class CallHistoryObserver extends GetxController {
   CallHistoryObserver({
     required this.callHistoryRepo,
-    required this.callConnectionController,
+    required this.callStatusObserver,
     required this.contactRepository,
   });
 
   final CallHistoryAbstractRepo callHistoryRepo;
-  final CallConnectionController callConnectionController;
+  final CallStatusObserver callStatusObserver;
   final ContactRepository contactRepository;
 
   /// maps session id of a call to the time it started so that when it ends
@@ -42,23 +42,23 @@ class CallHistoryObserver extends GetxController {
 
   void callHistoryObserver() {
     stateListener =
-        callConnectionController.callHistoryState.listen((state) async {
+        callStatusObserver.callHistoryState.listen((state) async {
       if (state == null) {
         return;
       }
       switch (state.callHistoryStatus) {
-        case CallHistoryStatus.ringing:
+        case CallHistoryStatus.incoming:
           {
             await _createMissedCallRecord(
-              callInfo: state.remotes.first,
+              callInfo: state.remote,
               callId: state.callId,
             );
             break;
           }
-        case CallHistoryStatus.invite:
+        case CallHistoryStatus.calling:
           {
             await _createOutgoingNotAnsweredRecord(
-              callInfo: state.remotes.first,
+              callInfo: state.remote,
               callId: state.callId,
             );
             break;
@@ -68,8 +68,8 @@ class CallHistoryObserver extends GetxController {
             await _connectedCallHistory(state: state);
             break;
           }
-        case CallHistoryStatus.byeSent:
-        case CallHistoryStatus.byeReceived:
+        case CallHistoryStatus.left:
+        case CallHistoryStatus.end:
           {
             final call = await callHistoryRepo.getOneCall(state.callId);
             if (call == null) {
@@ -96,9 +96,7 @@ class CallHistoryObserver extends GetxController {
 
             break;
           }
-        case CallHistoryStatus.initial:
-        case CallHistoryStatus.nop:
-          break;
+
       }
     });
   }
@@ -107,23 +105,23 @@ class CallHistoryObserver extends GetxController {
     CallStatus prevStatus,
     CallHistoryStatus historyStatus,
   ) {
-    if (prevStatus == CallStatus.outgoingNotAnswered &&
-        historyStatus == CallHistoryStatus.byeSent) {
+    if (prevStatus == CallStatus.outgoingNotAnswered //&&
+        /*historyStatus == CallHistoryStatus.byeSent*/) {
       return CallStatus.outgoingCanceled;
     }
 
-    if (prevStatus == CallStatus.outgoingNotAnswered &&
-        historyStatus == CallHistoryStatus.byeReceived) {
+    if (prevStatus == CallStatus.outgoingNotAnswered //&&
+       /* historyStatus == CallHistoryStatus.byeReceived*/) {
       return CallStatus.outgoingDeclined;
     }
 
-    if (prevStatus == CallStatus.incomingMissed &&
-        historyStatus == CallHistoryStatus.byeSent) {
+    if (prevStatus == CallStatus.incomingMissed //&&
+        /*historyStatus == CallHistoryStatus.byeSent*/) {
       return CallStatus.incomingDeclined;
     }
 
-    if (prevStatus == CallStatus.incomingMissed &&
-        historyStatus == CallHistoryStatus.byeReceived) {
+    if (prevStatus == CallStatus.incomingMissed //&&
+       /* historyStatus == CallHistoryStatus.byeReceived*/) {
       return CallStatus.incomingMissed;
     }
 
@@ -223,7 +221,7 @@ class CallHistoryObserver extends GetxController {
   }) async {
     //* Check if the new user save to contact or not
     final callParticipant = await _getUserFromCoreId(
-      callHistoryState.remotes.first.remotePeer.remoteCoreId,
+      callHistoryState.remote.remotePeer.remoteCoreId,
     );
 
     //* Check if the new user is in call or not
