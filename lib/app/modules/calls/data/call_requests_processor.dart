@@ -1,3 +1,4 @@
+import 'package:heyo/app/modules/calls/data/call_status_provider.dart';
 import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
@@ -7,6 +8,7 @@ class CallRequestsProcessor {
   CallRequestsProcessor({
     required this.connectionContractor,
     required this.callConnectionsHandler,
+    required this.callStatusProvider,
   }) {
     connectionContractor.getMessageStream().listen((event) {
       if (event is CallConnectionDataReceived) {
@@ -21,6 +23,7 @@ class CallRequestsProcessor {
 
   final ConnectionContractor connectionContractor;
   final CallConnectionsHandler callConnectionsHandler;
+  final CallStatusProvider callStatusProvider;
 
   Future<void> onRequestReceived(
     Map<String, dynamic> mapData,
@@ -31,9 +34,10 @@ class CallRequestsProcessor {
 
     final callId = mapData['call_id'] as String;
 
+    final signalType = mapData['type'];
     print("onMessage, type: ${mapData['type']}");
 
-    switch (mapData['type']) {
+    switch (signalType) {
       case CallSignalingCommands.request:
         {
           callConnectionsHandler.onCallRequestReceived(
@@ -45,7 +49,6 @@ class CallRequestsProcessor {
             ),
           );
         }
-        break;
       case CallSignalingCommands.reject:
         {
           callConnectionsHandler.onCallRequestRejected(
@@ -93,10 +96,13 @@ class CallRequestsProcessor {
       case CallSignalingCommands.cameraStateChanged:
         {
           callConnectionsHandler.onCameraStateChanged(
-              callId,
-              data,
-              RemotePeer(
-                  remoteCoreId: remoteCoreId, remotePeerId: remotePeerId),);
+            callId,
+            data,
+            RemotePeer(
+              remoteCoreId: remoteCoreId,
+              remotePeerId: remotePeerId,
+            ),
+          );
         }
     }
   }
