@@ -14,16 +14,19 @@ import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../../shared/data/models/messaging_participant_model.dart';
 
 class AddContactsController extends GetxController {
+
   late AddContactsViewArgumentsModel args;
+
   late RxString nickname;
+  late RxString isContact;
+
   final ContactRepository contactRepository;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final CallHistoryAbstractRepo callHistoryRepo;
 
   Rx<UserModel> user = UserModel(
     coreId: (Get.arguments as AddContactsViewArgumentsModel).coreId,
-    iconUrl: (Get.arguments as AddContactsViewArgumentsModel).iconUrl ??
-        "https://avatars.githubusercontent.com/u/2345136?v=4",
+    iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
     name: (Get.arguments as AddContactsViewArgumentsModel).coreId.shortenCoreId,
     walletAddress: (Get.arguments).coreId as String,
     isBlocked: false,
@@ -41,9 +44,8 @@ class AddContactsController extends GetxController {
 
   @override
   void onInit() async {
-    args = Get.arguments as AddContactsViewArgumentsModel;
 
-    nickname = "".obs;
+    args = Get.arguments as AddContactsViewArgumentsModel;
     await _getUserContact();
     super.onInit();
   }
@@ -78,7 +80,7 @@ class AddContactsController extends GetxController {
     if (createdUser == null) {
       createdUser = UserModel(
         coreId: args.coreId,
-        iconUrl: args.iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
+        iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
         name: args.coreId.shortenCoreId,
         isOnline: true,
         isContact: false,
