@@ -20,7 +20,7 @@ class AddContactsController extends GetxController {
   RxString nickname = ''.obs;
   RxBool isContact = false.obs;
   RxBool isVerified = false.obs;
-  TextEditingController myNicknameController = new TextEditingController();
+  TextEditingController myNicknameController = TextEditingController();
 
   final ContactRepository contactRepository;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
@@ -36,10 +36,14 @@ class AddContactsController extends GetxController {
   void onInit() async {
 
     args = Get.arguments as AddContactsViewArgumentsModel;
-    isContact.value = false;
-    nickname.value = '';
-    _initUserContact();
     super.onInit();
+  }
+
+  @override
+  void onReady() {
+    // MARK: implement onReady
+    _initUserContact();
+    super.onReady();
   }
 
   void setNickname(String name) {
