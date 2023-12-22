@@ -173,14 +173,15 @@ class MessagesController extends GetxController {
 
     connectionType = args.connectionType;
 
-    chatId = _setChatId();
+    _setChatId();
+    print(chatId);
   }
 
-  String _setChatId() {
+  void _setChatId() {
     if (isGroupChat) {
-      return participants.first.chatId;
+      chatId = participants.first.chatId;
     } else {
-      return user.value.coreId;
+      chatId = user.value.coreId;
     }
   }
 
@@ -217,7 +218,7 @@ class MessagesController extends GetxController {
   }
 
   Future<void> _initMessagesStream() async {
-    final messagesStream = await messageRepository.getMessagesStream(coreId: user.value.coreId);
+    final messagesStream = await messageRepository.getMessagesStream(chatId: chatId);
 
     _messagesStreamSubscription = (messagesStream).listen((newMessages) {
       messages.value = newMessages;
@@ -786,7 +787,7 @@ class MessagesController extends GetxController {
   }
 
   Future<void> _getMessages() async {
-    await messageRepository.getMessagesList(coreId: user.value.coreId).then(
+    await messageRepository.getMessagesList(chatId: chatId).then(
           (value) => {
             messages.value = value,
             messages.refresh(),
@@ -923,7 +924,7 @@ class MessagesController extends GetxController {
         chatName: chatName.value,
         lastReadRemoteMessagesId: lastReadRemoteMessagesId.value,
         scrollPositionMessagesId: scrollPositionMessagesId.value,
-        lastMessageTimestamp: messages.last.timestamp,
+        lastMessageTimestamp: messages.last.timestamp ?? DateTime.now(),
         lastMessagePreview: messages.last.getMessagePreview(),
       ),
     );

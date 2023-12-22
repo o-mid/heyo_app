@@ -171,6 +171,7 @@ class NewGroupChatController extends GetxController {
 
   Future<void> _navigateToMessages() async {
     final chatId = ChatIdGenerator.generate();
+    print(chatId);
 
     await Get.offNamedUntil(
       Routes.MESSAGES,

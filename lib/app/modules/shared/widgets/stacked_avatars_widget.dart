@@ -22,7 +22,6 @@ class StackedAvatars extends StatelessWidget {
       width: avatarSize * 2,
       height: avatarSize * 2 + overLapSize,
       child: Stack(
-        alignment: Alignment.center,
         children: <Widget>[
           Positioned(
             left: 0,
