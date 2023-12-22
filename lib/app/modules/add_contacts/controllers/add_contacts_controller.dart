@@ -17,24 +17,25 @@ class AddContactsController extends GetxController {
 
   late AddContactsViewArgumentsModel args;
 
-  late RxString nickname;
-  late RxBool isContact;
+  RxString nickname = ''.obs;
+  RxBool isContact = false.obs;
+  RxBool isVerified = false.obs;
 
   final ContactRepository contactRepository;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final CallHistoryAbstractRepo callHistoryRepo;
 
-  Rx<UserModel> user = UserModel(
-    coreId: (Get.arguments as AddContactsViewArgumentsModel).coreId,
-    iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
-    name: (Get.arguments as AddContactsViewArgumentsModel).coreId.shortenCoreId,
-    walletAddress: (Get.arguments).coreId as String,
-    isBlocked: false,
-    isOnline: false,
-    isContact: false,
-    isVerified: false,
-    nickname: "",
-  ).obs;
+  // Rx<UserModel> user = UserModel(
+  //   coreId: (Get.arguments as AddContactsViewArgumentsModel).coreId,
+  //   iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
+  //   name: (Get.arguments as AddContactsViewArgumentsModel).coreId.shortenCoreId,
+  //   walletAddress: (Get.arguments).coreId as String,
+  //   isBlocked: false,
+  //   isOnline: false,
+  //   isContact: false,
+  //   isVerified: false,
+  //   nickname: "",
+  // ).obs;
 
   AddContactsController({
     required this.contactRepository,
@@ -53,7 +54,6 @@ class AddContactsController extends GetxController {
   }
 
   void setNickname(String name) {
-    user.value.nickname = name;
     nickname.value = name;
   }
 
@@ -61,14 +61,28 @@ class AddContactsController extends GetxController {
     return contactRepository.getContactById(id);
   }
 
-  Future<void> addContact() async {
-    
-    await updateUserChatMode(
-        userModel: user.value.copyWith(
-      nickname: nickname.value,
-      name: nickname.value,
-      isContact: true,
-    ));
+  Future<void> updateContact() async {
+
+    UserModel? user = await _getContactWith(args.coreId);
+    if (user == null) {
+
+      var createdUser = UserModel(
+        coreId: args.coreId,
+        iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
+        name: args.coreId.shortenCoreId,
+        isOnline: true,
+        isContact: false,
+        walletAddress: args.coreId,
+      );
+      await contactRepository.addContact(createdUser);
+    } else {
+      await updateUserChatMode(
+          userModel: user.copyWith(
+            nickname: nickname.value,
+            name: args.coreId.shortenCoreId,
+            isContact: true,
+          ));
+    }
   }
 
   _initUserContact() async {
@@ -90,7 +104,7 @@ class AddContactsController extends GetxController {
       await contactRepository.addContact(createdUser);
     } else {
 
-      isContact.value = createdUser?.isContact ?? false;
+      isContact.value = createdUser.isContact;
       nickname.value = createdUser.nickname;
     }
   }

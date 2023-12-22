@@ -25,8 +25,9 @@ class AddContactsView extends GetView<AddContactsController> {
         backgroundColor: COLORS.kGreenMainColor,
         elevation: 0,
         centerTitle: false,
-        title: Text(
-          LocaleKeys.AddContacts_addToContacts.tr,
+        title: Text(controller.isContact.value
+            ? 'Edit Contact'.tr
+            : LocaleKeys.AddContacts_addToContacts.tr,
           style: const TextStyle(
             fontWeight: FONTS.Bold,
             fontFamily: FONTS.interFamily,
@@ -45,7 +46,7 @@ class AddContactsView extends GetView<AddContactsController> {
                 children: [
                   CustomSizes.largeSizedBoxHeight,
                   CustomCircleAvatar(
-                    coreId: controller.user.value.coreId,
+                    coreId: controller.args.coreId,
                     size: 64,
                   ),
                   CustomSizes.mediumSizedBoxHeight,
@@ -54,12 +55,12 @@ class AddContactsView extends GetView<AddContactsController> {
                     children: [
                       Text(
                         controller.nickname.value.isEmpty
-                            ? controller.user.value.name
+                            ? controller.args.coreId.shortenCoreId
                             : controller.nickname.value,
                         style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
                       ),
                       CustomSizes.smallSizedBoxWidth,
-                      controller.user.value.isVerified
+                      controller.isVerified.value
                           ? Assets.svg.verifiedWithBluePadding.svg(
                               alignment: Alignment.center,
                               height: 24.w,
@@ -73,7 +74,7 @@ class AddContactsView extends GetView<AddContactsController> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        controller.user.value.walletAddress.shortenCoreId,
+                        controller.args.coreId.shortenCoreId,
                         style: TEXTSTYLES.kBodySmall.copyWith(
                           color: COLORS.kTextBlueColor,
                         ),
@@ -110,11 +111,11 @@ class AddContactsView extends GetView<AddContactsController> {
                   CustomButton.primary(
                     // TODO : chatModel should be filled with correct data
                     onTap: () async {
-                      await controller.addContact();
+                      await controller.updateContact();
                     },
 
                     titleWidget: Text(
-                      LocaleKeys.AddContacts_buttons_addToContacts.tr,
+                      controller.isContact.value ? "Update contact": LocaleKeys.AddContacts_buttons_addToContacts.tr,
                       style: TEXTSTYLES.kLinkBig.copyWith(
                         color: COLORS.kWhiteColor,
                       ),
