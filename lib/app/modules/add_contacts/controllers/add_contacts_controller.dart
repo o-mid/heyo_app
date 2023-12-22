@@ -72,7 +72,7 @@ class AddContactsController extends GetxController {
       await updateUserChatMode(
           userModel: user.copyWith(
             nickname: nickname.value,
-            name: args.coreId.shortenCoreId,
+            name: nickname.value.isEmpty ? args.coreId.shortenCoreId: nickname.value,
             isContact: true,
           ));
     }
