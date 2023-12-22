@@ -30,7 +30,7 @@ class AddContactsView extends GetView<AddContactsController> {
             fontWeight: FONTS.Bold,
             fontFamily: FONTS.interFamily,
           ),
-        ) : Text("Update contact",
+        ) : Text(LocaleKeys.AddContacts_Edit_Contact.tr,
           style: const TextStyle(
             fontWeight: FONTS.Bold,
             fontFamily: FONTS.interFamily,
@@ -119,7 +119,7 @@ class AddContactsView extends GetView<AddContactsController> {
                     },
 
                     titleWidget: Text(
-                      controller.isContact.value ? "Update contact": LocaleKeys.AddContacts_buttons_addToContacts.tr,
+                      controller.isContact.value ? LocaleKeys.AddContacts_Update_Contact.tr : LocaleKeys.AddContacts_buttons_addToContacts.tr,
                       style: TEXTSTYLES.kLinkBig.copyWith(
                         color: COLORS.kWhiteColor,
                       ),
