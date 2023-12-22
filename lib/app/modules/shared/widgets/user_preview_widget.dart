@@ -180,7 +180,6 @@ class UserPreviewWidget extends GetView<UserPreview> {
                             Routes.ADD_CONTACTS,
                             arguments: AddContactsViewArgumentsModel(
                               coreId: user.coreId,
-                              iconUrl: user.iconUrl,
                             ),
                           );
                         },

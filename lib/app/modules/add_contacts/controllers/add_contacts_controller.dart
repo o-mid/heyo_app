@@ -18,7 +18,7 @@ class AddContactsController extends GetxController {
   late AddContactsViewArgumentsModel args;
 
   late RxString nickname;
-  late RxString isContact;
+  late RxBool isContact;
 
   final ContactRepository contactRepository;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
@@ -46,7 +46,9 @@ class AddContactsController extends GetxController {
   void onInit() async {
 
     args = Get.arguments as AddContactsViewArgumentsModel;
-    await _getUserContact();
+    isContact.value = false;
+    nickname.value = '';
+    await _initUserContact();
     super.onInit();
   }
 
@@ -55,16 +57,12 @@ class AddContactsController extends GetxController {
     nickname.value = name;
   }
 
+  Future<UserModel?> _getContactWith(String id) async{
+    return contactRepository.getContactById(id);
+  }
+
   Future<void> addContact() async {
-    // UserModel user = UserModel(
-    //   coreId: args.user.walletAddress,
-    //   nickname: nickname.value,
-    //   iconUrl: args.user.iconUrl,
-    //   name: nickname.value,
-    //   isOnline: true,
-    //   walletAddress: args.user.walletAddress,
-    //   isContact: true,
-    // );
+    
     await updateUserChatMode(
         userModel: user.value.copyWith(
       nickname: nickname.value,
@@ -73,11 +71,13 @@ class AddContactsController extends GetxController {
     ));
   }
 
-  _getUserContact() async {
+  _initUserContact() async {
+
     // check if user is already in contact
-    UserModel? createdUser = await contactRepository.getContactById(args.coreId);
+    UserModel? createdUser = await _getContactWith(args.coreId);
 
     if (createdUser == null) {
+
       createdUser = UserModel(
         coreId: args.coreId,
         iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
@@ -88,11 +88,11 @@ class AddContactsController extends GetxController {
       );
       // adds the new user to the repo and update the UserModel
       await contactRepository.addContact(createdUser);
-      user.value = createdUser;
     } else {
-      user.value = createdUser;
+
+      isContact.value = createdUser?.isContact ?? false;
+      nickname.value = createdUser.nickname;
     }
-    user.refresh();
   }
 
   Future<void> updateUserChatMode({required UserModel userModel}) async {
