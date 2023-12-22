@@ -95,6 +95,7 @@ class AddContactsView extends GetView<AddContactsController> {
                   CustomTextField(
                     labelText: LocaleKeys.AddContacts_addNickname.tr,
                     onChanged: (String value) => controller.setNickname(value),
+                    textController: controller.myNicknameController,
                   ),
                   CustomSizes.mediumSizedBoxHeight,
                   Align(

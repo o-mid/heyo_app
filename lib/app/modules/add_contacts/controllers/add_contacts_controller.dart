@@ -20,22 +20,11 @@ class AddContactsController extends GetxController {
   RxString nickname = ''.obs;
   RxBool isContact = false.obs;
   RxBool isVerified = false.obs;
+  TextEditingController myNicknameController = new TextEditingController();
 
   final ContactRepository contactRepository;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final CallHistoryAbstractRepo callHistoryRepo;
-
-  // Rx<UserModel> user = UserModel(
-  //   coreId: (Get.arguments as AddContactsViewArgumentsModel).coreId,
-  //   iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
-  //   name: (Get.arguments as AddContactsViewArgumentsModel).coreId.shortenCoreId,
-  //   walletAddress: (Get.arguments).coreId as String,
-  //   isBlocked: false,
-  //   isOnline: false,
-  //   isContact: false,
-  //   isVerified: false,
-  //   nickname: "",
-  // ).obs;
 
   AddContactsController({
     required this.contactRepository,
@@ -49,7 +38,7 @@ class AddContactsController extends GetxController {
     args = Get.arguments as AddContactsViewArgumentsModel;
     isContact.value = false;
     nickname.value = '';
-    await _initUserContact();
+    _initUserContact();
     super.onInit();
   }
 
@@ -106,6 +95,7 @@ class AddContactsController extends GetxController {
 
       isContact.value = createdUser.isContact;
       nickname.value = createdUser.nickname;
+      myNicknameController.text = createdUser.nickname;
     }
   }
 
