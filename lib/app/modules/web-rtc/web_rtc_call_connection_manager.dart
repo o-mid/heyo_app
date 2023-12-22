@@ -3,7 +3,7 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 class WebRTCCallConnectionManager {
 
   WebRTCCallConnectionManager();
-  String sdpSemantics = 'unified-plan';
+  static String sdpSemantics = 'unified-plan';
 
   static const Map<String, dynamic> iceServers = {
     'iceServers': [
@@ -47,26 +47,26 @@ class WebRTCCallConnectionManager {
   };
 
   Future<RTCSessionDescription> setupUpOffer(
-      RTCPeerConnection pc, String media) async {
-    final sessionDescription =
-        await pc.createOffer(media == 'data' ? dcConstraints : {});
-    await pc.setLocalDescription(sessionDescription);
-    return sessionDescription;
+      RTCPeerConnection pc,) async {
+    final localDescription =
+        await pc.createOffer({});
+    await pc.setLocalDescription(localDescription);
+    return localDescription;
   }
 
   Future<RTCSessionDescription> setupAnswer(
-      RTCPeerConnection pc, String media) async {
-    final sessionDescription =
-        await pc.createAnswer(media == 'data' ? dcConstraints : {});
-    await pc.setLocalDescription(sessionDescription);
-    return sessionDescription;
+      RTCPeerConnection pc,) async {
+    final localDescription =
+        await pc.createAnswer();
+    await pc.setLocalDescription(localDescription);
+    return localDescription;
   }
 
-  Future<RTCPeerConnection> createRTCPeerConnection() async {
+  static  Future<RTCPeerConnection> createRTCPeerConnection() async {
     final pc = await createPeerConnection({
       ...iceServers,
-      ...{'sdpSemantics': sdpSemantics}
-    }, config);
+      ...{'sdpSemantics': sdpSemantics},
+    }, config,);
     return pc;
   }
 

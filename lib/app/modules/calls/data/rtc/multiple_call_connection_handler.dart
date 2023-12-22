@@ -273,38 +273,6 @@ class CallConnectionsHandler {
     }
   }
 
-  void onCallRequestReceived(mapData, data, remotePeer) {
-    final callId = mapData[CALL_ID] as String;
-    final isAudioCall = data["isAudioCall"] as bool;
-    final members = data["members"] as List<dynamic>;
-    final callInfo = CallInfo(
-      remotePeer: remotePeer as RemotePeer,
-      isAudioCall: isAudioCall,
-    );
-    /*  if (_incomingCalls?.callId != null && _incomingCalls?.callId == callId) {
-    } else if (_incomingCalls != null && _incomingCalls?.callId != callId ||
-        _currentCall != null) {
-      //TODO busy
-    } else if (_incomingCalls?.callId == null) {
-    }*/
-    List<CallInfo> remotePeers = [callInfo];
-    for (var element in members) {
-      remotePeers.add(
-        CallInfo(
-          remotePeer:
-              RemotePeer(remotePeerId: null, remoteCoreId: element as String),
-          isAudioCall: isAudioCall,
-        ),
-      );
-    }
-    callStatusProvider.incomingCalls =
-        IncomingCalls(callId: callId, remotePeers: remotePeers);
-
-    onCallHistoryStatusEvent?.call(
-        callId, callInfo, CallHistoryStatus.incoming);
-
-    onCallStateChange?.call(callId, remotePeers, CallState.callStateRinging);
-  }
 
   void rejectIncomingCall(String callId) {
     if (callStatusProvider.incomingCalls?.callId == callId) {

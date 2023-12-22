@@ -36,7 +36,22 @@ class CallRequestsProcessor {
 
     final signalType = mapData['type'];
     print("onMessage, type: ${mapData['type']}");
+    if(callStatusProvider.callStatus==CallStatus.none && signalType==CallSignalingCommands.request){
+      callStatusProvider.inComingCallReceived(  mapData,
+        data,
+        RemotePeer(
+          remoteCoreId: remoteCoreId,
+          remotePeerId: remotePeerId,
+        ),);
 
+    }else if (callStatusProvider.callStatus==CallStatus.inCall){
+
+    }else if(callStatusProvider.callStatus==CallStatus.inComingCall) {
+
+    }
+    if (signalType == CallSignalingCommands.request) {
+      callStatusProvider.callStatus
+    }
     switch (signalType) {
       case CallSignalingCommands.request:
         {

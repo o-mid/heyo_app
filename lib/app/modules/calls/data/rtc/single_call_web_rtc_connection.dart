@@ -71,8 +71,12 @@ class SingleCallWebRTCBuilder {
     );
   }*/
 
-  void requestCall(CallId callId, RemotePeer remotePeer, bool isAudioCall,
-      List<String> members,) {
+  void requestCall(
+    CallId callId,
+    RemotePeer remotePeer,
+    bool isAudioCall,
+    List<String> members,
+  ) {
     members.removeWhere(
       (element) => element == remotePeer.remoteCoreId,
     );
@@ -88,7 +92,7 @@ class SingleCallWebRTCBuilder {
   Future<bool> startSession(CallRTCSession rtcSession) async {
     print("startSession");
     final rtcSessionDescription =
-        await webRTCConnectionManager.setupUpOffer(rtcSession.pc!, MEDIA_TYPE);
+        await webRTCConnectionManager.setupUpOffer(rtcSession.pc);
     print("onMessage send");
 
     return _send(
@@ -107,16 +111,11 @@ class SingleCallWebRTCBuilder {
   }
 
   Future<void> onOfferReceived(CallRTCSession rtcSession, description) async {
-    await rtcSession.pc!.setRemoteDescription(
-      RTCSessionDescription(
-        description['sdp'] as String?,
-        description['type'] as String?,
-      ),
+    final sessionDescription = await rtcSession.onOfferReceived(
+      description['sdp'] as String?,
+      description['type'] as String?,
     );
-
-    final sessionDescription =
-        await webRTCConnectionManager.setupAnswer(rtcSession.pc!, MEDIA_TYPE);
-    print("onMessage onOfferReceived Send");
+    print('onMessage onOfferReceived Send');
 
     _send(
       CallSignalingCommands.answer,
@@ -134,13 +133,8 @@ class SingleCallWebRTCBuilder {
 
   Future<void> onAnswerReceived(CallRTCSession rtcSession, description) async {
     print("onMessage onAnswerReceived  : ${rtcSession.pc?.signalingState}");
-
-    await rtcSession.pc!.setRemoteDescription(
-      RTCSessionDescription(
-        description['sdp'] as String?,
-        description['type'] as String?,
-      ),
-    );
+    await rtcSession.onAnswerReceived( description['sdp'] as String?,
+      description['type'] as String?,);
   }
 
   Future<void> reject(String callId, RemotePeer remotePeer) async {

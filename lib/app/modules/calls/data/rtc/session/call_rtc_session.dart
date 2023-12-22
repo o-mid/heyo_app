@@ -1,5 +1,6 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/calls/data/rtc/models.dart';
+import 'package:heyo/app/modules/web-rtc/web_rtc_call_connection_manager.dart';
 
 class CallRTCSession {
   CallRTCSession({
@@ -8,7 +9,9 @@ class CallRTCSession {
     required this.onConnectionFailed,
     required this.isAudioCall,
     required this.onIceCandidate,
-  });
+  }) {
+    init();
+  }
 
   bool isAudioCall;
 
@@ -35,26 +38,28 @@ class CallRTCSession {
     return _stream;
   }
 
-  RTCPeerConnection? _pc;
+  RTCPeerConnection _pc;
 
-  set pc(RTCPeerConnection? value) {
+  set pc(RTCPeerConnection value) {
     _pc = value;
     init();
   }
 
-  RTCPeerConnection? get pc => _pc;
+  RTCPeerConnection get pc => _pc;
 
   final List<RTCIceCandidate> remoteCandidates = [];
 
-  void init() {
-    pc!.onTrack = (event) {
+  void init() async {
+    pc = await WebRTCCallConnectionManager.createRTCPeerConnection();
+
+    pc.onTrack = (event) {
       if (event.track.kind == 'video') {
         _stream = event.streams[0];
         onAddRemoteStream?.call(_stream!);
         print("CallRTCSession OnAddRemoteStream");
       }
     };
-    pc!.onIceConnectionState = (RTCIceConnectionState state) {
+    pc.onIceConnectionState = (RTCIceConnectionState state) {
       print("CallRTCSession On ICE connection state changed => ${state}");
       isConnected =
           (state == RTCIceConnectionState.RTCIceConnectionStateConnected);
@@ -65,19 +70,20 @@ class CallRTCSession {
         onConnectionFailed.call(callId, remotePeer.remoteCoreId);
       }
     };
-    pc!.onConnectionState = (state) {
-      print("CallRTCSession onConnectionState for ${remotePeer.remoteCoreId} is: $state");
+    pc.onConnectionState = (state) {
+      print(
+          "CallRTCSession onConnectionState for ${remotePeer.remoteCoreId} is: $state");
     };
-    pc!.onSignalingState = (RTCSignalingState state) {
+    pc.onSignalingState = (RTCSignalingState state) {
       print("CallRTCSession state for ${remotePeer.remoteCoreId} : $state");
       if (isConnectionStable()) {
         _setPeerCandidates();
       }
     };
-    pc!.onIceCandidate = (candidate) {
+    pc.onIceCandidate = (candidate) {
       onIceCandidate?.call(candidate, this);
     };
-    pc!.onRemoveStream = (stream) {
+    pc.onRemoveStream = (stream) {
       print("CallRTCSession PC : onRemoveStream");
       onRemoveRemoteStream?.call(stream);
     };
@@ -99,4 +105,27 @@ class CallRTCSession {
   Future<void> dispose() async {
     await _pc?.dispose();
   }
+
+  Future<RTCSessionDescription> onOfferReceived(String? sdp, String? type) async {
+    await pc.setRemoteDescription(
+      RTCSessionDescription(
+        sdp,
+        type,
+      ),
+    );
+    final localDescription =
+    await pc.createAnswer();
+    await pc.setLocalDescription(localDescription);
+    return localDescription;
+  }
+
+  Future<void> onAnswerReceived(String? sdp, String? type) async {
+
+    await pc.setRemoteDescription(
+      RTCSessionDescription(
+       sdp,type,
+      ),
+    );
+  }
+
 }
