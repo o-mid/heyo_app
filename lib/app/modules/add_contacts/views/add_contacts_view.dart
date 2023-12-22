@@ -25,9 +25,12 @@ class AddContactsView extends GetView<AddContactsController> {
         backgroundColor: COLORS.kGreenMainColor,
         elevation: 0,
         centerTitle: false,
-        title: Text(controller.isContact.value
-            ? 'Edit Contact'.tr
-            : LocaleKeys.AddContacts_addToContacts.tr,
+        title: controller.isContact.value ? Text(LocaleKeys.AddContacts_addToContacts.tr,
+          style: const TextStyle(
+            fontWeight: FONTS.Bold,
+            fontFamily: FONTS.interFamily,
+          ),
+        ) : Text("Update contact",
           style: const TextStyle(
             fontWeight: FONTS.Bold,
             fontFamily: FONTS.interFamily,
