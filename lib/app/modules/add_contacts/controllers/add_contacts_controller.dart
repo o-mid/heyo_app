@@ -14,24 +14,6 @@ import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../../shared/data/models/messaging_participant_model.dart';
 
 class AddContactsController extends GetxController {
-  late AddContactsViewArgumentsModel args;
-  late RxString nickname;
-  final ContactRepository contactRepository;
-  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
-  final CallHistoryAbstractRepo callHistoryRepo;
-
-  Rx<UserModel> user = UserModel(
-    coreId: (Get.arguments as AddContactsViewArgumentsModel).coreId,
-    iconUrl: (Get.arguments as AddContactsViewArgumentsModel).iconUrl ??
-        "https://avatars.githubusercontent.com/u/2345136?v=4",
-    name: (Get.arguments as AddContactsViewArgumentsModel).coreId.shortenCoreId,
-    walletAddress: (Get.arguments).coreId as String,
-    isBlocked: false,
-    isOnline: false,
-    isContact: false,
-    isVerified: false,
-    nickname: "",
-  ).obs;
 
   AddContactsController({
     required this.contactRepository,
@@ -39,62 +21,86 @@ class AddContactsController extends GetxController {
     required this.callHistoryRepo,
   });
 
+  late AddContactsViewArgumentsModel args;
+  static String DefaultAvatarPath = 'https://avatars.githubusercontent.com/u/2345136?v=4';
+  RxString nickname = ''.obs;
+  RxBool isContact = false.obs;
+  RxBool isVerified = false.obs;
+  TextEditingController myNicknameController = TextEditingController();
+
+  final ContactRepository contactRepository;
+  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
+  final CallHistoryAbstractRepo callHistoryRepo;
+
   @override
   void onInit() async {
-    args = Get.arguments as AddContactsViewArgumentsModel;
 
-    nickname = "".obs;
-    await _getUserContact();
+    args = Get.arguments as AddContactsViewArgumentsModel;
     super.onInit();
   }
 
+  @override
+  void onReady() {
+    _initUserContact();
+    super.onReady();
+  }
+
   void setNickname(String name) {
-    user.value.nickname = name;
     nickname.value = name;
   }
 
-  Future<void> addContact() async {
-    // UserModel user = UserModel(
-    //   coreId: args.user.walletAddress,
-    //   nickname: nickname.value,
-    //   iconUrl: args.user.iconUrl,
-    //   name: nickname.value,
-    //   isOnline: true,
-    //   walletAddress: args.user.walletAddress,
-    //   isContact: true,
-    // );
-    await updateUserChatMode(
-        userModel: user.value.copyWith(
-      nickname: nickname.value,
-      name: nickname.value,
-      isContact: true,
-    ));
+  Future<UserModel?> _getContactWith(String id) async{
+    return contactRepository.getContactById(id);
   }
 
-  _getUserContact() async {
+  Future<UserModel> _cloneUserModel() async{
+    return UserModel(
+      coreId: args.coreId,
+      iconUrl: AddContactsController.DefaultAvatarPath,
+      name: args.coreId.shortenCoreId,
+      isOnline: true,
+      isContact: isContact.value,
+      walletAddress: args.coreId,
+    );
+  }
+
+  Future<void> updateContact() async {
+
+    var user = await _getContactWith(args.coreId);
+    if (user == null) {
+      user = await _cloneUserModel();
+      await contactRepository.addContact(user);
+    } else {
+      await updateUserChatMode(
+          userModel: user.copyWith(
+            nickname: nickname.value,
+            name: nickname.value.isEmpty ? args.coreId.shortenCoreId: nickname.value,
+            isContact: true,
+          ));
+    }
+  }
+
+  Future<void> _initUserContact() async {
+
     // check if user is already in contact
-    UserModel? createdUser = await contactRepository.getContactById(args.coreId);
+    var createdUser = await _getContactWith(args.coreId);
 
     if (createdUser == null) {
-      createdUser = UserModel(
-        coreId: args.coreId,
-        iconUrl: args.iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
-        name: args.coreId.shortenCoreId,
-        isOnline: true,
-        isContact: false,
-        walletAddress: args.coreId,
-      );
-      // adds the new user to the repo and update the UserModel
+
+      createdUser = await _cloneUserModel();
       await contactRepository.addContact(createdUser);
-      user.value = createdUser;
     } else {
-      user.value = createdUser;
+      isContact.value = createdUser.isContact;
+      nickname.value = createdUser.nickname;
+      myNicknameController.text = createdUser.nickname;
     }
-    user.refresh();
   }
 
   Future<void> updateUserChatMode({required UserModel userModel}) async {
-    UserModel? user = await contactRepository.getContactById(userModel.coreId);
+
+    // check if user is already in contact
+    var user = await _getContactWith(userModel.coreId);
+
     if (user == null) {
       await contactRepository.addContact(userModel);
     } else {
@@ -104,16 +110,20 @@ class AddContactsController extends GetxController {
     await _updateChatHistory(userModel: userModel);
     await _updateCallHistory(userModel: userModel);
 
-    Get.offNamedUntil(Routes.MESSAGES, ModalRoute.withName(Routes.HOME),
-        arguments: MessagesViewArgumentsModel(
-          coreId: userModel.coreId,
-          iconUrl: userModel.iconUrl,
-          participants: [
-            MessagingParticipantModel(
-              coreId: userModel.coreId,
-            ),
-          ],
-        ));
+    if (isContact.value == true){
+      Get.back();
+    }else{
+      Get.offNamedUntil(Routes.MESSAGES, ModalRoute.withName(Routes.HOME),
+          arguments: MessagesViewArgumentsModel(
+            coreId: userModel.coreId,
+            iconUrl: userModel.iconUrl,
+            participants: [
+              MessagingParticipantModel(
+                coreId: userModel.coreId,
+              ),
+            ],
+          ));
+    }
   }
 
   Future<void> _updateChatHistory({required UserModel userModel}) async {
