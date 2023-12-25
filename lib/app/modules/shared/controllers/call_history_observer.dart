@@ -41,8 +41,7 @@ class CallHistoryObserver extends GetxController {
   }
 
   void callHistoryObserver() {
-    stateListener =
-        callStatusObserver.callHistoryState.listen((state) async {
+    stateListener = callStatusObserver.callHistoryState.listen((state) async {
       if (state == null) {
         return;
       }
@@ -71,61 +70,11 @@ class CallHistoryObserver extends GetxController {
         case CallHistoryStatus.left:
         case CallHistoryStatus.end:
           {
-            final call = await callHistoryRepo.getOneCall(state.callId);
-            if (call == null) {
-              return;
-            }
-
-            final startTime = _callStartTimestamps[state.callId];
-
-            if (startTime == null) {
-              //* This means the user reject the call
-              await _endOrRejectCall(
-                callId: call.callId,
-                status: _determineCallStatusFromPrevAndHistory(
-                  call.status,
-                  state.callHistoryStatus,
-                ),
-              );
-            } else {
-              //* This means the call end after duration
-              await _endOrRejectCall(
-                callId: call.callId,
-              );
-            }
-
+            await _endOrRejectCall(state: state);
             break;
           }
-
       }
     });
-  }
-
-  CallStatus? _determineCallStatusFromPrevAndHistory(
-    CallStatus prevStatus,
-    CallHistoryStatus historyStatus,
-  ) {
-    if (prevStatus == CallStatus.outgoingNotAnswered //&&
-        /*historyStatus == CallHistoryStatus.byeSent*/) {
-      return CallStatus.outgoingCanceled;
-    }
-
-    if (prevStatus == CallStatus.outgoingNotAnswered //&&
-       /* historyStatus == CallHistoryStatus.byeReceived*/) {
-      return CallStatus.outgoingDeclined;
-    }
-
-    if (prevStatus == CallStatus.incomingMissed //&&
-        /*historyStatus == CallHistoryStatus.byeSent*/) {
-      return CallStatus.incomingDeclined;
-    }
-
-    if (prevStatus == CallStatus.incomingMissed //&&
-       /* historyStatus == CallHistoryStatus.byeReceived*/) {
-      return CallStatus.incomingMissed;
-    }
-
-    return null;
   }
 
   Future<void> _createMissedCallRecord({
@@ -167,22 +116,46 @@ class CallHistoryObserver extends GetxController {
   }
 
   Future<void> _endOrRejectCall({
-    required String callId,
-    CallStatus? status,
+    required CallHistoryState state,
   }) async {
-    final call = await callHistoryRepo.getOneCall(callId);
+    final call = await callHistoryRepo.getOneCall(state.callId);
     if (call == null) {
       return;
     }
 
-    final updateCall = status == null
-        ? call.copyWith(
-            endDate: DateTime.now(),
-          )
-        : call.copyWith(
-            status: status,
-            endDate: DateTime.now(),
-          );
+    CallHistoryModel updateCall;
+
+    final startTime = _callStartTimestamps[state.callId];
+    if (startTime == null) {
+      //* call did not connect (reject)
+      final historyStatus = call.status == CallStatus.outgoingNotAnswered
+          ? CallStatus.outgoingDeclined
+          : CallStatus.incomingMissed;
+
+      updateCall = call.copyWith(
+        status: historyStatus,
+        endDate: DateTime.now(),
+      );
+    } else {
+      //* call connected (end)
+      final participant = call.participants.firstWhere(
+        (p) => p.coreId == state.remote.remotePeer.remoteCoreId,
+      );
+
+      final updateParticipant = call.participants.map((p) {
+        if (p.coreId != participant.coreId) {
+          return p;
+        } else {
+          return participant.copyWith(endDate: DateTime.now());
+        }
+      }).toList();
+
+      updateCall = call.copyWith(
+        endDate: DateTime.now(),
+        participants: updateParticipant,
+      );
+    }
+
     await callHistoryRepo.updateCall(updateCall);
   }
 
@@ -277,4 +250,31 @@ class CallHistoryObserver extends GetxController {
 
     return callHistoryParticipant;
   }
+
+  //CallStatus? _determineCallStatusFromPrevAndHistory(
+  //  CallStatus prevStatus,
+  //  CallHistoryStatus historyStatus,
+  //) {
+  //if (prevStatus == CallStatus.outgoingNotAnswered //&&
+  //    /*historyStatus == CallHistoryStatus.byeSent*/) {
+  //  return CallStatus.outgoingCanceled;
+  //}
+
+  //if (prevStatus == CallStatus.outgoingNotAnswered //&&
+  //    /* historyStatus == CallHistoryStatus.byeReceived*/) {
+  //  return CallStatus.outgoingDeclined;
+  //}
+
+  //if (prevStatus == CallStatus.incomingMissed //&&
+  //    /*historyStatus == CallHistoryStatus.byeSent*/) {
+  //  return CallStatus.incomingDeclined;
+  //}
+
+  //  if (prevStatus == CallStatus.incomingMissed //&&
+  //      /* historyStatus == CallHistoryStatus.byeReceived*/) {
+  //    return CallStatus.incomingMissed;
+  //  }
+
+  //  return null;
+  //}
 }
