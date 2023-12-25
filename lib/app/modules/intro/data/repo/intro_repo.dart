@@ -37,6 +37,9 @@ class IntroRepo extends IntroAbstractRepo {
   @override
   Future<bool> applyDelegatedCredentials(
       String coreId, String signature) async {
+    print("signature ${signature}");
+    print("coreId ${coreId}");
+
     final isSuccessful = await vcp.setCredentials(coreId, signature);
     if (isSuccessful) {
       await vcp.cleanUp();
