@@ -7,21 +7,20 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 class CallRendererWidget extends StatelessWidget {
   const CallRendererWidget({
     required this.participantModel,
-    this.objectFit = RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
     super.key,
   });
 
   final ConnectedParticipantModel participantModel;
-  final RTCVideoViewObjectFit objectFit;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(color: COLORS.kCallPageDarkGrey),
-      child: participantModel.videoMode.value
+      child: participantModel.videoMode.value &&
+              participantModel.rtcVideoRenderer != null
           ? RTCVideoView(
               participantModel.rtcVideoRenderer!,
-              objectFit: objectFit,
+              objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
               mirror: true,
             )
           : Row(
