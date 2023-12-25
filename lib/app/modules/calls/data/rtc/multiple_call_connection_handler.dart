@@ -14,7 +14,6 @@ enum CallState {
   callStateBusy
 }
 
-enum CallHistoryStatus { incoming, calling, connected, left, end }
 
 class CallConnectionsHandler {
   CallConnectionsHandler({
@@ -50,6 +49,7 @@ class CallConnectionsHandler {
       ),
       _localStream!,
       callStatusProvider.getCurrentCallSessions().first.isAudioCall,
+      callStatusProvider.incomingCalls!.callId
     );
     singleCallWebRTCBuilder.requestCall(
       callRTCSession.callId,
@@ -73,6 +73,7 @@ class CallConnectionsHandler {
       RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
       _localStream!,
       isAudioCall,
+      callId
     );
     singleCallWebRTCBuilder
         .requestCall(callId, callRTCSession.remotePeer, isAudioCall, []);
@@ -171,6 +172,7 @@ class CallConnectionsHandler {
         ),
         _localStream!,
         callStatusProvider.getCurrentCall()!.sessions.first.isAudioCall,
+        callId
       );
     }
   }

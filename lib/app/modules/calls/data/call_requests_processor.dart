@@ -36,23 +36,26 @@ class CallRequestsProcessor {
 
     final signalType = mapData['type'];
     print("onMessage, type: ${mapData['type']}");
-    if(callStatusProvider.callStatus==CallStatus.none && signalType==CallSignalingCommands.request){
-      callStatusProvider.inComingCallReceived(  mapData,
-        data,
-        RemotePeer(
-          remoteCoreId: remoteCoreId,
-          remotePeerId: remotePeerId,
-        ),);
+    if (callStatusProvider.callStatus == CurrentCallStatus.none) {
+      if (signalType == CallSignalingCommands.request) {
+        await callStatusProvider.inComingCallReceived(
+          mapData,
+          data,
+          RemotePeer(
+            remoteCoreId: remoteCoreId,
+            remotePeerId: remotePeerId,
+          ),
+        );
+      } else {
+        //TODO send busy or unavailble
+      }
+    } else if (callStatusProvider.callStatus == CurrentCallStatus.inCall) {
 
-    }else if (callStatusProvider.callStatus==CallStatus.inCall){
-
-    }else if(callStatusProvider.callStatus==CallStatus.inComingCall) {
-
-    }
+    } else if (callStatusProvider.callStatus == CurrentCallStatus.inComingCall) {}
     if (signalType == CallSignalingCommands.request) {
-      callStatusProvider.callStatus
+      // callStatusProvider.callStatus
     }
-    switch (signalType) {
+/*    switch (signalType) {
       case CallSignalingCommands.request:
         {
           callConnectionsHandler.onCallRequestReceived(
@@ -119,6 +122,6 @@ class CallRequestsProcessor {
             ),
           );
         }
-    }
+    }*/
   }
 }

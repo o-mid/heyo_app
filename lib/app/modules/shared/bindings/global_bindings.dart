@@ -210,13 +210,14 @@ class GlobalBindings extends Bindings {
                   connectionContractor: Get.find(),
                   webRTCConnectionManager: WebRTCCallConnectionManager(),),),
           permanent: true)
+      ..put(CallStatusProvider())
       ..put(CallRequestsProcessor(
-          connectionContractor: Get.find(), callConnectionsHandler: Get.find(),),)
+          connectionContractor: Get.find(), callStatusProvider: Get.find(),callConnectionsHandler: Get.find()),)
       ..put(
           CallStatusObserver(
+            callStatusProvider: Get.find(),
               accountInfoRepo: Get.find(),
               notificationsController: Get.find(),
-              callConnectionsHandler: Get.find(),
               contactRepository: ContactRepository(
                 cacheContractor: CacheRepository(
                     userProvider: UserProvider(
