@@ -37,11 +37,34 @@ class CallStatusProvider {
     return null;
   }
 
-  CurrentCall makeCall() {
+  Future<CallRTCSession> makeCall(
+      String remoteCoreId,
+      MediaStream localStream,
+      bool isAudioCall,
+      Function(CallRTCSession callRTCSession) onAddRemoteStream) async {
     final callId = generateCallId();
     callStatus = CurrentCallStatus.inCall;
     _currentCall = CurrentCall(callId: callId, sessions: []);
-    return _currentCall!;
+
+    final callRTCSession = await addSession(
+      RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
+      localStream,
+      isAudioCall,
+      callId,
+    );
+    callRTCSession.onAddRemoteStream = (stream) {
+      onAddRemoteStream.call(callRTCSession);
+    };
+    callSignaling
+        .requestCall(callId, callRTCSession.remotePeer, isAudioCall, []);
+    final callInfo = CallInfo(
+      remotePeer: RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
+      isAudioCall: isAudioCall,
+    );
+
+    onCallHistoryStatusEvent?.call(callId, callInfo, CallHistoryStatus.calling);
+
+    return callRTCSession;
   }
 
   Future<void> inComingCallReceived(mapData, data, remotePeer) async {
@@ -78,6 +101,7 @@ class CallStatusProvider {
 
   Future<List<CallRTCSession>> makeCallByIncomingCall(
     MediaStream localStream,
+    Function(CallRTCSession callRTCSession) onAddRemoteStream,
   ) async {
     _currentCall = CurrentCall(callId: incomingCalls!.callId, sessions: []);
     callStatus = CurrentCallStatus.inCall;
@@ -89,12 +113,16 @@ class CallStatusProvider {
 
       /*    unawaited(singleCallWebRTCBuilder.startSession(
           ,),);*/
-      await addSession(
+      final callRTCSession = await addSession(
         element.remotePeer,
         localStream,
         element.isAudioCall,
         incomingCalls!.callId,
       );
+      callRTCSession.onAddRemoteStream = (stream) {
+        print("bbbbbbbb instatutsopr");
+        onAddRemoteStream.call(callRTCSession);
+      };
     }
     incomingCalls = null;
 
@@ -130,16 +158,21 @@ class CallStatusProvider {
     _currentCall = null;
   }
 
-  Future<CallRTCSession> addSession(RemotePeer remotePeer,
-      MediaStream localStream, bool isAudioCall, String connectionId,) async {
+  Future<CallRTCSession> addSession(
+    RemotePeer remotePeer,
+    MediaStream localStream,
+    bool isAudioCall,
+    String connectionId,
+  ) async {
     final callRTCSession = await CallRTCSession.createCallRTCSession(
-        remotePeer,
-        localStream,
-        isAudioCall,
-        connectionId,
-        (callId, remote) => null,
-        (candidate, callRTCSession) =>
-            {callSignaling.sendCandidate(candidate, callRTCSession)},);
+      remotePeer,
+      localStream,
+      isAudioCall,
+      connectionId,
+      (callId, remote) => null,
+      (candidate, callRTCSession) =>
+          {callSignaling.sendCandidate(candidate, callRTCSession)},
+    );
     _addSession(callRTCSession);
     return callRTCSession;
   }

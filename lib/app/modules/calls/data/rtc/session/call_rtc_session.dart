@@ -29,6 +29,7 @@ class CallRTCSession {
   Function(RTCIceCandidate candidate, CallRTCSession callRTCSession)?
       onIceCandidate;
   Function()? connected;
+  Function()? accepted;
 
   bool isConnected = false;
 
@@ -53,7 +54,7 @@ class CallRTCSession {
       if (event.track.kind == 'video') {
         _stream = event.streams[0];
         onAddRemoteStream?.call(_stream!);
-        print("CallRTCSession OnAddRemoteStream");
+        print("bbbbbbbb CallRTCSession OnAddRemoteStream ${onAddRemoteStream}");
       }
     };
     pc!.onIceConnectionState = (RTCIceConnectionState state) {
@@ -65,6 +66,7 @@ class CallRTCSession {
       }
       if (state == RTCIceConnectionState.RTCIceConnectionStateDisconnected) {
         onConnectionFailed.call(callId, remotePeer.remoteCoreId);
+        pc!.restartIce();
       }
     };
     pc!.onConnectionState = (state) {
@@ -107,6 +109,7 @@ class CallRTCSession {
     String? sdp,
     String? type,
   ) async {
+    accepted?.call();
     await pc!.setRemoteDescription(
       RTCSessionDescription(
         sdp,
@@ -150,20 +153,20 @@ class CallRTCSession {
     localStream.getTracks().forEach((track) async{
       await rtcSession.pc!.addTrack(track, localStream);
     });
-    rtcSession
+  /*  rtcSession
       ..onAddRemoteStream = (stream) {
         //TODO refactor
-     /*   onCallHistoryStatusEvent?.call(
+     *//*   onCallHistoryStatusEvent?.call(
           callRTCSession.callId,
           CallInfo(remotePeer: remotePeer, isAudioCall: isAudioCall),
           CallHistoryStatus.connected,
-        );*/
+        );*//*
 
         //onAddRemoteStream?.call(callRTCSession);
       }
       ..onCameraStateChanged = () {
         //onAudioStateChanged?.call(callRTCSession);
-      };
+      };*/
    // _addSession(callRTCSession);
     return rtcSession;
   }

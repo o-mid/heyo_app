@@ -39,6 +39,23 @@ class CallSignaling {
     return requestSucceeded;
   }
 
+  void requestCall(
+      CallId callId,
+      RemotePeer remotePeer,
+      bool isAudioCall,
+      List<String> members,
+      ) {
+    members.removeWhere(
+          (element) => element == remotePeer.remoteCoreId,
+    );
+    _send(
+      CallSignalingCommands.request,
+      {'isAudioCall': isAudioCall, 'members': members},
+      remotePeer.remoteCoreId,
+      remotePeer.remotePeerId,
+      callId,
+    );
+  }
   void sendCandidate(RTCIceCandidate iceCandidate, CallRTCSession rtcSession) {
     _send(
       CallSignalingCommands.candidate,

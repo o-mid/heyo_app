@@ -18,14 +18,12 @@ class CallBinding extends Bindings {
   @override
   void dependencies() {
     // Create a new instance of CallRepository
-    final CallRepository callRepository = WebRTCCallRepository(
-      callConnectionsHandler: Get.find(),
-    );
+
     Get
       ..lazyPut<CallController>(
         () => CallController(
           //* Lazy put CallController with the manually created instance
-          callRepository: callRepository,
+          callRepository: Get.find(),
           accountInfo: Get.find(),
         ),
       )
@@ -33,7 +31,7 @@ class CallBinding extends Bindings {
       //* Lazy put AddParticipateController with the same instance
       ..put(
         AddParticipateController(
-          callRepository: callRepository,
+          callRepository: Get.find(),
           getContactUserUseCase: GetContactUserUseCase(
             contactRepository: ContactRepository(
               cacheContractor: CacheRepository(

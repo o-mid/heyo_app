@@ -222,6 +222,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   }
 
   Future<void> createConnectedParticipantModel(CallStream callStream) async {
+    print("bbbbbbbb createConnectedParticipantModel : ${callStream.isAudioCall} : ${callStream.remoteStream}");
     RTCVideoRenderer? renderer;
     if (callStream.remoteStream != null) {
       renderer = RTCVideoRenderer();
@@ -274,12 +275,10 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   Future<void> observeRemoteStreams() async {
     final callStreams = await callRepository.getCallStreams();
-    print("hbgkbj ${callStreams.length}");
-    for (final element in callStreams) {
-      await createConnectedParticipantModel(element);
-    }
+    print("bbbbbbbb hbgkbj ${callStreams.length} : ${callRepository.hashCode}");
+
     callRepository.onCallStreamReceived = (callStateView) {
-      debugPrint('onAddCallStream : $callStateView');
+      debugPrint('bbbbbbbb onAddCallStream : $callStateView : ${callStateView.remoteStream} : ${callRepository.hashCode}');
       //print("calll ${_remoteRenderers} : $stream");
       //TODO refactor this if related to the call state
       if (!isInCall.value) {
@@ -290,6 +289,10 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
       onNewParticipateReceived(callStateView);
     };
+
+    for (final element in callStreams) {
+      await onNewParticipateReceived(element);
+    }
   }
 
   // Todo

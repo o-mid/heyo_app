@@ -13,9 +13,7 @@ class IncomingCallBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<IncomingCallController>(
       () => IncomingCallController(
-        callRepository: WebRTCCallRepository(
-          callConnectionsHandler: Get.find(),
-        ),
+        callRepository: Get.find(),
         contactAvailabilityUseCase: ContactAvailabilityUseCase(
           contactRepository: ContactRepository(
             cacheContractor: CacheRepository(

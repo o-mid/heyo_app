@@ -66,23 +66,8 @@ class CallConnectionsHandler {
     bool isAudioCall,
   ) async {
     await _createLocalStream();
-
-    final callId = callStatusProvider.makeCall().callId;
-    final callRTCSession = await callStatusProvider.addSession(
-        RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
-        _localStream!,
-        isAudioCall,
-        callId);
-    singleCallWebRTCBuilder
-        .requestCall(callId, callRTCSession.remotePeer, isAudioCall, []);
-    final callInfo = CallInfo(
-      remotePeer: RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
-      isAudioCall: isAudioCall,
-    );
-
-    onCallHistoryStatusEvent?.call(callId, callInfo, CallHistoryStatus.calling);
-    //generate a connectionId
-    //send requestCall
+    final callRTCSession = await callStatusProvider.makeCall(
+        remoteCoreId, _localStream!, isAudioCall,onAddRemoteStream!);
     return callRTCSession;
   }
 
@@ -94,41 +79,12 @@ class CallConnectionsHandler {
     }
   }
 
-/*
-  Future<CallRTCSession> _createSession(
-    RemotePeer remotePeer,
-    bool isAudioCall,
-  ) async {
-    final callRTCSession = await singleCallWebRTCBuilder.createSession(
-      callStatusProvider.getCurrentCallId(),
-      remotePeer,
-      _localStream!,
-      isAudioCall,
-    );
-    callRTCSession
-      ..onAddRemoteStream = (stream) {
-        //TODO refactor
-        onCallHistoryStatusEvent?.call(
-            callRTCSession.callId,
-            CallInfo(remotePeer: remotePeer, isAudioCall: isAudioCall),
-            CallHistoryStatus.connected,);
-
-        onAddRemoteStream?.call(callRTCSession);
-      }
-      ..onCameraStateChanged = () {
-        onAudioStateChanged?.call(callRTCSession);
-      };
-    callStatusProvider.addSession(callRTCSession);
-    return callRTCSession;
-  }
-*/
-
   Future<void> accept(CallId callId) async {
     print('accept ${callStatusProvider.incomingCalls}');
     if (callStatusProvider.incomingCalls?.callId == callId) {
       await _createLocalStream();
       final sessions =
-          await callStatusProvider.makeCallByIncomingCall(_localStream!);
+          await callStatusProvider.makeCallByIncomingCall(_localStream!,onAddRemoteStream!);
       for (final element in sessions) {
         unawaited(singleCallWebRTCBuilder.startSession(element));
       }
