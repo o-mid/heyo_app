@@ -38,7 +38,7 @@ class CallRTCSession {
     return _stream;
   }
 
-  RTCPeerConnection _pc;
+  late RTCPeerConnection _pc;
 
   set pc(RTCPeerConnection value) {
     _pc = value;
@@ -49,7 +49,7 @@ class CallRTCSession {
 
   final List<RTCIceCandidate> remoteCandidates = [];
 
-  void init() async {
+  Future<void> init() async {
     pc = await WebRTCCallConnectionManager.createRTCPeerConnection();
 
     pc.onTrack = (event) {
@@ -103,29 +103,66 @@ class CallRTCSession {
   }
 
   Future<void> dispose() async {
-    await _pc?.dispose();
+    await _pc.dispose();
   }
 
-  Future<RTCSessionDescription> onOfferReceived(String? sdp, String? type) async {
+  Future<RTCSessionDescription> onOfferReceived(
+      String? sdp, String? type,) async {
     await pc.setRemoteDescription(
       RTCSessionDescription(
         sdp,
         type,
       ),
     );
-    final localDescription =
-    await pc.createAnswer();
+    final localDescription = await pc.createAnswer();
     await pc.setLocalDescription(localDescription);
     return localDescription;
   }
 
   Future<void> onAnswerReceived(String? sdp, String? type) async {
-
     await pc.setRemoteDescription(
       RTCSessionDescription(
-       sdp,type,
+        sdp,
+        type,
       ),
     );
   }
 
+  static Future<CallRTCSession> createCallRTCSession(
+    RemotePeer remotePeer,
+    MediaStream localStream,
+    bool isAudioCall,
+    CallId callId,
+      Function(CallId, String) onConnectionFailed,
+  ) {
+    final rtcSession = CallRTCSession(
+      callId: callId,
+      remotePeer: remotePeer,
+      onConnectionFailed: (id, remote) {
+        onConnectionFailed?.call(id, remote);
+      },
+      isAudioCall: isAudioCall,
+      onIceCandidate: _sendCandidate,
+    );
+
+    localStream.getTracks().forEach((track) {
+      rtcSession.pc!.addTrack(track, localStream);
+    });
+    callRTCSession
+      ..onAddRemoteStream = (stream) {
+        //TODO refactor
+        onCallHistoryStatusEvent?.call(
+          callRTCSession.callId,
+          CallInfo(remotePeer: remotePeer, isAudioCall: isAudioCall),
+          CallHistoryStatus.connected,
+        );
+
+        onAddRemoteStream?.call(callRTCSession);
+      }
+      ..onCameraStateChanged = () {
+        onAudioStateChanged?.call(callRTCSession);
+      };
+    _addSession(callRTCSession);
+    return callRTCSession;
+  }
 }
