@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/calls/main/widgets/call_renderer_local_stack_widget.dart';
-import 'package:heyo/app/modules/calls/main/widgets/call_renderer_widget.dart';
 import 'package:heyo/app/modules/calls/main/widgets/draggable_video.dart';
+import 'package:heyo/app/modules/calls/main/widgets/group_call_renderer_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/transitions_constant.dart';
 
 class GroupCallWidget extends GetView<CallController> {
@@ -25,24 +24,40 @@ class GroupCallWidget extends GetView<CallController> {
         return const Center(child: Text('No remote videos available.'));
       }
 
+      final size = MediaQuery.of(context).size;
+
+      final toolBarHeight =
+          controller.fullScreenMode.isFalse ? kToolbarHeight : 0;
+
+      //* The height og expanded bottom sheet is ~100
+      final expandedHeaderHeight = controller.fullScreenMode.isFalse ? 100 : 0;
+
+      //* 24 is for notification bar on Android
+      final itemHeight =
+          (size.height - toolBarHeight - expandedHeaderHeight - 24) /
+              (remoteParticipate.length / 2).ceil();
+      final itemWidth = size.width / 2;
+
       return Stack(
         children: [
           GridView.builder(
-            padding: const EdgeInsets.only(top: 8),
-            physics: const NeverScrollableScrollPhysics(),
+            //physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //* The only exception that we have is in 2 remotes
+              //* we have to show them like Column(every axis one renderer)
               crossAxisCount: remoteParticipate.length == 2 ? 1 : 2,
-              childAspectRatio: ScreenUtil.defaultSize.aspectRatio *
-                  (remoteParticipate.length == 2 ? 2 : 1),
+              childAspectRatio: remoteParticipate.length == 2
+                  ? size.width / itemHeight * 2
+                  : itemWidth / itemHeight,
+              //childAspectRatio: ScreenUtil.defaultSize.aspectRatio *
+              //    (remoteParticipate.length == 2 ? 2 : 1),
             ),
             itemCount: remoteParticipate.length,
             itemBuilder: (context, index) {
-              return CallRendererWidget(
+              return GroupCallRendererWidget(
                 participantModel: remoteParticipate[index],
-                objectFit: remoteParticipate.length == 2
-                    ? RTCVideoViewObjectFit.RTCVideoViewObjectFitContain
-                    : RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                participantCount: remoteParticipate.length,
               );
             },
           ),

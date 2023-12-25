@@ -23,41 +23,54 @@ class PeerCallWidget extends GetView<CallController> {
         return const Center(child: Text('No remote videos available.'));
       }
 
-      return SafeArea(
-        child: Stack(
-          children: [
-            //* The remote video that will get whole screen
-            CallRendererWidget(
+      final size = MediaQuery.of(context).size;
+
+      final toolBarHeight =
+          controller.fullScreenMode.isFalse ? kToolbarHeight : 0;
+
+      //* The height og expanded bottom sheet is ~100
+      final expandedHeaderHeight = controller.fullScreenMode.isFalse ? 100 : 0;
+
+      //* 24 is for notification bar on Android
+      final itemHeight =
+          size.height - toolBarHeight - expandedHeaderHeight - 24;
+
+      return Stack(
+        children: [
+          //* The remote video that will get whole screen
+          SizedBox(
+            height: itemHeight,
+            child: CallRendererWidget(
               participantModel: remoteParticipate.first,
             ),
-            //* The local drapable video
-            if (localParticipate.value!.videoMode.isTrue)
-              DraggableVideo(
-                child: AnimatedSize(
-                  clipBehavior: Clip.hardEdge,
-                  curve: TRANSITIONS.callPage_DraggableVideoAnimatedSizeCurve,
-                  alignment: Alignment.bottomLeft,
-                  duration: controller.callerScaleDuration,
-                  reverseDuration: controller.callerScaleReverseDuration,
-                  child: SizedBox(
-                    width: changeCallerWidgetSize ? 200.w : 120.w,
-                    height: changeCallerWidgetSize ? 250.h : 170.h,
-                    child: GestureDetector(
-                      //TODO: AliAzim => check if we need this onTap & onDoubleTap or not
-                      onTap: controller.changeCallerOptions,
-                      onDoubleTap: controller.flipVideoPositions,
-                      child: Container(
-                        margin: const EdgeInsets.all(5),
-                        child: CallRendererLocalStackWidget(
-                          participantModel: localParticipate.value!,
-                        ),
+          ),
+          //* The local drapable video
+          if (localParticipate.value!.videoMode.isTrue)
+            DraggableVideo(
+              child: AnimatedSize(
+                clipBehavior: Clip.hardEdge,
+                curve: TRANSITIONS.callPage_DraggableVideoAnimatedSizeCurve,
+                alignment: Alignment.bottomLeft,
+                duration: controller.callerScaleDuration,
+                reverseDuration: controller.callerScaleReverseDuration,
+                child: SizedBox(
+                  width: changeCallerWidgetSize ? 200.w : 120.w,
+                  height: changeCallerWidgetSize ? 250.h : 170.h,
+                  child: GestureDetector(
+                    //TODO: AliAzim => check if we need this onTap & onDoubleTap or not
+                    onTap: controller.changeCallerOptions,
+                    onDoubleTap: controller.flipVideoPositions,
+                    child: Container(
+                      margin: const EdgeInsets.all(5),
+                      child: CallRendererLocalStackWidget(
+                        participantModel: localParticipate.value!,
                       ),
                     ),
                   ),
                 ),
               ),
-          ],
-        ),
+            ),
+        ],
       );
     });
   }
