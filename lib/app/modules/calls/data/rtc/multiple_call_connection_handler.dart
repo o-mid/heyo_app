@@ -5,6 +5,7 @@ import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 import 'package:heyo/app/modules/calls/data/rtc/session/call_rtc_session.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/calls/data/rtc/single_call_web_rtc_connection.dart';
+import 'package:heyo/app/modules/web-rtc/web_rtc_call_connection_manager.dart';
 
 enum CallState {
   callStateConnected,
@@ -13,7 +14,6 @@ enum CallState {
   callStateBye,
   callStateBusy
 }
-
 
 class CallConnectionsHandler {
   CallConnectionsHandler({
@@ -43,14 +43,13 @@ class CallConnectionsHandler {
     }
     //TODO refactor isAudio
     final callRTCSession = await callStatusProvider.addSession(
-      RemotePeer(
-        remoteCoreId: remoteCoreId,
-        remotePeerId: null,
-      ),
-      _localStream!,
-      callStatusProvider.getCurrentCallSessions().first.isAudioCall,
-      callStatusProvider.incomingCalls!.callId
-    );
+        RemotePeer(
+          remoteCoreId: remoteCoreId,
+          remotePeerId: null,
+        ),
+        _localStream!,
+        callStatusProvider.getCurrentCallSessions().first.isAudioCall,
+        callStatusProvider.incomingCalls!.callId);
     singleCallWebRTCBuilder.requestCall(
       callRTCSession.callId,
       RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
@@ -70,11 +69,10 @@ class CallConnectionsHandler {
 
     final callId = callStatusProvider.makeCall().callId;
     final callRTCSession = await callStatusProvider.addSession(
-      RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
-      _localStream!,
-      isAudioCall,
-      callId
-    );
+        RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
+        _localStream!,
+        isAudioCall,
+        callId);
     singleCallWebRTCBuilder
         .requestCall(callId, callRTCSession.remotePeer, isAudioCall, []);
     final callInfo = CallInfo(
@@ -90,7 +88,8 @@ class CallConnectionsHandler {
 
   Future<void> _createLocalStream() async {
     if (_localStream == null) {
-      _localStream = await singleCallWebRTCBuilder.createStream('video', false);
+      _localStream =
+          await WebRTCCallConnectionManager.createStream('video', false);
       onLocalStream?.call(_localStream!);
     }
   }
@@ -128,7 +127,8 @@ class CallConnectionsHandler {
     print('accept ${callStatusProvider.incomingCalls}');
     if (callStatusProvider.incomingCalls?.callId == callId) {
       await _createLocalStream();
-      final sessions=await callStatusProvider.makeCallByIncomingCall(_localStream!);
+      final sessions =
+          await callStatusProvider.makeCallByIncomingCall(_localStream!);
       for (final element in sessions) {
         unawaited(singleCallWebRTCBuilder.startSession(element));
       }
@@ -166,19 +166,21 @@ class CallConnectionsHandler {
     final member = data["newMemer"] as Map<String, dynamic>;
     if (callId == callStatusProvider.getCurrentCall()?.callId) {
       await callStatusProvider.addSession(
-        RemotePeer(
-          remoteCoreId: member["member"] as String,
-          remotePeerId: null,
-        ),
-        _localStream!,
-        callStatusProvider.getCurrentCall()!.sessions.first.isAudioCall,
-        callId
-      );
+          RemotePeer(
+            remoteCoreId: member["member"] as String,
+            remotePeerId: null,
+          ),
+          _localStream!,
+          callStatusProvider.getCurrentCall()!.sessions.first.isAudioCall,
+          callId);
     }
   }
 
   void onCallCandidateReceived(
-      CallId callId, RemotePeer remotePeer, dynamic data,) {
+    CallId callId,
+    RemotePeer remotePeer,
+    dynamic data,
+  ) {
     final rtcSession =
         callStatusProvider.getConnection(remotePeer.remoteCoreId, callId)!;
     rtcSession.remotePeer.remotePeerId ??= remotePeer.remotePeerId;
@@ -274,7 +276,6 @@ class CallConnectionsHandler {
       callStatusProvider.incomingCalls = null;
     }
   }
-
 
   void rejectIncomingCall(String callId) {
     if (callStatusProvider.incomingCalls?.callId == callId) {

@@ -2,6 +2,7 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/modules/calls/data/rtc/session/call_rtc_session.dart';
+import 'package:heyo/app/modules/calls/data/signaling/call_signaling.dart';
 import 'package:heyo/app/modules/web-rtc/web_rtc_call_connection_manager.dart';
 
 enum CurrentCallStatus {
@@ -13,9 +14,12 @@ enum CurrentCallStatus {
 enum CallHistoryStatus { incoming, calling, connected, left, end }
 
 class CallStatusProvider {
+  CallStatusProvider({required this.callSignaling});
+
   CurrentCall? _currentCall;
   RequestedCalls? requestedCalls;
   IncomingCalls? incomingCalls;
+  CallSignaling callSignaling;
   CurrentCallStatus callStatus = CurrentCallStatus.none;
   Function(CallId callId, List<CallInfo> callInfo, CurrentCallStatus state)?
       onCallStateChange;
@@ -62,7 +66,9 @@ class CallStatusProvider {
     }
 
     incomingCalls = IncomingCalls(callId: callId, remotePeers: remotePeers);
-    onCallStateChange?.call(callId,remotePeers,CurrentCallStatus.inComingCall);
+
+    onCallStateChange?.call(
+        callId, remotePeers, CurrentCallStatus.inComingCall);
 /*
     onCallHistoryStatusEvent?.call(
       callId, callInfo, CallHistoryStatus.incoming,);
@@ -125,74 +131,16 @@ class CallStatusProvider {
   }
 
   Future<CallRTCSession> addSession(RemotePeer remotePeer,
-      MediaStream localStream, bool isAudioCall, String connectionId) async {
+      MediaStream localStream, bool isAudioCall, String connectionId,) async {
     final callRTCSession = await CallRTCSession.createCallRTCSession(
         remotePeer,
         localStream,
         isAudioCall,
         connectionId,
-        (p0, p1) => null,
-        (candidate, callRTCSession) => null);
+        (callId, remote) => null,
+        (candidate, callRTCSession) =>
+            {callSignaling.sendCandidate(candidate, callRTCSession)},);
     _addSession(callRTCSession);
     return callRTCSession;
   }
-
-/*  Future<CallRTCSession> createSession(
-    RemotePeer remotePeer,
-    bool isAudioCall,
-  ) async {
-    final rtcSession = CallRTCSession(
-      callId: connectionId,
-      remotePeer: remotePeer,
-      onConnectionFailed: (id, remote) {
-        onConnectionFailed?.call(id, remote);
-      },
-      isAudioCall: isAudioCall,
-      onIceCandidate: _sendCandidate,
-    );
-
-    localStream.getTracks().forEach((track) {
-      rtcSession.pc!.addTrack(track, localStream);
-    });
-    callRTCSession
-      ..onAddRemoteStream = (stream) {
-        //TODO refactor
-        onCallHistoryStatusEvent?.call(
-          callRTCSession.callId,
-          CallInfo(remotePeer: remotePeer, isAudioCall: isAudioCall),
-          CallHistoryStatus.connected,
-        );
-
-        onAddRemoteStream?.call(callRTCSession);
-      }
-      ..onCameraStateChanged = () {
-        onAudioStateChanged?.call(callRTCSession);
-      };
-    _addSession(callRTCSession);
-    return callRTCSession;
-  }*/
-/*
-  Future<CallRTCSession> _createRTCSession(
-    CallId connectionId,
-    RemotePeer remotePeer,
-    MediaStream localStream,
-    bool isAudioCall,
-  ) async {
-    final rtcSession = CallRTCSession(
-      callId: connectionId,
-      remotePeer: remotePeer,
-      onConnectionFailed: (id, remote) {
-        onConnectionFailed?.call(id, remote);
-      },
-      isAudioCall: isAudioCall,
-      onIceCandidate: _sendCandidate,
-    );
-    rtcSession.pc = await webRTCConnectionManager.createRTCPeerConnection();
-
-    localStream.getTracks().forEach((track) {
-      rtcSession.pc!.addTrack(track, localStream);
-    });
-
-    return rtcSession;
-  }*/
 }

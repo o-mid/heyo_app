@@ -5,6 +5,7 @@ import 'package:heyo/app/modules/calls/data/call_status_observer.dart';
 import 'package:heyo/app/modules/calls/call_history/controllers/call_history_controller.dart';
 import 'package:heyo/app/modules/calls/data/call_requests_processor.dart';
 import 'package:heyo/app/modules/calls/data/call_status_provider.dart';
+import 'package:heyo/app/modules/calls/data/signaling/call_signaling.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
@@ -203,14 +204,15 @@ class GlobalBindings extends Bindings {
       ..put(NotificationsController(
           appNotifications: Get.find(),
           ))
+      ..put(CallSignaling(connectionContractor: Get.find()))
+      ..put(CallStatusProvider(callSignaling: Get.find()),permanent: true)
+
       ..put(
           CallConnectionsHandler(
-            callStatusProvider: CallStatusProvider(),
+            callStatusProvider: Get.find(),
               singleCallWebRTCBuilder: SingleCallWebRTCBuilder(
-                  connectionContractor: Get.find(),
-                  webRTCConnectionManager: WebRTCCallConnectionManager(),),),
+                  connectionContractor: Get.find(),),),
           permanent: true)
-      ..put(CallStatusProvider())
       ..put(CallRequestsProcessor(
           connectionContractor: Get.find(), callStatusProvider: Get.find(),callConnectionsHandler: Get.find()),)
       ..put(

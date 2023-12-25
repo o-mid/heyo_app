@@ -19,57 +19,17 @@ const DATA_DESCRIPTION = 'description';
 const CALL_ID = 'call_id';
 
 class SingleCallWebRTCBuilder {
+
+  SingleCallWebRTCBuilder({
+    required this.connectionContractor,
+  });
   final ConnectionContractor connectionContractor;
-  final WebRTCCallConnectionManager webRTCConnectionManager;
   final JsonEncoder _encoder = const JsonEncoder();
   final JsonDecoder _decoder = const JsonDecoder();
   Function(CallId, String)? onConnectionFailed;
   Function(MediaStream stream)? onAddRemoteStream;
   Function(MediaStream stream)? onRemoveStream;
 
-  SingleCallWebRTCBuilder({
-    required this.connectionContractor,
-    required this.webRTCConnectionManager,
-  });
-
-/*  Future<CallRTCSession> _createRTCSession(
-    CallId connectionId,
-    RemotePeer remotePeer,
-    MediaStream localStream,
-    bool isAudioCall,
-  ) async {
-
-    final rtcSession = CallRTCSession(
-      callId: connectionId,
-      remotePeer: remotePeer,
-      onConnectionFailed: (id, remote) {
-        onConnectionFailed?.call(id, remote);
-      },
-      isAudioCall: isAudioCall,
-      onIceCandidate: _sendCandidate,
-    );
-    rtcSession.pc =  await webRTCConnectionManager.createRTCPeerConnection();
-
-    localStream.getTracks().forEach((track) {
-      rtcSession.pc!.addTrack(track, localStream);
-    });
-
-    return rtcSession;
-  }*/
-
-/*  Future<CallRTCSession> createSession(
-    CallId connectionId,
-    RemotePeer remotePeer,
-    MediaStream stream,
-    bool isAudioCall,
-  ) async {
-    return _createRTCSession(
-      connectionId,
-      remotePeer,
-      stream,
-      isAudioCall,
-    );
-  }*/
 
   void requestCall(
     CallId callId,
@@ -92,7 +52,7 @@ class SingleCallWebRTCBuilder {
   Future<bool> startSession(CallRTCSession rtcSession) async {
     print("startSession");
     final rtcSessionDescription =
-        await webRTCConnectionManager.setupUpOffer(rtcSession.pc);
+        await WebRTCCallConnectionManager.setupUpOffer(rtcSession.pc!);
     print("onMessage send");
 
     return _send(
@@ -147,21 +107,7 @@ class SingleCallWebRTCBuilder {
     ));
   }
 
-  void _sendCandidate(RTCIceCandidate iceCandidate, CallRTCSession rtcSession) {
-    _send(
-      CallSignalingCommands.candidate,
-      {
-        CallSignalingCommands.candidate: {
-          'sdpMLineIndex': iceCandidate.sdpMLineIndex,
-          'sdpMid': iceCandidate.sdpMid,
-          'candidate': iceCandidate.candidate,
-        },
-      },
-      rtcSession.remotePeer.remoteCoreId,
-      rtcSession.remotePeer.remotePeerId,
-      rtcSession.callId,
-    );
-  }
+
 
   Future<bool> _send(
     eventType,
@@ -201,9 +147,6 @@ class SingleCallWebRTCBuilder {
     await rtcSession.pc!.addCandidate(candidate);
   }
 
-  Future<MediaStream> createStream(String media, bool userScreen) async {
-    return webRTCConnectionManager.createStream(media, userScreen);
-  }
 
   void addMemberEvent(String member, CallRTCSession rtcSession) {
     _send(

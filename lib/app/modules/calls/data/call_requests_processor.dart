@@ -36,8 +36,8 @@ class CallRequestsProcessor {
 
     final signalType = mapData['type'];
     print("onMessage, type: ${mapData['type']}");
-    if (callStatusProvider.callStatus == CurrentCallStatus.none) {
-      if (signalType == CallSignalingCommands.request) {
+    if (signalType == CallSignalingCommands.request) {
+      if (callStatusProvider.callStatus == CurrentCallStatus.none) {
         await callStatusProvider.inComingCallReceived(
           mapData,
           data,
@@ -49,24 +49,21 @@ class CallRequestsProcessor {
       } else {
         //TODO send busy or unavailble
       }
-    } else if (callStatusProvider.callStatus == CurrentCallStatus.inCall) {
-
-    } else if (callStatusProvider.callStatus == CurrentCallStatus.inComingCall) {}
-    if (signalType == CallSignalingCommands.request) {
-      // callStatusProvider.callStatus
+    } else {
+      if (callStatusProvider.callStatus == CurrentCallStatus.inCall) {
+        handleCallRequestProcess(
+            signalType, mapData, data, callId, remoteCoreId, remotePeerId,);
+      } else if (callStatusProvider.callStatus ==
+          CurrentCallStatus.inComingCall) {
+        handleCallRequestProcess(
+            signalType, mapData, data, callId, remoteCoreId, remotePeerId,);
+      }
     }
-/*    switch (signalType) {
-      case CallSignalingCommands.request:
-        {
-          callConnectionsHandler.onCallRequestReceived(
-            mapData,
-            data,
-            RemotePeer(
-              remoteCoreId: remoteCoreId,
-              remotePeerId: remotePeerId,
-            ),
-          );
-        }
+  }
+
+  handleCallRequestProcess(signalType, Map<String, dynamic> mapData, data,
+      String callId, String remoteCoreId,String remotePeerId) {
+    switch (signalType) {
       case CallSignalingCommands.reject:
         {
           callConnectionsHandler.onCallRequestRejected(
@@ -122,6 +119,6 @@ class CallRequestsProcessor {
             ),
           );
         }
-    }*/
+    }
   }
 }

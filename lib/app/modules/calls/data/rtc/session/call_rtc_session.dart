@@ -9,9 +9,7 @@ class CallRTCSession {
     required this.onConnectionFailed,
     required this.isAudioCall,
     required this.onIceCandidate,
-  }) {
-    init();
-  }
+  });
 
   bool isAudioCall;
 
@@ -38,28 +36,27 @@ class CallRTCSession {
     return _stream;
   }
 
-  late RTCPeerConnection _pc;
+  RTCPeerConnection? _pc;
 
-  set pc(RTCPeerConnection value) {
+  set pc(RTCPeerConnection? value) {
     _pc = value;
     init();
   }
 
-  RTCPeerConnection get pc => _pc;
+  RTCPeerConnection? get pc => _pc;
 
   final List<RTCIceCandidate> remoteCandidates = [];
 
   Future<void> init() async {
-    pc = await WebRTCCallConnectionManager.createRTCPeerConnection();
 
-    pc.onTrack = (event) {
+    pc!.onTrack = (event) {
       if (event.track.kind == 'video') {
         _stream = event.streams[0];
         onAddRemoteStream?.call(_stream!);
         print("CallRTCSession OnAddRemoteStream");
       }
     };
-    pc.onIceConnectionState = (RTCIceConnectionState state) {
+    pc!.onIceConnectionState = (RTCIceConnectionState state) {
       print("CallRTCSession On ICE connection state changed => ${state}");
       isConnected =
           (state == RTCIceConnectionState.RTCIceConnectionStateConnected);
@@ -70,20 +67,20 @@ class CallRTCSession {
         onConnectionFailed.call(callId, remotePeer.remoteCoreId);
       }
     };
-    pc.onConnectionState = (state) {
+    pc!.onConnectionState = (state) {
       print(
           "CallRTCSession onConnectionState for ${remotePeer.remoteCoreId} is: $state");
     };
-    pc.onSignalingState = (RTCSignalingState state) {
+    pc!.onSignalingState = (RTCSignalingState state) {
       print("CallRTCSession state for ${remotePeer.remoteCoreId} : $state");
       if (isConnectionStable()) {
         _setPeerCandidates();
       }
     };
-    pc.onIceCandidate = (candidate) {
+    pc!.onIceCandidate = (candidate) {
       onIceCandidate?.call(candidate, this);
     };
-    pc.onRemoveStream = (stream) {
+    pc!.onRemoveStream = (stream) {
       print("CallRTCSession PC : onRemoveStream");
       onRemoveRemoteStream?.call(stream);
     };
@@ -103,26 +100,26 @@ class CallRTCSession {
   }
 
   Future<void> dispose() async {
-    await _pc.dispose();
+    await _pc!.dispose();
   }
 
   Future<RTCSessionDescription> onOfferReceived(
     String? sdp,
     String? type,
   ) async {
-    await pc.setRemoteDescription(
+    await pc!.setRemoteDescription(
       RTCSessionDescription(
         sdp,
         type,
       ),
     );
-    final localDescription = await pc.createAnswer();
-    await pc.setLocalDescription(localDescription);
+    final localDescription = await pc!.createAnswer();
+    await pc!.setLocalDescription(localDescription);
     return localDescription;
   }
 
   Future<void> onAnswerReceived(String? sdp, String? type) async {
-    await pc.setRemoteDescription(
+    await pc!.setRemoteDescription(
       RTCSessionDescription(
         sdp,
         type,
@@ -147,10 +144,11 @@ class CallRTCSession {
       },
       isAudioCall: isAudioCall,
       onIceCandidate: onIceCandidate,
-    );
+    )..pc=await WebRTCCallConnectionManager.createRTCPeerConnection();
+
 
     localStream.getTracks().forEach((track) async{
-      await rtcSession.pc.addTrack(track, localStream);
+      await rtcSession.pc!.addTrack(track, localStream);
     });
     rtcSession
       ..onAddRemoteStream = (stream) {

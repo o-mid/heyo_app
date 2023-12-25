@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:heyo/app/modules/calls/data/rtc/models.dart';
+import 'package:heyo/app/modules/calls/data/rtc/session/call_rtc_session.dart';
 import 'package:heyo/app/modules/calls/data/signaling/signaling_models.dart';
 import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
 import 'package:heyo/app/modules/connection/domain/connection_models.dart';
@@ -12,7 +15,7 @@ class CallSignaling {
 
   Future<bool> _send(
       String eventType,
-      String data,
+      data,
       String remoteCoreId,
       String? remotePeerId,
       String connectionId,
@@ -34,5 +37,21 @@ class CallSignaling {
     );
 
     return requestSucceeded;
+  }
+
+  void sendCandidate(RTCIceCandidate iceCandidate, CallRTCSession rtcSession) {
+    _send(
+      CallSignalingCommands.candidate,
+      {
+        CallSignalingCommands.candidate: {
+          'sdpMLineIndex': iceCandidate.sdpMLineIndex,
+          'sdpMid': iceCandidate.sdpMid,
+          'candidate': iceCandidate.candidate,
+        },
+      },
+      rtcSession.remotePeer.remoteCoreId,
+      rtcSession.remotePeer.remotePeerId,
+      rtcSession.callId,
+    );
   }
 }
