@@ -104,9 +104,9 @@ class _DefaultAppBar extends StatelessWidget {
             )
           else
             CustomCircleAvatar(
-                coreId: controller.user.value.coreId,
+                coreId: controller.users.first.coreId,
                 size: 32,
-                isOnline: controller.user.value.isOnline),
+                isOnline: controller.users.first.isOnline),
           CustomSizes.smallSizedBoxWidth,
           GestureDetector(
             onDoubleTap: controller.saveCoreIdToClipboard,
@@ -115,12 +115,12 @@ class _DefaultAppBar extends StatelessWidget {
               children: [
                 _BuildChatName(
                   name: controller.chatName.value,
-                  isVerified: controller.user.value.isVerified,
+                  isVerified: controller.users.first.isVerified,
                 ),
                 _BuildUserStatus(
                   isGroupChat: controller.isGroupChat,
                   membersCount: controller.participants.length,
-                  isOnline: controller.user.value.isOnline,
+                  isOnline: controller.users.first.isOnline,
                   connectionType: controller.connectionType,
                 ),
               ],
@@ -132,11 +132,12 @@ class _DefaultAppBar extends StatelessWidget {
               CircleIconButton(
                 onPressed: () {
                   Get.toNamed(
+                    // TODO : GROUP CALL
                     Routes.CALL,
                     arguments: CallViewArgumentsModel(
                         session: null,
                         callId: null,
-                        user: controller.getUser(),
+                        user: controller.users.first,
                         enableVideo: true,
                         isAudioCall: false),
                   );
@@ -147,11 +148,12 @@ class _DefaultAppBar extends StatelessWidget {
               CircleIconButton(
                 onPressed: () {
                   Get.toNamed(
+                    // TODO : GROUP CALL
                     Routes.CALL,
                     arguments: CallViewArgumentsModel(
                         session: null,
                         callId: null,
-                        user: controller.getUser(),
+                        user: controller.users.first,
                         enableVideo: false,
                         isAudioCall: true),
                   );
@@ -165,7 +167,7 @@ class _DefaultAppBar extends StatelessWidget {
                 icon: Assets.svg.verticalMenuIcon.svg(),
                 size: 22,
                 onPressed: () {
-                  _openAppBarActionBottomSheet(userModel: controller.getUser());
+                  _openAppBarActionBottomSheet(userModel: controller.users.first);
                 },
               ),
             ],

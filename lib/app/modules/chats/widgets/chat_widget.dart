@@ -42,6 +42,7 @@ class ChatWidget extends GetView<ChatsController> {
               Routes.MESSAGES,
               arguments: MessagesViewArgumentsModel(
                 participants: chat.participants,
+                chatName: chat.name,
               ),
             );
           },

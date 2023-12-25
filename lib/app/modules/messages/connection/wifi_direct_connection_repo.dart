@@ -27,7 +27,7 @@ class WifiDirectConnectionRepository extends ConnectionRepository {
   //and remoteId, similar to how RTC data channel connections are handled in RTCMessagingConnectionRepository.
 
   @override
-  void initConnection(MessageConnectionType messageConnectionType, String remoteId) {
+  void initConnection(MessageConnectionType messageConnectionType, List<String> remoteIds) {
     // TODO: implement initConnection
   }
 

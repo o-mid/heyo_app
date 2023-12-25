@@ -115,12 +115,6 @@ class MessagesController extends GetxController {
   late KeyboardVisibilityController keyboardController;
 
   late ChatModel? chatModel;
-  Rx<UserModel> user = UserModel(
-    coreId: (Get.arguments as MessagesViewArgumentsModel).participants.first.coreId,
-    name: (Get.arguments as MessagesViewArgumentsModel).participants.first.coreId.shortenCoreId,
-    walletAddress:
-        (Get.arguments as MessagesViewArgumentsModel).participants.first.coreId as String,
-  ).obs;
 
   RxList<MessagingParticipantModel> participants =
       (Get.arguments as MessagesViewArgumentsModel).participants.obs;
@@ -147,7 +141,7 @@ class MessagesController extends GetxController {
   Future<void> init() async {
     firstCoreId = participants.first.coreId;
     if (chatName.value.isEmpty) {
-      chatName.value = user.value.name;
+      chatName.value = users.first.name;
     }
     _initMessagesArguments();
 
@@ -181,22 +175,16 @@ class MessagesController extends GetxController {
     if (isGroupChat) {
       chatId = participants.first.chatId;
     } else {
-      chatId = user.value.coreId;
+      chatId = users.first.coreId;
     }
   }
 
   Future<void> _getUserContact() async {
-    user.value = await userStateRepository.getUserContact(
+    users.first = await userStateRepository.getUserContact(
       userInstance: UserInstance(
-        coreId: user.value.coreId,
+        coreId: users.first.coreId,
       ),
     );
-    user.refresh();
-  }
-
-  // late UserModel _userModel;
-  UserModel getUser() {
-    return user.value;
   }
 
   @override
@@ -214,7 +202,8 @@ class MessagesController extends GetxController {
   }
 
   Future<void> initMessagingConnection() async {
-    initMessageUseCase.execute(args.connectionType.map(), user.value.coreId);
+    initMessageUseCase.execute(
+        args.connectionType.map(), participants.map((e) => e.coreId).toList());
   }
 
   Future<void> _initMessagesStream() async {
@@ -405,7 +394,8 @@ class MessagesController extends GetxController {
   Future<void> toggleReaction(MessageModel msg, String emoji) async {
     await updateMessageUseCase.execute(
       messageConnectionType: args.connectionType.map(),
-      remoteCoreId: user.value.walletAddress,
+      // TODO: GROUP MESSAGING
+      remoteCoreId: users.first.coreId,
       updateMessageType: UpdateMessageType.updateReactions(
         selectedMessage: msg,
         emoji: emoji,
@@ -416,9 +406,11 @@ class MessagesController extends GetxController {
 
   Future<void> toggleMessageReadStatus({required String messageId}) async {
     await readMessageUseCase.execute(
-        connectionType: args.connectionType.map(),
-        messageId: messageId,
-        remoteCoreId: user.value.walletAddress);
+      connectionType: args.connectionType.map(),
+      messageId: messageId,
+      // TODO: GROUP MESSAGING
+      remoteCoreId: users.first.coreId,
+    );
 
     await markMessagesAsReadById(
       lastReadmessageId: messageId,
@@ -466,7 +458,8 @@ class MessagesController extends GetxController {
         replyTo: replyingTo.value,
         chatId: chatId,
       ),
-      remoteCoreId: user.value.walletAddress,
+      // TODO: GROUP MESSAGING
+      remoteCoreId: users.first.coreId,
     );
 
     textController.clear();
@@ -484,7 +477,8 @@ class MessagesController extends GetxController {
         replyTo: replyingTo.value,
         chatId: chatId,
       ),
-      remoteCoreId: user.value.walletAddress,
+      // TODO: GROUP MESSAGING
+      remoteCoreId: users.first.coreId,
     );
 
     _postMessageSendOperations();
@@ -504,7 +498,8 @@ class MessagesController extends GetxController {
         replyTo: replyingTo.value,
         chatId: chatId,
       ),
-      remoteCoreId: user.value.walletAddress,
+      // TODO: GROUP MESSAGING
+      remoteCoreId: users.first.coreId,
     );
 
     locationMessage.value = null;
@@ -527,7 +522,8 @@ class MessagesController extends GetxController {
         replyTo: replyingTo.value,
         chatId: chatId,
       ),
-      remoteCoreId: user.value.walletAddress,
+      // TODO: GROUP MESSAGING
+      remoteCoreId: users.first.coreId,
     );
 
     _postMessageSendOperations();
@@ -632,7 +628,8 @@ class MessagesController extends GetxController {
   Future<void> deleteSelectedForEveryone() async {
     await deleteMessageUseCase.execute(
       messageConnectionType: args.connectionType.map(),
-      remoteCoreId: user.value.walletAddress,
+      // TODO: GROUP MESSAGING
+      remoteCoreId: users.first.coreId,
       deleteMessageType: DeleteMessageType.forEveryone(
         chatId: chatId,
         selectedMessages: selectedMessages,
@@ -644,7 +641,8 @@ class MessagesController extends GetxController {
   Future<void> deleteSelectedForMe() async {
     await deleteMessageUseCase.execute(
       messageConnectionType: args.connectionType.map(),
-      remoteCoreId: user.value.walletAddress,
+      // TODO: GROUP MESSAGING
+      remoteCoreId: users.first.coreId,
       deleteMessageType: DeleteMessageType.forMe(
         chatId: chatId,
         selectedMessages: selectedMessages,
@@ -770,7 +768,8 @@ class MessagesController extends GetxController {
             replyTo: replyingTo.value,
             chatId: chatId,
           ),
-          remoteCoreId: user.value.walletAddress,
+          // TODO: GROUP MESSAGING
+          remoteCoreId: users.first.coreId,
         );
       }
       mediaGlassmorphicChangeState();
@@ -821,26 +820,21 @@ class MessagesController extends GetxController {
       print("ListLoaded");
 
       chatModel = ChatModel(
-          id: user.value.coreId,
-          name: chatName.value,
-          lastMessage: "",
-          timestamp: DateTime.now(),
-          isOnline: true,
-          isVerified: true,
-          lastReadMessageId: lastReadRemoteMessagesId.value,
-          participants: [
-            MessagingParticipantModel(
-              coreId: user.value.coreId,
-              chatId: chatId,
-            ),
-          ]);
+        id: chatId,
+        name: chatName.value,
+        lastMessage: "",
+        timestamp: DateTime.now(),
+        isOnline: true,
+        isVerified: true,
+        lastReadMessageId: lastReadRemoteMessagesId.value,
+        participants: participants,
+      );
     }
   }
 
   Future<void> saveCoreIdToClipboard() async {
-    final remoteCoreId = user.value.walletAddress;
-    print("Core ID : $remoteCoreId");
-    await _copyToClipboard(remoteCoreId);
+    print("chat Id : $chatId");
+    await _copyToClipboard(chatId);
     _displaySnackbar(LocaleKeys.ShareableQrPage_copiedToClipboardText.tr);
   }
 

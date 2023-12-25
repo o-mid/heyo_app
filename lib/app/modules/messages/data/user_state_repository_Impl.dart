@@ -68,10 +68,12 @@ class UserStateRepositoryImpl implements UserStateRepository {
     final List<UserModel> users = [];
 
     for (final element in userInstances) {
-      participants.add(MessagingParticipantModel(
-        coreId: element.coreId,
-        chatId: userStates.chatId,
-      ));
+      participants.add(
+        MessagingParticipantModel(
+          coreId: element.coreId,
+          chatId: userStates.chatId,
+        ),
+      );
       users.add(await getUserContact(userInstance: element));
     }
 
@@ -95,16 +97,20 @@ class UserStateRepositoryImpl implements UserStateRepository {
         timestamp: lastMessageTimestamp,
         participants: participants,
       );
-      await chatHistoryRepo.updateChat(updatedChatModel);
+      await chatHistoryRepo.addChatToHistory(updatedChatModel);
     } else {
       await chatHistoryRepo.updateChat(
         chatModel.copyWith(
-            name: chatName,
-            lastReadMessageId: lastReadRemoteMessagesId,
-            isOnline: true,
-            scrollPosition: scrollPositionMessagesId,
-            lastMessage: lastMessagePreview,
-            notificationCount: unReadMessagesCount),
+          id: chatId,
+          name: chatName,
+          lastReadMessageId: lastReadRemoteMessagesId,
+          isOnline: true,
+          scrollPosition: scrollPositionMessagesId,
+          lastMessage: lastMessagePreview,
+          notificationCount: unReadMessagesCount,
+          timestamp: lastMessageTimestamp,
+          participants: participants,
+        ),
       );
     }
   }
