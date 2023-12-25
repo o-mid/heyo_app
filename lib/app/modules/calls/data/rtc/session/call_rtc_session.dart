@@ -6,7 +6,6 @@ class CallRTCSession {
   CallRTCSession({
     required this.callId,
     required this.remotePeer,
-    required this.onConnectionFailed,
     required this.isAudioCall,
     required this.onIceCandidate,
   });
@@ -18,7 +17,6 @@ class CallRTCSession {
     onCameraStateChanged?.call();
   }
 
-  Function(CallId, String) onConnectionFailed;
 
   CallId callId;
   RemotePeer remotePeer;
@@ -65,7 +63,7 @@ class CallRTCSession {
         connected?.call();
       }
       if (state == RTCIceConnectionState.RTCIceConnectionStateDisconnected) {
-        onConnectionFailed.call(callId, remotePeer.remoteCoreId);
+        //onConnectionFailed.call(callId, remotePeer.remoteCoreId);
         pc!.restartIce();
       }
     };
@@ -135,16 +133,12 @@ class CallRTCSession {
     MediaStream localStream,
     bool isAudioCall,
     CallId callId,
-    Function(CallId, String) onConnectionFailed,
     Function(RTCIceCandidate candidate, CallRTCSession callRTCSession)?
         onIceCandidate,
   ) async {
     final rtcSession = CallRTCSession(
       callId: callId,
       remotePeer: remotePeer,
-      onConnectionFailed: (id, remote) {
-        onConnectionFailed.call(id, remote);
-      },
       isAudioCall: isAudioCall,
       onIceCandidate: onIceCandidate,
     )..pc=await WebRTCCallConnectionManager.createRTCPeerConnection();
@@ -153,21 +147,7 @@ class CallRTCSession {
     localStream.getTracks().forEach((track) async{
       await rtcSession.pc!.addTrack(track, localStream);
     });
-  /*  rtcSession
-      ..onAddRemoteStream = (stream) {
-        //TODO refactor
-     *//*   onCallHistoryStatusEvent?.call(
-          callRTCSession.callId,
-          CallInfo(remotePeer: remotePeer, isAudioCall: isAudioCall),
-          CallHistoryStatus.connected,
-        );*//*
 
-        //onAddRemoteStream?.call(callRTCSession);
-      }
-      ..onCameraStateChanged = () {
-        //onAudioStateChanged?.call(callRTCSession);
-      };*/
-   // _addSession(callRTCSession);
     return rtcSession;
   }
 }

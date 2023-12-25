@@ -40,8 +40,7 @@ class CallStatusProvider {
   Future<CallRTCSession> makeCall(
       String remoteCoreId,
       MediaStream localStream,
-      bool isAudioCall,
-      Function(CallRTCSession callRTCSession) onAddRemoteStream) async {
+      bool isAudioCall,) async {
     final callId = generateCallId();
     callStatus = CurrentCallStatus.inCall;
     _currentCall = CurrentCall(callId: callId, sessions: []);
@@ -52,9 +51,7 @@ class CallStatusProvider {
       isAudioCall,
       callId,
     );
-    callRTCSession.onAddRemoteStream = (stream) {
-      onAddRemoteStream.call(callRTCSession);
-    };
+
     callSignaling
         .requestCall(callId, callRTCSession.remotePeer, isAudioCall, []);
     final callInfo = CallInfo(
@@ -101,7 +98,6 @@ class CallStatusProvider {
 
   Future<List<CallRTCSession>> makeCallByIncomingCall(
     MediaStream localStream,
-    Function(CallRTCSession callRTCSession) onAddRemoteStream,
   ) async {
     _currentCall = CurrentCall(callId: incomingCalls!.callId, sessions: []);
     callStatus = CurrentCallStatus.inCall;
@@ -117,12 +113,8 @@ class CallStatusProvider {
         element.remotePeer,
         localStream,
         element.isAudioCall,
-        incomingCalls!.callId,
+        incomingCalls!.callId
       );
-      callRTCSession.onAddRemoteStream = (stream) {
-        print("bbbbbbbb instatutsopr");
-        onAddRemoteStream.call(callRTCSession);
-      };
     }
     incomingCalls = null;
 
@@ -169,7 +161,6 @@ class CallStatusProvider {
       localStream,
       isAudioCall,
       connectionId,
-      (callId, remote) => null,
       (candidate, callRTCSession) =>
           {callSignaling.sendCandidate(candidate, callRTCSession)},
     );

@@ -49,7 +49,10 @@ class CallConnectionsHandler {
         ),
         _localStream!,
         callStatusProvider.getCurrentCallSessions().first.isAudioCall,
-        callStatusProvider.incomingCalls!.callId);
+        callStatusProvider.getCurrentCallId());
+    callRTCSession.onAddRemoteStream = (stream) {
+      onAddRemoteStream?.call(callRTCSession);
+    };
     singleCallWebRTCBuilder.requestCall(
       callRTCSession.callId,
       RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
@@ -67,7 +70,10 @@ class CallConnectionsHandler {
   ) async {
     await _createLocalStream();
     final callRTCSession = await callStatusProvider.makeCall(
-        remoteCoreId, _localStream!, isAudioCall,onAddRemoteStream!);
+        remoteCoreId, _localStream!, isAudioCall);
+    callRTCSession.onAddRemoteStream = (stream) {
+      onAddRemoteStream?.call(callRTCSession);
+    };
     return callRTCSession;
   }
 
@@ -84,8 +90,12 @@ class CallConnectionsHandler {
     if (callStatusProvider.incomingCalls?.callId == callId) {
       await _createLocalStream();
       final sessions =
-          await callStatusProvider.makeCallByIncomingCall(_localStream!,onAddRemoteStream!);
+          await callStatusProvider.makeCallByIncomingCall(_localStream!);
+
       for (final element in sessions) {
+        element.onAddRemoteStream = (stream) {
+          onAddRemoteStream?.call(element);
+        };
         unawaited(singleCallWebRTCBuilder.startSession(element));
       }
     }
@@ -121,7 +131,7 @@ class CallConnectionsHandler {
   void onNewMemberEventReceived(CallId callId, dynamic data) async {
     final member = data["newMemer"] as Map<String, dynamic>;
     if (callId == callStatusProvider.getCurrentCall()?.callId) {
-      await callStatusProvider.addSession(
+      CallRTCSession callRTCSession=await callStatusProvider.addSession(
           RemotePeer(
             remoteCoreId: member["member"] as String,
             remotePeerId: null,
@@ -129,6 +139,9 @@ class CallConnectionsHandler {
           _localStream!,
           callStatusProvider.getCurrentCall()!.sessions.first.isAudioCall,
           callId);
+      callRTCSession.onAddRemoteStream = (stream) {
+        onAddRemoteStream?.call(callRTCSession);
+      };
     }
   }
 
