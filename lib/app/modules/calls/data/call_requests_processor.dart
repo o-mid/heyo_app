@@ -83,13 +83,6 @@ class CallRequestsProcessor {
       case CallSignalingCommands.reject:
         {
           callStatusProvider.onRejectReceived(remoteCoreId);
-          callConnectionsHandler.onCallRequestRejected(
-            mapData,
-            RemotePeer(
-              remoteCoreId: remoteCoreId,
-              remotePeerId: remotePeerId,
-            ),
-          );
         }
       case CallSignalingCommands.offer:
         {

@@ -107,6 +107,7 @@ class CallConnectionsHandler {
         await singleCallWebRTCBuilder.reject(callId, element.remotePeer);
       }
       callStatusProvider.close();
+      callStatusProvider.rejectCurrentCall();
     }
   }
 
@@ -126,6 +127,7 @@ class CallConnectionsHandler {
       callStatusProvider.getCurrentCall()!.sessions.clear();
       callStatusProvider.close();
     }
+    callStatusProvider.reset();
   }
 
   void onNewMemberEventReceived(CallId callId, dynamic data) async {
@@ -251,7 +253,7 @@ class CallConnectionsHandler {
       for (final element in callStatusProvider.incomingCalls!.remotePeers) {
         singleCallWebRTCBuilder.reject(callId, element.remotePeer);
       }
-      callStatusProvider.incomingCalls = null;
+      callStatusProvider.rejectCurrentCall();
     }
   }
 
