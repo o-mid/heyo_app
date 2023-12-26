@@ -17,7 +17,6 @@ class CallRTCSession {
     onCameraStateChanged?.call();
   }
 
-
   CallId callId;
   RemotePeer remotePeer;
   Function(MediaStream mediaStream)? onAddRemoteStream;
@@ -47,7 +46,6 @@ class CallRTCSession {
   final List<RTCIceCandidate> remoteCandidates = [];
 
   Future<void> init() async {
-
     pc!.onTrack = (event) {
       if (event.track.kind == 'video') {
         _stream = event.streams[0];
@@ -100,7 +98,16 @@ class CallRTCSession {
   }
 
   Future<void> dispose() async {
+    onAddRemoteStream = null;
+    onRemoveRemoteStream = null;
+    onCameraStateChanged = null;
+    _stream = null;
+    onIceCandidate = null;
+    connected = null;
+    accepted = null;
     await _pc!.dispose();
+    await _pc!.close();
+    _pc = null;
   }
 
   Future<RTCSessionDescription> onOfferReceived(
@@ -141,10 +148,9 @@ class CallRTCSession {
       remotePeer: remotePeer,
       isAudioCall: isAudioCall,
       onIceCandidate: onIceCandidate,
-    )..pc=await WebRTCCallConnectionManager.createRTCPeerConnection();
+    )..pc = await WebRTCCallConnectionManager.createRTCPeerConnection();
 
-
-    localStream.getTracks().forEach((track) async{
+    localStream.getTracks().forEach((track) async {
       await rtcSession.pc!.addTrack(track, localStream);
     });
 
