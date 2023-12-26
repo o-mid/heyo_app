@@ -55,7 +55,7 @@ extension UserModelToIncomingCallModel on UserModel {
   IncomingCallModel toIncomingCallModel() {
     return IncomingCallModel(
       name: name,
-      iconUrl: iconUrl,
+      iconUrl: iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
       coreId: coreId,
     );
   }

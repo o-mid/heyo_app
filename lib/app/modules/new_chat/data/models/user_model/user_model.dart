@@ -11,7 +11,7 @@ abstract class UserModel with _$UserModel {
   const factory UserModel({
     required String coreId,
     required String name,
-    required String iconUrl,
+    required String? iconUrl,
     required String walletAddress,
     @Default('') String nickname,
     @Default(false) bool isOnline,
