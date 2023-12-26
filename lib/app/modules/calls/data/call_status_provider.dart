@@ -28,6 +28,8 @@ class CallStatusProvider {
   Function(CallId callId, String remoteCoreId, CallHistoryStatus status,
       bool? isAudioCall)? onCallHistoryStatusEvent;
 
+ Function(String coreId)? onSessionRemoved;
+
   CallRTCSession? getConnection(String remoteCoreId, CallId callId) {
     for (final value in _currentCall!.sessions) {
       if (value.callId == callId &&
@@ -152,10 +154,6 @@ class CallStatusProvider {
     return _currentCall;
   }
 
-  void close() {
-    callStatus = CurrentCallStatus.none;
-    _currentCall = null;
-  }
 
   Future<CallRTCSession> addSession(
     RemotePeer remotePeer,
@@ -176,6 +174,8 @@ class CallStatusProvider {
   }
 
   void onRejectReceived(String remoteCoreId) {
+    onSessionRemoved?.call(remoteCoreId);
+
     if (callStatus == CurrentCallStatus.inComingCall) {
       incomingCalls!.remotePeers.removeWhere(
         (element) => element.remotePeer.remoteCoreId == remoteCoreId,
@@ -200,14 +200,14 @@ class CallStatusProvider {
       if (_currentCall!.sessions.isEmpty) {
         onCallStateChange?.call(getCurrentCallId(), [], CurrentCallStatus.end);
         onCallHistoryStatusEvent?.call(
-            getCurrentCallId(), remoteCoreId, CallHistoryStatus.left, null);
+            getCurrentCallId(), remoteCoreId, CallHistoryStatus.left, null,);
         onCallHistoryStatusEvent?.call(
-            getCurrentCallId(), remoteCoreId, CallHistoryStatus.end, null);
+            getCurrentCallId(), remoteCoreId, CallHistoryStatus.end, null,);
         _currentCall = null;
         callStatus = CurrentCallStatus.none;
       } else {
         onCallHistoryStatusEvent?.call(
-            getCurrentCallId(), remoteCoreId, CallHistoryStatus.left, null);
+            getCurrentCallId(), remoteCoreId, CallHistoryStatus.left, null,);
       }
     }
   }

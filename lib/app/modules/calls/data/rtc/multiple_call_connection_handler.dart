@@ -25,6 +25,8 @@ class CallConnectionsHandler {
   MediaStream? _localStream;
   Function(MediaStream stream)? onLocalStream;
   Function(CallRTCSession callRTCSession)? onAddRemoteStream;
+  Function(String remoteCoreId)? onSessionRemoved;
+
 
   Function(AllParticipantModel participate)? onChangeParticipateStream;
   Function(CallRTCSession callRTCSession)? onAudioStateChanged;
@@ -74,6 +76,9 @@ class CallConnectionsHandler {
     callRTCSession.onAddRemoteStream = (stream) {
       onAddRemoteStream?.call(callRTCSession);
     };
+    callStatusProvider.onSessionRemoved=(coreId){
+      onSessionRemoved?.call(coreId);
+    };
     return callRTCSession;
   }
 
@@ -91,7 +96,9 @@ class CallConnectionsHandler {
       await _createLocalStream();
       final sessions =
           await callStatusProvider.makeCallByIncomingCall(_localStream!);
-
+      callStatusProvider.onSessionRemoved=(coreId){
+        onSessionRemoved?.call(coreId);
+      };
       for (final element in sessions) {
         element.onAddRemoteStream = (stream) {
           onAddRemoteStream?.call(element);
@@ -106,7 +113,6 @@ class CallConnectionsHandler {
       for (final element in callStatusProvider.getCurrentCallSessions()) {
         await singleCallWebRTCBuilder.reject(callId, element.remotePeer);
       }
-      callStatusProvider.close();
       callStatusProvider.rejectCurrentCall();
     }
   }
@@ -119,13 +125,11 @@ class CallConnectionsHandler {
       await _localStream?.dispose();
       _localStream = null;
     }
-
     if (callStatusProvider.getCurrentCall() != null) {
       for (final element in callStatusProvider.getCurrentCall()!.sessions) {
         await element.dispose();
       }
       callStatusProvider.getCurrentCall()!.sessions.clear();
-      callStatusProvider.close();
     }
     callStatusProvider.reset();
   }
@@ -213,40 +217,6 @@ class CallConnectionsHandler {
 
   void peerClosedCamera(String sessionId) {}
 
-  Future<void> onCallRequestRejected(mapData, RemotePeer remotePeer) async {
-    String callId = mapData[CALL_ID] as String;
-    if (callStatusProvider.getCurrentCall() != null) {
-      final callRTCSession =
-          callStatusProvider.getConnection(remotePeer.remoteCoreId, callId);
-      if (callRTCSession != null) {
-        //TODO update based on..
-
-        await callRTCSession.dispose();
-        callStatusProvider.getCurrentCall()?.sessions.removeWhere(
-              (element) =>
-                  element.remotePeer.remoteCoreId == remotePeer.remoteCoreId,
-            );
-        onCallStateChange?.call(
-          callId,
-          [
-            CallInfo(
-              remotePeer: callRTCSession.remotePeer,
-              isAudioCall: callRTCSession.isAudioCall,
-            ),
-          ],
-          CallState.callStateBye,
-        );
-      }
-    }
-    if (callStatusProvider.incomingCalls != null) {
-      onCallStateChange?.call(
-        callId,
-        [callStatusProvider.incomingCalls!.remotePeers.first],
-        CallState.callStateBye,
-      );
-      callStatusProvider.incomingCalls = null;
-    }
-  }
 
   void rejectIncomingCall(String callId) {
     if (callStatusProvider.incomingCalls?.callId == callId) {

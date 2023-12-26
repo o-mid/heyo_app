@@ -203,7 +203,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     int index,
     ConnectedParticipantModel connectedParticipantModel,
   ) async {
-    if (connectedParticipantModel.rtcVideoRenderer == null && callStream.remoteStream!=null) {
+    if (connectedParticipantModel.rtcVideoRenderer == null &&
+        callStream.remoteStream != null) {
       final renderer = RTCVideoRenderer();
       await renderer.initialize();
       renderer.srcObject = callStream.remoteStream;
@@ -217,26 +218,31 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       );
       connectedRemoteParticipates[index] = remoteParticipate;
     } else {
-      connectedRemoteParticipates[index] =connectedRemoteParticipates[index].copyWith(videoMode: (!callStream.isAudioCall).obs);
+      connectedRemoteParticipates[index] = connectedRemoteParticipates[index]
+          .copyWith(videoMode: (!callStream.isAudioCall).obs);
     }
   }
 
   Future<void> createConnectedParticipantModel(CallStream callStream) async {
-    print("bbbbbbbb createConnectedParticipantModel : ${callStream.isAudioCall} : ${callStream.remoteStream}");
+    print(
+        "bbbbbbbb createConnectedParticipantModel : ${callStream.isAudioCall} : ${callStream.remoteStream}");
     RTCVideoRenderer? renderer;
     if (callStream.remoteStream != null) {
       renderer = RTCVideoRenderer();
       await renderer.initialize();
       renderer.srcObject = callStream.remoteStream;
     }
-    connectedRemoteParticipates.add( ConnectedParticipantModel(
-      audioMode: true.obs,
-      videoMode: (renderer==null)? false.obs: (!callStream.isAudioCall).obs,
-      coreId: callStream.coreId,
-      name: callStream.coreId.shortenCoreId,
-      stream: callStream.remoteStream,
-      rtcVideoRenderer: renderer,
-    ),);
+    connectedRemoteParticipates.add(
+      ConnectedParticipantModel(
+        audioMode: true.obs,
+        videoMode:
+            (renderer == null) ? false.obs : (!callStream.isAudioCall).obs,
+        coreId: callStream.coreId,
+        name: callStream.coreId.shortenCoreId,
+        stream: callStream.remoteStream,
+        rtcVideoRenderer: renderer,
+      ),
+    );
   }
 
   Future<void> onNewParticipateReceived(CallStream callStream) async {
@@ -277,8 +283,9 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     final callStreams = await callRepository.getCallStreams();
     print("bbbbbbbb hbgkbj ${callStreams.length} : ${callRepository.hashCode}");
 
-    callRepository.onCallStreamReceived = (callStateView) {
-      debugPrint('bbbbbbbb onAddCallStream : $callStateView : ${callStateView.remoteStream} : ${callRepository.hashCode}');
+    callRepository..onCallStreamReceived = (callStateView) {
+      debugPrint(
+          'bbbbbbbb onAddCallStream : $callStateView : ${callStateView.remoteStream} : ${callRepository.hashCode}');
       //print("calll ${_remoteRenderers} : $stream");
       //TODO refactor this if related to the call state
       if (!isInCall.value) {
@@ -288,6 +295,15 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       }
 
       onNewParticipateReceived(callStateView);
+    }
+    ..onRemoveStream = (coreId) {
+      for (var index = 0; index < connectedRemoteParticipates.length; index++) {
+        if (connectedRemoteParticipates[index].coreId == coreId) {
+          connectedRemoteParticipates
+              .remove(connectedRemoteParticipates[index]);
+          break;
+        }
+      }
     };
 
     for (final element in callStreams) {

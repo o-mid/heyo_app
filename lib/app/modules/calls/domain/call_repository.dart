@@ -7,6 +7,7 @@ import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/
 abstract class CallRepository {
   MediaStream? getLocalStream();
 
+  Function(String coreId)? onRemoveStream;
   Function(MediaStream stream)? onLocalStream;
 
   Future<List<CallStream>> getCallStreams();
