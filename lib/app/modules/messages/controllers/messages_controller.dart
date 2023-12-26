@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'dart:io';
+import 'dart:math';
 
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/multi_media_message_model.dart';
@@ -49,6 +50,7 @@ import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:uuid/uuid.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import '../connection/wifi_direct_connection_controller.dart';
@@ -155,7 +157,6 @@ class MessagesController extends GetxController {
     await _getMessages();
 
     await _initMessagesStream();
-
     // Close emoji picker when keyboard opens
     _handleKeyboardVisibilityChanges();
 
@@ -211,6 +212,10 @@ class MessagesController extends GetxController {
 
     _messagesStreamSubscription = (messagesStream).listen((newMessages) {
       messages.value = newMessages;
+
+      // remove adding mock messages
+      _addMockMessages();
+
       messages.refresh();
     });
   }
@@ -806,16 +811,6 @@ class MessagesController extends GetxController {
       await jumpToMessage(messageId: chatModel!.scrollPosition);
       //isListLoaded.value = true;
     } else {
-      // uncomment the following lines if you want to add mock Messages
-      // and animate To the Bottom of list
-
-      // await _addMockMessages();
-      // WidgetsBinding.instance.scheduleFrameCallback((_) {
-      //   animateToBottom(
-      //     duration: TRANSITIONS.messagingPage_getAllMsgsDurtion,
-      //     curve: TRANSITIONS.messagingPage_getAllMsgscurve,
-      //   );
-      // });
       isListLoaded.value = true;
       print("ListLoaded");
 
@@ -922,5 +917,31 @@ class MessagesController extends GetxController {
         lastMessagePreview: messages.last.getMessagePreview(),
       ),
     );
+  }
+
+  Future<void> _addMockMessages() async {
+    var random = Random();
+    final mockMessages = List.generate(30, (index) {
+      var participantIndex = random.nextInt(participants.length);
+      var participant = participants[participantIndex];
+      final messageId = Uuid().v4();
+      var timestamp = DateTime.now().subtract(Duration(minutes: index));
+      return TextMessageModel(
+        messageId: messageId,
+        chatId: chatId,
+        timestamp: timestamp,
+        senderName: participant.coreId.shortenCoreId, // Ensure this returns a valid string
+        senderAvatar: participant.coreId, // Ensure this returns a valid string or URL
+        status: MessageStatus.delivered,
+        isFromMe: false,
+
+        text:
+            "This is a mock message from ${participant.coreId.shortenCoreId}.\nchat id: $chatId\ntimestamp ${timestamp}",
+      );
+    });
+
+    messages
+      ..addAll(mockMessages.reversed)
+      ..refresh();
   }
 }

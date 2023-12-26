@@ -115,7 +115,7 @@ class _DefaultAppBar extends StatelessWidget {
               children: [
                 _BuildChatName(
                   name: controller.chatName.value,
-                  isVerified: controller.users.first.isVerified,
+                  isVerified: controller.users.first.isVerified && !controller.isGroupChat,
                 ),
                 _BuildUserStatus(
                   isGroupChat: controller.isGroupChat,

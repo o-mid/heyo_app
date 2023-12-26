@@ -274,41 +274,39 @@ class NewGroupChatController extends GetxController {
   Future<void> _addMockUsers() async {
     final _mockUsers = <UserModel>[
       UserModel(
-        name: 'Crapps',
-        walletAddress: 'CB92...969A',
+        name: 'Omid',
+        walletAddress: 'CB92969A',
         coreId: 'CB92969A',
-        nickname: 'Nickname',
       ),
       UserModel(
-        name: 'Fancy',
-        walletAddress: 'CB21...C325',
-        coreId: 'CB21C325',
+        name: 'Farzaam',
+        walletAddress: 'CB62C325',
+        coreId: 'CB62C325',
         isOnline: true,
         isVerified: true,
       ),
       UserModel(
-        name: 'manly',
-        walletAddress: 'CB42...324E',
-        coreId: 'CB42324E',
+        name: 'Ali',
+        walletAddress: 'CB423H4E',
+        coreId: 'CB423H4E',
         isOnline: true,
       ),
       UserModel(
-        name: 'jack',
-        walletAddress: 'CB92...969A',
-        coreId: 'CB43269A',
-        nickname: 'Nickname',
+        name: 'Saeed',
+        walletAddress: 'CB23969A',
+        coreId: 'CB23969A',
       ),
       UserModel(
-        name: 'james',
-        walletAddress: 'CB21...C325',
-        coreId: 'CBwe2325',
+        name: 'Mohammad',
+        walletAddress: 'CB21C391',
+        coreId: 'CB21C391',
         isOnline: true,
         isVerified: true,
       ),
       UserModel(
-        name: 'Aren',
-        walletAddress: 'CB42...324E',
-        coreId: 'CB4dsw24E',
+        name: 'Hoorad',
+        walletAddress: 'CB51324E',
+        coreId: 'CB51324E',
         isOnline: true,
       ),
     ].obs;
@@ -322,11 +320,4 @@ class NewGroupChatController extends GetxController {
       }
     });
   }
-
-  List<String> mockIconUrls = [
-    'https://avatars.githubusercontent.com/u/6644146?v=4',
-    'https://avatars.githubusercontent.com/u/7844146?v=4',
-    'https://avatars.githubusercontent.com/u/7847725?v=4',
-    'https://avatars.githubusercontent.com/u/9947725?v=4',
-  ];
 }

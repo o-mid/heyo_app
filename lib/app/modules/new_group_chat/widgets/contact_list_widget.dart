@@ -31,6 +31,7 @@ class ContactListWidget extends StatelessWidget {
           ListView.separated(
             shrinkWrap: true,
             itemCount: contacts.length,
+            scrollDirection: Axis.vertical,
             separatorBuilder: (_, __) =>
                 searchMode ? CustomSizes.mediumSizedBoxHeight : const SizedBox.shrink(),
             itemBuilder: (context, index) => _buildContactListItem(index),
