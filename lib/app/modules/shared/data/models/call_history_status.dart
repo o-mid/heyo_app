@@ -6,9 +6,11 @@ class CallHistoryState {
     required this.callId,
     required this.remote,
     required this.callHistoryStatus,
+    required this.isAudioCall
   });
 
   final String callId;
-  final CallInfo remote;
+  final String remote;
   final CallHistoryStatus callHistoryStatus;
+  bool? isAudioCall;
 }

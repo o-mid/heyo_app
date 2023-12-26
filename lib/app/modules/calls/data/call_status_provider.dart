@@ -8,6 +8,7 @@ import 'package:heyo/app/modules/web-rtc/web_rtc_call_connection_manager.dart';
 enum CurrentCallStatus {
   inComingCall,
   inCall,
+  end,
   none,
 }
 
@@ -22,10 +23,10 @@ class CallStatusProvider {
   CallSignaling callSignaling;
   CurrentCallStatus callStatus = CurrentCallStatus.none;
   Function(CallId callId, List<CallInfo> callInfo, CurrentCallStatus state)?
-      onCallStateChange;
+  onCallStateChange;
 
-  Function(CallId callId, CallInfo callInfo, CallHistoryStatus status)?
-      onCallHistoryStatusEvent;
+  Function(CallId callId, String remoteCoreId, CallHistoryStatus status, bool? isAudioCall)?
+  onCallHistoryStatusEvent;
 
   CallRTCSession? getConnection(String remoteCoreId, CallId callId) {
     for (final value in _currentCall!.sessions) {
@@ -37,8 +38,7 @@ class CallStatusProvider {
     return null;
   }
 
-  Future<CallRTCSession> makeCall(
-      String remoteCoreId,
+  Future<CallRTCSession> makeCall(String remoteCoreId,
       MediaStream localStream,
       bool isAudioCall,) async {
     final callId = generateCallId();
@@ -59,7 +59,8 @@ class CallStatusProvider {
       isAudioCall: isAudioCall,
     );
 
-    onCallHistoryStatusEvent?.call(callId, callInfo, CallHistoryStatus.calling);
+    onCallHistoryStatusEvent?.call(
+        callId, remoteCoreId, CallHistoryStatus.calling, isAudioCall,);
 
     return callRTCSession;
   }
@@ -79,7 +80,7 @@ class CallStatusProvider {
       remotePeers.add(
         CallInfo(
           remotePeer:
-              RemotePeer(remotePeerId: null, remoteCoreId: element as String),
+          RemotePeer(remotePeerId: null, remoteCoreId: element as String),
           isAudioCall: isAudioCall,
         ),
       );
@@ -97,8 +98,7 @@ class CallStatusProvider {
   }
 
   Future<List<CallRTCSession>> makeCallByIncomingCall(
-    MediaStream localStream,
-  ) async {
+      MediaStream localStream,) async {
     _currentCall = CurrentCall(callId: incomingCalls!.callId, sessions: []);
     callStatus = CurrentCallStatus.inCall;
 
@@ -109,12 +109,8 @@ class CallStatusProvider {
 
       /*    unawaited(singleCallWebRTCBuilder.startSession(
           ,),);*/
-      final callRTCSession = await addSession(
-        element.remotePeer,
-        localStream,
-        element.isAudioCall,
-        incomingCalls!.callId
-      );
+      final callRTCSession = await addSession(element.remotePeer, localStream,
+          element.isAudioCall, incomingCalls!.callId);
     }
     incomingCalls = null;
 
@@ -123,8 +119,8 @@ class CallStatusProvider {
 
   void removeSession(CallRTCSession callRTCSession) {
     _currentCall!.sessions.removeWhere(
-      (element) =>
-          callRTCSession.remotePeer.remoteCoreId ==
+          (element) =>
+      callRTCSession.remotePeer.remoteCoreId ==
           element.remotePeer.remoteCoreId,
     );
   }
@@ -134,7 +130,11 @@ class CallStatusProvider {
   }
 
   CallId getCurrentCallId() {
-    return _currentCall!.callId;
+    if (callStatus == CurrentCallStatus.inCall) {
+      return _currentCall!.callId;
+    } else {
+      return incomingCalls!.callId;
+    }
   }
 
   List<CallRTCSession> getCurrentCallSessions() {
@@ -150,21 +150,44 @@ class CallStatusProvider {
     _currentCall = null;
   }
 
-  Future<CallRTCSession> addSession(
-    RemotePeer remotePeer,
-    MediaStream localStream,
-    bool isAudioCall,
-    String connectionId,
-  ) async {
+  Future<CallRTCSession> addSession(RemotePeer remotePeer,
+      MediaStream localStream,
+      bool isAudioCall,
+      String connectionId,) async {
     final callRTCSession = await CallRTCSession.createCallRTCSession(
       remotePeer,
       localStream,
       isAudioCall,
       connectionId,
-      (candidate, callRTCSession) =>
-          {callSignaling.sendCandidate(candidate, callRTCSession)},
+          (candidate, callRTCSession) =>
+      {callSignaling.sendCandidate(candidate, callRTCSession)},
     );
     _addSession(callRTCSession);
     return callRTCSession;
+  }
+
+  void onRejectReceived(String remoteCoreId) {
+    if (callStatus == CurrentCallStatus.inComingCall) {
+      incomingCalls!.remotePeers.removeWhere(
+            (element) => element.remotePeer.remoteCoreId == remoteCoreId,);
+      if (incomingCalls!.remotePeers.isEmpty) {
+        onCallStateChange?.call(getCurrentCallId(), [], CurrentCallStatus.end);
+        onCallHistoryStatusEvent?.call(getCurrentCallId(),remoteCoreId,CallHistoryStatus.left,null);
+        onCallHistoryStatusEvent?.call(getCurrentCallId(),remoteCoreId,CallHistoryStatus.end,null);
+      }else {
+        onCallHistoryStatusEvent?.call(getCurrentCallId(),remoteCoreId,CallHistoryStatus.left,null);
+      }
+    } else if (callStatus == CurrentCallStatus.inCall) {
+      //TODO remove should be expose
+      _currentCall!.sessions.removeWhere(
+            (element) => element.remotePeer.remoteCoreId == remoteCoreId,);
+      if ( _currentCall!.sessions.isEmpty) {
+        onCallStateChange?.call(getCurrentCallId(), [], CurrentCallStatus.end);
+        onCallHistoryStatusEvent?.call(getCurrentCallId(),remoteCoreId,CallHistoryStatus.left,null);
+        onCallHistoryStatusEvent?.call(getCurrentCallId(),remoteCoreId,CallHistoryStatus.end,null);
+      }else {
+        onCallHistoryStatusEvent?.call(getCurrentCallId(),remoteCoreId,CallHistoryStatus.left,null);
+      }
+    }
   }
 }

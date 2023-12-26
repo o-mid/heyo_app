@@ -35,17 +35,25 @@ class CallStatusObserver extends GetxController {
 
   void observeCallStatus() {
     callStatusProvider
-      ..onCallHistoryStatusEvent = (callId, call, state) async {
+      ..onCallHistoryStatusEvent = (callId, call, state,isAudioCall) async {
         callHistoryState.value = CallHistoryState(
           callId: callId,
           remote: call,
           callHistoryStatus: state,
+          isAudioCall: isAudioCall
         );
       }
       ..onCallStateChange = (callId, calls, state) async {
         print("Call State changed, state is: $state");
         if(state==CurrentCallStatus.inComingCall){
           await handleCallStateRinging(callId: callId, calls: calls);
+        }
+        if(state==CurrentCallStatus.end){
+          if (Get.currentRoute == Routes.CALL) {
+            Get.until((route) => Get.currentRoute != Routes.CALL);
+          } else if (Get.currentRoute == Routes.INCOMING_CALL) {
+            Get.until((route) => Get.currentRoute != Routes.INCOMING_CALL);
+          }
         }
       /*  if (state == CallState.callStateRinging) {
 

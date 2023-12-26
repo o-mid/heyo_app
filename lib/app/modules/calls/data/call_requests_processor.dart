@@ -50,22 +50,39 @@ class CallRequestsProcessor {
         //TODO send busy or unavailble
       }
     } else {
-      if (callStatusProvider.callStatus == CurrentCallStatus.inCall) {
-        handleCallRequestProcess(
-            signalType, mapData, data, callId, remoteCoreId, remotePeerId,);
-      } else if (callStatusProvider.callStatus ==
-          CurrentCallStatus.inComingCall) {
-        handleCallRequestProcess(
-            signalType, mapData, data, callId, remoteCoreId, remotePeerId,);
+      if(callId == callStatusProvider.getCurrentCallId()){
+        if (callStatusProvider.callStatus == CurrentCallStatus.inCall) {
+          handleCallRequestProcess(
+            signalType,
+            mapData,
+            data,
+            callId,
+            remoteCoreId,
+            remotePeerId,
+          );
+        } else if (callStatusProvider.callStatus ==
+            CurrentCallStatus.inComingCall) {
+          handleCallRequestProcess(
+            signalType,
+            mapData,
+            data,
+            callId,
+            remoteCoreId,
+            remotePeerId,
+          );
+        }
+      }else {
+        //TODO send busy or unavailble
       }
     }
   }
 
   handleCallRequestProcess(signalType, Map<String, dynamic> mapData, data,
-      String callId, String remoteCoreId,String remotePeerId) {
+      String callId, String remoteCoreId, String remotePeerId) {
     switch (signalType) {
       case CallSignalingCommands.reject:
         {
+          callStatusProvider.onRejectReceived(remoteCoreId);
           callConnectionsHandler.onCallRequestRejected(
             mapData,
             RemotePeer(
