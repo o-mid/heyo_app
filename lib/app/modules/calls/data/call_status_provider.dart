@@ -69,7 +69,14 @@ class CallStatusProvider {
       CallHistoryStatus.calling,
       isAudioCall,
     );
-
+    callRTCSession.connected=(){
+      onCallHistoryStatusEvent?.call(
+        getCurrentCallId(),
+        callRTCSession.remotePeer.remoteCoreId,
+        CallHistoryStatus.connected,
+        isAudioCall,
+      );
+    };
     return callRTCSession;
   }
 
@@ -98,6 +105,13 @@ class CallStatusProvider {
 
     onCallStateChange?.call(
         callId, remotePeers, CurrentCallStatus.inComingCall);
+    onCallHistoryStatusEvent?.call(
+      callId,
+      remotePeer.remoteCoreId,
+      CallHistoryStatus.incoming,
+      isAudioCall,
+    );
+
 /*
     onCallHistoryStatusEvent?.call(
       callId, callInfo, CallHistoryStatus.incoming,);
@@ -120,6 +134,14 @@ class CallStatusProvider {
           ,),);*/
       final callRTCSession = await addSession(element.remotePeer, localStream,
           element.isAudioCall, incomingCalls!.callId);
+      callRTCSession.connected=(){
+        onCallHistoryStatusEvent?.call(
+          getCurrentCallId(),
+          callRTCSession.remotePeer.remoteCoreId,
+          CallHistoryStatus.connected,
+          element.isAudioCall,
+        );
+      };
     }
     incomingCalls = null;
 

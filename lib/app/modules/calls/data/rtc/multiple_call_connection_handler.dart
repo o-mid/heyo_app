@@ -72,7 +72,7 @@ class CallConnectionsHandler {
   ) async {
     await _createLocalStream();
     final callRTCSession = await callStatusProvider.makeCall(
-        remoteCoreId, _localStream!, isAudioCall);
+        remoteCoreId, _localStream!, isAudioCall,);
     callRTCSession.onAddRemoteStream = (stream) {
       onAddRemoteStream?.call(callRTCSession);
     };
