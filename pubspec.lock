@@ -694,9 +694,11 @@ packages:
   flutter_p2p_communicator:
     dependency: "direct main"
     description:
-      path: "../flutter_p2p_communicator"
-      relative: true
-    source: path
+      path: "."
+      ref: d370bd9e
+      resolved-ref: d370bd9eea26c2941c77bf6c049e6b31efcc861f
+      url: "git@ssh.git.energy:corepass/flutter_p2p_communicator.git"
+    source: git
     version: "1.16.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive

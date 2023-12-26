@@ -294,7 +294,6 @@ void _openAppBarActionBottomSheet({required UserModel userModel}) {
                   arguments: AddContactsViewArgumentsModel(
                     //  user: userModel,
                     coreId: userModel.coreId,
-                    iconUrl: userModel.coreId,
                   ),
                 );
               },

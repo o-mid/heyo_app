@@ -1,3 +1,3 @@
 enum NotificationType {
-  missed_call;
+  missed_call,start_call;
 }

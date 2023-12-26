@@ -35,11 +35,20 @@ class AppNotificationProvider extends NotificationProvider {
     if (signature == null) return false;
     print("$fcmToken");
     print("$signature");
+
+    final corePassSignature=await libP2PStorageProvider.getSignature();
+    final coreId=await libP2PStorageProvider.getCorePassCoreId();
+    print("$coreId");
+    print("$corePassSignature");
+
+
     final response = await networkRequest
         .post(path: 'notification-service/user/register', data: {
-      'fcmToken': fcmToken,
-      'signature': signature,
-    });
+      'fcmToken': "$fcmToken",
+      'signature': "$signature",
+      'coreId' : "$coreId",
+      'coreSignature':"$corePassSignature",
+    },);
     
     return response.isSuccess();
   }
@@ -54,7 +63,7 @@ class AppNotificationProvider extends NotificationProvider {
       'coreId': remoteDelegatedCoreId,
       'notificationType': notificationType.name.toUpperCase(),
       'senderUsername': 'Johnathan Baby',
-    });
+    },);
     return result.isSuccess();
   }
 }
