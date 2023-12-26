@@ -7,9 +7,13 @@ import 'package:heyo/app/modules/calls/call_history_detail/controllers/models/ca
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_availability_use_case.dart';
+import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/routes/app_pages.dart';
+import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 class CallHistoryDetailController extends GetxController {
@@ -76,6 +80,69 @@ class CallHistoryDetailController extends GetxController {
         ),
       ],
       borderRadius: 8,
+    );
+  }
+
+  Future<void> openAppBarActionBottomSheet({
+    required CallHistoryDetailParticipantModel participant,
+  }) async {
+    await Get.bottomSheet(
+      Padding(
+        padding: CustomSizes.iconListPadding,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+
+                final userModel = participant.mapToUserModel();
+
+                Get.toNamed(
+                  Routes.ADD_CONTACTS,
+                  arguments: AddContactsViewArgumentsModel(
+                    //  user: userModel,
+                    coreId: userModel.coreId,
+                    iconUrl: userModel.iconUrl,
+                  ),
+                );
+              },
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: COLORS.kBrightBlueColor,
+                    ),
+                    child: Assets.svg.addToContactsIcon.svg(
+                      width: 20,
+                      height: 20,
+                    ),
+                  ),
+                  CustomSizes.mediumSizedBoxWidth,
+                  Text(
+                    LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
+                    style: TEXTSTYLES.kLinkBig.copyWith(
+                      color: COLORS.kDarkBlueColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            CustomSizes.mediumSizedBoxHeight,
+          ],
+        ),
+      ),
+      backgroundColor: COLORS.kWhiteColor,
+      isDismissible: true,
+      enableDrag: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
     );
   }
 
