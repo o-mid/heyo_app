@@ -25,3 +25,14 @@ extension UserModelMapper on UserModel {
     );
   }
 }
+
+extension CallHistoryParticipantMapper on CallHistoryDetailParticipantModel {
+  UserModel mapToUserModel() {
+    return UserModel(
+      name: name,
+      coreId: coreId,
+      walletAddress: coreId,
+      iconUrl: '',
+    );
+  }
+}

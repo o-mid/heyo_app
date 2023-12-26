@@ -31,7 +31,8 @@ class UserStateRepositoryImpl implements UserStateRepository {
     if (createdUser == null) {
       createdUser = UserModel(
         coreId: coreId,
-        iconUrl: iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
+        iconUrl:
+            iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
         name: coreId.shortenCoreId,
         isOnline: true,
         isContact: false,
@@ -73,7 +74,8 @@ class UserStateRepositoryImpl implements UserStateRepository {
     if (chatModel == null) {
       ChatModel updatedChatModel = ChatModel(
         id: chatId,
-        icon: user.iconUrl,
+        icon: user.iconUrl ??
+            "https://avatars.githubusercontent.com/u/2345136?v=4",
         name: user.name,
         lastReadMessageId: lastReadRemoteMessagesId,
         isOnline: true,

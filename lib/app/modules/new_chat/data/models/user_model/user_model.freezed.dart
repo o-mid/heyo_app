@@ -22,7 +22,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) {
 mixin _$UserModel {
   String get coreId => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  String get iconUrl => throw _privateConstructorUsedError;
+  String? get iconUrl => throw _privateConstructorUsedError;
   String get walletAddress => throw _privateConstructorUsedError;
   String get nickname => throw _privateConstructorUsedError;
   bool get isOnline => throw _privateConstructorUsedError;
@@ -44,7 +44,7 @@ abstract class $UserModelCopyWith<$Res> {
   $Res call(
       {String coreId,
       String name,
-      String iconUrl,
+      String? iconUrl,
       String walletAddress,
       String nickname,
       bool isOnline,
@@ -68,7 +68,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
   $Res call({
     Object? coreId = null,
     Object? name = null,
-    Object? iconUrl = null,
+    Object? iconUrl = freezed,
     Object? walletAddress = null,
     Object? nickname = null,
     Object? isOnline = null,
@@ -85,10 +85,10 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      iconUrl: null == iconUrl
+      iconUrl: freezed == iconUrl
           ? _value.iconUrl
           : iconUrl // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       walletAddress: null == walletAddress
           ? _value.walletAddress
           : walletAddress // ignore: cast_nullable_to_non_nullable
@@ -128,7 +128,7 @@ abstract class _$$UserModelImplCopyWith<$Res>
   $Res call(
       {String coreId,
       String name,
-      String iconUrl,
+      String? iconUrl,
       String walletAddress,
       String nickname,
       bool isOnline,
@@ -150,7 +150,7 @@ class __$$UserModelImplCopyWithImpl<$Res>
   $Res call({
     Object? coreId = null,
     Object? name = null,
-    Object? iconUrl = null,
+    Object? iconUrl = freezed,
     Object? walletAddress = null,
     Object? nickname = null,
     Object? isOnline = null,
@@ -167,10 +167,10 @@ class __$$UserModelImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      iconUrl: null == iconUrl
+      iconUrl: freezed == iconUrl
           ? _value.iconUrl
           : iconUrl // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       walletAddress: null == walletAddress
           ? _value.walletAddress
           : walletAddress // ignore: cast_nullable_to_non_nullable
@@ -222,7 +222,7 @@ class _$UserModelImpl implements _UserModel {
   @override
   final String name;
   @override
-  final String iconUrl;
+  final String? iconUrl;
   @override
   final String walletAddress;
   @override
@@ -291,7 +291,7 @@ abstract class _UserModel implements UserModel {
   const factory _UserModel(
       {required final String coreId,
       required final String name,
-      required final String iconUrl,
+      required final String? iconUrl,
       required final String walletAddress,
       final String nickname,
       final bool isOnline,
@@ -307,7 +307,7 @@ abstract class _UserModel implements UserModel {
   @override
   String get name;
   @override
-  String get iconUrl;
+  String? get iconUrl;
   @override
   String get walletAddress;
   @override
