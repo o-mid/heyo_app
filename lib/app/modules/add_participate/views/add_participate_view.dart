@@ -27,7 +27,7 @@ class AddParticipateView extends GetView<AddParticipateController> {
               ListView(
                 children: [
                   CustomSizes.largeSizedBoxHeight,
-                  TextfieldAddParticipate(controller),
+                  const TextfieldAddParticipate(),
                   if (controller.searchItems.isEmpty)
                     EmptyUsersBody(
                       infoText: LocaleKeys.newChat_emptyStateTitleContacts.tr,

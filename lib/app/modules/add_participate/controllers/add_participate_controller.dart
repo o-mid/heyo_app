@@ -24,7 +24,7 @@ class AddParticipateController extends GetxController {
   RxList<AllParticipantModel> participateItems = <AllParticipantModel>[].obs;
   RxList<AllParticipantModel> searchItems = <AllParticipantModel>[].obs;
   late TextEditingController inputController;
-  final inputFocusNode = FocusNode();
+  //final inputFocusNode = FocusNode();
   final inputText = ''.obs;
   final profileLink = 'https://heyo.core/m6ljkB4KJ';
 
