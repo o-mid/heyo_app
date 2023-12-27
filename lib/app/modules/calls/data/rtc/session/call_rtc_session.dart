@@ -61,6 +61,7 @@ class CallRTCSession {
         connected?.call();
       }
       if (state == RTCIceConnectionState.RTCIceConnectionStateFailed) {
+        print("CallRTCSession: Failed Ice");
         //onConnectionFailed.call(callId, remotePeer.remoteCoreId);
         pc!.restartIce();
       }
