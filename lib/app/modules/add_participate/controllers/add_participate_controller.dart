@@ -8,6 +8,8 @@ import 'package:heyo/app/modules/add_participate/usecase/search_contact_user_use
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 
 class AddParticipateController extends GetxController {
   AddParticipateController({
@@ -82,9 +84,16 @@ class AddParticipateController extends GetxController {
     } else {
       query = query.toLowerCase();
 
-      searchItems.value = participateItems
+      final result=participateItems
           .where((item) => item.name.toLowerCase().contains(query))
           .toList();
+      //TODO should be rafactored
+      if(result.isEmpty && query.isValidCoreId()){
+        searchItems.value = [AllParticipantModel(name: query.shortenCoreId, coreId: query)];
+      }else {
+        searchItems.value =result;
+      }
+
     }
     //refresh();
   }
