@@ -171,7 +171,18 @@ class UserPreviewWidget extends GetView<UserPreview> {
               children: [
                 _buildIconTextButton(
                   //Todo: Add User Info onPressed
-                  onPressed: () {},
+                  onPressed: () {
+
+                    if (user.isContact == true){
+
+                      Get.toNamed(
+                        Routes.ADD_CONTACTS,
+                        arguments: AddContactsViewArgumentsModel(
+                          coreId: user.coreId,
+                        ),
+                      );
+                    }
+                  },
                   icon: Assets.svg.infoIcon.svg(width: 20, height: 20),
                   title: user.isContact
                       ? LocaleKeys.newChat_userBottomSheet_contactInfo.tr
@@ -186,7 +197,6 @@ class UserPreviewWidget extends GetView<UserPreview> {
                             Routes.ADD_CONTACTS,
                             arguments: AddContactsViewArgumentsModel(
                               coreId: user.coreId,
-                              iconUrl: user.iconUrl,
                             ),
                           );
                         },

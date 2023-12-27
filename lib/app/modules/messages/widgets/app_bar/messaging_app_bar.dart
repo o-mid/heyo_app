@@ -229,26 +229,23 @@ void _openAppBarActionBottomSheet({required UserModel userModel}) {
             onPressed: () {
               Get.back();
 
-              Get.toNamed(
-                Routes.ADD_CONTACTS,
-                arguments: AddContactsViewArgumentsModel(
-                  //  user: userModel,
-                  coreId: userModel.coreId,
-                  iconUrl: userModel.iconUrl,
-                ),
-              );
-            },
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: COLORS.kBrightBlueColor,
+                Get.toNamed(
+                  Routes.ADD_CONTACTS,
+                  arguments: AddContactsViewArgumentsModel(
+                    //  user: userModel,
+                    coreId: userModel.coreId,
                   ),
-                  child: Assets.svg.addToContactsIcon.svg(
-                    width: 20,
-                    height: 20,
+                );
+              },
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: COLORS.kBrightBlueColor,
+                    ),
+                    child: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
                   ),
                 ),
                 CustomSizes.mediumSizedBoxWidth,

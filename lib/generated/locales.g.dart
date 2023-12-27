@@ -341,6 +341,10 @@ class LocaleKeys {
       'AddContacts_AddNicknameSubtitle';
   static const AddContacts_buttons_addToContacts =
       'AddContacts_buttons_addToContacts';
+  static const AddContacts_Edit_Contact =
+      'AddContacts_Edit_Contact';
+  static const AddContacts_Update_Contact =
+      'AddContacts_Update_Contact';
   static const Permissions_AllowAccess = 'Permissions_AllowAccess';
   static const Permissions_capturePhotos = 'Permissions_capturePhotos';
   static const Permissions_camera = 'Permissions_camera';
@@ -648,6 +652,8 @@ class Locales {
     'offline': 'Offline',
     'scanQrTitle': 'Scan Qr Code',
     'AddContacts_addToContacts': 'Add to contacts',
+  'AddContacts_Edit_Contact': 'Edit contact',
+  'AddContacts_Update_Contact': 'Update contact',
     'AddContacts_addNickname': 'Add nickname',
     'AddContacts_AddNicknameSubtitle':
         'Nickname help you to identify others. Only you can \nsee this nickname.',
