@@ -115,7 +115,7 @@ class MessagesController extends GetxController {
   late ChatModel? chatModel;
   Rx<UserModel> user = UserModel(
     coreId: (Get.arguments as MessagesViewArgumentsModel).coreId,
-    iconUrl: (Get.arguments).iconUrl as String ??
+    iconUrl: (Get.arguments).iconUrl as String? ??
         "https://avatars.githubusercontent.com/u/2345136?v=4",
     name: (Get.arguments as MessagesViewArgumentsModel).coreId.shortenCoreId,
     walletAddress: (Get.arguments).coreId as String,
