@@ -23,9 +23,7 @@ class CallBinding extends Bindings {
     Get.lazyPut<CallController>(
       () => CallController(
         //* Lazy put CallController with the manually created instance
-        callRepository: WebRTCCallRepository(
-          callConnectionsHandler: Get.find(),
-        ),
+        callRepository: Get.find(),
         accountInfo: Get.find(),
         getContactUserUseCase: GetContactUserUseCase(
           contactRepository: ContactRepository(

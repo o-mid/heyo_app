@@ -17,6 +17,7 @@ import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_mode
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -497,16 +498,22 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
         contacts.map((e) => e.mapToAllParticipantModel()).toList();
     searchItems.value = participateItems;
   }
-
   Future<void> searchUsers(String query) async {
     if (query == '') {
       searchItems.value = participateItems;
     } else {
       query = query.toLowerCase();
 
-      searchItems.value = participateItems
+      final result=participateItems
           .where((item) => item.name.toLowerCase().contains(query))
           .toList();
+      //TODO should be rafactored
+      if(result.isEmpty && query.isValidCoreId()){
+        searchItems.value = [AllParticipantModel(name: query.shortenCoreId, coreId: query)];
+      }else {
+        searchItems.value =result;
+      }
+
     }
     //refresh();
   }
