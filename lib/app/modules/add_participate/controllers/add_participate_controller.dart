@@ -56,9 +56,13 @@ class AddParticipateController extends GetxController {
   Future<void> getContact() async {
     final contacts = await getContactUserUseCase.execute();
     //* Get the list of users who are in call
-    List<CallStream> callStreams;
+    var callStreams = <CallStream>[];
     try {
       callStreams = await callRepository.getCallStreams();
+      //callRepository.onCallStreamReceived = (callStateView) {
+      //  debugPrint('onAddCallStream : $callStateView');
+      //  callStreams.add(callStateView);
+      //};
     } catch (e) {
       debugPrint(e.toString());
       callStreams = [];
