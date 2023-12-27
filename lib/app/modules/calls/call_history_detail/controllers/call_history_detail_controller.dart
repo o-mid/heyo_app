@@ -103,7 +103,6 @@ class CallHistoryDetailController extends GetxController {
                   arguments: AddContactsViewArgumentsModel(
                     //  user: userModel,
                     coreId: userModel.coreId,
-                    iconUrl: userModel.iconUrl,
                   ),
                 );
               },
