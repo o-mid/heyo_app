@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:share_plus/share_plus.dart';
-import '../../shared/utils/screen-utils/buttons/custom_button.dart';
+import '../../../shared/utils/screen-utils/buttons/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
