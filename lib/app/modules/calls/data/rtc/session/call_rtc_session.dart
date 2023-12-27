@@ -60,7 +60,7 @@ class CallRTCSession {
       if (isConnected) {
         connected?.call();
       }
-      if (state == RTCIceConnectionState.RTCIceConnectionStateDisconnected) {
+      if (state == RTCIceConnectionState.RTCIceConnectionStateFailed) {
         //onConnectionFailed.call(callId, remotePeer.remoteCoreId);
         pc!.restartIce();
       }
