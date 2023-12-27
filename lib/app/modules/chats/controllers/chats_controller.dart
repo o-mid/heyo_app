@@ -9,7 +9,7 @@ import 'package:heyo/app/modules/chats/widgets/chat_widget.dart';
 import 'package:heyo/app/modules/chats/widgets/delete_all_chats_bottom_sheet.dart';
 import 'package:heyo/app/modules/chats/widgets/delete_chat_dialog.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 

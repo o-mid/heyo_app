@@ -84,7 +84,8 @@ class _ActiveRecorderWidgetState extends State<ActiveRecorderWidget> {
 
                         /// Linear interpolation of x1 = -40, y1 = 0 and x2 = 0, y2 = 16
                         /// y1 is the min and y2 the max spread radius
-                        spreadRadius: max(0, 0.4 * (_amplitude?.current ?? -40) + 16).h,
+                        spreadRadius:
+                            max(0, 0.4 * (_amplitude?.current ?? -40) + 16).h,
                         blurStyle: BlurStyle.solid,
                       ),
                     ],
@@ -171,7 +172,8 @@ class _ActiveRecorderWidgetState extends State<ActiveRecorderWidget> {
       setState(() => _recordDuration++);
     });
 
-    _ampTimer = Timer.periodic(const Duration(milliseconds: 200), (Timer t) async {
+    _ampTimer =
+        Timer.periodic(const Duration(milliseconds: 200), (Timer t) async {
       _amplitude = await _audioRecorder.getAmplitude();
       setState(() {});
     });

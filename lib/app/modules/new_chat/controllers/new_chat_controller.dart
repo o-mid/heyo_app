@@ -12,7 +12,7 @@ import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../data/models/filter_model.dart';
-import '../data/models/user_model.dart';
+import '../data/models/user_model/user_model.dart';
 import '../widgets/invite_bttom_sheet.dart';
 
 class NewChatController extends GetxController

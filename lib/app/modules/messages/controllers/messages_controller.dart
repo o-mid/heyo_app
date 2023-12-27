@@ -16,6 +16,7 @@ import 'package:heyo/app/modules/messages/domain/user_state_repository.dart';
 import 'package:heyo/app/modules/messages/utils/extensions/messageModel.extension.dart';
 import 'package:heyo/app/modules/messages/utils/open_camera_for_sending_media_message.dart';
 import 'package:heyo/app/modules/messages/connection/domain/messaging_connections_models.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:path/path.dart' as path;
@@ -51,7 +52,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import '../connection/wifi_direct_connection_controller.dart';
-import '../../new_chat/data/models/user_model.dart';
 import '../../share_files/models/file_model.dart';
 import '../../shared/utils/constants/colors.dart';
 import '../../shared/utils/constants/textStyles.dart';
@@ -115,8 +115,8 @@ class MessagesController extends GetxController {
   late ChatModel? chatModel;
   Rx<UserModel> user = UserModel(
     coreId: (Get.arguments as MessagesViewArgumentsModel).coreId,
-    iconUrl:
-        (Get.arguments).iconUrl as String ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
+    iconUrl: (Get.arguments).iconUrl as String ??
+        "https://avatars.githubusercontent.com/u/2345136?v=4",
     name: (Get.arguments as MessagesViewArgumentsModel).coreId.shortenCoreId,
     walletAddress: (Get.arguments).coreId as String,
   ).obs;
@@ -186,7 +186,8 @@ class MessagesController extends GetxController {
   }
 
   Future<void> _initMessagesStream() async {
-    final messagesStream = await messageRepository.getMessagesStream(coreId: user.value.coreId);
+    final messagesStream =
+        await messageRepository.getMessagesStream(coreId: user.value.coreId);
 
     _messagesStreamSubscription = (messagesStream).listen((newMessages) {
       messages.value = newMessages;
@@ -232,7 +233,8 @@ class MessagesController extends GetxController {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (scrollController.hasClients) {
         final scrollOffset = scrollController.offset;
-        final offsetChange = isKeyboardVisible ? _keyboardHeight : -_keyboardHeight;
+        final offsetChange =
+            isKeyboardVisible ? _keyboardHeight : -_keyboardHeight;
 
         animateToPosition(
           offset: scrollOffset + offsetChange,
@@ -273,8 +275,9 @@ class MessagesController extends GetxController {
         str +
         textController.text.substring(currentPos);
 
-    textController.selection = textController.selection
-        .copyWith(baseOffset: currentPos + str.length, extentOffset: currentPos + str.length);
+    textController.selection = textController.selection.copyWith(
+        baseOffset: currentPos + str.length,
+        extentOffset: currentPos + str.length);
 
     newMessage.value = textController.text;
   }
@@ -283,7 +286,11 @@ class MessagesController extends GetxController {
   // the character before cursor is removed and cursor moves to the correct place.
   void removeCharacterBeforeCursorPosition() {
     final currentPos = textController.selection.base.offset;
-    final prefix = textController.text.substring(0, currentPos).characters.skipLast(1).toString();
+    final prefix = textController.text
+        .substring(0, currentPos)
+        .characters
+        .skipLast(1)
+        .toString();
     final suffix = textController.text.substring(currentPos);
 
     textController
@@ -332,7 +339,8 @@ class MessagesController extends GetxController {
 
   Future<void> _finishMessagesLoading() async {
     // Todo: remove this delay if needed
-    await Future.delayed(TRANSITIONS.messagingPage_closeMessagesLoadingShimmerDurtion, () {
+    await Future.delayed(
+        TRANSITIONS.messagingPage_closeMessagesLoadingShimmerDurtion, () {
       isListLoaded.value = true;
     });
   }
@@ -351,7 +359,8 @@ class MessagesController extends GetxController {
       scrollController.animateTo(
         scrollController.position.minScrollExtent,
         curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
-        duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+        duration:
+            duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
       );
     }
   }
@@ -365,7 +374,8 @@ class MessagesController extends GetxController {
       scrollController.animateTo(
         offset,
         curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
-        duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+        duration:
+            duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
       );
     }
   }
@@ -393,7 +403,8 @@ class MessagesController extends GetxController {
     );
   }
 
-  Future<void> markMessagesAsReadById({required String lastReadmessageId}) async {
+  Future<void> markMessagesAsReadById(
+      {required String lastReadmessageId}) async {
     await messageRepository.markMessagesAsReadById(
       lastReadmessageId: lastReadmessageId,
       chatId: chatId,
@@ -509,7 +520,8 @@ class MessagesController extends GetxController {
       scrollController.animateTo(
         scrollController.position.maxScrollExtent,
         curve: curve ?? TRANSITIONS.messagingPage_generalMsgTransitioncurve,
-        duration: duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
+        duration:
+            duration ?? TRANSITIONS.messagingPage_generalMsgTransitionDurtion,
       );
     }
   }
@@ -547,7 +559,8 @@ class MessagesController extends GetxController {
   }
 
   stopSharingLiveLocation(LiveLocationMessageModel message) {
-    Get.find<LiveLocationController>().removeIdFromSharingList(message.messageId);
+    Get.find<LiveLocationController>()
+        .removeIdFromSharingList(message.messageId);
 
     final index = messages.indexWhere((m) => m.messageId == message.messageId);
 
@@ -624,7 +637,8 @@ class MessagesController extends GetxController {
   void copySelectedToClipboard() {
     var text = "";
 
-    if (selectedMessages.length == 1 && selectedMessages.first is TextMessageModel) {
+    if (selectedMessages.length == 1 &&
+        selectedMessages.first is TextMessageModel) {
       text = (selectedMessages.first as TextMessageModel).text;
     } else {
       for (final message in selectedMessages) {
@@ -632,7 +646,8 @@ class MessagesController extends GetxController {
           continue;
         }
 
-        text += "[${message.senderName} - ${message.timestamp.dateInAmPmFormat()}]\n";
+        text +=
+            "[${message.senderName} - ${message.timestamp.dateInAmPmFormat()}]\n";
         text += message.text;
         text += "\n\n";
       }
@@ -791,7 +806,8 @@ class MessagesController extends GetxController {
       chatModel = ChatModel(
         id: user.value.coreId,
         name: user.value.name,
-        icon: user.value.iconUrl,
+        icon: user.value.iconUrl ??
+            "https://avatars.githubusercontent.com/u/2345136?v=4",
         lastMessage: "",
         timestamp: DateTime.now(),
         isOnline: true,
@@ -860,14 +876,16 @@ class MessagesController extends GetxController {
         // print("currentItemIndex.value: ${currentRemoteMessagesIndex.value}");
         // print("lastReadRemoteMessagesIndex.value: ${lastReadRemoteMessagesIndex.value}");
 
-        if (currentRemoteMessagesIndex.value > lastReadRemoteMessagesIndex.value) {
+        if (currentRemoteMessagesIndex.value >
+            lastReadRemoteMessagesIndex.value) {
           // print("lastReadRemoteMessagesKey.value ${lastReadRemoteMessagesId.value}");
 
           //  checks if its status is read or not
           // if its not read, it will toogleMessageReadStatus
 
           if (itemStatus != MessageStatus.read) {
-            lastReadRemoteMessagesIndex.value = currentRemoteMessagesIndex.value;
+            lastReadRemoteMessagesIndex.value =
+                currentRemoteMessagesIndex.value;
             lastReadRemoteMessagesId.value = itemMessageId;
             toggleMessageReadStatus(messageId: itemMessageId);
           }

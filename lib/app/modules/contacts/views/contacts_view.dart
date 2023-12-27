@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -57,7 +57,8 @@ class ContactsView extends GetView<ContactsController> {
                   Get.rawSnackbar(
                     messageText: Text(
                       "Blocking Contacts feature is in development phase",
-                      style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kDarkBlueColor),
+                      style: TEXTSTYLES.kBodySmall
+                          .copyWith(color: COLORS.kDarkBlueColor),
                       textAlign: TextAlign.center,
                     ),
                     //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
@@ -91,7 +92,9 @@ class ContactsView extends GetView<ContactsController> {
                 ),
               ),
               CustomSizes.smallSizedBoxHeight,
-              ...controller.contacts.map((contact) => _buildContact(contact)).toList(),
+              ...controller.contacts
+                  .map((contact) => _buildContact(contact))
+                  .toList(),
             ],
           );
         }),
@@ -122,11 +125,13 @@ class ContactsView extends GetView<ContactsController> {
                 children: [
                   Text(
                     contact.nickname,
-                    style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kDarkBlueColor),
+                    style: TEXTSTYLES.kChatName
+                        .copyWith(color: COLORS.kDarkBlueColor),
                   ),
                   Text(
                     contact.coreId.shortenCoreId,
-                    style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
+                    style: TEXTSTYLES.kBodySmall
+                        .copyWith(color: COLORS.kTextSoftBlueColor),
                   ),
                 ],
               ),

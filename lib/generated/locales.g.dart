@@ -168,6 +168,7 @@ class LocaleKeys {
   static const CallHistory_callDeclined = 'CallHistory_callDeclined';
   static const CallHistory_callCanceled = 'CallHistory_callCanceled';
   static const CallHistory_notAnswered = 'CallHistory_notAnswered';
+  static const CallHistory_callParticipant = 'CallHistory_callParticipant';
   static const CallPage_participants = 'CallPage_participants';
   static const CallPage_ringing = 'CallPage_ringing';
   static const CallPage_calling = 'CallPage_calling';
@@ -531,6 +532,7 @@ class Locales {
     'CallHistory_callDeclined': 'Call declined',
     'CallHistory_callCanceled': 'Call canceled',
     'CallHistory_notAnswered': 'Not answered',
+    'CallHistory_callParticipant': 'Call participants',
     'CallPage_participants': 'Participants',
     'CallPage_ringing': 'Ringing...',
     'CallPage_calling': 'Calling...',

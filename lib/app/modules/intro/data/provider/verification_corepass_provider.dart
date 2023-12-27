@@ -32,6 +32,7 @@ class VerificationCorePassProvider
     //   heyoId = await accountInfo.getLocalCoreId();
     // }
     // App scheme for corePass
+    print("heyoId : $heyoId");
     final uri =
         'corepass:sign/?data=$heyoId&conn=heyo://auth&dl=${dateTimeUtils.getCurrentTimeInSeconds(300)}&type=app-link';
     print('Launching : $uri');

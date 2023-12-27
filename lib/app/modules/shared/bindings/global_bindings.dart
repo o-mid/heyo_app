@@ -1,8 +1,13 @@
 import 'package:flutter_p2p_communicator/utils/constants.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/account/controllers/account_controller.dart';
-import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
-import 'package:heyo/app/modules/calls/home/controllers/calls_controller.dart';
+import 'package:heyo/app/modules/calls/data/call_status_observer.dart';
+import 'package:heyo/app/modules/calls/call_history/controllers/call_history_controller.dart';
+import 'package:heyo/app/modules/calls/data/call_requests_processor.dart';
+import 'package:heyo/app/modules/calls/data/call_status_provider.dart';
+import 'package:heyo/app/modules/calls/data/signaling/call_signaling.dart';
+import 'package:heyo/app/modules/calls/data/web_rtc_call_repository.dart';
+import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
@@ -50,6 +55,9 @@ import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provide
 import 'package:heyo/app/modules/shared/data/providers/secure_storage/secure_storage_provider.dart';
 import 'package:core_web3dart/web3dart.dart';
 import 'package:heyo/contracts/Registry.g.dart';
+import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
+import 'package:heyo/app/modules/calls/data/rtc/single_call_web_rtc_connection.dart';
+import 'package:heyo/app/modules/web-rtc/web_rtc_call_connection_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:heyo/app/modules/web-rtc/signaling.dart';
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
@@ -170,7 +178,6 @@ class GlobalBindings extends Bindings {
         ),
         permanent: true,
       )
-      ..put(Signaling(connectionContractor: Get.find()), permanent: true)
       ..put(
         MultipleConnectionHandler(
           connectionContractor: Get.find(),
@@ -195,12 +202,26 @@ class GlobalBindings extends Bindings {
       )
       // p2p related dependencies
 
+      ..put(AppNotifications(), permanent: true)
+      ..put(NotificationsController(
+          appNotifications: Get.find(),
+          ))
+      ..put(CallSignaling(connectionContractor: Get.find()))
+      ..put(CallStatusProvider(callSignaling: Get.find()),permanent: true)
+
       ..put(
-          CallConnectionController(
+          CallConnectionsHandler(
+            callStatusProvider: Get.find(),
+              singleCallWebRTCBuilder: SingleCallWebRTCBuilder(
+                  connectionContractor: Get.find(),),),
+          permanent: true)
+      ..put(CallRequestsProcessor(
+          connectionContractor: Get.find(), callStatusProvider: Get.find(),callConnectionsHandler: Get.find()),)
+      ..put(
+          CallStatusObserver(
+            callStatusProvider: Get.find(),
               accountInfoRepo: Get.find(),
-              signaling: Get.find(),
-              notificationsController:
-                  NotificationsController(appNotifications: appNotifications),
+              notificationsController: Get.find(),
               contactRepository: ContactRepository(
                 cacheContractor: CacheRepository(
                     userProvider: UserProvider(
@@ -215,20 +236,11 @@ class GlobalBindings extends Bindings {
             callHistoryProvider: CallHistoryProvider(
                 appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
-          callConnectionController: Get.find(),
+          callStatusObserver: Get.find(),
           contactRepository: ContactRepository(
             cacheContractor: CacheRepository(
               userProvider: UserProvider(
                   appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-            ),
-          ),
-        ),
-      )
-      ..put(
-        CallsController(
-          callHistoryRepo: CallHistoryRepo(
-            callHistoryProvider: CallHistoryProvider(
-              appDatabaseProvider: Get.find<AppDatabaseProvider>(),
             ),
           ),
         ),
@@ -353,8 +365,20 @@ class GlobalBindings extends Bindings {
                   Get.find<RTCMessagingConnectionRepository>(),
               processor: MessageProcessor(),
             ),
+          ),));
+
+    Get.put(
+      CallHistoryController(
+        callHistoryRepo: CallHistoryRepo(
+          callHistoryProvider: CallHistoryProvider(
+            appDatabaseProvider: Get.find<AppDatabaseProvider>(),
           ),
         ),
-      );
+      ),
+    );
+
+    Get.put<CallRepository>(WebRTCCallRepository(
+      callConnectionsHandler: Get.find(),
+    ),permanent: true);
   }
 }

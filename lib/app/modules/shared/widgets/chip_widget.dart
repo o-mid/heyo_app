@@ -1,15 +1,16 @@
+import 'package:core_blockies/core_blockies.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/constants/colors.dart';
 
 class ChipWidget extends StatelessWidget {
-  final String avatarUrl;
   final String label;
+  final String coreId;
   final void Function()? onDelete;
   const ChipWidget({
     super.key,
-    required this.avatarUrl,
     required this.label,
+    required this.coreId,
     this.onDelete,
   });
 
@@ -18,15 +19,7 @@ class ChipWidget extends StatelessWidget {
     return Chip(
       backgroundColor: COLORS.kChipColor,
       deleteIcon: const Icon(Icons.close),
-      avatar: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: COLORS.KChatFooterGrey),
-          shape: BoxShape.circle,
-          image: DecorationImage(
-            image: NetworkImage(avatarUrl),
-          ),
-        ),
-      ),
+      avatar:CoreBlockies(coreId: coreId,size: 16,),
       label: Text(label),
       onDeleted: onDelete,
     );

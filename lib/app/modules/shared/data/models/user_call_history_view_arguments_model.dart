@@ -1,11 +1,11 @@
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 
 class UserCallHistoryViewArgumentsModel {
-  final String coreId;
-  final String? iconUrl;
-
   UserCallHistoryViewArgumentsModel({
-    required this.coreId,
-    required this.iconUrl,
+    required this.callId,
+    required this.participants,
   });
+
+  final String callId;
+  final List<String> participants;
 }

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
+import 'package:get/get.dart';
+
+import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
+import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -11,13 +15,9 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/app/modules/shared/widgets/scale_animated_switcher.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-import 'package:get/get.dart';
-
-import '../../../../routes/app_pages.dart';
-import '../../../shared/data/models/add_contacts_view_arguments_model.dart';
-import '../../../shared/data/models/messages_view_arguments_model.dart';
 
 class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MessagingAppBar({
@@ -29,21 +29,23 @@ class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
     final controller = Get.find<MessagesController>();
     // Material is used here so that splash can be seen
     return Material(
-        color: COLORS.kGreenMainColor,
-        child: Container(
-          padding: EdgeInsets.only(top: 12.h, bottom: 12.h, right: 20.w),
-          child: SafeArea(
-            child: ScaleAnimatedSwitcher(
-              child: controller.selectedMessages.isNotEmpty
-                  ? const _SelectionModeAppBar()
-                  : const _DefaultAppBar(),
-            ),
+      color: COLORS.kGreenMainColor,
+      child: Container(
+        padding: EdgeInsets.only(top: 12.h, bottom: 12.h, right: 20.w),
+        child: SafeArea(
+          child: ScaleAnimatedSwitcher(
+            child: controller.selectedMessages.isNotEmpty
+                ? const _SelectionModeAppBar()
+                : const _DefaultAppBar(),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   @override
-  Size get preferredSize => Size(AppBar().preferredSize.width.w, AppBar().preferredSize.height.w);
+  Size get preferredSize =>
+      Size(AppBar().preferredSize.width.w, AppBar().preferredSize.height.w);
 }
 
 class _SelectionModeAppBar extends StatelessWidget {
@@ -138,7 +140,8 @@ class _DefaultAppBar extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 4.w),
-                      controller.connectionType == MessagingConnectionType.internet
+                      controller.connectionType ==
+                              MessagingConnectionType.internet
                           ? Icon(
                               Icons.wifi,
                               size: 12.w,
@@ -171,10 +174,8 @@ class _DefaultAppBar extends StatelessWidget {
                   Get.toNamed(
                     Routes.CALL,
                     arguments: CallViewArgumentsModel(
-                        session: null,
                         callId: null,
-                        user: controller.getUser(),
-                        enableVideo: true,
+                        members: [controller.getUser().coreId],
                         isAudioCall: false),
                   );
                 },
@@ -186,10 +187,8 @@ class _DefaultAppBar extends StatelessWidget {
                   Get.toNamed(
                     Routes.CALL,
                     arguments: CallViewArgumentsModel(
-                        session: null,
                         callId: null,
-                        user: controller.getUser(),
-                        enableVideo: false,
+                        members: [controller.getUser().coreId],
                         isAudioCall: true),
                   );
                 },
@@ -222,12 +221,10 @@ void _openAppBarActionBottomSheet({required UserModel userModel}) {
           children: [
             TextButton(
               onPressed: () {
-                Get.back();
-
-                Get.toNamed(
+                Get..back()
+                ..toNamed(
                   Routes.ADD_CONTACTS,
                   arguments: AddContactsViewArgumentsModel(
-                    //  user: userModel,
                     coreId: userModel.coreId,
                   ),
                 );
@@ -240,7 +237,8 @@ void _openAppBarActionBottomSheet({required UserModel userModel}) {
                       borderRadius: BorderRadius.circular(100),
                       color: COLORS.kBrightBlueColor,
                     ),
-                    child: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
+                    child:
+                        Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
                   ),
                   CustomSizes.mediumSizedBoxWidth,
                   Text(
@@ -260,6 +258,6 @@ void _openAppBarActionBottomSheet({required UserModel userModel}) {
       isDismissible: true,
       enableDrag: true,
       shape: const RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))));
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20))));
 }

@@ -7,7 +7,7 @@ import 'package:heyo/app/modules/media_view/widgets/thumbnail_builder_widget.dar
 import 'package:photo_view/photo_view.dart';
 
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/forward_massages/data/models/forward_massages_view_arguments_model..dart';
+import 'package:heyo/app/modules/forward_massages/data/models/forward_massages_view_arguments_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/video_message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/body/video_message_player.dart';
@@ -73,23 +73,30 @@ class MediaView extends GetView<MediaViewController> {
                         color: Colors.black,
                         child: Center(
                           child: VideoMessagePlayer(
-                            message: controller.currentMessage as VideoMessageModel,
+                            message:
+                                controller.currentMessage as VideoMessageModel,
                           ),
                         ),
                       )
                     : Container(
                         color: Colors.black,
-                        child: (controller.currentMessage as ImageMessageModel).isLocal
+                        child: (controller.currentMessage as ImageMessageModel)
+                                .isLocal
                             ? PhotoView(
                                 imageProvider: FileImage(
-                                  File((controller.currentMessage as ImageMessageModel).url),
+                                  File((controller.currentMessage
+                                          as ImageMessageModel)
+                                      .url),
                                 ),
-                                scaleStateController: controller.photoViewController,
-                                minScale: PhotoViewComputedScale.contained * 1.0,
+                                scaleStateController:
+                                    controller.photoViewController,
+                                minScale:
+                                    PhotoViewComputedScale.contained * 1.0,
                               )
                             : PhotoView(
-                                imageProvider: FileImage(
-                                    File((controller.currentMessage as ImageMessageModel).url)),
+                                imageProvider: FileImage(File((controller
+                                        .currentMessage as ImageMessageModel)
+                                    .url)),
                               ),
                       ),
               ),

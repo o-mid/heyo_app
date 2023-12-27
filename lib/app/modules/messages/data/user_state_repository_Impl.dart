@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/domain/user_state_repository.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
@@ -31,7 +31,8 @@ class UserStateRepositoryImpl implements UserStateRepository {
     if (createdUser == null) {
       createdUser = UserModel(
         coreId: coreId,
-        iconUrl: iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
+        iconUrl:
+            iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
         name: coreId.shortenCoreId,
         isOnline: true,
         isContact: false,
@@ -73,7 +74,8 @@ class UserStateRepositoryImpl implements UserStateRepository {
     if (chatModel == null) {
       ChatModel updatedChatModel = ChatModel(
         id: chatId,
-        icon: user.iconUrl,
+        icon: user.iconUrl ??
+            "https://avatars.githubusercontent.com/u/2345136?v=4",
         name: user.name,
         lastReadMessageId: lastReadRemoteMessagesId,
         isOnline: true,

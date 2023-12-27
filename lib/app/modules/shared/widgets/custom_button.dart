@@ -28,12 +28,14 @@ class CustomButton extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: borderRadius ?? BorderRadius.circular(8.w),
-        child: Ink(
+        child: Container(
           width: takeFullWidth ? double.infinity : null,
           padding: padding ?? EdgeInsets.symmetric(vertical: 9.w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8.w),
-            color: backgroundColor?.withOpacity(onTap != null ? 1 : disabledOpacity),
+            color: backgroundColor?.withOpacity(
+              onTap != null ? 1 : disabledOpacity,
+            ),
           ),
           child: Text(
             title,
