@@ -1,3 +1,4 @@
+import 'package:heyo/app/modules/calls/data/call_status_provider.dart';
 import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
@@ -7,6 +8,7 @@ class CallRequestsProcessor {
   CallRequestsProcessor({
     required this.connectionContractor,
     required this.callConnectionsHandler,
+    required this.callStatusProvider,
   }) {
     connectionContractor.getMessageStream().listen((event) {
       if (event is CallConnectionDataReceived) {
@@ -21,6 +23,7 @@ class CallRequestsProcessor {
 
   final ConnectionContractor connectionContractor;
   final CallConnectionsHandler callConnectionsHandler;
+  final CallStatusProvider callStatusProvider;
 
   Future<void> onRequestReceived(
     Map<String, dynamic> mapData,
@@ -31,30 +34,55 @@ class CallRequestsProcessor {
 
     final callId = mapData['call_id'] as String;
 
+    final signalType = mapData['type'];
     print("onMessage, type: ${mapData['type']}");
-
-    switch (mapData['type']) {
-      case CallSignalingCommands.request:
-        {
-          callConnectionsHandler.onCallRequestReceived(
+    if (signalType == CallSignalingCommands.request) {
+      if (callStatusProvider.callStatus == CurrentCallStatus.none) {
+        await callStatusProvider.inComingCallReceived(
+          mapData,
+          data,
+          RemotePeer(
+            remoteCoreId: remoteCoreId,
+            remotePeerId: remotePeerId,
+          ),
+        );
+      } else {
+        //TODO send busy or unavailble
+      }
+    } else {
+      if(callId == callStatusProvider.getCurrentCallId()){
+        if (callStatusProvider.callStatus == CurrentCallStatus.inCall) {
+          handleCallRequestProcess(
+            signalType,
             mapData,
             data,
-            RemotePeer(
-              remoteCoreId: remoteCoreId,
-              remotePeerId: remotePeerId,
-            ),
+            callId,
+            remoteCoreId,
+            remotePeerId,
+          );
+        } else if (callStatusProvider.callStatus ==
+            CurrentCallStatus.inComingCall) {
+          handleCallRequestProcess(
+            signalType,
+            mapData,
+            data,
+            callId,
+            remoteCoreId,
+            remotePeerId,
           );
         }
-        break;
+      }else {
+        //TODO send busy or unavailble
+      }
+    }
+  }
+
+  handleCallRequestProcess(signalType, Map<String, dynamic> mapData, data,
+      String callId, String remoteCoreId, String remotePeerId) {
+    switch (signalType) {
       case CallSignalingCommands.reject:
         {
-          callConnectionsHandler.onCallRequestRejected(
-            mapData,
-            RemotePeer(
-              remoteCoreId: remoteCoreId,
-              remotePeerId: remotePeerId,
-            ),
-          );
+          callStatusProvider.onRejectReceived(remoteCoreId);
         }
       case CallSignalingCommands.offer:
         {
@@ -93,10 +121,13 @@ class CallRequestsProcessor {
       case CallSignalingCommands.cameraStateChanged:
         {
           callConnectionsHandler.onCameraStateChanged(
-              callId,
-              data,
-              RemotePeer(
-                  remoteCoreId: remoteCoreId, remotePeerId: remotePeerId),);
+            callId,
+            data,
+            RemotePeer(
+              remoteCoreId: remoteCoreId,
+              remotePeerId: remotePeerId,
+            ),
+          );
         }
     }
   }

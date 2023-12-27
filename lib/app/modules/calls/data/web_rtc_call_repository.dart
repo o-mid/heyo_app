@@ -19,7 +19,12 @@ class WebRTCCallRepository implements CallRepository {
           ),
         );
       }
+      ..onSessionRemoved = (coreId) {
+        onRemoveStream?.call(coreId);
+      }
       ..onAddRemoteStream = ((callRTCSession) {
+        print(
+            "bbbbbbbb ioj in webrtc Repo ${callRTCSession.getStream()} : ${this.hashCode}");
         onCallStreamReceived?.call(
           CallStream(
               coreId: callRTCSession.remotePeer.remoteCoreId,
@@ -40,6 +45,9 @@ class WebRTCCallRepository implements CallRepository {
   Function(CallStream callStream)? onCallStreamReceived;
   @override
   Function(AllParticipantModel participantModel)? onChangeParticipateStream;
+
+  @override
+  Function(String coreId)? onRemoveStream;
 
   bool mock = false;
 

@@ -1,9 +1,9 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 class WebRTCCallConnectionManager {
-
   WebRTCCallConnectionManager();
-  String sdpSemantics = 'unified-plan';
+
+  static String sdpSemantics = 'unified-plan';
 
   static const Map<String, dynamic> iceServers = {
     'iceServers': [
@@ -46,54 +46,55 @@ class WebRTCCallConnectionManager {
     'optional': [],
   };
 
-  Future<RTCSessionDescription> setupUpOffer(
-      RTCPeerConnection pc, String media) async {
-    final sessionDescription =
-        await pc.createOffer(media == 'data' ? dcConstraints : {});
-    await pc.setLocalDescription(sessionDescription);
-    return sessionDescription;
+  static Future<RTCSessionDescription> setupUpOffer(
+    RTCPeerConnection pc,
+  ) async {
+    final localDescription = await pc.createOffer({});
+    await pc.setLocalDescription(localDescription);
+    return localDescription;
   }
 
-  Future<RTCSessionDescription> setupAnswer(
-      RTCPeerConnection pc, String media) async {
-    final sessionDescription =
-        await pc.createAnswer(media == 'data' ? dcConstraints : {});
-    await pc.setLocalDescription(sessionDescription);
-    return sessionDescription;
+  static Future<RTCSessionDescription> setupAnswer(
+    RTCPeerConnection pc,
+  ) async {
+    final localDescription = await pc.createAnswer();
+    await pc.setLocalDescription(localDescription);
+    return localDescription;
   }
 
-  Future<RTCPeerConnection> createRTCPeerConnection() async {
-    final pc = await createPeerConnection({
-      ...iceServers,
-      ...{'sdpSemantics': sdpSemantics}
-    }, config);
+  static Future<RTCPeerConnection> createRTCPeerConnection() async {
+    final pc = await createPeerConnection(
+      {
+        ...iceServers,
+        ...{'sdpSemantics': sdpSemantics},
+      },
+      config,
+    );
     return pc;
   }
 
-
-  Future<MediaStream> createStream(String media, bool userScreen) async {
+  static Future<MediaStream> createStream(String media, bool userScreen) async {
     final mediaConstraints = <String, dynamic>{
       'audio': true,
       'video': userScreen
           ? true
           : {
-        'mandatory': {
-          'minWidth': '640',
-          // Provide your own width, height and frame rate here
-          'minHeight': '480',
-          'minFrameRate': '30',
-        },
-        'facingMode': 'user',
-        'optional': [],
-      }
+              'mandatory': {
+                'minWidth': '640',
+                // Provide your own width, height and frame rate here
+                'minHeight': '480',
+                'minFrameRate': '30',
+              },
+              'facingMode': 'user',
+              'optional': [],
+            }
     };
 
     final stream = userScreen
         ? await RTCFactoryNative.instance.navigator.mediaDevices
-        .getDisplayMedia(mediaConstraints)
+            .getDisplayMedia(mediaConstraints)
         : await RTCFactoryNative.instance.navigator.mediaDevices
-        .getUserMedia(mediaConstraints);
+            .getUserMedia(mediaConstraints);
     return stream;
   }
-
 }

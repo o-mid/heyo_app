@@ -17,6 +17,7 @@ import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_mode
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -236,6 +237,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   }
 
   Future<void> createConnectedParticipantModel(CallStream callStream) async {
+    print(
+        "bbbbbbbb createConnectedParticipantModel : ${callStream.isAudioCall} : ${callStream.remoteStream}");
     RTCVideoRenderer? renderer;
     if (callStream.remoteStream != null) {
       renderer = RTCVideoRenderer();
@@ -291,12 +294,11 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   Future<void> observeRemoteStreams() async {
     final callStreams = await callRepository.getCallStreams();
-    print("hbgkbj ${callStreams.length}");
-    for (final element in callStreams) {
-      await createConnectedParticipantModel(element);
-    }
-    callRepository.onCallStreamReceived = (callStateView) {
-      debugPrint('onAddCallStream : $callStateView');
+    print("bbbbbbbb hbgkbj ${callStreams.length} : ${callRepository.hashCode}");
+
+    callRepository..onCallStreamReceived = (callStateView) {
+      debugPrint(
+          'bbbbbbbb onAddCallStream : $callStateView : ${callStateView.remoteStream} : ${callRepository.hashCode}');
       //print("calll ${_remoteRenderers} : $stream");
       //TODO refactor this if related to the call state
       if (!isInCall.value) {
@@ -306,7 +308,20 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       }
 
       onNewParticipateReceived(callStateView);
+    }
+    ..onRemoveStream = (coreId) {
+      for (var index = 0; index < connectedRemoteParticipates.length; index++) {
+        if (connectedRemoteParticipates[index].coreId == coreId) {
+          connectedRemoteParticipates
+              .remove(connectedRemoteParticipates[index]);
+          break;
+        }
+      }
     };
+
+    for (final element in callStreams) {
+      await onNewParticipateReceived(element);
+    }
   }
 
   // Todo
@@ -483,16 +498,22 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
         contacts.map((e) => e.mapToAllParticipantModel()).toList();
     searchItems.value = participateItems;
   }
-
   Future<void> searchUsers(String query) async {
     if (query == '') {
       searchItems.value = participateItems;
     } else {
       query = query.toLowerCase();
 
-      searchItems.value = participateItems
+      final result=participateItems
           .where((item) => item.name.toLowerCase().contains(query))
           .toList();
+      //TODO should be rafactored
+      if(result.isEmpty && query.isValidCoreId()){
+        searchItems.value = [AllParticipantModel(name: query.shortenCoreId, coreId: query)];
+      }else {
+        searchItems.value =result;
+      }
+
     }
     //refresh();
   }
