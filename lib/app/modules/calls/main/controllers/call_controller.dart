@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/calls/usecase/get_contact_user_use_case.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
@@ -29,10 +30,12 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   CallController({
     required this.callRepository,
     required this.accountInfo,
+    required this.getContactUserUseCase,
   });
 
   final CallRepository callRepository;
   final AccountRepository accountInfo;
+  final GetContactUserUseCase getContactUserUseCase;
 
   //* CallViewArgumentsModel will not effect the UI
   late CallViewArgumentsModel args;
@@ -58,6 +61,14 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   late final AnimationController animationController;
 
   final localRenderer = RTCVideoRenderer();
+
+  RxList<AllParticipantModel> selectedUser = <AllParticipantModel>[].obs;
+  RxList<AllParticipantModel> participateItems = <AllParticipantModel>[].obs;
+  RxList<AllParticipantModel> searchItems = <AllParticipantModel>[].obs;
+  final inputController = TextEditingController();
+  final profileLink = 'https://heyo.core/m6ljkB4KJ';
+
+  final inputText = ''.obs;
 
   //final micEnabled = true.obs;
   //final callerVideoEnabled = false.obs;
@@ -130,6 +141,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   void onInit() {
     super.onInit();
     args = Get.arguments as CallViewArgumentsModel;
+    getContact();
     initCall();
     animationController = AnimationController(
       vsync: this,
@@ -203,7 +215,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     int index,
     ConnectedParticipantModel connectedParticipantModel,
   ) async {
-    if (connectedParticipantModel.rtcVideoRenderer == null && callStream.remoteStream!=null) {
+    if (connectedParticipantModel.rtcVideoRenderer == null &&
+        callStream.remoteStream != null) {
       final renderer = RTCVideoRenderer();
       await renderer.initialize();
       renderer.srcObject = callStream.remoteStream;
@@ -217,7 +230,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       );
       connectedRemoteParticipates[index] = remoteParticipate;
     } else {
-      connectedRemoteParticipates[index] =connectedRemoteParticipates[index].copyWith(videoMode: (!callStream.isAudioCall).obs);
+      connectedRemoteParticipates[index] = connectedRemoteParticipates[index]
+          .copyWith(videoMode: (!callStream.isAudioCall).obs);
     }
   }
 
@@ -228,14 +242,17 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       await renderer.initialize();
       renderer.srcObject = callStream.remoteStream;
     }
-    connectedRemoteParticipates.add( ConnectedParticipantModel(
-      audioMode: true.obs,
-      videoMode: (renderer==null)? false.obs: (!callStream.isAudioCall).obs,
-      coreId: callStream.coreId,
-      name: callStream.coreId.shortenCoreId,
-      stream: callStream.remoteStream,
-      rtcVideoRenderer: renderer,
-    ),);
+    connectedRemoteParticipates.add(
+      ConnectedParticipantModel(
+        audioMode: true.obs,
+        videoMode:
+            (renderer == null) ? false.obs : (!callStream.isAudioCall).obs,
+        coreId: callStream.coreId,
+        name: callStream.coreId.shortenCoreId,
+        stream: callStream.remoteStream,
+        rtcVideoRenderer: renderer,
+      ),
+    );
   }
 
   Future<void> onNewParticipateReceived(CallStream callStream) async {
@@ -439,4 +456,87 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   }
 
   void switchFullSCreenMode() => fullScreenMode.value = !fullScreenMode.value;
+
+  Future<void> getContact() async {
+    final contacts = await getContactUserUseCase.execute();
+    //* Get the list of users who are in call
+    var callStreams = <CallStream>[];
+    try {
+      callStreams = await callRepository.getCallStreams();
+      //callRepository.onCallStreamReceived = (callStateView) {
+      //  debugPrint('onAddCallStream : $callStateView');
+      //  callStreams.add(callStateView);
+      //};
+    } catch (e) {
+      debugPrint(e.toString());
+      callStreams = [];
+    }
+
+    //* Remove the users who are already in call
+    for (final callStream in callStreams) {
+      contacts.removeWhere(
+        (contact) => contact.coreId == callStream.coreId,
+      );
+    }
+
+    participateItems.value =
+        contacts.map((e) => e.mapToAllParticipantModel()).toList();
+    searchItems.value = participateItems;
+  }
+
+  Future<void> searchUsers(String query) async {
+    if (query == '') {
+      searchItems.value = participateItems;
+    } else {
+      query = query.toLowerCase();
+
+      searchItems.value = participateItems
+          .where((item) => item.name.toLowerCase().contains(query))
+          .toList();
+    }
+    //refresh();
+  }
+
+  RxBool isTextInputFocused = false.obs;
+
+  void selectUser(AllParticipantModel user) {
+    final existingIndex =
+        selectedUser.indexWhere((u) => u.coreId == user.coreId);
+
+    if (existingIndex != -1) {
+      selectedUser.removeAt(existingIndex);
+    } else {
+      //It will add user to the top
+      selectedUser.insert(0, user);
+    }
+  }
+
+  bool isSelected(AllParticipantModel user) {
+    return selectedUser.any((u) => u.coreId == user.coreId);
+  }
+
+  void clearRxList() {
+    selectedUser.clear();
+    participateItems.clear();
+    searchItems.clear();
+  }
+
+  Future<void> addUsersToCall() async {
+    if (selectedUser.isEmpty) {
+      return;
+    }
+
+    debugPrint('Add selected users to call');
+
+    //* Pop to call page
+    Get.back();
+
+    //* Add user to call repo
+    for (final user in selectedUser) {
+      await callRepository.addMember(user.coreId);
+    }
+
+    //* Clears list
+    clearRxList();
+  }
 }
