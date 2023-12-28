@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/app/routes/app_pages.dart';
-import '../data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
@@ -63,15 +65,17 @@ class UserWidget extends StatelessWidget {
               Get.toNamed(
                 Routes.CALL,
                 arguments: CallViewArgumentsModel(
-                  session: null,
-                  user: user,
+                  // convert userModel to callUserModel
+                  members: [user.toCallUserModel().coreId],
                   callId: null,
                   isAudioCall: true,
                 ),
               );
             },
             backgroundColor: COLORS.kBrightBlueColor,
-            icon: Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor),
+            icon: Assets.svg.audioCallIcon.svg(
+              color: COLORS.kDarkBlueColor,
+            ),
           ),
         CustomSizes.mediumSizedBoxWidth,
         if (showVideoCallButton)
@@ -80,16 +84,17 @@ class UserWidget extends StatelessWidget {
               Get.toNamed(
                 Routes.CALL,
                 arguments: CallViewArgumentsModel(
-                  session: null,
-                  user: user,
+                  // convert userModel to callUserModel
+                  members: [user.toCallUserModel().coreId],
                   callId: null,
-                  enableVideo: true,
                   isAudioCall: false,
                 ),
               );
             },
             backgroundColor: COLORS.kBrightBlueColor,
-            icon: Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
+            icon: Assets.svg.videoCallIcon.svg(
+              color: COLORS.kDarkBlueColor,
+            ),
           ),
       ],
     );

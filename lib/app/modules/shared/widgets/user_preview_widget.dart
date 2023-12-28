@@ -1,16 +1,23 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
+import 'package:heyo/app/modules/contacts/widgets/removeContactsDialog.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
+import 'package:heyo/app/modules/shared/controllers/user_preview_controller.dart';
+import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
+import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
+import 'package:heyo/app/routes/app_pages.dart';
+import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 import '../../../../generated/assets.gen.dart';
@@ -101,11 +108,11 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.toNamed(
                       Routes.CALL,
                       arguments: CallViewArgumentsModel(
-                          session: null,
-                          callId: null,
-                          user: user,
-                          enableVideo: false,
-                          isAudioCall: true),
+                        callId: null,
+                        // convert userModel to callUserModel
+                        members: [user.toCallUserModel().coreId],
+                        isAudioCall: true,
+                      ),
                     );
                   } else {
                     SnackBarWidget.info(
@@ -128,10 +135,9 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.toNamed(
                       Routes.CALL,
                       arguments: CallViewArgumentsModel(
-                        session: null,
                         callId: null,
-                        user: user,
-                        enableVideo: true,
+                        // convert userModel to callUserModel
+                        members: [user.toCallUserModel().coreId],
                         isAudioCall: false,
                       ),
                     );
@@ -197,9 +203,11 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     : _buildIconTextButton(
                         onPressed: () async {
                           Get.back();
-                          await Get.dialog(RemoveContactsDialog(
-                            userName: user.name,
-                          )).then((result) async {
+                          await Get.dialog(
+                            RemoveContactsDialog(
+                              userName: user.name,
+                            ),
+                          ).then((result) async {
                             if (result is bool && result == true) {
                               print("result   $result");
 

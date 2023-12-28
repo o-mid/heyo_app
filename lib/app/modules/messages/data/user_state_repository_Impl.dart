@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/domain/user_state_repository.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import '../../new_chat/data/models/user_model/user_model.dart';
 import '../../shared/data/repository/contact_repository.dart';
 import '../domain/message_repository_models.dart';
 

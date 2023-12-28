@@ -1,41 +1,16 @@
-import 'package:heyo/app/modules/web-rtc/signaling.dart';
-
-enum CallHistoryStatus {
-  nop,
-
-  /// for mapping non important [CallState] to [CallHistoryStatus]
-  initial,
-  ringing,
-  invite,
-  connected,
-  byeReceived,
-  byeSent,
-}
+import 'package:heyo/app/modules/calls/data/call_status_provider.dart';
+import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 
 class CallHistoryState {
-  final Session session;
-  final CallHistoryStatus callHistoryStatus;
-
   CallHistoryState({
-    required this.session,
+    required this.callId,
+    required this.remote,
     required this.callHistoryStatus,
+    required this.isAudioCall
   });
 
-  static CallHistoryStatus mapCallStateToCallHistoryStatus(CallState callState) {
-    switch (callState) {
-      case CallState.callStateNew:
-        return CallHistoryStatus.initial;
-      case CallState.callStateRinging:
-        return CallHistoryStatus.ringing;
-      case CallState.callStateInvite:
-        return CallHistoryStatus.invite;
-      case CallState.callStateConnected:
-        return CallHistoryStatus.connected;
-      case CallState.callStateBye:
-        return CallHistoryStatus.byeReceived;
-      case CallState.callStateClosedCamera:
-      case CallState.callStateOpendCamera:
-        return CallHistoryStatus.nop;
-    }
-  }
+  final String callId;
+  final String remote;
+  final CallHistoryStatus callHistoryStatus;
+  bool? isAudioCall;
 }

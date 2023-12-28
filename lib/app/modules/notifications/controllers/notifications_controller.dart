@@ -20,7 +20,6 @@ import '../../messages/data/provider/messages_provider.dart';
 import '../../messages/data/repo/messages_abstract_repo.dart';
 import '../../messages/data/repo/messages_repo.dart';
 import '../../messages/data/usecases/send_message_usecase.dart';
-import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../../shared/data/providers/database/app_database.dart';
 import '../../shared/utils/constants/colors.dart';

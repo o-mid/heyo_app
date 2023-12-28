@@ -25,3 +25,10 @@ class CallConnectionDataReceived extends LibP2PRequestReceived {
         required super.remotePeerId,
         required super.mapData,});
 }
+
+class RemotePeerData {
+  String remoteCoreId;
+  String? remotePeerId;
+
+  RemotePeerData({required this.remoteCoreId, required this.remotePeerId});
+}

@@ -27,7 +27,7 @@ class LibP2PConnectionContractor extends ConnectionContractor {
 
   @override
   Future<bool> sendMessage(String data, remoteId) {
-    final remotePeer = remoteId as RemotePeer;
+    final remotePeer = remoteId as RemotePeerData;
     return p2pCommunicator.sendSDP(data, remotePeer.remoteCoreId, remotePeer.remoteCoreId);
   }
 
@@ -91,7 +91,7 @@ class LibP2PConnectionContractor extends ConnectionContractor {
     var mapData = _decoder.convert(request) as Map<String, dynamic>;
     print("onRequestReceived $mapData : ${mapData['command']} : $remoteCoreId");
 
-    if (mapData['command'] == "call") {
+    if (mapData['command'] == "call_connection") {
       _streamController.add(
         CallConnectionDataReceived(
           remoteCoreId: remoteCoreId,

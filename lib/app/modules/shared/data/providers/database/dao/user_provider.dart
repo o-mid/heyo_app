@@ -1,10 +1,8 @@
 import 'dart:async';
-
-import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
 
-import '../../../../../new_chat/data/models/user_model.dart';
 
 class UserProvider {
   final AppDatabaseProvider appDatabaseProvider;
@@ -21,12 +19,13 @@ class UserProvider {
 
   Future insert(UserModel user) async {
     await _userStore.add(
-        await _db,
-        user
-            .copyWith(
-              isContact: true,
-            )
-            .toJson());
+      await _db,
+      user
+          .copyWith(
+            isContact: true,
+          )
+          .toJson(),
+    );
   }
 
   Future update(UserModel user) async {
@@ -49,7 +48,7 @@ class UserProvider {
   }
 
   Future<void> deleteContactById(String userCoreId) async {
-    final finder = Finder(filter: Filter.equals(UserModel.coreIdSerializedName, userCoreId));
+    final finder = Finder(filter: Filter.equals('coreId', userCoreId));
     print("finder delete contact id: " + finder.toString());
     await _userStore.delete(
       await _db,
@@ -59,9 +58,11 @@ class UserProvider {
 
   Future<List<UserModel>> getAllSortedByName() async {
     // Finder object can also sort data.
-    final finder = Finder(sortOrders: [
-      SortOrder(UserModel.nicknameSerializedName),
-    ]);
+    final finder = Finder(
+      sortOrders: [
+        SortOrder('nickname'),
+      ],
+    );
 
     final records = await _userStore.find(
       await _db,
@@ -74,7 +75,7 @@ class UserProvider {
 
 // get Blocked Contacts
   Future<List<UserModel>> getBlocked() async {
-    final finder = Finder(filter: Filter.equals(UserModel.isBlockedSerializedName, true));
+    final finder = Finder(filter: Filter.equals('isBlocked', true));
 
     final records = await _userStore.find(
       await _db,
@@ -88,7 +89,7 @@ class UserProvider {
   Future<UserModel?> getContactById(String userCoreId) async {
     final records = await _userStore.find(
       await _db,
-      finder: Finder(filter: Filter.equals(UserModel.coreIdSerializedName, userCoreId)),
+      finder: Finder(filter: Filter.equals('coreId', userCoreId)),
     );
 
     if (records.isEmpty) {
@@ -101,7 +102,7 @@ class UserProvider {
 
   Future<Stream<List<UserModel>>> getContactsStream() async {
     final query = _userStore.query(
-      finder: Finder(sortOrders: [SortOrder(UserModel.nameSerializedName, false)]),
+      finder: Finder(sortOrders: [SortOrder('nickname', false)]),
     );
 
     return query.onSnapshots(await _db).transform(

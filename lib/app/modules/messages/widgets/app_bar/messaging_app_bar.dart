@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
+import 'package:get/get.dart';
+
+import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
+import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -11,6 +15,7 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/app/modules/shared/widgets/scale_animated_switcher.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:get/get.dart';
@@ -30,17 +35,18 @@ class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
     final controller = Get.find<MessagesController>();
     // Material is used here so that splash can be seen
     return Material(
-        color: COLORS.kGreenMainColor,
-        child: Container(
-          padding: EdgeInsets.only(top: 12.h, bottom: 12.h, right: 20.w),
-          child: SafeArea(
-            child: ScaleAnimatedSwitcher(
-              child: controller.selectedMessages.isNotEmpty
-                  ? const _SelectionModeAppBar()
-                  : const _DefaultAppBar(),
-            ),
+      color: COLORS.kGreenMainColor,
+      child: Container(
+        padding: EdgeInsets.only(top: 12.h, bottom: 12.h, right: 20.w),
+        child: SafeArea(
+          child: ScaleAnimatedSwitcher(
+            child: controller.selectedMessages.isNotEmpty
+                ? const _SelectionModeAppBar()
+                : const _DefaultAppBar(),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   @override
@@ -135,11 +141,7 @@ class _DefaultAppBar extends StatelessWidget {
                     // TODO : GROUP CALL
                     Routes.CALL,
                     arguments: CallViewArgumentsModel(
-                        session: null,
-                        callId: null,
-                        user: controller.users.first,
-                        enableVideo: true,
-                        isAudioCall: false),
+                        callId: null, members: [controller.users.first.coreId], isAudioCall: false),
                   );
                 },
                 icon: Assets.svg.videoCallIcon.svg(),
@@ -151,11 +153,7 @@ class _DefaultAppBar extends StatelessWidget {
                     // TODO : GROUP CALL
                     Routes.CALL,
                     arguments: CallViewArgumentsModel(
-                        session: null,
-                        callId: null,
-                        user: controller.users.first,
-                        enableVideo: false,
-                        isAudioCall: true),
+                        callId: null, members: [controller.users.first.coreId], isAudioCall: true),
                   );
                 },
                 backgroundColor: Colors.transparent,
@@ -287,15 +285,14 @@ void _openAppBarActionBottomSheet({required UserModel userModel}) {
           children: [
             TextButton(
               onPressed: () {
-                Get.back();
-
-                Get.toNamed(
-                  Routes.ADD_CONTACTS,
-                  arguments: AddContactsViewArgumentsModel(
-                    //  user: userModel,
-                    coreId: userModel.coreId,
-                  ),
-                );
+                Get
+                  ..back()
+                  ..toNamed(
+                    Routes.ADD_CONTACTS,
+                    arguments: AddContactsViewArgumentsModel(
+                      coreId: userModel.coreId,
+                    ),
+                  );
               },
               child: Row(
                 children: [
