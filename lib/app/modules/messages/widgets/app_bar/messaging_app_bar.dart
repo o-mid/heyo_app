@@ -306,7 +306,9 @@ void _openAppBarActionBottomSheet({required UserModel userModel}) {
                   ),
                   CustomSizes.mediumSizedBoxWidth,
                   Text(
-                    LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
+                    userModel.isContact
+                        ? LocaleKeys.AddContacts_Edit_Contact.tr
+                        : LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
                     style: TEXTSTYLES.kLinkBig.copyWith(
                       color: COLORS.kDarkBlueColor,
                     ),
