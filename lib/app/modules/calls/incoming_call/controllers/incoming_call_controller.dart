@@ -25,24 +25,7 @@ class IncomingCallController extends GetxController {
   Future<void> onInit() async {
     args = Get.arguments as IncomingCallViewArguments;
 
-<<<<<<< HEAD
-    if (args.name == null) {
-      userName =
-          "${args.remoteCoreId.characters.take(4).string}...${args.remoteCoreId.characters.takeLast(4).string}";
-    } else {
-      userName = args.name!;
-    }
-    //TODO name should be get from contacts
-    caller = UserModel(
-      name: userName,
-      isContact: (!(args.name == null)),
-      isVerified: true,
-      walletAddress: args.remoteCoreId,
-      coreId: args.remoteCoreId,
-    );
-=======
     await getUserData();
->>>>>>> development
     _playRingtone();
 
     super.onInit();
@@ -98,8 +81,7 @@ class IncomingCallController extends GetxController {
 
   Future<void> getUserData() async {
     for (final coreId in args.members) {
-      final userModel =
-          await contactAvailabilityUseCase.execute(coreId: coreId);
+      final userModel = await contactAvailabilityUseCase.execute(coreId: coreId);
 
       incomingCallers.add(userModel.toIncomingCallModel());
     }

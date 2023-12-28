@@ -58,9 +58,10 @@ class CallHistoryObserver extends GetxController {
         case CallHistoryStatus.calling:
           {
             await _createOutgoingNotAnsweredRecord(
-                remoteCoreId: state.remote,
-                callId: state.callId,
-                isAudioCall: state.isAudioCall!,);
+              remoteCoreId: state.remote,
+              callId: state.callId,
+              isAudioCall: state.isAudioCall!,
+            );
             break;
           }
         case CallHistoryStatus.connected:
@@ -99,9 +100,7 @@ class CallHistoryObserver extends GetxController {
   }
 
   Future<void> _createOutgoingNotAnsweredRecord(
-      {required String remoteCoreId,
-      required String callId,
-      required bool isAudioCall}) async {
+      {required String remoteCoreId, required String callId, required bool isAudioCall}) async {
     final callParticipant = await _getUserFromCoreId(
       remoteCoreId,
     );
@@ -161,15 +160,6 @@ class CallHistoryObserver extends GetxController {
     await callHistoryRepo.updateCall(updateCall);
   }
 
-<<<<<<< HEAD
-  Future<UserModel> _getUserFromCoreId(String coreId) async {
-    UserModel? user = await contactRepository.getContactById(coreId);
-    user ??= UserModel(
-      name: "${coreId.characters.take(4).string}...${coreId.characters.takeLast(4).string}",
-      isVerified: true,
-      walletAddress: coreId,
-      coreId: coreId,
-=======
   Future<void> _connectedCallHistory({
     required CallHistoryState state,
   }) async {
@@ -195,7 +185,6 @@ class CallHistoryObserver extends GetxController {
     final updateCall = call.copyWith(
       status: status,
       endDate: DateTime.now(),
->>>>>>> development
     );
     await callHistoryRepo.updateCall(updateCall);
   }

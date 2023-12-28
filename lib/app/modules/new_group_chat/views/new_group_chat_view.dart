@@ -58,19 +58,12 @@ class NewGroupChatView extends GetView<NewGroupChatController> {
       padding: const EdgeInsets.only(bottom: 24),
       child: FloatingActionButton(
         onPressed: controller.handleFabOnpressed,
-<<<<<<< HEAD
         backgroundColor:
             controller.selectedCoreids.length <= 1 || controller.confirmationInputText.isEmpty
                 ? Colors.grey
                 : COLORS.kGreenMainColor,
-=======
-        backgroundColor: controller.selectedCoreids.length <= 1
-            ? Colors.grey
-            : COLORS.kGreenMainColor,
->>>>>>> development
         child: controller.showConfirmationScreen.value
-            ? Assets.svg.singleTickIcon
-                .svg(width: 20.w, color: COLORS.kWhiteColor)
+            ? Assets.svg.singleTickIcon.svg(width: 20.w, color: COLORS.kWhiteColor)
             : Assets.svg.arrowIcon.svg(width: 20.w, color: COLORS.kWhiteColor),
       ),
     );
@@ -79,9 +72,7 @@ class NewGroupChatView extends GetView<NewGroupChatController> {
   Widget _buildbody() {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
-      child: controller.showConfirmationScreen.value
-          ? GroupConfirmationWidget()
-          : _bodyWidget(),
+      child: controller.showConfirmationScreen.value ? GroupConfirmationWidget() : _bodyWidget(),
     );
   }
 
@@ -91,10 +82,7 @@ class NewGroupChatView extends GetView<NewGroupChatController> {
         children: [
           CustomSizes.largeSizedBoxHeight,
           _buildSearchInput(),
-          if (controller.searchSuggestions.isEmpty)
-            _buildEmptyUsersBody()
-          else
-            _buildContactList(),
+          if (controller.searchSuggestions.isEmpty) _buildEmptyUsersBody() else _buildContactList(),
         ],
       ),
     );
@@ -112,8 +100,7 @@ class NewGroupChatView extends GetView<NewGroupChatController> {
             labelText: LocaleKeys.newChat_usernameInput.tr,
             rightWidget: IconButton(
               icon: Assets.svg.qrCode.svg(width: 20.w, fit: BoxFit.fitWidth),
-              onPressed: () =>
-                  openQrScannerBottomSheet(controller.handleScannedValue),
+              onPressed: () => openQrScannerBottomSheet(controller.handleScannedValue),
             ),
           ),
         ),
@@ -125,8 +112,7 @@ class NewGroupChatView extends GetView<NewGroupChatController> {
     return EmptyUsersBody(
       infoText: LocaleKeys.newChat_emptyStateTitleContacts.tr,
       buttonText: LocaleKeys.newChat_buttons_invite.tr,
-      onInvite: () =>
-          openInviteBottomSheet(profileLink: controller.profileLink),
+      onInvite: () => openInviteBottomSheet(profileLink: controller.profileLink),
     );
   }
 
