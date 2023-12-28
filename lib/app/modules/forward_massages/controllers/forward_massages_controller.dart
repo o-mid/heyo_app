@@ -44,7 +44,6 @@ class ForwardMassagesController extends GetxController {
     UserModel(
       name: "Crapps Wallbanger",
       walletAddress: 'CB92...969A',
-      iconUrl: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
       nickname: "Nickname",
       coreId: 'CB92...969A',
     ),

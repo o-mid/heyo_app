@@ -56,7 +56,6 @@ class AddContactsController extends GetxController {
       isOnline: true,
       isContact: isContact.value,
       walletAddress: args.coreId,
-      iconUrl: '',
     );
   }
 

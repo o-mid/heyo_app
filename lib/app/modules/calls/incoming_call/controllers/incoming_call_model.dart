@@ -47,15 +47,14 @@ class IncomingCallModel {
       IncomingCallModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() =>
-      'IncomingCallModel(name: $name, iconUrl: $iconUrl, coreId: $coreId)';
+  String toString() => 'IncomingCallModel(name: $name, iconUrl: $iconUrl, coreId: $coreId)';
 }
 
 extension UserModelToIncomingCallModel on UserModel {
   IncomingCallModel toIncomingCallModel() {
     return IncomingCallModel(
       name: name,
-      iconUrl: iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
+      iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
       coreId: coreId,
     );
   }

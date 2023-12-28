@@ -10,7 +10,6 @@ import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../messages/utils/chat_Id_generator.dart';
-import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../../shared/data/repository/contact_repository.dart';
 import '../../shared/data/repository/crypto_account/account_repository.dart';

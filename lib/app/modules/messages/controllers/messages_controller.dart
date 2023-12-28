@@ -53,7 +53,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
-import '../../new_chat/data/models/user_model.dart';
+import '../../new_chat/data/models/user_model/user_model.dart';
 import '../connection/wifi_direct_connection_controller.dart';
 import '../../share_files/models/file_model.dart';
 import '../../shared/utils/constants/colors.dart';

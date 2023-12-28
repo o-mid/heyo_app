@@ -17,8 +17,7 @@ import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-class CallHistorySingleParticipantWidget
-    extends GetView<CallHistoryDetailController> {
+class CallHistorySingleParticipantWidget extends GetView<CallHistoryDetailController> {
   const CallHistorySingleParticipantWidget({super.key});
 
   @override
@@ -65,8 +64,7 @@ class CallHistorySingleParticipantWidget
                   onTap: () => controller.saveCoreIdToClipboard(),
                   child: Text(
                     controller.participants[0].name,
-                    style: TEXTSTYLES.kHeaderLarge
-                        .copyWith(color: COLORS.kDarkBlueColor),
+                    style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
                   ),
                 ),
                 SizedBox(height: 4.h),
@@ -74,8 +72,7 @@ class CallHistorySingleParticipantWidget
                   onTap: () => controller.saveCoreIdToClipboard(),
                   child: Text(
                     controller.participants[0].coreId.shortenCoreId,
-                    style: TEXTSTYLES.kBodySmall
-                        .copyWith(color: COLORS.kTextSoftBlueColor),
+                    style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
                   ),
                 ),
                 SizedBox(height: 40.h),
@@ -93,8 +90,7 @@ class CallHistorySingleParticipantWidget
                           members: controller.args.participants,
                         ),
                       ),
-                      icon: Assets.svg.audioCallIcon
-                          .svg(color: COLORS.kDarkBlueColor),
+                      icon: Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor),
                     ),
                     SizedBox(width: 24.w),
                     CircleIconButton(
@@ -108,8 +104,7 @@ class CallHistorySingleParticipantWidget
                           isAudioCall: false,
                         ),
                       ),
-                      icon: Assets.svg.videoCallIcon
-                          .svg(color: COLORS.kDarkBlueColor),
+                      icon: Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
                     ),
                     SizedBox(width: 24.w),
                     // Todo Omid : add go to messaging screen
@@ -120,18 +115,17 @@ class CallHistorySingleParticipantWidget
                         Get.toNamed(
                           Routes.MESSAGES,
                           arguments: MessagesViewArgumentsModel(
-                            coreId: controller.participants[0]!.coreId,
                             connectionType: MessagingConnectionType.internet,
                             participants: [
                               MessagingParticipantModel(
                                 coreId: controller.participants[0].coreId,
+                                chatId: controller.participants[0].coreId,
                               ),
                             ],
                           ),
                         );
                       },
-                      icon: Assets.svg.chatOutlined
-                          .svg(color: COLORS.kDarkBlueColor),
+                      icon: Assets.svg.chatOutlined.svg(color: COLORS.kDarkBlueColor),
                     ),
                   ],
                 ),
@@ -143,16 +137,14 @@ class CallHistorySingleParticipantWidget
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Text(
                     LocaleKeys.CallHistory_appbar.tr,
-                    style: TEXTSTYLES.kLinkSmall
-                        .copyWith(color: COLORS.kTextBlueColor),
+                    style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextBlueColor),
                   ),
                 ),
                 CustomSizes.smallSizedBoxHeight,
                 ...controller.calls.map(
                   (call) => Container(
                     width: double.infinity,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
                     child: HistoryCallLogWidget(call: call),
                   ),
                 ),

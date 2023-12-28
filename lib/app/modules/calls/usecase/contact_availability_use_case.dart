@@ -20,8 +20,6 @@ class ContactAvailabilityUseCase {
       //* The user is not in contact
       return UserModel(
         coreId: coreId,
-        iconUrl:
-            iconUrl ?? 'https://avatars.githubusercontent.com/u/2345136?v=4',
         name: name ?? coreId.shortenCoreId,
         walletAddress: coreId,
       );
