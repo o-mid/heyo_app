@@ -22,7 +22,7 @@ class AddParticipateController extends GetxController {
   RxList<AllParticipantModel> participateItems = <AllParticipantModel>[].obs;
   RxList<AllParticipantModel> searchItems = <AllParticipantModel>[].obs;
   late TextEditingController inputController;
-  //final inputFocusNode = FocusNode();
+
   final inputText = ''.obs;
   final profileLink = 'https://heyo.core/m6ljkB4KJ';
 
@@ -36,7 +36,6 @@ class AddParticipateController extends GetxController {
   @override
   void onClose() {
     inputController.dispose();
-    //_contactsStreamSubscription.cancel();
   }
 
 // Mock filters for the users
@@ -57,10 +56,10 @@ class AddParticipateController extends GetxController {
     var callStreams = <CallStream>[];
     try {
       callStreams = await callRepository.getCallStreams();
-      //callRepository.onCallStreamReceived = (callStateView) {
-      //  debugPrint('onAddCallStream : $callStateView');
-      //  callStreams.add(callStateView);
-      //};
+      callRepository.onCallStreamReceived = (callStateView) {
+        debugPrint('Add participant controller: $callStateView');
+        callStreams.add(callStateView);
+      };
     } catch (e) {
       debugPrint(e.toString());
       callStreams = [];
@@ -82,7 +81,7 @@ class AddParticipateController extends GetxController {
     if (query == '') {
       searchItems.value = participateItems;
     } else {
-      query = query.toLowerCase();
+      query.toLowerCase();
 
       searchItems.value = participateItems
           .where((item) => item.name.toLowerCase().contains(query))
