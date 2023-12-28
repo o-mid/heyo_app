@@ -204,8 +204,8 @@ class ChatsController extends GetxController {
       await Future.delayed(duration, () {
         chatHistoryRepo.addChatToHistory(mockchats[i].copyWith(
             timestamp: DateTime.now(),
-            lastMessage: "${DateTime.now()}",
-            icon: "https://avatars.githubusercontent.com/u/664${i}336?v=4"));
+            lastMessage: "${DateTime.now()}"
+                " ${mockchats[i].name}"));
       });
     }
   }
