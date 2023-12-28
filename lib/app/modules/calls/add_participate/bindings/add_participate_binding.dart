@@ -12,6 +12,7 @@ class AddParticipateBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<AddParticipateController>(
       () => AddParticipateController(
+        accountInfoRepo: Get.find(),
         callRepository: Get.find(),
         getContactUserUseCase: GetContactUserUseCase(
           contactRepository: ContactRepository(

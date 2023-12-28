@@ -6,17 +6,24 @@ import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/calls/usecase/get_contact_user_use_case.dart';
+import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 
 class AddParticipateController extends GetxController {
   AddParticipateController({
     //required this.searchContactUserUseCase,
     required this.getContactUserUseCase,
     required this.callRepository,
+    required this.accountInfoRepo,
   });
 
   //final SearchContactUserUseCase searchContactUserUseCase;
   final GetContactUserUseCase getContactUserUseCase;
   final CallRepository callRepository;
+  final AccountRepository accountInfoRepo;
 
   RxList<AllParticipantModel> selectedUser = <AllParticipantModel>[].obs;
   RxList<AllParticipantModel> participateItems = <AllParticipantModel>[].obs;
@@ -86,8 +93,22 @@ class AddParticipateController extends GetxController {
       searchItems.value = participateItems
           .where((item) => item.name.toLowerCase().contains(query))
           .toList();
+
+      if (searchItems.isEmpty) {
+        final currentUserCoreId = await accountInfoRepo.getUserAddress();
+        if (query.isValidCoreId() && currentUserCoreId != query) {
+          //its a new user
+          searchItems.value = [
+            AllParticipantModel(
+              name: query.shortenCoreId,
+              coreId: query,
+            ),
+          ];
+        } else {
+          searchItems.value = [];
+        }
+      }
     }
-    //refresh();
   }
 
   RxBool isTextInputFocused = false.obs;
@@ -114,8 +135,6 @@ class AddParticipateController extends GetxController {
     searchItems.clear();
   }
 
-// region ali
-  // endregion
   Future<void> addUsersToCall() async {
     if (selectedUser.isEmpty) {
       return;
@@ -133,5 +152,40 @@ class AddParticipateController extends GetxController {
 
     //* Clears list
     clearRxList();
+  }
+
+  void qrBottomSheet() {
+    openQrScannerBottomSheet(handleScannedValue);
+  }
+
+  Future<void> handleScannedValue(String? barcodeValue) async {
+    // TODO: Implement the right filter logic for QRCode
+    if (barcodeValue == null) {
+      // Todo(qr)
+      return;
+    }
+    try {
+      final coreId = barcodeValue.getCoreId();
+
+      Get.back();
+      isTextInputFocused.value = true;
+      // this will set the input field to the scanned value and serach for users
+      inputController.text = coreId;
+
+      final currentUserCoreId = await accountInfoRepo.getUserAddress();
+      if (coreId.isValidCoreId() && currentUserCoreId != coreId) {
+        //its a new user
+        searchItems.value = [
+          AllParticipantModel(
+            name: coreId.shortenCoreId,
+            coreId: coreId,
+          ),
+        ];
+      } else {
+        searchItems.value = [];
+      }
+    } catch (e) {
+      return;
+    }
   }
 }
