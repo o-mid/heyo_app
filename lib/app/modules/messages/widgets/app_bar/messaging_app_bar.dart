@@ -238,11 +238,11 @@ void _openAppBarActionBottomSheet({required UserModel userModel}) {
                       color: COLORS.kBrightBlueColor,
                     ),
                     child:
-                        Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
+                        userModel.isContact ? Assets.svg.infoIcon.svg(width: 20, height: 20) : Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
                   ),
                   CustomSizes.mediumSizedBoxWidth,
                   Text(
-                    LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
+                    userModel.isContact ? LocaleKeys.AddContacts_Edit_Contact.tr : LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
                     style: TEXTSTYLES.kLinkBig.copyWith(
                       color: COLORS.kDarkBlueColor,
                     ),
