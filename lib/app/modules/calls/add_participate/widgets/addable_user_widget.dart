@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
+import 'package:heyo/app/modules/calls/add_participate/controllers/add_participate_controller.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -10,7 +10,7 @@ import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
-class AddableUserWidget extends GetView<CallController> {
+class AddableUserWidget extends GetView<AddParticipateController> {
   const AddableUserWidget({
     required this.user,
     super.key,

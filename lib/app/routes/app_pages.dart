@@ -270,7 +270,7 @@ class AppPages {
     GetPage(
       name: _Paths.ADD_PARTICIPATE,
       page: () => const AddParticipateView(),
-      //binding: AddParticipateBinding(),
+      binding: AddParticipateBinding(),
     ),
     GetPage(
       name: _Paths.VERIFIED_USER,

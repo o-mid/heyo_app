@@ -63,14 +63,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   final localRenderer = RTCVideoRenderer();
 
-  RxList<AllParticipantModel> selectedUser = <AllParticipantModel>[].obs;
-  RxList<AllParticipantModel> participateItems = <AllParticipantModel>[].obs;
-  RxList<AllParticipantModel> searchItems = <AllParticipantModel>[].obs;
-  final inputController = TextEditingController();
-  final profileLink = 'https://heyo.core/m6ljkB4KJ';
-
-  final inputText = ''.obs;
-
   //final micEnabled = true.obs;
   //final callerVideoEnabled = false.obs;
   //final isInCall = true.obs;
@@ -142,7 +134,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   void onInit() {
     super.onInit();
     args = Get.arguments as CallViewArgumentsModel;
-    getContact();
     initCall();
     animationController = AnimationController(
       vsync: this,
@@ -296,28 +287,31 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     final callStreams = await callRepository.getCallStreams();
     print("bbbbbbbb hbgkbj ${callStreams.length} : ${callRepository.hashCode}");
 
-    callRepository..onCallStreamReceived = (callStateView) {
-      debugPrint(
-          'bbbbbbbb onAddCallStream : $callStateView : ${callStateView.remoteStream} : ${callRepository.hashCode}');
-      //print("calll ${_remoteRenderers} : $stream");
-      //TODO refactor this if related to the call state
-      if (!isInCall.value) {
-        isInCall.value = true;
-        _stopWatingBeep();
-        startCallTimer();
-      }
-
-      onNewParticipateReceived(callStateView);
-    }
-    ..onRemoveStream = (coreId) {
-      for (var index = 0; index < connectedRemoteParticipates.length; index++) {
-        if (connectedRemoteParticipates[index].coreId == coreId) {
-          connectedRemoteParticipates
-              .remove(connectedRemoteParticipates[index]);
-          break;
+    callRepository
+      ..onCallStreamReceived = (callStateView) {
+        debugPrint(
+            'bbbbbbbb onAddCallStream : $callStateView : ${callStateView.remoteStream} : ${callRepository.hashCode}');
+        //print("calll ${_remoteRenderers} : $stream");
+        //TODO refactor this if related to the call state
+        if (!isInCall.value) {
+          isInCall.value = true;
+          _stopWatingBeep();
+          startCallTimer();
         }
+
+        onNewParticipateReceived(callStateView);
       }
-    };
+      ..onRemoveStream = (coreId) {
+        for (var index = 0;
+            index < connectedRemoteParticipates.length;
+            index++) {
+          if (connectedRemoteParticipates[index].coreId == coreId) {
+            connectedRemoteParticipates
+                .remove(connectedRemoteParticipates[index]);
+            break;
+          }
+        }
+      };
 
     for (final element in callStreams) {
       await onNewParticipateReceived(element);
@@ -471,93 +465,4 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   }
 
   void switchFullSCreenMode() => fullScreenMode.value = !fullScreenMode.value;
-
-  Future<void> getContact() async {
-    final contacts = await getContactUserUseCase.execute();
-    //* Get the list of users who are in call
-    var callStreams = <CallStream>[];
-    try {
-      callStreams = await callRepository.getCallStreams();
-      //callRepository.onCallStreamReceived = (callStateView) {
-      //  debugPrint('onAddCallStream : $callStateView');
-      //  callStreams.add(callStateView);
-      //};
-    } catch (e) {
-      debugPrint(e.toString());
-      callStreams = [];
-    }
-
-    //* Remove the users who are already in call
-    for (final callStream in callStreams) {
-      contacts.removeWhere(
-        (contact) => contact.coreId == callStream.coreId,
-      );
-    }
-
-    participateItems.value =
-        contacts.map((e) => e.mapToAllParticipantModel()).toList();
-    searchItems.value = participateItems;
-  }
-  Future<void> searchUsers(String query) async {
-    if (query == '') {
-      searchItems.value = participateItems;
-    } else {
-      query = query.toLowerCase();
-
-      final result=participateItems
-          .where((item) => item.name.toLowerCase().contains(query))
-          .toList();
-      //TODO should be rafactored
-      if(result.isEmpty && query.isValidCoreId()){
-        searchItems.value = [AllParticipantModel(name: query.shortenCoreId, coreId: query)];
-      }else {
-        searchItems.value =result;
-      }
-
-    }
-    //refresh();
-  }
-
-  RxBool isTextInputFocused = false.obs;
-
-  void selectUser(AllParticipantModel user) {
-    final existingIndex =
-        selectedUser.indexWhere((u) => u.coreId == user.coreId);
-
-    if (existingIndex != -1) {
-      selectedUser.removeAt(existingIndex);
-    } else {
-      //It will add user to the top
-      selectedUser.insert(0, user);
-    }
-  }
-
-  bool isSelected(AllParticipantModel user) {
-    return selectedUser.any((u) => u.coreId == user.coreId);
-  }
-
-  void clearRxList() {
-    selectedUser.clear();
-    participateItems.clear();
-    searchItems.clear();
-  }
-
-  Future<void> addUsersToCall() async {
-    if (selectedUser.isEmpty) {
-      return;
-    }
-
-    debugPrint('Add selected users to call');
-
-    //* Pop to call page
-    Get.back();
-
-    //* Add user to call repo
-    for (final user in selectedUser) {
-      await callRepository.addMember(user.coreId);
-    }
-
-    //* Clears list
-    clearRxList();
-  }
 }
