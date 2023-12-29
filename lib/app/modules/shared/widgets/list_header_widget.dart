@@ -3,14 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-
-import '../utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 
 class ListHeaderWidget extends StatelessWidget {
-  const ListHeaderWidget({
-    Key? key,
-    required this.title,
-  }) : super(key: key);
+  const ListHeaderWidget({required this.title, super.key});
 
   final String title;
 
@@ -20,7 +16,6 @@ class ListHeaderWidget extends StatelessWidget {
       children: [
         CustomSizes.mediumSizedBoxHeight,
         Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
               width: 10.w,
@@ -40,10 +35,10 @@ class ListHeaderWidget extends StatelessWidget {
                 color: COLORS.kDividerColor,
                 thickness: 2,
               ),
-            )
+            ),
           ],
         ),
-        CustomSizes.largeSizedBoxHeight
+        CustomSizes.smallSizedBoxHeight,
       ],
     );
   }

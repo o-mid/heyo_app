@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/add_participate/controllers/add_participate_controller.dart';
-import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/shared/widgets/chip_widget.dart';
 
 class SelectedUserChip extends GetView<AddParticipateController> {

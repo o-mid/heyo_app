@@ -21,27 +21,29 @@ class AddParticipateView extends GetView<AddParticipateController> {
       appBar: AppBarAddParticipate(controller),
       body: Obx(() {
         return SafeArea(
-          child: Stack(
-            alignment: Alignment.bottomCenter,
+          child: Column(
             children: [
-              ListView(
-                children: [
-                  CustomSizes.largeSizedBoxHeight,
-                  const TextfieldAddParticipate(),
-                  if (controller.searchItems.isEmpty)
-                    EmptyUsersBody(
-                      infoText: LocaleKeys.newChat_emptyStateTitleContacts.tr,
-                      buttonText: LocaleKeys.newChat_buttons_invite.tr,
-                      onInvite: () => openInviteBottomSheet(
-                        profileLink: controller.profileLink,
-                      ),
-                    )
-                  else
-                    const SearchInContactsBody(),
-                ],
+              Expanded(
+                child: Column(
+                  children: [
+                    CustomSizes.largeSizedBoxHeight,
+                    const TextfieldAddParticipate(),
+                    if (controller.searchItems.isEmpty &&
+                        controller.inputText.isEmpty)
+                      EmptyUsersBody(
+                        infoText: LocaleKeys.newChat_emptyStateTitleContacts.tr,
+                        buttonText: LocaleKeys.newChat_buttons_invite.tr,
+                        onInvite: () => openInviteBottomSheet(
+                          profileLink: controller.profileLink,
+                        ),
+                      )
+                    else
+                      const SearchInContactsBody(),
+                  ],
+                ),
               ),
               Padding(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                 child: CustomButton(
                   title: 'Add to Call (${controller.selectedUser.length})',
                   textStyle: TEXTSTYLES.kLinkBig.copyWith(

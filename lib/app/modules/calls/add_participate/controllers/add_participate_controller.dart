@@ -27,23 +27,22 @@ class AddParticipateController extends GetxController {
 
   RxList<AllParticipantModel> selectedUser = <AllParticipantModel>[].obs;
   RxList<AllParticipantModel> participateItems = <AllParticipantModel>[].obs;
+  RxMap<String, List<AllParticipantModel>> groupedParticipateItems = RxMap();
   RxList<AllParticipantModel> searchItems = <AllParticipantModel>[].obs;
-  late TextEditingController inputController;
 
   final inputText = ''.obs;
   final profileLink = 'https://heyo.core/m6ljkB4KJ';
 
   @override
   Future<void> onInit() async {
-    inputController = TextEditingController();
     await getContact();
     super.onInit();
   }
 
-  @override
-  void onClose() {
-    inputController.dispose();
-  }
+  //@override
+  //void onClose() {
+  //  inputController.value.dispose();
+  //}
 
 // Mock filters for the users
   //RxList<FilterModel> filters = [
@@ -79,12 +78,25 @@ class AddParticipateController extends GetxController {
       );
     }
 
-    participateItems.value =
-        contacts.map((e) => e.mapToAllParticipantModel()).toList();
+    participateItems
+      ..value = contacts.map((e) => e.mapToAllParticipantModel()).toList()
+      //* Sort the The list alphabetically
+      ..sort((a, b) => a.name.compareTo(b.name));
+
     searchItems.value = participateItems;
+
+    for (final participant in participateItems) {
+      final firstChar = participant.name[0].toUpperCase();
+      if (!groupedParticipateItems.containsKey(firstChar)) {
+        groupedParticipateItems[firstChar] = [];
+      }
+      groupedParticipateItems[firstChar]!.add(participant);
+    }
+    print(groupedParticipateItems);
   }
 
   Future<void> searchUsers(String query) async {
+    inputText.value = query;
     if (query == '') {
       searchItems.value = participateItems;
     } else {
@@ -159,7 +171,7 @@ class AddParticipateController extends GetxController {
       Get.back();
       isTextInputFocused.value = true;
       // this will set the input field to the scanned value and serach for users
-      inputController.text = coreId;
+      inputText.value = coreId;
       await searchByCoreId(coreId);
     } catch (e) {
       return;
