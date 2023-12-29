@@ -15,28 +15,34 @@ class ContactListWithHeaderAddParticipate
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Expanded(
-        child: Padding(
-          padding: CustomSizes.mainContentPadding,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (controller.inputText.isNotEmpty) ...[
-                Text(
-                  LocaleKeys.newChat_searchResults.tr,
-                  style: TEXTSTYLES.kLinkSmall.copyWith(
-                    color: COLORS.kTextSoftBlueColor,
-                  ),
-                ),
-                CustomSizes.mediumSizedBoxHeight,
-              ],
-              Expanded(
-                child: controller.inputText.isEmpty
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: controller.groupedParticipateItems.length,
-                        itemBuilder: (context, index) {
+    return Expanded(
+      child: Padding(
+        padding: CustomSizes.mainContentPadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Obx(() {
+              return Column(
+                children: [
+                  if (controller.inputText.value.isNotEmpty) ...[
+                    Text(
+                      LocaleKeys.newChat_searchResults.tr,
+                      style: TEXTSTYLES.kLinkSmall.copyWith(
+                        color: COLORS.kTextSoftBlueColor,
+                      ),
+                    ),
+                    CustomSizes.mediumSizedBoxHeight,
+                  ],
+                ],
+              );
+            }),
+            Expanded(
+              child: controller.inputText.value.isEmpty
+                  ? ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: controller.groupedParticipateItems.length,
+                      itemBuilder: (context, index) {
+                        return Obx(() {
                           final firstChar = controller
                               .groupedParticipateItems.keys
                               .elementAt(index);
@@ -54,20 +60,22 @@ class ContactListWithHeaderAddParticipate
                               ),
                             ],
                           );
-                        },
-                      )
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: controller.searchItems.length,
-                        itemBuilder: (context, index) => AddableUserWidget(
+                        });
+                      },
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: controller.searchItems.length,
+                      itemBuilder: (context, index) {
+                        return AddableUserWidget(
                           user: controller.searchItems[index],
-                        ),
-                      ),
-              ),
-            ],
-          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
         ),
-      );
-    });
+      ),
+    );
   }
 }

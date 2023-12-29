@@ -17,55 +17,63 @@ class AddableUserWidget extends GetView<AddParticipateController> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: InkWell(
-        onTap: () => controller.selectUser(user),
-        child: Row(
-          children: [
-            CustomCircleAvatar(
-              coreId: user.coreId,
-              size: 48,
-              //isOnline: user.isOnline,
-            ),
-            CustomSizes.mediumSizedBoxWidth,
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      user.name,
-                      style: TEXTSTYLES.kChatName.copyWith(
-                        color: COLORS.kDarkBlueColor,
-                      ),
-                    ),
-                    CustomSizes.smallSizedBoxWidth,
-                    //if (user.isVerified) Assets.svg.verifiedWithBluePadding.svg(),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  user.coreId.shortenCoreId,
-                  maxLines: 1,
-                  style: TEXTSTYLES.kChatText.copyWith(
-                    color: COLORS.kTextBlueColor,
+    return Obx(
+      () {
+        return Visibility(
+          visible: !controller.isSelected(user).isTrue,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: InkWell(
+              onTap: () => controller.selectUser(user),
+              child: Row(
+                children: [
+                  CustomCircleAvatar(
+                    coreId: user.coreId,
+                    size: 48,
+                    //isOnline: user.isOnline,
                   ),
-                ),
-              ],
-            ),
-            const Spacer(),
+                  CustomSizes.mediumSizedBoxWidth,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.name,
+                            style: TEXTSTYLES.kChatName.copyWith(
+                              color: COLORS.kDarkBlueColor,
+                            ),
+                          ),
+                          CustomSizes.smallSizedBoxWidth,
+                          //if (user.isVerified) Assets.svg.verifiedWithBluePadding.svg(),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        user.coreId.shortenCoreId,
+                        maxLines: 1,
+                        style: TEXTSTYLES.kChatText.copyWith(
+                          color: COLORS.kTextBlueColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
 
-            // Below code is + icon for adding multiple participate in call
-            CircleIconButton(
-              backgroundColor: COLORS.kBrightBlueColor,
-              icon: Assets.svg.addCircle.svg(color: COLORS.kDarkBlueColor),
+                  // Below code is + icon for adding multiple participate in call
+                  CircleIconButton(
+                    backgroundColor: COLORS.kBrightBlueColor,
+                    icon:
+                        Assets.svg.addCircle.svg(color: COLORS.kDarkBlueColor),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

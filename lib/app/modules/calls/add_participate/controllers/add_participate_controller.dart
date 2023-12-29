@@ -126,9 +126,21 @@ class AddParticipateController extends GetxController {
     }
   }
 
-  bool isSelected(AllParticipantModel user) {
-    return selectedUser.any((u) => u.coreId == user.coreId);
+  RxBool isSelected(AllParticipantModel user) {
+    return selectedUser.any((u) => u.coreId == user.coreId).obs;
   }
+
+  //RxBool allSelected(List<AllParticipantModel> participantList) {
+  //  var length = 0;
+  //  for (final user in selectedUser) {
+  //    participantList.forEach(( value) {
+  //      if (value.contains(user)) {
+  //        length++;
+  //      }
+  //    });
+  //  }
+  //  if(length==se)
+  //}
 
   void clearRxList() {
     selectedUser.clear();

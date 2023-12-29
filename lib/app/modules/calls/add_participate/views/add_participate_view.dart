@@ -29,7 +29,7 @@ class AddParticipateView extends GetView<AddParticipateController> {
                     CustomSizes.largeSizedBoxHeight,
                     const TextfieldAddParticipate(),
                     if (controller.searchItems.isEmpty &&
-                        controller.inputText.isEmpty)
+                        controller.inputText.value.isEmpty)
                       EmptyUsersBody(
                         infoText: LocaleKeys.newChat_emptyStateTitleContacts.tr,
                         buttonText: LocaleKeys.newChat_buttons_invite.tr,
