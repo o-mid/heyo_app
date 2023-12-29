@@ -95,18 +95,7 @@ class AddParticipateController extends GetxController {
           .toList();
 
       if (searchItems.isEmpty) {
-        final currentUserCoreId = await accountInfoRepo.getUserAddress();
-        if (query.isValidCoreId() && currentUserCoreId != query) {
-          //its a new user
-          searchItems.value = [
-            AllParticipantModel(
-              name: query.shortenCoreId,
-              coreId: query,
-            ),
-          ];
-        } else {
-          searchItems.value = [];
-        }
+        await searchByCoreId(query);
       }
     }
   }
@@ -171,21 +160,31 @@ class AddParticipateController extends GetxController {
       isTextInputFocused.value = true;
       // this will set the input field to the scanned value and serach for users
       inputController.text = coreId;
+      await searchByCoreId(coreId);
+    } catch (e) {
+      return;
+    }
+  }
 
-      final currentUserCoreId = await accountInfoRepo.getUserAddress();
-      if (coreId.isValidCoreId() && currentUserCoreId != coreId) {
-        //its a new user
+  Future<void> searchByCoreId(String coreId) async {
+    final currentUserCoreId = await accountInfoRepo.getUserAddress();
+    if (coreId.isValidCoreId() && currentUserCoreId != coreId) {
+      //* The searched coreId is in contact list
+      searchItems.value = participateItems
+          .where((item) => item.coreId.contains(coreId))
+          .toList();
+      //* If it's not empty the searched coreId is in contact list
+      if (searchItems.isEmpty) {
+        //* It's a new user
         searchItems.value = [
           AllParticipantModel(
             name: coreId.shortenCoreId,
             coreId: coreId,
           ),
         ];
-      } else {
-        searchItems.value = [];
       }
-    } catch (e) {
-      return;
+    } else {
+      searchItems.value = [];
     }
   }
 }
