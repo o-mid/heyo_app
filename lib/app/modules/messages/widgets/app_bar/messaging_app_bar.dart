@@ -165,7 +165,10 @@ class _DefaultAppBar extends StatelessWidget {
                 icon: Assets.svg.verticalMenuIcon.svg(),
                 size: 22,
                 onPressed: () {
-                  _openAppBarActionBottomSheet(userModel: controller.users.first);
+                  _openAppBarActionBottomSheet(
+                    coreId: controller.users.first.coreId,
+                    isContact: controller.users.first.isContact,
+                  );
                 },
               ),
             ],
@@ -276,7 +279,10 @@ class _BuildChatName extends StatelessWidget {
   }
 }
 
-void _openAppBarActionBottomSheet({required UserModel userModel}) {
+void _openAppBarActionBottomSheet({
+  required String coreId,
+  required bool isContact,
+}) {
   Get.bottomSheet(
       Padding(
         padding: CustomSizes.iconListPadding,
@@ -290,7 +296,7 @@ void _openAppBarActionBottomSheet({required UserModel userModel}) {
                   ..toNamed(
                     Routes.ADD_CONTACTS,
                     arguments: AddContactsViewArgumentsModel(
-                      coreId: userModel.coreId,
+                      coreId: coreId,
                     ),
                   );
               },
@@ -306,7 +312,7 @@ void _openAppBarActionBottomSheet({required UserModel userModel}) {
                   ),
                   CustomSizes.mediumSizedBoxWidth,
                   Text(
-                    userModel.isContact
+                    isContact
                         ? LocaleKeys.AddContacts_Edit_Contact.tr
                         : LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
                     style: TEXTSTYLES.kLinkBig.copyWith(
