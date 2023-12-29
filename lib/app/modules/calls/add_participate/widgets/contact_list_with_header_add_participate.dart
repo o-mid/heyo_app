@@ -59,52 +59,11 @@ class ContactListWithHeaderAddParticipate
                     : ListView.builder(
                         shrinkWrap: true,
                         itemCount: controller.searchItems.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: controller.searchItems
-                                .map((p) => AddableUserWidget(user: p))
-                                .toList(),
-                          );
-                        },
+                        itemBuilder: (context, index) => AddableUserWidget(
+                          user: controller.searchItems[index],
+                        ),
                       ),
               ),
-              //ListView.separated(
-              //  shrinkWrap: true,
-              //  itemCount: contacts.length,
-              //  separatorBuilder: (_, __) => searchMode
-              //      ? CustomSizes.mediumSizedBoxHeight
-              //      : const SizedBox.shrink(),
-              //  itemBuilder: (BuildContext context, int index) {
-              //    //this will grab the current user and
-              //    // extract the first character from its name
-              //    final currentUsernameFirstChar =
-              //        contacts[index].name.characters.first;
-              //    //this will grab the next user in the list if its not null and
-              //    // extract the first character from its name
-              //    final nextUsernameFirstChar =
-              //        contacts.indexOf(contacts.last) > index + 1
-              //            ? contacts[index + 1].name.characters.first
-              //            : "";
-              //    final suggestedUser = contacts[index];
-              //    return !controller.isSelected(suggestedUser)
-              //        ? Column(
-              //            children: [
-              //              currentUsernameFirstChar != nextUsernameFirstChar &&
-              //                      !searchMode
-              //                  ? ListHeaderWidget(
-              //                      title: contacts[index]
-              //                          .name
-              //                          .characters
-              //                          .first
-              //                          .toUpperCase(),
-              //                    )
-              //                  : const SizedBox(),
-              //              AddableUserWidget(user: suggestedUser),
-              //            ],
-              //          )
-              //        : Container();
-              //  },
-              //),
             ],
           ),
         ),
