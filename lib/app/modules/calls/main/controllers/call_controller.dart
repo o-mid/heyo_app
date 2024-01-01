@@ -63,14 +63,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   final localRenderer = RTCVideoRenderer();
 
-  RxList<AllParticipantModel> selectedUser = <AllParticipantModel>[].obs;
-  RxList<AllParticipantModel> participateItems = <AllParticipantModel>[].obs;
-  RxList<AllParticipantModel> searchItems = <AllParticipantModel>[].obs;
-  final inputController = TextEditingController();
-  final profileLink = 'https://heyo.core/m6ljkB4KJ';
-
-  final inputText = ''.obs;
-
   //final micEnabled = true.obs;
   //final callerVideoEnabled = false.obs;
   //final isInCall = true.obs;
@@ -138,7 +130,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   void onInit() {
     super.onInit();
     args = Get.arguments as CallViewArgumentsModel;
-    getContact();
     initCall();
     animationController = AnimationController(
       vsync: this,

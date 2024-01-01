@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
+import 'package:heyo/app/modules/calls/add_participate/controllers/add_participate_controller.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -10,63 +10,70 @@ import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
-class AddableUserWidget extends GetView<CallController> {
-  const AddableUserWidget({
-    required this.user,
-    super.key,
-  });
+class AddableUserWidget extends GetView<AddParticipateController> {
+  const AddableUserWidget({required this.user, super.key});
 
   final AllParticipantModel user;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => controller.selectUser(user),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CustomCircleAvatar(
-            coreId: user.coreId,
-            size: 48,
-            //isOnline: user.isOnline,
-          ),
-          CustomSizes.mediumSizedBoxWidth,
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+    return Obx(
+      () {
+        return Visibility(
+          visible: !controller.isSelected(user).isTrue,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: InkWell(
+              onTap: () => controller.selectUser(user),
+              child: Row(
                 children: [
-                  Text(
-                    user.name,
-                    style: TEXTSTYLES.kChatName.copyWith(
-                      color: COLORS.kDarkBlueColor,
-                    ),
+                  CustomCircleAvatar(
+                    coreId: user.coreId,
+                    size: 48,
+                    //isOnline: user.isOnline,
                   ),
-                  CustomSizes.smallSizedBoxWidth,
-                  //if (user.isVerified) Assets.svg.verifiedWithBluePadding.svg(),
+                  CustomSizes.mediumSizedBoxWidth,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.name,
+                            style: TEXTSTYLES.kChatName.copyWith(
+                              color: COLORS.kDarkBlueColor,
+                            ),
+                          ),
+                          CustomSizes.smallSizedBoxWidth,
+                          //if (user.isVerified) Assets.svg.verifiedWithBluePadding.svg(),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        user.coreId.shortenCoreId,
+                        maxLines: 1,
+                        style: TEXTSTYLES.kChatText.copyWith(
+                          color: COLORS.kTextBlueColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+
+                  // Below code is + icon for adding multiple participate in call
+                  CircleIconButton(
+                    backgroundColor: COLORS.kBrightBlueColor,
+                    icon:
+                        Assets.svg.addCircle.svg(color: COLORS.kDarkBlueColor),
+                  ),
                 ],
               ),
-              const SizedBox(height: 4),
-              Text(
-                user.coreId.shortenCoreId,
-                maxLines: 1,
-                style: TEXTSTYLES.kChatText.copyWith(
-                  color: COLORS.kTextBlueColor,
-                ),
-              ),
-            ],
+            ),
           ),
-          const Spacer(),
-
-          // Below code is + icon for adding multiple participate in call
-          CircleIconButton(
-            backgroundColor: COLORS.kBrightBlueColor,
-            icon: Assets.svg.addCircle.svg(color: COLORS.kDarkBlueColor),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
