@@ -126,17 +126,23 @@ class AddParticipateController extends GetxController {
     return selectedUser.any((u) => u.coreId == user.coreId).obs;
   }
 
-  //RxBool allSelected(List<AllParticipantModel> participantList) {
-  //  var length = 0;
-  //  for (final user in selectedUser) {
-  //    participantList.forEach(( value) {
-  //      if (value.contains(user)) {
-  //        length++;
-  //      }
-  //    });
-  //  }
-  //  if(length==se)
-  //}
+  bool allSubgroupSelected(String firstChar) {
+    var allSelected = false;
+    var selectionCount = 0;
+    final contactsForChar = groupedParticipateItems[firstChar]!;
+    for (final user in contactsForChar) {
+      if (isSelected(user).isTrue) {
+        selectionCount++;
+      }
+    }
+
+    //* This means all the subGroup are selected
+    if (selectionCount == contactsForChar.length) {
+      allSelected = true;
+    }
+
+    return allSelected;
+  }
 
   void clearRxList() {
     selectedUser.clear();

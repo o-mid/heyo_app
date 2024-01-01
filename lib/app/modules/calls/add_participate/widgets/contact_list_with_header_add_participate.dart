@@ -52,7 +52,8 @@ class ContactListWithHeaderAddParticipate
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ListHeaderWidget(title: firstChar),
+                              if (!controller.allSubgroupSelected(firstChar))
+                                ListHeaderWidget(title: firstChar),
                               Column(
                                 children: contactsForChar
                                     .map((p) => AddableUserWidget(user: p))
