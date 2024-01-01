@@ -28,11 +28,7 @@ class PreStartBindings extends Bindings {
       );
 
     int? networkId;
-    try {
-      networkId = await GlobalBindings.web3Client.getNetworkId();
-    } on Exception catch (e) {
-      return;
-    }
+    networkId = await GlobalBindings.web3Client.getNetworkId();
 
     Get
       ..put(
