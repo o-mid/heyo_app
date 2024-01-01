@@ -101,15 +101,7 @@ class AddContactsController extends GetxController {
     await _updateChatHistory(userModel: userModel);
     await _updateCallHistory(userModel: userModel);
 
-    Get.offNamedUntil(Routes.MESSAGES, ModalRoute.withName(Routes.HOME),
-        arguments: MessagesViewArgumentsModel(
-          participants: [
-            MessagingParticipantModel(
-              coreId: userModel.coreId,
-              chatId: userModel.coreId,
-            ),
-          ],
-        ));
+    Get.back();
   }
 
   Future<void> _updateChatHistory({required UserModel userModel}) async {
