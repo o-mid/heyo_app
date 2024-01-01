@@ -11,6 +11,7 @@ class SplashBinding extends Bindings {
         splashRepository: SplashRepository(
           notificationProvider: Get.find(),
           registryProvider: Get.find(),
+          kycVaultProvider: Get.find(),
         ),
         connectionContractor: Get.find(),
       ),

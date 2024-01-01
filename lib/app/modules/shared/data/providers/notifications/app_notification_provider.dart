@@ -5,7 +5,7 @@ import 'package:heyo/app/modules/shared/data/models/notification_type.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/netowrk_request_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/notifications/notification_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/registry/registery_provider.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/dio.extension.dart';
 

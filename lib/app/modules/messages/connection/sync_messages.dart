@@ -6,7 +6,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/message_model.dar
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/messages/utils/message_to_send_message_type.dart';
 

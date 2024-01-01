@@ -16,7 +16,7 @@ import 'package:heyo/app/modules/messages/data/usecases/update_message_usecase.d
 import 'package:heyo/app/modules/messages/data/user_state_repository_Impl.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 
 class MessagesBinding extends Bindings {
   @override
