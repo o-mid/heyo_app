@@ -16,9 +16,17 @@ import 'package:heyo/app/modules/shared/utils/constants/web3client_constant.dart
 import 'package:heyo/contracts/KYCVault.g.dart';
 import 'package:heyo/contracts/Registry.g.dart';
 
-class InitialBindings extends Bindings {
+class PreStartBindings extends Bindings {
   @override
   Future<void> dependencies() async {
+    Get
+      ..put<NetworkRequest>(DioNetworkRequest(), permanent: true)
+      ..put<LibP2PStorageProvider>(
+        LibP2PStorageProvider(
+          localProvider: GlobalBindings.secureStorageProvider,
+        ),
+      );
+
     int? networkId;
     try {
       networkId = await GlobalBindings.web3Client.getNetworkId();
@@ -43,12 +51,6 @@ class InitialBindings extends Bindings {
           registry: Get.find(),
         ),
       )
-      ..put<LibP2PStorageProvider>(
-        LibP2PStorageProvider(
-          localProvider: GlobalBindings.secureStorageProvider,
-        ),
-      )
-      ..put<NetworkRequest>(DioNetworkRequest(), permanent: true)
       ..put<BlockchainProvider>(
         BlockchainProviderImpl(
           registryProvider: Get.find(),
