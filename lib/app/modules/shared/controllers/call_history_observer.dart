@@ -58,9 +58,10 @@ class CallHistoryObserver extends GetxController {
         case CallHistoryStatus.calling:
           {
             await _createOutgoingNotAnsweredRecord(
-                remoteCoreId: state.remote,
-                callId: state.callId,
-                isAudioCall: state.isAudioCall!,);
+              remoteCoreId: state.remote,
+              callId: state.callId,
+              isAudioCall: state.isAudioCall!,
+            );
             break;
           }
         case CallHistoryStatus.connected:
@@ -99,9 +100,7 @@ class CallHistoryObserver extends GetxController {
   }
 
   Future<void> _createOutgoingNotAnsweredRecord(
-      {required String remoteCoreId,
-      required String callId,
-      required bool isAudioCall}) async {
+      {required String remoteCoreId, required String callId, required bool isAudioCall}) async {
     final callParticipant = await _getUserFromCoreId(
       remoteCoreId,
     );

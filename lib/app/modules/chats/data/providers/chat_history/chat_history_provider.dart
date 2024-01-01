@@ -30,7 +30,7 @@ class ChatHistoryProvider implements ChatHistoryLocalAbstractProvider {
     await _store.delete(
       await _db,
       finder: Finder(
-        filter: Filter.equals(ChatModel.idSerializedName, chatId),
+        filter: Filter.equals('id', chatId),
       ),
     );
   }
@@ -39,8 +39,7 @@ class ChatHistoryProvider implements ChatHistoryLocalAbstractProvider {
   Future<List<ChatModel>> getAllChats() async {
     final records = await _store.find(
       await _db,
-      finder: Finder(
-          sortOrders: [SortOrder(ChatModel.timestampSerializedName, false)]),
+      finder: Finder(sortOrders: [SortOrder('timestamp', false)]),
     );
 
     return records.map((e) => ChatModel.fromJson(e.value)).toList();
@@ -50,7 +49,7 @@ class ChatHistoryProvider implements ChatHistoryLocalAbstractProvider {
   Future<ChatModel?> getChat(String chatId) async {
     final records = await _store.find(
       await _db,
-      finder: Finder(filter: Filter.equals(ChatModel.idSerializedName, chatId)),
+      finder: Finder(filter: Filter.equals('id', chatId)),
     );
 
     if (records.isEmpty) {
@@ -65,8 +64,7 @@ class ChatHistoryProvider implements ChatHistoryLocalAbstractProvider {
   Future<void> updateChat(ChatModel chat) async {
     final records = await _store.find(
       await _db,
-      finder:
-          Finder(filter: Filter.equals(ChatModel.idSerializedName, chat.id)),
+      finder: Finder(filter: Filter.equals('id', chat.id)),
     );
 
     if (records.isEmpty) {
@@ -75,8 +73,7 @@ class ChatHistoryProvider implements ChatHistoryLocalAbstractProvider {
       await _store.update(
         await _db,
         chat.toJson(),
-        finder:
-            Finder(filter: Filter.equals(ChatModel.idSerializedName, chat.id)),
+        finder: Finder(filter: Filter.equals('id', chat.id)),
       );
     }
   }
@@ -86,9 +83,9 @@ class ChatHistoryProvider implements ChatHistoryLocalAbstractProvider {
     final records = await _store.find(
       await _db,
       finder: Finder(
-        sortOrders: [SortOrder(ChatModel.timestampSerializedName, false)],
+        sortOrders: [SortOrder('timestamp', false)],
         filter: Filter.equals(
-          '${ChatModel.timestampSerializedName}.walletAddress',
+          'walletAddress',
           userId,
         ),
       ),
@@ -100,8 +97,7 @@ class ChatHistoryProvider implements ChatHistoryLocalAbstractProvider {
   @override
   Future<Stream<List<ChatModel>>> getChatsStream() async {
     final query = _store.query(
-      finder: Finder(
-          sortOrders: [SortOrder(ChatModel.timestampSerializedName, false)]),
+      finder: Finder(sortOrders: [SortOrder('timestamp', false)]),
     );
 
     return query.onSnapshots(await _db).transform(

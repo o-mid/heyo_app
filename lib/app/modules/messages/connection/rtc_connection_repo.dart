@@ -83,7 +83,14 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
   }
 
   @override
-  void initConnection(MessageConnectionType messageConnectionType, String remoteId) {
-    dataChannelMessagingConnection.init(WebRTCConnectionInitData(remoteId: remoteId));
+  void initConnection(MessageConnectionType messageConnectionType, List<String> remoteIds) {
+    // TODO: implement connection FOR group messaging
+    if (remoteIds.length > 1) {
+      return;
+    } else {
+      dataChannelMessagingConnection.init(
+        WebRTCConnectionInitData(remoteId: remoteIds.first),
+      );
+    }
   }
 }

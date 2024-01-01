@@ -57,8 +57,7 @@ class ContactsView extends GetView<ContactsController> {
                   Get.rawSnackbar(
                     messageText: Text(
                       "Blocking Contacts feature is in development phase",
-                      style: TEXTSTYLES.kBodySmall
-                          .copyWith(color: COLORS.kDarkBlueColor),
+                      style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kDarkBlueColor),
                       textAlign: TextAlign.center,
                     ),
                     //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
@@ -93,7 +92,14 @@ class ContactsView extends GetView<ContactsController> {
               ),
               CustomSizes.smallSizedBoxHeight,
               ...controller.contacts
-                  .map((contact) => _buildContact(contact))
+                  .map(
+                    (contact) => _buildContact(
+                      coreId: contact.coreId,
+                      name: contact.name,
+                      isVerified: contact.isVerified,
+                      isContact: contact.isContact, // or any other relevant fields
+                    ),
+                  )
                   .toList(),
             ],
           );
@@ -102,13 +108,19 @@ class ContactsView extends GetView<ContactsController> {
     );
   }
 
-  Widget _buildContact(
-    UserModel contact,
-  ) {
+  Widget _buildContact({
+    required String coreId,
+    required String name,
+    required bool isVerified,
+    required bool isContact,
+  }) {
     return InkWell(
       onTap: () {
         Get.find<UserPreview>().openUserPreview(
-          userModel: contact,
+          coreId: coreId,
+          name: name, // Assuming you want to display the nickname as the name
+          isVerified: isVerified,
+          isContact: isContact,
         );
       },
       borderRadius: BorderRadius.circular(8.r),
@@ -117,21 +129,19 @@ class ContactsView extends GetView<ContactsController> {
         margin: EdgeInsets.symmetric(horizontal: 10.w),
         child: Row(
           children: [
-            CustomCircleAvatar(coreId: contact.coreId, size: 40),
+            CustomCircleAvatar(coreId: coreId, size: 40),
             CustomSizes.mediumSizedBoxWidth,
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    contact.nickname,
-                    style: TEXTSTYLES.kChatName
-                        .copyWith(color: COLORS.kDarkBlueColor),
+                    name,
+                    style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kDarkBlueColor),
                   ),
                   Text(
-                    contact.coreId.shortenCoreId,
-                    style: TEXTSTYLES.kBodySmall
-                        .copyWith(color: COLORS.kTextSoftBlueColor),
+                    coreId.shortenCoreId, // Assuming you have a method to shorten the coreId
+                    style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
                   ),
                 ],
               ),

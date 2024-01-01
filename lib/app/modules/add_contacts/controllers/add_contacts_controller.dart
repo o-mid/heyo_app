@@ -12,7 +12,6 @@ import 'package:heyo/app/routes/app_pages.dart';
 import '../../shared/data/models/messaging_participant_model.dart';
 
 class AddContactsController extends GetxController {
-
   AddContactsController({
     required this.contactRepository,
     required this.chatHistoryRepo,
@@ -32,7 +31,6 @@ class AddContactsController extends GetxController {
 
   @override
   void onInit() async {
-
     args = Get.arguments as AddContactsViewArgumentsModel;
     super.onInit();
   }
@@ -47,14 +45,13 @@ class AddContactsController extends GetxController {
     nickname.value = name;
   }
 
-  Future<UserModel?> _getContactWith(String id) async{
+  Future<UserModel?> _getContactWith(String id) async {
     return contactRepository.getContactById(id);
   }
 
-  Future<UserModel> _cloneUserModel() async{
+  Future<UserModel> _cloneUserModel() async {
     return UserModel(
       coreId: args.coreId,
-      iconUrl: AddContactsController.DefaultAvatarPath,
       name: args.coreId.shortenCoreId,
       isOnline: true,
       isContact: isContact.value,
@@ -63,7 +60,6 @@ class AddContactsController extends GetxController {
   }
 
   Future<void> updateContact() async {
-
     var user = await _getContactWith(args.coreId);
     if (user == null) {
       user = await _cloneUserModel();
@@ -71,20 +67,18 @@ class AddContactsController extends GetxController {
     } else {
       await updateUserChatMode(
           userModel: user.copyWith(
-            nickname: nickname.value,
-            name: nickname.value.isEmpty ? args.coreId.shortenCoreId: nickname.value,
-            isContact: true,
-          ));
+        nickname: nickname.value,
+        name: nickname.value.isEmpty ? args.coreId.shortenCoreId : nickname.value,
+        isContact: true,
+      ));
     }
   }
 
   Future<void> _initUserContact() async {
-
     // check if user is already in contact
     var createdUser = await _getContactWith(args.coreId);
 
     if (createdUser == null) {
-
       createdUser = await _cloneUserModel();
       await contactRepository.addContact(createdUser);
     } else {
@@ -95,7 +89,6 @@ class AddContactsController extends GetxController {
   }
 
   Future<void> updateUserChatMode({required UserModel userModel}) async {
-
     // check if user is already in contact
     var user = await _getContactWith(userModel.coreId);
 
@@ -109,15 +102,6 @@ class AddContactsController extends GetxController {
     await _updateCallHistory(userModel: userModel);
 
     Get.back();
-    //Get.offNamedUntil(Routes.MESSAGES, ModalRoute.withName(Routes.HOME),
-    //    arguments: MessagesViewArgumentsModel(
-    //      coreId: userModel.coreId,
-    //      participants: [
-    //        MessagingParticipantModel(
-    //          coreId: userModel.coreId,
-    //        ),
-    //      ],
-    //    ));
   }
 
   Future<void> _updateChatHistory({required UserModel userModel}) async {
@@ -131,8 +115,7 @@ class AddContactsController extends GetxController {
   }
 
   Future<void> _updateCallHistory({required UserModel userModel}) async {
-    final callHistoryList =
-        await callHistoryRepo.getCallsFromUserId(userModel.coreId);
+    final callHistoryList = await callHistoryRepo.getCallsFromUserId(userModel.coreId);
 
     //* For loop for all stored call history
     for (final call in callHistoryList) {
@@ -151,8 +134,7 @@ class AddContactsController extends GetxController {
         );
 
         // Create a copy of the list
-        final newParticipantList =
-            List<CallHistoryParticipantModel>.from(call.participants);
+        final newParticipantList = List<CallHistoryParticipantModel>.from(call.participants);
 
         // Replace the old item with the new one
         newParticipantList[index] = updatedParticipant;

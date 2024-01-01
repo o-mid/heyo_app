@@ -98,13 +98,11 @@ class WifiDirectConnectController extends GetxController {
             ..toNamed(
               Routes.MESSAGES,
               arguments: MessagesViewArgumentsModel(
-                //  user: user,
-                coreId: user.coreId,
-                iconUrl: user.iconUrl,
                 connectionType: MessagingConnectionType.wifiDirect,
                 participants: [
                   MessagingParticipantModel(
                     coreId: user.coreId,
+                    chatId: user.coreId,
                   ),
                 ],
               ),
@@ -121,13 +119,11 @@ class WifiDirectConnectController extends GetxController {
             ..toNamed(
               Routes.MESSAGES,
               arguments: MessagesViewArgumentsModel(
-                //   user: user,
-                coreId: user.coreId,
-                iconUrl: user.iconUrl,
                 connectionType: MessagingConnectionType.wifiDirect,
                 participants: [
                   MessagingParticipantModel(
                     coreId: user.coreId,
+                    chatId: user.coreId,
                   ),
                 ],
               ),

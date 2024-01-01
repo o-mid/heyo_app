@@ -6,8 +6,7 @@ import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart
 part 'call_history_detail_participant_model.freezed.dart';
 
 @freezed
-class CallHistoryDetailParticipantModel
-    with _$CallHistoryDetailParticipantModel {
+class CallHistoryDetailParticipantModel with _$CallHistoryDetailParticipantModel {
   const factory CallHistoryDetailParticipantModel({
     required String name,
     required String coreId,
@@ -32,7 +31,6 @@ extension CallHistoryParticipantMapper on CallHistoryDetailParticipantModel {
       name: name,
       coreId: coreId,
       walletAddress: coreId,
-      iconUrl: '',
     );
   }
 }

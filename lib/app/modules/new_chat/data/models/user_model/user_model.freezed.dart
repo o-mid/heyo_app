@@ -22,7 +22,6 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) {
 mixin _$UserModel {
   String get coreId => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  String? get iconUrl => throw _privateConstructorUsedError;
   String get walletAddress => throw _privateConstructorUsedError;
   String get nickname => throw _privateConstructorUsedError;
   bool get isOnline => throw _privateConstructorUsedError;
@@ -44,7 +43,6 @@ abstract class $UserModelCopyWith<$Res> {
   $Res call(
       {String coreId,
       String name,
-      String? iconUrl,
       String walletAddress,
       String nickname,
       bool isOnline,
@@ -68,7 +66,6 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
   $Res call({
     Object? coreId = null,
     Object? name = null,
-    Object? iconUrl = freezed,
     Object? walletAddress = null,
     Object? nickname = null,
     Object? isOnline = null,
@@ -85,10 +82,6 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      iconUrl: freezed == iconUrl
-          ? _value.iconUrl
-          : iconUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
       walletAddress: null == walletAddress
           ? _value.walletAddress
           : walletAddress // ignore: cast_nullable_to_non_nullable
@@ -128,7 +121,6 @@ abstract class _$$UserModelImplCopyWith<$Res>
   $Res call(
       {String coreId,
       String name,
-      String? iconUrl,
       String walletAddress,
       String nickname,
       bool isOnline,
@@ -150,7 +142,6 @@ class __$$UserModelImplCopyWithImpl<$Res>
   $Res call({
     Object? coreId = null,
     Object? name = null,
-    Object? iconUrl = freezed,
     Object? walletAddress = null,
     Object? nickname = null,
     Object? isOnline = null,
@@ -167,10 +158,6 @@ class __$$UserModelImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      iconUrl: freezed == iconUrl
-          ? _value.iconUrl
-          : iconUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
       walletAddress: null == walletAddress
           ? _value.walletAddress
           : walletAddress // ignore: cast_nullable_to_non_nullable
@@ -206,7 +193,6 @@ class _$UserModelImpl implements _UserModel {
   const _$UserModelImpl(
       {required this.coreId,
       required this.name,
-      required this.iconUrl,
       required this.walletAddress,
       this.nickname = '',
       this.isOnline = false,
@@ -221,8 +207,6 @@ class _$UserModelImpl implements _UserModel {
   final String coreId;
   @override
   final String name;
-  @override
-  final String? iconUrl;
   @override
   final String walletAddress;
   @override
@@ -243,7 +227,7 @@ class _$UserModelImpl implements _UserModel {
 
   @override
   String toString() {
-    return 'UserModel(coreId: $coreId, name: $name, iconUrl: $iconUrl, walletAddress: $walletAddress, nickname: $nickname, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, isContact: $isContact)';
+    return 'UserModel(coreId: $coreId, name: $name, walletAddress: $walletAddress, nickname: $nickname, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, isContact: $isContact)';
   }
 
   @override
@@ -253,7 +237,6 @@ class _$UserModelImpl implements _UserModel {
             other is _$UserModelImpl &&
             (identical(other.coreId, coreId) || other.coreId == coreId) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.iconUrl, iconUrl) || other.iconUrl == iconUrl) &&
             (identical(other.walletAddress, walletAddress) ||
                 other.walletAddress == walletAddress) &&
             (identical(other.nickname, nickname) ||
@@ -270,8 +253,8 @@ class _$UserModelImpl implements _UserModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, coreId, name, iconUrl,
-      walletAddress, nickname, isOnline, isVerified, isBlocked, isContact);
+  int get hashCode => Object.hash(runtimeType, coreId, name, walletAddress,
+      nickname, isOnline, isVerified, isBlocked, isContact);
 
   @JsonKey(ignore: true)
   @override
@@ -291,7 +274,6 @@ abstract class _UserModel implements UserModel {
   const factory _UserModel(
       {required final String coreId,
       required final String name,
-      required final String? iconUrl,
       required final String walletAddress,
       final String nickname,
       final bool isOnline,
@@ -306,8 +288,6 @@ abstract class _UserModel implements UserModel {
   String get coreId;
   @override
   String get name;
-  @override
-  String? get iconUrl;
   @override
   String get walletAddress;
   @override
