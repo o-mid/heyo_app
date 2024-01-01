@@ -62,10 +62,6 @@ class AddParticipateController extends GetxController {
     var callStreams = <CallStream>[];
     try {
       callStreams = await callRepository.getCallStreams();
-      callRepository.onCallStreamReceived = (callStateView) {
-        debugPrint('Add participant controller: $callStateView');
-        callStreams.add(callStateView);
-      };
     } catch (e) {
       debugPrint(e.toString());
       callStreams = [];
