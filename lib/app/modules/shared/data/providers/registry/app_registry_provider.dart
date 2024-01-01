@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:core_web3dart/crypto.dart';
 import 'package:core_web3dart/web3dart.dart';
+import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/data/models/registry_info_model.dart';
 import 'package:heyo/app/modules/shared/data/providers/registry/registery_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/secure_storage/secure_storage_provider.dart';
@@ -36,15 +37,18 @@ class AppRegistryProvider extends RegistryProvider {
   }
 
   @override
-  Future<RegistryInfoModel> getRegistry() async {
+  Future<RegistryInfoModel?> getRegistryInfo() async {
     final rawModel = await storageProvider.readFromStorage(REGISTRY_MODEL);
+
+    if (rawModel == null || rawModel.isEmpty) return null;
+
     return RegistryInfoModel.fromJSON(
       jsonDecode(rawModel!) as Map<String, dynamic>,
     );
   }
 
   @override
-  Future<String> createFcmRegisterSignature(
+  Future<String?> createFcmRegisterSignature(
       {required String fcmToken, required String privateKey}) async {
     const eip712DomainName = 'EIP712Domain';
     final eip712DomainVal = <Map<String, dynamic>>[
@@ -54,7 +58,8 @@ class AppRegistryProvider extends RegistryProvider {
       {'name': 'verifyingContract', 'type': 'address'}
     ];
 
-    final registryInfo = await getRegistry();
+    final registryInfo = await getRegistryInfo();
+    if(registryInfo == null) return null;
 
     final domain = {
       'name': 'NotificationServer',

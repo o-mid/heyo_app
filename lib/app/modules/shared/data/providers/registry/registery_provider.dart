@@ -6,7 +6,7 @@ abstract class RegistryProvider {
 
   Future<void> saveRegistry(RegistryInfoModel registryInfoModel);
 
-  Future<RegistryInfoModel> getRegistry();
+  Future<RegistryInfoModel?> getRegistryInfo();
 
   Future<String?> createFcmRegisterSignature({
     required String fcmToken,
