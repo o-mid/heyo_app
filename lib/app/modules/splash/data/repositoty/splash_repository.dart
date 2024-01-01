@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:heyo/app/modules/shared/data/models/registry_info_model.dart';
+import 'package:heyo/app/modules/shared/data/providers/kyc_vault/kyc_vault_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/notifications/notification_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/registry/registery_provider.dart';
 import 'package:heyo/app/modules/splash/data/repositoty/splash_abstract_repository.dart';
@@ -11,10 +12,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SplashRepository extends SplashAbstractRepository {
   NotificationProvider notificationProvider;
   RegistryProvider registryProvider;
+  KycVaultProvider kycVaultProvider;
 
   SplashRepository({
     required this.notificationProvider,
     required this.registryProvider,
+    required this.kycVaultProvider,
   });
 
   @override
