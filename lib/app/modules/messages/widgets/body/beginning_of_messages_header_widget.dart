@@ -15,13 +15,13 @@ import 'package:heyo/generated/locales.g.dart';
 import '../../../new_chat/data/models/user_model/user_model.dart';
 
 class BeginningOfMessagesHeaderWidget extends StatelessWidget {
-  final String userName;
-  final String coreId;
+  final String chatName;
+  final List<String> participantsCoreIds;
 
   const BeginningOfMessagesHeaderWidget({
     Key? key,
-    required this.coreId,
-    required this.userName,
+    required this.participantsCoreIds,
+    required this.chatName,
   }) : super(key: key);
 
   @override
@@ -35,8 +35,6 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
           _buildUserAvatar(),
           CustomSizes.mediumSizedBoxHeight,
           _buildUserNameRow(),
-          SizedBox(height: 4.h),
-          _buildCoreIdText(),
           CustomSizes.mediumSizedBoxHeight,
           _buildEncryptedMessagingText(),
         ],
@@ -47,7 +45,6 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
   BoxDecoration _containerDecoration() {
     return BoxDecoration(
       border: Border.all(
-        width: 1,
         color: COLORS.kPinCodeDeactivateColor,
       ),
       borderRadius: BorderRadius.circular(8),
@@ -55,20 +52,83 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
   }
 
   Widget _buildUserAvatar() {
-    return CustomCircleAvatar(coreId: coreId, size: 64);
+    if (participantsCoreIds.length > 1) {
+      return _buildUserAvatarsStack();
+    } else {
+      return CustomCircleAvatar(coreId: participantsCoreIds[0], size: 62);
+    }
   }
 
   Widget _buildUserNameRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          userName,
+    if (participantsCoreIds.length > 1) {
+      return Align(
+        child: Text(
+          chatName,
           style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
         ),
-        CustomSizes.smallSizedBoxWidth,
-        _buildVerifiedIcon(),
-      ],
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            chatName,
+            style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+          ),
+          CustomSizes.smallSizedBoxWidth,
+          _buildVerifiedIcon(),
+        ],
+      );
+    }
+  }
+
+  Widget _buildUserAvatarsStack() {
+    var avatarWidgets = <Widget>[];
+    const double size = 60; // Avatar size
+    const double overlap = 10; // Overlap between avatars
+    double totalWidth = 0.0; // Total width to avoid exceeding stack bounds
+
+    for (var i = 0; i < participantsCoreIds.length; i++) {
+      if (i <= 3) {
+        final leftPosition = i * (size - overlap);
+        totalWidth = leftPosition + size;
+        avatarWidgets.add(
+          Positioned(
+            left: leftPosition,
+            child: CustomCircleAvatar(coreId: participantsCoreIds[i], size: size),
+          ),
+        );
+      }
+    }
+
+    // Check if extra avatar indicator is needed
+    if (participantsCoreIds.length > 4) {
+      avatarWidgets.add(
+        Positioned(
+          left: totalWidth,
+          child: SizedBox(
+            width: size,
+            height: size,
+            child: Center(
+              child: Text(
+                '+${participantsCoreIds.length - 4}',
+                style: TEXTSTYLES.kHeaderMedium.copyWith(color: COLORS.kDarkBlueColor),
+              ),
+            ),
+          ),
+        ),
+      );
+      totalWidth += size;
+    }
+    return Align(
+      child: SizedBox(
+        width: totalWidth + overlap,
+        height: size + overlap,
+        child: Stack(
+          alignment: Alignment.center,
+          children: avatarWidgets,
+        ),
+      ),
     );
   }
 
@@ -95,7 +155,9 @@ class BeginningOfMessagesHeaderWidget extends StatelessWidget {
   Widget _buildEncryptedMessagingText() {
     return Text(
       LocaleKeys.MessagesPage_endToEndEncryptedMessaging.trParams(
-        {"name": userName},
+        {
+          "name": chatName,
+        },
       ),
       style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
       textAlign: TextAlign.center,

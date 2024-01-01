@@ -1,3 +1,28 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
+
+part 'chat_model.freezed.dart';
+part 'chat_model.g.dart';
+
+@freezed
+class ChatModel with _$ChatModel {
+  @JsonSerializable(explicitToJson: true)
+  const factory ChatModel({
+    required String id,
+    required String name,
+    required String lastMessage,
+    required DateTime timestamp,
+    @Default(false) bool isOnline,
+    @Default(false) bool isVerified,
+    @Default(0) int notificationCount,
+    @Default('') String scrollPosition,
+    required String lastReadMessageId,
+    required List<MessagingParticipantModel> participants,
+  }) = _ChatModel;
+
+  factory ChatModel.fromJson(Map<String, dynamic> json) => _$ChatModelFromJson(json);
+}
+
 /// [ChatModel] document structure :
 
 /// |      Variable        |    Data Type  |                         Description                        | Default Value ((N/A) = required)|
@@ -12,94 +37,3 @@
 /// | notificationCount    | int           | The number of unread messages in the chat.                 | 0            |
 /// |----------------------|---------------|----------------------------------------------------------|--------------|
 
-class ChatModel {
-  static const idSerializedName = 'id';
-  static const coreIdSerializedName = 'coreId';
-  static const nameSerializedName = 'name';
-  static const iconSerializedName = 'icon';
-  static const lastMessageSerializedName = 'lastMessage';
-  static const timestampSerializedName = 'timestamp';
-  static const isOnlineSerializedName = 'isOnline';
-  static const isVerifiedSerializedName = 'isVerified';
-  static const notificationCountSerializedName = 'notificationCount';
-  static const lastReadMessageIdSerializedName = 'lastReadMessageId';
-  static const scrollPositionSerializedName = "scrollPosition";
-
-  final String id;
-  final String name;
-  final String icon;
-  final String lastMessage;
-  final DateTime timestamp;
-  final bool isOnline;
-  final bool isVerified;
-  final int notificationCount;
-  final String scrollPosition;
-  final String lastReadMessageId;
-
-  ChatModel({
-    required this.id,
-    required this.name,
-    required this.icon,
-    required this.lastMessage,
-    required this.timestamp,
-    this.isOnline = false,
-    this.isVerified = false,
-    this.notificationCount = 0,
-    // should be required after implementing the feature and refactoring
-    this.scrollPosition = '',
-    required this.lastReadMessageId,
-  });
-
-  factory ChatModel.fromJson(Map<String, dynamic> json) => ChatModel(
-        id: json[idSerializedName] as String,
-        name: json[nameSerializedName] as String,
-        icon: json[iconSerializedName] as String,
-        lastMessage: json[lastMessageSerializedName] as String,
-        timestamp: DateTime.parse(json[timestampSerializedName] as String),
-        isOnline: json[isOnlineSerializedName] as bool,
-        isVerified: json[isVerifiedSerializedName] as bool,
-        notificationCount: json[notificationCountSerializedName] as int,
-        lastReadMessageId: json[lastReadMessageIdSerializedName] as String,
-        scrollPosition: json[scrollPositionSerializedName] as String,
-      );
-
-  Map<String, dynamic> toJson() => {
-        idSerializedName: id,
-        nameSerializedName: name,
-        iconSerializedName: icon,
-        lastMessageSerializedName: lastMessage,
-        timestampSerializedName: timestamp.toIso8601String(),
-        isOnlineSerializedName: isOnline,
-        isVerifiedSerializedName: isVerified,
-        notificationCountSerializedName: notificationCount,
-        lastReadMessageIdSerializedName: lastReadMessageId,
-        scrollPositionSerializedName: scrollPosition,
-      };
-
-  ChatModel copyWith({
-    String? id,
-    String? coreId,
-    String? name,
-    String? icon,
-    String? lastMessage,
-    DateTime? timestamp,
-    bool? isOnline,
-    bool? isVerified,
-    int? notificationCount,
-    String? scrollPosition,
-    String? lastReadMessageId,
-  }) {
-    return ChatModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      icon: icon ?? this.icon,
-      lastMessage: lastMessage ?? this.lastMessage,
-      timestamp: timestamp ?? this.timestamp,
-      isOnline: isOnline ?? this.isOnline,
-      isVerified: isVerified ?? this.isVerified,
-      notificationCount: notificationCount ?? this.notificationCount,
-      scrollPosition: scrollPosition ?? this.scrollPosition,
-      lastReadMessageId: lastReadMessageId ?? this.lastReadMessageId,
-    );
-  }
-}

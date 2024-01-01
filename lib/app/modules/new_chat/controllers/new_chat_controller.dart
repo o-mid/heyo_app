@@ -15,8 +15,7 @@ import '../data/models/filter_model.dart';
 import '../data/models/user_model/user_model.dart';
 import '../widgets/invite_bttom_sheet.dart';
 
-class NewChatController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class NewChatController extends GetxController with GetSingleTickerProviderStateMixin {
   late AnimationController animController;
   late Animation<double> animation;
   late TextEditingController inputController;
@@ -26,8 +25,7 @@ class NewChatController extends GetxController
   final inputText = "".obs;
   late StreamSubscription _contactasStreamSubscription;
 
-  NewChatController(
-      {required this.contactRepository, required this.accountInfoRepo});
+  NewChatController({required this.contactRepository, required this.accountInfoRepo});
 
 // in nearby users Tab after 3 seconds the refresh button will be visible
   RxBool refreshBtnVisibility = false.obs;
@@ -91,15 +89,12 @@ class NewChatController extends GetxController
       name: "Crapps Wallbanger",
       walletAddress: 'CB92...969A',
       coreId: 'CB92...969A',
-      iconUrl:
-          "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
       nickname: "Nickname",
     ),
     UserModel(
       name: "Fancy Potato",
       walletAddress: 'CB21...C325',
       coreId: 'CB21...C325',
-      iconUrl: "https://avatars.githubusercontent.com/u/6634136?v=4",
       isOnline: true,
       isVerified: true,
     ),
@@ -107,7 +102,6 @@ class NewChatController extends GetxController
       name: "manly Cupholder",
       walletAddress: 'CB42...324E',
       coreId: 'CB42...324E',
-      iconUrl: "https://avatars.githubusercontent.com/u/9801359?v=4",
       isOnline: true,
     ),
   ].obs;
@@ -124,8 +118,7 @@ class NewChatController extends GetxController
     ),
   ].obs;
 
-  RefreshController refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController refreshController = RefreshController(initialRefresh: false);
 
   void onRefresh() async {
     await Future.delayed(const Duration(milliseconds: 1000));
@@ -149,15 +142,13 @@ class NewChatController extends GetxController
         searchSuggestions.value = newContacts;
       }
     });
-    nearbyUsers
-        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    nearbyUsers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     super.onInit();
   }
 
   void searchUsers(String query) async {
     //TODO icon and chatmodel should be filled with correct data
-    List<UserModel> searchedItems =
-        (await contactRepository.search(query)).toList();
+    List<UserModel> searchedItems = (await contactRepository.search(query)).toList();
 
     if (searchedItems.isEmpty) {
       final currentUserCoreId = await accountInfoRepo.getUserAddress();
@@ -167,7 +158,6 @@ class NewChatController extends GetxController
         searchSuggestions.value = [
           UserModel(
             name: 'unknown',
-            iconUrl: (nearbyUsers..shuffle()).first.iconUrl,
             walletAddress: query,
             coreId: query,
           )

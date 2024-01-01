@@ -23,15 +23,23 @@ class UserPreview extends GetxController {
 
   Future<void> openUserPreview({
     bool isWifiDirect = false,
-    required UserModel userModel,
+    required String coreId,
+    required String name,
+    required bool isVerified,
+    required bool isContact,
   }) async {
     isWifiDirectConnection.value = isWifiDirect;
     print("openUserPreviewBottomSheet");
 
-    Get.bottomSheet(
+    await Get.bottomSheet(
       enterBottomSheetDuration: TRANSITIONS.newChat_EnterBottomSheetDuration,
       exitBottomSheetDuration: TRANSITIONS.newChat_ExitBottomSheetDuration,
-      UserPreviewWidget(user: userModel),
+      UserPreviewWidget(
+        coreId: coreId,
+        name: name,
+        isVerified: isVerified,
+        isContact: isContact,
+      ),
       backgroundColor: COLORS.kWhiteColor,
       isDismissible: true,
       isScrollControlled: true,
@@ -52,8 +60,7 @@ class UserPreview extends GetxController {
 
     final chatModel = await chatHistoryRepo.getChat(userCoreId);
     if (chatModel != null) {
-      await chatHistoryRepo
-          .updateChat(chatModel.copyWith(name: userCoreId.shortenCoreId));
+      await chatHistoryRepo.updateChat(chatModel.copyWith(name: userCoreId.shortenCoreId));
     }
     final calls = await callHistoryRepo.getCallsFromUserId(userCoreId);
     calls.forEach((call) async {

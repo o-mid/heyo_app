@@ -68,7 +68,7 @@ extension UserModelToCallUserModel on UserModel {
   CallUserModel toCallUserModel() {
     return CallUserModel(
       name: name,
-      iconUrl: iconUrl ?? "https://avatars.githubusercontent.com/u/2345136?v=4",
+      iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
       walletAddress: walletAddress,
       coreId: coreId,
       isContact: isContact,

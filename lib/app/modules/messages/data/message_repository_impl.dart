@@ -16,14 +16,14 @@ class MessageRepositoryImpl implements MessageRepository {
   final MessagesAbstractRepo messagesRepo;
 
   @override
-  Future<Stream<List<MessageModel>>> getMessagesStream({required String coreId}) async {
-    final messagesStream = await messagesRepo.getMessagesStream(coreId);
+  Future<Stream<List<MessageModel>>> getMessagesStream({required String chatId}) async {
+    final messagesStream = await messagesRepo.getMessagesStream(chatId);
     return messagesStream;
   }
 
   @override
-  Future<List<MessageModel>> getMessagesList({required String coreId}) async {
-    final messagesList = await messagesRepo.getMessages(coreId);
+  Future<List<MessageModel>> getMessagesList({required String chatId}) async {
+    final messagesList = await messagesRepo.getMessages(chatId);
 
     return messagesList;
   }

@@ -43,10 +43,7 @@ class CallHistoryListTitleWidget extends GetView<CallHistoryController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      call.participants
-                          .map((element) => element.name)
-                          .toList()
-                          .join(', '),
+                      call.participants.map((element) => element.name).toList().join(', '),
                       style: TEXTSTYLES.kChatName.copyWith(
                         color: COLORS.kDarkBlueColor,
                       ),

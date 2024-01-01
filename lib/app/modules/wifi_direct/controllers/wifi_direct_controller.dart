@@ -180,7 +180,6 @@ class WifiDirectController extends GetxController {
     peersAvailable.values.forEach((peer) {
       final user = UserModel(
         name: peer.name,
-        iconUrl: "https://avatars.githubusercontent.com/u/7847725?v=4",
         walletAddress: peer.coreID,
         coreId: peer.coreID,
       );
@@ -193,33 +192,28 @@ class WifiDirectController extends GetxController {
     var mockUsers = [
       UserModel(
         name: "Boiled Dealmaker",
-        iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
         isVerified: true,
         walletAddress: "CB11${List.generate(11, (index) => index).join()}14AB",
         coreId: "CB11${List.generate(11, (index) => index).join()}14AB",
       ),
       UserModel(
         name: "Crapps Wallbanger",
-        iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
         walletAddress: "CB11${List.generate(11, (index) => index).join()}49BB",
         coreId: "CB11${List.generate(11, (index) => index).join()}49BB",
       ),
       UserModel(
         name: "Fancy Potato",
-        iconUrl: "https://avatars.githubusercontent.com/u/6644146?v=4",
         walletAddress: "CB11${List.generate(11, (index) => index).join()}11FE",
         coreId: "CB11${List.generate(11, (index) => index).join()}11FE",
       ),
       UserModel(
         name: "Ockerito Fazola",
         isVerified: true,
-        iconUrl: "https://avatars.githubusercontent.com/u/7844146?v=4",
         walletAddress: "CB11${List.generate(11, (index) => index).join()}5A5D",
         coreId: "CB11${List.generate(11, (index) => index).join()}5A5D",
       ),
       UserModel(
         name: "Unchained Banana",
-        iconUrl: "https://avatars.githubusercontent.com/u/7847725?v=4",
         walletAddress: "CB11${List.generate(11, (index) => index).join()}44AC",
         coreId: "CB11${List.generate(11, (index) => index).join()}44AC",
       ),

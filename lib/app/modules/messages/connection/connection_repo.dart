@@ -13,7 +13,7 @@ abstract class ConnectionRepository {
 
   void initConnection(
     MessageConnectionType messageConnectionType,
-    String remoteId,
+    List<String> remoteIds,
   );
 
   Future<void> sendTextMessage({
