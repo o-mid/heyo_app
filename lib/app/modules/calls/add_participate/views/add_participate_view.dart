@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/add_participate/controllers/add_participate_controller.dart';
 import 'package:heyo/app/modules/calls/add_participate/widgets/appbar_add_participate.dart';
 import 'package:heyo/app/modules/calls/add_participate/widgets/invite_bttom_sheet.dart';
-import 'package:heyo/app/modules/calls/add_participate/widgets/search_in_contact_add_participate.dart';
+import 'package:heyo/app/modules/calls/add_participate/widgets/participant_list_widget.dart';
 import 'package:heyo/app/modules/calls/add_participate/widgets/textfield_add_participate.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -38,7 +38,7 @@ class AddParticipateView extends GetView<AddParticipateController> {
                         ),
                       )
                     else
-                      const SearchInContactsBody(),
+                      const ParticipantListWidget(),
                   ],
                 ),
               ),
