@@ -20,6 +20,8 @@ class AddParticipateView extends GetView<AddParticipateController> {
     return Scaffold(
       appBar: AppBarAddParticipate(controller),
       body: Obx(() {
+        //* If list is empty show the empty screen
+        final emptyScreen = controller.searchItems.isEmpty;
         return SafeArea(
           child: Column(
             children: [
@@ -28,13 +30,19 @@ class AddParticipateView extends GetView<AddParticipateController> {
                   children: [
                     CustomSizes.largeSizedBoxHeight,
                     const TextfieldAddParticipate(),
-                    if (controller.searchItems.isEmpty &&
-                        controller.inputText.value.isEmpty)
-                      EmptyUsersBody(
-                        infoText: LocaleKeys.newChat_emptyStateTitleContacts.tr,
-                        buttonText: LocaleKeys.newChat_buttons_invite.tr,
-                        onInvite: () => openInviteBottomSheet(
-                          profileLink: controller.profileLink,
+                    if (emptyScreen)
+                      Expanded(
+                        child: ListView(
+                          children: [
+                            EmptyUsersBody(
+                              infoText:
+                                  LocaleKeys.newChat_emptyStateTitleContacts.tr,
+                              buttonText: LocaleKeys.newChat_buttons_invite.tr,
+                              onInvite: () => openInviteBottomSheet(
+                                profileLink: controller.profileLink,
+                              ),
+                            ),
+                          ],
                         ),
                       )
                     else
@@ -42,19 +50,20 @@ class AddParticipateView extends GetView<AddParticipateController> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                child: CustomButton(
-                  title: 'Add to Call (${controller.selectedUser.length})',
-                  textStyle: TEXTSTYLES.kLinkBig.copyWith(
-                    color: COLORS.kWhiteColor,
+              if (!emptyScreen)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                  child: CustomButton(
+                    title: 'Add to Call (${controller.selectedUser.length})',
+                    textStyle: TEXTSTYLES.kLinkBig.copyWith(
+                      color: COLORS.kWhiteColor,
+                    ),
+                    backgroundColor: controller.selectedUser.isEmpty
+                        ? COLORS.kShimmerBase
+                        : COLORS.kGreenMainColor,
+                    onTap: controller.addUsersToCall,
                   ),
-                  backgroundColor: controller.selectedUser.isEmpty
-                      ? COLORS.kShimmerBase
-                      : COLORS.kGreenMainColor,
-                  onTap: controller.addUsersToCall,
                 ),
-              ),
             ],
           ),
         );
