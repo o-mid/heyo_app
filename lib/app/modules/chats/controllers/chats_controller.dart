@@ -128,7 +128,6 @@ class ChatsController extends GetxController {
     var mockchats = <ChatModel>[
       ChatModel(
         id: '1',
-        isOnline: false,
         name: "John ",
         lastMessage: "",
         lastReadMessageId: "",
@@ -142,7 +141,6 @@ class ChatsController extends GetxController {
       ),
       ChatModel(
         id: '2',
-        isOnline: true,
         name: "emmy",
         lastMessage: "",
         lastReadMessageId: "",
@@ -156,11 +154,9 @@ class ChatsController extends GetxController {
       ),
       ChatModel(
         id: '3',
-        isOnline: false,
         name: "dow",
         lastMessage: "",
         lastReadMessageId: "",
-        isVerified: true,
         timestamp: DateTime.now(),
         participants: [
           MessagingParticipantModel(
@@ -171,7 +167,6 @@ class ChatsController extends GetxController {
       ),
       ChatModel(
         id: '4',
-        isOnline: true,
         name: "docs",
         lastMessage: "",
         lastReadMessageId: "",
@@ -185,11 +180,9 @@ class ChatsController extends GetxController {
       ),
       ChatModel(
         id: '5',
-        isOnline: false,
         name: "joseef boran",
         lastMessage: "",
         lastReadMessageId: "",
-        isVerified: true,
         timestamp: DateTime.now(),
         participants: [
           MessagingParticipantModel(

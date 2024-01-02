@@ -819,8 +819,6 @@ class MessagesController extends GetxController {
         name: chatName.value,
         lastMessage: "",
         timestamp: DateTime.now(),
-        isOnline: true,
-        isVerified: true,
         lastReadMessageId: lastReadRemoteMessagesId.value,
         participants: participants,
       );
