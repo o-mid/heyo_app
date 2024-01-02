@@ -16,13 +16,12 @@ class InitialBindings extends Bindings {
           localProvider: GlobalBindings.secureStorageProvider,
         ),
       )
-
-    ..put<BlockchainProvider>(
-      BlockchainProviderImpl(
-        storageProvider: Get.find(),
-        web3client: GlobalBindings.web3Client,
-      ),
-      permanent: true
-    );
+      ..put<BlockchainProvider>(
+        BlockchainProviderImpl(
+          storageProvider: GlobalBindings.secureStorageProvider,
+          web3client: GlobalBindings.web3Client,
+        ),
+        permanent: true,
+      );
   }
 }
