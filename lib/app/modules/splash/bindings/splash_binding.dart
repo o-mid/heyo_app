@@ -8,11 +8,7 @@ class SplashBinding extends Bindings {
     Get.put(
       SplashController(
         accountInfoRepo: Get.find(),
-        splashRepository: SplashRepository(
-          notificationProvider: Get.find(),
-          registryProvider: Get.find(),
-          kycVaultProvider: Get.find(),
-        ),
+        splashRepository: SplashRepository(),
         connectionContractor: Get.find(),
       ),
     );

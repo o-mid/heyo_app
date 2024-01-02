@@ -46,8 +46,6 @@ import 'package:heyo/app/modules/shared/data/providers/network/netowrk_request_p
 import 'package:heyo/app/modules/shared/data/providers/network/network_credentials.dart';
 import 'package:heyo/app/modules/shared/data/providers/notifications/app_notification_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/notifications/notification_provider.dart';
-import 'package:heyo/app/modules/shared/data/providers/registry/app_registry_provider.dart';
-import 'package:heyo/app/modules/shared/data/providers/registry/registery_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/secure_storage/secure_storage_provider.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/app_account_repository.dart';
@@ -125,7 +123,7 @@ class GlobalBindings extends Bindings {
         AppNotificationProvider(
           networkRequest: Get.find(),
           libP2PStorageProvider: Get.find(),
-          registryProvider: Get.find(),
+          blockchainProvider: Get.find(),
         ),
       )
       ..put<AccountCreation>(LibP2PAccountCreation(

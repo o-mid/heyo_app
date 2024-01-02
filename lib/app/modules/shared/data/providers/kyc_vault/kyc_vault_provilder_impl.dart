@@ -1,8 +1,5 @@
 import 'package:core_web3dart/credentials.dart';
-import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
-import 'package:heyo/app/modules/shared/data/models/registry_info_model.dart';
 import 'package:heyo/app/modules/shared/data/providers/kyc_vault/kyc_vault_provider.dart';
-import 'package:heyo/app/modules/shared/data/providers/registry/registery_provider.dart';
 import 'package:heyo/app/modules/shared/utils/constants/web3client_constant.dart';
 import 'package:heyo/contracts/KYCVault.g.dart';
 
