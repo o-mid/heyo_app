@@ -17,7 +17,6 @@ import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_mode
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -454,89 +453,5 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   void switchFullSCreenMode() => fullScreenMode.value = !fullScreenMode.value;
 
-  Future<void> getContact() async {
-    final contacts = await getContactUserUseCase.execute();
-    //* Get the list of users who are in call
-    var callStreams = <CallStream>[];
-    try {
-      callStreams = await callRepository.getCallStreams();
-      //callRepository.onCallStreamReceived = (callStateView) {
-      //  debugPrint('onAddCallStream : $callStateView');
-      //  callStreams.add(callStateView);
-      //};
-    } catch (e) {
-      debugPrint(e.toString());
-      callStreams = [];
-    }
-
-    //* Remove the users who are already in call
-    for (final callStream in callStreams) {
-      contacts.removeWhere(
-        (contact) => contact.coreId == callStream.coreId,
-      );
-    }
-
-    participateItems.value = contacts.map((e) => e.mapToAllParticipantModel()).toList();
-    searchItems.value = participateItems;
-  }
-
-  Future<void> searchUsers(String query) async {
-    if (query == '') {
-      searchItems.value = participateItems;
-    } else {
-      query = query.toLowerCase();
-
-      final result =
-          participateItems.where((item) => item.name.toLowerCase().contains(query)).toList();
-      //TODO should be rafactored
-      if (result.isEmpty && query.isValidCoreId()) {
-        searchItems.value = [AllParticipantModel(name: query.shortenCoreId, coreId: query)];
-      } else {
-        searchItems.value = result;
-      }
-    }
-    //refresh();
-  }
-
-  RxBool isTextInputFocused = false.obs;
-
-  void selectUser(AllParticipantModel user) {
-    final existingIndex = selectedUser.indexWhere((u) => u.coreId == user.coreId);
-
-    if (existingIndex != -1) {
-      selectedUser.removeAt(existingIndex);
-    } else {
-      //It will add user to the top
-      selectedUser.insert(0, user);
-    }
-  }
-
-  bool isSelected(AllParticipantModel user) {
-    return selectedUser.any((u) => u.coreId == user.coreId);
-  }
-
-  void clearRxList() {
-    selectedUser.clear();
-    participateItems.clear();
-    searchItems.clear();
-  }
-
-  Future<void> addUsersToCall() async {
-    if (selectedUser.isEmpty) {
-      return;
-    }
-
-    debugPrint('Add selected users to call');
-
-    //* Pop to call page
-    Get.back();
-
-    //* Add user to call repo
-    for (final user in selectedUser) {
-      await callRepository.addMember(user.coreId);
-    }
-
-    //* Clears list
-    clearRxList();
-  }
+  
 }
