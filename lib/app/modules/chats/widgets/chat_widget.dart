@@ -61,7 +61,7 @@ class ChatWidget extends GetView<ChatsController> {
                   CustomCircleAvatar(
                     coreId: chat.id,
                     size: 48,
-                    isOnline: chat.isOnline,
+                    isOnline: true,
                   ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -82,11 +82,11 @@ class ChatWidget extends GetView<ChatsController> {
                                 ),
                               ),
                               const SizedBox(width: 6),
-                              if (chat.isVerified)
-                                Assets.svg.verified.svg(
-                                  width: 12.w,
-                                  height: 12.w,
-                                ),
+                              // if (chat.isVerified)
+                              //   Assets.svg.verified.svg(
+                              //     width: 12.w,
+                              //     height: 12.w,
+                              //   ),
                             ],
                           ),
                           Text(

@@ -12,15 +12,15 @@ _$ChatModelImpl _$$ChatModelImplFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       lastMessage: json['lastMessage'] as String,
       timestamp: DateTime.parse(json['timestamp'] as String),
-      isOnline: json['isOnline'] as bool? ?? false,
-      isVerified: json['isVerified'] as bool? ?? false,
-      notificationCount: json['notificationCount'] as int? ?? 0,
-      scrollPosition: json['scrollPosition'] as String? ?? '',
       lastReadMessageId: json['lastReadMessageId'] as String,
       participants: (json['participants'] as List<dynamic>)
           .map((e) =>
               MessagingParticipantModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      notificationCount: json['notificationCount'] as int? ?? 0,
+      scrollPosition: json['scrollPosition'] as String? ?? '',
+      isGroupChat: json['isGroupChat'] as bool? ?? false,
+      creatorCoreId: json['creatorCoreId'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$ChatModelImplToJson(_$ChatModelImpl instance) =>
@@ -29,10 +29,10 @@ Map<String, dynamic> _$$ChatModelImplToJson(_$ChatModelImpl instance) =>
       'name': instance.name,
       'lastMessage': instance.lastMessage,
       'timestamp': instance.timestamp.toIso8601String(),
-      'isOnline': instance.isOnline,
-      'isVerified': instance.isVerified,
-      'notificationCount': instance.notificationCount,
-      'scrollPosition': instance.scrollPosition,
       'lastReadMessageId': instance.lastReadMessageId,
       'participants': instance.participants.map((e) => e.toJson()).toList(),
+      'notificationCount': instance.notificationCount,
+      'scrollPosition': instance.scrollPosition,
+      'isGroupChat': instance.isGroupChat,
+      'creatorCoreId': instance.creatorCoreId,
     };
