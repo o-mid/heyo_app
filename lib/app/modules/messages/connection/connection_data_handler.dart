@@ -42,13 +42,11 @@ class DataHandler {
 
     final userChatModel = ChatModel(
       id: sessioncid,
-      isOnline: true,
       name: (userModel == null)
           ? "${sessioncid.characters.take(4).string}...${sessioncid.characters.takeLast(4).string}"
           : userModel.name,
       lastMessage: "",
       lastReadMessageId: "",
-      isVerified: true,
       timestamp: DateTime.now(),
       participants: [
         MessagingParticipantModel(
