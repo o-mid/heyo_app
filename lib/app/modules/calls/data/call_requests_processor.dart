@@ -1,14 +1,18 @@
+import 'dart:convert';
+
 import 'package:heyo/app/modules/calls/data/call_status_provider.dart';
 import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
 import 'package:heyo/app/modules/connection/domain/connection_models.dart';
+import 'package:heyo/app/modules/shared/data/providers/notifications/notification_provider.dart';
 
 class CallRequestsProcessor {
   CallRequestsProcessor({
     required this.connectionContractor,
     required this.callConnectionsHandler,
     required this.callStatusProvider,
+    required this.notificationProvider,
   }) {
     connectionContractor.getMessageStream().listen((event) {
       if (event is CallConnectionDataReceived) {
@@ -19,16 +23,22 @@ class CallRequestsProcessor {
         );
       }
     });
+    notificationProvider.getNotificationStream().listen((event) {
+      final receivedData = _decoder.convert(event) as Map<String, dynamic>;
+      onRequestReceived(receivedData['content'] as  Map<String, dynamic> , receivedData['id'] as String, null);
+    });
   }
+  final JsonDecoder _decoder = const JsonDecoder();
 
   final ConnectionContractor connectionContractor;
   final CallConnectionsHandler callConnectionsHandler;
   final CallStatusProvider callStatusProvider;
 
+  final NotificationProvider notificationProvider;
   Future<void> onRequestReceived(
     Map<String, dynamic> mapData,
     String remoteCoreId,
-    String remotePeerId,
+    String? remotePeerId,
   ) async {
     final data = mapData['data'];
 
@@ -78,7 +88,7 @@ class CallRequestsProcessor {
   }
 
   handleCallRequestProcess(signalType, Map<String, dynamic> mapData, data,
-      String callId, String remoteCoreId, String remotePeerId) {
+      String callId, String remoteCoreId, String? remotePeerId) {
     switch (signalType) {
       case CallSignalingCommands.reject:
         {

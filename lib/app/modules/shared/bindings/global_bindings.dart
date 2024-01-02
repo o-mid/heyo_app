@@ -206,7 +206,7 @@ class GlobalBindings extends Bindings {
       ..put(NotificationsController(
           appNotifications: Get.find(),
           ))
-      ..put(CallSignaling(connectionContractor: Get.find()))
+      ..put(CallSignaling(connectionContractor: Get.find(),notificationProvider: Get.find(),accountRepository: Get.find()))
       ..put(CallStatusProvider(callSignaling: Get.find()),permanent: true)
 
       ..put(
@@ -216,7 +216,7 @@ class GlobalBindings extends Bindings {
                   connectionContractor: Get.find(),),),
           permanent: true)
       ..put(CallRequestsProcessor(
-          connectionContractor: Get.find(), callStatusProvider: Get.find(),callConnectionsHandler: Get.find()),)
+          connectionContractor: Get.find(), callStatusProvider: Get.find(),callConnectionsHandler: Get.find(), notificationProvider: Get.find()),)
       ..put(
           CallStatusObserver(
             callStatusProvider: Get.find(),

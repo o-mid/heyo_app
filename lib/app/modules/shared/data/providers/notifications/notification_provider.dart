@@ -7,5 +7,7 @@ abstract class NotificationProvider {
   Future<bool> sendNotification({
     required String remoteDelegatedCoreId,
     required NotificationType notificationType,
+    required String content,
   });
+  Stream<String> getNotificationStream();
 }
