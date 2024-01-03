@@ -119,13 +119,7 @@ class GlobalBindings extends Bindings {
         ),
       )
       ..put<NetworkRequest>(DioNetworkRequest(), permanent: true)
-      ..put<NotificationProvider>(
-        AppNotificationProvider(
-          networkRequest: Get.find(),
-          libP2PStorageProvider: Get.find(),
-          registryProvider: Get.find(),
-        ),
-      )
+
       ..put<AccountCreation>(LibP2PAccountCreation(
         localProvider: secureStorageProvider,
         cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
@@ -137,6 +131,14 @@ class GlobalBindings extends Bindings {
           localStorageProvider: secureStorageProvider,
         ),
         permanent: true,
+      )
+      ..put<NotificationProvider>(
+        AppNotificationProvider(
+            networkRequest: Get.find(),
+            libP2PStorageProvider: Get.find(),
+            registryProvider: Get.find(),
+            accountRepository: Get.find()
+        ),
       )
       ..put(P2PState(), permanent: true)
       ..put(P2PCommunicator(
@@ -206,7 +208,7 @@ class GlobalBindings extends Bindings {
       ..put(NotificationsController(
           appNotifications: Get.find(),
           ))
-      ..put(CallSignaling(connectionContractor: Get.find(),notificationProvider: Get.find(),accountRepository: Get.find()))
+      ..put(CallSignaling(connectionContractor: Get.find(),notificationProvider: Get.find()))
       ..put(CallStatusProvider(callSignaling: Get.find()),permanent: true)
 
       ..put(

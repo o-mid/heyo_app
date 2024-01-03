@@ -24,8 +24,9 @@ class CallRequestsProcessor {
       }
     });
     notificationProvider.getNotificationStream().listen((event) {
-      final receivedData = _decoder.convert(event) as Map<String, dynamic>;
-      onRequestReceived(receivedData['content'] as  Map<String, dynamic> , receivedData['id'] as String, null);
+      final receivedData = _decoder.convert(event['content'] as String) as Map<String, dynamic>;
+
+      onRequestReceived( receivedData , event['messageFrom'] as String, null);
     });
   }
   final JsonDecoder _decoder = const JsonDecoder();

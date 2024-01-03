@@ -5,6 +5,7 @@ import 'package:heyo/app/modules/shared/data/models/notification_type.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/netowrk_request_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/notifications/notification_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/registry/registery_provider.dart';
+import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/dio.extension.dart';
 
@@ -12,15 +13,16 @@ class AppNotificationProvider extends NotificationProvider {
   NetworkRequest networkRequest;
   LibP2PStorageProvider libP2PStorageProvider;
   RegistryProvider registryProvider;
+  final AccountRepository accountRepository;
 
-  final StreamController<String> _streamController =
-      StreamController<String>.broadcast();
+  final StreamController<Map<String,dynamic>> _streamController =
+      StreamController<Map<String,dynamic>>.broadcast();
 
-  AppNotificationProvider({
-    required this.networkRequest,
-    required this.libP2PStorageProvider,
-    required this.registryProvider,
-  }) {
+  AppNotificationProvider(
+      {required this.networkRequest,
+      required this.libP2PStorageProvider,
+      required this.registryProvider,
+      required this.accountRepository}) {
     _listen();
   }
 
@@ -62,14 +64,18 @@ class AppNotificationProvider extends NotificationProvider {
   Future<bool> sendNotification(
       {required String remoteDelegatedCoreId,
       required NotificationType notificationType,
-      required String content}) async {
+      required String content,}) async {
+    final userCoreId = await accountRepository.getUserAddress();
     final result = await networkRequest.post(
       path: 'notification-service/notification/send',
       data: {
         'coreId': remoteDelegatedCoreId,
         'notificationType': notificationType.name.toUpperCase(),
         'senderUsername': '',
-        'content': content
+        'content': content,
+        'senderCoreId': userCoreId,
+        'title' : 'Call',
+        'body' :  userCoreId
       },
     );
     return result.isSuccess();
@@ -89,9 +95,9 @@ class AppNotificationProvider extends NotificationProvider {
       print('Message data: ${message.data}');
       print('Message notification: ${message.notification?.title}');
       print('Message notification: ${message.notification?.body}');
-      if (diff < 15 * 1000 && message.notification?.body != null) {
+      if (diff < 15 * 1000) {
         print("Call accepted");
-        _streamController.add(message.notification!.body!);
+        _streamController.add(message.data);
       } else {
         print("Call is not accepted");
       }
@@ -105,7 +111,7 @@ class AppNotificationProvider extends NotificationProvider {
   }
 
   @override
-  Stream<String> getNotificationStream() {
+  Stream<Map<String,dynamic>> getNotificationStream() {
     return _streamController.stream.asBroadcastStream();
   }
 }
