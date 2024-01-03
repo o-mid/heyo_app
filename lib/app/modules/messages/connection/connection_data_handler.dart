@@ -275,7 +275,6 @@ class DataHandler {
   Future<String> getMessageJsonEncode({
     required String messageId,
     required ConfirmMessageStatus status,
-    required String remoteCoreId,
   }) async {
     final confirmMessageJson = ConfirmMessageModel(
       messageId: messageId,

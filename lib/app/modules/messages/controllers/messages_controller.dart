@@ -132,6 +132,11 @@ class MessagesController extends GetxController {
       })
       .toList()
       .obs;
+  final List<String> remoteCoreIds = (Get.arguments as MessagesViewArgumentsModel)
+      .participants
+      .map((element) => element.coreId)
+      .toList();
+
   final chatName = (Get.arguments as MessagesViewArgumentsModel).chatName.obs;
 
   final isGroupChat = (Get.arguments as MessagesViewArgumentsModel).participants.length > 1;
@@ -145,6 +150,7 @@ class MessagesController extends GetxController {
     if (chatName.value.isEmpty) {
       chatName.value = users.first.name;
     }
+
     _initMessagesArguments();
 
     _initUiControllers();
@@ -400,7 +406,7 @@ class MessagesController extends GetxController {
     await updateMessageUseCase.execute(
       messageConnectionType: args.connectionType.map(),
       // TODO: GROUP MESSAGING
-      remoteCoreId: users.first.coreId,
+      remoteCoreIds: remoteCoreIds,
       updateMessageType: UpdateMessageType.updateReactions(
         selectedMessage: msg,
         emoji: emoji,
@@ -414,7 +420,7 @@ class MessagesController extends GetxController {
       connectionType: args.connectionType.map(),
       messageId: messageId,
       // TODO: GROUP MESSAGING
-      remoteCoreId: users.first.coreId,
+      remoteCoreIds: remoteCoreIds,
     );
 
     await markMessagesAsReadById(
@@ -463,8 +469,7 @@ class MessagesController extends GetxController {
         replyTo: replyingTo.value,
         chatId: chatId,
       ),
-      // TODO: GROUP MESSAGING
-      remoteCoreId: users.first.coreId,
+      remoteCoreIds: remoteCoreIds,
     );
 
     textController.clear();
@@ -483,7 +488,7 @@ class MessagesController extends GetxController {
         chatId: chatId,
       ),
       // TODO: GROUP MESSAGING
-      remoteCoreId: users.first.coreId,
+      remoteCoreIds: remoteCoreIds,
     );
 
     _postMessageSendOperations();
@@ -504,7 +509,7 @@ class MessagesController extends GetxController {
         chatId: chatId,
       ),
       // TODO: GROUP MESSAGING
-      remoteCoreId: users.first.coreId,
+      remoteCoreIds: remoteCoreIds,
     );
 
     locationMessage.value = null;
@@ -527,8 +532,7 @@ class MessagesController extends GetxController {
         replyTo: replyingTo.value,
         chatId: chatId,
       ),
-      // TODO: GROUP MESSAGING
-      remoteCoreId: users.first.coreId,
+      remoteCoreIds: remoteCoreIds,
     );
 
     _postMessageSendOperations();
@@ -634,7 +638,7 @@ class MessagesController extends GetxController {
     await deleteMessageUseCase.execute(
       messageConnectionType: args.connectionType.map(),
       // TODO: GROUP MESSAGING
-      remoteCoreId: users.first.coreId,
+      remoteCoreIds: remoteCoreIds,
       deleteMessageType: DeleteMessageType.forEveryone(
         chatId: chatId,
         selectedMessages: selectedMessages,
@@ -647,7 +651,7 @@ class MessagesController extends GetxController {
     await deleteMessageUseCase.execute(
       messageConnectionType: args.connectionType.map(),
       // TODO: GROUP MESSAGING
-      remoteCoreId: users.first.coreId,
+      remoteCoreIds: remoteCoreIds,
       deleteMessageType: DeleteMessageType.forMe(
         chatId: chatId,
         selectedMessages: selectedMessages,
@@ -774,7 +778,7 @@ class MessagesController extends GetxController {
             chatId: chatId,
           ),
           // TODO: GROUP MESSAGING
-          remoteCoreId: users.first.coreId,
+          remoteCoreIds: remoteCoreIds,
         );
       }
       mediaGlassmorphicChangeState();

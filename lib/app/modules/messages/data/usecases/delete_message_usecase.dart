@@ -25,7 +25,7 @@ class DeleteMessageUseCase {
   Future<void> execute({
     required MessageConnectionType messageConnectionType,
     required DeleteMessageType deleteMessageType,
-    required String remoteCoreId,
+    required List<String> remoteCoreIds,
   }) async {
     switch (deleteMessageType.runtimeType) {
       case DeleteLocalMessages:
@@ -40,7 +40,7 @@ class DeleteMessageUseCase {
           messageConnectionType: messageConnectionType,
           remoteMessages: remoteMessages,
           chatId: deleteMessageType.chatId,
-          remoteCoreId: remoteCoreId,
+          remoteCoreIds: remoteCoreIds,
         );
         break;
     }
@@ -58,7 +58,7 @@ class DeleteMessageUseCase {
     required MessageConnectionType messageConnectionType,
     required List<MessageModel> remoteMessages,
     required String chatId,
-    required String remoteCoreId,
+    required List<String> remoteCoreIds,
   }) async {
     final messageIds = remoteMessages.map((e) => e.messageId).toList();
 
@@ -68,13 +68,12 @@ class DeleteMessageUseCase {
 
     final processedMessage = await processor.getMessageDetails(
       channelMessageType: ChannelMessageType.delete(message: deleteMessagesJson),
-      remoteCoreId: remoteCoreId,
     );
 
     await connectionRepository.sendTextMessage(
       messageConnectionType: messageConnectionType,
       text: jsonEncode(processedMessage.messageJson),
-      remoteCoreIds: [remoteCoreId],
+      remoteCoreIds: remoteCoreIds,
     );
   }
 }

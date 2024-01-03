@@ -27,7 +27,7 @@ class SendMessageUseCase {
   execute(
       {required MessageConnectionType messageConnectionType,
       required SendMessageType sendMessageType,
-      required String remoteCoreId,
+      required List<String> remoteCoreIds,
       bool isUpdate = false,
       MessageModel? messageModel = null}) async {
     Tuple3<MessageModel?, bool, String> messageObject =
@@ -52,7 +52,6 @@ class SendMessageUseCase {
     final processedMessage = await processor.getMessageDetails(
       channelMessageType: ChannelMessageType.message(
           message: rawmessageJson, isDataBinary: isDataBinary, messageLocalPath: messageLocalPath),
-      remoteCoreId: remoteCoreId,
     );
     if (isDataBinary && messageLocalPath.isNotEmpty) {
       // Todo: implement sending binary data
@@ -68,7 +67,7 @@ class SendMessageUseCase {
       await connectionRepository.sendTextMessage(
           messageConnectionType: messageConnectionType,
           text: jsonEncode(processedMessage.messageJson),
-          remoteCoreIds: [remoteCoreId]);
+          remoteCoreIds: remoteCoreIds);
     }
   }
 }
