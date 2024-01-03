@@ -74,7 +74,7 @@ class DeleteMessageUseCase {
     await connectionRepository.sendTextMessage(
       messageConnectionType: messageConnectionType,
       text: jsonEncode(processedMessage.messageJson),
-      remoteCoreId: remoteCoreId,
+      remoteCoreIds: [remoteCoreId],
     );
   }
 }

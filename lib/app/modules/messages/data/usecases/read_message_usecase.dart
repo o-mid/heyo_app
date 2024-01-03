@@ -21,6 +21,8 @@ class ReadMessageUseCase {
     );
 
     await connectionRepository.sendTextMessage(
-        messageConnectionType: connectionType, text: messageJsonEncode, remoteCoreId: remoteCoreId);
+        messageConnectionType: connectionType,
+        text: messageJsonEncode,
+        remoteCoreIds: [remoteCoreId]);
   }
 }

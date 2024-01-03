@@ -46,7 +46,7 @@ class ConfirmMessageUseCase {
         await connectionRepository.sendTextMessage(
           messageConnectionType: MessageConnectionType.RTC_DATA_CHANNEL,
           text: jsonEncode(processedMessage.messageJson),
-          remoteCoreId: remoteCoreId,
+          remoteCoreIds: [remoteCoreId],
         );
         break;
     }
