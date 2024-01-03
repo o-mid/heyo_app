@@ -7,7 +7,6 @@ import '../utils/channel_message_from_type.dart';
 class MessageProcessor {
   Future<MessageProcessingResult> getMessageDetails({
     required ChannelMessageType channelMessageType,
-    required String remoteCoreId,
   }) async {
     Tuple3<WrappedMessageModel?, bool, String> channelMessageObject =
         channelmessageFromType(channelMessageType: channelMessageType);

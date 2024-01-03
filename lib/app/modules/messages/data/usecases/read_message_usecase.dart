@@ -12,17 +12,16 @@ class ReadMessageUseCase {
   Future<void> execute({
     required MessageConnectionType connectionType,
     required String messageId,
-    required String remoteCoreId,
+    required List<String> remoteCoreIds,
   }) async {
     final messageJsonEncode = await dataHandler.getMessageJsonEncode(
       messageId: messageId,
       status: ConfirmMessageStatus.read,
-      remoteCoreId: remoteCoreId,
     );
 
     await connectionRepository.sendTextMessage(
         messageConnectionType: connectionType,
         text: messageJsonEncode,
-        remoteCoreIds: [remoteCoreId]);
+        remoteCoreIds: remoteCoreIds);
   }
 }

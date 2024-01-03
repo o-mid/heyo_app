@@ -26,7 +26,7 @@ class ConfirmMessageUseCase {
   void execute({
     required MessageConnectionType messageConnectionType,
     required ConfirmMessageType confirmMessageType,
-    required String remoteCoreId,
+    required List<String> remoteCoreIds,
   }) async {
     switch (confirmMessageType.runtimeType) {
       case ConfirmReceivedText:
@@ -40,13 +40,12 @@ class ConfirmMessageUseCase {
 
         final processedMessage = await processor.getMessageDetails(
           channelMessageType: ChannelMessageType.confirm(message: confirmmessageJson),
-          remoteCoreId: remoteCoreId,
         );
 
         await connectionRepository.sendTextMessage(
           messageConnectionType: MessageConnectionType.RTC_DATA_CHANNEL,
           text: jsonEncode(processedMessage.messageJson),
-          remoteCoreIds: [remoteCoreId],
+          remoteCoreIds: remoteCoreIds,
         );
         break;
     }
