@@ -23,22 +23,30 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
   @override
   Future<void> sendTextMessage({
     required String text,
-    required String remoteCoreId,
+    required List<String> remoteCoreIds,
     required MessageConnectionType messageConnectionType,
   }) async {
-    await dataHandler.createUserChatModel(sessioncid: remoteCoreId);
-
-    await dataChannelMessagingConnection.sendMessage(
-      DataChannelConnectionSendData(
-        remoteCoreId: remoteCoreId,
-        message: text,
-      ),
-    );
+    for (final remoteCoreId in remoteCoreIds) {
+      try {
+        await dataChannelMessagingConnection.sendMessage(
+          DataChannelConnectionSendData(
+            remoteCoreId: remoteCoreId,
+            message: text,
+          ),
+        );
+      } catch (e) {
+        print("Failed to send message to $remoteCoreId: $e");
+      }
+      ;
+    }
   }
 
   @override
-  Future<void> sendBinaryMessage({required Uint8List binary, required String remoteCoreId}) async {
-    await dataHandler.createUserChatModel(sessioncid: remoteCoreId);
+  Future<void> sendBinaryMessage({
+    required Uint8List binary,
+    required List<String> remoteCoreIds,
+  }) async {
+    await dataHandler.createUserChatModel(sessioncid: remoteCoreIds.first);
   }
 
   Future<void> _observeMessagingStatus(RTCSession rtcSession) async {
@@ -84,13 +92,14 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
 
   @override
   void initConnection(MessageConnectionType messageConnectionType, List<String> remoteIds) {
-    // TODO: implement connection FOR group messaging
-    if (remoteIds.length > 1) {
-      return;
-    } else {
-      dataChannelMessagingConnection.init(
-        WebRTCConnectionInitData(remoteId: remoteIds.first),
-      );
+    for (final remoteId in remoteIds) {
+      try {
+        print("Initializing connection with $remoteId");
+
+        dataChannelMessagingConnection.init(WebRTCConnectionInitData(remoteId: remoteId));
+      } catch (e) {
+        print("Failed to initialize connection with $remoteId: $e");
+      }
     }
   }
 }

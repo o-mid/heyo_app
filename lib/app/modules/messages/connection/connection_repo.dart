@@ -13,17 +13,17 @@ abstract class ConnectionRepository {
 
   void initConnection(
     MessageConnectionType messageConnectionType,
-    List<String> remoteIds,
+    List<String> remoteCoreIds,
   );
 
   Future<void> sendTextMessage({
     required MessageConnectionType messageConnectionType,
     required String text,
-    required String remoteCoreId,
+    required List<String> remoteCoreIds,
   });
 
   Future<void> sendBinaryMessage({
     required Uint8List binary,
-    required String remoteCoreId,
+    required List<String> remoteCoreIds,
   });
 }

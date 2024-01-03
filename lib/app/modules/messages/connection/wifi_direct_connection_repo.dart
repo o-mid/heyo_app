@@ -27,12 +27,12 @@ class WifiDirectConnectionRepository extends ConnectionRepository {
   //and remoteId, similar to how RTC data channel connections are handled in RTCMessagingConnectionRepository.
 
   @override
-  void initConnection(MessageConnectionType messageConnectionType, List<String> remoteIds) {
+  void initConnection(MessageConnectionType messageConnectionType, List<String> remoteCoreIds) {
     // TODO: implement initConnection
   }
 
   @override
-  Future<void> sendBinaryMessage({required Uint8List binary, required String remoteCoreId}) {
+  Future<void> sendBinaryMessage({required Uint8List binary, required List<String> remoteCoreIds}) {
     // TODO: implement sendBinaryMessage
     throw UnimplementedError();
   }
@@ -42,7 +42,7 @@ class WifiDirectConnectionRepository extends ConnectionRepository {
   Future<void> sendTextMessage(
       {required MessageConnectionType messageConnectionType,
       required String text,
-      required String remoteCoreId}) {
+      required List<String> remoteCoreIds}) {
     // TODO: implement sendTextMessage
     throw UnimplementedError();
   }

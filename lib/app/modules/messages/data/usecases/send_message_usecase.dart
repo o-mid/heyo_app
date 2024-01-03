@@ -66,10 +66,9 @@ class SendMessageUseCase {
       // messagingConnection.sendBinaryMessage(binary: binary, remoteCoreId: remoteCoreId)
     } else {
       await connectionRepository.sendTextMessage(
-        messageConnectionType: messageConnectionType,
-        text: jsonEncode(processedMessage.messageJson),
-        remoteCoreId: remoteCoreId,
-      );
+          messageConnectionType: messageConnectionType,
+          text: jsonEncode(processedMessage.messageJson),
+          remoteCoreIds: [remoteCoreId]);
     }
   }
 }
