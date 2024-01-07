@@ -51,7 +51,9 @@ dependencies:
   connectivity_plus: ^2.3.4
   flutter_secure_storage: ^5.0.2
   convert: ^3.0.2
+#  flutter_foreground_task: ^6.1.2
   pointycastle: ^3.6.0
+  flutter_local_notifications: ^16.3.0
   flutter_p2p_communicator:
     path: ../flutter_p2p_communicator/
     #git:
