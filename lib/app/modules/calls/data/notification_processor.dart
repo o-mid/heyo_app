@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/calls/data/call_requests_processor.dart';
 import 'package:heyo/app/modules/calls/data/model/notification_call_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/routes/app_pages.dart';
@@ -16,8 +17,9 @@ class NotificationProcessor {
     required bool isBackgroundNotification,
   }) {
     final data = jsonDecode(rawData) as Map<String, dynamic>;
+    print("dadasd $data");
     switch (data['notificationType']) {
-      case 'MISSED_CALL':
+      case 'CALL':
         processCallNotification(
           data,
           isBackgroundNotification: isBackgroundNotification,
@@ -76,13 +78,23 @@ class NotificationProcessor {
   static Future<void> openIncomingCallPage(String payload) async {
     final notificationContent =
         NotificationCallModel.fromJson(jsonDecode(payload));
-    unawaited(Get.toNamed(
+
+    print("$payload");
+
+    final callRequestsProcessor =
+        Get.find<CallRequestsProcessor>();
+    print("${notificationContent.content.toString()} : ${notificationContent.content!.toJson()} : ${notificationContent.messageFrom}");
+    await callRequestsProcessor.onRequestReceived(
+        notificationContent.content!.toJson(),
+        notificationContent.messageFrom! ,
+        null,);
+/*    unawaited(Get.toNamed(
       Routes.INCOMING_CALL,
       arguments: IncomingCallViewArguments(
         callId: notificationContent.content!.callId!,
         isAudioCall: notificationContent.content?.data?.isAudioCall ?? true,
-        members: notificationContent.content!.data?.members ?? [],
+        members: members,
       ),
-    ));
+    ));*/
   }
 }

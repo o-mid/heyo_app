@@ -73,7 +73,6 @@ class CallStatusObserver extends GetxController {
   }) async {
     final userModel = await contactRepository
         .getContactById(calls.first.remotePeer.remoteCoreId);
-    await _notifyReceivedCall(callInfo: calls.first);
 
     await Get.toNamed(
       Routes.INCOMING_CALL,
