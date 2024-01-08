@@ -19,7 +19,6 @@ const DATA_DESCRIPTION = 'description';
 const CALL_ID = 'call_id';
 
 class SingleCallWebRTCBuilder {
-
   SingleCallWebRTCBuilder({
     required this.connectionContractor,
   });
@@ -29,7 +28,6 @@ class SingleCallWebRTCBuilder {
   Function(CallId, String)? onConnectionFailed;
   Function(MediaStream stream)? onAddRemoteStream;
   Function(MediaStream stream)? onRemoveStream;
-
 
   void requestCall(
     CallId callId,
@@ -51,8 +49,7 @@ class SingleCallWebRTCBuilder {
 
   Future<bool> startSession(CallRTCSession rtcSession) async {
     print("startSession");
-    final rtcSessionDescription =
-        await WebRTCCallConnectionManager.setupUpOffer(rtcSession.pc!);
+    final rtcSessionDescription = await WebRTCCallConnectionManager.setupUpOffer(rtcSession.pc!);
     print("onMessage send");
 
     return _send(
@@ -93,8 +90,10 @@ class SingleCallWebRTCBuilder {
 
   Future<void> onAnswerReceived(CallRTCSession rtcSession, description) async {
     print("onMessage onAnswerReceived  : ${rtcSession.pc?.signalingState}");
-    await rtcSession.onAnswerReceived( description['sdp'] as String?,
-      description['type'] as String?,);
+    await rtcSession.onAnswerReceived(
+      description['sdp'] as String?,
+      description['type'] as String?,
+    );
   }
 
   Future<void> reject(String callId, RemotePeer remotePeer) async {
@@ -106,8 +105,6 @@ class SingleCallWebRTCBuilder {
       callId,
     ));
   }
-
-
 
   Future<bool> _send(
     eventType,
@@ -125,8 +122,7 @@ class SingleCallWebRTCBuilder {
     request["command"] = COMMAND;
     request[CALL_ID] = connectionId;
     print("P2PCommunicator: sendingSDP $remoteCoreId : $eventType");
-    final requestSucceeded = await connectionContractor.sendMessage(
-        _encoder.convert(request),
+    final requestSucceeded = await connectionContractor.sendMessage(_encoder.convert(request),
         RemotePeerData(remoteCoreId: remoteCoreId, remotePeerId: remotePeerId));
     print(
       "P2PCommunicator: sendingSDP $remoteCoreId : $eventType : $requestSucceeded",
@@ -146,7 +142,6 @@ class SingleCallWebRTCBuilder {
     );
     await rtcSession.pc!.addCandidate(candidate);
   }
-
 
   void addMemberEvent(String member, CallRTCSession rtcSession) {
     _send(

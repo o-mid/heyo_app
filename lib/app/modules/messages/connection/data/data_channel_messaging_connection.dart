@@ -26,6 +26,8 @@ class DataChannelMessagingConnection extends MessagingConnection {
           _receivedDataStreamController.add(
             MessagingConnectionReceivedData(
               remoteCoreId: rtcSession.remotePeer.remoteCoreId,
+              chatId: rtcSession.chatId,
+              isGroupChat: rtcSession.isGroupChat,
               receivedJson: _decoder.convert(data.text) as Map<String, dynamic>,
             ),
           );
@@ -41,13 +43,22 @@ class DataChannelMessagingConnection extends MessagingConnection {
 
   @override
   void init(MessagingConnectionInitialData initialData) {
-    multipleConnectionHandler.getConnection(initialData.remoteId);
+    multipleConnectionHandler.getConnection(
+      initialData.remoteId,
+      initialData.chatId,
+      initialData.isGroupChat,
+    );
   }
 
   @override
   Future<void> sendMessage(MessagingConnectionSendData sendData) async {
     final data = sendData as DataChannelConnectionSendData;
-    (await multipleConnectionHandler.getConnection(data.remoteCoreId)).send(sendData.message);
+    (await multipleConnectionHandler.getConnection(
+      data.remoteCoreId,
+      data.chatId,
+      data.isGroupChat,
+    ))
+        .send(sendData.message);
   }
 
   @override

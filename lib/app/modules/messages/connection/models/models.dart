@@ -1,4 +1,5 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:heyo/app/modules/messages/utils/chat_Id_generator.dart';
 
 class RemotePeer {
   String remoteCoreId;
@@ -11,7 +12,12 @@ ConnectionId generateConnectionId() {
   return '${DateTime.now().millisecondsSinceEpoch}';
 }
 
+ChatId generateChatId() {
+  return ChatIdGenerator.generate();
+}
+
 typedef ConnectionId = String;
+typedef ChatId = String;
 
 extension RTCInfo on ConnectionId {
   int getTimeStamp() {
@@ -26,9 +32,13 @@ class RTCSession {
     required this.connectionId,
     required this.remotePeer,
     required this.onConnectionFailed,
+    required this.isGroupChat,
+    required this.chatId,
   }) {
     timeStamp = connectionId.getTimeStamp();
   }
+  ChatId chatId;
+  bool isGroupChat;
 
   late int timeStamp;
   Function(ConnectionId, String) onConnectionFailed;
@@ -89,14 +99,12 @@ class RTCSession {
     if (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected) {
       rtcSessionStatus = RTCSessionStatus.connected;
       onRTCSessionConnected?.call(this);
-    } else if (state ==
-        RTCPeerConnectionState.RTCPeerConnectionStateConnecting) {
+    } else if (state == RTCPeerConnectionState.RTCPeerConnectionStateConnecting) {
       rtcSessionStatus = RTCSessionStatus.connecting;
     } else if (state == RTCPeerConnectionState.RTCPeerConnectionStateFailed) {
       rtcSessionStatus = RTCSessionStatus.failed;
       onConnectionFailed.call(connectionId, remotePeer.remoteCoreId);
-    } else if (state ==
-        RTCPeerConnectionState.RTCPeerConnectionStateDisconnected) {
+    } else if (state == RTCPeerConnectionState.RTCPeerConnectionStateDisconnected) {
       rtcSessionStatus = RTCSessionStatus.failed;
       onConnectionFailed.call(connectionId, remotePeer.remoteCoreId);
     }
@@ -121,16 +129,13 @@ class RTCSession {
   }
 
   Future<void> createDataChannel({label = 'fileTransfer'}) async {
-    RTCDataChannelInit dataChannelDict = RTCDataChannelInit()
-      ..maxRetransmits = 30;
-    RTCDataChannel channel =
-        await pc!.createDataChannel(label as String, dataChannelDict);
+    RTCDataChannelInit dataChannelDict = RTCDataChannelInit()..maxRetransmits = 30;
+    RTCDataChannel channel = await pc!.createDataChannel(label as String, dataChannelDict);
     dc = channel;
     _addDataChannel(channel);
   }
 
-  bool isConnectionStable() =>
-      (pc?.signalingState == RTCSignalingState.RTCSignalingStateStable);
+  bool isConnectionStable() => (pc?.signalingState == RTCSignalingState.RTCSignalingStateStable);
 
   Future<void> _setPeerCandidates() async {
     if (remoteCandidates.isNotEmpty) {
