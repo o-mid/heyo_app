@@ -25,13 +25,17 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
     required String text,
     required List<String> remoteCoreIds,
     required MessageConnectionType messageConnectionType,
+    required ChatId chatId,
   }) async {
+    final bool isGroupChat = remoteCoreIds.length > 1;
     for (final remoteCoreId in remoteCoreIds) {
       try {
         await dataChannelMessagingConnection.sendMessage(
           DataChannelConnectionSendData(
             remoteCoreId: remoteCoreId,
             message: text,
+            chatId: chatId,
+            isGroupChat: isGroupChat,
           ),
         );
       } catch (e) {
@@ -91,12 +95,21 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
   }
 
   @override
-  void initConnection(MessageConnectionType messageConnectionType, List<String> remoteIds) {
+  void initConnection(
+    MessageConnectionType messageConnectionType,
+    List<String> remoteIds,
+    ChatId chatId,
+  ) {
+    final bool isGroupChat = remoteIds.length > 1;
     for (final remoteId in remoteIds) {
       try {
         print("Initializing connection with $remoteId");
 
-        dataChannelMessagingConnection.init(WebRTCConnectionInitData(remoteId: remoteId));
+        dataChannelMessagingConnection.init(WebRTCConnectionInitData(
+          remoteId: remoteId,
+          chatId: chatId,
+          isGroupChat: isGroupChat,
+        ));
       } catch (e) {
         print("Failed to initialize connection with $remoteId: $e");
       }

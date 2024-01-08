@@ -14,6 +14,7 @@ import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
 
 import 'connection_data_handler.dart';
 import 'data/wifi_direct_messaging_connection.dart';
+import 'models/models.dart';
 
 class WifiDirectConnectionRepository extends ConnectionRepository {
   WifiDirectConnectionRepository({
@@ -27,7 +28,11 @@ class WifiDirectConnectionRepository extends ConnectionRepository {
   //and remoteId, similar to how RTC data channel connections are handled in RTCMessagingConnectionRepository.
 
   @override
-  void initConnection(MessageConnectionType messageConnectionType, List<String> remoteCoreIds) {
+  void initConnection(
+    MessageConnectionType messageConnectionType,
+    List<String> remoteCoreIds,
+    ChatId chatId,
+  ) {
     // TODO: implement initConnection
   }
 
@@ -42,7 +47,8 @@ class WifiDirectConnectionRepository extends ConnectionRepository {
   Future<void> sendTextMessage(
       {required MessageConnectionType messageConnectionType,
       required String text,
-      required List<String> remoteCoreIds}) {
+      required List<String> remoteCoreIds,
+      required ChatId chatId}) {
     // TODO: implement sendTextMessage
     throw UnimplementedError();
   }
