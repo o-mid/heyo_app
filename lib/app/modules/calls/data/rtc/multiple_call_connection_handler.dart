@@ -32,11 +32,7 @@ class CallConnectionsHandler {
   Function(CallRTCSession callRTCSession)? onAudioStateChanged;
 
   final CallStatusProvider callStatusProvider;
-  Function(CallId callId, List<CallInfo> callInfo, CallState state)?
-      onCallStateChange;
 
-  Function(CallId callId, CallInfo callInfo, CallHistoryStatus status)?
-      onCallHistoryStatusEvent;
 
   Future<void> addMember(String remoteCoreId) async {
     for (var element in callStatusProvider.getCurrentCallSessions()) {
