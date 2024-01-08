@@ -15,9 +15,6 @@ class AppNotificationProvider extends NotificationProvider {
   RegistryProvider registryProvider;
   final AccountRepository accountRepository;
 
-  final StreamController<Map<String,dynamic>> _streamController =
-      StreamController<Map<String,dynamic>>.broadcast();
-
   AppNotificationProvider(
       {required this.networkRequest,
       required this.libP2PStorageProvider,
@@ -97,7 +94,7 @@ class AppNotificationProvider extends NotificationProvider {
       print('Message notification: ${message.notification?.body}');
       if (diff < 15 * 1000) {
         print("Call accepted");
-        _streamController.add(message.data);
+      //  _streamController.add(message.data);
       } else {
         print("Call is not accepted");
       }
@@ -110,8 +107,5 @@ class AppNotificationProvider extends NotificationProvider {
     print('-FirebaseMessaging');
   }
 
-  @override
-  Stream<Map<String,dynamic>> getNotificationStream() {
-    return _streamController.stream.asBroadcastStream();
-  }
+
 }

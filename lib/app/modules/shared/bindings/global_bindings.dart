@@ -218,7 +218,7 @@ class GlobalBindings extends Bindings {
                   connectionContractor: Get.find(),),),
           permanent: true)
       ..put(CallRequestsProcessor(
-          connectionContractor: Get.find(), callStatusProvider: Get.find(),callConnectionsHandler: Get.find(), notificationProvider: Get.find()),)
+          connectionContractor: Get.find(), callStatusProvider: Get.find(),callConnectionsHandler: Get.find(),),)
       ..put(
           CallStatusObserver(
             callStatusProvider: Get.find(),

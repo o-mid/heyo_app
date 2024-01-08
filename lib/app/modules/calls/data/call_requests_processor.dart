@@ -12,7 +12,6 @@ class CallRequestsProcessor {
     required this.connectionContractor,
     required this.callConnectionsHandler,
     required this.callStatusProvider,
-    required this.notificationProvider,
   }) {
     connectionContractor.getMessageStream().listen((event) {
       if (event is CallConnectionDataReceived) {
@@ -23,11 +22,7 @@ class CallRequestsProcessor {
         );
       }
     });
-    notificationProvider.getNotificationStream().listen((event) {
-      final receivedData = _decoder.convert(event['content'] as String) as Map<String, dynamic>;
 
-      onRequestReceived( receivedData , event['messageFrom'] as String, null);
-    });
   }
   final JsonDecoder _decoder = const JsonDecoder();
 
@@ -35,7 +30,6 @@ class CallRequestsProcessor {
   final CallConnectionsHandler callConnectionsHandler;
   final CallStatusProvider callStatusProvider;
 
-  final NotificationProvider notificationProvider;
   Future<void> onRequestReceived(
     Map<String, dynamic> mapData,
     String remoteCoreId,

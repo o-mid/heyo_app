@@ -6,42 +6,45 @@ import 'dart:convert';
 class NotificationCallModel {
   NotificationCallModel({
     NotificationCallContentModel? content,
-    String? id,
+    String? messageFrom,
   }) {
     _content = content;
-    _id = id;
+    _messageFrom = messageFrom;
   }
 
   NotificationCallModel.fromJson(dynamic json) {
     final tempContent = jsonDecode(json['content'].toString());
-    _content = tempContent['content'] != null
-        ? NotificationCallContentModel.fromJson(tempContent['content'])
+    _content = tempContent != null
+        ? NotificationCallContentModel.fromJson(tempContent)
         : null;
-    _id = tempContent['id'] as String;
+    _messageFrom = json['messageFrom'].toString();
   }
 
   NotificationCallContentModel? _content;
-  String? _id;
+  String? _messageFrom;
+
+  String? get messageFrom => _messageFrom;
 
   NotificationCallModel copyWith({
     NotificationCallContentModel? content,
     String? id,
+    String? messageFrom,
   }) =>
       NotificationCallModel(
         content: content ?? _content,
-        id: id ?? _id,
+        messageFrom: messageFrom?? _messageFrom,
       );
 
   NotificationCallContentModel? get content => _content;
-
-  String? get id => _id;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     if (_content != null) {
       map['content'] = _content?.toJson();
     }
-    map['id'] = _id;
+    if (_messageFrom != null) {
+      map['messageFrom'] = _messageFrom?.toString();
+    }
     return map;
   }
 }
