@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/messages/connection/models/models.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/delete_message_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_repo.dart';
 import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
@@ -74,6 +75,7 @@ class DeleteMessageUseCase {
       messageConnectionType: messageConnectionType,
       text: jsonEncode(processedMessage.messageJson),
       remoteCoreIds: remoteCoreIds,
+      chatId: chatId,
     );
   }
 }

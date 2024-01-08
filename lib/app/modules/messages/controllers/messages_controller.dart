@@ -210,7 +210,10 @@ class MessagesController extends GetxController {
 
   Future<void> initMessagingConnection() async {
     initMessageUseCase.execute(
-        args.connectionType.map(), participants.map((e) => e.coreId).toList());
+      args.connectionType.map(),
+      participants.map((e) => e.coreId).toList(),
+      chatId,
+    );
   }
 
   Future<void> _initMessagesStream() async {
@@ -220,7 +223,7 @@ class MessagesController extends GetxController {
       messages.value = newMessages;
 
       // remove adding mock messages
-      _addMockMessages();
+      // _addMockMessages();
 
       messages.refresh();
     });
@@ -421,6 +424,7 @@ class MessagesController extends GetxController {
       messageId: messageId,
       // TODO: GROUP MESSAGING
       remoteCoreIds: remoteCoreIds,
+      chatId: chatId,
     );
 
     await markMessagesAsReadById(
