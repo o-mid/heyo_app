@@ -87,9 +87,11 @@ class UpdateMessageUseCase {
     );
 
     await connectionRepository.sendTextMessage(
-        messageConnectionType: messageConnectionType,
-        text: jsonEncode(processedMessage.messageJson),
-        remoteCoreIds: remoteCoreIds);
+      messageConnectionType: messageConnectionType,
+      text: jsonEncode(processedMessage.messageJson),
+      remoteCoreIds: remoteCoreIds,
+      chatId: chatId,
+    );
   }
 }
 

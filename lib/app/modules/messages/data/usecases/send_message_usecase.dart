@@ -9,6 +9,7 @@ import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
 import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
 import 'package:tuple/tuple.dart';
 
+import '../../connection/models/models.dart';
 import '../../utils/message_from_type.dart';
 import '../message_processor.dart';
 import '../models/messages/message_model.dart';
@@ -65,9 +66,11 @@ class SendMessageUseCase {
       // messagingConnection.sendBinaryMessage(binary: binary, remoteCoreId: remoteCoreId)
     } else {
       await connectionRepository.sendTextMessage(
-          messageConnectionType: messageConnectionType,
-          text: jsonEncode(processedMessage.messageJson),
-          remoteCoreIds: remoteCoreIds);
+        messageConnectionType: messageConnectionType,
+        text: jsonEncode(processedMessage.messageJson),
+        remoteCoreIds: remoteCoreIds,
+        chatId: sendMessageType.chatId,
+      );
     }
   }
 }

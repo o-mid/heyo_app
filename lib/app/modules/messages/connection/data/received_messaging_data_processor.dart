@@ -5,6 +5,8 @@ import 'package:heyo/app/modules/messages/connection/data/data_channel_messaging
 import 'package:heyo/app/modules/messages/connection/domain/messaging_connections_models.dart';
 import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
 
+import '../models/models.dart';
+
 class ReceivedMessageDataProcessor {
   ReceivedMessageDataProcessor({
     required this.dataChannelMessagingConnection,
@@ -31,6 +33,8 @@ class ReceivedMessageDataProcessor {
       receivedJson: messagingConnectionReceivedData.receivedJson,
       remoteCoreId: messagingConnectionReceivedData.remoteCoreId,
       messageConnectionType: messageConnectionType,
+      chatId: messagingConnectionReceivedData.chatId,
+      isGroupChat: messagingConnectionReceivedData.isGroupChat,
     );
   }
 
@@ -38,6 +42,8 @@ class ReceivedMessageDataProcessor {
   Future<void> handleMessageReceived(
       {required Map<String, dynamic> receivedJson,
       required String remoteCoreId,
+      required ChatId chatId,
+      required bool isGroupChat,
       required MessageConnectionType messageConnectionType}) async {
     WrappedMessageModel wrappedMessageModel = WrappedMessageModel.fromJson(receivedJson);
 
@@ -52,6 +58,8 @@ class ReceivedMessageDataProcessor {
           status: confirmationValues.item2,
           remoteCoreId: confirmationValues.item3,
           messageConnectionType: messageConnectionType,
+          chatId: chatId,
+          isGroupChat: isGroupChat,
         );
 
       case MessageType.delete:
@@ -78,6 +86,8 @@ class ReceivedMessageDataProcessor {
     required String messageId,
     required ConfirmMessageStatus status,
     required String remoteCoreId,
+    required ChatId chatId,
+    required bool isGroupChat,
     required MessageConnectionType messageConnectionType,
   }) async {
     final confirmMessageJson = ConfirmMessageModel(messageId: messageId, status: status).toJson();
@@ -91,6 +101,8 @@ class ReceivedMessageDataProcessor {
       await dataChannelMessagingConnection.sendMessage(
         DataChannelConnectionSendData(
           remoteCoreId: remoteCoreId,
+          chatId: chatId,
+          isGroupChat: isGroupChat,
           message: jsonEncode(wrappedMessageModel.toJson()),
         ),
       );
