@@ -100,7 +100,9 @@ class CallHistoryObserver extends GetxController {
   }
 
   Future<void> _createOutgoingNotAnsweredRecord(
-      {required String remoteCoreId, required String callId, required bool isAudioCall}) async {
+      {required String remoteCoreId,
+      required String callId,
+      required bool isAudioCall}) async {
     final callParticipant = await _getUserFromCoreId(
       remoteCoreId,
     );
@@ -175,21 +177,22 @@ class CallHistoryObserver extends GetxController {
     /// store the time call started
     _callStartTimestamps[state.callId] = DateTime.now();
 
-    if (call.participants.isNotEmpty) {
-      await _addMemberToCallHistory(
-        callHistoryModel: call,
-        callHistoryState: state,
-      );
-    }
+    //if (call.participants.isNotEmpty) {
+    final callWithNewParticipant = await _addParticipantToCallHistory(
+      callHistoryModel: call,
+      callHistoryState: state,
+    );
+    //}
 
-    final updateCall = call.copyWith(
+    final updateCall = callWithNewParticipant.copyWith(
       status: status,
       endDate: DateTime.now(),
     );
+
     await callHistoryRepo.updateCall(updateCall);
   }
 
-  Future<void> _addMemberToCallHistory({
+  Future<CallHistoryModel> _addParticipantToCallHistory({
     required CallHistoryModel callHistoryModel,
     required CallHistoryState callHistoryState,
   }) async {
@@ -232,7 +235,8 @@ class CallHistoryObserver extends GetxController {
     final updateCall = callHistoryModel.copyWith(
       participants: currentParticipantList,
     );
-    await callHistoryRepo.updateCall(updateCall);
+    //await callHistoryRepo.updateCall(updateCall);
+    return updateCall;
   }
 
   Future<CallHistoryParticipantModel> _getUserFromCoreId(String coreId) async {
