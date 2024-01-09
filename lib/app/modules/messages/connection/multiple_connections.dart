@@ -25,7 +25,13 @@ class MultipleConnectionHandler {
     });
   }
 
-  Future<RTCSession> getConnection(String remoteCoreId, ChatId chatId, bool isGroupChat) async {
+  Future<RTCSession> getConnection(
+    String remoteCoreId,
+    ChatId chatId,
+    bool isGroupChat,
+    String chatName,
+    List<String> remoteCoreIds,
+  ) async {
     print("getConnection : $remoteCoreId");
     //TODO debug remove in production
     connections.forEach((key, value) {
@@ -44,10 +50,17 @@ class MultipleConnectionHandler {
               ((currentTime - rtcSession.timeStamp) > 10000))) {
         connections[rtcSession.connectionId]?.dispose();
         connections.remove(rtcSession.connectionId);
-        rtcSession = await _initiateSession(remoteCoreId, chatId, isGroupChat);
+        rtcSession = await _initiateSession(
+          remoteCoreId,
+          chatId,
+          isGroupChat,
+          chatName,
+          remoteCoreIds,
+        );
       }
     } else {
-      rtcSession = await _initiateSession(remoteCoreId, chatId, isGroupChat);
+      rtcSession =
+          await _initiateSession(remoteCoreId, chatId, isGroupChat, chatName, remoteCoreIds);
     }
 
     return rtcSession;
@@ -58,11 +71,15 @@ class MultipleConnectionHandler {
     String selfCoreId,
     bool isGroupChat,
     ChatId chatId,
+    String chatName,
+    List<String> remoteCoreIds,
   ) {
     _initiateSession(
       remoteCoreId,
       chatId,
       isGroupChat,
+      chatName,
+      remoteCoreIds,
     );
   }
 
@@ -120,6 +137,8 @@ class MultipleConnectionHandler {
     String? remotePeerId,
     ChatId chatId,
     bool isGroupChat,
+    String chatName,
+    List<String> remoteCoreIds,
   ) async {
     print("_getConnection");
     if (connections[connectionId] == null) {
@@ -130,6 +149,8 @@ class MultipleConnectionHandler {
         remotePeerId,
         isGroupChat,
         chatId,
+        chatName,
+        remoteCoreIds,
       );
       print("_getConnection new created");
 
@@ -151,6 +172,8 @@ class MultipleConnectionHandler {
           remotePeerId,
           isGroupChat,
           chatId,
+          chatName,
+          remoteCoreIds,
         );
         return rtcSession;
       }
@@ -170,6 +193,8 @@ class MultipleConnectionHandler {
     String? remotePeerId,
     bool isGroupChat,
     ChatId chatId,
+    String chatName,
+    List<String> remoteCoreIds,
   ) async {
     RTCSession rtcSession = await singleWebRTCConnection.createSession(
       connectionId,
@@ -177,6 +202,8 @@ class MultipleConnectionHandler {
       remotePeerId,
       isGroupChat,
       chatId,
+      chatName,
+      remoteCoreIds,
     );
     connections[connectionId] = rtcSession;
 
@@ -194,6 +221,8 @@ class MultipleConnectionHandler {
     String remoteCoreId /*, String selfCoreId*/,
     ChatId chatId,
     bool isGroupChat,
+    String chatName,
+    List<String> remoteCoreIds,
   ) async {
     RTCSession rtcSession = await _getConnection(
       generateConnectionId(),
@@ -201,6 +230,8 @@ class MultipleConnectionHandler {
       null,
       chatId,
       isGroupChat,
+      chatName,
+      remoteCoreIds,
     );
 
     // if (selfCoreId.compareTo(remoteCoreId) > 0) {
@@ -233,6 +264,8 @@ class MultipleConnectionHandler {
           final connectionId = mapData[CONNECTION_ID] as String;
           final chatId = mapData["chatId"] as String;
           final isGroupChat = mapData["isGroupChat"] as bool;
+          final chatName = mapData["chatName"] as String;
+          final remoteCoreIds = List<String>.from(mapData["remoteCoreIds"] as List<dynamic>);
 
           RTCSession rtcSession = await _getConnection(
             connectionId,
@@ -240,6 +273,8 @@ class MultipleConnectionHandler {
             remotePeerId,
             chatId,
             isGroupChat,
+            chatName,
+            remoteCoreIds,
           );
           Map<String, dynamic> description = data[DATA_DESCRIPTION] as Map<String, dynamic>;
 
@@ -251,12 +286,16 @@ class MultipleConnectionHandler {
           final String connectionId = mapData[CONNECTION_ID] as String;
           final chatId = mapData["chatId"] as String;
           final isGroupChat = mapData["isGroupChat"] as bool;
+          final chatName = mapData["chatName"] as String;
+          final remoteCoreIds = List<String>.from(mapData["remoteCoreIds"] as List<dynamic>);
           RTCSession rtcSession = await _getConnection(
             connectionId,
             remoteCoreId,
             remotePeerId,
             chatId,
             isGroupChat,
+            chatName,
+            remoteCoreIds,
           );
           var description = data[DATA_DESCRIPTION];
           await singleWebRTCConnection.onAnswerReceived(
@@ -268,6 +307,8 @@ class MultipleConnectionHandler {
           final String connectionId = mapData[CONNECTION_ID] as String;
           final chatId = mapData["chatId"] as String;
           final isGroupChat = mapData["isGroupChat"] as bool;
+          final chatName = mapData["chatName"] as String;
+          final remoteCoreIds = List<String>.from(mapData["remoteCoreIds"] as List<dynamic>);
 
           RTCSession rtcSession = await _getConnection(
             connectionId,
@@ -275,6 +316,8 @@ class MultipleConnectionHandler {
             remotePeerId,
             chatId,
             isGroupChat,
+            chatName,
+            remoteCoreIds,
           );
           var candidateMap = data[candidate];
           await singleWebRTCConnection.onCandidateReceived(

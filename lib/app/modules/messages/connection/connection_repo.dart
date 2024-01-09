@@ -16,6 +16,7 @@ abstract class ConnectionRepository {
     MessageConnectionType messageConnectionType,
     List<String> remoteCoreIds,
     ChatId chatId,
+    String chatName,
   );
 
   Future<void> sendTextMessage({

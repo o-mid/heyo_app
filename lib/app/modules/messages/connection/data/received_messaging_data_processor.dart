@@ -17,7 +17,12 @@ class ReceivedMessageDataProcessor {
 
   void _init() {
     dataChannelMessagingConnection.getMessageStream().listen((event) async {
-      await dataHandler.createUserChatModel(sessioncid: event.remoteCoreId);
+      await dataHandler.createChatModel(
+          chatId: event.chatId,
+          isGroupChat: event.isGroupChat,
+          chatName: event.chatName,
+          remoteCoreIds: event.remoteCoreIds);
+      //await dataHandler.createUserChatModel(sessioncid: event.remoteCoreId);
       onDataReceived(event, MessageConnectionType.RTC_DATA_CHANNEL);
     });
   }
@@ -35,23 +40,29 @@ class ReceivedMessageDataProcessor {
       messageConnectionType: messageConnectionType,
       chatId: messagingConnectionReceivedData.chatId,
       isGroupChat: messagingConnectionReceivedData.isGroupChat,
+      chatName: messagingConnectionReceivedData.chatName,
+      remoteCoreIds: messagingConnectionReceivedData.remoteCoreIds,
     );
   }
 
   /// Handles text data, received from remote peer.
-  Future<void> handleMessageReceived(
-      {required Map<String, dynamic> receivedJson,
-      required String remoteCoreId,
-      required ChatId chatId,
-      required bool isGroupChat,
-      required MessageConnectionType messageConnectionType}) async {
+  Future<void> handleMessageReceived({
+    required Map<String, dynamic> receivedJson,
+    required String remoteCoreId,
+    required ChatId chatId,
+    required bool isGroupChat,
+    required MessageConnectionType messageConnectionType,
+    required String chatName,
+    required List<String> remoteCoreIds,
+  }) async {
     WrappedMessageModel wrappedMessageModel = WrappedMessageModel.fromJson(receivedJson);
 
     switch (wrappedMessageModel.dataChannelMessagetype) {
       case MessageType.message:
         var confirmationValues = await dataHandler.saveReceivedMessage(
           receivedMessageJson: wrappedMessageModel.message,
-          chatId: remoteCoreId,
+          chatId: chatId,
+          coreId: remoteCoreId,
         );
         await confirmMessageById(
           messageId: confirmationValues.item1,
@@ -60,24 +71,25 @@ class ReceivedMessageDataProcessor {
           messageConnectionType: messageConnectionType,
           chatId: chatId,
           isGroupChat: isGroupChat,
+          remoteCoreIds: remoteCoreIds,
         );
 
       case MessageType.delete:
         await dataHandler.deleteReceivedMessage(
           receivedDeleteJson: wrappedMessageModel.message,
-          chatId: remoteCoreId,
+          chatId: chatId,
         );
 
       case MessageType.update:
         await dataHandler.updateReceivedMessage(
           receivedUpdateJson: wrappedMessageModel.message,
-          chatId: remoteCoreId,
+          chatId: chatId,
         );
 
       case MessageType.confirm:
         await dataHandler.confirmReceivedMessage(
           receivedconfirmJson: wrappedMessageModel.message,
-          chatId: remoteCoreId,
+          chatId: chatId,
         );
     }
   }
@@ -89,6 +101,7 @@ class ReceivedMessageDataProcessor {
     required ChatId chatId,
     required bool isGroupChat,
     required MessageConnectionType messageConnectionType,
+    required List<String> remoteCoreIds,
   }) async {
     final confirmMessageJson = ConfirmMessageModel(messageId: messageId, status: status).toJson();
 
@@ -96,13 +109,15 @@ class ReceivedMessageDataProcessor {
       message: confirmMessageJson,
       dataChannelMessagetype: MessageType.confirm,
     );
-
+    final chatName = await dataHandler.getChatName(chatId: chatId);
     if (messageConnectionType == MessageConnectionType.RTC_DATA_CHANNEL) {
       await dataChannelMessagingConnection.sendMessage(
         DataChannelConnectionSendData(
           remoteCoreId: remoteCoreId,
           chatId: chatId,
           isGroupChat: isGroupChat,
+          remoteCoreIds: remoteCoreIds,
+          chatName: chatName,
           message: jsonEncode(wrappedMessageModel.toJson()),
         ),
       );
