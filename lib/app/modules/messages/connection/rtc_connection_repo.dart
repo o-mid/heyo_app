@@ -28,15 +28,18 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
     required ChatId chatId,
   }) async {
     final bool isGroupChat = remoteCoreIds.length > 1;
+
+    final chatName = await dataHandler.getChatName(chatId: chatId);
     for (final remoteCoreId in remoteCoreIds) {
       try {
         await dataChannelMessagingConnection.sendMessage(
           DataChannelConnectionSendData(
-            remoteCoreId: remoteCoreId,
-            message: text,
-            chatId: chatId,
-            isGroupChat: isGroupChat,
-          ),
+              remoteCoreId: remoteCoreId,
+              message: text,
+              chatId: chatId,
+              isGroupChat: isGroupChat,
+              remoteCoreIds: remoteCoreIds,
+              chatName: chatName),
         );
       } catch (e) {
         print("Failed to send message to $remoteCoreId: $e");
@@ -95,13 +98,15 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
   }
 
   @override
-  void initConnection(
+  Future<void> initConnection(
     MessageConnectionType messageConnectionType,
-    List<String> remoteIds,
+    List<String> remoteCoreIds,
     ChatId chatId,
-  ) {
-    final bool isGroupChat = remoteIds.length > 1;
-    for (final remoteId in remoteIds) {
+    String chatName,
+  ) async {
+    final bool isGroupChat = remoteCoreIds.length > 1;
+
+    for (final remoteId in remoteCoreIds) {
       try {
         print("Initializing connection with $remoteId");
 
@@ -109,6 +114,8 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
           remoteId: remoteId,
           chatId: chatId,
           isGroupChat: isGroupChat,
+          remoteCoreIds: remoteCoreIds,
+          chatName: chatName,
         ));
       } catch (e) {
         print("Failed to initialize connection with $remoteId: $e");
