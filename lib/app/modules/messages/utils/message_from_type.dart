@@ -22,7 +22,7 @@ Tuple3<MessageModel?, bool, String> messageFromType(
   // send messages with utc format timestamp to avoid timezone issues
   final timestamp = DateTime.now().toUtc();
   const senderName = ""; // Todo: get sender name from user repo
-  const senderAvatar = ""; // Todo: get sender avatar from user repo
+  const senderAvatar = "";
   MessageModel? msg;
 
   switch (messageType.runtimeType) {

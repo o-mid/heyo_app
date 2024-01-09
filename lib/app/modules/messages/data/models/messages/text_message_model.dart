@@ -38,6 +38,7 @@ class TextMessageModel extends MessageModel {
     bool? isFromMe,
     bool? isForwarded,
     bool? isSelected,
+    String? senderAvatar,
     bool clearReply = false,
   }) {
     return TextMessageModel(
@@ -46,7 +47,7 @@ class TextMessageModel extends MessageModel {
       chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
-      senderAvatar: senderAvatar,
+      senderAvatar: senderAvatar ?? this.senderAvatar,
       status: status ?? this.status,
       isFromMe: isFromMe ?? this.isFromMe,
       isForwarded: isForwarded ?? this.isForwarded,
