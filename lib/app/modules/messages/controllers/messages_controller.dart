@@ -213,6 +213,7 @@ class MessagesController extends GetxController {
       args.connectionType.map(),
       participants.map((e) => e.coreId).toList(),
       chatId,
+      chatName.value,
     );
   }
 

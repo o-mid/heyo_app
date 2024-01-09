@@ -9,7 +9,8 @@ class InitMessageUseCase {
     MessageConnectionType messageConnectionType,
     List<String> remoteIds,
     ChatId chatId,
+    String chatName,
   ) {
-    connectionRepository.initConnection(messageConnectionType, remoteIds, chatId);
+    connectionRepository.initConnection(messageConnectionType, remoteIds, chatId, chatName);
   }
 }

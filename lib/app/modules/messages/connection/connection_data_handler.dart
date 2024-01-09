@@ -69,6 +69,43 @@ class DataHandler {
     }
   }
 
+  createChatModel({
+    required String chatId,
+    required bool isGroupChat,
+    required String chatName,
+    required List<String> remoteCoreIds,
+  }) async {
+    if (remoteCoreIds.length == 1) {
+      final userModel = await contactRepository.getContactById(remoteCoreIds.first);
+      chatName = (userModel == null)
+          ? "${remoteCoreIds.first.characters.take(4).string}...${remoteCoreIds.first.characters.takeLast(4).string}"
+          : userModel.name;
+    }
+
+    final chatModel = ChatModel(
+      id: chatId,
+      name: chatName,
+      lastMessage: "",
+      lastReadMessageId: "",
+      timestamp: DateTime.now(),
+      isGroupChat: isGroupChat,
+      participants:
+          remoteCoreIds.map((e) => MessagingParticipantModel(coreId: e, chatId: chatId)).toList(),
+    );
+    final currentChatModel = await chatHistoryRepo.getChat(chatId);
+
+    if (currentChatModel == null) {
+      await chatHistoryRepo.addChatToHistory(chatModel);
+    } else {
+      /*   await chatHistoryRepo.updateChat(userChatModel.copyWith(
+        lastMessage: currentChatModel.lastMessage,
+        lastReadMessageId: currentChatModel.lastReadMessageId,
+        notificationCount: currentChatModel.notificationCount,
+        isOnline: true,
+      ));*/
+    }
+  }
+
   /* Future<void> handleReceivedBinaryData({
     required String remoteCoreId,
     required BinaryFileReceivingState currentBinaryState,
@@ -80,6 +117,7 @@ class DataHandler {
   Future<Tuple3<String, ConfirmMessageStatus, String>> saveReceivedMessage({
     required Map<String, dynamic> receivedMessageJson,
     required String chatId,
+    required String coreId,
   }) async {
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
     MessageModel? _currentMsg =
@@ -92,6 +130,7 @@ class DataHandler {
         message: receivedMessage.copyWith(
           isFromMe: false,
           status: receivedMessage.status.deliveredStatus(),
+          senderAvatar: coreId,
         ),
         chatId: chatId,
       );
@@ -287,5 +326,15 @@ class DataHandler {
     final dataChannelMessageJson = dataChannelMessage.toJson();
 
     return jsonEncode(dataChannelMessageJson);
+  }
+
+  Future<String> getChatName({required String chatId}) async {
+    final chatModel = await chatHistoryRepo.getChat(chatId);
+
+    if (chatModel != null) {
+      return chatModel.name;
+    } else {
+      return "";
+    }
   }
 }
