@@ -53,11 +53,13 @@ dependencies:
   convert: ^3.0.2
   pointycastle: ^3.6.0
   flutter_p2p_communicator:
-    #path: ../flutter_p2p_communicator/
+#    path: ./flutter_p2p_communicator/
     git:
       url: git@ssh.git.energy:corepass/flutter_p2p_communicator.git
       ref: f04315ab
 
+  flutter_ios_call_kit:
+    path: ./heyo-plugin/flutter_ios_call_kit
   core_blockies:
     git: git@ssh.git.energy:corepass/core-blockies.git
 
