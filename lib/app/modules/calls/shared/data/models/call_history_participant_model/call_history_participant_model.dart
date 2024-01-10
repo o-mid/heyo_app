@@ -37,3 +37,13 @@ extension UserModelMapper on UserModel {
     );
   }
 }
+
+extension CallHistoryParticipantMapper on CallHistoryParticipantModel {
+  UserModel mapToUserModel() {
+    return UserModel(
+      name: name,
+      coreId: coreId,
+      walletAddress: coreId,
+    );
+  }
+}
