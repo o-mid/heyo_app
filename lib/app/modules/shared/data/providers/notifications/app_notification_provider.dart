@@ -20,7 +20,7 @@ class AppNotificationProvider extends NotificationProvider {
       required this.libP2PStorageProvider,
       required this.registryProvider,
       required this.accountRepository}) {
-    _listen();
+    // _listen();
   }
 
   @override
@@ -71,8 +71,8 @@ class AppNotificationProvider extends NotificationProvider {
         'senderUsername': '',
         'content': content,
         'senderCoreId': userCoreId,
-        'title' : 'Call',
-        'body' :  userCoreId
+        'title' : null,
+        'body' :  null
       },
     );
     return result.isSuccess();
