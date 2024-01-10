@@ -5,7 +5,6 @@ homepage:
 
 environment:
   sdk: '>=3.1.2 <4.0.0'
-  flutter: '>=3.3.0'
 
 dependencies:
   flutter:
@@ -44,15 +43,6 @@ flutter:
         pluginClass: FlutterIosCallKitPlugin
       ios:
         pluginClass: FlutterIosCallKitPlugin
-      linux:
-        pluginClass: FlutterIosCallKitPlugin
-      macos:
-        pluginClass: FlutterIosCallKitPlugin
-      windows:
-        pluginClass: FlutterIosCallKitPluginCApi
-      web:
-        pluginClass: FlutterIosCallKitWeb
-        fileName: flutter_ios_call_kit_web.dart
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
