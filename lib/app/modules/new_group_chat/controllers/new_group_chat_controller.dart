@@ -274,39 +274,42 @@ class NewGroupChatController extends GetxController {
   Future<void> _addMockUsers() async {
     final _mockUsers = <UserModel>[
       UserModel(
-        name: 'Omid',
-        walletAddress: 'CB92969A',
-        coreId: 'CB92969A',
+        name: 'testApi33',
+        walletAddress: 'ab68f7423e57d266d5a7061e3e166f5004e7353e841e',
+        coreId: 'ab68f7423e57d266d5a7061e3e166f5004e7353e841e',
+      ),
+      // UserModel(
+      //   name: 'Farzaam',
+      //   walletAddress: 'CB62C325',
+      //   coreId: 'CB62C325',
+      //   isOnline: true,
+      //   isVerified: true,
+      // ),
+      // UserModel(
+      //   name: 'Ali',
+      //   walletAddress: 'CB423H4E',
+      //   coreId: 'CB423H4E',
+      //   isOnline: true,
+      // ),
+      // UserModel(
+      //   name: 'Saeed',
+      //   walletAddress: 'CB23969A',
+      //   coreId: 'CB23969A',
+      // ),
+      UserModel(
+        name: 'testIosReal',
+        walletAddress: 'ab08a6c74ca74022a394ac1dab6a8adb55e5146e8caf',
+        coreId: 'ab08a6c74ca74022a394ac1dab6a8adb55e5146e8caf',
       ),
       UserModel(
-        name: 'Farzaam',
-        walletAddress: 'CB62C325',
-        coreId: 'CB62C325',
-        isOnline: true,
-        isVerified: true,
+        name: 'testApi31',
+        walletAddress: 'ab45655fd5cdec507ed368251568c66abb3b0d71dd30',
+        coreId: 'ab45655fd5cdec507ed368251568c66abb3b0d71dd30',
       ),
       UserModel(
-        name: 'Ali',
-        walletAddress: 'CB423H4E',
-        coreId: 'CB423H4E',
-        isOnline: true,
-      ),
-      UserModel(
-        name: 'Saeed',
-        walletAddress: 'CB23969A',
-        coreId: 'CB23969A',
-      ),
-      UserModel(
-        name: 'Mohammad',
-        walletAddress: 'CB21C391',
-        coreId: 'CB21C391',
-        isOnline: true,
-        isVerified: true,
-      ),
-      UserModel(
-        name: 'Hoorad',
-        walletAddress: 'CB51324E',
-        coreId: 'CB51324E',
+        name: 'testIosSim',
+        walletAddress: 'ab1920ab021739e5120b158eaefd579bcf3b01527f91',
+        coreId: 'ab1920ab021739e5120b158eaefd579bcf3b01527f91',
         isOnline: true,
       ),
     ].obs;

@@ -13,6 +13,7 @@ import 'package:tuple/tuple.dart';
 
 import '../../chats/data/models/chat_model.dart';
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import '../../shared/data/repository/crypto_account/account_repository.dart';
 import '../data/models/messages/confirm_message_model.dart';
 import '../data/models/messages/delete_message_model.dart';
 import '../data/models/messages/message_model.dart';
@@ -29,12 +30,14 @@ class DataHandler {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final NotificationsController notificationsController;
   final ContactRepository contactRepository;
+  final AccountRepository accountInfoRepo;
 
   DataHandler({
     required this.messagesRepo,
     required this.chatHistoryRepo,
     required this.notificationsController,
     required this.contactRepository,
+    required this.accountInfoRepo,
   });
 
   createUserChatModel({required String sessioncid}) async {
@@ -336,5 +339,10 @@ class DataHandler {
     } else {
       return "";
     }
+  }
+
+  Future<String> getSelfCoreId() async {
+    final selfCoreId = await accountInfoRepo.getUserAddress();
+    return selfCoreId ?? '';
   }
 }
