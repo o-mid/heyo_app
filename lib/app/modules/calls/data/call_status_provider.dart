@@ -28,7 +28,7 @@ class CallStatusProvider {
   Function(CallId callId, String remoteCoreId, CallHistoryStatus status,
       bool? isAudioCall)? onCallHistoryStatusEvent;
 
- Function(String coreId)? onSessionRemoved;
+  Function(String coreId)? onSessionRemoved;
 
   CallRTCSession? getConnection(String remoteCoreId, CallId callId) {
     for (final value in _currentCall!.sessions) {
@@ -69,7 +69,7 @@ class CallStatusProvider {
       CallHistoryStatus.calling,
       isAudioCall,
     );
-    callRTCSession.connected=(){
+    callRTCSession.connected = () {
       onCallHistoryStatusEvent?.call(
         getCurrentCallId(),
         callRTCSession.remotePeer.remoteCoreId,
@@ -134,7 +134,7 @@ class CallStatusProvider {
           ,),);*/
       final callRTCSession = await addSession(element.remotePeer, localStream,
           element.isAudioCall, incomingCalls!.callId);
-      callRTCSession.connected=(){
+      callRTCSession.connected = () {
         onCallHistoryStatusEvent?.call(
           getCurrentCallId(),
           callRTCSession.remotePeer.remoteCoreId,
@@ -176,7 +176,6 @@ class CallStatusProvider {
     return _currentCall;
   }
 
-
   Future<CallRTCSession> addSession(
     RemotePeer remotePeer,
     MediaStream localStream,
@@ -192,6 +191,14 @@ class CallStatusProvider {
           {callSignaling.sendCandidate(candidate, callRTCSession)},
     );
     _addSession(callRTCSession);
+    callRTCSession.connected = () {
+      onCallHistoryStatusEvent?.call(
+        getCurrentCallId(),
+        callRTCSession.remotePeer.remoteCoreId,
+        CallHistoryStatus.connected,
+        isAudioCall,
+      );
+    };
     return callRTCSession;
   }
 
@@ -222,14 +229,26 @@ class CallStatusProvider {
       if (_currentCall!.sessions.isEmpty) {
         onCallStateChange?.call(getCurrentCallId(), [], CurrentCallStatus.end);
         onCallHistoryStatusEvent?.call(
-            getCurrentCallId(), remoteCoreId, CallHistoryStatus.left, null,);
+          getCurrentCallId(),
+          remoteCoreId,
+          CallHistoryStatus.left,
+          null,
+        );
         onCallHistoryStatusEvent?.call(
-            getCurrentCallId(), remoteCoreId, CallHistoryStatus.end, null,);
+          getCurrentCallId(),
+          remoteCoreId,
+          CallHistoryStatus.end,
+          null,
+        );
         _currentCall = null;
         callStatus = CurrentCallStatus.none;
       } else {
         onCallHistoryStatusEvent?.call(
-            getCurrentCallId(), remoteCoreId, CallHistoryStatus.left, null,);
+          getCurrentCallId(),
+          remoteCoreId,
+          CallHistoryStatus.left,
+          null,
+        );
       }
     }
   }
