@@ -9,5 +9,4 @@ abstract class NotificationProvider {
     required NotificationType notificationType,
     required String content,
   });
-  Stream<String> getNotificationStream();
 }
