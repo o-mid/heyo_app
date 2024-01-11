@@ -693,7 +693,7 @@ packages:
   flutter_p2p_communicator:
     dependency: "direct main"
     description:
-      path: flutter_p2p_communicator
+      path: "../flutter_p2p_communicator"
       relative: true
     source: path
     version: "1.16.0"
