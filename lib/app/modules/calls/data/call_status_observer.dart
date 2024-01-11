@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/data/call_status_provider.dart';
 import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
+import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/call_controller_provider.dart';
+import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/ios_call_controller_provider.dart';
 import 'package:heyo/app/modules/notifications/controllers/notifications_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
@@ -12,6 +16,7 @@ import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_r
 import 'package:heyo/app/routes/app_pages.dart';
 
 class CallStatusObserver extends GetxController {
+
   CallStatusObserver({
     required this.callStatusProvider,
     required this.accountInfoRepo,
@@ -29,8 +34,11 @@ class CallStatusObserver extends GetxController {
   final callHistoryState = Rxn<CallHistoryState>();
   final removeStream = Rxn<MediaStream>();
 
+  late final CallControllerProvider callController;
+
   Future<void> init() async {
     observeCallStatus();
+    callController = IosCallControllerProvider(accountInfoRepo: accountInfoRepo, contactRepository: contactRepository);
   }
 
   void observeCallStatus() {
@@ -73,16 +81,24 @@ class CallStatusObserver extends GetxController {
   }) async {
     final userModel = await contactRepository
         .getContactById(calls.first.remotePeer.remoteCoreId);
-    await _notifyReceivedCall(callInfo: calls.first);
 
-    await Get.toNamed(
-      Routes.INCOMING_CALL,
-      arguments: IncomingCallViewArguments(
-        callId: callId,
-        isAudioCall: calls.first.isAudioCall,
-        members: calls.map((e) => e.remotePeer.remoteCoreId).toList(),
-      ),
-    );
+    await _notifyReceivedCall(callInfo: calls.first);
+    // TODO: Move it to up layer and inject specific call controller
+    if (Platform.isIOS){
+
+      await callController.incomingCall(callId, calls);
+    }else{
+
+      await Get.toNamed(
+        Routes.INCOMING_CALL,
+        arguments: IncomingCallViewArguments(
+          callId: callId,
+          isAudioCall: calls.first.isAudioCall,
+          members: calls.map((e) => e.remotePeer.remoteCoreId).toList(),
+        ),
+      );
+    }
+
   }
 
   Future<void> _notifyReceivedCall({required CallInfo callInfo}) async {
