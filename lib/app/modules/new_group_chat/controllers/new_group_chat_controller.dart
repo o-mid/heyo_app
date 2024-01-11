@@ -173,19 +173,32 @@ class NewGroupChatController extends GetxController {
     final chatId = ChatIdGenerator.generate();
     print(chatId);
 
+    final selfCoreId = await accountInfoRepo.getUserAddress() ?? "";
+
+    final participants = selectedCoreids
+        .map(
+          (element) => MessagingParticipantModel(
+            coreId: element.coreId,
+            chatId: chatId,
+          ),
+        )
+        .toList();
+
+    if (!selectedCoreids.contains(selfCoreId)) {
+      participants.add(
+        MessagingParticipantModel(
+          coreId: selfCoreId,
+          chatId: chatId,
+        ),
+      );
+    }
+
     await Get.offNamedUntil(
       Routes.MESSAGES,
       ModalRoute.withName(Routes.HOME),
       arguments: MessagesViewArgumentsModel(
         connectionType: MessagingConnectionType.internet,
-        participants: selectedCoreids
-            .map(
-              (element) => MessagingParticipantModel(
-                coreId: element.coreId,
-                chatId: chatId,
-              ),
-            )
-            .toList(),
+        participants: participants,
         chatName: confirmationInputText.value,
       ),
     );
