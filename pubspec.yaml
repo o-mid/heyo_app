@@ -50,6 +50,7 @@ dependencies:
   emojis: ^0.9.9
   connectivity_plus: ^2.3.4
   flutter_secure_storage: ^5.0.2
+  auto_start_flutter: ^0.1.1
   convert: ^3.0.2
 #  flutter_foreground_task: ^6.1.2
   pointycastle: ^3.6.0
