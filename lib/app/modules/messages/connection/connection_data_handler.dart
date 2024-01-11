@@ -171,6 +171,7 @@ class DataHandler {
     required String chatId,
   }) async {
     final updateMessage = UpdateMessageModel.fromJson(receivedUpdateJson);
+    final localCoreID = await accountInfoRepo.getUserAddress() ?? "";
 
     final MessageModel? currentMessage = await messagesRepo.getMessageById(
       messageId: updateMessage.message.messageId,
@@ -180,15 +181,17 @@ class DataHandler {
     if (currentMessage != null) {
       final receivedReactions = updateMessage.message.reactions.map((key, value) {
         ReactionModel? existingReaction = currentMessage.reactions[key] as ReactionModel?;
+        bool isReactedByMe = value.users.contains(localCoreID);
+
         if (existingReaction is ReactionModel) {
           final newValue = value.copyWith(
-            isReactedByMe: existingReaction.isReactedByMe,
+            isReactedByMe: isReactedByMe,
           );
           return MapEntry(key, newValue);
         }
         return MapEntry(
           key,
-          value,
+          value.copyWith(isReactedByMe: isReactedByMe),
         ); // handle case where the reaction doesn't exist in currentMessage
       });
 

@@ -53,17 +53,21 @@ class UpdateMessageUseCase {
     final localCoreID = await accountInfo.getUserAddress() ?? "";
     var reaction = message.reactions[emoji] as ReactionModel? ?? ReactionModel();
 
-    if (reaction.isReactedByMe) {
-      reaction.users.removeWhere((element) => element == localCoreID);
-      reaction = reaction.copyWith(
-        isReactedByMe: false,
-      );
+    bool hasReacted = reaction.users.contains(localCoreID);
+    List<String> updatedUsers = List<String>.from(reaction.users);
+
+    if (hasReacted) {
+      // If already reacted, remove the reaction
+      updatedUsers.remove(localCoreID);
     } else {
-      reaction = reaction.copyWith(users: [...reaction.users, localCoreID]);
-      reaction = reaction.copyWith(
-        isReactedByMe: true,
-      );
+      // If not reacted, add the reaction
+      updatedUsers.add(localCoreID);
     }
+
+    reaction = reaction.copyWith(
+      users: updatedUsers,
+      isReactedByMe: !hasReacted,
+    );
 
     var updatedMessage = message.copyWith(
       reactions: {
@@ -71,6 +75,7 @@ class UpdateMessageUseCase {
         emoji: reaction,
       },
     );
+
     await messagesRepo.updateMessage(message: updatedMessage, chatId: chatId);
 
     var updatedMessageJson =

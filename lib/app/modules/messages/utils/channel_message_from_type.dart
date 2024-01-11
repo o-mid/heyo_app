@@ -26,7 +26,7 @@ Tuple3<WrappedMessageModel?, bool, String> channelmessageFromType(
       break;
     case UpdateMessageType:
       msg = WrappedMessageModel(
-        message: (channelMessageType as WrappedMessageModel).message,
+        message: (channelMessageType as UpdateMessageType).message,
         dataChannelMessagetype: MessageType.update,
       );
       break;
