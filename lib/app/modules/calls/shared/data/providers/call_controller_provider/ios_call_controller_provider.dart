@@ -1,5 +1,6 @@
 import 'package:flutter_ios_call_kit/entities/entities.dart';
 import 'package:flutter_ios_call_kit/flutter_ios_call_kit.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/call_controller_provider.dart';
 
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
@@ -18,9 +19,9 @@ class IosCallControllerProvider implements CallControllerProvider {
   final ContactRepository contactRepository;
 
   // MARK: On Call kit call back event
+  final onCallKitNewEvent = Rxn<CallEvent>();
   void onEvent(CallEvent event) {
-
-    // Call back event or mutating observable properties
+    this.onCallKitNewEvent.value = event;
   }
 
   @override
@@ -100,6 +101,7 @@ class IosCallControllerProvider implements CallControllerProvider {
 }
 
 Future<void> showMockCallkitIncoming(String uuid) async {
+
   final params = CallKitParams(
     id: uuid,
     nameCaller: 'Hoorad',

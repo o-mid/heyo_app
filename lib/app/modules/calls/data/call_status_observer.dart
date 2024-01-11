@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/data/call_status_provider.dart';
 import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
+import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/android_call_controller_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/call_controller_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/ios_call_controller_provider.dart';
 import 'package:heyo/app/modules/notifications/controllers/notifications_controller.dart';
@@ -38,7 +39,13 @@ class CallStatusObserver extends GetxController {
 
   Future<void> init() async {
     observeCallStatus();
-    callController = IosCallControllerProvider(accountInfoRepo: accountInfoRepo, contactRepository: contactRepository);
+
+    // TODO: Move it to up layer as dependency
+    if (Platform.isIOS){
+      callController = IosCallControllerProvider(accountInfoRepo: accountInfoRepo, contactRepository: contactRepository);
+    }else{
+      callController = AndroidCallControllerProvider(accountInfoRepo: accountInfoRepo, contactRepository: contactRepository);
+    }
   }
 
   void observeCallStatus() {
@@ -83,22 +90,7 @@ class CallStatusObserver extends GetxController {
         .getContactById(calls.first.remotePeer.remoteCoreId);
 
     await _notifyReceivedCall(callInfo: calls.first);
-    // TODO: Move it to up layer and inject specific call controller
-    if (Platform.isIOS){
-
-      await callController.incomingCall(callId, calls);
-    }else{
-
-      await Get.toNamed(
-        Routes.INCOMING_CALL,
-        arguments: IncomingCallViewArguments(
-          callId: callId,
-          isAudioCall: calls.first.isAudioCall,
-          members: calls.map((e) => e.remotePeer.remoteCoreId).toList(),
-        ),
-      );
-    }
-
+    await callController.incomingCall(callId, calls);
   }
 
   Future<void> _notifyReceivedCall({required CallInfo callInfo}) async {
