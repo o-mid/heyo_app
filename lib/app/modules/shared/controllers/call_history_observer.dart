@@ -141,17 +141,37 @@ class CallHistoryObserver extends GetxController {
       );
     } else {
       //* call connected (end)
-      final participant = call.participants.firstWhere(
-        (p) => p.coreId == state.remote,
-      );
 
-      final updateParticipant = call.participants.map((p) {
-        if (p.coreId != participant.coreId) {
-          return p;
-        } else {
-          return participant.copyWith(endDate: DateTime.now());
+      CallHistoryParticipantModel? participant;
+
+      for (var i = 0; i < call.participants.length; i++) {
+        if (call.participants[i].coreId == state.remote) {
+          participant = call.participants[i];
         }
-      }).toList();
+      }
+
+      var updateParticipant = <CallHistoryParticipantModel>[];
+
+      if (participant != null) {
+        //* It means someone in call end or reject call
+        updateParticipant = call.participants.map((p) {
+          if (p.coreId != participant!.coreId) {
+            return p;
+          } else {
+            return participant.copyWith(endDate: DateTime.now());
+          }
+        }).toList();
+      } else {
+        //* It means Current user end call
+        //* So we should fill all the end dates
+        updateParticipant = call.participants.map((p) {
+          if (p.endDate == null) {
+            return p.copyWith(endDate: DateTime.now());
+          } else {
+            return p;
+          }
+        }).toList();
+      }
 
       updateCall = call.copyWith(
         endDate: DateTime.now(),
@@ -186,7 +206,7 @@ class CallHistoryObserver extends GetxController {
 
     final updateCall = callWithNewParticipant.copyWith(
       status: status,
-      endDate: DateTime.now(),
+      //endDate: DateTime.now(),
     );
 
     await callHistoryRepo.updateCall(updateCall);
