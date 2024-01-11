@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:auto_start_flutter/auto_start_flutter.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -61,7 +63,19 @@ void main() async {
 void notificationSetup() {
   const initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
-  final initializationSettingsDarwin = DarwinInitializationSettings();
+  final initializationSettingsDarwin = DarwinInitializationSettings(
+    notificationCategories: [
+      DarwinNotificationCategory(
+        'Calls',
+        actions: [
+          DarwinNotificationAction.plain('1', 'Accept',
+              options: {DarwinNotificationActionOption.foreground}),
+          DarwinNotificationAction.plain('2', 'Deny',
+              options: {DarwinNotificationActionOption.foreground}),
+        ],
+      ),
+    ],
+  );
   final initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
     iOS: initializationSettingsDarwin,
@@ -117,8 +131,4 @@ void initApp() {
       ),
     ),
   );
-}
-
-Future<void> onBack(RemoteMessage message) async {
-  print("Received god damn notif");
 }
