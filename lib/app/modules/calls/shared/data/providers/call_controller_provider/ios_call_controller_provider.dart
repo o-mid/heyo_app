@@ -1,5 +1,6 @@
 import 'package:flutter_ios_call_kit/entities/entities.dart';
 import 'package:flutter_ios_call_kit/flutter_ios_call_kit.dart';
+import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/call_controller_provider.dart';
 
@@ -33,7 +34,13 @@ class IosCallControllerProvider implements CallControllerProvider {
 
     final userModel = await contactRepository
         .getContactById(calls.first.remotePeer.remoteCoreId);
-    await showMockCallkitIncoming(Uuid().v4());
+    final params = CallKitParams(id: Uuid().v4(), nameCaller: userModel?.name.tr, appName: "Heyo");
+    await FlutterIosCallKit.showCallkitIncoming(params);
+  }
+
+  Future<void> makeCall() async {
+
+    // Do implementation for make call with call kit
   }
 
   Future<void> listenerEvent(void Function(CallEvent) callback) async {
