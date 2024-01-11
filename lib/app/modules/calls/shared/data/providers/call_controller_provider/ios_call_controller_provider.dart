@@ -17,6 +17,17 @@ class IosCallControllerProvider implements CallControllerProvider {
   final AccountRepository accountInfoRepo;
   final ContactRepository contactRepository;
 
+  // MARK: On Call kit call back event
+  void onEvent(CallEvent event) {
+
+    // Call back event or mutating observable properties
+  }
+
+  @override
+  void onInit() {
+    listenerEvent(onEvent);
+  }
+
   Future<void> incomingCall(CallId callId,List<CallInfo> calls) async {
 
     final userModel = await contactRepository
