@@ -23,6 +23,69 @@ class IosCallControllerProvider implements CallControllerProvider {
         .getContactById(calls.first.remotePeer.remoteCoreId);
     await showMockCallkitIncoming(Uuid().v4());
   }
+
+  Future<void> listenerEvent(void Function(CallEvent) callback) async {
+    try {
+      FlutterIosCallKit.onEvent.listen((event) async {
+        print('HOME: $event');
+        switch (event!.event) {
+          case Event.actionCallIncoming:
+          // TODO: received an incoming call
+            print("🟩 Event.actionCallIncoming");
+            break;
+          case Event.actionCallStart:
+          // TODO: started an outgoing call
+          // TODO: show screen calling in Flutter
+            print("🟩 Event.actionCallStart");
+            break;
+          case Event.actionCallAccept:
+          // TODO: accepted an incoming call
+          // TODO: show screen calling in Flutter
+          //acceptCall();
+            print("🟩 Event.actionCallAccept");
+            break;
+          case Event.actionCallDecline:
+          // TODO: declined an incoming call
+            print("🟩 Event.actionCallDecline");
+            break;
+          case Event.actionCallEnded:
+          // TODO: ended an incoming/outgoing call
+            break;
+          case Event.actionCallTimeout:
+          // TODO: missed an incoming call
+            break;
+          case Event.actionCallCallback:
+          // TODO: only Android - click action `Call back` from missed call notification
+            break;
+          case Event.actionCallToggleHold:
+          // TODO: only iOS
+            break;
+          case Event.actionCallToggleMute:
+          // TODO: only iOS
+            break;
+          case Event.actionCallToggleDmtf:
+          // TODO: only iOS
+            break;
+          case Event.actionCallToggleGroup:
+          // TODO: only iOS
+            break;
+          case Event.actionCallToggleAudioSession:
+          // TODO: only iOS
+            break;
+          case Event.actionDidUpdateDevicePushTokenVoip:
+          // TODO: only iOS
+            break;
+          case Event.actionCallCustom:
+            break;
+        }
+        callback(event);
+      });
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+
 }
 
 Future<void> showMockCallkitIncoming(String uuid) async {
