@@ -9,9 +9,12 @@ import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/stream.extension.dart';
+import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
+import 'package:heyo/main.dart';
 
-class CallStatusObserver extends GetxController {
+class CallStatusObserver extends GetxController with WidgetsBindingObserver {
   CallStatusObserver({
     required this.callStatusProvider,
     required this.accountInfoRepo,
@@ -20,6 +23,8 @@ class CallStatusObserver extends GetxController {
   }) {
     init();
   }
+
+  final Rx<AppLifecycleState> _appState = Rx(AppLifecycleState.resumed);
 
   //final CallConnectionsHandler callConnectionsHandler;
   final CallStatusProvider callStatusProvider;
@@ -31,31 +36,31 @@ class CallStatusObserver extends GetxController {
 
   Future<void> init() async {
     observeCallStatus();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   void observeCallStatus() {
     callStatusProvider
-      ..onCallHistoryStatusEvent = (callId, call, state,isAudioCall) async {
+      ..onCallHistoryStatusEvent = (callId, call, state, isAudioCall) async {
         callHistoryState.value = CallHistoryState(
-          callId: callId,
-          remote: call,
-          callHistoryStatus: state,
-          isAudioCall: isAudioCall
-        );
+            callId: callId,
+            remote: call,
+            callHistoryStatus: state,
+            isAudioCall: isAudioCall);
       }
       ..onCallStateChange = (callId, calls, state) async {
-        print("Call State changed, state is: $state");
-        if(state==CurrentCallStatus.inComingCall){
+        print('Call State changed, state is: $state');
+        if (state == CurrentCallStatus.inComingCall) {
           await handleCallStateRinging(callId: callId, calls: calls);
         }
-        if(state==CurrentCallStatus.end){
+        if (state == CurrentCallStatus.end) {
           if (Get.currentRoute == Routes.CALL) {
             Get.until((route) => Get.currentRoute != Routes.CALL);
           } else if (Get.currentRoute == Routes.INCOMING_CALL) {
             Get.until((route) => Get.currentRoute != Routes.INCOMING_CALL);
           }
         }
-      /*  if (state == CallState.callStateRinging) {
+        /*  if (state == CallState.callStateRinging) {
 
         } else if (state == CallState.callStateBye) {
           if (Get.currentRoute == Routes.CALL) {
@@ -74,6 +79,8 @@ class CallStatusObserver extends GetxController {
     final userModel = await contactRepository
         .getContactById(calls.first.remotePeer.remoteCoreId);
 
+    await waitForApplicationStatus();
+
     await Get.toNamed(
       Routes.INCOMING_CALL,
       arguments: IncomingCallViewArguments(
@@ -88,7 +95,27 @@ class CallStatusObserver extends GetxController {
     await notificationsController.receivedCallNotify(
       title: "Incoming ${callInfo.isAudioCall ? "Audio" : "Video"} Call",
       body:
-          "from ${callInfo.remotePeer.remoteCoreId.characters.take(4).string}...${callInfo.remotePeer.remoteCoreId.characters.takeLast(4).string}",
+          'from ${callInfo.remotePeer.remoteCoreId.characters.take(4).string}...${callInfo.remotePeer.remoteCoreId.characters.takeLast(4).string}',
     );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _appState.value = state;
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  Future<void> waitForApplicationStatus() async {
+    if (_appState.value.name != AppLifecycleState.resumed.name) {
+      await _appState.stream.waitForResult(
+          condition: (AppLifecycleState value) {
+        return value.name == AppLifecycleState.resumed.name;
+      });
+    }
   }
 }
