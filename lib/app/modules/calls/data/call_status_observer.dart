@@ -5,6 +5,7 @@ import 'package:heyo/app/modules/calls/data/call_status_provider.dart';
 import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/modules/notifications/controllers/notifications_controller.dart';
+import 'package:heyo/app/modules/shared/controllers/app_lifecyle_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
@@ -20,6 +21,7 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
     required this.accountInfoRepo,
     required this.notificationsController,
     required this.contactRepository,
+    required this.appLifeCycleController,
   }) {
     init();
   }
@@ -31,6 +33,7 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
   final AccountRepository accountInfoRepo;
   final NotificationsController notificationsController;
   final ContactRepository contactRepository;
+  final AppLifeCycleController appLifeCycleController;
   final callHistoryState = Rxn<CallHistoryState>();
   final removeStream = Rxn<MediaStream>();
 
@@ -79,8 +82,8 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
     final userModel = await contactRepository
         .getContactById(calls.first.remotePeer.remoteCoreId);
 
-    await waitForApplicationStatus();
-
+    await appLifeCycleController.waitForResumeState();
+    await Future.delayed(10.seconds);
     await Get.toNamed(
       Routes.INCOMING_CALL,
       arguments: IncomingCallViewArguments(
@@ -108,14 +111,5 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  Future<void> waitForApplicationStatus() async {
-    if (_appState.value.name != AppLifecycleState.resumed.name) {
-      await _appState.stream.waitForResult(
-          condition: (AppLifecycleState value) {
-        return value.name == AppLifecycleState.resumed.name;
-      });
-    }
   }
 }
