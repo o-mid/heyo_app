@@ -46,6 +46,7 @@ class AppDatabaseProvider {
 
     final database = await databaseFactoryIo.openDatabase(
       dbPath,
+      version: 1,
     );
     /* final database = await databaseFactoryIo.openDatabase(
       dbPath,
