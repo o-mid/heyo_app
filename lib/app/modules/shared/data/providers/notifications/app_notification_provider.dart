@@ -1,6 +1,6 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:heyo/app/modules/shared/data/models/fcm_register_model.dart';
 import 'package:heyo/app/modules/shared/data/models/notification_type.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/netowrk_request_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/notifications/notification_provider.dart';
@@ -13,12 +13,13 @@ class AppNotificationProvider extends NotificationProvider {
   NetworkRequest networkRequest;
   LibP2PStorageProvider libP2PStorageProvider;
   RegistryProvider registryProvider;
+  final AccountRepository accountRepository;
 
-  AppNotificationProvider({
-    required this.networkRequest,
-    required this.libP2PStorageProvider,
-    required this.registryProvider,
-  });
+  AppNotificationProvider(
+      {required this.networkRequest,
+      required this.libP2PStorageProvider,
+      required this.registryProvider,
+      required this.accountRepository,}) ;
 
   @override
   Future<bool> pushFCMToken() async {
@@ -36,34 +37,44 @@ class AppNotificationProvider extends NotificationProvider {
     print("$fcmToken");
     print("$signature");
 
-    final corePassSignature=await libP2PStorageProvider.getSignature();
-    final coreId=await libP2PStorageProvider.getCorePassCoreId();
+    final corePassSignature = await libP2PStorageProvider.getSignature();
+    final coreId = await libP2PStorageProvider.getCorePassCoreId();
     print("$coreId");
     print("$corePassSignature");
 
+    final response = await networkRequest.post(
+      path: 'notification-service/user/register',
+      data: {
+        'fcmToken': "$fcmToken",
+        'signature': "$signature",
+        'coreId': "$coreId",
+        'coreSignature': "$corePassSignature",
+      },
+    );
 
-    final response = await networkRequest
-        .post(path: 'notification-service/user/register', data: {
-      'fcmToken': "$fcmToken",
-      'signature': "$signature",
-      'coreId' : "$coreId",
-      'coreSignature':"$corePassSignature",
-    },);
-    
     return response.isSuccess();
   }
 
   @override
-  Future<bool> sendNotification({
-    required String remoteDelegatedCoreId,
-    required NotificationType notificationType,
-  }) async {
-    final result = await networkRequest
-        .post(path: 'notification-service/notification/send', data: {
-      'coreId': remoteDelegatedCoreId,
-      'notificationType': notificationType.name.toUpperCase(),
-      'senderUsername': 'Johnathan Baby',
-    },);
+  Future<bool> sendNotification(
+      {required String remoteDelegatedCoreId,
+      required NotificationType notificationType,
+      required String content,}) async {
+    final userCoreId = await accountRepository.getUserAddress();
+    final result = await networkRequest.post(
+      path: 'notification-service/notification/send',
+      data: {
+        'coreId': remoteDelegatedCoreId,
+        'notificationType': notificationType.name.toUpperCase(),
+        'senderUsername': '',
+        'content': content,
+        'senderCoreId': userCoreId,
+        'title' : null,
+        'body' :  null,
+      },
+    );
     return result.isSuccess();
   }
+
+
 }

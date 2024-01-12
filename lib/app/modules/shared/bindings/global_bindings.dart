@@ -25,6 +25,7 @@ import 'package:heyo/app/modules/messages/connection/data/wifi_direct_messaging_
 import 'package:heyo/app/modules/messages/connection/rtc_connection_repo.dart';
 import 'package:heyo/app/modules/messages/connection/web_rtc_connection_manager.dart';
 import 'package:heyo/app/modules/notifications/controllers/app_notifications.dart';
+import 'package:heyo/app/modules/shared/controllers/app_lifecyle_controller.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/dio/dio_network_request.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/netowrk_request_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/network_credentials.dart';
@@ -91,12 +92,12 @@ class GlobalBindings extends Bindings {
   );
 
 // call related bindings
-
   static AppNotifications appNotifications = AppNotifications();
 
   @override
   void dependencies() {
     Get
+      ..put(AppLifeCycleController())
       ..put<Registry>(
         Registry(
           address: XCBAddress.fromHex(REGISTERY_ADDR),
@@ -119,13 +120,6 @@ class GlobalBindings extends Bindings {
         ),
       )
       ..put<NetworkRequest>(DioNetworkRequest(), permanent: true)
-      ..put<NotificationProvider>(
-        AppNotificationProvider(
-          networkRequest: Get.find(),
-          libP2PStorageProvider: Get.find(),
-          registryProvider: Get.find(),
-        ),
-      )
       ..put<AccountCreation>(LibP2PAccountCreation(
         localProvider: secureStorageProvider,
         cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
@@ -137,6 +131,13 @@ class GlobalBindings extends Bindings {
           localStorageProvider: secureStorageProvider,
         ),
         permanent: true,
+      )
+      ..put<NotificationProvider>(
+        AppNotificationProvider(
+            networkRequest: Get.find(),
+            libP2PStorageProvider: Get.find(),
+            registryProvider: Get.find(),
+            accountRepository: Get.find()),
       )
       ..put(P2PState(), permanent: true)
       ..put(P2PCommunicator(
@@ -204,29 +205,38 @@ class GlobalBindings extends Bindings {
 
       ..put(AppNotifications(), permanent: true)
       ..put(NotificationsController(
-          appNotifications: Get.find(),
-          ))
-      ..put(CallSignaling(connectionContractor: Get.find()))
-      ..put(CallStatusProvider(callSignaling: Get.find()),permanent: true)
-
+        appNotifications: Get.find(),
+      ))
+      ..put(CallSignaling(
+          connectionContractor: Get.find(), notificationProvider: Get.find()))
+      ..put(CallStatusProvider(callSignaling: Get.find()), permanent: true)
       ..put(
           CallConnectionsHandler(
             callStatusProvider: Get.find(),
-              singleCallWebRTCBuilder: SingleCallWebRTCBuilder(
-                  connectionContractor: Get.find(),),),
+            singleCallWebRTCBuilder: SingleCallWebRTCBuilder(
+              connectionContractor: Get.find(),
+            ),
+          ),
           permanent: true)
-      ..put(CallRequestsProcessor(
-          connectionContractor: Get.find(), callStatusProvider: Get.find(),callConnectionsHandler: Get.find()),)
+      ..put(
+        CallRequestsProcessor(
+          connectionContractor: Get.find(),
+          callStatusProvider: Get.find(),
+          callConnectionsHandler: Get.find(),
+        ),
+      )
       ..put(
           CallStatusObserver(
             callStatusProvider: Get.find(),
-              accountInfoRepo: Get.find(),
-              notificationsController: Get.find(),
-              contactRepository: ContactRepository(
-                cacheContractor: CacheRepository(
-                    userProvider: UserProvider(
-                        appDatabaseProvider: Get.find<AppDatabaseProvider>())),
-              )),
+            accountInfoRepo: Get.find(),
+            notificationsController: Get.find(),
+            contactRepository: ContactRepository(
+              cacheContractor: CacheRepository(
+                  userProvider: UserProvider(
+                      appDatabaseProvider: Get.find<AppDatabaseProvider>())),
+            ),
+            appLifeCycleController: Get.find(),
+          ),
           permanent: true)
 
       // call related dependencies
@@ -341,31 +351,30 @@ class GlobalBindings extends Bindings {
           dataHandler: Get.find(),
         ),
       )
-      ..put(
-        Get.put(
-          SyncMessages(
-            p2pState: Get.find(),
-            multipleConnectionHandler: Get.find(),
-            accountInfo: Get.find(),
-            chatHistoryRepo: ChatHistoryLocalRepo(
-              chatHistoryProvider: ChatHistoryProvider(
-                appDatabaseProvider: Get.find<AppDatabaseProvider>(),
-              ),
+      ..put(Get.put(
+        SyncMessages(
+          p2pState: Get.find(),
+          multipleConnectionHandler: Get.find(),
+          accountInfo: Get.find(),
+          chatHistoryRepo: ChatHistoryLocalRepo(
+            chatHistoryProvider: ChatHistoryProvider(
+              appDatabaseProvider: Get.find<AppDatabaseProvider>(),
             ),
+          ),
+          messagesRepo: MessagesRepo(
+            messagesProvider: MessagesProvider(
+                appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          ),
+          sendMessageUseCase: SendMessageUseCase(
             messagesRepo: MessagesRepo(
               messagesProvider: MessagesProvider(
                   appDatabaseProvider: Get.find<AppDatabaseProvider>()),
             ),
-            sendMessageUseCase: SendMessageUseCase(
-              messagesRepo: MessagesRepo(
-                messagesProvider: MessagesProvider(
-                    appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-              ),
-              connectionRepository:
-                  Get.find<RTCMessagingConnectionRepository>(),
-              processor: MessageProcessor(),
-            ),
-          ),));
+            connectionRepository: Get.find<RTCMessagingConnectionRepository>(),
+            processor: MessageProcessor(),
+          ),
+        ),
+      ));
 
     Get.put(
       CallHistoryController(
@@ -377,8 +386,10 @@ class GlobalBindings extends Bindings {
       ),
     );
 
-    Get.put<CallRepository>(WebRTCCallRepository(
-      callConnectionsHandler: Get.find(),
-    ),permanent: true);
+    Get.put<CallRepository>(
+        WebRTCCallRepository(
+          callConnectionsHandler: Get.find(),
+        ),
+        permanent: true);
   }
 }
