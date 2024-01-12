@@ -34,11 +34,11 @@ extension DateTimeExtension on DateTime {
     if (hours == 0 && minutes == 0) {
       return '$seconds seconds';
     } else if (hours == 0) {
-      return '$minutes minutes and $seconds seconds';
+      return '$minutes minutes & $seconds seconds';
     } else if (minutes == 0) {
-      return '$hours hours and $seconds seconds';
+      return '$hours hours & $seconds seconds';
     } else {
-      return '$hours hours, $minutes minutes, and $seconds seconds';
+      return '$hours hours, $minutes minutes, & $seconds seconds';
     }
   }
 }
