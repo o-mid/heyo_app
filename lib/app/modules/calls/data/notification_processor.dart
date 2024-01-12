@@ -12,6 +12,7 @@ import 'package:heyo/main.dart';
 
 class NotificationProcessor {
   static void process(
+    DateTime? messageSent,
     String rawData, {
     required FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
     required bool isBackgroundNotification,
@@ -21,6 +22,7 @@ class NotificationProcessor {
     switch (data['notificationType']) {
       case 'CALL':
         processCallNotification(
+          messageSent,
           data,
           isBackgroundNotification: isBackgroundNotification,
         );
@@ -30,9 +32,17 @@ class NotificationProcessor {
   }
 
   static void processCallNotification(
+    DateTime? messageSent,
     Map<String, dynamic> data, {
     required bool isBackgroundNotification,
   }) {
+    if (messageSent != null) {
+      final diff = DateTime.now().millisecondsSinceEpoch -
+          messageSent.millisecondsSinceEpoch;
+      //Skip if more than 20 seconds
+      if (diff > 20 * 1000) return;
+    }
+
     if (isBackgroundNotification) {
       showNotificationWithActions(
         channelName: 'Calls',
@@ -81,13 +91,14 @@ class NotificationProcessor {
 
     print("$payload");
 
-    final callRequestsProcessor =
-        Get.find<CallRequestsProcessor>();
-    print("${notificationContent.content.toString()} : ${notificationContent.content!.toJson()} : ${notificationContent.messageFrom}");
+    final callRequestsProcessor = Get.find<CallRequestsProcessor>();
+    print(
+        "${notificationContent.content.toString()} : ${notificationContent.content!.toJson()} : ${notificationContent.messageFrom}");
     await callRequestsProcessor.onRequestReceived(
-        notificationContent.content!.toJson(),
-        notificationContent.messageFrom! ,
-        null,);
+      notificationContent.content!.toJson(),
+      notificationContent.messageFrom!,
+      null,
+    );
 /*    unawaited(Get.toNamed(
       Routes.INCOMING_CALL,
       arguments: IncomingCallViewArguments(

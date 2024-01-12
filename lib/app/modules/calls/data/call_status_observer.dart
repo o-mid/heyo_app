@@ -49,7 +49,7 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
             callId: callId,
             remote: call,
             callHistoryStatus: state,
-            isAudioCall: isAudioCall);
+            isAudioCall: isAudioCall,);
       }
       ..onCallStateChange = (callId, calls, state) async {
         print('Call State changed, state is: $state');
@@ -83,7 +83,6 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
         .getContactById(calls.first.remotePeer.remoteCoreId);
 
     await appLifeCycleController.waitForResumeState();
-    await Future.delayed(10.seconds);
     await Get.toNamed(
       Routes.INCOMING_CALL,
       arguments: IncomingCallViewArguments(
