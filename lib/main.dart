@@ -86,7 +86,9 @@ void notificationSetup() {
     onDidReceiveNotificationResponse: (notification) async {
       /// user pressed first action button, means agreeing to proceed
       if (notification.id! == 1) {
+        //TODO should be refactored and notification should be updated based on the time
         NotificationProcessor.process(
+          null,
           notification.payload!,
           flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
           isBackgroundNotification: false,
