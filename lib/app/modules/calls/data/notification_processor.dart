@@ -18,7 +18,7 @@ class NotificationProcessor {
     required bool isBackgroundNotification,
   }) {
     final data = jsonDecode(rawData) as Map<String, dynamic>;
-    print("dadasd $data");
+    print("NotificationProcessor data: $data");
     switch (data['notificationType']) {
       case 'CALL':
         processCallNotification(
@@ -89,23 +89,15 @@ class NotificationProcessor {
     final notificationContent =
         NotificationCallModel.fromJson(jsonDecode(payload));
 
-    print("$payload");
+    print("openIncomingCallPage: payload: $payload");
 
     final callRequestsProcessor = Get.find<CallRequestsProcessor>();
     print(
-        "${notificationContent.content.toString()} : ${notificationContent.content!.toJson()} : ${notificationContent.messageFrom}");
+        "openIncomingCallPage: ${notificationContent.content.toString()} : ${notificationContent.content!.toJson()} : ${notificationContent.messageFrom}");
     await callRequestsProcessor.onRequestReceived(
       notificationContent.content!.toJson(),
       notificationContent.messageFrom!,
       null,
     );
-/*    unawaited(Get.toNamed(
-      Routes.INCOMING_CALL,
-      arguments: IncomingCallViewArguments(
-        callId: notificationContent.content!.callId!,
-        isAudioCall: notificationContent.content?.data?.isAudioCall ?? true,
-        members: members,
-      ),
-    ));*/
   }
 }

@@ -19,9 +19,7 @@ class AppNotificationProvider extends NotificationProvider {
       {required this.networkRequest,
       required this.libP2PStorageProvider,
       required this.registryProvider,
-      required this.accountRepository}) {
-    // _listen();
-  }
+      required this.accountRepository,}) ;
 
   @override
   Future<bool> pushFCMToken() async {
@@ -72,39 +70,10 @@ class AppNotificationProvider extends NotificationProvider {
         'content': content,
         'senderCoreId': userCoreId,
         'title' : null,
-        'body' :  null
+        'body' :  null,
       },
     );
     return result.isSuccess();
-  }
-
-  void _listen() {
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('-----------------------------------------------------');
-      print("${message.from}");
-      print("${message.contentAvailable}");
-      print("${message.data}");
-      final diff = DateTime.now().millisecondsSinceEpoch -
-          message.sentTime!.millisecondsSinceEpoch;
-      print("diff ${diff}");
-
-      print('Handling a foreground message: ${message.messageId}');
-      print('Message data: ${message.data}');
-      print('Message notification: ${message.notification?.title}');
-      print('Message notification: ${message.notification?.body}');
-      if (diff < 15 * 1000) {
-        print("Call accepted");
-      //  _streamController.add(message.data);
-      } else {
-        print("Call is not accepted");
-      }
-      print('-----------------------------------------------------');
-    });
-
-    FirebaseMessaging.onMessageOpenedApp.listen((event) {
-      print("onMessageOpened ${event.data}");
-    });
-    print('-FirebaseMessaging');
   }
 
 
