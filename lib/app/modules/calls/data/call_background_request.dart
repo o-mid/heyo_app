@@ -10,7 +10,7 @@ Future<void> onMessageReceived(
   required FlutterLocalNotificationsPlugin flutterLocalNotification,
 }) async {
   NotificationProcessor.process(
-    message.sentTime!,
+    message.sentTime,
     jsonEncode(message.data),
     flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
     isBackgroundNotification: isFromBackground,
@@ -19,7 +19,7 @@ Future<void> onMessageReceived(
 
 Future<void> onBackgroundMessage(RemoteMessage message) async {
   NotificationProcessor.process(
-    message.sentTime!,
+    message.sentTime,
     jsonEncode(message.data),
     flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
     isBackgroundNotification: true,

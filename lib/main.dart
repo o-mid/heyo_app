@@ -44,6 +44,8 @@ void main() async {
       flutterLocalNotification: flutterLocalNotificationsPlugin,
     ),
   );
+  await FirebaseMessaging.instance.getToken();
+
   // only activate sentry in release mode
   if (kReleaseMode) {
     await SentryFlutter.init(
