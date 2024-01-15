@@ -242,13 +242,18 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       await renderer.initialize();
       renderer.srcObject = callStream.remoteStream;
     }
+    //* To get the name if current user save this coreId to contact
+    final userContact = await contactAvailabilityUseCase.execute(
+      coreId: callStream.coreId,
+    );
+
     connectedRemoteParticipates.add(
       ConnectedParticipantModel(
         audioMode: true.obs,
         videoMode:
             (renderer == null) ? false.obs : (!callStream.isAudioCall).obs,
         coreId: callStream.coreId,
-        name: callStream.coreId.shortenCoreId,
+        name: userContact.name,
         stream: callStream.remoteStream,
         rtcVideoRenderer: renderer,
       ),
