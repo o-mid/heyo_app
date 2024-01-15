@@ -10,10 +10,14 @@ class CallHistoryDetailView extends GetView<CallHistoryDetailController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (controller.participants.length == 1) {
-        return const CallHistorySingleParticipantWidget();
+      if (controller.loading.isTrue) {
+        return const SizedBox.shrink();
       } else {
-        return const CallHistoryMultiParticipantWidget();
+        if (controller.callHistoryModel!.value!.participants.length == 1) {
+          return const CallHistorySingleParticipantWidget();
+        } else {
+          return const CallHistoryMultiParticipantWidget();
+        }
       }
     });
   }

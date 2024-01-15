@@ -100,7 +100,9 @@ class CallHistoryObserver extends GetxController {
   }
 
   Future<void> _createOutgoingNotAnsweredRecord(
-      {required String remoteCoreId, required String callId, required bool isAudioCall}) async {
+      {required String remoteCoreId,
+      required String callId,
+      required bool isAudioCall}) async {
     final callParticipant = await _getUserFromCoreId(
       remoteCoreId,
     );
@@ -139,17 +141,37 @@ class CallHistoryObserver extends GetxController {
       );
     } else {
       //* call connected (end)
-      final participant = call.participants.firstWhere(
-        (p) => p.coreId == state.remote,
-      );
 
-      final updateParticipant = call.participants.map((p) {
-        if (p.coreId != participant.coreId) {
-          return p;
-        } else {
-          return participant.copyWith(endDate: DateTime.now());
+      CallHistoryParticipantModel? participant;
+
+      for (var i = 0; i < call.participants.length; i++) {
+        if (call.participants[i].coreId == state.remote) {
+          participant = call.participants[i];
         }
-      }).toList();
+      }
+
+      var updateParticipant = <CallHistoryParticipantModel>[];
+
+      if (participant != null) {
+        //* It means someone in call end or reject call
+        updateParticipant = call.participants.map((p) {
+          if (p.coreId != participant!.coreId) {
+            return p;
+          } else {
+            return participant.copyWith(endDate: DateTime.now());
+          }
+        }).toList();
+      } else {
+        //* It means Current user end call
+        //* So we should fill all the end dates
+        updateParticipant = call.participants.map((p) {
+          if (p.endDate == null) {
+            return p.copyWith(endDate: DateTime.now());
+          } else {
+            return p;
+          }
+        }).toList();
+      }
 
       updateCall = call.copyWith(
         endDate: DateTime.now(),
@@ -175,21 +197,22 @@ class CallHistoryObserver extends GetxController {
     /// store the time call started
     _callStartTimestamps[state.callId] = DateTime.now();
 
-    if (call.participants.isNotEmpty) {
-      await _addMemberToCallHistory(
-        callHistoryModel: call,
-        callHistoryState: state,
-      );
-    }
-
-    final updateCall = call.copyWith(
-      status: status,
-      endDate: DateTime.now(),
+    //if (call.participants.isNotEmpty) {
+    final callWithNewParticipant = await _addParticipantToCallHistory(
+      callHistoryModel: call,
+      callHistoryState: state,
     );
+    //}
+
+    final updateCall = callWithNewParticipant.copyWith(
+      status: status,
+      //endDate: DateTime.now(),
+    );
+
     await callHistoryRepo.updateCall(updateCall);
   }
 
-  Future<void> _addMemberToCallHistory({
+  Future<CallHistoryModel> _addParticipantToCallHistory({
     required CallHistoryModel callHistoryModel,
     required CallHistoryState callHistoryState,
   }) async {
@@ -232,7 +255,8 @@ class CallHistoryObserver extends GetxController {
     final updateCall = callHistoryModel.copyWith(
       participants: currentParticipantList,
     );
-    await callHistoryRepo.updateCall(updateCall);
+    //await callHistoryRepo.updateCall(updateCall);
+    return updateCall;
   }
 
   Future<CallHistoryParticipantModel> _getUserFromCoreId(String coreId) async {
