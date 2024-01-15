@@ -126,7 +126,7 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
   Future<void> initConnection(
     MessageConnectionType messageConnectionType,
     List<String> remoteCoreIds,
-    ChatId chatId,
+    String chatId,
     String chatName,
   ) async {
     final isGroupChat = remoteCoreIds.length > 1;
@@ -151,7 +151,7 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
 
   Future<void> _initMessagingConnection(
     String remoteId,
-    ChatId chatId,
+    String chatId,
     bool isGroupChat,
     List<String> remoteCoreIds,
     String chatName,

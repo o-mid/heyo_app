@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/widgets/body/message_body_widget.dart';
@@ -26,6 +27,7 @@ class MessageWidget extends StatelessWidget {
           CustomCircleAvatar(
             size: 20,
             coreId: message.senderAvatar,
+            onTap: () => Clipboard.setData(ClipboardData(text: message.senderAvatar)),
           ),
         );
     }
