@@ -56,10 +56,10 @@ dependencies:
   pointycastle: ^3.6.0
   flutter_local_notifications: ^16.3.0
   flutter_p2p_communicator:
-    path: ../flutter_p2p_communicator/
-    #git:
-    #  url: git@ssh.git.energy:corepass/flutter_p2p_communicator.git
-    #  ref: f04315ab
+#    path: ./flutter_p2p_communicator/
+    git:
+      url: git@ssh.git.energy:corepass/flutter_p2p_communicator.git
+      ref: f04315ab
 
   flutter_ios_call_kit:
     path: ./heyo-plugin/flutter_ios_call_kit
