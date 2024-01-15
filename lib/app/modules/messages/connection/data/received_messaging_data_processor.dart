@@ -63,6 +63,9 @@ class ReceivedMessageDataProcessor {
           receivedMessageJson: wrappedMessageModel.message,
           chatId: chatId,
           coreId: remoteCoreId,
+          isGroupChat: isGroupChat,
+          remoteCoreIds: remoteCoreIds,
+          chatName: chatName,
         );
         await confirmMessageById(
           messageId: confirmationValues.item1,

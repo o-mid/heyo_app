@@ -72,7 +72,7 @@ class DataHandler {
     }
   }
 
-  createChatModel({
+  Future<void> createChatModel({
     required String chatId,
     required bool isGroupChat,
     required String chatName,
@@ -121,6 +121,9 @@ class DataHandler {
     required Map<String, dynamic> receivedMessageJson,
     required String chatId,
     required String coreId,
+    required bool isGroupChat,
+    required String chatName,
+    required List<String> remoteCoreIds,
   }) async {
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
     MessageModel? _currentMsg =
@@ -152,6 +155,9 @@ class DataHandler {
       receivedMessage: receivedMessage,
       chatId: chatId,
       notify: isNewMessage,
+      isGroupChat: isGroupChat,
+      chatName: chatName,
+      remoteCoreIds: remoteCoreIds,
     );
 
     return Tuple3(receivedMessage.messageId, ConfirmMessageStatus.delivered, chatId);
@@ -285,22 +291,29 @@ class DataHandler {
     required MessageModel receivedMessage,
     required String chatId,
     required bool notify,
+    required bool isGroupChat,
+    required String chatName,
+    required List<String> remoteCoreIds,
   }) async {
-    ChatModel? userChatmodel = await chatHistoryRepo.getChat(chatId);
+    ChatModel? chatmodel = await chatHistoryRepo.getChat(chatId);
 
     int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
 
-    userChatmodel = userChatmodel?.copyWith(
+    chatmodel = chatmodel?.copyWith(
       lastMessage: receivedMessage.type == MessageContentType.text
           ? (receivedMessage as TextMessageModel).text
           : receivedMessage.type.name,
       notificationCount: unReadMessagesCount,
       id: chatId,
       timestamp: receivedMessage.timestamp.toLocal(),
+      isGroupChat: isGroupChat,
+      name: chatName,
+      participants:
+          remoteCoreIds.map((e) => MessagingParticipantModel(coreId: e, chatId: chatId)).toList(),
     );
 
-    if (userChatmodel != null) {
-      await chatHistoryRepo.updateChat(userChatmodel);
+    if (chatmodel != null) {
+      await chatHistoryRepo.updateChat(chatmodel);
     }
 
     if (notify) {

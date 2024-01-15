@@ -179,11 +179,7 @@ class MessagesController extends GetxController {
   }
 
   void _setChatId() {
-    if (isGroupChat) {
-      chatId = participants.first.chatId;
-    } else {
-      chatId = users.first.coreId;
-    }
+    chatId = participants.first.chatId;
   }
 
   Future<void> _getUserContact() async {
