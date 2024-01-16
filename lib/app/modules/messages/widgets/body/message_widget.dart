@@ -12,11 +12,12 @@ class MessageWidget extends StatelessWidget {
     required this.message,
     super.key,
     this.isMockMessage = false,
+    required this.isGroupChat,
   });
 
   final MessageModel message;
   final bool isMockMessage;
-
+  final bool isGroupChat;
   List<Widget> _buildChildren() {
     List<Widget> children = [];
 
@@ -36,7 +37,8 @@ class MessageWidget extends StatelessWidget {
       Expanded(
         child: Column(
           children: [
-            MessageHeaderWidget(message: message, isMockMessage: isMockMessage),
+            MessageHeaderWidget(
+                message: message, isMockMessage: isMockMessage, isGroupChat: isGroupChat),
             SizedBox(height: 4.h),
             MessageBodyWidget(
               message: message,

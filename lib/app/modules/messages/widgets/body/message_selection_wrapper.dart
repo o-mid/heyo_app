@@ -18,14 +18,16 @@ import 'reaction_box.dart';
 import 'recipient_reply_to_widget.dart';
 
 class MessageSelectionWrapper extends StatelessWidget {
-  const MessageSelectionWrapper({
+  MessageSelectionWrapper({
     required this.message,
+    required this.isGroupChat,
     super.key,
     this.isMockMessage = false,
   });
 
   final MessageModel message;
   final bool isMockMessage;
+  final bool isGroupChat;
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +76,7 @@ class MessageSelectionWrapper extends StatelessWidget {
                     child: MessageWidget(
                       message: message,
                       isMockMessage: isMockMessage,
+                      isGroupChat: isGroupChat,
                     ),
                   ),
                 ),
