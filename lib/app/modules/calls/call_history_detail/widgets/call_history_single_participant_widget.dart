@@ -17,7 +17,8 @@ import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-class CallHistorySingleParticipantWidget extends GetView<CallHistoryDetailController> {
+class CallHistorySingleParticipantWidget
+    extends GetView<CallHistoryDetailController> {
   const CallHistorySingleParticipantWidget({super.key});
 
   @override
@@ -28,11 +29,12 @@ class CallHistorySingleParticipantWidget extends GetView<CallHistoryDetailContro
         title: LocaleKeys.CallHistory_callParticipant.tr,
         actions: [
           Obx(() {
-            if (controller.calls.isNotEmpty) {
+            if (controller.recentCalls.isNotEmpty) {
               return InkWell(
                 onTap: () {
                   controller.openAppBarActionBottomSheet(
-                    participant: controller.participants[0],
+                    participant:
+                        controller.callHistoryModel!.value!.participants[0],
                   );
                 },
                 child: Container(
@@ -49,30 +51,34 @@ class CallHistorySingleParticipantWidget extends GetView<CallHistoryDetailContro
         child: SizedBox(
           width: double.infinity,
           child: Obx(() {
-            if (controller.participants.isEmpty) {
+            if (controller.callHistoryModel!.value!.participants.isEmpty) {
               return const SizedBox.shrink();
             }
             return Column(
               children: [
                 SizedBox(height: 40.h),
                 CustomCircleAvatar(
-                  coreId: controller.participants[0]!.coreId,
+                  coreId: controller
+                      .callHistoryModel!.value!.participants[0].coreId,
                   size: 64,
                 ),
                 CustomSizes.mediumSizedBoxHeight,
                 GestureDetector(
                   onTap: () => controller.saveCoreIdToClipboard(),
                   child: Text(
-                    controller.participants[0].name,
-                    style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+                    controller.callHistoryModel!.value!.participants[0].name,
+                    style: TEXTSTYLES.kHeaderLarge
+                        .copyWith(color: COLORS.kDarkBlueColor),
                   ),
                 ),
                 SizedBox(height: 4.h),
                 GestureDetector(
                   onTap: () => controller.saveCoreIdToClipboard(),
                   child: Text(
-                    controller.participants[0].coreId.shortenCoreId,
-                    style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
+                    controller.callHistoryModel!.value!.participants[0].coreId
+                        .shortenCoreId,
+                    style: TEXTSTYLES.kBodySmall
+                        .copyWith(color: COLORS.kTextSoftBlueColor),
                   ),
                 ),
                 SizedBox(height: 40.h),
@@ -90,7 +96,8 @@ class CallHistorySingleParticipantWidget extends GetView<CallHistoryDetailContro
                           members: controller.args.participants,
                         ),
                       ),
-                      icon: Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor),
+                      icon: Assets.svg.audioCallIcon
+                          .svg(color: COLORS.kDarkBlueColor),
                     ),
                     SizedBox(width: 24.w),
                     CircleIconButton(
@@ -104,7 +111,8 @@ class CallHistorySingleParticipantWidget extends GetView<CallHistoryDetailContro
                           isAudioCall: false,
                         ),
                       ),
-                      icon: Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
+                      icon: Assets.svg.videoCallIcon
+                          .svg(color: COLORS.kDarkBlueColor),
                     ),
                     SizedBox(width: 24.w),
                     // Todo Omid : add go to messaging screen
@@ -118,14 +126,17 @@ class CallHistorySingleParticipantWidget extends GetView<CallHistoryDetailContro
                             connectionType: MessagingConnectionType.internet,
                             participants: [
                               MessagingParticipantModel(
-                                coreId: controller.participants[0].coreId,
-                                chatId: controller.participants[0].coreId,
+                                coreId: controller.callHistoryModel!.value!
+                                    .participants[0].coreId,
+                                chatId: controller.callHistoryModel!.value!
+                                    .participants[0].coreId,
                               ),
                             ],
                           ),
                         );
                       },
-                      icon: Assets.svg.chatOutlined.svg(color: COLORS.kDarkBlueColor),
+                      icon: Assets.svg.chatOutlined
+                          .svg(color: COLORS.kDarkBlueColor),
                     ),
                   ],
                 ),
@@ -137,14 +148,16 @@ class CallHistorySingleParticipantWidget extends GetView<CallHistoryDetailContro
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Text(
                     LocaleKeys.CallHistory_appbar.tr,
-                    style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextBlueColor),
+                    style: TEXTSTYLES.kLinkSmall
+                        .copyWith(color: COLORS.kTextBlueColor),
                   ),
                 ),
                 CustomSizes.smallSizedBoxHeight,
-                ...controller.calls.map(
+                ...controller.recentCalls.map(
                   (call) => Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
                     child: HistoryCallLogWidget(call: call),
                   ),
                 ),

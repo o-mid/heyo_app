@@ -27,12 +27,10 @@ class CallConnectionsHandler {
   Function(CallRTCSession callRTCSession)? onAddRemoteStream;
   Function(String remoteCoreId)? onSessionRemoved;
 
-
   Function(AllParticipantModel participate)? onChangeParticipateStream;
   Function(CallRTCSession callRTCSession)? onAudioStateChanged;
 
   final CallStatusProvider callStatusProvider;
-
 
   Future<void> addMember(String remoteCoreId) async {
     for (var element in callStatusProvider.getCurrentCallSessions()) {
@@ -68,11 +66,14 @@ class CallConnectionsHandler {
   ) async {
     await _createLocalStream();
     final callRTCSession = await callStatusProvider.makeCall(
-        remoteCoreId, _localStream!, isAudioCall,);
+      remoteCoreId,
+      _localStream!,
+      isAudioCall,
+    );
     callRTCSession.onAddRemoteStream = (stream) {
       onAddRemoteStream?.call(callRTCSession);
     };
-    callStatusProvider.onSessionRemoved=(coreId){
+    callStatusProvider.onSessionRemoved = (coreId) {
       onSessionRemoved?.call(coreId);
     };
     return callRTCSession;
@@ -92,7 +93,7 @@ class CallConnectionsHandler {
       await _createLocalStream();
       final sessions =
           await callStatusProvider.makeCallByIncomingCall(_localStream!);
-      callStatusProvider.onSessionRemoved=(coreId){
+      callStatusProvider.onSessionRemoved = (coreId) {
         onSessionRemoved?.call(coreId);
       };
       for (final element in sessions) {
@@ -109,7 +110,7 @@ class CallConnectionsHandler {
       for (final element in callStatusProvider.getCurrentCallSessions()) {
         await singleCallWebRTCBuilder.reject(callId, element.remotePeer);
       }
-      callStatusProvider.rejectCurrentCall();
+      callStatusProvider.rejectCurrentCall(callId);
     }
   }
 
@@ -133,7 +134,7 @@ class CallConnectionsHandler {
   void onNewMemberEventReceived(CallId callId, dynamic data) async {
     final member = data["newMemer"] as Map<String, dynamic>;
     if (callId == callStatusProvider.getCurrentCall()?.callId) {
-      CallRTCSession callRTCSession=await callStatusProvider.addSession(
+      CallRTCSession callRTCSession = await callStatusProvider.addSession(
           RemotePeer(
             remoteCoreId: member["member"] as String,
             remotePeerId: null,
@@ -213,13 +214,12 @@ class CallConnectionsHandler {
 
   void peerClosedCamera(String sessionId) {}
 
-
   void rejectIncomingCall(String callId) {
     if (callStatusProvider.incomingCalls?.callId == callId) {
       for (final element in callStatusProvider.incomingCalls!.remotePeers) {
         singleCallWebRTCBuilder.reject(callId, element.remotePeer);
       }
-      callStatusProvider.rejectCurrentCall();
+      callStatusProvider.rejectCurrentCall(callId);
     }
   }
 

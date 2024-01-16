@@ -29,13 +29,16 @@ extension DateTimeExtension on DateTime {
     final difference = endTime.difference(this);
     final hours = difference.inHours;
     final minutes = difference.inMinutes.remainder(60);
+    final seconds = difference.inSeconds.remainder(60);
 
-    if (hours == 0) {
-      return '$minutes minutes';
+    if (hours == 0 && minutes == 0) {
+      return '$seconds seconds';
+    } else if (hours == 0) {
+      return '$minutes minutes & $seconds seconds';
     } else if (minutes == 0) {
-      return '$hours hours';
+      return '$hours hours & $seconds seconds';
     } else {
-      return '$hours hours and $minutes minutes';
+      return '$hours hours, $minutes minutes, & $seconds seconds';
     }
   }
 }

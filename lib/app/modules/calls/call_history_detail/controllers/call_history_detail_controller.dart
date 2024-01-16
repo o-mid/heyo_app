@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/call_history_detail/controllers/models/call_history_detail_participant_model.dart';
 
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_availability_use_case.dart';
 import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
@@ -26,9 +26,11 @@ class CallHistoryDetailController extends GetxController {
   final ContactAvailabilityUseCase contactAvailabilityUseCase;
 
   late UserCallHistoryViewArgumentsModel args;
-  final calls = <CallHistoryModel>[].obs;
+  final recentCalls = <CallHistoryModel>[].obs;
+  Rx<CallHistoryModel?>? callHistoryModel;
+  RxBool loading = true.obs;
 
-  RxList<CallHistoryDetailParticipantModel> participants = RxList();
+  //RxList<CallHistoryDetailParticipantModel> participants = RxList();
 
   @override
   Future<void> onInit() async {
@@ -38,21 +40,28 @@ class CallHistoryDetailController extends GetxController {
   }
 
   Future<void> getData() async {
-    for (final participant in args.participants) {
-      final checkContactAvailability = await contactAvailabilityUseCase.execute(
-        coreId: participant,
-      );
-      participants.add(
-        checkContactAvailability.mapToHistoryParticipantModel(),
-      );
+    //for (final participant in args.participants) {
+    //  final checkContactAvailability = await contactAvailabilityUseCase.execute(
+    //    coreId: participant,
+    //  );
+    //  participants.add(
+    //    checkContactAvailability.mapToHistoryParticipantModel(),
+    //  );
+    //}
+
+    try {
+      callHistoryModel = (await callHistoryRepo.getOneCall(args.callId)).obs;
+    } catch (e) {
+      debugPrint(e.toString());
     }
 
     //* If the length is equal to one it means the call is p2p
     //* and app should show the user call history
     if (args.participants.length == 1) {
-      calls.value =
+      recentCalls.value =
           await callHistoryRepo.getCallsFromUserId(args.participants[0]);
     }
+    loading.value = false;
   }
 
   Future<void> saveCoreIdToClipboard() async {
@@ -84,7 +93,7 @@ class CallHistoryDetailController extends GetxController {
   }
 
   Future<void> openAppBarActionBottomSheet({
-    required CallHistoryDetailParticipantModel participant,
+    required CallHistoryParticipantModel participant,
   }) async {
     await Get.bottomSheet(
       Padding(
