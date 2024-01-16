@@ -43,7 +43,7 @@ class UserPreview extends GetxController {
     isWifiDirectConnection.value = isWifiDirect;
     print("openUserPreviewBottomSheet");
 
-    Get.bottomSheet(
+    await Get.bottomSheet(
       enterBottomSheetDuration: TRANSITIONS.newChat_EnterBottomSheetDuration,
       exitBottomSheetDuration: TRANSITIONS.newChat_ExitBottomSheetDuration,
       UserPreviewWidget(user: userModel),

@@ -20,13 +20,14 @@ class PeersListWidget extends GetView<WifiDirectController> {
     return Obx(() {
       return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
         CustomSizes.largeSizedBoxHeight,
-        controller.availableDirectUsers.isEmpty
-            ? Center(
+        if (controller.availableDirectUsers.isEmpty)
+          Center(
                 child: EmptyUsersBody(
                   infoText: LocaleKeys.wifiDirect_emptyPeersTitle.tr,
                 ),
               )
-            : Column(
+        else
+          Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
