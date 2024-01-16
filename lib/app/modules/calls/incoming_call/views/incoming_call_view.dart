@@ -24,8 +24,8 @@ class IncomingCallView extends GetView<IncomingCallController> {
             children: [
               if (controller.isAdvertised.isFalse)
                 const LinearProgressIndicator(
-                  color: COLORS.kGreenMainColor,
-                  backgroundColor: COLORS.kGreenLighterColor,
+                  color: COLORS.kDarkBlueColor,
+                  backgroundColor: COLORS.kWhiteColor,
                 ),
               SizedBox(height: 105.h),
               if (controller.incomingCallers.isNotEmpty)

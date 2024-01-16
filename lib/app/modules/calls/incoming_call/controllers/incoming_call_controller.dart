@@ -20,7 +20,7 @@ class IncomingCallController extends GetxController {
   RxList<IncomingCallModel> incomingCallers = RxList();
   final muted = false.obs;
   late IncomingCallViewArguments args;
-  RxBool isAdvertised = false.obs;
+  RxBool isAdvertised = true.obs;
 
   @override
   Future<void> onInit() async {
