@@ -35,8 +35,8 @@ class MessageBodyWidget extends StatelessWidget {
   final bool isMockMessage;
 
   const MessageBodyWidget({
-    Key? key,
     required this.message,
+    Key? key,
     this.isMockMessage = false,
   }) : super(key: key);
 
@@ -70,7 +70,7 @@ class MessageBodyWidget extends StatelessWidget {
 class _MessageContent extends StatelessWidget {
   final MessageModel message;
 
-  const _MessageContent({Key? key, required this.message}) : super(key: key);
+  const _MessageContent({required this.message, Key? key}) : super(key: key);
 
   Color get backgroundColor =>
       message.isFromMe ? COLORS.kGreenMainColor : COLORS.kPinCodeDeactivateColor;
