@@ -49,4 +49,8 @@ extension MessageModelHelpers on MessageModel {
 
     return replyMsg;
   }
+
+  String getMessageContent() {
+    return type == MessageContentType.text ? (this as TextMessageModel).text : type.name;
+  }
 }

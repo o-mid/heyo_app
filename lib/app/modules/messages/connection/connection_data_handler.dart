@@ -4,10 +4,12 @@ import 'dart:typed_data';
 import 'package:flutter/widgets.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
+import 'package:heyo/app/modules/messages/utils/extensions/messageModel.extension.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/notifications/data/models/notifications_payload_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/notifications_constant.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import 'package:tuple/tuple.dart';
 
@@ -235,7 +237,7 @@ class DataHandler {
       final index = messages.lastIndexWhere((element) => element.messageId == messageId);
 
       if (index != -1) {
-        final List<MessageModel> messagesToUpdate = messages
+        final messagesToUpdate = messages
             .sublist(0, index + 1)
             .where(
               (element) =>
@@ -260,30 +262,38 @@ class DataHandler {
     required String chatId,
     required String senderName,
   }) async {
+    final bigPicture = await _getBigPicture(receivedMessage, chatId);
+
+    final payload = _createNotificationPayload(receivedMessage, chatId);
+
     await notificationsController.receivedMessageNotify(
       chatId: chatId,
       channelKey: NOTIFICATIONS.messagesChannelKey,
-
-      // largeIcon: 'resource://drawable/usericon',
       title: senderName,
-      body: receivedMessage.type == MessageContentType.text
-          ? (receivedMessage as TextMessageModel).text
-          : receivedMessage.type.name,
-      bigPicture: receivedMessage.type == MessageContentType.image
-          ? (await messagesRepo.getMessageById(
-              messageId: receivedMessage.messageId,
-              chatId: chatId,
-            ) as ImageMessageModel)
-              .url
-          : null,
-      payload: NotificationsPayloadModel(
+      body: receivedMessage.getMessageContent(),
+      bigPicture: bigPicture,
+      payload: payload.toJson(),
+    );
+  }
+
+  Future<String?> _getBigPicture(MessageModel message, String chatId) async {
+    if (message.type == MessageContentType.image) {
+      return ((await messagesRepo.getMessageById(
+        messageId: message.messageId,
         chatId: chatId,
-        messageId: receivedMessage.messageId,
-        senderName: receivedMessage.senderName,
-        replyMsg: receivedMessage.type == MessageContentType.text
-            ? (receivedMessage as TextMessageModel).text
-            : receivedMessage.type.name,
-      ).toJson(),
+      ))! as ImageMessageModel)
+          .url;
+    }
+    return null;
+  }
+
+  NotificationsPayloadModel _createNotificationPayload(
+      MessageModel receivedMessage, String chatId) {
+    return NotificationsPayloadModel(
+      chatId: chatId,
+      messageId: receivedMessage.messageId,
+      senderName: receivedMessage.senderName,
+      replyMsg: receivedMessage.getMessageContent(),
     );
   }
 
@@ -300,9 +310,7 @@ class DataHandler {
     int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
 
     chatmodel = chatmodel?.copyWith(
-      lastMessage: receivedMessage.type == MessageContentType.text
-          ? (receivedMessage as TextMessageModel).text
-          : receivedMessage.type.name,
+      lastMessage: receivedMessage.getMessageContent(),
       notificationCount: unReadMessagesCount,
       id: chatId,
       timestamp: receivedMessage.timestamp.toLocal(),
@@ -318,14 +326,15 @@ class DataHandler {
 
     if (notify) {
       print("notifyyyyy $chatId");
-      UserModel? userModel = await contactRepository.getContactById(chatId);
 
       await notifyReceivedMessage(
         receivedMessage: receivedMessage,
         chatId: chatId,
-        senderName: (userModel == null)
-            ? "${chatId.characters.take(4).string}...${chatId.characters.takeLast(4).string}"
-            : userModel.name,
+        senderName: isGroupChat
+            ? chatName
+            : (chatmodel?.name == null)
+                ? chatId.shortenCoreId
+                : chatmodel!.name,
       );
     }
   }
