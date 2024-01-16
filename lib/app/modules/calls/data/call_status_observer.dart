@@ -51,7 +51,8 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
 
     // TODO: Move it to up layer as dependency
     if (Platform.isIOS){
-      callController = IosCallControllerProvider(accountInfoRepo: accountInfoRepo, contactRepository: contactRepository);
+      callController = IosCallControllerProvider(accountInfoRepo: accountInfoRepo,
+          contactRepository: contactRepository);
     }else{
       callController = AndroidCallControllerProvider(accountInfoRepo: accountInfoRepo, contactRepository: contactRepository);
     }
@@ -95,9 +96,9 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
     required CallId callId,
     required List<CallInfo> calls,
   }) async {
+
     final userModel = await contactRepository
         .getContactById(calls.first.remotePeer.remoteCoreId);
-
     await appLifeCycleController.waitForResumeState();
     await _notifyReceivedCall(callInfo: calls.first);
     await callController.incomingCall(callId, calls);

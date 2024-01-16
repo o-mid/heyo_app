@@ -2,11 +2,15 @@ import 'package:flutter_ios_call_kit/entities/entities.dart';
 import 'package:flutter_ios_call_kit/flutter_ios_call_kit.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/call_controller_provider.dart';
+import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/calls/data/rtc/models.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:uuid/uuid.dart';
 
 class IosCallControllerProvider implements CallControllerProvider {
@@ -18,20 +22,27 @@ class IosCallControllerProvider implements CallControllerProvider {
 
   final AccountRepository accountInfoRepo;
   final ContactRepository contactRepository;
+  late CallRepository callRepository;
+  late CallId callId;
+  late IncomingCallViewArguments args;
 
   // MARK: On Call kit call back event
   final onCallKitNewEvent = Rxn<CallEvent>();
+
   void onEvent(CallEvent event) {
-    this.onCallKitNewEvent.value = event;
+    onCallKitNewEvent.value = event;
   }
 
   @override
   void onInit() {
+
+    //args = Get.arguments as IncomingCallViewArguments;
     listenerEvent(onEvent);
   }
 
   Future<void> incomingCall(CallId callId,List<CallInfo> calls) async {
 
+    this.callId = callId;
     final userModel = await contactRepository
         .getContactById(calls.first.remotePeer.remoteCoreId);
     final params = CallKitParams(id: Uuid().v4(), nameCaller: userModel?.name.tr, appName: "Heyo");
@@ -41,6 +52,28 @@ class IosCallControllerProvider implements CallControllerProvider {
   Future<void> makeCall() async {
 
     // Do implementation for make call with call kit
+  }
+
+  void declineCall() {
+    // _hangUp();
+    // _stopRingtone();
+    Get.back();
+  }
+
+  Future<void> acceptCall() async {
+
+    await callRepository.acceptCall(callId);
+    //TODO farzam, accept
+    Get.offNamed(
+      Routes.CALL,
+      arguments: CallViewArgumentsModel(
+        callId: callId,
+        isAudioCall: args.isAudioCall,
+        members: args.members,
+      ),
+    );
+
+    print("🟩 acceptCall");
   }
 
   Future<void> listenerEvent(void Function(CallEvent) callback) async {
@@ -59,9 +92,8 @@ class IosCallControllerProvider implements CallControllerProvider {
             break;
           case Event.actionCallAccept:
           // TODO: accepted an incoming call
-          // TODO: show screen calling in Flutter
-          //acceptCall();
             print("🟩 Event.actionCallAccept");
+            acceptCall();
             break;
           case Event.actionCallDecline:
           // TODO: declined an incoming call
