@@ -119,16 +119,18 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   }
 
   void message() {
-    Get.toNamed(Routes.MESSAGES,
-        arguments: MessagesViewArgumentsModel(
-          connectionType: MessagingConnectionType.internet,
-          participants: [
-            MessagingParticipantModel(
-              coreId: args.members.first,
-              chatId: args.members.first,
-            ),
-          ],
-        ));
+    Get.toNamed(
+      Routes.MESSAGES,
+      arguments: MessagesViewArgumentsModel(
+        connectionType: MessagingConnectionType.internet,
+        participants: [
+          MessagingParticipantModel(
+            coreId: args.members.first,
+            chatId: args.members.first,
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -161,8 +163,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     // check isAudioCall for toggle show video
     await initLocalRenderer();
 
-    observeOnChangeParticipate();
-
     if (args.callId == null) {
       //* This means you start the call (you are caller)
       await startCalling();
@@ -174,17 +174,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
     print("Call type ${(args.isAudioCall)}");
 
-    //* adding participate into bottom sheet
-    // TODO(AliAzim): This list will be change in future
-    for (final element in args.members) {
-      // TODO(AliAzim): should be check isContact or not
-      participants.add(
-        AllParticipantModel(
-          name: element.shortenCoreId,
-          coreId: element.shortenCoreId,
-        ),
-      );
-    }
+    await onChangeParticipant();
 
     updateCallerVideoWidget();
     await enableWakeScreenLock();
@@ -235,7 +225,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   Future<void> createConnectedParticipantModel(CallStream callStream) async {
     print(
-        "bbbbbbbb createConnectedParticipantModel : ${callStream.isAudioCall} : ${callStream.remoteStream}");
+      "bbbbbbbb createConnectedParticipantModel : ${callStream.isAudioCall} : ${callStream.remoteStream}",
+    );
     RTCVideoRenderer? renderer;
     if (callStream.remoteStream != null) {
       renderer = RTCVideoRenderer();
@@ -286,12 +277,52 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     startCallTimer();
   }
 
-  void observeOnChangeParticipate() {
-    callRepository.onChangeParticipateStream = (participant) {
-      debugPrint('Change participate observer in Call Controller...');
-      //debugPrint(participant.toString());
-      participants.add(participant);
+  Future<void> onChangeParticipant() async {
+    //* adding participate into bottom sheet
+    for (final element in args.members) {
+      await addOrUpdateAllParticipate(coreId: element);
+    }
+
+    //* Observe the changes in onChangeParticipateStream
+    callRepository.onChangeParticipateStream = (participant) async {
+      debugPrint('New participate added to call => $participants');
+      await addOrUpdateAllParticipate(coreId: participant.coreId);
     };
+  }
+
+  Future<void> addOrUpdateAllParticipate({
+    required String coreId,
+    AllParticipantStatus status = AllParticipantStatus.calling,
+  }) async {
+//* To get the name if current user save this coreId to contact
+    final userContact = await contactAvailabilityUseCase.execute(
+      coreId: coreId,
+    );
+    final participant = AllParticipantModel(
+      name: userContact.name,
+      coreId: coreId,
+      status: status,
+    );
+
+    //* check if the participant is already in list or not
+    final participantIndex =
+        participants.indexWhere((item) => item.coreId == coreId);
+
+    if (participantIndex == -1) {
+      participants.add(participant.copyWith(name: userContact.name));
+    } else {
+      participants[participantIndex] = participant;
+    }
+  }
+
+  Future<void> removeFromAllParticipate(String coreId) async {
+    //* check if the participant is already in list or not
+    final participantIndex =
+        participants.indexWhere((item) => item.coreId == coreId);
+
+    if (participantIndex != -1) {
+      participants.removeAt(participantIndex);
+    }
   }
 
   Future<void> observeRemoteStreams() async {
@@ -301,7 +332,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     callRepository
       ..onCallStreamReceived = (callStateView) {
         debugPrint(
-            'bbbbbbbb onAddCallStream : $callStateView : ${callStateView.remoteStream} : ${callRepository.hashCode}');
+          'bbbbbbbb onAddCallStream : $callStateView : ${callStateView.remoteStream} : ${callRepository.hashCode}',
+        );
         //print("calll ${_remoteRenderers} : $stream");
         //TODO refactor this if related to the call state
         if (!isInCall.value) {
@@ -311,6 +343,10 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
         }
 
         onNewParticipateReceived(callStateView);
+        addOrUpdateAllParticipate(
+          coreId: callStateView.coreId,
+          status: AllParticipantStatus.accepted,
+        );
       }
       ..onRemoveStream = (coreId) {
         for (var index = 0;
@@ -322,6 +358,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
             break;
           }
         }
+        removeFromAllParticipate(coreId);
       };
 
     for (final element in callStreams) {
