@@ -30,5 +30,11 @@ class AndroidCallControllerProvider implements CallControllerProvider {
       ),
     );
   }
+
+  @override
+  Future<void> declineCall() {
+    // TODO: implement declineCall
+    throw UnimplementedError();
+  }
 }
 
