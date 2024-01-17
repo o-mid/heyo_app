@@ -235,7 +235,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   Future<void> createConnectedParticipantModel(CallStream callStream) async {
     print(
-        "bbbbbbbb createConnectedParticipantModel : ${callStream.isAudioCall} : ${callStream.remoteStream}");
+        " createConnectedParticipantModel : ${callStream.isAudioCall} : ${callStream.remoteStream}");
     RTCVideoRenderer? renderer;
     if (callStream.remoteStream != null) {
       renderer = RTCVideoRenderer();
@@ -296,12 +296,12 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   Future<void> observeRemoteStreams() async {
     final callStreams = await callRepository.getCallStreams();
-    print("bbbbbbbb hbgkbj ${callStreams.length} : ${callRepository.hashCode}");
+    print(" ${callStreams.length} : ${callRepository.hashCode}");
 
     callRepository
       ..onCallStreamReceived = (callStateView) {
         debugPrint(
-            'bbbbbbbb onAddCallStream : $callStateView : ${callStateView.remoteStream} : ${callRepository.hashCode}');
+            ' onAddCallStream : $callStateView : ${callStateView.remoteStream} : ${callRepository.hashCode}');
         //print("calll ${_remoteRenderers} : $stream");
         //TODO refactor this if related to the call state
         if (!isInCall.value) {
@@ -341,7 +341,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   void toggleMuteCall() {}
 
   Future<void> endCall() async {
-    print("ENDCALL  : controller");
     if (args.callId == null) {
       await callRepository.endOrCancelCall(requestedCallId);
     } else {

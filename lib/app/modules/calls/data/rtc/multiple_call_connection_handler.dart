@@ -119,23 +119,17 @@ class CallConnectionsHandler {
   }
 
   Future<void> close() async {
-    print("ENDCALL  : multipleCall close");
-
     if (_localStream != null) {
       for (final element in _localStream!.getTracks()) {
         await element.stop();
       }
       await _localStream?.dispose();
       _localStream = null;
-      print("ENDCALL  : multipleCall close localStream");
-
     }
     if (callStatusProvider.getCurrentCall() != null) {
-      print("ENDCALL  : multipleCall close current");
 
       for (final element in callStatusProvider.getCurrentCall()!.sessions) {
         await element.dispose();
-        print("ENDCALL  : multipleCall close current element");
 
       }
       callStatusProvider.getCurrentCall()!.sessions.clear();
