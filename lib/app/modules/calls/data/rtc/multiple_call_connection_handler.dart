@@ -106,11 +106,15 @@ class CallConnectionsHandler {
   }
 
   Future<void> reject(String callId) async {
+    print("ENDCALL  : multipleCall");
+
     if (callStatusProvider.getCurrentCall()?.callId == callId) {
       for (final element in callStatusProvider.getCurrentCallSessions()) {
         await singleCallWebRTCBuilder.reject(callId, element.remotePeer);
       }
-      callStatusProvider.rejectCurrentCall(callId);
+      print("ENDCALL  : multipleCall if");
+
+      callStatusProvider.rejectCall(callId);
     }
   }
 
@@ -123,8 +127,10 @@ class CallConnectionsHandler {
       _localStream = null;
     }
     if (callStatusProvider.getCurrentCall() != null) {
+
       for (final element in callStatusProvider.getCurrentCall()!.sessions) {
         await element.dispose();
+
       }
       callStatusProvider.getCurrentCall()!.sessions.clear();
     }
@@ -219,7 +225,7 @@ class CallConnectionsHandler {
       for (final element in callStatusProvider.incomingCalls!.remotePeers) {
         singleCallWebRTCBuilder.reject(callId, element.remotePeer);
       }
-      callStatusProvider.rejectCurrentCall(callId);
+      callStatusProvider.rejectIncomingCall(callId);
     }
   }
 
