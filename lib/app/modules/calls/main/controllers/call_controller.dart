@@ -341,6 +341,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   void toggleMuteCall() {}
 
   Future<void> endCall() async {
+    print("ENDCALL  : controller");
     if (args.callId == null) {
       await callRepository.endOrCancelCall(requestedCallId);
     } else {
