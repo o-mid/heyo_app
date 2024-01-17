@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:heyo/app/modules/new_call/controllers/new_call_controller.dart';
+import 'package:heyo/app/modules/calls/new_call/controllers/new_call_controller.dart';
+import 'package:heyo/app/modules/calls/new_call/widgets/contact_list_widget.dart';
 import 'package:heyo/app/modules/new_chat/widgets/app_bar_action_bottom_sheet.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -14,7 +15,8 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 class NewCallView extends GetView<NewCallController> {
-  const NewCallView({Key? key}) : super(key: key);
+  const NewCallView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +40,9 @@ class NewCallView extends GetView<NewCallController> {
         ],
       ),
       body: Obx(() {
+        //* If list is empty show the empty screen
+        final emptyScreen = controller.searchItems.isEmpty;
+
         return SingleChildScrollView(
           child: Column(
             children: [
@@ -49,7 +54,6 @@ class NewCallView extends GetView<NewCallController> {
                     onFocusChange: (focus) =>
                         controller.isTextInputFocused.value = focus,
                     child: CustomTextField(
-                      textController: controller.inputController,
                       labelText: LocaleKeys.newChat_usernameInput.tr,
                       rightWidget: IconButton(
                         icon: const Icon(
@@ -63,50 +67,52 @@ class NewCallView extends GetView<NewCallController> {
                   ),
                 ),
               ),
-              controller.searchSuggestions.isEmpty
-                  ? EmptyUsersBody(
-                      infoText:
-                          LocaleKeys.NewCallPage_emptyStateContactsTitle.tr,
-                      buttonText: LocaleKeys.NewCallPage_invite.tr,
-                      onInvite: controller.inviteBottomSheet,
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomSizes.smallSizedBoxHeight,
-                        const Divider(
-                            thickness: 8, color: COLORS.kBrightBlueColor),
-                        if (!controller.inputController.text.isNotEmpty) ...[
-                          SizedBox(height: 24.h),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20.w),
-                            child: Text(
-                              LocaleKeys.NewCallPage_contactListHeader.trParams(
-                                {
-                                  'count': controller.searchSuggestions.length
-                                      .toString()
-                                },
-                              ),
-                              style: TEXTSTYLES.kLinkSmall.copyWith(
-                                color: COLORS.kTextSoftBlueColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                        if (controller.inputController.text.isNotEmpty)
-                          CustomSizes.largeSizedBoxHeight,
-                        Padding(
-                          padding: CustomSizes.mainContentPadding,
-                          child: ContactListWithHeader(
-                            contacts: controller.searchSuggestions.toList(),
-                            searchMode:
-                                controller.inputController.text.isNotEmpty,
-                            showAudioCallButton: true,
-                            showVideoCallButton: true,
-                          ),
-                        ),
-                      ],
-                    ),
+              if (emptyScreen)
+                Expanded(
+                  child: ListView(
+                    children: [
+                      EmptyUsersBody(
+                        infoText: LocaleKeys.newChat_emptyStateTitleContacts.tr,
+                        buttonText: LocaleKeys.newChat_buttons_invite.tr,
+                        onInvite: controller.inviteBottomSheet,
+                      ),
+                    ],
+                  ),
+                )
+              else
+                const ContactListWidget()
+              //Column(
+              //  crossAxisAlignment: CrossAxisAlignment.start,
+              //  children: [
+              //    CustomSizes.smallSizedBoxHeight,
+              //    const Divider(thickness: 8, color: COLORS.kBrightBlueColor),
+              //    if (!controller.inputText.isNotEmpty) ...[
+              //      SizedBox(height: 24.h),
+              //      Padding(
+              //        padding: EdgeInsets.symmetric(horizontal: 20.w),
+              //        child: Text(
+              //          LocaleKeys.NewCallPage_contactListHeader.trParams(
+              //            {'count': controller.searchItems.length.toString()},
+              //          ),
+              //          style: TEXTSTYLES.kLinkSmall.copyWith(
+              //            color: COLORS.kTextSoftBlueColor,
+              //          ),
+              //        ),
+              //      ),
+              //    ],
+              //    if (controller.inputText.isNotEmpty)
+              //      CustomSizes.largeSizedBoxHeight,
+              //    Padding(
+              //      padding: CustomSizes.mainContentPadding,
+              //      child: ContactListWithHeader(
+              //        contacts: controller.searchItems.toList(),
+              //        searchMode: controller.inputText.isNotEmpty,
+              //        showAudioCallButton: true,
+              //        showVideoCallButton: true,
+              //      ),
+              //    ),
+              //  ],
+              //),
             ],
           ),
         );
