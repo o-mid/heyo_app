@@ -4,6 +4,7 @@ import 'package:heyo/app/modules/home/data/repository/home_repository.dart';
 import 'package:heyo/app/modules/home/data/repository/home_repository_impl.dart';
 
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
+import 'package:heyo/main.dart';
 
 class HomeBinding extends Bindings {
   @override
@@ -13,6 +14,7 @@ class HomeBinding extends Bindings {
         p2pState: Get.find(),
         connectionContractor: Get.find(),
         homeRepository: HomeRepositoryImpl(notificationProvider: Get.find()),
+        flutterLocalNotification: flutterLocalNotificationsPlugin,
       ),
     );
   }
