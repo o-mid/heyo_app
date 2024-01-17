@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/data/call_status_provider.dart';
 import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
+import 'package:heyo/app/modules/calls/data/web_rtc_call_repository.dart';
+import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/android_call_controller_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/call_controller_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/ios_call_controller_provider.dart';
@@ -52,7 +54,8 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
     // TODO: Move it to up layer as dependency
     if (Platform.isIOS){
       callController = IosCallControllerProvider(accountInfoRepo: accountInfoRepo,
-          contactRepository: contactRepository);
+          contactRepository: contactRepository,
+          callRepository: Get.put(WebRTCCallRepository(callConnectionsHandler: Get.find())));
     }else{
       callController = AndroidCallControllerProvider(accountInfoRepo: accountInfoRepo, contactRepository: contactRepository);
     }
@@ -74,6 +77,11 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
           await handleCallStateRinging(callId: callId, calls: calls);
         }
         if (state == CurrentCallStatus.end) {
+
+          // TODO: - fix it later
+          if (WebRTC.platformIsIOS == true){
+            await callController.declineCall();
+          }
           if (Get.currentRoute == Routes.CALL) {
             Get.until((route) => Get.currentRoute != Routes.CALL);
           } else if (Get.currentRoute == Routes.INCOMING_CALL) {

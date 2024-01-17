@@ -18,7 +18,10 @@ class IosCallControllerProvider implements CallControllerProvider {
   IosCallControllerProvider({
     required this.accountInfoRepo,
     required this.contactRepository,
-  });
+    required this.callRepository,
+  }){
+    listenerEvent(onEvent);
+  }
 
   final AccountRepository accountInfoRepo;
   final ContactRepository contactRepository;
@@ -31,13 +34,6 @@ class IosCallControllerProvider implements CallControllerProvider {
 
   void onEvent(CallEvent event) {
     onCallKitNewEvent.value = event;
-  }
-
-  @override
-  void onInit() {
-
-    //args = Get.arguments as IncomingCallViewArguments;
-    listenerEvent(onEvent);
   }
 
   Future<void> incomingCall(CallId callId,List<CallInfo> calls) async {
@@ -54,17 +50,20 @@ class IosCallControllerProvider implements CallControllerProvider {
     // Do implementation for make call with call kit
   }
 
-  void declineCall() {
-    // _hangUp();
-    // _stopRingtone();
-    Get.back();
+  Future<void> declineCall() async{
+
+    callRepository.rejectIncomingCall(callId);
+    FlutterIosCallKit.endCall(callId);
+    print("🟩 declineCall");
   }
 
   Future<void> acceptCall() async {
 
     await callRepository.acceptCall(callId);
+    FlutterIosCallKit.activeCalls();
+
     //TODO farzam, accept
-    Get.offNamed(
+    await Get.offNamed(
       Routes.CALL,
       arguments: CallViewArgumentsModel(
         callId: callId,
@@ -98,6 +97,7 @@ class IosCallControllerProvider implements CallControllerProvider {
           case Event.actionCallDecline:
           // TODO: declined an incoming call
             print("🟩 Event.actionCallDecline");
+            declineCall();
             break;
           case Event.actionCallEnded:
           // TODO: ended an incoming/outgoing call
