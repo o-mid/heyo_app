@@ -50,14 +50,19 @@ dependencies:
   emojis: ^0.9.9
   connectivity_plus: ^2.3.4
   flutter_secure_storage: ^5.0.2
+  auto_start_flutter: ^0.1.1
   convert: ^3.0.2
+  #  flutter_foreground_task: ^6.1.2
   pointycastle: ^3.6.0
+  flutter_local_notifications: ^16.3.0
   flutter_p2p_communicator:
     #path: ../flutter_p2p_communicator/
     git:
       url: git@ssh.git.energy:corepass/flutter_p2p_communicator.git
       ref: f04315ab
 
+  flutter_ios_call_kit:
+    path: ./heyo-plugin/flutter_ios_call_kit
   core_blockies:
     git: git@ssh.git.energy:corepass/core-blockies.git
 

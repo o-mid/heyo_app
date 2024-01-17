@@ -6,20 +6,21 @@ import 'package:heyo/app/modules/calls/data/rtc/session/call_rtc_session.dart';
 import 'package:heyo/app/modules/calls/data/signaling/signaling_models.dart';
 import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
 import 'package:heyo/app/modules/connection/domain/connection_models.dart';
+import 'package:heyo/app/modules/shared/data/models/notification_type.dart';
+import 'package:heyo/app/modules/shared/data/providers/notifications/notification_provider.dart';
 
 class CallSignaling {
+  CallSignaling(
+      {required this.connectionContractor, required this.notificationProvider});
 
-  CallSignaling({required this.connectionContractor});
   final ConnectionContractor connectionContractor;
+  final NotificationProvider notificationProvider;
   final JsonEncoder _encoder = const JsonEncoder();
-
-  Future<bool> _send(
-      String eventType,
+  Future<bool> _send(String eventType,
       data,
       String remoteCoreId,
       String? remotePeerId,
-      String connectionId,
-      ) async {
+      String connectionId,) async {
     print(
       "onMessage send $remotePeerId : $remoteCoreId : $connectionId : $eventType : $data ",
     );
@@ -31,7 +32,7 @@ class CallSignaling {
     print("P2PCommunicator: sendingSDP $remoteCoreId : $eventType");
     final requestSucceeded = await connectionContractor.sendMessage(
         _encoder.convert(request),
-        RemotePeerData(remoteCoreId: remoteCoreId, remotePeerId: remotePeerId));
+        RemotePeerData(remoteCoreId: remoteCoreId, remotePeerId: remotePeerId),);
     print(
       "P2PCommunicator: sendingSDP $remoteCoreId : $eventType : $requestSucceeded",
     );
@@ -39,23 +40,26 @@ class CallSignaling {
     return requestSucceeded;
   }
 
-  void requestCall(
-      CallId callId,
+  void requestCall(CallId callId,
       RemotePeer remotePeer,
       bool isAudioCall,
-      List<String> members,
-      ) {
+      List<String> members,) async {
     members.removeWhere(
           (element) => element == remotePeer.remoteCoreId,
     );
-    _send(
-      CallSignalingCommands.request,
-      {'isAudioCall': isAudioCall, 'members': members},
-      remotePeer.remoteCoreId,
-      remotePeer.remotePeerId,
-      callId,
-    );
+
+    final data = {};
+    data["type"] = CallSignalingCommands.request;
+    data["data"] = {'isAudioCall': isAudioCall, 'members': members};
+    data["command"] = CALL_COMMAND;
+    data[CALL_ID] = callId;
+    String content= _encoder.convert(data);
+
+    notificationProvider.sendNotification(
+        remoteDelegatedCoreId: remotePeer.remoteCoreId,
+        notificationType: NotificationType.call,content: content,);
   }
+
   void sendCandidate(RTCIceCandidate iceCandidate, CallRTCSession rtcSession) {
     _send(
       CallSignalingCommands.candidate,

@@ -253,7 +253,13 @@ class CallStatusProvider {
     }
   }
 
-  void rejectCurrentCall() {
+  void rejectCurrentCall(String remoteCoreId) {
+    onCallHistoryStatusEvent?.call(
+      getCurrentCallId(),
+      remoteCoreId,
+      CallHistoryStatus.end,
+      null,
+    );
     reset();
   }
 

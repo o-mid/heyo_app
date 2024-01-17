@@ -7,6 +7,7 @@ import 'package:heyo/app/modules/calls/call_history_detail/widgets/call_history_
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/appbar_widget.dart';
@@ -27,7 +28,7 @@ class CallHistoryMultiParticipantWidget
         title: LocaleKeys.CallHistory_callParticipant.tr,
         actions: [
           Obx(() {
-            if (controller.calls.isNotEmpty) {
+            if (controller.recentCalls.isNotEmpty) {
               return Padding(
                 padding: EdgeInsets.only(right: 26.w),
                 child: GestureDetector(
@@ -42,19 +43,20 @@ class CallHistoryMultiParticipantWidget
       ),
       body: SingleChildScrollView(
         child: Obx(() {
-          if (controller.participants.isEmpty) {
+          if (controller.callHistoryModel!.value!.participants.isEmpty) {
             return const SizedBox.shrink();
           }
           return Column(
             children: [
               SizedBox(height: 40.h),
               CallHistoryDetailAvatarWidget(
-                participants:
-                    controller.participants.map((e) => e.coreId).toList(),
+                participants: controller.callHistoryModel!.value!.participants
+                    .map((e) => e.coreId)
+                    .toList(),
               ),
               CustomSizes.mediumSizedBoxHeight,
               Text(
-                controller.participants
+                controller.callHistoryModel!.value!.participants.obs
                     .map((element) => element.name)
                     .toList()
                     .join(', '),
@@ -65,8 +67,8 @@ class CallHistoryMultiParticipantWidget
               ),
               SizedBox(height: 4.h),
               Text(
-                controller.participants
-                    .map((element) => element.name)
+                controller.callHistoryModel!.value!.participants
+                    .map((element) => element.coreId.shortenCoreId)
                     .toList()
                     .join(', '),
                 style: TEXTSTYLES.kBodySmall
@@ -144,7 +146,8 @@ class CallHistoryMultiParticipantWidget
                 ),
               ),
               CustomSizes.smallSizedBoxHeight,
-              ...controller.participants.map((participant) {
+              ...controller.callHistoryModel!.value!.participants
+                  .map((participant) {
                 return CallHistoryDetailListTileWidget(
                   coreId: participant.coreId,
                   name: participant.name,
