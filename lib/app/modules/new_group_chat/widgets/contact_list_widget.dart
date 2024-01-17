@@ -112,7 +112,8 @@ class ContactListWidget extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              if (controller.selectedCoreids.contains(suggestedUser))
+              if (controller.selectedCoreids
+                  .any((element) => element.coreId == suggestedUser.coreId))
                 const Icon(Icons.check_circle, color: COLORS.kGreenMainColor)
               else
                 const Icon(Icons.circle_outlined, color: Colors.grey),

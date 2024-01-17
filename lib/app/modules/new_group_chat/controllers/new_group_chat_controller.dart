@@ -45,7 +45,7 @@ class NewGroupChatController extends GetxController {
 
   @override
   void onReady() {
-    _addMockUsers();
+    //_addMockUsers();
     super.onReady();
   }
 
@@ -54,7 +54,7 @@ class NewGroupChatController extends GetxController {
     inputController.dispose();
     confirmationScreenInputController.dispose();
     await _contactsStreamSubscription.cancel();
-    await _clearSearchSuggestions();
+    // await _clearSearchSuggestions();
     super.onClose();
   }
 
@@ -73,7 +73,9 @@ class NewGroupChatController extends GetxController {
 
   Future<void> _listenToContacts() async {
     _contactsStreamSubscription =
-        (await contactRepository.getContactsStream()).listen(_updateSearchSuggestions);
+        (await contactRepository.getContactsStream()).listen((newContacts) {
+      _updateSearchSuggestions(newContacts);
+    });
   }
 
   void _updateSearchSuggestions(List<UserModel> newContacts) {
@@ -286,11 +288,11 @@ class NewGroupChatController extends GetxController {
 
   Future<void> _addMockUsers() async {
     final _mockUsers = <UserModel>[
-      UserModel(
-        name: 'testApi33',
-        walletAddress: 'ab68f7423e57d266d5a7061e3e166f5004e7353e841e',
-        coreId: 'ab68f7423e57d266d5a7061e3e166f5004e7353e841e',
-      ),
+      // UserModel(
+      //   name: 'testApi33',
+      //   walletAddress: 'ab68f7423e57d266d5a7061e3e166f5004e7353e841e',
+      //   coreId: 'ab68f7423e57d266d5a7061e3e166f5004e7353e841e',
+      // ),
       // UserModel(
       //   name: 'Farzaam',
       //   walletAddress: 'CB62C325',
@@ -309,22 +311,22 @@ class NewGroupChatController extends GetxController {
       //   walletAddress: 'CB23969A',
       //   coreId: 'CB23969A',
       // ),
-      UserModel(
-        name: 'testIosReal',
-        walletAddress: 'ab08a6c74ca74022a394ac1dab6a8adb55e5146e8caf',
-        coreId: 'ab08a6c74ca74022a394ac1dab6a8adb55e5146e8caf',
-      ),
-      UserModel(
-        name: 'testApi31',
-        walletAddress: 'ab45655fd5cdec507ed368251568c66abb3b0d71dd30',
-        coreId: 'ab45655fd5cdec507ed368251568c66abb3b0d71dd30',
-      ),
-      UserModel(
-        name: 'testIosSim',
-        walletAddress: 'ab1920ab021739e5120b158eaefd579bcf3b01527f91',
-        coreId: 'ab1920ab021739e5120b158eaefd579bcf3b01527f91',
-        isOnline: true,
-      ),
+      // UserModel(
+      //   name: 'testIosReal',
+      //   walletAddress: 'ab08a6c74ca74022a394ac1dab6a8adb55e5146e8caf',
+      //   coreId: 'ab08a6c74ca74022a394ac1dab6a8adb55e5146e8caf',
+      // ),
+      // UserModel(
+      //   name: 'testApi31',
+      //   walletAddress: 'ab45655fd5cdec507ed368251568c66abb3b0d71dd30',
+      //   coreId: 'ab45655fd5cdec507ed368251568c66abb3b0d71dd30',
+      // ),
+      // UserModel(
+      //   name: 'testIosSim',
+      //   walletAddress: 'ab1920ab021739e5120b158eaefd579bcf3b01527f91',
+      //   coreId: 'ab1920ab021739e5120b158eaefd579bcf3b01527f91',
+      //   isOnline: true,
+      // ),
     ].obs;
     await Future.delayed(const Duration(seconds: 2), () async {
       for (var i = 0; i < _mockUsers.length; i++) {
