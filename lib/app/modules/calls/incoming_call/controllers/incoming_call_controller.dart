@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/incoming_call/controllers/incoming_call_model.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_availability_use_case.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/routes/app_pages.dart';
@@ -12,15 +13,17 @@ class IncomingCallController extends GetxController {
   IncomingCallController({
     required this.callRepository,
     required this.contactAvailabilityUseCase,
+    required this.p2pState,
   });
 
   final CallRepository callRepository;
   final ContactAvailabilityUseCase contactAvailabilityUseCase;
 
+  final P2PState p2pState;
   RxList<IncomingCallModel> incomingCallers = RxList();
   final muted = false.obs;
   late IncomingCallViewArguments args;
-  RxBool isAdvertised = true.obs;
+  RxBool isAdvertised = false.obs;
 
   @override
   Future<void> onInit() async {
@@ -29,7 +32,15 @@ class IncomingCallController extends GetxController {
     await getUserData();
     _playRingtone();
 
+    _isAdvertised();
     super.onInit();
+  }
+
+  void _isAdvertised() {
+    isAdvertised.value = p2pState.advertise.value;
+    p2pState.advertise.listen((p0) {
+      this.isAdvertised.value = p0;
+    });
   }
 
   @override
