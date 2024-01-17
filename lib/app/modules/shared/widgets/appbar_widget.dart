@@ -1,27 +1,40 @@
 import 'package:flutter/material.dart';
-
-import '../utils/constants/colors.dart';
-import '../utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 
 class AppBarWidget extends PreferredSize {
-  final String title;
-  final List<Widget>? actions;
   AppBarWidget({
-    super.key,
-    this.actions,
     required this.title,
+    super.key,
+    this.backgroundColor,
+    this.actions,
+    this.leading,
+    this.bottom,
+    this.titleStyle,
+    this.automaticallyImplyLeading,
   }) : super(
           preferredSize: const Size.fromHeight(60),
           child: AppBar(
             centerTitle: false,
+            automaticallyImplyLeading: automaticallyImplyLeading ?? true,
             elevation: 0,
-            backgroundColor: COLORS.kGreenMainColor,
+            backgroundColor: backgroundColor ?? COLORS.kGreenMainColor,
             title: Text(
               title,
-              style: TEXTSTYLES.kHeaderLarge,
+              style: titleStyle ?? TEXTSTYLES.kHeaderLarge,
             ),
             //automaticallyImplyLeading: false,
             actions: actions,
+            bottom: bottom,
+            leading: leading,
           ),
         );
+
+  final String title;
+  final List<Widget>? actions;
+  final Widget? leading;
+  final Color? backgroundColor;
+  final PreferredSizeWidget? bottom;
+  final TextStyle? titleStyle;
+  final bool? automaticallyImplyLeading;
 }

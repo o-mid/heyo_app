@@ -1,24 +1,24 @@
-import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_abstract_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 
 class CallHistoryRepo implements CallHistoryAbstractRepo {
-  final CallHistoryAbstractProvider callHistoryProvider;
-
   CallHistoryRepo({required this.callHistoryProvider});
 
+  final CallHistoryAbstractProvider callHistoryProvider;
+
   @override
-  Future<void> addCallToHistory(CallModel call) async {
+  Future<void> addCallToHistory(CallHistoryModel call) async {
     await callHistoryProvider.insert(call);
   }
 
   @override
-  Future<List<CallModel>> getAllCalls() {
+  Future<List<CallHistoryModel>> getAllCalls() {
     return callHistoryProvider.getAllCalls();
   }
 
   @override
-  Future<CallModel?> getOneCall(String callId) {
+  Future<CallHistoryModel?> getOneCall(String callId) {
     return callHistoryProvider.getOneCall(callId);
   }
 
@@ -33,17 +33,17 @@ class CallHistoryRepo implements CallHistoryAbstractRepo {
   }
 
   @override
-  Future<List<CallModel>> getCallsFromUserId(String userId) {
+  Future<List<CallHistoryModel>> getCallsFromUserId(String userId) {
     return callHistoryProvider.getCallsFromUserId(userId);
   }
 
   @override
-  Future<Stream<List<CallModel>>> getCallsStream() {
+  Future<Stream<List<CallHistoryModel>>> getCallsStream() {
     return callHistoryProvider.getCallsStream();
   }
 
   @override
-  Future<void> updateCall(CallModel call) async {
-    await callHistoryProvider.insert(call);
+  Future<void> updateCall(CallHistoryModel call) async {
+    await callHistoryProvider.updateCall(call);
   }
 }

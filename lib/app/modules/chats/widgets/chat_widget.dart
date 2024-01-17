@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
-import 'package:intl/intl.dart';
 
 import 'package:heyo/app/modules/shared/widgets/slidable_widget.dart';
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
@@ -17,6 +16,9 @@ import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_mode
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:intl/intl.dart';
+
+import '../../shared/widgets/stacked_avatars_widget.dart';
 
 class ChatWidget extends GetView<ChatsController> {
   final ChatModel chat;
@@ -27,6 +29,7 @@ class ChatWidget extends GetView<ChatsController> {
 
   @override
   Widget build(BuildContext context) {
+    final isGroupChat = chat.participants.length > 1;
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
       child: SlidableWidget(
@@ -37,23 +40,29 @@ class ChatWidget extends GetView<ChatsController> {
           onTap: () {
             Get.toNamed(
               Routes.MESSAGES,
-              arguments:
-                  MessagesViewArgumentsModel(iconUrl: chat.icon, coreId: chat.id, participants: [
-                MessagingParticipantModel(
-                  coreId: chat.id,
-                )
-              ]),
+              arguments: MessagesViewArgumentsModel(
+                participants: chat.participants,
+                chatName: chat.name,
+              ),
             );
           },
           child: Padding(
             padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomCircleAvatar(
-                  coreId: chat.id,
-                  size: 48,
-                  isOnline: chat.isOnline,
-                ),
+                if (isGroupChat)
+                  StackedAvatars(
+                    avatarSize: 24,
+                    coreId1: chat.participants.first.coreId,
+                    coreId2: chat.participants.last.coreId,
+                  )
+                else
+                  CustomCircleAvatar(
+                    coreId: chat.id,
+                    size: 48,
+                    isOnline: chat.isOnline,
+                  ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(

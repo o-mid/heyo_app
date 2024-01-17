@@ -9,9 +9,12 @@ import 'package:heyo/app/modules/chats/widgets/chat_widget.dart';
 import 'package:heyo/app/modules/chats/widgets/delete_all_chats_bottom_sheet.dart';
 import 'package:heyo/app/modules/chats/widgets/delete_chat_dialog.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/messages/utils/chat_Id_generator.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
+
+import '../../shared/data/models/messaging_participant_model.dart';
 
 class ChatsController extends GetxController {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
@@ -126,49 +129,74 @@ class ChatsController extends GetxController {
       ChatModel(
         id: '1',
         isOnline: false,
-        icon: "",
         name: "John ",
         lastMessage: "",
         lastReadMessageId: "",
         timestamp: DateTime.now(),
+        participants: [
+          MessagingParticipantModel(
+            coreId: '1',
+            chatId: ChatIdGenerator.generate(),
+          ),
+        ],
       ),
       ChatModel(
         id: '2',
         isOnline: true,
-        icon: "",
         name: "emmy",
         lastMessage: "",
         lastReadMessageId: "",
         timestamp: DateTime.now(),
+        participants: [
+          MessagingParticipantModel(
+            coreId: '2',
+            chatId: ChatIdGenerator.generate(),
+          ),
+        ],
       ),
       ChatModel(
         id: '3',
         isOnline: false,
-        icon: "",
         name: "dow",
         lastMessage: "",
         lastReadMessageId: "",
         isVerified: true,
         timestamp: DateTime.now(),
+        participants: [
+          MessagingParticipantModel(
+            coreId: '3',
+            chatId: ChatIdGenerator.generate(),
+          ),
+        ],
       ),
       ChatModel(
         id: '4',
         isOnline: true,
-        icon: "",
         name: "docs",
         lastMessage: "",
         lastReadMessageId: "",
         timestamp: DateTime.now(),
+        participants: [
+          MessagingParticipantModel(
+            coreId: '4',
+            chatId: ChatIdGenerator.generate(),
+          ),
+        ],
       ),
       ChatModel(
         id: '5',
         isOnline: false,
-        icon: "",
         name: "joseef boran",
         lastMessage: "",
         lastReadMessageId: "",
         isVerified: true,
         timestamp: DateTime.now(),
+        participants: [
+          MessagingParticipantModel(
+            coreId: '5',
+            chatId: ChatIdGenerator.generate(),
+          ),
+        ],
       ),
     ];
 
@@ -176,8 +204,8 @@ class ChatsController extends GetxController {
       await Future.delayed(duration, () {
         chatHistoryRepo.addChatToHistory(mockchats[i].copyWith(
             timestamp: DateTime.now(),
-            lastMessage: "${DateTime.now()}",
-            icon: "https://avatars.githubusercontent.com/u/664${i}336?v=4"));
+            lastMessage: "${DateTime.now()}"
+                " ${mockchats[i].name}"));
       });
     }
   }

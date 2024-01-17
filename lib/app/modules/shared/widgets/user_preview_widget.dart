@@ -1,34 +1,39 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
+import 'package:heyo/app/modules/contacts/widgets/removeContactsDialog.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
+import 'package:heyo/app/modules/shared/controllers/user_preview_controller.dart';
+import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
+import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
+import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
+import 'package:heyo/app/routes/app_pages.dart';
+import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-import '../../../../generated/assets.gen.dart';
-import '../../../routes/app_pages.dart';
-import '../../contacts/widgets/removeContactsDialog.dart';
-import '../../shared/data/models/add_contacts_view_arguments_model.dart';
-import '../../shared/utils/constants/textStyles.dart';
-import '../controllers/user_preview_controller.dart';
 import '../data/models/messaging_participant_model.dart';
-import '../utils/constants/colors.dart';
-import '../utils/screen-utils/sizing/custom_sizes.dart';
-import 'curtom_circle_avatar.dart';
 
 class UserPreviewWidget extends GetView<UserPreview> {
-  final UserModel user;
+  final String coreId;
+  final String name;
+  final bool isVerified;
+  final bool isContact;
+
   const UserPreviewWidget({
     super.key,
-    required this.user,
+    required this.coreId,
+    required this.name,
+    this.isVerified = false,
+    this.isContact = false,
   });
 
   @override
@@ -40,17 +45,17 @@ class UserPreviewWidget extends GetView<UserPreview> {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomSizes.largeSizedBoxHeight,
-          CustomCircleAvatar(coreId: user.coreId, size: 64),
+          CustomCircleAvatar(coreId: coreId, size: 64),
           CustomSizes.mediumSizedBoxHeight,
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                user.name,
+                name,
                 style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
               ),
               CustomSizes.smallSizedBoxWidth,
-              user.isVerified
+              isVerified
                   ? Assets.svg.verifiedWithBluePadding
                   .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
                   : const SizedBox(),
@@ -58,7 +63,7 @@ class UserPreviewWidget extends GetView<UserPreview> {
           ),
           CustomSizes.smallSizedBoxHeight,
           Text(
-            user.walletAddress.shortenCoreId,
+            coreId.shortenCoreId,
             style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
           ),
           CustomSizes.largeSizedBoxHeight,
@@ -67,22 +72,23 @@ class UserPreviewWidget extends GetView<UserPreview> {
             children: [
               CircleIconButton(
                 onPressed: () {
-                  if (user.coreId.isEmpty) {
+                  if (coreId.isEmpty) {
                     return;
                   } else {
                     Get.back();
                     print('UserPreviewWidget isWifiDirect $isWifiDirect');
                     isWifiDirect
-                        ? Get.toNamed(Routes.WIFI_DIRECT_CONNECT, arguments: user)
+                        ? Get.toNamed(
+                            Routes.WIFI_DIRECT_CONNECT,
+                          )
                         : Get.toNamed(
                             Routes.MESSAGES,
                             arguments: MessagesViewArgumentsModel(
-                                coreId: user.coreId,
-                                iconUrl: user.iconUrl,
                                 connectionType: MessagingConnectionType.internet,
                                 participants: [
                                   MessagingParticipantModel(
-                                    coreId: user.coreId,
+                                    coreId: coreId,
+                                    chatId: coreId,
                                   )
                                 ]),
                           );
@@ -102,11 +108,11 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.toNamed(
                       Routes.CALL,
                       arguments: CallViewArgumentsModel(
-                          session: null,
-                          callId: null,
-                          user: user,
-                          enableVideo: false,
-                          isAudioCall: true),
+                        callId: null,
+                        // convert userModel to callUserModel
+                        members: [coreId],
+                        isAudioCall: true,
+                      ),
                     );
                   } else {
                     SnackBarWidget.info(
@@ -129,10 +135,9 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     Get.toNamed(
                       Routes.CALL,
                       arguments: CallViewArgumentsModel(
-                        session: null,
                         callId: null,
-                        user: user,
-                        enableVideo: true,
+                        // convert userModel to callUserModel
+                        members: [coreId],
                         isAudioCall: false,
                       ),
                     );
@@ -165,13 +170,22 @@ class UserPreviewWidget extends GetView<UserPreview> {
               children: [
                 _buildIconTextButton(
                   //Todo: Add User Info onPressed
-                  onPressed: () {},
+                  onPressed: () {
+                    if (isContact == true) {
+                      Get.toNamed(
+                        Routes.ADD_CONTACTS,
+                        arguments: AddContactsViewArgumentsModel(
+                          coreId: coreId,
+                        ),
+                      );
+                    }
+                  },
                   icon: Assets.svg.infoIcon.svg(width: 20, height: 20),
-                  title: user.isContact
+                  title: isContact
                       ? LocaleKeys.newChat_userBottomSheet_contactInfo.tr
                       : LocaleKeys.newChat_userBottomSheet_userInfo.tr,
                 ),
-                !user.isContact
+                !isContact
                     ? _buildIconTextButton(
                         onPressed: () {
                           Get.back();
@@ -179,8 +193,7 @@ class UserPreviewWidget extends GetView<UserPreview> {
                           Get.toNamed(
                             Routes.ADD_CONTACTS,
                             arguments: AddContactsViewArgumentsModel(
-                              coreId: user.coreId,
-                              iconUrl: user.iconUrl,
+                              coreId: coreId,
                             ),
                           );
                         },
@@ -190,13 +203,15 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     : _buildIconTextButton(
                         onPressed: () async {
                           Get.back();
-                          await Get.dialog(RemoveContactsDialog(
-                            userName: user.name,
-                          )).then((result) async {
+                          await Get.dialog(
+                            RemoveContactsDialog(
+                              userName: name,
+                            ),
+                          ).then((result) async {
                             if (result is bool && result == true) {
                               print("result   $result");
 
-                              await controller.deleteContact(user.walletAddress);
+                              await controller.deleteContact(coreId);
                             }
                           });
                         },

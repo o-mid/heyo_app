@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/stream.extension.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 

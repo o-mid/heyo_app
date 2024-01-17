@@ -53,7 +53,6 @@ class MessageItemWidget extends StatelessWidget {
           _buildDateHeader(message, prevMessage),
           MessageSelectionWrapper(
             message: message,
-            iconUrl: controller.user.value.iconUrl,
           ),
         ],
       ),

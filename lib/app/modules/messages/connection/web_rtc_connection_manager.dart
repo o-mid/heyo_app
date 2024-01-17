@@ -8,7 +8,17 @@ class WebRTCConnectionManager{
     'iceServers': [
       {'url': 'stun:stun.l.google.com:19302'},
       {
-        "url": 'turn:turn-ca.ting.tube',
+        "url": 'turn:turn-fi.ting.tube:3478',
+        "username": 'turn-server-fi',
+        "credential": 'KIUSBYCausbycuia897',
+      },
+      {
+        "url": 'turn:turn-ru.ting.tube:3478',
+        "username": 'turn-server-ru',
+        "credential": 'coiansliocuna89s7ca',
+      },
+      {
+        "url": 'turn:turn-ca.ting.tube:3478',
         "username": 'turn-server-ca',
         "credential": 'OIUACOasiCBSucoiasu878',
       },
@@ -16,16 +26,6 @@ class WebRTCConnectionManager{
         "url": 'turn:turn-sg.ting.tube',
         "username": 'turn-server-sg',
         "credential": 'KIuybckIUASvycv78aSC',
-      },
-      {
-        "url": 'turn:turn-gr.ting.tube',
-        "username": 'turn-server-gr',
-        "credential": 'AUISBCoa8&VSC*ASBUIc',
-      },
-      {
-        "url": 'turn:turn-ir.ting.tube',
-        "username": 'turn-server-ir',
-        "credential": 'turn-server-ir',
       }
     ]
   };

@@ -77,12 +77,14 @@ class AccountView extends GetView<AccountController> {
                 controller.logout();
               },
               title: LocaleKeys.AccountPage_logout.tr,
-              icon: Icon(
+              icon: const Icon(
                 Icons.logout,
+                size: 20,
                 color: Color(
                   0xFF039200,
                 ),
               ),
+              iconBackgroundColor: const Color(0xFFE4FFE4),
             ),
           ],
         ),

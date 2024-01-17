@@ -1,0 +1,24 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:heyo/app/modules/calls/call_history_detail/controllers/call_history_detail_controller.dart';
+import 'package:heyo/app/modules/calls/call_history_detail/widgets/call_history_multi_participant_widget.dart';
+import 'package:heyo/app/modules/calls/call_history_detail/widgets/call_history_single_participant_widget.dart';
+
+class CallHistoryDetailView extends GetView<CallHistoryDetailController> {
+  const CallHistoryDetailView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      if (controller.loading.isTrue) {
+        return const SizedBox.shrink();
+      } else {
+        if (controller.callHistoryModel!.value!.participants.length == 1) {
+          return const CallHistorySingleParticipantWidget();
+        } else {
+          return const CallHistoryMultiParticipantWidget();
+        }
+      }
+    });
+  }
+}

@@ -1,23 +1,25 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:heyo/app/modules/shared/data/models/fcm_register_model.dart';
 import 'package:heyo/app/modules/shared/data/models/notification_type.dart';
+import 'package:heyo/app/modules/shared/data/providers/blockchain/blockchain_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/netowrk_request_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/notifications/notification_provider.dart';
-import 'package:heyo/app/modules/shared/data/providers/registry/registery_provider.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/dio.extension.dart';
 
 class AppNotificationProvider extends NotificationProvider {
   NetworkRequest networkRequest;
   LibP2PStorageProvider libP2PStorageProvider;
-  RegistryProvider registryProvider;
+  BlockchainProvider blockchainProvider;
+  final AccountRepository accountRepository;
 
   AppNotificationProvider({
     required this.networkRequest,
     required this.libP2PStorageProvider,
-    required this.registryProvider,
+    required this.blockchainProvider,
+    required this.accountRepository,
   });
 
   @override
@@ -27,19 +29,30 @@ class AppNotificationProvider extends NotificationProvider {
 
     if (privateKey == null || fcmToken == null) return false;
 
-    final signature = await registryProvider.createFcmRegisterSignature(
+    final signature = await blockchainProvider.createFcmRegisterSignature(
       fcmToken: fcmToken,
       privateKey: privateKey,
     );
 
     if (signature == null) return false;
+    print("$fcmToken");
+    print("$signature");
 
-    final response = await networkRequest
-        .post(path: 'notification-service/user/register', data: {
-      'fcmToken': fcmToken,
-      'signature': signature,
-    });
-    
+    final corePassSignature = await libP2PStorageProvider.getSignature();
+    final coreId = await libP2PStorageProvider.getCorePassCoreId();
+    print("$coreId");
+    print("$corePassSignature");
+
+    final response = await networkRequest.post(
+      path: 'notification-service/user/register',
+      data: {
+        'fcmToken': "$fcmToken",
+        'signature': "$signature",
+        'coreId': "$coreId",
+        'coreSignature': "$corePassSignature",
+      },
+    );
+
     return response.isSuccess();
   }
 
@@ -47,13 +60,21 @@ class AppNotificationProvider extends NotificationProvider {
   Future<bool> sendNotification({
     required String remoteDelegatedCoreId,
     required NotificationType notificationType,
+    required String content,
   }) async {
-    final result = await networkRequest
-        .post(path: 'notification-service/notification/send', data: {
-      'coreId': remoteDelegatedCoreId,
-      'notificationType': notificationType.name.toUpperCase(),
-      'senderUsername': 'Johnathan Baby',
-    });
+    final userCoreId = await accountRepository.getUserAddress();
+    final result = await networkRequest.post(
+      path: 'notification-service/notification/send',
+      data: {
+        'coreId': remoteDelegatedCoreId,
+        'notificationType': notificationType.name.toUpperCase(),
+        'senderUsername': '',
+        'content': content,
+        'senderCoreId': userCoreId,
+        'title': null,
+        'body': null,
+      },
+    );
     return result.isSuccess();
   }
 }

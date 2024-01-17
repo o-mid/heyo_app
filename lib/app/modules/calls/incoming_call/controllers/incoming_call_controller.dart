@@ -1,43 +1,46 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+
+import 'package:heyo/app/modules/calls/domain/call_repository.dart';
+import 'package:heyo/app/modules/calls/incoming_call/controllers/incoming_call_model.dart';
+import 'package:heyo/app/modules/calls/usecase/contact_availability_use_case.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
-import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
 import 'package:heyo/app/routes/app_pages.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 class IncomingCallController extends GetxController {
-  late UserModel caller;
+  IncomingCallController({
+    required this.callRepository,
+    required this.contactAvailabilityUseCase,
+    required this.p2pState,
+  });
+
+  final CallRepository callRepository;
+  final ContactAvailabilityUseCase contactAvailabilityUseCase;
+
+  final P2PState p2pState;
+  RxList<IncomingCallModel> incomingCallers = RxList();
   final muted = false.obs;
-  final CallConnectionController callConnectionController;
   late IncomingCallViewArguments args;
-  late String userName;
-  IncomingCallController({required this.callConnectionController});
+  RxBool isAdvertised = false.obs;
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     args = Get.arguments as IncomingCallViewArguments;
 
-    if (args.name == null) {
-      userName =
-          "${args.remoteCoreId.characters.take(4).string}...${args.remoteCoreId.characters.takeLast(4).string}";
-    } else {
-      userName = args.name!;
-    }
-    //TODO name should be get from contacts
-    caller = UserModel(
-      name: userName,
-      isContact:(!(args.name == null)),
-      iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
-      isVerified: true,
-      walletAddress: args.remoteCoreId,
-      coreId: args.remoteCoreId,
-    );
+    await getUserData();
     _playRingtone();
 
+    _isAdvertised();
     super.onInit();
+  }
+
+  void _isAdvertised() {
+    isAdvertised.value = p2pState.advertise.value;
+    p2pState.advertise.listen((p0) {
+      this.isAdvertised.value = p0;
+    });
   }
 
   @override
@@ -61,30 +64,23 @@ class IncomingCallController extends GetxController {
     Get.back();
   }
 
-  void acceptCall() async {
+  Future<void> acceptCall() async {
     _stopRingtone();
-
-    //TODO name should be get from contacts
+    await callRepository.acceptCall(args.callId);
+    //TODO farzam, accept
     Get.offNamed(
       Routes.CALL,
       arguments: CallViewArgumentsModel(
-          session: args.session,
-          callId: args.callId,
-          enableVideo: args.session.isAudioCall ? false : true,
-          user: UserModel(
-            name: userName,
-            iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
-            isVerified: true,
-            walletAddress: args.remoteCoreId,
-            coreId: args.remoteCoreId,
-          ),
-          isAudioCall: args.session.isAudioCall),
+        callId: args.callId,
+        isAudioCall: args.isAudioCall,
+        members: args.members,
+      ),
     );
   }
 
   void _hangUp() {
-    callConnectionController.rejectCall(args.session);
-    callConnectionController.close();
+    callRepository.rejectIncomingCall(args.callId);
+    //callConnectionController.close();
   }
 
   void _playRingtone() {
@@ -93,5 +89,14 @@ class IncomingCallController extends GetxController {
 
   void _stopRingtone() {
     FlutterRingtonePlayer.stop();
+  }
+
+  Future<void> getUserData() async {
+    for (final coreId in args.members) {
+      final userModel =
+          await contactAvailabilityUseCase.execute(coreId: coreId);
+
+      incomingCallers.add(userModel.toIncomingCallModel());
+    }
   }
 }

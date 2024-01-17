@@ -1,18 +1,25 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/call_controller/call_connection_controller.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/call_model.dart';
+import 'package:heyo/app/modules/calls/data/call_status_observer.dart';
+import 'package:heyo/app/modules/calls/data/call_status_provider.dart';
+import 'package:heyo/app/modules/calls/data/rtc/models.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
-
-import '../data/repository/contact_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
 class CallHistoryObserver extends GetxController {
+  CallHistoryObserver({
+    required this.callHistoryRepo,
+    required this.callStatusObserver,
+    required this.contactRepository,
+  });
+
   final CallHistoryAbstractRepo callHistoryRepo;
-  final CallConnectionController callConnectionController;
+  final CallStatusObserver callStatusObserver;
   final ContactRepository contactRepository;
 
   /// maps session id of a call to the time it started so that when it ends
@@ -21,86 +28,10 @@ class CallHistoryObserver extends GetxController {
 
   late StreamSubscription stateListener;
 
-  CallHistoryObserver({
-    required this.callHistoryRepo,
-    required this.callConnectionController,
-    required this.contactRepository,
-  });
-
   @override
   void onInit() {
+    callHistoryObserver();
     super.onInit();
-    stateListener = callConnectionController.callHistoryState.listen((state) async {
-      if (state == null) {
-        return;
-      }
-      switch (state.callHistoryStatus) {
-        case CallHistoryStatus.ringing:
-          {
-            await _createMissedCallRecord(
-              await _getUserFromCoreId(state.session.cid),
-              state.session.sid,
-              state.session.isAudioCall ? CallType.audio : CallType.video,
-            );
-            break;
-          }
-        case CallHistoryStatus.invite:
-          {
-            await _createOutgoingNotAnsweredRecord(
-              await _getUserFromCoreId(state.session.cid),
-              state.session.sid,
-              state.session.isAudioCall ? CallType.audio : CallType.video,
-            );
-            break;
-          }
-        case CallHistoryStatus.connected:
-          {
-            final call = await callHistoryRepo.getOneCall(state.session.sid);
-            if (call == null) {
-              return;
-            }
-
-            /// store the time call started
-            _callStartTimestamps[state.session.sid] = DateTime.now();
-
-            await _updateCallStatusAndDuration(
-              callId: call.id,
-              status: call.status == CallStatus.incomingMissed
-                  ? CallStatus.incomingAnswered
-                  : CallStatus.outgoingAnswered,
-            );
-            break;
-          }
-        case CallHistoryStatus.byeSent:
-        case CallHistoryStatus.byeReceived:
-          {
-            final call = await callHistoryRepo.getOneCall(state.session.sid);
-            if (call == null) {
-              return;
-            }
-
-            final startTime = _callStartTimestamps[call.id];
-
-            if (startTime == null) {
-              await _updateCallStatusAndDuration(
-                callId: call.id,
-                status:
-                    _determineCallStatusFromPrevAndHistory(call.status, state.callHistoryStatus),
-              );
-              return;
-            }
-
-            await _updateCallStatusAndDuration(
-              callId: call.id,
-              duration: DateTime.now().difference(startTime as DateTime),
-            );
-            break;
-          }
-        case CallHistoryStatus.initial:
-        case CallHistoryStatus.nop:
-          break;
-      }
-    });
   }
 
   @override
@@ -109,83 +40,266 @@ class CallHistoryObserver extends GetxController {
     super.onClose();
   }
 
-  CallStatus? _determineCallStatusFromPrevAndHistory(
-      CallStatus prevStatus, CallHistoryStatus historyStatus) {
-    if (prevStatus == CallStatus.outgoingNotAnswered &&
-        historyStatus == CallHistoryStatus.byeSent) {
-      return CallStatus.outgoingCanceled;
-    }
-
-    if (prevStatus == CallStatus.outgoingNotAnswered &&
-        historyStatus == CallHistoryStatus.byeReceived) {
-      return CallStatus.outgoingDeclined;
-    }
-
-    if (prevStatus == CallStatus.incomingMissed && historyStatus == CallHistoryStatus.byeSent) {
-      return CallStatus.incomingDeclined;
-    }
-
-    if (prevStatus == CallStatus.incomingMissed && historyStatus == CallHistoryStatus.byeReceived) {
-      return CallStatus.incomingMissed;
-    }
-
-    return null;
+  void callHistoryObserver() {
+    stateListener = callStatusObserver.callHistoryState.listen((state) async {
+      if (state == null) {
+        return;
+      }
+      switch (state.callHistoryStatus) {
+        case CallHistoryStatus.incoming:
+          {
+            await _createMissedCallRecord(
+              remoteCoreId: state.remote,
+              callId: state.callId,
+              isAudioCall: state.isAudioCall!,
+            );
+            break;
+          }
+        case CallHistoryStatus.calling:
+          {
+            await _createOutgoingNotAnsweredRecord(
+              remoteCoreId: state.remote,
+              callId: state.callId,
+              isAudioCall: state.isAudioCall!,
+            );
+            break;
+          }
+        case CallHistoryStatus.connected:
+          {
+            await _connectedCallHistory(state: state);
+            break;
+          }
+        case CallHistoryStatus.left:
+        case CallHistoryStatus.end:
+          {
+            await _endOrRejectCall(state: state);
+            break;
+          }
+      }
+    });
   }
 
-  Future<void> _createMissedCallRecord(UserModel user, String callId, CallType type) async {
-    final CallModel _call = CallModel(
-      user: user,
-      status: CallStatus.incomingMissed,
-      date: DateTime.now(),
-      id: callId,
-      coreId: user.coreId,
-      type: type,
+  Future<void> _createMissedCallRecord({
+    required String remoteCoreId,
+    required String callId,
+    required bool isAudioCall,
+  }) async {
+    final callParticipant = await _getUserFromCoreId(
+      remoteCoreId,
     );
 
-    await callHistoryRepo.addCallToHistory(_call);
+    final callHistory = CallHistoryModel(
+      participants: [callParticipant],
+      status: CallStatus.incomingMissed,
+      startDate: DateTime.now(),
+      callId: callId,
+      type: isAudioCall ? CallType.audio : CallType.video,
+    );
+
+    await callHistoryRepo.addCallToHistory(callHistory);
   }
 
   Future<void> _createOutgoingNotAnsweredRecord(
-      UserModel user, String callId, CallType type) async {
-    final CallModel _call = CallModel(
-      user: user,
-      status: CallStatus.outgoingNotAnswered,
-      date: DateTime.now(),
-      id: callId,
-      coreId: user.coreId,
-      type: type,
+      {required String remoteCoreId,
+      required String callId,
+      required bool isAudioCall}) async {
+    final callParticipant = await _getUserFromCoreId(
+      remoteCoreId,
     );
 
-    await callHistoryRepo.addCallToHistory(_call);
+    final callHistory = CallHistoryModel(
+      participants: [callParticipant],
+      status: CallStatus.outgoingNotAnswered,
+      startDate: DateTime.now(),
+      callId: callId,
+      type: isAudioCall ? CallType.audio : CallType.video,
+    );
+
+    await callHistoryRepo.addCallToHistory(callHistory);
   }
 
-  Future<void> _updateCallStatusAndDuration({
-    required String callId,
-    CallStatus? status,
-    Duration? duration,
+  Future<void> _endOrRejectCall({
+    required CallHistoryState state,
   }) async {
-    final call = await callHistoryRepo.getOneCall(callId);
+    final call = await callHistoryRepo.getOneCall(state.callId);
     if (call == null) {
       return;
     }
-    await callHistoryRepo.deleteOneCall(callId);
-    await callHistoryRepo.addCallToHistory(
-      call.copyWith(
-        status: status,
-        duration: duration,
-      ),
-    );
+
+    CallHistoryModel updateCall;
+
+    final startTime = _callStartTimestamps[state.callId];
+    if (startTime == null) {
+      //* call did not connect (reject)
+      final historyStatus = call.status == CallStatus.outgoingNotAnswered
+          ? CallStatus.outgoingDeclined
+          : CallStatus.incomingMissed;
+
+      updateCall = call.copyWith(
+        status: historyStatus,
+        endDate: DateTime.now(),
+      );
+    } else {
+      //* call connected (end)
+
+      CallHistoryParticipantModel? participant;
+
+      for (var i = 0; i < call.participants.length; i++) {
+        if (call.participants[i].coreId == state.remote) {
+          participant = call.participants[i];
+        }
+      }
+
+      var updateParticipant = <CallHistoryParticipantModel>[];
+
+      if (participant != null) {
+        //* It means someone in call end or reject call
+        updateParticipant = call.participants.map((p) {
+          if (p.coreId != participant!.coreId) {
+            return p;
+          } else {
+            return participant.copyWith(endDate: DateTime.now());
+          }
+        }).toList();
+      } else {
+        //* It means Current user end call
+        //* So we should fill all the end dates
+        updateParticipant = call.participants.map((p) {
+          if (p.endDate == null) {
+            return p.copyWith(endDate: DateTime.now());
+          } else {
+            return p;
+          }
+        }).toList();
+      }
+
+      updateCall = call.copyWith(
+        endDate: DateTime.now(),
+        participants: updateParticipant,
+      );
+    }
+
+    await callHistoryRepo.updateCall(updateCall);
   }
 
-  Future<UserModel> _getUserFromCoreId(String coreId) async {
-    UserModel? user = await contactRepository.getContactById(coreId);
-    user ??= UserModel(
-      name: "${coreId.characters.take(4).string}...${coreId.characters.takeLast(4).string}",
-      iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
-      isVerified: true,
-      walletAddress: coreId,
-      coreId: coreId,
+  Future<void> _connectedCallHistory({
+    required CallHistoryState state,
+  }) async {
+    final call = await callHistoryRepo.getOneCall(state.callId);
+    if (call == null) {
+      return;
+    }
+
+    final status = call.status == CallStatus.incomingMissed
+        ? CallStatus.incomingAnswered
+        : CallStatus.outgoingAnswered;
+
+    /// store the time call started
+    _callStartTimestamps[state.callId] = DateTime.now();
+
+    //if (call.participants.isNotEmpty) {
+    final callWithNewParticipant = await _addParticipantToCallHistory(
+      callHistoryModel: call,
+      callHistoryState: state,
     );
-    return user;
+    //}
+
+    final updateCall = callWithNewParticipant.copyWith(
+      status: status,
+      //endDate: DateTime.now(),
+    );
+
+    await callHistoryRepo.updateCall(updateCall);
   }
+
+  Future<CallHistoryModel> _addParticipantToCallHistory({
+    required CallHistoryModel callHistoryModel,
+    required CallHistoryState callHistoryState,
+  }) async {
+    //* Check if the new user save to contact or not
+    final callParticipant = await _getUserFromCoreId(
+      callHistoryState.remote,
+    );
+
+    //* Check if the new user is in call or not
+    var isInCall = false;
+    var currentParticipantList = [...callHistoryModel.participants];
+    for (var i = 0; i < currentParticipantList.length; i++) {
+      if (currentParticipantList[i].coreId == callParticipant.coreId) {
+        // TODO(AliAzim): update the data.
+        //* The user is already in call
+        isInCall = true;
+      }
+    }
+
+    if (!isInCall) {
+      currentParticipantList = [
+        ...currentParticipantList,
+        callParticipant.copyWith(
+          status: CallHistoryParticipantStatus.accepted,
+        ),
+      ];
+    } else {
+      currentParticipantList
+        //* remove the participant from list
+        ..removeWhere(
+          (element) => element.coreId == callParticipant.coreId,
+        )
+        //* add participant with accepted status
+        ..add(
+          callParticipant.copyWith(
+            status: CallHistoryParticipantStatus.accepted,
+          ),
+        );
+    }
+    final updateCall = callHistoryModel.copyWith(
+      participants: currentParticipantList,
+    );
+    //await callHistoryRepo.updateCall(updateCall);
+    return updateCall;
+  }
+
+  Future<CallHistoryParticipantModel> _getUserFromCoreId(String coreId) async {
+    final user = await contactRepository.getContactById(coreId);
+    CallHistoryParticipantModel callHistoryParticipant;
+
+    if (user != null) {
+      callHistoryParticipant = user.mapToCallHistoryParticipantModel();
+    } else {
+      callHistoryParticipant = CallHistoryParticipantModel(
+        name: coreId.shortenCoreId,
+        coreId: coreId,
+        startDate: DateTime.now(),
+      );
+    }
+
+    return callHistoryParticipant;
+  }
+
+//CallStatus? _determineCallStatusFromPrevAndHistory(
+//  CallStatus prevStatus,
+//  CallHistoryStatus historyStatus,
+//) {
+//if (prevStatus == CallStatus.outgoingNotAnswered //&&
+//    /*historyStatus == CallHistoryStatus.byeSent*/) {
+//  return CallStatus.outgoingCanceled;
+//}
+
+//if (prevStatus == CallStatus.outgoingNotAnswered //&&
+//    /* historyStatus == CallHistoryStatus.byeReceived*/) {
+//  return CallStatus.outgoingDeclined;
+//}
+
+//if (prevStatus == CallStatus.incomingMissed //&&
+//    /*historyStatus == CallHistoryStatus.byeSent*/) {
+//  return CallStatus.incomingDeclined;
+//}
+
+//  if (prevStatus == CallStatus.incomingMissed //&&
+//      /* historyStatus == CallHistoryStatus.byeReceived*/) {
+//    return CallStatus.incomingMissed;
+//  }
+
+//  return null;
+//}
 }

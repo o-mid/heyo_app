@@ -3,15 +3,16 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 
 import '../../../routes/app_pages.dart';
-import '../../new_chat/data/models/user_model.dart';
+import '../../messages/utils/chat_Id_generator.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../../shared/data/repository/contact_repository.dart';
-import '../../shared/data/repository/crypto_account/account_repository.dart';
+import '../../shared/data/repository/account/account_repository.dart';
 import '../../shared/utils/constants/colors.dart';
 import '../../shared/utils/constants/textStyles.dart';
 
@@ -104,7 +105,6 @@ class NewGroupChatController extends GetxController {
       searchSuggestions.value = [
         UserModel(
           name: 'Unknown',
-          iconUrl: (mockIconUrls..shuffle()).first,
           walletAddress: query,
           coreId: query,
         ),
@@ -157,6 +157,8 @@ class NewGroupChatController extends GetxController {
       _showMembersSnackbar();
     } else if (showConfirmationScreen.value == false) {
       _showConfirmationScreen();
+    } else if (confirmationInputText.value.isEmpty) {
+      _showGroupNameSnackbar();
     } else {
       _navigateToMessages();
     }
@@ -167,16 +169,24 @@ class NewGroupChatController extends GetxController {
     confirmationScreenInputFocusNode.requestFocus();
   }
 
-  void _navigateToMessages() {
-    Get.toNamed(
+  Future<void> _navigateToMessages() async {
+    final chatId = ChatIdGenerator.generate();
+    print(chatId);
+
+    await Get.offNamedUntil(
       Routes.MESSAGES,
+      ModalRoute.withName(Routes.HOME),
       arguments: MessagesViewArgumentsModel(
-        coreId: selectedCoreids.first.coreId,
-        iconUrl: mockIconUrls.first,
         connectionType: MessagingConnectionType.internet,
         participants: selectedCoreids
-            .map((element) => MessagingParticipantModel(coreId: element.coreId))
+            .map(
+              (element) => MessagingParticipantModel(
+                coreId: element.coreId,
+                chatId: chatId,
+              ),
+            )
             .toList(),
+        chatName: confirmationInputText.value,
       ),
     );
   }
@@ -233,6 +243,28 @@ class NewGroupChatController extends GetxController {
     );
   }
 
+  void _showGroupNameSnackbar() {
+    Get.rawSnackbar(
+      messageText: Text(
+        'Add group name to start a group chat.',
+        style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kGreenMainColor),
+        textAlign: TextAlign.center,
+      ),
+      backgroundColor: COLORS.kAppBackground,
+      snackPosition: SnackPosition.TOP,
+      snackStyle: SnackStyle.FLOATING,
+      margin: const EdgeInsets.only(top: 20),
+      boxShadows: [
+        BoxShadow(
+          color: const Color(0xFF466087).withOpacity(0.1),
+          offset: const Offset(0, 3),
+          blurRadius: 10,
+        ),
+      ],
+      borderRadius: 8,
+    );
+  }
+
   Future<bool> handleConfirmationWidgetPop() async {
     showConfirmationScreen.value = false;
     inputFocusNode.requestFocus();
@@ -242,25 +274,39 @@ class NewGroupChatController extends GetxController {
   Future<void> _addMockUsers() async {
     final _mockUsers = <UserModel>[
       UserModel(
-        name: 'Crapps',
-        walletAddress: 'CB92...969A',
+        name: 'Omid',
+        walletAddress: 'CB92969A',
         coreId: 'CB92969A',
-        iconUrl: 'https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png',
-        nickname: 'Nickname',
       ),
       UserModel(
-        name: 'Fancy',
-        walletAddress: 'CB21...C325',
-        coreId: 'CB21C325',
-        iconUrl: 'https://avatars.githubusercontent.com/u/6634136?v=4',
+        name: 'Farzaam',
+        walletAddress: 'CB62C325',
+        coreId: 'CB62C325',
         isOnline: true,
         isVerified: true,
       ),
       UserModel(
-        name: 'manly',
-        walletAddress: 'CB42...324E',
-        coreId: 'CB42324E',
-        iconUrl: 'https://avatars.githubusercontent.com/u/9801359?v=4',
+        name: 'Ali',
+        walletAddress: 'CB423H4E',
+        coreId: 'CB423H4E',
+        isOnline: true,
+      ),
+      UserModel(
+        name: 'Saeed',
+        walletAddress: 'CB23969A',
+        coreId: 'CB23969A',
+      ),
+      UserModel(
+        name: 'Mohammad',
+        walletAddress: 'CB21C391',
+        coreId: 'CB21C391',
+        isOnline: true,
+        isVerified: true,
+      ),
+      UserModel(
+        name: 'Hoorad',
+        walletAddress: 'CB51324E',
+        coreId: 'CB51324E',
         isOnline: true,
       ),
     ].obs;
@@ -274,11 +320,4 @@ class NewGroupChatController extends GetxController {
       }
     });
   }
-
-  List<String> mockIconUrls = [
-    'https://avatars.githubusercontent.com/u/6644146?v=4',
-    'https://avatars.githubusercontent.com/u/7844146?v=4',
-    'https://avatars.githubusercontent.com/u/7847725?v=4',
-    'https://avatars.githubusercontent.com/u/9947725?v=4',
-  ];
 }

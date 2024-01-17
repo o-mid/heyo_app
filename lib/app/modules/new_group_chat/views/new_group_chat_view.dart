@@ -10,7 +10,7 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/app/modules/shared/widgets/empty_users_body.dart';
 import 'package:heyo/app/modules/shared/widgets/contact_list_with_header.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
-import 'package:heyo/app/modules/add_participate/widgets/invite_bttom_sheet.dart';
+import 'package:heyo/app/modules/calls/add_participate/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/new_group_chat/widgets/contact_list_widget.dart';
 import 'package:heyo/app/modules/new_group_chat/controllers/new_group_chat_controller.dart';
 import 'package:heyo/generated/assets.gen.dart';
@@ -59,7 +59,9 @@ class NewGroupChatView extends GetView<NewGroupChatController> {
       child: FloatingActionButton(
         onPressed: controller.handleFabOnpressed,
         backgroundColor:
-            controller.selectedCoreids.length <= 1 ? Colors.grey : COLORS.kGreenMainColor,
+            controller.selectedCoreids.length <= 1 || controller.confirmationInputText.isEmpty
+                ? Colors.grey
+                : COLORS.kGreenMainColor,
         child: controller.showConfirmationScreen.value
             ? Assets.svg.singleTickIcon.svg(width: 20.w, color: COLORS.kWhiteColor)
             : Assets.svg.arrowIcon.svg(width: 20.w, color: COLORS.kWhiteColor),

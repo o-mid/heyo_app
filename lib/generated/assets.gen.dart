@@ -5,11 +5,21 @@
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
-// ignore_for_file: directives_ordering,unnecessary_import
+// ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
+
+class $AssetsLocalesGen {
+  const $AssetsLocalesGen();
+
+  /// File path: assets/locales/en_EN.json
+  String get enEN => 'assets/locales/en_EN.json';
+
+  /// List of all assets
+  List<String> get values => [enEN];
+}
 
 class $AssetsPngGen {
   const $AssetsPngGen();
@@ -89,6 +99,32 @@ class $AssetsPngGen {
 
   /// File path: assets/png/welcome.png
   AssetGenImage get welcome => const AssetGenImage('assets/png/welcome.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+        benefits001,
+        benefits002,
+        benefits003,
+        benefits004,
+        callee,
+        caller,
+        callsEmptyState,
+        chain,
+        corePassLogoCircle,
+        greenChecked,
+        groupCall,
+        heyoLogoCircle,
+        icon,
+        keys,
+        newChatEmptyState,
+        profile1,
+        profile2,
+        profile3,
+        profile4,
+        sadEmoji,
+        splash,
+        welcome
+      ];
 }
 
 class $AssetsSvgGen {
@@ -467,11 +503,121 @@ class $AssetsSvgGen {
   /// File path: assets/svg/wifi_direct_icon.svg
   SvgGenImage get wifiDirectIcon =>
       const SvgGenImage('assets/svg/wifi_direct_icon.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [
+        incomingCall,
+        missedCall,
+        account,
+        accountFilled,
+        addCircle,
+        addParticipant,
+        addToContactsIcon,
+        arrowIcon,
+        audioCallIcon,
+        blockIcon,
+        blockedUser,
+        bottomsheetHandle,
+        call,
+        callDisconnected,
+        callEnd,
+        callFilled,
+        callIncoming,
+        callOutgoing,
+        cameraIcon,
+        cameraSwitch,
+        camerapermissionIcon,
+        chat,
+        chatOutlined,
+        clearIcon,
+        clock,
+        closeSign,
+        closeSignOutline,
+        contactsIcon,
+        copyIcon,
+        corePassTypo,
+        corePassLogo,
+        deleteIcon,
+        docIcon,
+        dotColumn,
+        dotIndicator,
+        doubleTickIcon,
+        editIcon,
+        emojiIcon,
+        failedIcon,
+        fileIcon,
+        filterIcon,
+        folderIcon,
+        forwardIcon,
+        forwardTo,
+        fullScreen,
+        galleryIcon,
+        gpsFixed,
+        heyoLogo,
+        infoIcon,
+        inviteIcon,
+        liveLocation,
+        liveLocationActive,
+        locationIcon,
+        locationFilled,
+        locationOutlined,
+        lockIcon,
+        lunaConnection,
+        mediaAndFiles,
+        mediaAndFilesIcon,
+        moneyIcon,
+        mp3Icon,
+        multipleSelectIcon,
+        muteMicIcon,
+        muteSpeaker,
+        newChat,
+        newGroupIcon,
+        noConnectionWifi,
+        outgoingCall2,
+        outgoingCall,
+        pauseRecordIcon,
+        pauseRecordOutlinedIcon,
+        pdfIcon,
+        personIcon,
+        playIcon,
+        pptxIcon,
+        qrCode,
+        recordIcon,
+        recordVoiceCircleIcon,
+        recordWordIcon,
+        recordWordWithDot,
+        removeContact,
+        replyFilled,
+        replyFilledMirror,
+        replyOutlined,
+        saveToDevice,
+        searchIcon,
+        searchNearby,
+        searchNearbyFilled,
+        sendImageIcon,
+        sendIcon,
+        shareIcon,
+        shareScreen,
+        singleTickIcon,
+        stackHorizontal,
+        stackVertical,
+        target,
+        twoArrowIcon,
+        verified,
+        verifiedWithBluePadding,
+        verticalMenuIcon,
+        videoCallIcon,
+        videoDisabled,
+        volumeUp,
+        wallet,
+        wifiDirectIcon
+      ];
 }
 
 class Assets {
   Assets._();
 
+  static const $AssetsLocalesGen locales = $AssetsLocalesGen();
   static const $AssetsPngGen png = $AssetsPngGen();
   static const $AssetsSvgGen svg = $AssetsSvgGen();
 }
@@ -534,6 +680,17 @@ class AssetGenImage {
     );
   }
 
+  ImageProvider provider({
+    AssetBundle? bundle,
+    String? package,
+  }) {
+    return AssetImage(
+      _assetName,
+      bundle: bundle,
+      package: package,
+    );
+  }
+
   String get path => _assetName;
 
   String get keyName => _assetName;
@@ -555,13 +712,14 @@ class SvgGenImage {
     AlignmentGeometry alignment = Alignment.center,
     bool allowDrawingOutsideViewBox = false,
     WidgetBuilder? placeholderBuilder,
-    Color? color,
-    BlendMode colorBlendMode = BlendMode.srcIn,
     String? semanticsLabel,
     bool excludeFromSemantics = false,
+    SvgTheme theme = const SvgTheme(),
+    ColorFilter? colorFilter,
     Clip clipBehavior = Clip.hardEdge,
-    bool cacheColorFilter = false,
-    SvgTheme? theme,
+    @deprecated Color? color,
+    @deprecated BlendMode colorBlendMode = BlendMode.srcIn,
+    @deprecated bool cacheColorFilter = false,
   }) {
     return SvgPicture.asset(
       _assetName,
@@ -575,15 +733,18 @@ class SvgGenImage {
       alignment: alignment,
       allowDrawingOutsideViewBox: allowDrawingOutsideViewBox,
       placeholderBuilder: placeholderBuilder,
-      color: color,
-      colorBlendMode: colorBlendMode,
       semanticsLabel: semanticsLabel,
       excludeFromSemantics: excludeFromSemantics,
+      theme: theme,
+      colorFilter: colorFilter,
+      color: color,
+      colorBlendMode: colorBlendMode,
       clipBehavior: clipBehavior,
       cacheColorFilter: cacheColorFilter,
-      theme: theme,
     );
   }
 
   String get path => _assetName;
+
+  String get keyName => _assetName;
 }

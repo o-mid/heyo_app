@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
@@ -196,7 +196,6 @@ class WifiDirectController extends GetxController {
     peersAvailable.values.forEach((peer) {
       final user = UserModel(
         name: peer.name,
-        iconUrl: "https://avatars.githubusercontent.com/u/7847725?v=4",
         walletAddress: peer.coreID,
         coreId: peer.coreID,
       );

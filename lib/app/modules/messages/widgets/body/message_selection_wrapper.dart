@@ -22,12 +22,10 @@ class MessageSelectionWrapper extends StatelessWidget {
     required this.message,
     super.key,
     this.isMockMessage = false,
-    this.iconUrl,
   });
 
   final MessageModel message;
   final bool isMockMessage;
-  final String? iconUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +73,6 @@ class MessageSelectionWrapper extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 4.h),
                     child: MessageWidget(
                       message: message,
-                      iconUrl: iconUrl,
                       isMockMessage: isMockMessage,
                     ),
                   ),

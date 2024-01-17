@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
+import 'package:get/get.dart';
+
+import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/messages/controllers/messages_controller.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
+import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -11,6 +15,7 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/app/modules/shared/widgets/scale_animated_switcher.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:get/get.dart';
@@ -18,6 +23,7 @@ import 'package:get/get.dart';
 import '../../../../routes/app_pages.dart';
 import '../../../shared/data/models/add_contacts_view_arguments_model.dart';
 import '../../../shared/data/models/messages_view_arguments_model.dart';
+import '../../../shared/widgets/stacked_avatars_widget.dart';
 
 class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MessagingAppBar({
@@ -29,17 +35,18 @@ class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
     final controller = Get.find<MessagesController>();
     // Material is used here so that splash can be seen
     return Material(
-        color: COLORS.kGreenMainColor,
-        child: Container(
-          padding: EdgeInsets.only(top: 12.h, bottom: 12.h, right: 20.w),
-          child: SafeArea(
-            child: ScaleAnimatedSwitcher(
-              child: controller.selectedMessages.isNotEmpty
-                  ? const _SelectionModeAppBar()
-                  : const _DefaultAppBar(),
-            ),
+      color: COLORS.kGreenMainColor,
+      child: Container(
+        padding: EdgeInsets.only(top: 12.h, bottom: 12.h, right: 20.w),
+        child: SafeArea(
+          child: ScaleAnimatedSwitcher(
+            child: controller.selectedMessages.isNotEmpty
+                ? const _SelectionModeAppBar()
+                : const _DefaultAppBar(),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   @override
@@ -95,71 +102,33 @@ class _DefaultAppBar extends StatelessWidget {
               color: COLORS.kWhiteColor,
             ),
           ),
-          CustomCircleAvatar(
-              coreId: controller.user.value.coreId,
-              size: 32,
-              isOnline: controller.user.value.isOnline),
+          if (controller.isGroupChat)
+            StackedAvatars(
+              avatarSize: 24,
+              coreId1: controller.participants.first.coreId,
+              coreId2: controller.participants.last.coreId,
+            )
+          else
+            CustomCircleAvatar(
+                coreId: controller.users.first.coreId,
+                size: 32,
+                isOnline: controller.users.first.isOnline),
           CustomSizes.smallSizedBoxWidth,
           GestureDetector(
             onDoubleTap: controller.saveCoreIdToClipboard,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Text(
-                        controller.user.value.name,
-                        style: TEXTSTYLES.kButtonBasic.copyWith(
-                          color: COLORS.kWhiteColor,
-                          height: 1,
-                        ),
-                      ),
-                      SizedBox(width: 5.w),
-                      if (controller.user.value.isVerified)
-                        Assets.svg.verified.svg(
-                          width: 12.w,
-                          height: 12.w,
-                          color: COLORS.kWhiteColor,
-                        ),
-                    ],
-                  ),
+                _BuildChatName(
+                  name: controller.chatName.value,
+                  isVerified: controller.users.first.isVerified && !controller.isGroupChat,
                 ),
-                if (controller.user.value.isOnline)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        LocaleKeys.MessagesPage_onlineVia.tr,
-                        style: TEXTSTYLES.kBodyTag.copyWith(
-                          color: COLORS.kWhiteColor,
-                          fontWeight: FONTS.Regular,
-                        ),
-                      ),
-                      SizedBox(width: 4.w),
-                      controller.connectionType == MessagingConnectionType.internet
-                          ? Icon(
-                              Icons.wifi,
-                              size: 12.w,
-                              color: COLORS.kWhiteColor,
-                            )
-                          : Assets.svg.wifiDirectIcon.svg(
-                              height: 10.w,
-                              fit: BoxFit.contain,
-                              alignment: Alignment.center,
-                              color: COLORS.kWhiteColor,
-                            ),
-                    ],
-                  ),
-                if (controller.user.value.isOnline == false)
-                  Text(
-                    LocaleKeys.offline.tr,
-                    style: TEXTSTYLES.kBodyTag.copyWith(
-                      color: COLORS.kWhiteColor,
-                      fontWeight: FONTS.Regular,
-                    ),
-                  ),
+                _BuildUserStatus(
+                  isGroupChat: controller.isGroupChat,
+                  membersCount: controller.participants.length,
+                  isOnline: controller.users.first.isOnline,
+                  connectionType: controller.connectionType,
+                ),
               ],
             ),
           ),
@@ -169,13 +138,10 @@ class _DefaultAppBar extends StatelessWidget {
               CircleIconButton(
                 onPressed: () {
                   Get.toNamed(
+                    // TODO : GROUP CALL
                     Routes.CALL,
                     arguments: CallViewArgumentsModel(
-                        session: null,
-                        callId: null,
-                        user: controller.getUser(),
-                        enableVideo: true,
-                        isAudioCall: false),
+                        callId: null, members: [controller.users.first.coreId], isAudioCall: false),
                   );
                 },
                 icon: Assets.svg.videoCallIcon.svg(),
@@ -184,13 +150,10 @@ class _DefaultAppBar extends StatelessWidget {
               CircleIconButton(
                 onPressed: () {
                   Get.toNamed(
+                    // TODO : GROUP CALL
                     Routes.CALL,
                     arguments: CallViewArgumentsModel(
-                        session: null,
-                        callId: null,
-                        user: controller.getUser(),
-                        enableVideo: false,
-                        isAudioCall: true),
+                        callId: null, members: [controller.users.first.coreId], isAudioCall: true),
                   );
                 },
                 backgroundColor: Colors.transparent,
@@ -202,7 +165,10 @@ class _DefaultAppBar extends StatelessWidget {
                 icon: Assets.svg.verticalMenuIcon.svg(),
                 size: 22,
                 onPressed: () {
-                  _openAppBarActionBottomSheet(userModel: controller.getUser());
+                  _openAppBarActionBottomSheet(
+                    coreId: controller.users.first.coreId,
+                    isContact: controller.users.first.isContact,
+                  );
                 },
               ),
             ],
@@ -213,7 +179,110 @@ class _DefaultAppBar extends StatelessWidget {
   }
 }
 
-void _openAppBarActionBottomSheet({required UserModel userModel}) {
+class _BuildUserStatus extends StatelessWidget {
+  final MessagingConnectionType connectionType;
+  final bool isOnline;
+  final bool isGroupChat;
+  final int membersCount;
+
+  const _BuildUserStatus({
+    required this.isOnline,
+    required this.isGroupChat,
+    required this.membersCount,
+    this.connectionType = MessagingConnectionType.internet,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (isGroupChat) {
+      return Text(
+        membersCount.toString() + " " + "members",
+        style: TEXTSTYLES.kBodyTag.copyWith(
+          color: COLORS.kWhiteColor,
+          fontWeight: FONTS.Regular,
+          fontSize: 12.0.sp,
+        ),
+      );
+    } else {
+      if (isOnline) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              LocaleKeys.MessagesPage_onlineVia.tr,
+              style: TEXTSTYLES.kBodyTag.copyWith(
+                color: COLORS.kWhiteColor,
+                fontWeight: FONTS.Regular,
+              ),
+            ),
+            SizedBox(width: 4.w),
+            if (connectionType == MessagingConnectionType.internet)
+              Icon(
+                Icons.wifi,
+                size: 12.w,
+                color: COLORS.kWhiteColor,
+              )
+            else
+              Assets.svg.wifiDirectIcon.svg(
+                height: 10.w,
+                fit: BoxFit.contain,
+                alignment: Alignment.center,
+                color: COLORS.kWhiteColor,
+              ),
+          ],
+        );
+      } else {
+        return Text(
+          LocaleKeys.offline.tr,
+          style: TEXTSTYLES.kBodyTag.copyWith(
+            color: COLORS.kWhiteColor,
+            fontWeight: FONTS.Regular,
+          ),
+        );
+      }
+    }
+  }
+}
+
+class _BuildChatName extends StatelessWidget {
+  final String name;
+  final bool isVerified;
+  _BuildChatName({
+    required this.name,
+    Key? key,
+    this.isVerified = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Row(
+        children: [
+          Text(
+            name,
+            style: TEXTSTYLES.kButtonBasic.copyWith(
+              color: COLORS.kWhiteColor,
+              height: 1,
+            ),
+          ),
+          SizedBox(width: 5.w),
+          if (isVerified)
+            Assets.svg.verified.svg(
+              width: 12.w,
+              height: 12.w,
+              color: COLORS.kWhiteColor,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+void _openAppBarActionBottomSheet({
+  required String coreId,
+  required bool isContact,
+}) {
   Get.bottomSheet(
       Padding(
         padding: CustomSizes.iconListPadding,
@@ -222,16 +291,14 @@ void _openAppBarActionBottomSheet({required UserModel userModel}) {
           children: [
             TextButton(
               onPressed: () {
-                Get.back();
-
-                Get.toNamed(
-                  Routes.ADD_CONTACTS,
-                  arguments: AddContactsViewArgumentsModel(
-                    //  user: userModel,
-                    coreId: userModel.coreId,
-                    iconUrl: userModel.iconUrl,
-                  ),
-                );
+                Get
+                  ..back()
+                  ..toNamed(
+                    Routes.ADD_CONTACTS,
+                    arguments: AddContactsViewArgumentsModel(
+                      coreId: coreId,
+                    ),
+                  );
               },
               child: Row(
                 children: [
@@ -245,7 +312,9 @@ void _openAppBarActionBottomSheet({required UserModel userModel}) {
                   ),
                   CustomSizes.mediumSizedBoxWidth,
                   Text(
-                    LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
+                    isContact
+                        ? LocaleKeys.AddContacts_Edit_Contact.tr
+                        : LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
                     style: TEXTSTYLES.kLinkBig.copyWith(
                       color: COLORS.kDarkBlueColor,
                     ),

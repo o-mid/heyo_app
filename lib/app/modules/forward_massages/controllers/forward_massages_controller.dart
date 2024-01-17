@@ -2,9 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 
-import '../data/models/forward_massages_view_arguments_model..dart';
+import '../data/models/forward_massages_view_arguments_model.dart';
 
 class ForwardMassagesController extends GetxController {
   //TODO: Implement ForwardMassagesController
@@ -44,7 +44,6 @@ class ForwardMassagesController extends GetxController {
     UserModel(
       name: "Crapps Wallbanger",
       walletAddress: 'CB92...969A',
-      iconUrl: "https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png",
       nickname: "Nickname",
       coreId: 'CB92...969A',
     ),
@@ -52,7 +51,6 @@ class ForwardMassagesController extends GetxController {
       name: "Fancy Potato",
       walletAddress: 'CB21...C325',
       coreId: 'CB21...C325',
-      iconUrl: "https://avatars.githubusercontent.com/u/6634136?v=4",
       isOnline: true,
       isVerified: true,
     ),
@@ -60,7 +58,6 @@ class ForwardMassagesController extends GetxController {
       name: "manly Cupholder",
       walletAddress: 'CB42...324E',
       coreId: 'CB42...324E',
-      iconUrl: "https://avatars.githubusercontent.com/u/9801359?v=4",
       isOnline: true,
     ),
   ].obs;

@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -91,7 +91,16 @@ class ContactsView extends GetView<ContactsController> {
                 ),
               ),
               CustomSizes.smallSizedBoxHeight,
-              ...controller.contacts.map((contact) => _buildContact(contact)).toList(),
+              ...controller.contacts
+                  .map(
+                    (contact) => _buildContact(
+                      coreId: contact.coreId,
+                      name: contact.name,
+                      isVerified: contact.isVerified,
+                      isContact: contact.isContact, // or any other relevant fields
+                    ),
+                  )
+                  .toList(),
             ],
           );
         }),
@@ -99,13 +108,19 @@ class ContactsView extends GetView<ContactsController> {
     );
   }
 
-  Widget _buildContact(
-    UserModel contact,
-  ) {
+  Widget _buildContact({
+    required String coreId,
+    required String name,
+    required bool isVerified,
+    required bool isContact,
+  }) {
     return InkWell(
       onTap: () {
         Get.find<UserPreview>().openUserPreview(
-          userModel: contact,
+          coreId: coreId,
+          name: name, // Assuming you want to display the nickname as the name
+          isVerified: isVerified,
+          isContact: isContact,
         );
       },
       borderRadius: BorderRadius.circular(8.r),
@@ -114,18 +129,18 @@ class ContactsView extends GetView<ContactsController> {
         margin: EdgeInsets.symmetric(horizontal: 10.w),
         child: Row(
           children: [
-            CustomCircleAvatar(coreId: contact.coreId, size: 40),
+            CustomCircleAvatar(coreId: coreId, size: 40),
             CustomSizes.mediumSizedBoxWidth,
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    contact.nickname,
+                    name,
                     style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kDarkBlueColor),
                   ),
                   Text(
-                    contact.coreId.shortenCoreId,
+                    coreId.shortenCoreId, // Assuming you have a method to shorten the coreId
                     style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
                   ),
                 ],

@@ -5,25 +5,25 @@ import 'package:flutter_p2p_communicator/model/addr_model.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/p2p_node/models.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
-import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
 import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
 class P2PNodeResponseStream {
-  P2PNodeResponseStream(
-      {required this.p2pState,
-      required this.libP2PStorageProvider,
-      required this.accountRepository}) {
-    _checkAddressJob();
+  P2PNodeResponseStream({
+    required this.p2pState,
+    required this.libP2PStorageProvider,
+    required this.accountRepository,
+  }) {
+    //_checkAddressJob();
   }
 
   StreamSubscription<P2PReqResNodeModel?>? _nodeResponseSubscription;
   bool advertiseRequested = false;
   final P2PState p2pState;
-  bool isP2PRunning = false;
+ //bool shouldCheckAddrs = false;
   LibP2PStorageProvider libP2PStorageProvider;
 
   /// temporarily added here since there is nothing to determine this class is in
@@ -31,12 +31,11 @@ class P2PNodeResponseStream {
   AccountRepository accountRepository;
 
   void setUp() {
-    isP2PRunning = true;
     _setUpResponseStream();
   }
 
   void reset() {
-    isP2PRunning = false;
+    //shouldCheckAddrs = false;
     advertiseRequested = false;
     p2pState.responses = [];
     _nodeResponseSubscription?.cancel();
@@ -63,16 +62,12 @@ class P2PNodeResponseStream {
     );
 
     p2pState.responses.add(event);
-    print("_onNewResponseEvent : eventId is: ${event.id.toString()}");
-    print("_onNewResponseEvent : eventName is: ${event.name.toString()}");
-    print("_onNewResponseEvent : body is: ${event.body.toString()}");
-    print("_onNewResponseEvent : error is: ${event.error.toString()}");
+    print('_onNewResponseEvent : eventId is: ${event.id.toString()}');
+    print('_onNewResponseEvent : eventName is: ${event.name.toString()}');
+    print('_onNewResponseEvent : body is: ${event.body.toString()}');
+    print('_onNewResponseEvent : error is: ${event.error.toString()}');
 
-    if (event.name == P2PReqResNodeNames.connect &&
-        event.error == null &&
-        !advertiseRequested) {
-      advertiseRequested = true;
-
+    if (event.name == P2PReqResNodeNames.connect && event.error == null) {
       final info = P2PReqResNodeModel(name: P2PReqResNodeNames.advertise);
       Future.delayed(const Duration(seconds: 1), () async {
         final id = await FlutterP2pCommunicator.sendRequest(info: info);
@@ -85,6 +80,7 @@ class P2PNodeResponseStream {
 
       await FlutterP2pCommunicator.sendRequest(
           info: P2PReqResNodeModel(name: P2PReqResNodeNames.addrs));
+
     } else if (event.name == P2PReqResNodeNames.advertise &&
         event.error == null) {
       // now you can start talking or communicating to others
@@ -98,7 +94,7 @@ class P2PNodeResponseStream {
       p2pState.address.value = (event.body!["addrs"] as List<dynamic>)
           .map((e) => e.toString())
           .toList();
-      _checkAddrs(p2pState.address.value);
+     // _checkAddrs(p2pState.address.value);
     }
     if (event.name == P2PReqResNodeNames.peerID && event.error == null) {
       p2pState.peerId.value = event.body!["peerID"].toString();
@@ -110,16 +106,18 @@ class P2PNodeResponseStream {
     }
   }
 
-  Future<void> _checkAddressJob() async {
+/*  Future<void> _checkAddressJob() async {
     return Future.delayed(const Duration(seconds: 15), () async {
-      if (isP2PRunning) {
+      if (shouldCheckAddrs) {
         await FlutterP2pCommunicator.sendRequest(
-            info: P2PReqResNodeModel(name: P2PReqResNodeNames.addrs));
+          info: P2PReqResNodeModel(name: P2PReqResNodeNames.addrs),
+        );
       }
       _checkAddressJob();
     });
-  }
+  }*/
 
+/*
   Future<void> _checkAddrs(List<String> addresses) async {
     var isConnected = false;
     for (final element in addresses) {
@@ -131,13 +129,15 @@ class P2PNodeResponseStream {
       _applyConnectRequest();
     }
   }
-
+*/
+/*
   Future<void> _applyConnectRequest() async {
     await Future.forEach(libP2PNodes, (P2PAddrModel element) async {
       unawaited(_sendConnectRequest(element));
     });
-  }
+  }*/
 
+/*
   Future<void> _sendConnectRequest(P2PAddrModel element) async {
     final info = P2PReqResNodeModel(
       name: P2PReqResNodeNames.connect,
@@ -152,4 +152,5 @@ class P2PNodeResponseStream {
       });
     }
   }
+*/
 }

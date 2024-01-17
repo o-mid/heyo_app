@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
@@ -43,7 +43,8 @@ class NewCallController extends GetxController {
 
   void searchUsers(String query) async {
     //TODO icon and chatmodel should be filled with correct data
-    List<UserModel> searchedItems = (await contactRepository.search(query)).toList();
+    List<UserModel> searchedItems =
+        (await contactRepository.search(query)).toList();
 
     if (searchedItems.isEmpty) {
       final currentUserCoreId = await accountInfoRepo.getUserAddress();
@@ -53,7 +54,6 @@ class NewCallController extends GetxController {
         searchSuggestions.value = [
           UserModel(
             name: 'unknown',
-            iconUrl: getMockIconUrl(),
             walletAddress: query,
             coreId: query,
           )

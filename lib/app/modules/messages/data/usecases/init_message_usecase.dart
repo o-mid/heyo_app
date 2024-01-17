@@ -4,7 +4,7 @@ import 'package:heyo/app/modules/messages/connection/models/data_channel_message
 class InitMessageUseCase {
   final ConnectionRepository connectionRepository;
   InitMessageUseCase({required this.connectionRepository});
-  void execute(MessageConnectionType messageConnectionType, String remoteId) {
-    connectionRepository.initConnection(messageConnectionType, remoteId);
+  void execute(MessageConnectionType messageConnectionType, List<String> remoteIds) {
+    connectionRepository.initConnection(messageConnectionType, remoteIds);
   }
 }

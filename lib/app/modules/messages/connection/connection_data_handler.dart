@@ -4,7 +4,9 @@ import 'dart:typed_data';
 import 'package:flutter/widgets.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/notifications/data/models/notifications_payload_model.dart';
+import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/notifications_constant.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import 'package:tuple/tuple.dart';
@@ -18,7 +20,6 @@ import '../data/models/messages/update_message_model.dart';
 import '../data/models/reaction_model.dart';
 import '../data/repo/messages_repo.dart';
 import '../utils/message_from_json.dart';
-import '../../new_chat/data/models/user_model.dart';
 import '../../notifications/controllers/notifications_controller.dart';
 import '../../shared/data/repository/contact_repository.dart';
 import 'models/data_channel_message_model.dart';
@@ -45,11 +46,16 @@ class DataHandler {
       name: (userModel == null)
           ? "${sessioncid.characters.take(4).string}...${sessioncid.characters.takeLast(4).string}"
           : userModel.name,
-      icon: getMockIconUrl(),
       lastMessage: "",
       lastReadMessageId: "",
       isVerified: true,
       timestamp: DateTime.now(),
+      participants: [
+        MessagingParticipantModel(
+          coreId: sessioncid,
+          chatId: sessioncid,
+        ),
+      ],
     );
     final currentChatModel = await chatHistoryRepo.getChat(userChatModel.id);
 
