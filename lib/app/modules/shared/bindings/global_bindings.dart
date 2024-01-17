@@ -1,3 +1,5 @@
+import 'package:core_web3dart/credentials.dart';
+import 'package:core_web3dart/web3dart.dart';
 import 'package:flutter_p2p_communicator/utils/constants.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/account/controllers/account_controller.dart';
@@ -12,11 +14,8 @@ import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_h
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
-import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
 import 'package:heyo/app/modules/connection/data/libp2p_connection_contractor.dart';
-import 'package:heyo/app/modules/messages/data/usecases/init_message_usecase.dart';
-import 'package:heyo/app/modules/messages/data/usecases/read_message_usecase.dart';
-import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
+import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
 import 'package:heyo/app/modules/messages/connection/connection_data_handler.dart';
 import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
 import 'package:heyo/app/modules/messages/connection/data/data_channel_messaging_connection.dart';
@@ -24,43 +23,47 @@ import 'package:heyo/app/modules/messages/connection/data/received_messaging_dat
 import 'package:heyo/app/modules/messages/connection/data/wifi_direct_messaging_connection.dart';
 import 'package:heyo/app/modules/messages/connection/rtc_connection_repo.dart';
 import 'package:heyo/app/modules/messages/connection/web_rtc_connection_manager.dart';
+import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
 import 'package:heyo/app/modules/notifications/controllers/app_notifications.dart';
+import 'package:heyo/app/modules/p2p_node/data/key/web3_keys.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_node.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_node_manager.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_node_request.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
+import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
+import 'package:heyo/app/modules/shared/controllers/audio_message_controller.dart';
+import 'package:heyo/app/modules/shared/controllers/call_history_observer.dart';
+import 'package:heyo/app/modules/shared/controllers/connection_controller.dart';
+import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
+import 'package:heyo/app/modules/shared/controllers/live_location_controller.dart';
+import 'package:heyo/app/modules/shared/controllers/video_message_controller.dart';
+import 'package:heyo/app/modules/shared/data/providers/blockchain/blockchain_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/blockchain/blockchain_provider_impl.dart';
+import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
+import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/kyc_vault/kyc_vault_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/kyc_vault/kyc_vault_provilder_impl.dart';
 import 'package:heyo/app/modules/shared/controllers/app_lifecyle_controller.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/dio/dio_network_request.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/netowrk_request_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/network_credentials.dart';
 import 'package:heyo/app/modules/shared/data/providers/notifications/app_notification_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/notifications/notification_provider.dart';
-import 'package:heyo/app/modules/shared/data/providers/registry/app_registry_provider.dart';
-import 'package:heyo/app/modules/shared/data/providers/registry/registery_provider.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/app_account_repository.dart';
+import 'package:heyo/app/modules/shared/data/providers/secure_storage/secure_storage_provider.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/app_account_repository.dart';
 import 'package:heyo/app/modules/shared/providers/account/creation/account_creation.dart';
 import 'package:heyo/app/modules/shared/providers/account/creation/libp2p_account_creation.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
-import 'package:heyo/app/modules/p2p_node/p2p_communicator.dart';
-import 'package:heyo/app/modules/shared/controllers/call_history_observer.dart';
-import 'package:heyo/app/modules/shared/controllers/connection_controller.dart';
-import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
-import 'package:heyo/app/modules/shared/controllers/live_location_controller.dart';
-import 'package:heyo/app/modules/shared/controllers/audio_message_controller.dart';
-import 'package:heyo/app/modules/shared/controllers/video_message_controller.dart';
-import 'package:heyo/app/modules/p2p_node/data/key/web3_keys.dart';
-import 'package:heyo/app/modules/p2p_node/p2p_node.dart';
-import 'package:heyo/app/modules/p2p_node/p2p_node_manager.dart';
-import 'package:heyo/app/modules/p2p_node/p2p_node_request.dart';
-import 'package:heyo/app/modules/p2p_node/p2p_node_response.dart';
-import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
-import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
-import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provider.dart';
-import 'package:heyo/app/modules/shared/data/providers/secure_storage/secure_storage_provider.dart';
-import 'package:core_web3dart/web3dart.dart';
+import 'package:heyo/app/modules/web-rtc/signaling.dart';
+import 'package:heyo/contracts/KYCVault.g.dart';
 import 'package:heyo/contracts/Registry.g.dart';
 import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/modules/calls/data/rtc/single_call_web_rtc_connection.dart';
 import 'package:heyo/app/modules/web-rtc/web_rtc_call_connection_manager.dart';
 import 'package:http/http.dart' as http;
-import 'package:heyo/app/modules/web-rtc/signaling.dart';
+
 import '../../chats/data/providers/chat_history/chat_history_provider.dart';
 import '../../chats/data/repos/chat_history/chat_history_repo.dart';
 import '../../messages/connection/multiple_connections.dart';
@@ -100,31 +103,12 @@ class GlobalBindings extends Bindings {
       ..put(AppLifeCycleController())
       ..put<Registry>(
         Registry(
-          address: XCBAddress.fromHex(REGISTERY_ADDR),
+          address: XCBAddress.fromHex(REGISTRY_ADDR),
           client: web3Client,
 
           /// Here we should pass network id which is variable that should
           /// be extracted from web3client
           chainId: 3,
-        ),
-      )
-      ..put<RegistryProvider>(
-        AppRegistryProvider(
-          storageProvider: GlobalBindings.secureStorageProvider,
-          registry: Get.find(),
-        ),
-      )
-      ..put<LibP2PStorageProvider>(
-        LibP2PStorageProvider(
-          localProvider: secureStorageProvider,
-        ),
-      )
-      ..put<NetworkRequest>(DioNetworkRequest(), permanent: true)
-      ..put<AccountCreation>(
-        LibP2PAccountCreation(
-          localProvider: secureStorageProvider,
-          cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
-          libp2pStorage: Get.find(),
         ),
       )
       ..put<AccountRepository>(
@@ -138,10 +122,15 @@ class GlobalBindings extends Bindings {
         AppNotificationProvider(
           networkRequest: Get.find(),
           libP2PStorageProvider: Get.find(),
-          registryProvider: Get.find(),
+          blockchainProvider: Get.find(),
           accountRepository: Get.find(),
         ),
       )
+      ..put<AccountCreation>(LibP2PAccountCreation(
+        localProvider: secureStorageProvider,
+        cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
+        libp2pStorage: Get.find(),
+      ))
       ..put(P2PState(), permanent: true)
       ..put(
         P2PCommunicator(

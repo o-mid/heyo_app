@@ -12,7 +12,7 @@ import '../../../routes/app_pages.dart';
 import '../../messages/utils/chat_Id_generator.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
 import '../../shared/data/repository/contact_repository.dart';
-import '../../shared/data/repository/crypto_account/account_repository.dart';
+import '../../shared/data/repository/account/account_repository.dart';
 import '../../shared/utils/constants/colors.dart';
 import '../../shared/utils/constants/textStyles.dart';
 
