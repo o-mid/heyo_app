@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/new_call/controllers/new_call_controller.dart';
@@ -9,7 +8,6 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/inputs/custom_text_field.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
-import 'package:heyo/app/modules/shared/widgets/contact_list_with_header.dart';
 import 'package:heyo/app/modules/shared/widgets/empty_users_body.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -43,78 +41,77 @@ class NewCallView extends GetView<NewCallController> {
         //* If list is empty show the empty screen
         final emptyScreen = controller.searchItems.isEmpty;
 
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              CustomSizes.largeSizedBoxHeight,
-              Padding(
-                padding: CustomSizes.mainContentPadding,
-                child: FocusScope(
-                  child: Focus(
-                    onFocusChange: (focus) =>
-                        controller.isTextInputFocused.value = focus,
-                    child: CustomTextField(
-                      labelText: LocaleKeys.newChat_usernameInput.tr,
-                      rightWidget: IconButton(
-                        icon: const Icon(
-                          Icons.qr_code_rounded,
-                          color: COLORS.kDarkBlueColor,
-                          size: 24,
-                        ),
-                        onPressed: controller.qrBottomSheet,
+        return Column(
+          children: [
+            CustomSizes.largeSizedBoxHeight,
+            Padding(
+              padding: CustomSizes.mainContentPadding,
+              child: FocusScope(
+                child: Focus(
+                  onFocusChange: (focus) =>
+                      controller.isTextInputFocused.value = focus,
+                  child: CustomTextField(
+                    onChanged: controller.searchUsers,
+                    labelText: LocaleKeys.newChat_usernameInput.tr,
+                    rightWidget: IconButton(
+                      icon: const Icon(
+                        Icons.qr_code_rounded,
+                        color: COLORS.kDarkBlueColor,
+                        size: 24,
                       ),
+                      onPressed: controller.qrBottomSheet,
                     ),
                   ),
                 ),
               ),
-              if (emptyScreen)
-                Expanded(
-                  child: ListView(
-                    children: [
-                      EmptyUsersBody(
-                        infoText: LocaleKeys.newChat_emptyStateTitleContacts.tr,
-                        buttonText: LocaleKeys.newChat_buttons_invite.tr,
-                        onInvite: controller.inviteBottomSheet,
-                      ),
-                    ],
-                  ),
-                )
-              else
-                const ContactListWidget()
-              //Column(
-              //  crossAxisAlignment: CrossAxisAlignment.start,
-              //  children: [
-              //    CustomSizes.smallSizedBoxHeight,
-              //    const Divider(thickness: 8, color: COLORS.kBrightBlueColor),
-              //    if (!controller.inputText.isNotEmpty) ...[
-              //      SizedBox(height: 24.h),
-              //      Padding(
-              //        padding: EdgeInsets.symmetric(horizontal: 20.w),
-              //        child: Text(
-              //          LocaleKeys.NewCallPage_contactListHeader.trParams(
-              //            {'count': controller.searchItems.length.toString()},
-              //          ),
-              //          style: TEXTSTYLES.kLinkSmall.copyWith(
-              //            color: COLORS.kTextSoftBlueColor,
-              //          ),
-              //        ),
-              //      ),
-              //    ],
-              //    if (controller.inputText.isNotEmpty)
-              //      CustomSizes.largeSizedBoxHeight,
-              //    Padding(
-              //      padding: CustomSizes.mainContentPadding,
-              //      child: ContactListWithHeader(
-              //        contacts: controller.searchItems.toList(),
-              //        searchMode: controller.inputText.isNotEmpty,
-              //        showAudioCallButton: true,
-              //        showVideoCallButton: true,
-              //      ),
-              //    ),
-              //  ],
-              //),
-            ],
-          ),
+            ),
+            if (emptyScreen)
+              Expanded(
+                child: ListView(
+                  children: [
+                    EmptyUsersBody(
+                      infoText: LocaleKeys.newChat_emptyStateTitleContacts.tr,
+                      buttonText: LocaleKeys.newChat_buttons_invite.tr,
+                      onInvite: controller.inviteBottomSheet,
+                    ),
+                  ],
+                ),
+              )
+            else
+              const ContactListWidget()
+            //Column(
+            //  crossAxisAlignment: CrossAxisAlignment.start,
+            //  children: [
+            //    CustomSizes.smallSizedBoxHeight,
+            //    const Divider(thickness: 8, color: COLORS.kBrightBlueColor),
+            //    if (!controller.inputText.isNotEmpty) ...[
+            //      SizedBox(height: 24.h),
+            //      Padding(
+            //        padding: EdgeInsets.symmetric(horizontal: 20.w),
+            //        child: Text(
+            //          LocaleKeys.NewCallPage_contactListHeader.trParams(
+            //            {'count': controller.searchItems.length.toString()},
+            //          ),
+            //          style: TEXTSTYLES.kLinkSmall.copyWith(
+            //            color: COLORS.kTextSoftBlueColor,
+            //          ),
+            //        ),
+            //      ),
+            //    ],
+            //    if (controller.inputText.isNotEmpty)
+            //      CustomSizes.largeSizedBoxHeight,
+            //    Padding(
+            //      padding: CustomSizes.mainContentPadding,
+            //      child: ContactListWithHeader(
+            //        contacts: controller.searchItems.toList(),
+            //        searchMode: controller.inputText.isNotEmpty,
+            //        showAudioCallButton: true,
+            //        showVideoCallButton: true,
+            //      ),
+            //    ),
+            //  ],
+            //),
+          ],
         );
       }),
     );

@@ -10,36 +10,38 @@ class GroupedContactListWidget extends GetView<NewCallController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return Expanded(
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: controller.groupedContact.length,
-          itemBuilder: (context, index) {
-            return Container();
-            //return Obx(() {
-            //  final firstChar = controller.groupedContact.keys.elementAt(index);
-            //  final contactsForChar = controller.groupedContact[firstChar]!;
+      return ListView.builder(
+        shrinkWrap: true,
+        itemCount: controller.groupedContact.length,
+        itemBuilder: (context, index) {
+          return Obx(() {
+            final firstChar = controller.groupedContact.keys.elementAt(index);
+            final contactsForChar = controller.groupedContact[firstChar]!;
 
-            //  return Column(
-            //    crossAxisAlignment: CrossAxisAlignment.start,
-            //    children: [
-            //      ListHeaderWidget(title: firstChar),
-            //      Column(
-            //        children: contactsForChar
-            //            .map(
-            //              (p) => UserWidget(
-            //                user: p,
-            //                showAudioCallButton: true,
-            //                showVideoCallButton: true,
-            //              ),
-            //            )
-            //            .toList(),
-            //      ),
-            //    ],
-            //  );
-            //});
-          },
-        ),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ListHeaderWidget(title: firstChar),
+                Column(
+                  children: contactsForChar
+                      .map(
+                        (p) => Column(
+                          children: [
+                            const SizedBox(height: 10),
+                            UserWidget(
+                              user: p,
+                              showAudioCallButton: true,
+                              showVideoCallButton: true,
+                            ),
+                          ],
+                        ),
+                      )
+                      .toList(),
+                ),
+              ],
+            );
+          });
+        },
       );
     });
   }

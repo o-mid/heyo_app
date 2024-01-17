@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/add_participate/widgets/addable_user_widget.dart';
 import 'package:heyo/app/modules/calls/new_call/controllers/new_call_controller.dart';
 import 'package:heyo/app/modules/new_chat/widgets/user_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -25,18 +24,21 @@ class SearchResultWidget extends GetView<NewCallController> {
             ),
           ),
           CustomSizes.smallSizedBoxHeight,
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: controller.searchItems.length,
-              itemBuilder: (context, index) {
-                return UserWidget(
-                  user: controller.searchItems[index],
-                  showAudioCallButton: true,
-                  showVideoCallButton: true,
-                );
-              },
-            ),
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: controller.searchItems.length,
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  const SizedBox(height: 10),
+                  UserWidget(
+                    user: controller.searchItems[index],
+                    showAudioCallButton: true,
+                    showVideoCallButton: true,
+                  ),
+                ],
+              );
+            },
           ),
         ],
       );
