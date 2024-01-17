@@ -62,6 +62,7 @@ class IosCallControllerProvider implements CallControllerProvider {
   Future<void> acceptCall() async {
 
     await callRepository.acceptCall(callId);
+    await FlutterIosCallKit.activeCalls();
     print("🟩 acceptCall");
   }
 
