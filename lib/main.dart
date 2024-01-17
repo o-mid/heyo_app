@@ -1,8 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:auto_start_flutter/auto_start_flutter.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -14,7 +11,9 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:heyo/app/modules/calls/data/notification_processor.dart';
 
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
+import 'package:heyo/app/modules/shared/bindings/initial_bindings.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
+import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -23,7 +22,6 @@ import 'app/modules/shared/utils/constants/strings_constant.dart';
 import 'firebase_options.dart';
 import 'app/modules/calls/data/call_background_request.dart';
 
-
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
@@ -31,20 +29,14 @@ void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
+
+  await InitialBindings().dependencies();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  notificationSetup();
-  FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
-  FirebaseMessaging.onMessage.listen(
-    (data) => onMessageReceived(
-      data,
-      isFromBackground: false,
-      flutterLocalNotification: flutterLocalNotificationsPlugin,
-    ),
-  );
-  await FirebaseMessaging.instance.getToken();
+  firebaseSetup();
+  localNotificationSetup();
 
   // only activate sentry in release mode
   if (kReleaseMode) {
@@ -62,7 +54,18 @@ void main() async {
   }
 }
 
-void notificationSetup() {
+void firebaseSetup() {
+  FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
+  FirebaseMessaging.onMessage.listen(
+    (data) => onMessageReceived(
+      data,
+      isFromBackground: false,
+      flutterLocalNotification: flutterLocalNotificationsPlugin,
+    ),
+  );
+}
+
+void localNotificationSetup() {
   const initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
   final initializationSettingsDarwin = DarwinInitializationSettings(
@@ -84,7 +87,6 @@ void notificationSetup() {
   );
   flutterLocalNotificationsPlugin.initialize(
     initializationSettings,
-    // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     onDidReceiveNotificationResponse: (notification) async {
       /// user pressed first action button, means agreeing to proceed
       if (notification.id! == 1) {
@@ -106,7 +108,7 @@ void initApp() {
       //  Width and height from figma design
       designSize: const Size(375, 712),
 
-      builder: (_, child) => GetMaterialApp(
+      builder: (_, child) =>  GetMaterialApp(
         navigatorObservers: [
           SentryNavigatorObserver(),
         ],
@@ -116,7 +118,7 @@ void initApp() {
         title: 'Heyo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(),
-        locale: const Locale("en", "EN"),
+        locale: const Locale('en', 'EN'),
         fallbackLocale: const Locale(
           'en',
           'EN',

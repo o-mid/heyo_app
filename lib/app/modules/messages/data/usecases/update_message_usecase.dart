@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:heyo/app/modules/messages/data/models/messages/update_message_model.dart';
 import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
 import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import '../message_processor.dart';
 import '../models/messages/message_model.dart';
 import '../models/reaction_model.dart';

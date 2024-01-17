@@ -2,24 +2,25 @@ import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:heyo/app/modules/shared/data/models/notification_type.dart';
+import 'package:heyo/app/modules/shared/data/providers/blockchain/blockchain_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/network/netowrk_request_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/notifications/notification_provider.dart';
-import 'package:heyo/app/modules/shared/data/providers/registry/registery_provider.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/dio.extension.dart';
 
 class AppNotificationProvider extends NotificationProvider {
   NetworkRequest networkRequest;
   LibP2PStorageProvider libP2PStorageProvider;
-  RegistryProvider registryProvider;
+  BlockchainProvider blockchainProvider;
   final AccountRepository accountRepository;
 
-  AppNotificationProvider(
-      {required this.networkRequest,
-      required this.libP2PStorageProvider,
-      required this.registryProvider,
-      required this.accountRepository,}) ;
+  AppNotificationProvider({
+    required this.networkRequest,
+    required this.libP2PStorageProvider,
+    required this.blockchainProvider,
+    required this.accountRepository,
+  });
 
   @override
   Future<bool> pushFCMToken() async {
@@ -28,7 +29,7 @@ class AppNotificationProvider extends NotificationProvider {
 
     if (privateKey == null || fcmToken == null) return false;
 
-    final signature = await registryProvider.createFcmRegisterSignature(
+    final signature = await blockchainProvider.createFcmRegisterSignature(
       fcmToken: fcmToken,
       privateKey: privateKey,
     );
@@ -56,10 +57,11 @@ class AppNotificationProvider extends NotificationProvider {
   }
 
   @override
-  Future<bool> sendNotification(
-      {required String remoteDelegatedCoreId,
-      required NotificationType notificationType,
-      required String content,}) async {
+  Future<bool> sendNotification({
+    required String remoteDelegatedCoreId,
+    required NotificationType notificationType,
+    required String content,
+  }) async {
     final userCoreId = await accountRepository.getUserAddress();
     final result = await networkRequest.post(
       path: 'notification-service/notification/send',
@@ -69,12 +71,10 @@ class AppNotificationProvider extends NotificationProvider {
         'senderUsername': '',
         'content': content,
         'senderCoreId': userCoreId,
-        'title' : null,
-        'body' :  null,
+        'title': null,
+        'body': null,
       },
     );
     return result.isSuccess();
   }
-
-
 }
