@@ -14,6 +14,7 @@ class IncomingCallBinding extends Bindings {
     Get.lazyPut<IncomingCallController>(
       () => IncomingCallController(
         callRepository: Get.find(),
+        p2pState: Get.find(),
         contactAvailabilityUseCase: ContactAvailabilityUseCase(
           contactRepository: ContactRepository(
             cacheContractor: CacheRepository(

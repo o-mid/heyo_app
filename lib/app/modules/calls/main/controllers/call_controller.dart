@@ -16,7 +16,7 @@ import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.da
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:wakelock/wakelock.dart';
@@ -225,8 +225,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   Future<void> createConnectedParticipantModel(CallStream callStream) async {
     print(
-      "bbbbbbbb createConnectedParticipantModel : ${callStream.isAudioCall} : ${callStream.remoteStream}",
-    );
+        " createConnectedParticipantModel : ${callStream.isAudioCall} : ${callStream.remoteStream}");
     RTCVideoRenderer? renderer;
     if (callStream.remoteStream != null) {
       renderer = RTCVideoRenderer();
@@ -327,7 +326,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   Future<void> observeRemoteStreams() async {
     final callStreams = await callRepository.getCallStreams();
-    print("bbbbbbbb hbgkbj ${callStreams.length} : ${callRepository.hashCode}");
+    print(" ${callStreams.length} : ${callRepository.hashCode}");
 
     callRepository
       ..onCallStreamReceived = (callStateView) {
