@@ -78,39 +78,7 @@ class NewCallView extends GetView<NewCallController> {
                 ),
               )
             else
-              const ContactListWidget()
-            //Column(
-            //  crossAxisAlignment: CrossAxisAlignment.start,
-            //  children: [
-            //    CustomSizes.smallSizedBoxHeight,
-            //    const Divider(thickness: 8, color: COLORS.kBrightBlueColor),
-            //    if (!controller.inputText.isNotEmpty) ...[
-            //      SizedBox(height: 24.h),
-            //      Padding(
-            //        padding: EdgeInsets.symmetric(horizontal: 20.w),
-            //        child: Text(
-            //          LocaleKeys.NewCallPage_contactListHeader.trParams(
-            //            {'count': controller.searchItems.length.toString()},
-            //          ),
-            //          style: TEXTSTYLES.kLinkSmall.copyWith(
-            //            color: COLORS.kTextSoftBlueColor,
-            //          ),
-            //        ),
-            //      ),
-            //    ],
-            //    if (controller.inputText.isNotEmpty)
-            //      CustomSizes.largeSizedBoxHeight,
-            //    Padding(
-            //      padding: CustomSizes.mainContentPadding,
-            //      child: ContactListWithHeader(
-            //        contacts: controller.searchItems.toList(),
-            //        searchMode: controller.inputText.isNotEmpty,
-            //        showAudioCallButton: true,
-            //        showVideoCallButton: true,
-            //      ),
-            //    ),
-            //  ],
-            //),
+              const ContactListWidget(),
           ],
         );
       }),
