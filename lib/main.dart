@@ -11,6 +11,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:heyo/app/modules/calls/data/notification_processor.dart';
 
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
+import 'package:heyo/app/modules/shared/bindings/initial_bindings.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
@@ -29,6 +30,7 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
 
+  await InitialBindings().dependencies();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -106,7 +108,7 @@ void initApp() {
       //  Width and height from figma design
       designSize: const Size(375, 712),
 
-      builder: (_, child) => GetMaterialApp(
+      builder: (_, child) =>  GetMaterialApp(
         navigatorObservers: [
           SentryNavigatorObserver(),
         ],

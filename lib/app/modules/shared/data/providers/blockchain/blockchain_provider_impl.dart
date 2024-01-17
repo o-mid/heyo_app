@@ -58,7 +58,7 @@ class BlockchainProviderImpl extends BlockchainProvider {
   }
 
   @override
-  Future<KycVaultProvider?> getKYCVaultProvider() async {
+    Future<KycVaultProvider?> getKYCVaultProvider() async {
     final kycVault = await getKYCVault();
     if (kycVault == null) return null;
     return KycVaultProviderImpl(kycVault);

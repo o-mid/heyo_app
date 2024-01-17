@@ -1,3 +1,5 @@
+import 'package:core_web3dart/credentials.dart';
+import 'package:core_web3dart/web3dart.dart';
 import 'package:flutter_p2p_communicator/utils/constants.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/account/controllers/account_controller.dart';
@@ -36,6 +38,8 @@ import 'package:heyo/app/modules/shared/controllers/connection_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/live_location_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/video_message_controller.dart';
+import 'package:heyo/app/modules/shared/data/providers/blockchain/blockchain_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/blockchain/blockchain_provider_impl.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/kyc_vault/kyc_vault_provider.dart';
@@ -99,7 +103,7 @@ class GlobalBindings extends Bindings {
       ..put(AppLifeCycleController())
       ..put<Registry>(
         Registry(
-          address: XCBAddress.fromHex(REGISTERY_ADDR),
+          address: XCBAddress.fromHex(REGISTRY_ADDR),
           client: web3Client,
 
           /// Here we should pass network id which is variable that should
@@ -107,30 +111,6 @@ class GlobalBindings extends Bindings {
           chainId: 3,
         ),
       )
-      ..put<RegistryProvider>(
-        AppRegistryProvider(
-          storageProvider: GlobalBindings.secureStorageProvider,
-          registry: Get.find(),
-        ),
-      )
-      ..put<LibP2PStorageProvider>(
-        LibP2PStorageProvider(
-          localProvider: secureStorageProvider,
-        ),
-      )
-      ..put<NetworkRequest>(DioNetworkRequest(), permanent: true)
-      ..put<NotificationProvider>(
-        AppNotificationProvider(
-          networkRequest: Get.find(),
-          libP2PStorageProvider: Get.find(),
-          blockchainProvider: Get.find(),
-        ),
-      )
-      ..put<AccountCreation>(LibP2PAccountCreation(
-        localProvider: secureStorageProvider,
-        cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
-        libp2pStorage: Get.find(),
-      ))
       ..put<AccountRepository>(
         AppAccountRepository(
           libP2PStorageProvider: Get.find(),
@@ -140,11 +120,18 @@ class GlobalBindings extends Bindings {
       )
       ..put<NotificationProvider>(
         AppNotificationProvider(
-            networkRequest: Get.find(),
-            libP2PStorageProvider: Get.find(),
-            registryProvider: Get.find(),
-            accountRepository: Get.find()),
+          networkRequest: Get.find(),
+          libP2PStorageProvider: Get.find(),
+          blockchainProvider: Get.find(),
+          accountRepository: Get.find(),
+        ),
       )
+      ..put<AccountCreation>(LibP2PAccountCreation(
+        localProvider: secureStorageProvider,
+        cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
+        libp2pStorage: Get.find(),
+      ))
+
       ..put(P2PState(), permanent: true)
       ..put(P2PCommunicator(
         p2pState: Get.find(),
