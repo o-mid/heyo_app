@@ -1,8 +1,9 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
-import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
 class WebRTCCallRepository implements CallRepository {
   WebRTCCallRepository({required this.callConnectionsHandler}) {
@@ -156,15 +157,11 @@ class WebRTCCallRepository implements CallRepository {
   //}
 
   void _addToAllParticipant(String coreId) {
-    const mockProfileImage =
-        'https://raw.githubusercontent.com/Zunawe/identicons/HEAD/examples/poly.png';
-
     //* it will notify the onChangeParticipateStream
     onChangeParticipateStream?.call(
       AllParticipantModel(
         coreId: coreId,
-        name: coreId,
-        status: AllParticipantStatus.accepted,
+        name: coreId.shortenCoreId,
       ),
     );
   }
