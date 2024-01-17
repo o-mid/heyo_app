@@ -114,7 +114,7 @@ class CallConnectionsHandler {
       }
       print("ENDCALL  : multipleCall if");
 
-      callStatusProvider.rejectCurrentCall(callId);
+      callStatusProvider.rejectCall(callId);
     }
   }
 
@@ -231,7 +231,7 @@ class CallConnectionsHandler {
       for (final element in callStatusProvider.incomingCalls!.remotePeers) {
         singleCallWebRTCBuilder.reject(callId, element.remotePeer);
       }
-      callStatusProvider.rejectCurrentCall(callId);
+      callStatusProvider.rejectIncomingCall(callId);
     }
   }
 
