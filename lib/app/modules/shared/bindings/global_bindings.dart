@@ -111,6 +111,25 @@ class GlobalBindings extends Bindings {
           chainId: 3,
         ),
       )
+      ..put<RegistryProvider>(
+        AppRegistryProvider(
+          storageProvider: GlobalBindings.secureStorageProvider,
+          registry: Get.find(),
+        ),
+      )
+      ..put<LibP2PStorageProvider>(
+        LibP2PStorageProvider(
+          localProvider: secureStorageProvider,
+        ),
+      )
+      ..put<NetworkRequest>(DioNetworkRequest(), permanent: true)
+      ..put<AccountCreation>(
+        LibP2PAccountCreation(
+          localProvider: secureStorageProvider,
+          cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
+          libp2pStorage: Get.find(),
+        ),
+      )
       ..put<AccountRepository>(
         AppAccountRepository(
           libP2PStorageProvider: Get.find(),
@@ -122,7 +141,7 @@ class GlobalBindings extends Bindings {
         AppNotificationProvider(
           networkRequest: Get.find(),
           libP2PStorageProvider: Get.find(),
-          blockchainProvider: Get.find(),
+          registryProvider: Get.find(),
           accountRepository: Get.find(),
         ),
       )
@@ -131,12 +150,13 @@ class GlobalBindings extends Bindings {
         cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
         libp2pStorage: Get.find(),
       ))
-
       ..put(P2PState(), permanent: true)
-      ..put(P2PCommunicator(
-        p2pState: Get.find(),
-        libP2PStorageProvider: Get.find(),
-      ))
+      ..put(
+        P2PCommunicator(
+          p2pState: Get.find(),
+          libP2PStorageProvider: Get.find(),
+        ),
+      )
       ..put(
         P2PNodeRequestStream(
           p2pState: Get.find(),
@@ -197,23 +217,23 @@ class GlobalBindings extends Bindings {
       // p2p related dependencies
 
       ..put(AppNotifications(), permanent: true)
-      ..put(NotificationsController(
-        appNotifications: Get.find(),
-      ))
-      ..put(CallSignaling(connectionContractor: Get.find()))
+      ..put(
+        NotificationsController(
+          appNotifications: Get.find(),
+        ),
+      )
+      ..put(CallSignaling(
+          connectionContractor: Get.find(), notificationProvider: Get.find()))
       ..put(CallStatusProvider(callSignaling: Get.find()), permanent: true)
       ..put(
-          CallConnectionsHandler(
-            callStatusProvider: Get.find(),
-            singleCallWebRTCBuilder: SingleCallWebRTCBuilder(
-              connectionContractor: Get.find(),
-            ),
+        CallConnectionsHandler(
+          callStatusProvider: Get.find(),
+          singleCallWebRTCBuilder: SingleCallWebRTCBuilder(
+            connectionContractor: Get.find(),
           ),
-            singleCallWebRTCBuilder: SingleCallWebRTCBuilder(
-              connectionContractor: Get.find(),
-            ),
-          ),
-          permanent: true)
+        ),
+        permanent: true,
+      )
       ..put(
         CallRequestsProcessor(
             connectionContractor: Get.find(),
@@ -221,28 +241,33 @@ class GlobalBindings extends Bindings {
             callConnectionsHandler: Get.find()),
       )
       ..put(
-          CallStatusObserver(
-              callStatusProvider: Get.find(),
-              accountInfoRepo: Get.find(),
-              notificationsController: Get.find(),
-              contactRepository: ContactRepository(
-                cacheContractor: CacheRepository(
-                    userProvider:
-                        UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
-              )),
-          permanent: true)
+        CallStatusObserver(
+          callStatusProvider: Get.find(),
+          accountInfoRepo: Get.find(),
+          notificationsController: Get.find(),
+          contactRepository: ContactRepository(
+            cacheContractor: CacheRepository(
+              userProvider: UserProvider(
+                  appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+            ),
+          ),
+          appLifeCycleController: Get.find(),
+        ),
+        permanent: true,
+      )
 
       // call related dependencies
       ..put(
         CallHistoryObserver(
           callHistoryRepo: CallHistoryRepo(
-            callHistoryProvider:
-                CallHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+            callHistoryProvider: CallHistoryProvider(
+                appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
           callStatusObserver: Get.find(),
           contactRepository: ContactRepository(
             cacheContractor: CacheRepository(
-              userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+              userProvider: UserProvider(
+                  appDatabaseProvider: Get.find<AppDatabaseProvider>()),
             ),
           ),
         ),
@@ -252,14 +277,15 @@ class GlobalBindings extends Bindings {
       ..put(
         DataHandler(
           messagesRepo: MessagesRepo(
-            messagesProvider:
-                MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+            messagesProvider: MessagesProvider(
+                appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
           chatHistoryRepo: ChatHistoryLocalRepo(
-            chatHistoryProvider:
-                ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+            chatHistoryProvider: ChatHistoryProvider(
+                appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
-          notificationsController: NotificationsController(appNotifications: appNotifications),
+          notificationsController:
+              NotificationsController(appNotifications: appNotifications),
           contactRepository: Get.find(),
           accountInfoRepo: Get.find(),
         ),
@@ -267,27 +293,32 @@ class GlobalBindings extends Bindings {
       )
       ..put<MessagesAbstractRepo>(
         MessagesRepo(
-          messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          messagesProvider: MessagesProvider(
+              appDatabaseProvider: Get.find<AppDatabaseProvider>()),
         ),
       )
       ..put(WifiDirectWrapper(), permanent: true)
-      ..put(ChatsController(
+      ..put(
+        ChatsController(
           chatHistoryRepo: ChatHistoryLocalRepo(
-            chatHistoryProvider:
-                ChatHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+            chatHistoryProvider: ChatHistoryProvider(
+                appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
           messagesRepo: MessagesRepo(
-            messagesProvider:
-                MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+            messagesProvider: MessagesProvider(
+                appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
-          contactRepository: Get.find<ContactRepository>()))
+          contactRepository: Get.find<ContactRepository>(),
+        ),
+      )
       ..put(AccountController(accountInfoRepo: Get.find()))
       ..put(GlobalMessageController())
       ..put(AudioMessageController())
       ..put(VideoMessageController())
       ..put(LiveLocationController())
       ..put(ConnectionController(p2pState: Get.find()))
-      ..put(DataChannelMessagingConnection(multipleConnectionHandler: Get.find()))
+      ..put(
+          DataChannelMessagingConnection(multipleConnectionHandler: Get.find()))
       ..put(
         RTCMessagingConnectionRepository(
           dataHandler: Get.find(),
@@ -324,8 +355,8 @@ class GlobalBindings extends Bindings {
       )
       ..put<CallHistoryAbstractRepo>(
         CallHistoryRepo(
-          callHistoryProvider:
-              CallHistoryProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          callHistoryProvider: CallHistoryProvider(
+              appDatabaseProvider: Get.find<AppDatabaseProvider>()),
         ),
       )
       ..put(
@@ -341,50 +372,47 @@ class GlobalBindings extends Bindings {
           dataHandler: Get.find(),
         ),
       )
-      ..put(Get.put(
-        SyncMessages(
-          p2pState: Get.find(),
-          multipleConnectionHandler: Get.find(),
-          accountInfo: Get.find(),
-          chatHistoryRepo: ChatHistoryLocalRepo(
-            chatHistoryProvider: ChatHistoryProvider(
+      ..put(
+        Get.put(
+          SyncMessages(
+            p2pState: Get.find(),
+            multipleConnectionHandler: Get.find(),
+            accountInfo: Get.find(),
+            chatHistoryRepo: ChatHistoryLocalRepo(
+              chatHistoryProvider: ChatHistoryProvider(
+                appDatabaseProvider: Get.find<AppDatabaseProvider>(),
+              ),
+            ),
+            messagesRepo: MessagesRepo(
+              messagesProvider: MessagesProvider(
+                  appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+            ),
+            sendMessageUseCase: SendMessageUseCase(
+              messagesRepo: MessagesRepo(
+                messagesProvider: MessagesProvider(
+                    appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+              ),
+              connectionRepository:
+                  Get.find<RTCMessagingConnectionRepository>(),
+              processor: MessageProcessor(),
+            ),
+          ),
+        ),
+      )
+      ..put(
+        CallHistoryController(
+          callHistoryRepo: CallHistoryRepo(
+            callHistoryProvider: CallHistoryProvider(
               appDatabaseProvider: Get.find<AppDatabaseProvider>(),
             ),
           ),
-          messagesRepo: MessagesRepo(
-            messagesProvider:
-                MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-          ),
-          sendMessageUseCase: SendMessageUseCase(
-            messagesRepo: MessagesRepo(
-              messagesProvider:
-                  MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-            ),
-            connectionRepository: Get.find<RTCMessagingConnectionRepository>(),
-            processor: MessageProcessor(),
-          ),
         ),
-      ));
-
-    Get.put(
-      CallHistoryController(
-        callHistoryRepo: CallHistoryRepo(
-          callHistoryProvider: CallHistoryProvider(
-            appDatabaseProvider: Get.find<AppDatabaseProvider>(),
-          ),
-        ),
-      ),
-    );
-
-    Get.put<CallRepository>(
+      )
+      ..put<CallRepository>(
         WebRTCCallRepository(
           callConnectionsHandler: Get.find(),
         ),
-        permanent: true);
-    Get.put<CallRepository>(
-        WebRTCCallRepository(
-          callConnectionsHandler: Get.find(),
-        ),
-        permanent: true);
+        permanent: true,
+      );
   }
 }
