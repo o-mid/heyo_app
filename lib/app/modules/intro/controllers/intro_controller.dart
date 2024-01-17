@@ -7,8 +7,8 @@ import 'package:heyo/app/modules/intro/widgets/verification_loading_dialog.dart'
 import 'package:heyo/app/modules/intro/widgets/verification_bottom_sheet.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/data/models/account_types.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/app_account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/app_account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';

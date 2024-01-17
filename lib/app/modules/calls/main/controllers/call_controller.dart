@@ -16,7 +16,7 @@ import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.da
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:wakelock/wakelock.dart';
