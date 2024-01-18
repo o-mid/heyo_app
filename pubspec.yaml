@@ -107,6 +107,7 @@ dependencies:
   firebase_messaging: ^14.7.3
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
+  flutter_animate: ^4.4.0
 
 dev_dependencies:
   flutter_test:
