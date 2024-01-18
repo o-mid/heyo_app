@@ -15,7 +15,7 @@ import 'package:tuple/tuple.dart';
 
 import '../../chats/data/models/chat_model.dart';
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
-import '../../shared/data/repository/crypto_account/account_repository.dart';
+import '../../shared/data/repository/account/account_repository.dart';
 import '../data/models/messages/confirm_message_model.dart';
 import '../data/models/messages/delete_message_model.dart';
 import '../data/models/messages/message_model.dart';
