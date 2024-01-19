@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 
-class MenuItem extends StatelessWidget {
-  MenuItem(
-      {required this.onTap,
-      this.iconBackgroundColor,
-      required this.icon,
-      required this.title,
-      this.subtitle,
-      this.trailing,
-      super.key});
+class MenuItemWidget extends StatelessWidget {
+  const MenuItemWidget({
+    required this.onTap,
+    required this.icon,
+    required this.title,
+    super.key,
+    this.iconBackgroundColor,
+    this.trailing,
+    this.subtitle,
+  });
 
-  Function() onTap;
-  Color? iconBackgroundColor;
-  Widget icon;
-  Widget? trailing;
-  String? subtitle;
-  String title;
+  final GestureTapCallback? onTap;
+  final Color? iconBackgroundColor;
+  final Widget icon;
+  final Widget? trailing;
+  final String? subtitle;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
