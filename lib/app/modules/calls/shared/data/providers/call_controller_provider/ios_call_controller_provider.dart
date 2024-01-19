@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/call_controller_provider.dart';
+import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
@@ -62,7 +63,16 @@ class IosCallControllerProvider implements CallControllerProvider {
 
   Future<void> acceptCall() async {
 
-    
+    await callRepository.acceptCall(callId);
+    //TODO farzam, accept
+    Get.offNamed(
+      Routes.CALL,
+      arguments: CallViewArgumentsModel(
+        callId: callId,
+        isAudioCall: callInfo.first.isAudioCall,
+        members: callInfo.map((e) => e.remotePeer.remoteCoreId).toList(),
+      ),
+    );
     print("🟩 acceptCall");
   }
 
@@ -89,6 +99,7 @@ class IosCallControllerProvider implements CallControllerProvider {
           // TODO: declined an incoming call
             print("🟩 Event.actionCallDecline");
             callRepository.rejectIncomingCall(callId);
+            FlutterIosCallKit.endCall(uuid);
             break;
           case Event.actionCallEnded:
           // TODO: ended an incoming/outgoing call
