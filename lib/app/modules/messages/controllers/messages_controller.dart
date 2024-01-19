@@ -214,7 +214,7 @@ class MessagesController extends GetxController {
       messages.value = newMessages;
 
       // remove adding mock messages
-      _addMockMessages();
+      // _addMockMessages();
 
       messages.refresh();
     });
