@@ -24,6 +24,7 @@ class UpdateMessageUseCase {
     required MessageConnectionType messageConnectionType,
     required UpdateMessageType updateMessageType,
     required List<String> remoteCoreIds,
+    required String chatName,
   }) async {
     switch (updateMessageType.runtimeType) {
       case UpdateReactions:
@@ -37,6 +38,7 @@ class UpdateMessageUseCase {
           chatId: updateMessageType.chatId,
           emoji: emoji,
           remoteCoreIds: remoteCoreIds,
+          chatName: chatName,
         );
 
         break;
@@ -49,6 +51,7 @@ class UpdateMessageUseCase {
     required String emoji,
     required String chatId,
     required List<String> remoteCoreIds,
+    required String chatName,
   }) async {
     final localCoreID = await accountInfo.getUserAddress() ?? "";
     var reaction = message.reactions[emoji] as ReactionModel? ?? ReactionModel();
@@ -88,7 +91,12 @@ class UpdateMessageUseCase {
     // );
 
     final processedMessage = await processor.getMessageDetails(
-      channelMessageType: ChannelMessageType.update(message: updatedMessageJson),
+      channelMessageType: ChannelMessageType.update(
+        message: updatedMessageJson,
+        remoteCoreIds: remoteCoreIds,
+        chatId: chatId,
+        chatName: chatName,
+      ),
     );
 
     await connectionRepository.sendTextMessage(

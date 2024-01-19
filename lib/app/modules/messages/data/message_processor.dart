@@ -46,18 +46,30 @@ class ChannelMessageType {
     required Map<String, dynamic> message,
     required bool isDataBinary,
     required String messageLocalPath,
+    required String chatId,
+    required String chatName,
+    required List<String> remoteCoreIds,
   }) = SendMessageType;
 
   factory ChannelMessageType.delete({
     required Map<String, dynamic> message,
+    required String chatId,
+    required String chatName,
+    required List<String> remoteCoreIds,
   }) = DeleteMessageType;
 
   factory ChannelMessageType.update({
     required Map<String, dynamic> message,
+    required String chatId,
+    required String chatName,
+    required List<String> remoteCoreIds,
   }) = UpdateMessageType;
 
   factory ChannelMessageType.confirm({
     required Map<String, dynamic> message,
+    required String chatId,
+    required String chatName,
+    required List<String> remoteCoreIds,
   }) = UpdateMessageType;
 }
 
@@ -65,34 +77,61 @@ class SendMessageType implements ChannelMessageType {
   final Map<String, dynamic> message;
   final bool isDataBinary;
   final String messageLocalPath;
+  final String chatId;
+  final List<String> remoteCoreIds;
+  final String chatName;
 
   SendMessageType({
     required this.message,
     required this.isDataBinary,
     required this.messageLocalPath,
+    required this.chatId,
+    required this.remoteCoreIds,
+    required this.chatName,
   });
 }
 
 class DeleteMessageType implements ChannelMessageType {
   final Map<String, dynamic> message;
+  final String chatId;
+
+  final String chatName;
+  final List<String> remoteCoreIds;
 
   DeleteMessageType({
     required this.message,
+    required this.chatId,
+    required this.remoteCoreIds,
+    required this.chatName,
   });
 }
 
 class UpdateMessageType implements ChannelMessageType {
   final Map<String, dynamic> message;
+  final String chatId;
+
+  final String chatName;
+  final List<String> remoteCoreIds;
 
   UpdateMessageType({
     required this.message,
+    required this.chatId,
+    required this.remoteCoreIds,
+    required this.chatName,
   });
 }
 
 class ConfirmMessageType implements ChannelMessageType {
   final Map<String, dynamic> message;
+  final String chatId;
+
+  final String chatName;
+  final List<String> remoteCoreIds;
 
   ConfirmMessageType({
     required this.message,
+    required this.chatId,
+    required this.remoteCoreIds,
+    required this.chatName,
   });
 }

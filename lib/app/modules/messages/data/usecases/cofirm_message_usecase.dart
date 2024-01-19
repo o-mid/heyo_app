@@ -29,6 +29,7 @@ class ConfirmMessageUseCase {
     required ConfirmMessageType confirmMessageType,
     required List<String> remoteCoreIds,
     required ChatId chatId,
+    required String chatName,
   }) async {
     switch (confirmMessageType.runtimeType) {
       case ConfirmReceivedText:
@@ -41,7 +42,12 @@ class ConfirmMessageUseCase {
         ).toJson();
 
         final processedMessage = await processor.getMessageDetails(
-          channelMessageType: ChannelMessageType.confirm(message: confirmmessageJson),
+          channelMessageType: ChannelMessageType.confirm(
+            message: confirmmessageJson,
+            remoteCoreIds: remoteCoreIds,
+            chatId: chatId,
+            chatName: chatName,
+          ),
         );
 
         await connectionRepository.sendTextMessage(

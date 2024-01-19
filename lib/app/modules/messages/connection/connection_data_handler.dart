@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
+import 'package:heyo/app/modules/messages/connection/models/models.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/image_message_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/text_message_model.dart';
 import 'package:heyo/app/modules/messages/utils/extensions/messageModel.extension.dart';
@@ -76,15 +77,17 @@ class DataHandler {
 
   Future<void> createChatModel({
     required String chatId,
-    required bool isGroupChat,
     required String chatName,
     required List<String> remoteCoreIds,
   }) async {
+    var isGroupChat = false;
     if (remoteCoreIds.length == 1) {
       final userModel = await contactRepository.getContactById(remoteCoreIds.first);
       chatName = (userModel == null)
           ? "${remoteCoreIds.first.characters.take(4).string}...${remoteCoreIds.first.characters.takeLast(4).string}"
           : userModel.name;
+    } else {
+      isGroupChat = true;
     }
 
     final chatModel = ChatModel(
@@ -342,6 +345,8 @@ class DataHandler {
   Future<String> getMessageJsonEncode({
     required String messageId,
     required ConfirmMessageStatus status,
+    required List<String> remoteCoreIds,
+    required ChatId chatId,
   }) async {
     final confirmMessageJson = ConfirmMessageModel(
       messageId: messageId,
@@ -350,6 +355,9 @@ class DataHandler {
     final dataChannelMessage = WrappedMessageModel(
       message: confirmMessageJson,
       dataChannelMessagetype: MessageType.confirm,
+      chatId: chatId,
+      chatName: await getChatName(chatId: chatId),
+      remoteCoreIds: remoteCoreIds,
     );
     final dataChannelMessageJson = dataChannelMessage.toJson();
 

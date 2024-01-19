@@ -20,6 +20,8 @@ class ReadMessageUseCase {
     final messageJsonEncode = await dataHandler.getMessageJsonEncode(
       messageId: messageId,
       status: ConfirmMessageStatus.read,
+      chatId: chatId,
+      remoteCoreIds: remoteCoreIds,
     );
 
     await connectionRepository.sendTextMessage(
