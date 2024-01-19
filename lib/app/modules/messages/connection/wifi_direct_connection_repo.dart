@@ -31,8 +31,6 @@ class WifiDirectConnectionRepository extends ConnectionRepository {
   void initConnection(
     MessageConnectionType messageConnectionType,
     List<String> remoteCoreIds,
-    ChatId chatId,
-    String chatName,
   ) {
     // TODO: implement initConnection
   }

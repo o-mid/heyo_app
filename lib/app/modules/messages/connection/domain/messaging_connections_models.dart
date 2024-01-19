@@ -7,34 +7,20 @@ import 'package:heyo/app/modules/messages/connection/models/data_channel_message
 class MessagingConnectionReceivedData {
   MessagingConnectionReceivedData({
     required this.remoteCoreId,
-    required this.remoteCoreIds,
-    required this.chatName,
     required this.receivedJson,
-    required this.chatId,
-    required this.isGroupChat,
   });
 
   final Map<String, dynamic> receivedJson;
 
-  final ChatId chatId;
-  final bool isGroupChat;
-  final String chatName;
   final String remoteCoreId;
-  final List<String> remoteCoreIds;
 }
 
 sealed class MessagingConnectionInitialData {
   final String remoteId;
-  final ChatId chatId;
-  final bool isGroupChat;
-  final String chatName;
-  final List<String> remoteCoreIds;
-  MessagingConnectionInitialData(
-      {required this.remoteCoreIds,
-      required this.chatId,
-      required this.remoteId,
-      required this.isGroupChat,
-      required this.chatName});
+
+  MessagingConnectionInitialData({
+    required this.remoteId,
+  });
 }
 
 sealed class MessagingConnectionSendData {}
@@ -42,30 +28,19 @@ sealed class MessagingConnectionSendData {}
 enum MessagingConnectionStatus { connectionLost, connecting, justConnected, online }
 
 class WebRTCConnectionInitData extends MessagingConnectionInitialData {
-  WebRTCConnectionInitData(
-      {required super.remoteId,
-      required super.remoteCoreIds,
-      required super.chatId,
-      required super.isGroupChat,
-      required super.chatName});
+  WebRTCConnectionInitData({
+    required super.remoteId,
+  });
 }
 
 class DataChannelConnectionSendData extends MessagingConnectionSendData {
   DataChannelConnectionSendData({
     required this.remoteCoreId,
     required this.message,
-    required this.chatId,
-    required this.isGroupChat,
-    required this.chatName,
-    required this.remoteCoreIds,
   });
 
   final String remoteCoreId;
   final String message;
-  final ChatId chatId;
-  final bool isGroupChat;
-  final String chatName;
-  final List<String> remoteCoreIds;
 }
 
 extension MapToMessageConnectionType on MessagingConnectionType {

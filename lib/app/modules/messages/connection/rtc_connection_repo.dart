@@ -40,10 +40,6 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
         await _sendTextMessage(
           text,
           remoteId,
-          chatId,
-          isGroupChat,
-          remoteCoreIds,
-          chatName,
         );
       }
     }
@@ -52,20 +48,12 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
   Future<void> _sendTextMessage(
     String text,
     String remoteCoreId,
-    ChatId chatId,
-    bool isGroupChat,
-    List<String> remoteCoreIds,
-    String chatName,
   ) async {
     try {
       await dataChannelMessagingConnection.sendMessage(
         DataChannelConnectionSendData(
           remoteCoreId: remoteCoreId,
           message: text,
-          chatId: chatId,
-          isGroupChat: isGroupChat,
-          remoteCoreIds: remoteCoreIds,
-          chatName: chatName,
         ),
       );
     } catch (e) {
@@ -126,8 +114,6 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
   Future<void> initConnection(
     MessageConnectionType messageConnectionType,
     List<String> remoteCoreIds,
-    String chatId,
-    String chatName,
   ) async {
     final isGroupChat = remoteCoreIds.length > 1;
     final selfCoreId = await dataHandler.getSelfCoreId();
@@ -139,10 +125,6 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
       if (remoteId != selfCoreId) {
         await _initMessagingConnection(
           remoteId,
-          chatId,
-          isGroupChat,
-          remoteCoreIds,
-          chatName,
         );
       }
     }
@@ -151,20 +133,12 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
 
   Future<void> _initMessagingConnection(
     String remoteId,
-    String chatId,
-    bool isGroupChat,
-    List<String> remoteCoreIds,
-    String chatName,
   ) async {
     try {
       print("Initializing connection with $remoteId");
       dataChannelMessagingConnection.init(
         WebRTCConnectionInitData(
           remoteId: remoteId,
-          chatId: chatId,
-          isGroupChat: isGroupChat,
-          remoteCoreIds: remoteCoreIds,
-          chatName: chatName,
         ),
       );
     } catch (e) {
