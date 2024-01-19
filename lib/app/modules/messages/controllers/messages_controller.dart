@@ -179,7 +179,11 @@ class MessagesController extends GetxController {
   }
 
   void _setChatId() {
-    chatId = participants.first.chatId;
+    if (participants.length > 1) {
+      chatId = participants.first.chatId;
+    } else {
+      chatId = participants.first.coreId;
+    }
   }
 
   Future<void> _getUserContact() async {
@@ -208,8 +212,6 @@ class MessagesController extends GetxController {
     initMessageUseCase.execute(
       args.connectionType.map(),
       participants.map((e) => e.coreId).toList(),
-      chatId,
-      chatName.value,
     );
   }
 

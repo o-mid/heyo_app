@@ -32,17 +32,10 @@ class RTCSession {
     required this.connectionId,
     required this.remotePeer,
     required this.onConnectionFailed,
-    required this.isGroupChat,
-    required this.chatId,
-    required this.chatName,
-    required this.remoteCoreIds,
   }) {
     timeStamp = connectionId.getTimeStamp();
   }
-  ChatId chatId;
-  bool isGroupChat;
-  final String chatName;
-  final List<String> remoteCoreIds;
+
   late int timeStamp;
   Function(ConnectionId, String) onConnectionFailed;
 

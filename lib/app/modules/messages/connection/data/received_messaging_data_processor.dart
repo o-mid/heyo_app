@@ -34,13 +34,12 @@ class ReceivedMessageDataProcessor {
     MessagingConnectionReceivedData messagingConnectionReceivedData,
     MessageConnectionType messageConnectionType,
   ) {
+    WrappedMessageModel wrappedMessageModel = WrappedMessageModel.fromJson(receivedJson);
+
     handleMessageReceived(
       receivedJson: messagingConnectionReceivedData.receivedJson,
       remoteCoreId: messagingConnectionReceivedData.remoteCoreId,
       messageConnectionType: messageConnectionType,
-      chatId: messagingConnectionReceivedData.chatId,
-      isGroupChat: messagingConnectionReceivedData.isGroupChat,
-      chatName: messagingConnectionReceivedData.chatName,
       remoteCoreIds: messagingConnectionReceivedData.remoteCoreIds,
     );
   }
@@ -49,10 +48,7 @@ class ReceivedMessageDataProcessor {
   Future<void> handleMessageReceived({
     required Map<String, dynamic> receivedJson,
     required String remoteCoreId,
-    required ChatId chatId,
-    required bool isGroupChat,
     required MessageConnectionType messageConnectionType,
-    required String chatName,
     required List<String> remoteCoreIds,
   }) async {
     WrappedMessageModel wrappedMessageModel = WrappedMessageModel.fromJson(receivedJson);
@@ -117,10 +113,7 @@ class ReceivedMessageDataProcessor {
       await dataChannelMessagingConnection.sendMessage(
         DataChannelConnectionSendData(
           remoteCoreId: remoteCoreId,
-          chatId: chatId,
-          isGroupChat: isGroupChat,
           remoteCoreIds: remoteCoreIds,
-          chatName: chatName,
           message: jsonEncode(wrappedMessageModel.toJson()),
         ),
       );

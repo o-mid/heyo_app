@@ -33,19 +33,11 @@ class SingleWebRTCConnection {
     ConnectionId connectionId,
     String remoteCoreId,
     String? remotePeer,
-    bool isGroupChat,
-    ChatId chatId,
-    String chatName,
-    List<String> remoteCoreIds,
   ) async {
     RTCPeerConnection peerConnection = await webRTCConnectionManager.createRTCPeerConnection();
     final rtcSession = RTCSession(
         connectionId: connectionId,
-        chatId: chatId,
-        isGroupChat: isGroupChat,
         remotePeer: RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: remotePeer),
-        chatName: chatName,
-        remoteCoreIds: remoteCoreIds,
         onConnectionFailed: (id, remote) {
           onConnectionFailed?.call(id, remote);
         });
@@ -60,19 +52,11 @@ class SingleWebRTCConnection {
     ConnectionId connectionId,
     String remoteCoreId,
     String? remotePeer,
-    bool isGroupChat,
-    ChatId chatId,
-    String chatName,
-    List<String> remoteCoreIds,
   ) async {
     return await _createRTCSession(
       connectionId,
       remoteCoreId,
       remotePeer,
-      isGroupChat,
-      chatId,
-      chatName,
-      remoteCoreIds,
     );
   }
 
@@ -92,10 +76,6 @@ class SingleWebRTCConnection {
       rtcSession.remotePeer.remoteCoreId,
       rtcSession.remotePeer.remotePeerId,
       rtcSession.connectionId,
-      rtcSession.chatId,
-      rtcSession.isGroupChat,
-      rtcSession.chatName,
-      rtcSession.remoteCoreIds,
     );
   }
 
@@ -119,10 +99,6 @@ class SingleWebRTCConnection {
       rtcSession.remotePeer.remoteCoreId,
       rtcSession.remotePeer.remotePeerId,
       rtcSession.connectionId,
-      rtcSession.chatId,
-      rtcSession.isGroupChat,
-      rtcSession.chatName,
-      rtcSession.remoteCoreIds,
     );
   }
 
@@ -150,10 +126,6 @@ class SingleWebRTCConnection {
       rtcSession.remotePeer.remoteCoreId,
       rtcSession.remotePeer.remotePeerId,
       rtcSession.connectionId,
-      rtcSession.chatId,
-      rtcSession.isGroupChat,
-      rtcSession.chatName,
-      rtcSession.remoteCoreIds,
     );
   }
 
@@ -163,10 +135,6 @@ class SingleWebRTCConnection {
     String remoteCoreId,
     String? remotePeerId,
     connectionId,
-    ChatId chatId,
-    bool isGroupChat,
-    String chatName,
-    List<String> remoteCoreIds,
   ) async {
     print(
         "onMessage send $remotePeerId : $remoteCoreId : $connectionId : $eventType : $chatId : $data ");
@@ -175,10 +143,6 @@ class SingleWebRTCConnection {
     request["data"] = data;
     request["command"] = COMMAND;
     request[CONNECTION_ID] = connectionId;
-    request["chatId"] = chatId;
-    request["isGroupChat"] = isGroupChat;
-    request["chatName"] = chatName;
-    request["remoteCoreIds"] = remoteCoreIds;
 
     print("P2PCommunicator: sendingSDP $remoteCoreId : $eventType");
     bool requestSucceeded = await connectionContractor.sendMessage(_encoder.convert(request),
