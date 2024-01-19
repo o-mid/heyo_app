@@ -9,6 +9,7 @@ class AnimateListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: AnimateList(
           interval: 30.ms,
           effects: [FadeEffect(duration: 100.ms)],
