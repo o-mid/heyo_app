@@ -1,26 +1,19 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/data/call_status_provider.dart';
 import 'package:heyo/app/modules/calls/data/rtc/models.dart';
-import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/modules/calls/data/web_rtc_call_repository.dart';
-import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/android_call_controller_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/call_controller_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/ios_call_controller_provider.dart';
 import 'package:heyo/app/modules/notifications/controllers/notifications_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/app_lifecyle_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
-import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/stream.extension.dart';
-import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
-import 'package:heyo/main.dart';
 
 
 class CallStatusObserver extends GetxController with WidgetsBindingObserver {

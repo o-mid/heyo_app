@@ -26,7 +26,7 @@ class WebRTCCallConnectionManager {
       {
         "url": 'turn:turn-ir.ting.tube',
         "username": 'turn-server-ir',
-        "credential": 'turn-server-ir',
+        "credential": 'Sckjas86AVicubao9s8c7',
       }
     ]
   };

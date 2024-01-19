@@ -41,7 +41,7 @@ class CallBottomSheetHeader extends GetView<CallController> {
                   }
 
                   return _buildEnabledOrDisabledButton(
-                    isEnabled: localParticipate!.videoMode.value,
+                    isEnabled: localParticipate.videoMode.value,
                     enabled: Assets.svg.videoCallIcon.svg(
                       color: COLORS.kWhiteColor,
                     ),

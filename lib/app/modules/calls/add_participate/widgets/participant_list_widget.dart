@@ -18,17 +18,15 @@ class ParticipantListWidget extends GetView<AddParticipateController> {
           const SelectedUserChip(),
           const Divider(thickness: 8, color: COLORS.kBrightBlueColor),
           //* List of participant
-          Expanded(
-            child: Padding(
-              padding: CustomSizes.mainContentPadding,
-              child: Obx(() {
-                if (controller.inputText.value.isNotEmpty) {
-                  return const SearchResultWidget();
-                } else {
-                  return const GroupedContactListWidget();
-                }
-              }),
-            ),
+          Padding(
+            padding: CustomSizes.mainContentPadding,
+            child: Obx(() {
+              if (controller.inputText.value.isNotEmpty) {
+                return const SearchResultWidget();
+              } else {
+                return const GroupedContactListWidget();
+              }
+            }),
           ),
         ],
       ),

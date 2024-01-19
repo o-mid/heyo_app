@@ -4,11 +4,9 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/call_controller_provider.dart';
-import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
-
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
 import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:uuid/uuid.dart';
@@ -27,6 +25,8 @@ class IosCallControllerProvider implements CallControllerProvider {
   final ContactRepository contactRepository;
   final CallRepository callRepository;
   late CallId callId;
+  late List<CallInfo> callInfo;
+
   late IncomingCallViewArguments args;
 
   String uuid = Uuid().v4();
@@ -41,6 +41,7 @@ class IosCallControllerProvider implements CallControllerProvider {
   Future<void> incomingCall(CallId callId,List<CallInfo> calls) async {
 
     this.callId = callId;
+    callInfo = calls;
     final userModel = await contactRepository
         .getContactById(calls.first.remotePeer.remoteCoreId);
     final params = CallKitParams(id: uuid, nameCaller: userModel?.name.tr, appName: "Heyo");
@@ -61,8 +62,7 @@ class IosCallControllerProvider implements CallControllerProvider {
 
   Future<void> acceptCall() async {
 
-    await callRepository.acceptCall(callId);
-    await FlutterIosCallKit.activeCalls();
+    
     print("🟩 acceptCall");
   }
 

@@ -3,7 +3,7 @@ import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
 import 'package:heyo/app/modules/intro/data/provider/verification_corepass_abstract_provider.dart';
 import 'package:heyo/app/modules/intro/data/repo/intro_abstract_repo.dart';
 import 'package:heyo/app/modules/shared/data/models/account_types.dart';
-import 'package:heyo/app/modules/shared/data/repository/crypto_account/account_repository.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/providers/store/store_abstract_provider.dart';
 import 'package:tuple/tuple.dart';
 
