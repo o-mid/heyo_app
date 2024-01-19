@@ -52,7 +52,14 @@ class SendMessageUseCase {
 
     final processedMessage = await processor.getMessageDetails(
       channelMessageType: ChannelMessageType.message(
-          message: rawmessageJson, isDataBinary: isDataBinary, messageLocalPath: messageLocalPath),
+        message: rawmessageJson,
+        isDataBinary: isDataBinary,
+        messageLocalPath: messageLocalPath,
+        remoteCoreIds: remoteCoreIds,
+        chatId: msg.chatId,
+        //TODO : Group chat name
+        chatName: "",
+      ),
     );
     if (isDataBinary && messageLocalPath.isNotEmpty) {
       // Todo: implement sending binary data
