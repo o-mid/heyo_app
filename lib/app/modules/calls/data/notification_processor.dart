@@ -11,27 +11,29 @@ class NotificationProcessor {
     required bool isBackgroundNotification,
   }) {
     final data = jsonDecode(rawData) as Map<String, dynamic>;
-    var messageCreationTime = messageSent;
-    if (data['dateTime'] != null) {
-      messageCreationTime = DateTime.fromMillisecondsSinceEpoch(
-          int.parse(data['dateTime'].toString()));
-    }
 
     print("NotificationProcessor data: $data");
     switch (data['notificationType']) {
       case 'CALL':
-        final callProcessor = CallProcessor();
-        callProcessor.setup(
-          messageCreationTime: messageCreationTime,
-          data: data,
-        );
-        callProcessor.process(
-          isBackgroundNotification: isBackgroundNotification,
-          data: data,
-          flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
+        processCall(
+          flutterLocalNotificationsPlugin,
+          data,
+          isBackgroundNotification,
         );
       default:
         {}
     }
+  }
+
+  static void processCall(
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
+    Map<String, dynamic> data,
+    bool isBackgroundNotification,
+  ) {
+    CallProcessor().process(
+      isBackgroundNotification: isBackgroundNotification,
+      data: data,
+      flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
+    );
   }
 }

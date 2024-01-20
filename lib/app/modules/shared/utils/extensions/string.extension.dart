@@ -30,3 +30,11 @@ extension StringExtension on String {
     return "${this[0].toUpperCase()}${this.substring(1).toLowerCase()}";
   }
 }
+
+extension JsonExtension on String {
+  /// wraps keys and values within quotes
+  String toValidJson() {
+    return replaceAllMapped(RegExp(r'(\w+):'), (Match m) => '"${m[1]}":')
+        .replaceAllMapped(RegExp(r':\s*(\w+)'), (Match m) => ': "${m[1]}"');
+  }
+}
