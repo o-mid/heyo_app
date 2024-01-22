@@ -27,16 +27,19 @@ class CallProcessor {
     final callData = NotificationCallModel.fromJson(data);
 
     if ([Routes.INCOMING_CALL, Routes.CALL].contains(Get.currentRoute)) {
+      /// could be moved to call requests processor
       /// in future, we have to show a missed call if caller is different from
       /// current one
       return;
     }
     if (isExpired(callData.content!.dateTime)) {
+      /// could be moved to call requests processor
       _showMissedCall(callData, flutterLocalNotificationsPlugin);
       return;
     }
 
     if (isBackgroundNotification) {
+      /// could be moved to call requests processor
       _showIncomingCallNotification(flutterLocalNotificationsPlugin, callData);
       return;
     }
@@ -65,6 +68,7 @@ class CallProcessor {
     );
     final notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
+
     await flutterLocalNotificationPlugin.show(
       CallProcessor.callNotificationId,
       title,
@@ -87,7 +91,6 @@ class CallProcessor {
       null,
     );
   }
-
 
   void _showMissedCall(NotificationCallModel data,
       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) {
