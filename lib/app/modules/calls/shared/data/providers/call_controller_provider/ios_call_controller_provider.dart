@@ -9,6 +9,7 @@ import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/calls/data/rtc/models.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:uuid/uuid.dart';
 
@@ -19,7 +20,7 @@ class IosCallControllerProvider implements CallControllerProvider {
     required this.contactRepository,
     required this.callRepository,
   }){
-    listenerEvent(onEvent);
+    listenerEvent(_onNewEventRecived);
   }
 
   final AccountRepository accountInfoRepo;
@@ -30,35 +31,53 @@ class IosCallControllerProvider implements CallControllerProvider {
 
   late IncomingCallViewArguments args;
 
-  String uuid = Uuid().v4();
+  String _uuid = Uuid().v4();
 
   // MARK: On Call kit call back event
   final onCallKitNewEvent = Rxn<CallEvent>();
 
-  void onEvent(CallEvent event) {
+  void _onNewEventRecived(CallEvent event) {
+
     onCallKitNewEvent.value = event;
+    print('🟩 IosCallController: on Call Kit New Event');
   }
 
+  @override
   Future<void> incomingCall(CallId callId,List<CallInfo> calls) async {
 
     this.callId = callId;
     callInfo = calls;
+    _uuid = const Uuid().v4();
     final userModel = await contactRepository
         .getContactById(calls.first.remotePeer.remoteCoreId);
-    final params = CallKitParams(id: uuid, nameCaller: userModel?.name.tr, appName: "Heyo");
+    final params = CallKitParams(id: _uuid, nameCaller: userModel?.name.tr, appName: "Heyo");
     await FlutterIosCallKit.showCallkitIncoming(params);
+    print('🟩 IosCallController: Decline Call');
   }
 
-  Future<void> makeCall() async {
+  Future<void> makeCall(CallId callId, List<CallInfo> calls) async {
 
     // Do implementation for make call with call kit
+    final userModel = await contactRepository
+        .getContactById(calls.first.remotePeer.remoteCoreId);
+    final params = CallKitParams(
+      id: _uuid,
+      nameCaller: userModel!.nickname.isEmpty ? userModel.coreId.shortenCoreId : userModel.nickname.tr,
+      handle: '0123456789',
+      type: 1,
+      extra: <String, dynamic>{'userId': userModel.coreId},
+      ios: const IOSParams(handleType: 'number'),
+    );
+    await FlutterIosCallKit.startCall(params);
+    print('🟩 IosCallController: Make Call');
   }
 
+  @override
   Future<void> declineCall() async{
 
-    callRepository.endOrCancelCall(callId);
-    await FlutterIosCallKit.endCall(uuid);
-    print("🟩 declineCall");
+    await callRepository.endOrCancelCall(callId);
+    await FlutterIosCallKit.endCall(_uuid);
+    print('🟩 IosCallController: declineCall');
   }
 
   Future<void> acceptCall() async {
@@ -79,33 +98,36 @@ class IosCallControllerProvider implements CallControllerProvider {
   Future<void> listenerEvent(void Function(CallEvent) callback) async {
     try {
       FlutterIosCallKit.onEvent.listen((event) async {
-        print('HOME: $event');
+
+        print('🟩 IosCallController: Event: $event');
+        _onCallKitNewEvent(event!);
+
         switch (event!.event) {
           case Event.actionCallIncoming:
           // TODO: received an incoming call
-            print("🟩 Event.actionCallIncoming");
+            print("🟩 IosCallController: Event.actionCallIncoming");
             break;
           case Event.actionCallStart:
           // TODO: started an outgoing call
           // TODO: show screen calling in Flutter
-            print("🟩 Event.actionCallStart");
+            print("🟩 IosCallController: Event.actionCallStart");
             break;
           case Event.actionCallAccept:
           // TODO: accepted an incoming call
-            print("🟩 Event.actionCallAccept");
+            print("🟩 IosCallController: Event.actionCallAccept");
             acceptCall();
             break;
           case Event.actionCallDecline:
           // TODO: declined an incoming call
-            print("🟩 Event.actionCallDecline");
+            print("🟩 IosCallController: Event.actionCallDecline");
             callRepository.rejectIncomingCall(callId);
-            await FlutterIosCallKit.endCall(uuid);
+            await FlutterIosCallKit.endCall(_uuid);
             break;
           case Event.actionCallEnded:
           // TODO: ended an incoming/outgoing call
-            print("🟩 Event.actionCallEnded");
+            print("🟩 IosCallController: Event.actionCallEnded");
             callRepository.endOrCancelCall(callId);
-            await FlutterIosCallKit.endCall(uuid);
+            await FlutterIosCallKit.endCall(_uuid);
             break;
           case Event.actionCallTimeout:
           // TODO: missed an incoming call
