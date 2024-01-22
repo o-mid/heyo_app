@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:heyo/app/modules/calls/data/call/call_processor.dart';
+import 'package:heyo/app/modules/calls/data/call/call_notification_processor.dart';
 
 class NotificationProcessor {
   static void process(
