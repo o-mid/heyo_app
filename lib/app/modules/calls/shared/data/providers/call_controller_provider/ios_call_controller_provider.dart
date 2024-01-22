@@ -52,7 +52,7 @@ class IosCallControllerProvider implements CallControllerProvider {
         .getContactById(calls.first.remotePeer.remoteCoreId);
     final params = CallKitParams(id: _uuid, nameCaller: userModel?.name.tr, appName: "Heyo");
     await FlutterIosCallKit.showCallkitIncoming(params);
-    print('🟩 IosCallController: Decline Call');
+    print('🟩 IosCallController: decline Call');
   }
 
   Future<void> makeCall(CallId callId, List<CallInfo> calls) async {
@@ -69,7 +69,29 @@ class IosCallControllerProvider implements CallControllerProvider {
       ios: const IOSParams(handleType: 'number'),
     );
     await FlutterIosCallKit.startCall(params);
-    print('🟩 IosCallController: Make Call');
+    print('🟩 IosCallController: make Call');
+  }
+
+  Future<void> activeCalls() async {
+    var calls = await FlutterIosCallKit.activeCalls();
+    print(calls);
+    print('🟩 IosCallController: active Call');
+  }
+
+  Future<void> endCurrentCall() async {
+    await FlutterIosCallKit.endCall(_uuid!);
+    print('🟩 IosCallController: end Current Call');
+  }
+
+  Future<void> endAllCalls() async {
+    await FlutterIosCallKit.endAllCalls();
+    print('🟩 IosCallController: end All Calls');
+  }
+
+  Future<void> getDevicePushTokenVoIP() async {
+    var devicePushTokenVoIP = await FlutterIosCallKit.getDevicePushTokenVoIP();
+    print(devicePushTokenVoIP);
+    print('🟩 IosCallController: get Device Push Token VoIP');
   }
 
   @override
@@ -99,7 +121,7 @@ class IosCallControllerProvider implements CallControllerProvider {
     try {
       FlutterIosCallKit.onEvent.listen((event) async {
 
-        print('🟩 IosCallController: Event: $event');
+        print('🟩 IosCallController: event: $event');
         _onCallKitNewEvent(event!);
 
         switch (event!.event) {
