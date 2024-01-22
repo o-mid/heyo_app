@@ -43,11 +43,11 @@ class WifiDirectConnectionRepository extends ConnectionRepository {
 
 // TODO: Implement sendTextMessage for Wi-Fi Direct. This should involve sending text messages over a Wi-Fi Direct connection
   @override
-  Future<void> sendTextMessage(
-      {required MessageConnectionType messageConnectionType,
-      required String text,
-      required List<String> remoteCoreIds,
-      required ChatId chatId}) {
+  Future<void> sendTextMessage({
+    required MessageConnectionType messageConnectionType,
+    required String text,
+    required List<String> remoteCoreIds,
+  }) {
     // TODO: implement sendTextMessage
     throw UnimplementedError();
   }

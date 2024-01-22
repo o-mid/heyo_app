@@ -103,7 +103,6 @@ class UpdateMessageUseCase {
       messageConnectionType: messageConnectionType,
       text: jsonEncode(processedMessage.messageJson),
       remoteCoreIds: remoteCoreIds,
-      chatId: chatId,
     );
   }
 }

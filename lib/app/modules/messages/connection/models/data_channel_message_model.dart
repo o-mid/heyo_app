@@ -13,7 +13,7 @@ class WrappedMessageModel {
       dataChannelMessagetype:
           MessageType.values.byName(json[dataChannelMessagetypeSerializedName] as String),
       chatName: json[chatNameSerializedName],
-      remoteCoreIds: json[remoteCoreIdsSerializedName] as List<String>,
+      remoteCoreIds: List<String>.from(json[remoteCoreIdsSerializedName] as List<dynamic>),
       chatId: json[chatIdSerializedName],
       message: json[messageSerializedName] as Map<String, dynamic>,
     );

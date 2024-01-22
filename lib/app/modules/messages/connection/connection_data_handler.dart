@@ -80,7 +80,10 @@ class DataHandler {
     required String chatName,
     required List<String> remoteCoreIds,
   }) async {
+    final currentChatModel = await chatHistoryRepo.getChat(chatId);
+
     var isGroupChat = false;
+
     if (remoteCoreIds.length == 1) {
       final userModel = await contactRepository.getContactById(remoteCoreIds.first);
       chatName = (userModel == null)
@@ -88,6 +91,9 @@ class DataHandler {
           : userModel.name;
     } else {
       isGroupChat = true;
+      if (chatName == "" && currentChatModel != null) {
+        chatName = currentChatModel.name;
+      }
     }
 
     final chatModel = ChatModel(
@@ -100,7 +106,6 @@ class DataHandler {
       participants:
           remoteCoreIds.map((e) => MessagingParticipantModel(coreId: e, chatId: chatId)).toList(),
     );
-    final currentChatModel = await chatHistoryRepo.getChat(chatId);
 
     if (currentChatModel == null) {
       await chatHistoryRepo.addChatToHistory(chatModel);

@@ -21,7 +21,6 @@ abstract class ConnectionRepository {
     required MessageConnectionType messageConnectionType,
     required String text,
     required List<String> remoteCoreIds,
-    required ChatId chatId,
   });
 
   Future<void> sendBinaryMessage({

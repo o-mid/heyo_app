@@ -54,7 +54,6 @@ class ConfirmMessageUseCase {
           messageConnectionType: MessageConnectionType.RTC_DATA_CHANNEL,
           text: jsonEncode(processedMessage.messageJson),
           remoteCoreIds: remoteCoreIds,
-          chatId: chatId,
         );
         break;
     }

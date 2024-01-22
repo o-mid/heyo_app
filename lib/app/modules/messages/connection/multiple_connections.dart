@@ -183,7 +183,11 @@ class MultipleConnectionHandler {
   Future<RTCSession> _initiateSession(
     String remoteCoreId /*, String selfCoreId*/,
   ) async {
-    RTCSession rtcSession = await _getConnection(generateConnectionId(), remoteCoreId);
+    RTCSession rtcSession = await _getConnection(
+      generateConnectionId(),
+      remoteCoreId,
+      null,
+    );
 
     // if (selfCoreId.compareTo(remoteCoreId) > 0) {
     singleWebRTCConnection.startSession(rtcSession);
