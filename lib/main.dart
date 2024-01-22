@@ -8,7 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/data/call/call_processor.dart';
+import 'package:heyo/app/modules/calls/data/call/call_notification_processor.dart';
 import 'package:heyo/app/modules/calls/data/notification_processor.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/modules/shared/bindings/initial_bindings.dart';
@@ -90,16 +90,12 @@ void localNotificationSetup() {
   flutterLocalNotificationsPlugin.initialize(
     initializationSettings,
     onDidReceiveNotificationResponse: (notification) async {
-      /// user pressed first action button, means agreeing to proceed
-      if (notification.id == CallProcessor.callNotificationId) {
-        //TODO should be refactored and notification should be updated based on the time
-        NotificationProcessor.process(
-          null,
-          notification.payload!,
-          flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
-          isBackgroundNotification: false,
-        );
-      }
+      NotificationProcessor.process(
+        null,
+        notification.payload!,
+        flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
+        isBackgroundNotification: false,
+      );
     },
   );
 }
