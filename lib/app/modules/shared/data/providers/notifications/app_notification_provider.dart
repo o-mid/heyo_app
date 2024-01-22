@@ -71,7 +71,7 @@ class AppNotificationProvider extends NotificationProvider {
         'senderUsername': '',
         'content': content,
         'senderCoreId': userCoreId,
-        'title': null,
+        'title': 'Heyo',
         'body': null,
       },
     );
