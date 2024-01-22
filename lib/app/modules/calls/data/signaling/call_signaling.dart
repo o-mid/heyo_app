@@ -16,11 +16,14 @@ class CallSignaling {
   final ConnectionContractor connectionContractor;
   final NotificationProvider notificationProvider;
   final JsonEncoder _encoder = const JsonEncoder();
-  Future<bool> _send(String eventType,
-      data,
-      String remoteCoreId,
-      String? remotePeerId,
-      String connectionId,) async {
+
+  Future<bool> _send(
+    String eventType,
+    data,
+    String remoteCoreId,
+    String? remotePeerId,
+    String connectionId,
+  ) async {
     print(
       "onMessage send $remotePeerId : $remoteCoreId : $connectionId : $eventType : $data ",
     );
@@ -31,8 +34,9 @@ class CallSignaling {
     request[CALL_ID] = connectionId;
     print("P2PCommunicator: sendingSDP $remoteCoreId : $eventType");
     final requestSucceeded = await connectionContractor.sendMessage(
-        _encoder.convert(request),
-        RemotePeerData(remoteCoreId: remoteCoreId, remotePeerId: remotePeerId),);
+      _encoder.convert(request),
+      RemotePeerData(remoteCoreId: remoteCoreId, remotePeerId: remotePeerId),
+    );
     print(
       "P2PCommunicator: sendingSDP $remoteCoreId : $eventType : $requestSucceeded",
     );
@@ -40,10 +44,12 @@ class CallSignaling {
     return requestSucceeded;
   }
 
-  void requestCall(CallId callId,
-      RemotePeer remotePeer,
-      bool isAudioCall,
-      List<String> members,) async {
+  void requestCall(
+    CallId callId,
+    RemotePeer remotePeer,
+    bool isAudioCall,
+    List<String> members,
+  ) async {
     members.removeWhere(
       (element) => element == remotePeer.remoteCoreId,
     );
@@ -54,7 +60,7 @@ class CallSignaling {
     data["command"] = CALL_COMMAND;
     data['dateTime'] = DateTime.now().millisecondsSinceEpoch;
     data[CALL_ID] = callId;
-    String content= _encoder.convert(data);
+    String content = _encoder.convert(data);
 
     notificationProvider.sendNotification(
       remoteDelegatedCoreId: remotePeer.remoteCoreId,
