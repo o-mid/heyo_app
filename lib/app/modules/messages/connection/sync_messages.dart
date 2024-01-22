@@ -57,7 +57,7 @@ class SyncMessages {
             await sendMessageUseCase.execute(
                 messageConnectionType: MessageConnectionType.RTC_DATA_CHANNEL,
                 sendMessageType: sendMessageType,
-                // TODO : Group Messaging
+                chatName: '',
                 remoteCoreIds: [rtcSession.remotePeer.remoteCoreId],
                 isUpdate: true,
                 messageModel: message);

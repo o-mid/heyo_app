@@ -136,8 +136,7 @@ class SingleWebRTCConnection {
     String? remotePeerId,
     connectionId,
   ) async {
-    print(
-        "onMessage send $remotePeerId : $remoteCoreId : $connectionId : $eventType : $chatId : $data ");
+    print("onMessage send $remotePeerId : $remoteCoreId : $connectionId : $eventType  : $data ");
     var request = {};
     request["type"] = eventType;
     request["data"] = data;

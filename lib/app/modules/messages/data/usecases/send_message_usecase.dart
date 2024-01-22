@@ -18,8 +18,11 @@ import '../models/metadatas/video_metadata.dart';
 import '../repo/messages_abstract_repo.dart';
 
 class SendMessageUseCase {
-  SendMessageUseCase(
-      {required this.messagesRepo, required this.connectionRepository, required this.processor});
+  SendMessageUseCase({
+    required this.messagesRepo,
+    required this.connectionRepository,
+    required this.processor,
+  });
 
   final MessagesAbstractRepo messagesRepo;
   final MessageProcessor processor;
@@ -29,6 +32,7 @@ class SendMessageUseCase {
       {required MessageConnectionType messageConnectionType,
       required SendMessageType sendMessageType,
       required List<String> remoteCoreIds,
+      required String chatName,
       bool isUpdate = false,
       MessageModel? messageModel = null}) async {
     Tuple3<MessageModel?, bool, String> messageObject =
@@ -58,7 +62,7 @@ class SendMessageUseCase {
         remoteCoreIds: remoteCoreIds,
         chatId: msg.chatId,
         //TODO : Group chat name
-        chatName: "",
+        chatName: chatName,
       ),
     );
     if (isDataBinary && messageLocalPath.isNotEmpty) {
@@ -76,7 +80,6 @@ class SendMessageUseCase {
         messageConnectionType: messageConnectionType,
         text: jsonEncode(processedMessage.messageJson),
         remoteCoreIds: remoteCoreIds,
-        chatId: sendMessageType.chatId,
       );
     }
   }

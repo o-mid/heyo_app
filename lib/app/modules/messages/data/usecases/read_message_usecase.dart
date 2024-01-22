@@ -28,7 +28,6 @@ class ReadMessageUseCase {
       messageConnectionType: connectionType,
       text: messageJsonEncode,
       remoteCoreIds: remoteCoreIds,
-      chatId: chatId,
     );
   }
 }

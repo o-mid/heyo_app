@@ -83,7 +83,6 @@ class DeleteMessageUseCase {
       messageConnectionType: messageConnectionType,
       text: jsonEncode(processedMessage.messageJson),
       remoteCoreIds: remoteCoreIds,
-      chatId: chatId,
     );
   }
 }

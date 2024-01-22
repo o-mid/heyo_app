@@ -407,7 +407,7 @@ class MessagesController extends GetxController {
   Future<void> toggleReaction(MessageModel msg, String emoji) async {
     await updateMessageUseCase.execute(
       messageConnectionType: args.connectionType.map(),
-      // TODO: GROUP MESSAGING
+      chatName: chatName.value,
       remoteCoreIds: remoteCoreIds,
       updateMessageType: UpdateMessageType.updateReactions(
         selectedMessage: msg,
@@ -421,7 +421,6 @@ class MessagesController extends GetxController {
     await readMessageUseCase.execute(
       connectionType: args.connectionType.map(),
       messageId: messageId,
-      // TODO: GROUP MESSAGING
       remoteCoreIds: remoteCoreIds,
       chatId: chatId,
     );
@@ -473,6 +472,7 @@ class MessagesController extends GetxController {
         chatId: chatId,
       ),
       remoteCoreIds: remoteCoreIds,
+      chatName: chatName.value,
     );
 
     textController.clear();
@@ -490,7 +490,7 @@ class MessagesController extends GetxController {
         replyTo: replyingTo.value,
         chatId: chatId,
       ),
-      // TODO: GROUP MESSAGING
+      chatName: chatName.value,
       remoteCoreIds: remoteCoreIds,
     );
 
@@ -511,7 +511,7 @@ class MessagesController extends GetxController {
         replyTo: replyingTo.value,
         chatId: chatId,
       ),
-      // TODO: GROUP MESSAGING
+      chatName: chatName.value,
       remoteCoreIds: remoteCoreIds,
     );
 
@@ -535,6 +535,7 @@ class MessagesController extends GetxController {
         replyTo: replyingTo.value,
         chatId: chatId,
       ),
+      chatName: chatName.value,
       remoteCoreIds: remoteCoreIds,
     );
 
@@ -640,7 +641,7 @@ class MessagesController extends GetxController {
   Future<void> deleteSelectedForEveryone() async {
     await deleteMessageUseCase.execute(
       messageConnectionType: args.connectionType.map(),
-      // TODO: GROUP MESSAGING
+      chatName: chatName.value,
       remoteCoreIds: remoteCoreIds,
       deleteMessageType: DeleteMessageType.forEveryone(
         chatId: chatId,
@@ -653,8 +654,8 @@ class MessagesController extends GetxController {
   Future<void> deleteSelectedForMe() async {
     await deleteMessageUseCase.execute(
       messageConnectionType: args.connectionType.map(),
-      // TODO: GROUP MESSAGING
       remoteCoreIds: remoteCoreIds,
+      chatName: chatName.value,
       deleteMessageType: DeleteMessageType.forMe(
         chatId: chatId,
         selectedMessages: selectedMessages,
@@ -780,7 +781,7 @@ class MessagesController extends GetxController {
             replyTo: replyingTo.value,
             chatId: chatId,
           ),
-          // TODO: GROUP MESSAGING
+          chatName: chatName.value,
           remoteCoreIds: remoteCoreIds,
         );
       }

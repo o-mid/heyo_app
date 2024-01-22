@@ -25,11 +25,7 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
     required String text,
     required List<String> remoteCoreIds,
     required MessageConnectionType messageConnectionType,
-    required ChatId chatId,
   }) async {
-    final bool isGroupChat = remoteCoreIds.length > 1;
-
-    final chatName = await dataHandler.getChatName(chatId: chatId);
     final selfCoreId = await dataHandler.getSelfCoreId();
     if (!remoteCoreIds.contains(selfCoreId)) {
       remoteCoreIds.add(selfCoreId);
