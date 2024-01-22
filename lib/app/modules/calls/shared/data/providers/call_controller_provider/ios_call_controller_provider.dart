@@ -57,7 +57,7 @@ class IosCallControllerProvider implements CallControllerProvider {
   Future<void> declineCall() async{
 
     callRepository.endOrCancelCall(callId);
-    FlutterIosCallKit.endCall(uuid);
+    await FlutterIosCallKit.endCall(uuid);
     print("🟩 declineCall");
   }
 
@@ -99,13 +99,13 @@ class IosCallControllerProvider implements CallControllerProvider {
           // TODO: declined an incoming call
             print("🟩 Event.actionCallDecline");
             callRepository.rejectIncomingCall(callId);
-            FlutterIosCallKit.endCall(uuid);
+            await FlutterIosCallKit.endCall(uuid);
             break;
           case Event.actionCallEnded:
           // TODO: ended an incoming/outgoing call
             print("🟩 Event.actionCallEnded");
             callRepository.endOrCancelCall(callId);
-            FlutterIosCallKit.endCall(uuid);
+            await FlutterIosCallKit.endCall(uuid);
             break;
           case Event.actionCallTimeout:
           // TODO: missed an incoming call
