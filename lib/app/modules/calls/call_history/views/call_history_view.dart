@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/call_history/controllers/call_history_controller.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/call_history_list_tile_widget.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/empty_call_history_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
+import 'package:heyo/app/modules/shared/widgets/animate_list_widget.dart';
 import 'package:heyo/app/modules/shared/widgets/appbar_widget.dart';
 import 'package:heyo/app/modules/shared/widgets/connection_status.dart';
 import 'package:heyo/generated/assets.gen.dart';
@@ -41,15 +41,10 @@ class CallHistoryView extends GetView<CallHistoryController> {
             child: Obx(() {
               return controller.calls.isEmpty
                   ? const EmptyCallHistoryWidget()
-                  : AnimatedList(
-                      key: controller.animatedListKey,
-                      padding: EdgeInsets.symmetric(vertical: 10.h),
-                      initialItemCount: controller.calls.length,
-                      itemBuilder: (context, index, animation) {
-                        return CallHistoryListTitleWidget(
-                          call: controller.calls[index],
-                        );
-                      },
+                  : AnimateListWidget(
+                      children: controller.calls.map((call) {
+                        return CallHistoryListTitleWidget(call: call);
+                      }).toList(),
                     );
             }),
           ),

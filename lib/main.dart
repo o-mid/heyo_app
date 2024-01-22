@@ -5,22 +5,19 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:heyo/app/modules/calls/data/call/call_processor.dart';
 import 'package:heyo/app/modules/calls/data/notification_processor.dart';
-
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/modules/shared/bindings/initial_bindings.dart';
-import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
-import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-
+import 'app/modules/calls/data/call_background_request.dart';
 import 'app/modules/shared/utils/constants/strings_constant.dart';
 import 'firebase_options.dart';
-import 'app/modules/calls/data/call_background_request.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -28,7 +25,6 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
 
   await InitialBindings().dependencies();
   await Firebase.initializeApp(
@@ -73,10 +69,16 @@ void localNotificationSetup() {
       DarwinNotificationCategory(
         'Calls',
         actions: [
-          DarwinNotificationAction.plain('1', 'Accept',
-              options: {DarwinNotificationActionOption.foreground}),
-          DarwinNotificationAction.plain('2', 'Deny',
-              options: {DarwinNotificationActionOption.foreground}),
+          DarwinNotificationAction.plain(
+            '1',
+            'Accept',
+            options: {DarwinNotificationActionOption.foreground},
+          ),
+          DarwinNotificationAction.plain(
+            '2',
+            'Deny',
+            options: {DarwinNotificationActionOption.foreground},
+          ),
         ],
       ),
     ],
@@ -89,7 +91,7 @@ void localNotificationSetup() {
     initializationSettings,
     onDidReceiveNotificationResponse: (notification) async {
       /// user pressed first action button, means agreeing to proceed
-      if (notification.id! == 1) {
+      if (notification.id == CallProcessor.callNotificationId) {
         //TODO should be refactored and notification should be updated based on the time
         NotificationProcessor.process(
           null,
@@ -108,7 +110,7 @@ void initApp() {
       //  Width and height from figma design
       designSize: const Size(375, 712),
 
-      builder: (_, child) =>  GetMaterialApp(
+      builder: (_, child) => GetMaterialApp(
         navigatorObservers: [
           SentryNavigatorObserver(),
         ],
