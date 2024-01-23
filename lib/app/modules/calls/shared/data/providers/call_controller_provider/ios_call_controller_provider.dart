@@ -122,7 +122,7 @@ class IosCallControllerProvider implements CallControllerProvider {
       FlutterIosCallKit.onEvent.listen((event) async {
 
         print('🟩 IosCallController: event: $event');
-        _onCallKitNewEvent(event!);
+        _onNewEventRecived(event!);
 
         switch (event!.event) {
           case Event.actionCallIncoming:
