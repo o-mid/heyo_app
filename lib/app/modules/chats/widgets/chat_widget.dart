@@ -29,7 +29,7 @@ class ChatWidget extends GetView<ChatsController> {
 
   @override
   Widget build(BuildContext context) {
-    final isGroupChat = chat.participants.length > 1;
+    final isGroupChat = chat.participants.length > 2;
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
       child: SlidableWidget(
@@ -59,7 +59,7 @@ class ChatWidget extends GetView<ChatsController> {
                   )
                 else
                   CustomCircleAvatar(
-                    coreId: chat.id,
+                    coreId: chat.participants.first.coreId,
                     size: 48,
                     isOnline: true,
                   ),
