@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/call_history/controllers/call_history_controller.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/call_history_list_tile_widget.dart';
+import 'package:heyo/app/modules/calls/call_history/widgets/call_history_loading_widget.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/empty_call_history_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/widgets/animate_list_widget.dart';
@@ -39,13 +40,19 @@ class CallHistoryView extends GetView<CallHistoryController> {
           ConnectionStatusWidget(),
           Expanded(
             child: Obx(() {
-              return controller.calls.isEmpty
-                  ? const EmptyCallHistoryWidget()
-                  : AnimateListWidget(
-                      children: controller.calls.map((call) {
-                        return CallHistoryListTitleWidget(call: call);
-                      }).toList(),
-                    );
+              if (controller.loading.isFalse) {
+                return const CallHistoryLoadingWidget();
+              } else {
+                if (controller.calls.isEmpty) {
+                  return const EmptyCallHistoryWidget();
+                } else {
+                  return AnimateListWidget(
+                    children: controller.calls.map((call) {
+                      return CallHistoryListTitleWidget(call: call);
+                    }).toList(),
+                  );
+                }
+              }
             }),
           ),
         ],

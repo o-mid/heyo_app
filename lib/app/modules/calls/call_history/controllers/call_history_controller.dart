@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:heyo/app/modules/calls/call_history/widgets/call_history_list_tile_widget.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/delete_all_calls_bottom_sheet.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/delete_call_history_dialog.dart';
@@ -17,6 +17,8 @@ class CallHistoryController extends GetxController {
   final animatedListKey = GlobalKey<AnimatedListState>();
 
   late StreamSubscription _callsStreamSubscription;
+
+  RxBool loading = true.obs;
 
   @override
   void onInit() {
@@ -39,6 +41,7 @@ class CallHistoryController extends GetxController {
 
   Future<void> init() async {
     calls.value = await callHistoryRepo.getAllCalls();
+    loading.value = false;
     _callsStreamSubscription =
         (await callHistoryRepo.getCallsStream()).listen((newCalls) {
       // remove the deleted calls
