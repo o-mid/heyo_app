@@ -40,7 +40,7 @@ class CallHistoryView extends GetView<CallHistoryController> {
           ConnectionStatusWidget(),
           Expanded(
             child: Obx(() {
-              if (controller.loading.isFalse) {
+              if (controller.loading.isTrue) {
                 return const CallHistoryLoadingWidget();
               } else {
                 if (controller.calls.isEmpty) {
