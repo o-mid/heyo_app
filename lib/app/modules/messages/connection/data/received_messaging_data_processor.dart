@@ -1,3 +1,5 @@
+// ignore_for_file: require_trailing_commas
+
 import 'dart:convert';
 import 'package:heyo/app/modules/messages/data/models/messages/confirm_message_model.dart';
 import 'package:heyo/app/modules/messages/connection/connection_data_handler.dart';
@@ -53,8 +55,13 @@ class ReceivedMessageDataProcessor {
     required List<String> remoteCoreIds,
   }) async {
     WrappedMessageModel wrappedMessageModel = WrappedMessageModel.fromJson(receivedJson);
+    final selfId = await dataHandler.accountInfoRepo.getUserAddress();
 
-    final isGroupChat = wrappedMessageModel.remoteCoreIds.length > 1;
+    List<String> newRemoteCoreIds = wrappedMessageModel.remoteCoreIds;
+    if (newRemoteCoreIds.contains(selfId)) {
+      newRemoteCoreIds.remove(selfId);
+    }
+    final isGroupChat = newRemoteCoreIds.length > 1;
 
     switch (wrappedMessageModel.dataChannelMessagetype) {
       case MessageType.message:
@@ -69,7 +76,7 @@ class ReceivedMessageDataProcessor {
         await confirmMessageById(
           messageId: confirmationValues.item1,
           status: confirmationValues.item2,
-          remoteCoreId: confirmationValues.item3,
+          remoteCoreId: remoteCoreId,
           messageConnectionType: messageConnectionType,
           chatId: wrappedMessageModel.chatId,
           isGroupChat: isGroupChat,

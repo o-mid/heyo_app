@@ -84,18 +84,25 @@ class DataHandler {
 
     var isGroupChat = false;
 
-    if (remoteCoreIds.length == 1) {
-      final userModel = await contactRepository.getContactById(remoteCoreIds.first);
-      chatName = (userModel == null)
-          ? "${remoteCoreIds.first.characters.take(4).string}...${remoteCoreIds.first.characters.takeLast(4).string}"
-          : userModel.name;
-    } else {
+    final selfCoreId = await accountInfoRepo.getUserAddress();
+
+    if (remoteCoreIds.contains(selfCoreId)) {
+      remoteCoreIds.remove(selfCoreId);
+    }
+
+    if (remoteCoreIds.length > 1) {
       isGroupChat = true;
       if (chatName == "" && currentChatModel != null) {
         chatName = currentChatModel.name;
       }
+    } else {
+      final userModel = await contactRepository.getContactById(remoteCoreIds.first);
+      chatName = (userModel == null)
+          ? '${remoteCoreIds.first.characters.take(4).string}...${remoteCoreIds.first.characters.takeLast(4).string}'
+          : userModel.name;
     }
 
+    remoteCoreIds.add(selfCoreId!);
     final chatModel = ChatModel(
       id: chatId,
       name: chatName,
@@ -165,12 +172,15 @@ class DataHandler {
       receivedMessage: receivedMessage,
       chatId: chatId,
       notify: isNewMessage,
-      isGroupChat: isGroupChat,
       chatName: chatName,
       remoteCoreIds: remoteCoreIds,
     );
 
-    return Tuple3(receivedMessage.messageId, ConfirmMessageStatus.delivered, chatId);
+    return Tuple3(
+      receivedMessage.messageId,
+      ConfirmMessageStatus.delivered,
+      chatId,
+    );
   }
 
   Future<void> deleteReceivedMessage({
@@ -272,7 +282,7 @@ class DataHandler {
   }) async {
     final bigPicture = await _getBigPicture(receivedMessage, chatId);
 
-    final payload = _createNotificationPayload(receivedMessage, chatId);
+    final payload = _createNotificationPayload(receivedMessage, chatId, senderName);
 
     await notificationsController.receivedMessageNotify(
       chatId: chatId,
@@ -296,11 +306,11 @@ class DataHandler {
   }
 
   NotificationsPayloadModel _createNotificationPayload(
-      MessageModel receivedMessage, String chatId) {
+      MessageModel receivedMessage, String chatId, String senderName) {
     return NotificationsPayloadModel(
       chatId: chatId,
       messageId: receivedMessage.messageId,
-      senderName: receivedMessage.senderName,
+      senderName: senderName,
       replyMsg: receivedMessage.getMessageContent(),
     );
   }
@@ -309,13 +319,19 @@ class DataHandler {
     required MessageModel receivedMessage,
     required String chatId,
     required bool notify,
-    required bool isGroupChat,
     required String chatName,
     required List<String> remoteCoreIds,
   }) async {
+    bool isGroupChat = false;
     ChatModel? chatmodel = await chatHistoryRepo.getChat(chatId);
 
     int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
+
+    if (remoteCoreIds.length > 2) {
+      isGroupChat = true;
+    } else {
+      isGroupChat = false;
+    }
 
     chatmodel = chatmodel?.copyWith(
       lastMessage: receivedMessage.getMessageContent(),
@@ -323,7 +339,7 @@ class DataHandler {
       id: chatId,
       timestamp: receivedMessage.timestamp.toLocal(),
       isGroupChat: isGroupChat,
-      name: chatName,
+      name: isGroupChat ? chatName : chatmodel.name,
       participants:
           remoteCoreIds.map((e) => MessagingParticipantModel(coreId: e, chatId: chatId)).toList(),
     );
@@ -338,11 +354,7 @@ class DataHandler {
       await notifyReceivedMessage(
         receivedMessage: receivedMessage,
         chatId: chatId,
-        senderName: isGroupChat
-            ? chatName
-            : (chatmodel?.name == null)
-                ? chatId.shortenCoreId
-                : chatmodel!.name,
+        senderName: isGroupChat ? chatName : chatmodel!.name,
       );
     }
   }
