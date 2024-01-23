@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/data/call_requests_processor.dart';
@@ -38,7 +39,7 @@ class CallProcessor {
       return;
     }
 
-    if (isBackgroundNotification) {
+    if (isBackgroundNotification && Platform.isAndroid) {
       /// could be moved to call requests processor
       _showIncomingCallNotification(flutterLocalNotificationsPlugin, callData);
       return;
