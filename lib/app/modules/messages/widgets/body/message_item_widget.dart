@@ -53,6 +53,7 @@ class MessageItemWidget extends StatelessWidget {
           _buildDateHeader(message, prevMessage),
           MessageSelectionWrapper(
             message: message,
+            isGroupChat: controller.isGroupChat,
           ),
         ],
       ),

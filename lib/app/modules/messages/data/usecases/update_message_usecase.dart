@@ -20,10 +20,12 @@ class UpdateMessageUseCase {
   final MessageProcessor processor;
   final AccountRepository accountInfo;
 
-  Future<void> execute(
-      {required MessageConnectionType messageConnectionType,
-      required UpdateMessageType updateMessageType,
-      required String remoteCoreId}) async {
+  Future<void> execute({
+    required MessageConnectionType messageConnectionType,
+    required UpdateMessageType updateMessageType,
+    required List<String> remoteCoreIds,
+    required String chatName,
+  }) async {
     switch (updateMessageType.runtimeType) {
       case UpdateReactions:
         final message = (updateMessageType as UpdateReactions).selectedMessage;
@@ -35,7 +37,8 @@ class UpdateMessageUseCase {
           message: message,
           chatId: updateMessageType.chatId,
           emoji: emoji,
-          remoteCoreId: remoteCoreId,
+          remoteCoreIds: remoteCoreIds,
+          chatName: chatName,
         );
 
         break;
@@ -47,22 +50,27 @@ class UpdateMessageUseCase {
     required MessageModel message,
     required String emoji,
     required String chatId,
-    required String remoteCoreId,
+    required List<String> remoteCoreIds,
+    required String chatName,
   }) async {
     final localCoreID = await accountInfo.getUserAddress() ?? "";
     var reaction = message.reactions[emoji] as ReactionModel? ?? ReactionModel();
 
-    if (reaction.isReactedByMe) {
-      reaction.users.removeWhere((element) => element == localCoreID);
-      reaction = reaction.copyWith(
-        isReactedByMe: false,
-      );
+    bool hasReacted = reaction.users.contains(localCoreID);
+    List<String> updatedUsers = List<String>.from(reaction.users);
+
+    if (hasReacted) {
+      // If already reacted, remove the reaction
+      updatedUsers.remove(localCoreID);
     } else {
-      reaction = reaction.copyWith(users: [...reaction.users, localCoreID]);
-      reaction = reaction.copyWith(
-        isReactedByMe: true,
-      );
+      // If not reacted, add the reaction
+      updatedUsers.add(localCoreID);
     }
+
+    reaction = reaction.copyWith(
+      users: updatedUsers,
+      isReactedByMe: !hasReacted,
+    );
 
     var updatedMessage = message.copyWith(
       reactions: {
@@ -70,6 +78,7 @@ class UpdateMessageUseCase {
         emoji: reaction,
       },
     );
+
     await messagesRepo.updateMessage(message: updatedMessage, chatId: chatId);
 
     var updatedMessageJson =
@@ -82,14 +91,18 @@ class UpdateMessageUseCase {
     // );
 
     final processedMessage = await processor.getMessageDetails(
-      channelMessageType: ChannelMessageType.update(message: updatedMessageJson),
-      remoteCoreId: remoteCoreId,
+      channelMessageType: ChannelMessageType.update(
+        message: updatedMessageJson,
+        remoteCoreIds: remoteCoreIds,
+        chatId: chatId,
+        chatName: chatName,
+      ),
     );
 
     await connectionRepository.sendTextMessage(
       messageConnectionType: messageConnectionType,
       text: jsonEncode(processedMessage.messageJson),
-      remoteCoreId: remoteCoreId,
+      remoteCoreIds: remoteCoreIds,
     );
   }
 }

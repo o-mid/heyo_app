@@ -23,22 +23,46 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
   @override
   Future<void> sendTextMessage({
     required String text,
-    required String remoteCoreId,
+    required List<String> remoteCoreIds,
     required MessageConnectionType messageConnectionType,
   }) async {
-    await dataHandler.createUserChatModel(sessioncid: remoteCoreId);
+    final selfCoreId = await dataHandler.getSelfCoreId();
+    if (!remoteCoreIds.contains(selfCoreId)) {
+      remoteCoreIds.add(selfCoreId);
+    }
 
-    await dataChannelMessagingConnection.sendMessage(
-      DataChannelConnectionSendData(
-        remoteCoreId: remoteCoreId,
-        message: text,
-      ),
-    );
+    for (final remoteId in remoteCoreIds) {
+      if (remoteId != selfCoreId) {
+        await _sendTextMessage(
+          text,
+          remoteId,
+        );
+      }
+    }
+  }
+
+  Future<void> _sendTextMessage(
+    String text,
+    String remoteCoreId,
+  ) async {
+    try {
+      await dataChannelMessagingConnection.sendMessage(
+        DataChannelConnectionSendData(
+          remoteCoreId: remoteCoreId,
+          message: text,
+        ),
+      );
+    } catch (e) {
+      print("Failed to send message to $remoteCoreId: $e");
+    }
   }
 
   @override
-  Future<void> sendBinaryMessage({required Uint8List binary, required String remoteCoreId}) async {
-    await dataHandler.createUserChatModel(sessioncid: remoteCoreId);
+  Future<void> sendBinaryMessage({
+    required Uint8List binary,
+    required List<String> remoteCoreIds,
+  }) async {
+    await dataHandler.createUserChatModel(sessioncid: remoteCoreIds.first);
   }
 
   Future<void> _observeMessagingStatus(RTCSession rtcSession) async {
@@ -83,14 +107,38 @@ class RTCMessagingConnectionRepository extends ConnectionRepository {
   }
 
   @override
-  void initConnection(MessageConnectionType messageConnectionType, List<String> remoteIds) {
-    // TODO: implement connection FOR group messaging
-    if (remoteIds.length > 1) {
-      return;
-    } else {
+  Future<void> initConnection(
+    MessageConnectionType messageConnectionType,
+    List<String> remoteCoreIds,
+  ) async {
+    final isGroupChat = remoteCoreIds.length > 1;
+    final selfCoreId = await dataHandler.getSelfCoreId();
+    if (!remoteCoreIds.contains(selfCoreId)) {
+      remoteCoreIds.add(selfCoreId);
+    }
+
+    for (final remoteId in remoteCoreIds) {
+      if (remoteId != selfCoreId) {
+        await _initMessagingConnection(
+          remoteId,
+        );
+      }
+    }
+    ;
+  }
+
+  Future<void> _initMessagingConnection(
+    String remoteId,
+  ) async {
+    try {
+      print("Initializing connection with $remoteId");
       dataChannelMessagingConnection.init(
-        WebRTCConnectionInitData(remoteId: remoteIds.first),
+        WebRTCConnectionInitData(
+          remoteId: remoteId,
+        ),
       );
+    } catch (e) {
+      print("Failed to initialize connection with $remoteId: $e");
     }
   }
 }

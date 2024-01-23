@@ -41,13 +41,18 @@ class DataChannelMessagingConnection extends MessagingConnection {
 
   @override
   void init(MessagingConnectionInitialData initialData) {
-    multipleConnectionHandler.getConnection(initialData.remoteId);
+    multipleConnectionHandler.getConnection(
+      initialData.remoteId,
+    );
   }
 
   @override
   Future<void> sendMessage(MessagingConnectionSendData sendData) async {
     final data = sendData as DataChannelConnectionSendData;
-    (await multipleConnectionHandler.getConnection(data.remoteCoreId)).send(sendData.message);
+    (await multipleConnectionHandler.getConnection(
+      data.remoteCoreId,
+    ))
+        .send(sendData.message);
   }
 
   @override

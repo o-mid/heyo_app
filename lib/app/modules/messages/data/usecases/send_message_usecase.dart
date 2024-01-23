@@ -9,6 +9,7 @@ import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
 import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
 import 'package:tuple/tuple.dart';
 
+import '../../connection/models/models.dart';
 import '../../utils/message_from_type.dart';
 import '../message_processor.dart';
 import '../models/messages/message_model.dart';
@@ -17,8 +18,11 @@ import '../models/metadatas/video_metadata.dart';
 import '../repo/messages_abstract_repo.dart';
 
 class SendMessageUseCase {
-  SendMessageUseCase(
-      {required this.messagesRepo, required this.connectionRepository, required this.processor});
+  SendMessageUseCase({
+    required this.messagesRepo,
+    required this.connectionRepository,
+    required this.processor,
+  });
 
   final MessagesAbstractRepo messagesRepo;
   final MessageProcessor processor;
@@ -27,7 +31,8 @@ class SendMessageUseCase {
   execute(
       {required MessageConnectionType messageConnectionType,
       required SendMessageType sendMessageType,
-      required String remoteCoreId,
+      required List<String> remoteCoreIds,
+      required String chatName,
       bool isUpdate = false,
       MessageModel? messageModel = null}) async {
     Tuple3<MessageModel?, bool, String> messageObject =
@@ -51,8 +56,14 @@ class SendMessageUseCase {
 
     final processedMessage = await processor.getMessageDetails(
       channelMessageType: ChannelMessageType.message(
-          message: rawmessageJson, isDataBinary: isDataBinary, messageLocalPath: messageLocalPath),
-      remoteCoreId: remoteCoreId,
+        message: rawmessageJson,
+        isDataBinary: isDataBinary,
+        messageLocalPath: messageLocalPath,
+        remoteCoreIds: remoteCoreIds,
+        chatId: msg.chatId,
+        //TODO : Group chat name
+        chatName: chatName,
+      ),
     );
     if (isDataBinary && messageLocalPath.isNotEmpty) {
       // Todo: implement sending binary data
@@ -68,7 +79,7 @@ class SendMessageUseCase {
       await connectionRepository.sendTextMessage(
         messageConnectionType: messageConnectionType,
         text: jsonEncode(processedMessage.messageJson),
-        remoteCoreId: remoteCoreId,
+        remoteCoreIds: remoteCoreIds,
       );
     }
   }

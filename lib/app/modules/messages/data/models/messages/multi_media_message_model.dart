@@ -42,6 +42,7 @@ class MultiMediaMessageModel extends MessageModel {
     bool? isFromMe,
     bool? isForwarded,
     bool? isSelected,
+    String? senderAvatar,
   }) {
     return MultiMediaMessageModel(
       mediaList: mediaList ?? this.mediaList,
@@ -49,7 +50,7 @@ class MultiMediaMessageModel extends MessageModel {
       chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
-      senderAvatar: senderAvatar,
+      senderAvatar: senderAvatar ?? this.senderAvatar,
       reactions: reactions ?? this.reactions,
       status: status ?? this.status,
       replyTo: clearReply ? null : replyTo,

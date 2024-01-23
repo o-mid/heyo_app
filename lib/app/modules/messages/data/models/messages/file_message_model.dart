@@ -39,6 +39,7 @@ class FileMessageModel extends MessageModel {
     Map<String, ReactionModel>? reactions,
     bool? isFromMe,
     bool? isForwarded,
+    String? senderAvatar,
     bool? isSelected,
     bool clearReply = false,
   }) {
@@ -48,7 +49,7 @@ class FileMessageModel extends MessageModel {
       chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
-      senderAvatar: senderAvatar,
+      senderAvatar: senderAvatar ?? this.senderAvatar,
       status: status ?? this.status,
       isFromMe: isFromMe ?? this.isFromMe,
       isForwarded: isForwarded ?? this.isForwarded,

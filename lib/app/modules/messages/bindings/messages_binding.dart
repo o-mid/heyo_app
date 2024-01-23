@@ -51,6 +51,7 @@ class MessagesBinding extends Bindings {
         ),
         userStateRepository: UserStateRepositoryImpl(
           contactRepository: Get.find(),
+          accountInfo: Get.find<AccountRepository>(),
           messagesRepo: MessagesRepo(
             messagesProvider: MessagesProvider(
               appDatabaseProvider: Get.find(),

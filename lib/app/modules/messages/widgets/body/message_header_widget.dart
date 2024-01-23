@@ -6,6 +6,7 @@ import 'package:heyo/app/modules/messages/data/models/messages/message_model.dar
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -13,7 +14,9 @@ import 'package:heyo/generated/locales.g.dart';
 class MessageHeaderWidget extends StatelessWidget {
   final MessageModel message;
   final bool isMockMessage;
-  const MessageHeaderWidget({Key? key, required this.message, this.isMockMessage = false})
+  final bool isGroupChat;
+  const MessageHeaderWidget(
+      {Key? key, required this.message, this.isMockMessage = false, required this.isGroupChat})
       : super(key: key);
 
   @override
@@ -22,21 +25,35 @@ class MessageHeaderWidget extends StatelessWidget {
       textDirection: message.isFromMe ? TextDirection.rtl : TextDirection.ltr,
       children: [
         CustomSizes.mediumSizedBoxWidth,
-        !isMockMessage
-            ? Text(
+        if (!isMockMessage)
+          Row(
+            children: [
+              if (isGroupChat)
+                Text(
+                  '${message.senderAvatar.shortenCoreId} . ',
+                  textAlign: TextAlign.center,
+                  style: TEXTSTYLES.kBodyTag.copyWith(
+                    color: COLORS.kTextBlueColor,
+                    fontSize: 10.sp,
+                  ),
+                ),
+              Text(
                 "${message.timestamp.hour.toString().padLeft(2, '0')}:${message.timestamp.minute.toString().padLeft(2, '0')}",
                 style: TEXTSTYLES.kBodyTag.copyWith(
                   color: COLORS.kTextBlueColor,
                   fontSize: 10.sp,
                 ),
-              )
-            : Text(
-                "00:00",
-                style: TEXTSTYLES.kBodyTag.copyWith(
-                  color: COLORS.kTextBlueColor,
-                  fontSize: 10.sp,
-                ),
               ),
+            ],
+          )
+        else
+          Text(
+            "00:00",
+            style: TEXTSTYLES.kBodyTag.copyWith(
+              color: COLORS.kTextBlueColor,
+              fontSize: 10.sp,
+            ),
+          ),
 
         /// Status Indicator
         if (message.isFromMe) ...[

@@ -12,6 +12,9 @@ Tuple3<WrappedMessageModel?, bool, String> channelmessageFromType(
       msg = WrappedMessageModel(
         message: (channelMessageType as SendMessageType).message,
         dataChannelMessagetype: MessageType.message,
+        remoteCoreIds: channelMessageType.remoteCoreIds,
+        chatId: (channelMessageType).chatId,
+        chatName: channelMessageType.chatName,
       );
       isDataBinary = (channelMessageType).isDataBinary;
       messageLocalPath = (channelMessageType).messageLocalPath;
@@ -21,13 +24,19 @@ Tuple3<WrappedMessageModel?, bool, String> channelmessageFromType(
       msg = WrappedMessageModel(
         message: (channelMessageType as DeleteMessageType).message,
         dataChannelMessagetype: MessageType.delete,
+        remoteCoreIds: channelMessageType.remoteCoreIds,
+        chatId: (channelMessageType).chatId,
+        chatName: channelMessageType.chatName,
       );
 
       break;
     case UpdateMessageType:
       msg = WrappedMessageModel(
-        message: (channelMessageType as WrappedMessageModel).message,
+        message: (channelMessageType as UpdateMessageType).message,
         dataChannelMessagetype: MessageType.update,
+        remoteCoreIds: channelMessageType.remoteCoreIds,
+        chatId: (channelMessageType).chatId,
+        chatName: channelMessageType.chatName,
       );
       break;
 
@@ -35,6 +44,9 @@ Tuple3<WrappedMessageModel?, bool, String> channelmessageFromType(
       msg = WrappedMessageModel(
         message: (channelMessageType as ConfirmMessageType).message,
         dataChannelMessagetype: MessageType.confirm,
+        remoteCoreIds: channelMessageType.remoteCoreIds,
+        chatId: (channelMessageType).chatId,
+        chatName: channelMessageType.chatName,
       );
   }
 

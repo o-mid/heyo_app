@@ -20,6 +20,7 @@ class MessagesLoadingWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           return MessageSelectionWrapper(
             isMockMessage: true,
+            isGroupChat: false,
             message: TextMessageModel(
               messageId: '',
               chatId: '',

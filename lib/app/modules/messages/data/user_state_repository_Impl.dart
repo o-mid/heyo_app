@@ -5,6 +5,7 @@ import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart'
 import 'package:heyo/app/modules/messages/domain/user_state_repository.dart';
 
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
@@ -16,12 +17,13 @@ class UserStateRepositoryImpl implements UserStateRepository {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final ContactRepository contactRepository;
   final MessagesAbstractRepo messagesRepo;
+  final AccountRepository accountInfo;
 
-  UserStateRepositoryImpl({
-    required this.chatHistoryRepo,
-    required this.contactRepository,
-    required this.messagesRepo,
-  });
+  UserStateRepositoryImpl(
+      {required this.chatHistoryRepo,
+      required this.contactRepository,
+      required this.messagesRepo,
+      required this.accountInfo});
 
   @override
   Future<UserModel> getUserContact({required UserInstance userInstance}) async {
@@ -39,6 +41,7 @@ class UserStateRepositoryImpl implements UserStateRepository {
         walletAddress: coreId,
       );
       // adds the new user to the repo and update the UserModel
+
       await contactRepository.addContact(createdUser);
     }
     return createdUser;
@@ -68,6 +71,8 @@ class UserStateRepositoryImpl implements UserStateRepository {
     List<MessagingParticipantModel> participants = [];
     final List<UserModel> users = [];
 
+    final selfCoreID = await accountInfo.getUserAddress();
+
     for (final element in userInstances) {
       participants.add(
         MessagingParticipantModel(
@@ -75,7 +80,9 @@ class UserStateRepositoryImpl implements UserStateRepository {
           chatId: userStates.chatId,
         ),
       );
-      users.add(await getUserContact(userInstance: element));
+      if (element.coreId != selfCoreID) {
+        users.add(await getUserContact(userInstance: element));
+      }
     }
 
     // final UserModel user = await getUserContact(userInstance: userInstance);
@@ -91,7 +98,6 @@ class UserStateRepositoryImpl implements UserStateRepository {
         id: chatId,
         name: chatName,
         lastReadMessageId: lastReadRemoteMessagesId,
-        isOnline: true,
         scrollPosition: scrollPositionMessagesId,
         lastMessage: lastMessagePreview,
         notificationCount: unReadMessagesCount,
@@ -105,7 +111,6 @@ class UserStateRepositoryImpl implements UserStateRepository {
           id: chatId,
           name: chatName,
           lastReadMessageId: lastReadRemoteMessagesId,
-          isOnline: true,
           scrollPosition: scrollPositionMessagesId,
           lastMessage: lastMessagePreview,
           notificationCount: unReadMessagesCount,
