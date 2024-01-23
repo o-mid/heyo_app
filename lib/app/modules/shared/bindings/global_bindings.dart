@@ -111,25 +111,6 @@ class GlobalBindings extends Bindings {
           chainId: 3,
         ),
       )
-      ..put<RegistryProvider>(
-        AppRegistryProvider(
-          storageProvider: GlobalBindings.secureStorageProvider,
-          registry: Get.find(),
-        ),
-      )
-      ..put<LibP2PStorageProvider>(
-        LibP2PStorageProvider(
-          localProvider: secureStorageProvider,
-        ),
-      )
-      ..put<NetworkRequest>(DioNetworkRequest(), permanent: true)
-      ..put<AccountCreation>(
-        LibP2PAccountCreation(
-          localProvider: secureStorageProvider,
-          cryptographyKeyGenerator: Web3Keys(web3client: web3Client),
-          libp2pStorage: Get.find(),
-        ),
-      )
       ..put<AccountRepository>(
         AppAccountRepository(
           libP2PStorageProvider: Get.find(),
@@ -141,7 +122,7 @@ class GlobalBindings extends Bindings {
         AppNotificationProvider(
           networkRequest: Get.find(),
           libP2PStorageProvider: Get.find(),
-          registryProvider: Get.find(),
+          blockchainProvider: Get.find(),
           accountRepository: Get.find(),
         ),
       )
@@ -236,9 +217,10 @@ class GlobalBindings extends Bindings {
       )
       ..put(
         CallRequestsProcessor(
-            connectionContractor: Get.find(),
-            callStatusProvider: Get.find(),
-            callConnectionsHandler: Get.find()),
+          connectionContractor: Get.find(),
+          callStatusProvider: Get.find(),
+          callConnectionsHandler: Get.find(),
+        ),
       )
       ..put(
         CallStatusObserver(
