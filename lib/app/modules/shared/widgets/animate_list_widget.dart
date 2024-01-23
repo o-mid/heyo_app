@@ -12,7 +12,7 @@ class AnimateListWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: AnimateList(
           interval: 30.ms,
-          effects: [FadeEffect(duration: 100.ms)],
+          effects: [FadeEffect(duration: 50.ms)],
           children: children,
         ),
       ),
