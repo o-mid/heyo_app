@@ -139,7 +139,7 @@ class MessagesController extends GetxController {
 
   final chatName = (Get.arguments as MessagesViewArgumentsModel).chatName.obs;
 
-  final isGroupChat = (Get.arguments as MessagesViewArgumentsModel).participants.length > 1;
+  final isGroupChat = (Get.arguments as MessagesViewArgumentsModel).participants.length > 2;
 
   final FocusNode textFocusNode = FocusNode();
 
@@ -179,11 +179,13 @@ class MessagesController extends GetxController {
   }
 
   void _setChatId() {
-    if (participants.length > 1) {
-      chatId = participants.first.chatId;
-    } else {
-      chatId = participants.first.coreId;
-    }
+    // if (participants.length > 2) {
+    //   chatId = participants.first.chatId;
+    // } else {
+    //   chatId = participants.first.coreId;
+    // }
+
+    chatId = participants.first.chatId;
   }
 
   Future<void> _getUserContact() async {
@@ -407,7 +409,7 @@ class MessagesController extends GetxController {
   Future<void> toggleReaction(MessageModel msg, String emoji) async {
     await updateMessageUseCase.execute(
       messageConnectionType: args.connectionType.map(),
-      chatName: chatName.value,
+      chatName: isGroupChat ? chatName.value : "",
       remoteCoreIds: remoteCoreIds,
       updateMessageType: UpdateMessageType.updateReactions(
         selectedMessage: msg,
@@ -472,7 +474,7 @@ class MessagesController extends GetxController {
         chatId: chatId,
       ),
       remoteCoreIds: remoteCoreIds,
-      chatName: chatName.value,
+      chatName: isGroupChat ? chatName.value : "",
     );
 
     textController.clear();
@@ -490,7 +492,7 @@ class MessagesController extends GetxController {
         replyTo: replyingTo.value,
         chatId: chatId,
       ),
-      chatName: chatName.value,
+      chatName: isGroupChat ? chatName.value : "",
       remoteCoreIds: remoteCoreIds,
     );
 
@@ -511,7 +513,7 @@ class MessagesController extends GetxController {
         replyTo: replyingTo.value,
         chatId: chatId,
       ),
-      chatName: chatName.value,
+      chatName: isGroupChat ? chatName.value : "",
       remoteCoreIds: remoteCoreIds,
     );
 
@@ -535,7 +537,7 @@ class MessagesController extends GetxController {
         replyTo: replyingTo.value,
         chatId: chatId,
       ),
-      chatName: chatName.value,
+      chatName: isGroupChat ? chatName.value : "",
       remoteCoreIds: remoteCoreIds,
     );
 
@@ -641,7 +643,7 @@ class MessagesController extends GetxController {
   Future<void> deleteSelectedForEveryone() async {
     await deleteMessageUseCase.execute(
       messageConnectionType: args.connectionType.map(),
-      chatName: chatName.value,
+      chatName: isGroupChat ? chatName.value : "",
       remoteCoreIds: remoteCoreIds,
       deleteMessageType: DeleteMessageType.forEveryone(
         chatId: chatId,
@@ -655,7 +657,7 @@ class MessagesController extends GetxController {
     await deleteMessageUseCase.execute(
       messageConnectionType: args.connectionType.map(),
       remoteCoreIds: remoteCoreIds,
-      chatName: chatName.value,
+      chatName: isGroupChat ? chatName.value : "",
       deleteMessageType: DeleteMessageType.forMe(
         chatId: chatId,
         selectedMessages: selectedMessages,
@@ -781,7 +783,7 @@ class MessagesController extends GetxController {
             replyTo: replyingTo.value,
             chatId: chatId,
           ),
-          chatName: chatName.value,
+          chatName: isGroupChat ? chatName.value : "",
           remoteCoreIds: remoteCoreIds,
         );
       }
