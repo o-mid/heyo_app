@@ -1,18 +1,17 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/shared/data/models/user_contact.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 
-import '../../new_chat/data/models/user_model/user_model.dart';
-
 class ContactsController extends GetxController {
+  ContactsController({required this.contactRepo});
+
   final contacts = <UserModel>[].obs;
   final blockedContacts = <UserModel>[].obs;
   final ContactRepository contactRepo;
   late StreamSubscription _contactStreamSubscription;
-
-  ContactsController({required this.contactRepo});
+  RxBool loading = true.obs;
 
   @override
   Future<void> onInit() async {
@@ -25,6 +24,7 @@ class ContactsController extends GetxController {
 
   Future<void> getContacts() async {
     contacts.value = await contactRepo.getContacts();
+    loading.value = false;
     blockedContacts.value =
         contacts.where((element) => element.isBlocked).toList();
   }
