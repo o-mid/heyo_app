@@ -154,6 +154,21 @@ class CallHistoryDetailController extends GetxController {
     );
   }
 
+  bool isGroupCall() => callHistoryModel!.value!.participants.length > 1;
+
+  void appBarAction() {
+    if (loading.isTrue) {
+      return;
+    }
+    if (isGroupCall()) {
+      debugPrint('Nothing yet');
+    } else {
+      openAppBarActionBottomSheet(
+        participant: callHistoryModel!.value!.participants[0],
+      );
+    }
+  }
+
   // void _addMockData() {
   //   var index = 0;
   //   calls.addAll([
