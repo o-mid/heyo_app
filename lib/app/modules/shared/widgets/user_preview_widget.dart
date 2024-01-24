@@ -58,7 +58,7 @@ class UserPreviewWidget extends GetView<UserPreview> {
               CustomSizes.smallSizedBoxWidth,
               isVerified
                   ? Assets.svg.verifiedWithBluePadding
-                      .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
+                  .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
                   : const SizedBox(),
             ],
           ),

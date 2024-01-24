@@ -98,6 +98,7 @@ dependencies:
   heyo_wifi_direct:
     git:
       url: git@ssh.git.energy:heyo/heyo_wifi_direct.git
+      ref: faster_wifi_research
   awesome_notifications: ^0.8.2
   url_launcher: 6.1.10
   uni_links: ^0.5.1
