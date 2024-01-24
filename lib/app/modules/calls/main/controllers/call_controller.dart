@@ -85,10 +85,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   String getConnectedParticipantsName() {
     //* This item will loop all call connected user
     //* Return their name as string and split them with comma
-    return connectedRemoteParticipates
-        .map((element) => element.name)
-        .toList()
-        .join(', ');
+    return connectedRemoteParticipates.map((element) => element.name).toList().join(', ');
   }
 
   Future<void> initLocalRenderer() async {
@@ -150,8 +147,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   }
 
   void onCallTick(Timer timer) {
-    localParticipate.value!.callDurationInSecond.value =
-        stopwatch.elapsed.inSeconds;
+    localParticipate.value!.callDurationInSecond.value = stopwatch.elapsed.inSeconds;
   }
 
   void stopCallTimer() {
@@ -198,8 +194,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     int index,
     ConnectedParticipantModel connectedParticipantModel,
   ) async {
-    if (connectedParticipantModel.rtcVideoRenderer == null &&
-        callStream.remoteStream != null) {
+    if (connectedParticipantModel.rtcVideoRenderer == null && callStream.remoteStream != null) {
       final renderer = RTCVideoRenderer();
       await renderer.initialize();
       renderer.srcObject = callStream.remoteStream;
@@ -218,8 +213,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       );
       connectedRemoteParticipates[index] = remoteParticipate;
     } else {
-      connectedRemoteParticipates[index] = connectedRemoteParticipates[index]
-          .copyWith(videoMode: (!callStream.isAudioCall).obs);
+      connectedRemoteParticipates[index] =
+          connectedRemoteParticipates[index].copyWith(videoMode: (!callStream.isAudioCall).obs);
     }
   }
 
@@ -240,8 +235,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     connectedRemoteParticipates.add(
       ConnectedParticipantModel(
         audioMode: true.obs,
-        videoMode:
-            (renderer == null) ? false.obs : (!callStream.isAudioCall).obs,
+        videoMode: (renderer == null) ? false.obs : (!callStream.isAudioCall).obs,
         coreId: callStream.coreId,
         name: userContact.name,
         stream: callStream.remoteStream,
@@ -304,8 +298,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     );
 
     //* check if the participant is already in list or not
-    final participantIndex =
-        participants.indexWhere((item) => item.coreId == coreId);
+    final participantIndex = participants.indexWhere((item) => item.coreId == coreId);
 
     if (participantIndex == -1) {
       participants.add(participant.copyWith(name: userContact.name));
@@ -316,8 +309,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   Future<void> removeFromAllParticipate(String coreId) async {
     //* check if the participant is already in list or not
-    final participantIndex =
-        participants.indexWhere((item) => item.coreId == coreId);
+    final participantIndex = participants.indexWhere((item) => item.coreId == coreId);
 
     if (participantIndex != -1) {
       participants.removeAt(participantIndex);
@@ -348,12 +340,9 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
         );
       }
       ..onRemoveStream = (coreId) {
-        for (var index = 0;
-            index < connectedRemoteParticipates.length;
-            index++) {
+        for (var index = 0; index < connectedRemoteParticipates.length; index++) {
           if (connectedRemoteParticipates[index].coreId == coreId) {
-            connectedRemoteParticipates
-                .remove(connectedRemoteParticipates[index]);
+            connectedRemoteParticipates.remove(connectedRemoteParticipates[index]);
             break;
           }
         }
@@ -368,8 +357,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   // Todo
   void toggleMuteMic() {
     callRepository.muteMic();
-    localParticipate.value!.audioMode.value =
-        !localParticipate.value!.audioMode.value;
+    localParticipate.value!.audioMode.value = !localParticipate.value!.audioMode.value;
     //micEnabled.value = !micEnabled.value;
   }
 
@@ -425,8 +413,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   //void updateCallViewType(CallViewType type) => callViewType.value = type;
 
-  void flipVideoPositions() =>
-      isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
+  void flipVideoPositions() => isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   Future<void> disposeRTCRender() async {
     for (var participate in connectedRemoteParticipates) {

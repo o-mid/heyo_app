@@ -101,17 +101,29 @@ class AddContactsController extends GetxController {
     await _updateChatHistory(userModel: userModel);
     await _updateCallHistory(userModel: userModel);
 
-    Get.back();
+    Get.back(
+      result: userModel.name,
+    );
   }
 
   Future<void> _updateChatHistory({required UserModel userModel}) async {
-    await chatHistoryRepo.getChat(userModel.coreId).then((chatModel) {
-      if (chatModel != null) {
-        chatHistoryRepo.updateChat(chatModel.copyWith(
-          name: userModel.nickname,
-        ));
-      }
-    });
+    final chatHistoryList = await chatHistoryRepo.getChatsFromUserId(userModel.coreId);
+
+    for (final chat in chatHistoryList) {
+      final updatedParticipants = chat.participants
+          .map(
+            (participant) => participant.coreId == userModel.coreId
+                ? participant.copyWith(name: userModel.name)
+                : participant,
+          )
+          .toList();
+      await chatHistoryRepo.updateChat(
+        chat.copyWith(
+          name: chat.isGroupChat ? chat.name : userModel.name,
+          participants: updatedParticipants,
+        ),
+      );
+    }
   }
 
   Future<void> _updateCallHistory({required UserModel userModel}) async {

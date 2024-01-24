@@ -54,6 +54,7 @@ import 'package:uuid/uuid.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import '../../new_chat/data/models/user_model/user_model.dart';
+import '../../shared/data/models/add_contacts_view_arguments_model.dart';
 import '../connection/wifi_direct_connection_controller.dart';
 import '../../share_files/models/file_model.dart';
 import '../../shared/utils/constants/colors.dart';
@@ -126,7 +127,7 @@ class MessagesController extends GetxController {
       .map((participant) {
         return UserModel(
           coreId: participant.coreId,
-          name: participant.coreId.shortenCoreId,
+          name: participant.name ?? participant.coreId.shortenCoreId,
           walletAddress: participant.coreId,
         );
       })
@@ -147,14 +148,17 @@ class MessagesController extends GetxController {
 
   Future<void> init() async {
     firstCoreId = participants.first.coreId;
-    if (chatName.value.isEmpty) {
-      chatName.value = users.first.name;
-    }
 
     _initMessagesArguments();
 
     _initUiControllers();
     await _getUserContact();
+
+    if (chatName.value.isEmpty) {
+      chatName.value = users.first.name;
+    } else if (!isGroupChat) {
+      chatName.value = users.first.name;
+    }
     // // Initialize messagingConnection instance of CommonMessagingController-inherited class depends on connection type
     // // Also included previous functionality of _initDataChannel()
     await initMessagingConnection();
@@ -194,12 +198,14 @@ class MessagesController extends GetxController {
         coreId: users.first.coreId,
       ),
     );
+    if (!isGroupChat) {
+      chatName.value = users.first.name;
+    }
   }
 
   @override
   Future<void> onReady() async {
     animateToBottom();
-
     super.onReady();
   }
 
@@ -906,6 +912,17 @@ class MessagesController extends GetxController {
           }
         }
       }
+    }
+  }
+
+  Future<void> NavigateToAddContacts() async {
+    var result = await Get.toNamed(Routes.ADD_CONTACTS,
+        arguments: AddContactsViewArgumentsModel(
+          coreId: users.first.coreId,
+        ));
+    if (result != null && result is String && !isGroupChat) {
+      chatName.value = result;
+      Get.back();
     }
   }
 
