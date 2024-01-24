@@ -177,14 +177,13 @@ class NewGroupChatController extends GetxController {
 
     final selfCoreId = await accountInfoRepo.getUserAddress() ?? "";
 
-    final participants = selectedCoreids
-        .map(
-          (element) => MessagingParticipantModel(
-            coreId: element.coreId,
-            chatId: chatId,
-          ),
-        )
-        .toList();
+    final participants = selectedCoreids.map((element) {
+      return MessagingParticipantModel(
+        coreId: element.coreId,
+        chatId: chatId,
+        name: element.name,
+      );
+    }).toList();
 
     if (!selectedCoreids.contains(selfCoreId)) {
       participants.add(
