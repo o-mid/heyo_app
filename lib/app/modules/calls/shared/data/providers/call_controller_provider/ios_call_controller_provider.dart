@@ -52,7 +52,7 @@ class IosCallControllerProvider implements CallControllerProvider {
         .getContactById(calls.first.remotePeer.remoteCoreId);
     final params = CallKitParams(id: _uuid, nameCaller: userModel?.name.tr, appName: "Heyo");
     await FlutterIosCallKit.showCallkitIncoming(params);
-    print('🟩 IosCallController: decline Call');
+    print('🟩 IosCallController: incoming Call');
   }
 
   Future<void> makeCall(CallId callId, List<CallInfo> calls) async {

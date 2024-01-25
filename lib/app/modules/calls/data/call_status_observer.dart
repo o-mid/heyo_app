@@ -100,7 +100,10 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
 
     final userModel = await contactRepository
         .getContactById(calls.first.remotePeer.remoteCoreId);
-    await appLifeCycleController.waitForResumeState();
+    if (WebRTC.platformIsAndroid){
+
+      await appLifeCycleController.waitForResumeState();
+    }
     await _notifyReceivedCall(callInfo: calls.first);
     await callController.incomingCall(callId, calls);
   }
