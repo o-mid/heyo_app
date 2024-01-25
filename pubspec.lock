@@ -733,9 +733,11 @@ packages:
   flutter_p2p_communicator:
     dependency: "direct main"
     description:
-      path: "../flutter_p2p_communicator"
-      relative: true
-    source: path
+      path: "."
+      ref: f04315ab
+      resolved-ref: f04315ab9a9113ad8d31909a419df98c3d9f913c
+      url: "git@ssh.git.energy:corepass/flutter_p2p_communicator.git"
+    source: git
     version: "1.16.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
@@ -967,8 +969,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: cc36c2b5a01c00fa12a6a9c8df073d4dce08abd9
+      ref: faster_wifi_research
+      resolved-ref: c044a4190e70b4e2f3a1820dc8f81bc2aa6ef6c6
       url: "git@ssh.git.energy:heyo/heyo_wifi_direct.git"
     source: git
     version: "0.0.1"

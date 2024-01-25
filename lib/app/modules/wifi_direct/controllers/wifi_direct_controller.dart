@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
@@ -12,9 +13,7 @@ import '../../../../generated/locales.g.dart';
 import '../../chats/data/models/chat_model.dart';
 import '../../messages/connection/wifi_direct_connection_repo.dart';
 import '../../messages/connection/wifi_direct_connection_controller.dart';
-import '../../new_chat/data/models/user_model.dart';
 import '../../shared/data/repository/contact_repository.dart';
-import '../../shared/data/repository/crypto_account/account_repository.dart';
 
 class WifiDirectController extends GetxController {
 

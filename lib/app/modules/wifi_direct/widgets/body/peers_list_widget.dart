@@ -12,6 +12,7 @@ import '../../../shared/utils/constants/textStyles.dart';
 import '../../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../controllers/wifi_direct_controller.dart';
 
+/*
 class PeersListWidget extends GetView<WifiDirectController> {
   const PeersListWidget({super.key});
 
@@ -106,3 +107,4 @@ class PeersListWidget extends GetView<WifiDirectController> {
     });
   }
 }
+*/
