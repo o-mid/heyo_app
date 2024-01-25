@@ -915,7 +915,7 @@ class MessagesController extends GetxController {
     }
   }
 
-  Future<void> NavigateToAddContacts() async {
+  Future<void> navigateToAddContacts() async {
     var result = await Get.toNamed(Routes.ADD_CONTACTS,
         arguments: AddContactsViewArgumentsModel(
           coreId: users.first.coreId,

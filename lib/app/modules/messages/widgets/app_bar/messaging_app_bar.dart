@@ -103,7 +103,7 @@ class _DefaultAppBar extends StatelessWidget {
           ),
           if (controller.isGroupChat)
             StackedAvatars(
-              avatarSize: 24,
+              avatarSize: 21,
               coreId1: controller.participants.first.coreId,
               coreId2: controller.participants.last.coreId,
             )
@@ -164,10 +164,12 @@ class _DefaultAppBar extends StatelessWidget {
                 icon: Assets.svg.verticalMenuIcon.svg(),
                 size: 22,
                 onPressed: () {
-                  _openAppBarActionBottomSheet(
-                    coreId: controller.users.first.coreId,
-                    isContact: controller.users.first.isContact,
-                  );
+                  if (!controller.isGroupChat) {
+                    _openAppBarActionBottomSheet(
+                      coreId: controller.users.first.coreId,
+                      isContact: controller.users.first.isContact,
+                    );
+                  }
                 },
               ),
             ],
@@ -188,7 +190,7 @@ class _DefaultAppBar extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextButton(
-                onPressed: controller.NavigateToAddContacts,
+                onPressed: controller.navigateToAddContacts,
                 child: Row(
                   children: [
                     Container(

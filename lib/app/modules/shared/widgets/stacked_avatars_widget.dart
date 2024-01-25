@@ -9,10 +9,10 @@ class StackedAvatars extends StatelessWidget {
   final double overLapSize;
 
   const StackedAvatars({
-    Key? key,
     required this.avatarSize,
     required this.coreId1,
     required this.coreId2,
+    Key? key,
     this.overLapSize = 8,
   }) : super(key: key);
 
