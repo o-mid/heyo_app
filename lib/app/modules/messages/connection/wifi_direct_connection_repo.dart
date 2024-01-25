@@ -14,6 +14,7 @@ import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
 
 import 'connection_data_handler.dart';
 import 'data/wifi_direct_messaging_connection.dart';
+import 'models/models.dart';
 
 class WifiDirectConnectionRepository extends ConnectionRepository {
   WifiDirectConnectionRepository({
@@ -27,22 +28,26 @@ class WifiDirectConnectionRepository extends ConnectionRepository {
   //and remoteId, similar to how RTC data channel connections are handled in RTCMessagingConnectionRepository.
 
   @override
-  void initConnection(MessageConnectionType messageConnectionType, List<String> remoteIds) {
+  void initConnection(
+    MessageConnectionType messageConnectionType,
+    List<String> remoteCoreIds,
+  ) {
     // TODO: implement initConnection
   }
 
   @override
-  Future<void> sendBinaryMessage({required Uint8List binary, required String remoteCoreId}) {
+  Future<void> sendBinaryMessage({required Uint8List binary, required List<String> remoteCoreIds}) {
     // TODO: implement sendBinaryMessage
     throw UnimplementedError();
   }
 
 // TODO: Implement sendTextMessage for Wi-Fi Direct. This should involve sending text messages over a Wi-Fi Direct connection
   @override
-  Future<void> sendTextMessage(
-      {required MessageConnectionType messageConnectionType,
-      required String text,
-      required String remoteCoreId}) {
+  Future<void> sendTextMessage({
+    required MessageConnectionType messageConnectionType,
+    required String text,
+    required List<String> remoteCoreIds,
+  }) {
     // TODO: implement sendTextMessage
     throw UnimplementedError();
   }

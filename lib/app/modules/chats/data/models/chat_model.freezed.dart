@@ -24,13 +24,13 @@ mixin _$ChatModel {
   String get name => throw _privateConstructorUsedError;
   String get lastMessage => throw _privateConstructorUsedError;
   DateTime get timestamp => throw _privateConstructorUsedError;
-  bool get isOnline => throw _privateConstructorUsedError;
-  bool get isVerified => throw _privateConstructorUsedError;
-  int get notificationCount => throw _privateConstructorUsedError;
-  String get scrollPosition => throw _privateConstructorUsedError;
   String get lastReadMessageId => throw _privateConstructorUsedError;
   List<MessagingParticipantModel> get participants =>
       throw _privateConstructorUsedError;
+  int get notificationCount => throw _privateConstructorUsedError;
+  String get scrollPosition => throw _privateConstructorUsedError;
+  bool get isGroupChat => throw _privateConstructorUsedError;
+  String get creatorCoreId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -48,12 +48,12 @@ abstract class $ChatModelCopyWith<$Res> {
       String name,
       String lastMessage,
       DateTime timestamp,
-      bool isOnline,
-      bool isVerified,
+      String lastReadMessageId,
+      List<MessagingParticipantModel> participants,
       int notificationCount,
       String scrollPosition,
-      String lastReadMessageId,
-      List<MessagingParticipantModel> participants});
+      bool isGroupChat,
+      String creatorCoreId});
 }
 
 /// @nodoc
@@ -73,12 +73,12 @@ class _$ChatModelCopyWithImpl<$Res, $Val extends ChatModel>
     Object? name = null,
     Object? lastMessage = null,
     Object? timestamp = null,
-    Object? isOnline = null,
-    Object? isVerified = null,
-    Object? notificationCount = null,
-    Object? scrollPosition = null,
     Object? lastReadMessageId = null,
     Object? participants = null,
+    Object? notificationCount = null,
+    Object? scrollPosition = null,
+    Object? isGroupChat = null,
+    Object? creatorCoreId = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -97,22 +97,6 @@ class _$ChatModelCopyWithImpl<$Res, $Val extends ChatModel>
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      isOnline: null == isOnline
-          ? _value.isOnline
-          : isOnline // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isVerified: null == isVerified
-          ? _value.isVerified
-          : isVerified // ignore: cast_nullable_to_non_nullable
-              as bool,
-      notificationCount: null == notificationCount
-          ? _value.notificationCount
-          : notificationCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      scrollPosition: null == scrollPosition
-          ? _value.scrollPosition
-          : scrollPosition // ignore: cast_nullable_to_non_nullable
-              as String,
       lastReadMessageId: null == lastReadMessageId
           ? _value.lastReadMessageId
           : lastReadMessageId // ignore: cast_nullable_to_non_nullable
@@ -121,6 +105,22 @@ class _$ChatModelCopyWithImpl<$Res, $Val extends ChatModel>
           ? _value.participants
           : participants // ignore: cast_nullable_to_non_nullable
               as List<MessagingParticipantModel>,
+      notificationCount: null == notificationCount
+          ? _value.notificationCount
+          : notificationCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      scrollPosition: null == scrollPosition
+          ? _value.scrollPosition
+          : scrollPosition // ignore: cast_nullable_to_non_nullable
+              as String,
+      isGroupChat: null == isGroupChat
+          ? _value.isGroupChat
+          : isGroupChat // ignore: cast_nullable_to_non_nullable
+              as bool,
+      creatorCoreId: null == creatorCoreId
+          ? _value.creatorCoreId
+          : creatorCoreId // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -138,12 +138,12 @@ abstract class _$$ChatModelImplCopyWith<$Res>
       String name,
       String lastMessage,
       DateTime timestamp,
-      bool isOnline,
-      bool isVerified,
+      String lastReadMessageId,
+      List<MessagingParticipantModel> participants,
       int notificationCount,
       String scrollPosition,
-      String lastReadMessageId,
-      List<MessagingParticipantModel> participants});
+      bool isGroupChat,
+      String creatorCoreId});
 }
 
 /// @nodoc
@@ -161,12 +161,12 @@ class __$$ChatModelImplCopyWithImpl<$Res>
     Object? name = null,
     Object? lastMessage = null,
     Object? timestamp = null,
-    Object? isOnline = null,
-    Object? isVerified = null,
-    Object? notificationCount = null,
-    Object? scrollPosition = null,
     Object? lastReadMessageId = null,
     Object? participants = null,
+    Object? notificationCount = null,
+    Object? scrollPosition = null,
+    Object? isGroupChat = null,
+    Object? creatorCoreId = null,
   }) {
     return _then(_$ChatModelImpl(
       id: null == id
@@ -185,22 +185,6 @@ class __$$ChatModelImplCopyWithImpl<$Res>
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      isOnline: null == isOnline
-          ? _value.isOnline
-          : isOnline // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isVerified: null == isVerified
-          ? _value.isVerified
-          : isVerified // ignore: cast_nullable_to_non_nullable
-              as bool,
-      notificationCount: null == notificationCount
-          ? _value.notificationCount
-          : notificationCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      scrollPosition: null == scrollPosition
-          ? _value.scrollPosition
-          : scrollPosition // ignore: cast_nullable_to_non_nullable
-              as String,
       lastReadMessageId: null == lastReadMessageId
           ? _value.lastReadMessageId
           : lastReadMessageId // ignore: cast_nullable_to_non_nullable
@@ -209,6 +193,22 @@ class __$$ChatModelImplCopyWithImpl<$Res>
           ? _value._participants
           : participants // ignore: cast_nullable_to_non_nullable
               as List<MessagingParticipantModel>,
+      notificationCount: null == notificationCount
+          ? _value.notificationCount
+          : notificationCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      scrollPosition: null == scrollPosition
+          ? _value.scrollPosition
+          : scrollPosition // ignore: cast_nullable_to_non_nullable
+              as String,
+      isGroupChat: null == isGroupChat
+          ? _value.isGroupChat
+          : isGroupChat // ignore: cast_nullable_to_non_nullable
+              as bool,
+      creatorCoreId: null == creatorCoreId
+          ? _value.creatorCoreId
+          : creatorCoreId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -222,12 +222,12 @@ class _$ChatModelImpl implements _ChatModel {
       required this.name,
       required this.lastMessage,
       required this.timestamp,
-      this.isOnline = false,
-      this.isVerified = false,
+      required this.lastReadMessageId,
+      required final List<MessagingParticipantModel> participants,
       this.notificationCount = 0,
       this.scrollPosition = '',
-      required this.lastReadMessageId,
-      required final List<MessagingParticipantModel> participants})
+      this.isGroupChat = false,
+      this.creatorCoreId = ''})
       : _participants = participants;
 
   factory _$ChatModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -242,18 +242,6 @@ class _$ChatModelImpl implements _ChatModel {
   @override
   final DateTime timestamp;
   @override
-  @JsonKey()
-  final bool isOnline;
-  @override
-  @JsonKey()
-  final bool isVerified;
-  @override
-  @JsonKey()
-  final int notificationCount;
-  @override
-  @JsonKey()
-  final String scrollPosition;
-  @override
   final String lastReadMessageId;
   final List<MessagingParticipantModel> _participants;
   @override
@@ -264,8 +252,21 @@ class _$ChatModelImpl implements _ChatModel {
   }
 
   @override
+  @JsonKey()
+  final int notificationCount;
+  @override
+  @JsonKey()
+  final String scrollPosition;
+  @override
+  @JsonKey()
+  final bool isGroupChat;
+  @override
+  @JsonKey()
+  final String creatorCoreId;
+
+  @override
   String toString() {
-    return 'ChatModel(id: $id, name: $name, lastMessage: $lastMessage, timestamp: $timestamp, isOnline: $isOnline, isVerified: $isVerified, notificationCount: $notificationCount, scrollPosition: $scrollPosition, lastReadMessageId: $lastReadMessageId, participants: $participants)';
+    return 'ChatModel(id: $id, name: $name, lastMessage: $lastMessage, timestamp: $timestamp, lastReadMessageId: $lastReadMessageId, participants: $participants, notificationCount: $notificationCount, scrollPosition: $scrollPosition, isGroupChat: $isGroupChat, creatorCoreId: $creatorCoreId)';
   }
 
   @override
@@ -279,18 +280,18 @@ class _$ChatModelImpl implements _ChatModel {
                 other.lastMessage == lastMessage) &&
             (identical(other.timestamp, timestamp) ||
                 other.timestamp == timestamp) &&
-            (identical(other.isOnline, isOnline) ||
-                other.isOnline == isOnline) &&
-            (identical(other.isVerified, isVerified) ||
-                other.isVerified == isVerified) &&
+            (identical(other.lastReadMessageId, lastReadMessageId) ||
+                other.lastReadMessageId == lastReadMessageId) &&
+            const DeepCollectionEquality()
+                .equals(other._participants, _participants) &&
             (identical(other.notificationCount, notificationCount) ||
                 other.notificationCount == notificationCount) &&
             (identical(other.scrollPosition, scrollPosition) ||
                 other.scrollPosition == scrollPosition) &&
-            (identical(other.lastReadMessageId, lastReadMessageId) ||
-                other.lastReadMessageId == lastReadMessageId) &&
-            const DeepCollectionEquality()
-                .equals(other._participants, _participants));
+            (identical(other.isGroupChat, isGroupChat) ||
+                other.isGroupChat == isGroupChat) &&
+            (identical(other.creatorCoreId, creatorCoreId) ||
+                other.creatorCoreId == creatorCoreId));
   }
 
   @JsonKey(ignore: true)
@@ -301,12 +302,12 @@ class _$ChatModelImpl implements _ChatModel {
       name,
       lastMessage,
       timestamp,
-      isOnline,
-      isVerified,
+      lastReadMessageId,
+      const DeepCollectionEquality().hash(_participants),
       notificationCount,
       scrollPosition,
-      lastReadMessageId,
-      const DeepCollectionEquality().hash(_participants));
+      isGroupChat,
+      creatorCoreId);
 
   @JsonKey(ignore: true)
   @override
@@ -324,17 +325,16 @@ class _$ChatModelImpl implements _ChatModel {
 
 abstract class _ChatModel implements ChatModel {
   const factory _ChatModel(
-          {required final String id,
-          required final String name,
-          required final String lastMessage,
-          required final DateTime timestamp,
-          final bool isOnline,
-          final bool isVerified,
-          final int notificationCount,
-          final String scrollPosition,
-          required final String lastReadMessageId,
-          required final List<MessagingParticipantModel> participants}) =
-      _$ChatModelImpl;
+      {required final String id,
+      required final String name,
+      required final String lastMessage,
+      required final DateTime timestamp,
+      required final String lastReadMessageId,
+      required final List<MessagingParticipantModel> participants,
+      final int notificationCount,
+      final String scrollPosition,
+      final bool isGroupChat,
+      final String creatorCoreId}) = _$ChatModelImpl;
 
   factory _ChatModel.fromJson(Map<String, dynamic> json) =
       _$ChatModelImpl.fromJson;
@@ -348,17 +348,17 @@ abstract class _ChatModel implements ChatModel {
   @override
   DateTime get timestamp;
   @override
-  bool get isOnline;
+  String get lastReadMessageId;
   @override
-  bool get isVerified;
+  List<MessagingParticipantModel> get participants;
   @override
   int get notificationCount;
   @override
   String get scrollPosition;
   @override
-  String get lastReadMessageId;
+  bool get isGroupChat;
   @override
-  List<MessagingParticipantModel> get participants;
+  String get creatorCoreId;
   @override
   @JsonKey(ignore: true)
   _$$ChatModelImplCopyWith<_$ChatModelImpl> get copyWith =>

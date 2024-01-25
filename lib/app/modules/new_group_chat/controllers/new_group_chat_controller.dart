@@ -45,7 +45,7 @@ class NewGroupChatController extends GetxController {
 
   @override
   void onReady() {
-    _addMockUsers();
+    //_addMockUsers();
     super.onReady();
   }
 
@@ -54,7 +54,7 @@ class NewGroupChatController extends GetxController {
     inputController.dispose();
     confirmationScreenInputController.dispose();
     await _contactsStreamSubscription.cancel();
-    await _clearSearchSuggestions();
+    // await _clearSearchSuggestions();
     super.onClose();
   }
 
@@ -73,7 +73,9 @@ class NewGroupChatController extends GetxController {
 
   Future<void> _listenToContacts() async {
     _contactsStreamSubscription =
-        (await contactRepository.getContactsStream()).listen(_updateSearchSuggestions);
+        (await contactRepository.getContactsStream()).listen((newContacts) {
+      _updateSearchSuggestions(newContacts);
+    });
   }
 
   void _updateSearchSuggestions(List<UserModel> newContacts) {
@@ -173,19 +175,32 @@ class NewGroupChatController extends GetxController {
     final chatId = ChatIdGenerator.generate();
     print(chatId);
 
+    final selfCoreId = await accountInfoRepo.getUserAddress() ?? "";
+
+    final participants = selectedCoreids
+        .map(
+          (element) => MessagingParticipantModel(
+            coreId: element.coreId,
+            chatId: chatId,
+          ),
+        )
+        .toList();
+
+    if (!selectedCoreids.contains(selfCoreId)) {
+      participants.add(
+        MessagingParticipantModel(
+          coreId: selfCoreId,
+          chatId: chatId,
+        ),
+      );
+    }
+
     await Get.offNamedUntil(
       Routes.MESSAGES,
       ModalRoute.withName(Routes.HOME),
       arguments: MessagesViewArgumentsModel(
         connectionType: MessagingConnectionType.internet,
-        participants: selectedCoreids
-            .map(
-              (element) => MessagingParticipantModel(
-                coreId: element.coreId,
-                chatId: chatId,
-              ),
-            )
-            .toList(),
+        participants: participants,
         chatName: confirmationInputText.value,
       ),
     );
@@ -273,42 +288,45 @@ class NewGroupChatController extends GetxController {
 
   Future<void> _addMockUsers() async {
     final _mockUsers = <UserModel>[
-      UserModel(
-        name: 'Omid',
-        walletAddress: 'CB92969A',
-        coreId: 'CB92969A',
-      ),
-      UserModel(
-        name: 'Farzaam',
-        walletAddress: 'CB62C325',
-        coreId: 'CB62C325',
-        isOnline: true,
-        isVerified: true,
-      ),
-      UserModel(
-        name: 'Ali',
-        walletAddress: 'CB423H4E',
-        coreId: 'CB423H4E',
-        isOnline: true,
-      ),
-      UserModel(
-        name: 'Saeed',
-        walletAddress: 'CB23969A',
-        coreId: 'CB23969A',
-      ),
-      UserModel(
-        name: 'Mohammad',
-        walletAddress: 'CB21C391',
-        coreId: 'CB21C391',
-        isOnline: true,
-        isVerified: true,
-      ),
-      UserModel(
-        name: 'Hoorad',
-        walletAddress: 'CB51324E',
-        coreId: 'CB51324E',
-        isOnline: true,
-      ),
+      // UserModel(
+      //   name: 'testApi33',
+      //   walletAddress: 'ab68f7423e57d266d5a7061e3e166f5004e7353e841e',
+      //   coreId: 'ab68f7423e57d266d5a7061e3e166f5004e7353e841e',
+      // ),
+      // UserModel(
+      //   name: 'Farzaam',
+      //   walletAddress: 'CB62C325',
+      //   coreId: 'CB62C325',
+      //   isOnline: true,
+      //   isVerified: true,
+      // ),
+      // UserModel(
+      //   name: 'Ali',
+      //   walletAddress: 'CB423H4E',
+      //   coreId: 'CB423H4E',
+      //   isOnline: true,
+      // ),
+      // UserModel(
+      //   name: 'Saeed',
+      //   walletAddress: 'CB23969A',
+      //   coreId: 'CB23969A',
+      // ),
+      // UserModel(
+      //   name: 'testIosReal',
+      //   walletAddress: 'ab08a6c74ca74022a394ac1dab6a8adb55e5146e8caf',
+      //   coreId: 'ab08a6c74ca74022a394ac1dab6a8adb55e5146e8caf',
+      // ),
+      // UserModel(
+      //   name: 'testApi31',
+      //   walletAddress: 'ab45655fd5cdec507ed368251568c66abb3b0d71dd30',
+      //   coreId: 'ab45655fd5cdec507ed368251568c66abb3b0d71dd30',
+      // ),
+      // UserModel(
+      //   name: 'testIosSim',
+      //   walletAddress: 'ab1920ab021739e5120b158eaefd579bcf3b01527f91',
+      //   coreId: 'ab1920ab021739e5120b158eaefd579bcf3b01527f91',
+      //   isOnline: true,
+      // ),
     ].obs;
     await Future.delayed(const Duration(seconds: 2), () async {
       for (var i = 0; i < _mockUsers.length; i++) {

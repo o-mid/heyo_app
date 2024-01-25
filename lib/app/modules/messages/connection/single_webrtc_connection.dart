@@ -30,9 +30,12 @@ class SingleWebRTCConnection {
       {required this.connectionContractor, required this.webRTCConnectionManager});
 
   Future<RTCSession> _createRTCSession(
-      ConnectionId connectionId, String remoteCoreId, String? remotePeer) async {
+    ConnectionId connectionId,
+    String remoteCoreId,
+    String? remotePeer,
+  ) async {
     RTCPeerConnection peerConnection = await webRTCConnectionManager.createRTCPeerConnection();
-    RTCSession rtcSession = RTCSession(
+    final rtcSession = RTCSession(
         connectionId: connectionId,
         remotePeer: RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: remotePeer),
         onConnectionFailed: (id, remote) {
@@ -46,8 +49,15 @@ class SingleWebRTCConnection {
   }
 
   Future<RTCSession> createSession(
-      ConnectionId connectionId, String remoteCoreId, String? remotePeer) async {
-    return await _createRTCSession(connectionId, remoteCoreId, remotePeer);
+    ConnectionId connectionId,
+    String remoteCoreId,
+    String? remotePeer,
+  ) async {
+    return await _createRTCSession(
+      connectionId,
+      remoteCoreId,
+      remotePeer,
+    );
   }
 
   Future<bool> startSession(RTCSession rtcSession) async {
@@ -105,27 +115,34 @@ class SingleWebRTCConnection {
 
   _sendCandidate(RTCIceCandidate iceCandidate, RTCSession rtcSession) {
     _send(
-        candidate,
-        {
-          candidate: {
-            'sdpMLineIndex': iceCandidate.sdpMLineIndex,
-            'sdpMid': iceCandidate.sdpMid,
-            'candidate': iceCandidate.candidate,
-          },
+      candidate,
+      {
+        candidate: {
+          'sdpMLineIndex': iceCandidate.sdpMLineIndex,
+          'sdpMid': iceCandidate.sdpMid,
+          'candidate': iceCandidate.candidate,
         },
-        rtcSession.remotePeer.remoteCoreId,
-        rtcSession.remotePeer.remotePeerId,
-        rtcSession.connectionId);
+      },
+      rtcSession.remotePeer.remoteCoreId,
+      rtcSession.remotePeer.remotePeerId,
+      rtcSession.connectionId,
+    );
   }
 
   Future<bool> _send(
-      eventType, data, String remoteCoreId, String? remotePeerId, connectionId) async {
-    print("onMessage send $remotePeerId : $remoteCoreId : $connectionId : $eventType : $data ");
+    eventType,
+    data,
+    String remoteCoreId,
+    String? remotePeerId,
+    connectionId,
+  ) async {
+    print("onMessage send $remotePeerId : $remoteCoreId : $connectionId : $eventType  : $data ");
     var request = {};
     request["type"] = eventType;
     request["data"] = data;
     request["command"] = COMMAND;
     request[CONNECTION_ID] = connectionId;
+
     print("P2PCommunicator: sendingSDP $remoteCoreId : $eventType");
     bool requestSucceeded = await connectionContractor.sendMessage(_encoder.convert(request),
         RemotePeerData(remoteCoreId: remoteCoreId, remotePeerId: remotePeerId));

@@ -3,26 +3,37 @@ import 'dart:async';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
+import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
+import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:heyo/generated/assets.gen.dart';
-import 'package:heyo/generated/locales.g.dart';
+import '../../../../generated/assets.gen.dart';
+import '../../../../generated/locales.g.dart';
+import '../../chats/data/models/chat_model.dart';
+import '../../messages/connection/wifi_direct_connection_repo.dart';
+import '../../messages/connection/wifi_direct_connection_controller.dart';
+import '../../shared/data/repository/contact_repository.dart';
 
 class WifiDirectController extends GetxController {
-  /*final AccountInfo accountInfo;
-  final ContactRepository contactRepository;*/
+
+  WifiDirectController(
+      {required  AccountRepository accountInfoRepo,
+      // required this.wifiDirectConnectionController,
+      required this.contactRepository}) :
+    _accountInfoRepo = accountInfoRepo;
+
+  final AccountRepository _accountInfoRepo;
+
+  // final AccountInfo accountInfo;
+  final ContactRepository contactRepository;
+
   HeyoWifiDirect? _heyoWifiDirect;
   bool isLocationPermissionGranted = false;
   final wifiDirectEnabled = false.obs;
   RxList<UserModel> availableDirectUsers = <UserModel>[].obs;
+    // _heyoWifiDirect = wifiDirectConnectionController.wifiDirectWrapper!.pluginInstance;
 
-/*  WifiDirectController(
-      {required this.accountInfo,
-      required this.wifiDirectConnectionController,
-      required this.contactRepository}) {
-    _heyoWifiDirect = wifiDirectConnectionController.wifiDirectWrapper!.pluginInstance;
-  }*/
 
   final coreId = "".obs;
   final visibleName = "".obs;
@@ -35,6 +46,7 @@ class WifiDirectController extends GetxController {
   @override
   Future<void> onInit() async {
     await _setCoreId();
+    _heyoWifiDirect = WifiDirectWrapper.pluginInstance;
     _heyoWifiDirect ?? _initializePlugin();
 
     //TODO remove debug print
@@ -80,6 +92,7 @@ class WifiDirectController extends GetxController {
       visibleName.value = "name";
 
       _heyoWifiDirect = HeyoWifiDirect(coreID: coreId.value, name: 'name', debugOutputEnable: true);
+      WifiDirectWrapper.pluginInstance = _heyoWifiDirect;
       // await _heyoWifiDirect!.wifiDirectOn();
       /*  wifiDirectConnectionController.wifiDirectWrapper!.pluginInstance = _heyoWifiDirect;
       Get.put(wifiDirectConnectionController);*/
@@ -151,6 +164,8 @@ class WifiDirectController extends GetxController {
   }
 
   Future<void> _setCoreId() async {
+    coreId.value = (await _accountInfoRepo.getUserAddress()) ?? "";
+
     //coreId.value = (await accountInfo.getCorePassCoreId()) ?? "";
   }
 
@@ -188,40 +203,45 @@ class WifiDirectController extends GetxController {
   }
 
   // this will add one UserModel to peers list with the duration provided for testing purposes
-  _addMockUsers({Duration duration = const Duration(seconds: 3)}) async {
-    var mockUsers = [
-      UserModel(
-        name: "Boiled Dealmaker",
-        isVerified: true,
-        walletAddress: "CB11${List.generate(11, (index) => index).join()}14AB",
-        coreId: "CB11${List.generate(11, (index) => index).join()}14AB",
-      ),
-      UserModel(
-        name: "Crapps Wallbanger",
-        walletAddress: "CB11${List.generate(11, (index) => index).join()}49BB",
-        coreId: "CB11${List.generate(11, (index) => index).join()}49BB",
-      ),
-      UserModel(
-        name: "Fancy Potato",
-        walletAddress: "CB11${List.generate(11, (index) => index).join()}11FE",
-        coreId: "CB11${List.generate(11, (index) => index).join()}11FE",
-      ),
-      UserModel(
-        name: "Ockerito Fazola",
-        isVerified: true,
-        walletAddress: "CB11${List.generate(11, (index) => index).join()}5A5D",
-        coreId: "CB11${List.generate(11, (index) => index).join()}5A5D",
-      ),
-      UserModel(
-        name: "Unchained Banana",
-        walletAddress: "CB11${List.generate(11, (index) => index).join()}44AC",
-        coreId: "CB11${List.generate(11, (index) => index).join()}44AC",
-      ),
-    ];
-    for (int i = 0; i < mockUsers.length; i++) {
-      await Future.delayed(duration, () {
-        availableDirectUsers.add(mockUsers[i]);
-      });
-    }
-  }
+  // _addMockUsers({Duration duration = const Duration(seconds: 3)}) async {
+  //   var mockUsers = [
+  //     UserModel(
+  //       name: "Boiled Dealmaker",
+  //       iconUrl: "https://avatars.githubusercontent.com/u/6645136?v=4",
+  //       isVerified: true,
+  //       walletAddress: "CB11${List.generate(11, (index) => index).join()}14AB",
+  //       coreId: "CB11${List.generate(11, (index) => index).join()}14AB",
+  //     ),
+  //     UserModel(
+  //       name: "Crapps Wallbanger",
+  //       iconUrl: "https://avatars.githubusercontent.com/u/2345136?v=4",
+  //       walletAddress: "CB11${List.generate(11, (index) => index).join()}49BB",
+  //       coreId: "CB11${List.generate(11, (index) => index).join()}49BB",
+  //     ),
+  //     UserModel(
+  //       name: "Fancy Potato",
+  //       iconUrl: "https://avatars.githubusercontent.com/u/6644146?v=4",
+  //       walletAddress: "CB11${List.generate(11, (index) => index).join()}11FE",
+  //       coreId: "CB11${List.generate(11, (index) => index).join()}11FE",
+  //     ),
+  //     UserModel(
+  //       name: "Ockerito Fazola",
+  //       isVerified: true,
+  //       iconUrl: "https://avatars.githubusercontent.com/u/7844146?v=4",
+  //       walletAddress: "CB11${List.generate(11, (index) => index).join()}5A5D",
+  //       coreId: "CB11${List.generate(11, (index) => index).join()}5A5D",
+  //     ),
+  //     UserModel(
+  //       name: "Unchained Banana",
+  //       iconUrl: "https://avatars.githubusercontent.com/u/7847725?v=4",
+  //       walletAddress: "CB11${List.generate(11, (index) => index).join()}44AC",
+  //       coreId: "CB11${List.generate(11, (index) => index).join()}44AC",
+  //     ),
+  //   ];
+  //   for (int i = 0; i < mockUsers.length; i++) {
+  //     await Future.delayed(duration, () {
+  //       availableDirectUsers.add(mockUsers[i]);
+  //     });
+  //   }
+  // }
 }

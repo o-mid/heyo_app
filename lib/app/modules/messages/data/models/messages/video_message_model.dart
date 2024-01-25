@@ -44,6 +44,7 @@ class VideoMessageModel extends MessageModel {
     bool? isForwarded,
     bool? isSelected,
     bool clearReply = false,
+    String? senderAvatar,
   }) {
     return VideoMessageModel(
       url: url ?? this.url,
@@ -52,7 +53,7 @@ class VideoMessageModel extends MessageModel {
       chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
-      senderAvatar: senderAvatar,
+      senderAvatar: senderAvatar ?? this.senderAvatar,
       status: status ?? this.status,
       isFromMe: isFromMe ?? this.isFromMe,
       isForwarded: isForwarded ?? this.isForwarded,

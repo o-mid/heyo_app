@@ -50,6 +50,7 @@ class CallMessageModel extends MessageModel {
     bool? isSelected,
     MessageContentType? type,
     bool clearReply = false,
+    String? senderAvatar,
   }) {
     return CallMessageModel(
       callStatus: callStatus,
@@ -58,7 +59,7 @@ class CallMessageModel extends MessageModel {
       chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
       senderName: senderName,
-      senderAvatar: senderAvatar,
+      senderAvatar: senderAvatar ?? this.senderAvatar,
       status: status ?? this.status,
       isFromMe: isFromMe ?? this.isFromMe,
       isForwarded: isForwarded ?? this.isForwarded,

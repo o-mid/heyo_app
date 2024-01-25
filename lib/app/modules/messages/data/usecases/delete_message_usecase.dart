@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/messages/connection/models/models.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/delete_message_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_repo.dart';
 import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
@@ -25,7 +26,8 @@ class DeleteMessageUseCase {
   Future<void> execute({
     required MessageConnectionType messageConnectionType,
     required DeleteMessageType deleteMessageType,
-    required String remoteCoreId,
+    required List<String> remoteCoreIds,
+    required String chatName,
   }) async {
     switch (deleteMessageType.runtimeType) {
       case DeleteLocalMessages:
@@ -40,7 +42,8 @@ class DeleteMessageUseCase {
           messageConnectionType: messageConnectionType,
           remoteMessages: remoteMessages,
           chatId: deleteMessageType.chatId,
-          remoteCoreId: remoteCoreId,
+          remoteCoreIds: remoteCoreIds,
+          chatName: chatName,
         );
         break;
     }
@@ -58,7 +61,8 @@ class DeleteMessageUseCase {
     required MessageConnectionType messageConnectionType,
     required List<MessageModel> remoteMessages,
     required String chatId,
-    required String remoteCoreId,
+    required List<String> remoteCoreIds,
+    required String chatName,
   }) async {
     final messageIds = remoteMessages.map((e) => e.messageId).toList();
 
@@ -67,14 +71,18 @@ class DeleteMessageUseCase {
     await messagesRepo.deleteMessages(messageIds: messageIds, chatId: chatId);
 
     final processedMessage = await processor.getMessageDetails(
-      channelMessageType: ChannelMessageType.delete(message: deleteMessagesJson),
-      remoteCoreId: remoteCoreId,
+      channelMessageType: ChannelMessageType.delete(
+        message: deleteMessagesJson,
+        remoteCoreIds: remoteCoreIds,
+        chatId: chatId,
+        chatName: chatName,
+      ),
     );
 
     await connectionRepository.sendTextMessage(
       messageConnectionType: messageConnectionType,
       text: jsonEncode(processedMessage.messageJson),
-      remoteCoreId: remoteCoreId,
+      remoteCoreIds: remoteCoreIds,
     );
   }
 }

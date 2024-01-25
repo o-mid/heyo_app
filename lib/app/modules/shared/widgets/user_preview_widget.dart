@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/contacts/widgets/removeContactsDialog.dart';
+import 'package:heyo/app/modules/messages/utils/chat_Id_generator.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/controllers/user_preview_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
@@ -57,7 +58,7 @@ class UserPreviewWidget extends GetView<UserPreview> {
               CustomSizes.smallSizedBoxWidth,
               isVerified
                   ? Assets.svg.verifiedWithBluePadding
-                      .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
+                  .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
                   : const SizedBox(),
             ],
           ),
@@ -88,7 +89,7 @@ class UserPreviewWidget extends GetView<UserPreview> {
                                 participants: [
                                   MessagingParticipantModel(
                                     coreId: coreId,
-                                    chatId: coreId,
+                                    chatId: ChatIdGenerator.generate(),
                                   )
                                 ]),
                           );

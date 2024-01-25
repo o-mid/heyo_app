@@ -5,6 +5,7 @@ import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
 import 'package:heyo/app/modules/messages/connection/domain/messaging_connection.dart';
 import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
 
+import '../../connection/models/models.dart';
 import '../message_processor.dart';
 import '../models/messages/confirm_message_model.dart';
 
@@ -26,7 +27,9 @@ class ConfirmMessageUseCase {
   void execute({
     required MessageConnectionType messageConnectionType,
     required ConfirmMessageType confirmMessageType,
-    required String remoteCoreId,
+    required List<String> remoteCoreIds,
+    required ChatId chatId,
+    required String chatName,
   }) async {
     switch (confirmMessageType.runtimeType) {
       case ConfirmReceivedText:
@@ -39,14 +42,18 @@ class ConfirmMessageUseCase {
         ).toJson();
 
         final processedMessage = await processor.getMessageDetails(
-          channelMessageType: ChannelMessageType.confirm(message: confirmmessageJson),
-          remoteCoreId: remoteCoreId,
+          channelMessageType: ChannelMessageType.confirm(
+            message: confirmmessageJson,
+            remoteCoreIds: remoteCoreIds,
+            chatId: chatId,
+            chatName: chatName,
+          ),
         );
 
         await connectionRepository.sendTextMessage(
           messageConnectionType: MessageConnectionType.RTC_DATA_CHANNEL,
           text: jsonEncode(processedMessage.messageJson),
-          remoteCoreId: remoteCoreId,
+          remoteCoreIds: remoteCoreIds,
         );
         break;
     }

@@ -3,6 +3,8 @@ import 'package:heyo/app/modules/messages/connection/connection_data_handler.dar
 import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
 import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
 
+import '../../connection/models/models.dart';
+
 class ReadMessageUseCase {
   ReadMessageUseCase({required this.dataHandler, required this.connectionRepository});
 
@@ -12,15 +14,20 @@ class ReadMessageUseCase {
   Future<void> execute({
     required MessageConnectionType connectionType,
     required String messageId,
-    required String remoteCoreId,
+    required List<String> remoteCoreIds,
+    required ChatId chatId,
   }) async {
     final messageJsonEncode = await dataHandler.getMessageJsonEncode(
       messageId: messageId,
       status: ConfirmMessageStatus.read,
-      remoteCoreId: remoteCoreId,
+      chatId: chatId,
+      remoteCoreIds: remoteCoreIds,
     );
 
     await connectionRepository.sendTextMessage(
-        messageConnectionType: connectionType, text: messageJsonEncode, remoteCoreId: remoteCoreId);
+      messageConnectionType: connectionType,
+      text: messageJsonEncode,
+      remoteCoreIds: remoteCoreIds,
+    );
   }
 }

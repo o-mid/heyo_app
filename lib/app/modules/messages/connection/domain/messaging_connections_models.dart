@@ -1,5 +1,6 @@
 import 'package:heyo/app/modules/messages/connection/domain/messaging_connection.dart';
 import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
+import 'package:heyo/app/modules/messages/connection/models/models.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';
 
@@ -10,12 +11,16 @@ class MessagingConnectionReceivedData {
   });
 
   final Map<String, dynamic> receivedJson;
+
   final String remoteCoreId;
 }
 
 sealed class MessagingConnectionInitialData {
   final String remoteId;
-  MessagingConnectionInitialData({required this.remoteId});
+
+  MessagingConnectionInitialData({
+    required this.remoteId,
+  });
 }
 
 sealed class MessagingConnectionSendData {}
@@ -23,7 +28,9 @@ sealed class MessagingConnectionSendData {}
 enum MessagingConnectionStatus { connectionLost, connecting, justConnected, online }
 
 class WebRTCConnectionInitData extends MessagingConnectionInitialData {
-  WebRTCConnectionInitData({required super.remoteId});
+  WebRTCConnectionInitData({
+    required super.remoteId,
+  });
 }
 
 class DataChannelConnectionSendData extends MessagingConnectionSendData {
