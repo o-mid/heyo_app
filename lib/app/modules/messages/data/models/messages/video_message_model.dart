@@ -45,6 +45,7 @@ class VideoMessageModel extends MessageModel {
     bool? isSelected,
     bool clearReply = false,
     String? senderAvatar,
+    String? senderName,
   }) {
     return VideoMessageModel(
       url: url ?? this.url,
@@ -52,7 +53,7 @@ class VideoMessageModel extends MessageModel {
       messageId: messageId ?? this.messageId,
       chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
-      senderName: senderName,
+      senderName: senderName ?? this.senderName,
       senderAvatar: senderAvatar ?? this.senderAvatar,
       status: status ?? this.status,
       isFromMe: isFromMe ?? this.isFromMe,

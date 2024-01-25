@@ -45,6 +45,7 @@ class LocationMessageModel extends MessageModel {
     bool? isSelected,
     bool clearReply = false,
     MessageContentType? type,
+    String? senderName,
   }) {
     return LocationMessageModel(
       address: address,
@@ -53,7 +54,7 @@ class LocationMessageModel extends MessageModel {
       messageId: messageId ?? this.messageId,
       chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
-      senderName: senderName,
+      senderName: senderName ?? this.senderName,
       senderAvatar: senderAvatar ?? this.senderAvatar,
       status: status ?? this.status,
       isFromMe: isFromMe ?? this.isFromMe,
