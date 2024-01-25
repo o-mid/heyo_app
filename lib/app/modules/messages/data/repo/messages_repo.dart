@@ -72,4 +72,11 @@ class MessagesRepo implements MessagesAbstractRepo {
   Future<void> deleteAllMessages(String chatId) {
     return messagesProvider.deleteAllMessages(chatId);
   }
+
+  @override
+  Future<void> updateMessagesSenderName(
+      {required String chatId, required String coreId, required String newSenderName}) {
+    return messagesProvider.updateMessagesSenderName(
+        chatId: chatId, coreId: coreId, newSenderName: newSenderName);
+  }
 }
