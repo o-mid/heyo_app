@@ -154,9 +154,7 @@ class MessagesController extends GetxController {
     _initUiControllers();
     await _getUserContact();
 
-    if (chatName.value.isEmpty) {
-      chatName.value = users.first.name;
-    } else if (!isGroupChat) {
+    if (chatName.value.isEmpty || !isGroupChat) {
       chatName.value = users.first.name;
     }
     // // Initialize messagingConnection instance of CommonMessagingController-inherited class depends on connection type
@@ -183,12 +181,6 @@ class MessagesController extends GetxController {
   }
 
   void _setChatId() {
-    // if (participants.length > 2) {
-    //   chatId = participants.first.chatId;
-    // } else {
-    //   chatId = participants.first.coreId;
-    // }
-
     chatId = participants.first.chatId;
   }
 
