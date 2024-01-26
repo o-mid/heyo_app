@@ -16,15 +16,12 @@ class WifiDirectBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<WifiDirectController>(
       () => WifiDirectController(
-          /*accountInfo: AccountRepo(
-          localProvider: SecureStorageProvider(),
-          cryptographyKeyGenerator: Web3Keys(web3client: GlobalBindings.web3Client),
-        ),
-        wifiDirectConnectionController: Get.find<UnifiedConnectionController>(),
+        accountInfoRepo: Get.find(),
+        // wifiDirectConnectionController: Get.find<UnifiedConnectionController>(),
         contactRepository: ContactRepository(
           cacheContractor: CacheRepository(
               userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
-        ),*/
+        ),
           ),
     );
   }

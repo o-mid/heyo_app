@@ -93,11 +93,12 @@ dependencies:
   uuid: ^3.0.6
   tuple: ^2.0.1
   visibility_detector: ^0.3.3
-  shimmer: ^2.0.0
+  shimmer: ^3.0.0
   shared_preferences: ^2.1.0
   heyo_wifi_direct:
     git:
       url: git@ssh.git.energy:heyo/heyo_wifi_direct.git
+      ref: faster_wifi_research
   awesome_notifications: ^0.8.2
   url_launcher: 6.1.10
   uni_links: ^0.5.1

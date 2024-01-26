@@ -24,60 +24,40 @@ class CallHistoryMultiParticipantWidget
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBarWidget(
-        backgroundColor: COLORS.kGreenMainColor,
-        title: LocaleKeys.CallHistory_callParticipant.tr,
-        actions: [
-          Obx(() {
-            if (controller.recentCalls.isNotEmpty) {
-              return Padding(
-                padding: EdgeInsets.only(right: 26.w),
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Assets.svg.verticalMenuIcon.svg(),
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          }),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Obx(() {
-          if (controller.callHistoryModel!.value!.participants.isEmpty) {
-            return const SizedBox.shrink();
-          }
-          return AnimateListWidget(
-            children: [
-              const MultiParticipantHeaderWidget(),
-              SizedBox(height: 40.h),
-              Container(color: COLORS.kBrightBlueColor, height: 8.h),
-              SizedBox(height: 24.h),
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Text(
-                  LocaleKeys.CallHistory_appbar.tr,
-                  style: TEXTSTYLES.kLinkSmall
-                      .copyWith(color: COLORS.kTextBlueColor),
-                ),
+    return SingleChildScrollView(
+      child: Obx(() {
+        if (controller.callHistoryModel!.value!.participants.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        return AnimateListWidget(
+          children: [
+            const MultiParticipantHeaderWidget(),
+            SizedBox(height: 40.h),
+            Container(color: COLORS.kBrightBlueColor, height: 8.h),
+            SizedBox(height: 24.h),
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: Text(
+                LocaleKeys.CallHistory_appbar.tr,
+                style: TEXTSTYLES.kLinkSmall
+                    .copyWith(color: COLORS.kTextBlueColor),
               ),
-              CustomSizes.smallSizedBoxHeight,
-              ...controller.callHistoryModel!.value!.participants
-                  .map((participant) {
-                return CallHistoryDetailListTileWidget(
-                  coreId: participant.coreId,
-                  name: participant.name,
-                  trailing: participant.startDate
-                      .formattedDifference(participant.endDate),
-                );
-              }),
-              CustomSizes.mediumSizedBoxHeight,
-            ],
-          );
-        }),
-      ),
+            ),
+            CustomSizes.smallSizedBoxHeight,
+            ...controller.callHistoryModel!.value!.participants
+                .map((participant) {
+              return CallHistoryDetailListTileWidget(
+                coreId: participant.coreId,
+                name: participant.name,
+                trailing: participant.startDate
+                    .formattedDifference(participant.endDate),
+              );
+            }),
+            CustomSizes.mediumSizedBoxHeight,
+          ],
+        );
+      }),
     );
   }
 }

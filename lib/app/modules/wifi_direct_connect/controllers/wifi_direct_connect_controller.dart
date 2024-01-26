@@ -9,6 +9,7 @@ import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 import '../../../routes/app_pages.dart';
 import '../../messages/connection/wifi_direct_connection_controller.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
+import '../../wifi_direct/controllers/wifi_direct_wrapper.dart';
 
 class WifiDirectConnectController extends GetxController {
   //TODO: Implement WifiDirectConnectController
@@ -18,9 +19,9 @@ class WifiDirectConnectController extends GetxController {
   late StreamSubscription _eventListener;
   late UserModel user;
 
-  /* WifiDirectConnectController({required this.wifiDirectConnectionController,required this.wifiDirectConnectionProvider}) {
-    //_pluginInstance = wifiDirectConnectionController.wifiDirectWrapper!.pluginInstance!;
-  }*/
+  WifiDirectConnectController() {
+    _pluginInstance = WifiDirectWrapper.pluginInstance!;
+  }
 
   Rx<PeerStatus> connectionStatus = PeerStatus.statusUnknown.obs;
 
@@ -28,15 +29,14 @@ class WifiDirectConnectController extends GetxController {
   void onInit() {
     super.onInit();
 
-    /* _eventListener = wifiDirectConnectionController
-        .wifiDirectWrapper!.pluginInstance!.consumerEventSource.stream
+    _eventListener = WifiDirectWrapper.pluginInstance!.consumerEventSource.stream
         .listen((event) => eventHandler(event));
-    user = Get.arguments as UserModel;*/
+    user = Get.arguments as UserModel;
   }
 
   Future<bool> startConnection() async {
     if (_pluginInstance.peerList.contains(user.coreId)) {
-      _pluginInstance.connectPeer(user.coreId);
+      await _pluginInstance.connectPeer(user.coreId);
     } else {
       return false;
     }
@@ -53,7 +53,7 @@ class WifiDirectConnectController extends GetxController {
 
         // PeerList peerList = signaling.wifiDirectPlugin.peerList;
         if (_pluginInstance.peerList.contains(user.coreId)) {
-          connectionStatus.value = (_pluginInstance.peerList.peers[user.coreId] as Peer)!.status;
+          connectionStatus.value = (_pluginInstance.peerList.peers[user.coreId]!).status;
         } else {
           connectionStatus.value = PeerStatus.peerUnavailable;
         }
