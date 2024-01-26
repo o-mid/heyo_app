@@ -22,7 +22,7 @@ class WifiDirectView extends GetView<WifiDirectController> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-             // const PeersListWidget(),
+              const PeersListWidget(),
               Column(
                 children: [
                   Row(
