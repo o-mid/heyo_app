@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/call_history/controllers/call_history_controller.dart';
+import 'package:heyo/app/modules/calls/call_history/views/models/call_history_view_model/call_history_view_model.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/call_history_avatar_widget.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/widgets/call_status_icon_and_date.dart';
@@ -16,7 +17,7 @@ import 'package:heyo/generated/assets.gen.dart';
 
 class CallHistoryListTitleWidget extends GetView<CallHistoryController> {
   const CallHistoryListTitleWidget({required this.call, super.key});
-  final CallHistoryModel call;
+  final CallHistoryViewModel call;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,10 @@ class CallHistoryListTitleWidget extends GetView<CallHistoryController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      call.participants.map((element) => element.name).toList().join(', '),
+                      call.participants
+                          .map((element) => element.name)
+                          .toList()
+                          .join(', '),
                       style: TEXTSTYLES.kChatName.copyWith(
                         color: COLORS.kDarkBlueColor,
                       ),

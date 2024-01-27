@@ -60,7 +60,8 @@ class UserPreview extends GetxController {
 
     final chatModel = await chatHistoryRepo.getChat(userCoreId);
     if (chatModel != null) {
-      await chatHistoryRepo.updateChat(chatModel.copyWith(name: userCoreId.shortenCoreId));
+      await chatHistoryRepo
+          .updateChat(chatModel.copyWith(name: userCoreId.shortenCoreId));
     }
     final calls = await callHistoryRepo.getCallsFromUserId(userCoreId);
     calls.forEach((call) async {
@@ -69,11 +70,7 @@ class UserPreview extends GetxController {
       await callHistoryRepo.addCallToHistory(
         call.copyWith(
           //TODO:(Aliazim) the call history participant will change
-          participants: [
-            call.participants[0].copyWith(
-              name: userCoreId.shortenCoreId,
-            ),
-          ],
+          participants: [call.participants[0]],
         ),
       );
     });

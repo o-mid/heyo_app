@@ -24,14 +24,15 @@ class SingleParticipantHeder extends GetView<CallHistoryDetailController> {
       children: [
         SizedBox(height: 40.h),
         CustomCircleAvatar(
-          coreId: controller.callHistoryModel!.value!.participants[0].coreId,
+          coreId:
+              controller.callHistoryViewModel!.value!.participants[0].coreId,
           size: 64,
         ),
         CustomSizes.mediumSizedBoxHeight,
         GestureDetector(
           onTap: () => controller.saveCoreIdToClipboard(),
           child: Text(
-            controller.callHistoryModel!.value!.participants[0].name,
+            controller.callHistoryViewModel!.value!.participants[0].name,
             style:
                 TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
           ),
@@ -40,8 +41,8 @@ class SingleParticipantHeder extends GetView<CallHistoryDetailController> {
         GestureDetector(
           onTap: () => controller.saveCoreIdToClipboard(),
           child: Text(
-            controller
-                .callHistoryModel!.value!.participants[0].coreId.shortenCoreId,
+            controller.callHistoryViewModel!.value!.participants[0].coreId
+                .shortenCoreId,
             style: TEXTSTYLES.kBodySmall
                 .copyWith(color: COLORS.kTextSoftBlueColor),
           ),
@@ -89,10 +90,10 @@ class SingleParticipantHeder extends GetView<CallHistoryDetailController> {
                     connectionType: MessagingConnectionType.internet,
                     participants: [
                       MessagingParticipantModel(
-                        coreId: controller
-                            .callHistoryModel!.value!.participants[0].coreId,
-                        chatId: controller
-                            .callHistoryModel!.value!.participants[0].coreId,
+                        coreId: controller.callHistoryViewModel!.value!
+                            .participants[0].coreId,
+                        chatId: controller.callHistoryViewModel!.value!
+                            .participants[0].coreId,
                       ),
                     ],
                   ),

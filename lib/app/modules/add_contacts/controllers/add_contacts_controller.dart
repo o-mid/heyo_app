@@ -19,7 +19,8 @@ class AddContactsController extends GetxController {
   });
 
   late AddContactsViewArgumentsModel args;
-  static String DefaultAvatarPath = 'https://avatars.githubusercontent.com/u/2345136?v=4';
+  static String DefaultAvatarPath =
+      'https://avatars.githubusercontent.com/u/2345136?v=4';
   RxString nickname = ''.obs;
   RxBool isContact = false.obs;
   RxBool isVerified = false.obs;
@@ -68,7 +69,8 @@ class AddContactsController extends GetxController {
       await updateUserChatMode(
           userModel: user.copyWith(
         nickname: nickname.value,
-        name: nickname.value.isEmpty ? args.coreId.shortenCoreId : nickname.value,
+        name:
+            nickname.value.isEmpty ? args.coreId.shortenCoreId : nickname.value,
         isContact: true,
       ));
     }
@@ -115,7 +117,8 @@ class AddContactsController extends GetxController {
   }
 
   Future<void> _updateCallHistory({required UserModel userModel}) async {
-    final callHistoryList = await callHistoryRepo.getCallsFromUserId(userModel.coreId);
+    final callHistoryList =
+        await callHistoryRepo.getCallsFromUserId(userModel.coreId);
 
     //* For loop for all stored call history
     for (final call in callHistoryList) {
@@ -129,12 +132,11 @@ class AddContactsController extends GetxController {
       if (index != -1) {
         //final newParticipants = call.participants.fi
 
-        final updatedParticipant = call.participants[index].copyWith(
-          name: userModel.name,
-        );
+        final updatedParticipant = call.participants[index];
 
         // Create a copy of the list
-        final newParticipantList = List<CallHistoryParticipantModel>.from(call.participants);
+        final newParticipantList =
+            List<CallHistoryParticipantModel>.from(call.participants);
 
         // Replace the old item with the new one
         newParticipantList[index] = updatedParticipant;

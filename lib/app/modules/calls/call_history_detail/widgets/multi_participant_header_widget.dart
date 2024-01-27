@@ -24,13 +24,13 @@ class MultiParticipantHeaderWidget
       children: [
         SizedBox(height: 40.h),
         CallHistoryDetailAvatarWidget(
-          participants: controller.callHistoryModel!.value!.participants
+          participants: controller.callHistoryViewModel!.value!.participants
               .map((e) => e.coreId)
               .toList(),
         ),
         CustomSizes.mediumSizedBoxHeight,
         Text(
-          controller.callHistoryModel!.value!.participants.obs
+          controller.callHistoryViewModel!.value!.participants.obs
               .map((element) => element.name)
               .toList()
               .join(', '),
@@ -40,7 +40,7 @@ class MultiParticipantHeaderWidget
         ),
         SizedBox(height: 4.h),
         Text(
-          controller.callHistoryModel!.value!.participants
+          controller.callHistoryViewModel!.value!.participants
               .map((element) => element.coreId.shortenCoreId)
               .toList()
               .join(', '),

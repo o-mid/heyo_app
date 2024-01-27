@@ -9,7 +9,6 @@ part of 'call_history_participant_model.dart';
 _$CallHistoryParticipantModelImpl _$$CallHistoryParticipantModelImplFromJson(
         Map<String, dynamic> json) =>
     _$CallHistoryParticipantModelImpl(
-      name: json['name'] as String,
       coreId: json['coreId'] as String,
       startDate: DateTime.parse(json['startDate'] as String),
       endDate: json['endDate'] == null
@@ -23,7 +22,6 @@ _$CallHistoryParticipantModelImpl _$$CallHistoryParticipantModelImplFromJson(
 Map<String, dynamic> _$$CallHistoryParticipantModelImplToJson(
         _$CallHistoryParticipantModelImpl instance) =>
     <String, dynamic>{
-      'name': instance.name,
       'coreId': instance.coreId,
       'startDate': instance.startDate.toIso8601String(),
       'endDate': instance.endDate?.toIso8601String(),

@@ -18,7 +18,7 @@ class CallHistorySingleParticipantWidget
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (controller.callHistoryModel!.value!.participants.isEmpty) {
+      if (controller.callHistoryViewModel!.value!.participants.isEmpty) {
         return const SizedBox.shrink();
       }
       return AnimateListWidget(

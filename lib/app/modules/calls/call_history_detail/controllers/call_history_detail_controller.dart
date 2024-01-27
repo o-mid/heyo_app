@@ -3,10 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
+import 'package:heyo/app/modules/calls/call_history/views/models/call_history_participant_view_model/call_history_participant_view_model.dart';
+import 'package:heyo/app/modules/calls/call_history/views/models/call_history_view_model/call_history_view_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
-import 'package:heyo/app/modules/calls/usecase/contact_availability_use_case.dart';
+import 'package:heyo/app/modules/calls/shared/utils/call_utils.dart';
+import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -19,15 +21,15 @@ import 'package:heyo/generated/locales.g.dart';
 class CallHistoryDetailController extends GetxController {
   CallHistoryDetailController({
     required this.callHistoryRepo,
-    required this.contactAvailabilityUseCase,
+    required this.contactNameUseCase,
   });
 
   final CallHistoryAbstractRepo callHistoryRepo;
-  final ContactAvailabilityUseCase contactAvailabilityUseCase;
+  final ContactNameUseCase contactNameUseCase;
 
   late UserCallHistoryViewArgumentsModel args;
-  final recentCalls = <CallHistoryModel>[].obs;
-  Rx<CallHistoryModel?>? callHistoryModel;
+  final recentCalls = <CallHistoryViewModel>[].obs;
+  Rx<CallHistoryViewModel?>? callHistoryViewModel;
   RxBool loading = true.obs;
 
   //RxList<CallHistoryDetailParticipantModel> participants = RxList();
@@ -40,17 +42,34 @@ class CallHistoryDetailController extends GetxController {
   }
 
   Future<void> getData() async {
-    //for (final participant in args.participants) {
-    //  final checkContactAvailability = await contactAvailabilityUseCase.execute(
-    //    coreId: participant,
-    //  );
-    //  participants.add(
-    //    checkContactAvailability.mapToHistoryParticipantModel(),
-    //  );
-    //}
-
     try {
-      callHistoryModel = (await callHistoryRepo.getOneCall(args.callId)).obs;
+      final callHistoryDataModel =
+          await callHistoryRepo.getOneCall(args.callId);
+
+      if (callHistoryDataModel == null) {
+        return;
+      }
+
+      final participantViewList = <CallHistoryParticipantViewModel>[];
+
+      //* Loop on participants data model to get their name from contact
+      //* And convert them to participants view model
+      for (final participant in callHistoryDataModel.participants) {
+        final name = await contactNameUseCase.execute(participant.coreId);
+        participantViewList.add(
+          participant.mapToCallHistoryParticipantViewModel(name),
+        );
+      }
+
+      //* Convert the call history data model to view model
+      callHistoryViewModel = CallHistoryViewModel(
+        callId: callHistoryDataModel.callId,
+        type: CallUtils.callStatus(callHistoryDataModel),
+        status: CallUtils.callTitle(callHistoryDataModel.status),
+        participants: participantViewList,
+        startDate: callHistoryDataModel.startDate,
+        endDate: callHistoryDataModel.endDate,
+      ).obs;
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -58,8 +77,21 @@ class CallHistoryDetailController extends GetxController {
     //* If the length is equal to one it means the call is p2p
     //* and app should show the user call history
     if (args.participants.length == 1) {
-      recentCalls.value =
+      final calls =
           await callHistoryRepo.getCallsFromUserId(args.participants[0]);
+
+      for (final call in calls) {
+        recentCalls.add(
+          CallHistoryViewModel(
+            callId: call.callId,
+            type: CallUtils.callStatus(call),
+            status: CallUtils.callTitle(call.status),
+            participants: [],
+            startDate: call.startDate,
+            endDate: call.endDate,
+          ),
+        );
+      }
     }
     loading.value = false;
   }
@@ -93,7 +125,7 @@ class CallHistoryDetailController extends GetxController {
   }
 
   Future<void> openAppBarActionBottomSheet({
-    required CallHistoryParticipantModel participant,
+    required CallHistoryParticipantViewModel participant,
   }) async {
     await Get.bottomSheet(
       Padding(
@@ -154,7 +186,7 @@ class CallHistoryDetailController extends GetxController {
     );
   }
 
-  bool isGroupCall() => callHistoryModel!.value!.participants.length > 1;
+  bool isGroupCall() => callHistoryViewModel!.value!.participants.length > 1;
 
   void appBarAction() {
     if (loading.isTrue) {
@@ -164,7 +196,7 @@ class CallHistoryDetailController extends GetxController {
       debugPrint('Nothing yet');
     } else {
       openAppBarActionBottomSheet(
-        participant: callHistoryModel!.value!.participants[0],
+        participant: callHistoryViewModel!.value!.participants[0],
       );
     }
   }

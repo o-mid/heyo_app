@@ -26,7 +26,7 @@ class CallHistoryMultiParticipantWidget
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Obx(() {
-        if (controller.callHistoryModel!.value!.participants.isEmpty) {
+        if (controller.callHistoryViewModel!.value!.participants.isEmpty) {
           return const SizedBox.shrink();
         }
         return AnimateListWidget(
@@ -45,7 +45,7 @@ class CallHistoryMultiParticipantWidget
               ),
             ),
             CustomSizes.smallSizedBoxHeight,
-            ...controller.callHistoryModel!.value!.participants
+            ...controller.callHistoryViewModel!.value!.participants
                 .map((participant) {
               return CallHistoryDetailListTileWidget(
                 coreId: participant.coreId,
