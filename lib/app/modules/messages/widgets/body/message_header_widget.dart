@@ -30,7 +30,9 @@ class MessageHeaderWidget extends StatelessWidget {
             children: [
               if (isGroupChat)
                 Text(
-                  '${message.senderAvatar.shortenCoreId} . ',
+                  message.senderName.isNotEmpty && message.senderName.isNotEmpty != "Unknown"
+                      ? '${message.senderName} . '
+                      : '${message.senderAvatar.shortenCoreId} . ',
                   textAlign: TextAlign.center,
                   style: TEXTSTYLES.kBodyTag.copyWith(
                     color: COLORS.kTextBlueColor,

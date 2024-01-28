@@ -32,18 +32,15 @@ class SingleParticipantHeder extends GetView<CallHistoryDetailController> {
           onTap: () => controller.saveCoreIdToClipboard(),
           child: Text(
             controller.callHistoryModel!.value!.participants[0].name,
-            style:
-                TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+            style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
           ),
         ),
         SizedBox(height: 4.h),
         GestureDetector(
           onTap: () => controller.saveCoreIdToClipboard(),
           child: Text(
-            controller
-                .callHistoryModel!.value!.participants[0].coreId.shortenCoreId,
-            style: TEXTSTYLES.kBodySmall
-                .copyWith(color: COLORS.kTextSoftBlueColor),
+            controller.callHistoryModel!.value!.participants[0].coreId.shortenCoreId,
+            style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
           ),
         ),
         SizedBox(height: 40.h),
@@ -89,10 +86,9 @@ class SingleParticipantHeder extends GetView<CallHistoryDetailController> {
                     connectionType: MessagingConnectionType.internet,
                     participants: [
                       MessagingParticipantModel(
-                        coreId: controller
-                            .callHistoryModel!.value!.participants[0].coreId,
-                        chatId: controller
-                            .callHistoryModel!.value!.participants[0].coreId,
+                        coreId: controller.callHistoryModel!.value!.participants[0].coreId,
+                        chatId: controller.callHistoryModel!.value!.participants[0].coreId,
+                        name: controller.callHistoryModel!.value!.participants[0].name,
                       ),
                     ],
                   ),

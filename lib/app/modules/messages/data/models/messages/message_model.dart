@@ -78,6 +78,7 @@ abstract class MessageModel {
     bool? isSelected,
     bool clearReply,
     String? senderAvatar,
+    String? senderName,
   });
 
   Map<String, dynamic> toJson();

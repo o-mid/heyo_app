@@ -9,6 +9,9 @@ import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provider.dart';
 
+import '../../messages/data/provider/messages_provider.dart';
+import '../../messages/data/repo/messages_repo.dart';
+
 class AddContactsBinding extends Bindings {
   @override
   void dependencies() {
@@ -29,6 +32,11 @@ class AddContactsBinding extends Bindings {
         callHistoryRepo: CallHistoryRepo(
           callHistoryProvider: CallHistoryProvider(
             appDatabaseProvider: Get.find<AppDatabaseProvider>(),
+          ),
+        ),
+        messagesRepo: MessagesRepo(
+          messagesProvider: MessagesProvider(
+            appDatabaseProvider: Get.find(),
           ),
         ),
       ),
