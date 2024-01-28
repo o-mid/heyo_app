@@ -7,6 +7,7 @@ import 'package:heyo/app/modules/calls/data/call_status_observer.dart';
 import 'package:heyo/app/modules/calls/call_history/controllers/call_history_controller.dart';
 import 'package:heyo/app/modules/calls/data/call_requests_processor.dart';
 import 'package:heyo/app/modules/calls/data/call_status_provider.dart';
+import 'package:heyo/app/modules/calls/data/ios_call_kit/ios_call_kit_provider.dart';
 import 'package:heyo/app/modules/calls/data/signaling/call_signaling.dart';
 import 'package:heyo/app/modules/calls/data/web_rtc_call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
@@ -215,26 +216,44 @@ class GlobalBindings extends Bindings {
         ),
         permanent: true,
       )
+      ..put<WebRTCCallRepository>(
+        WebRTCCallRepository(
+          callConnectionsHandler: Get.find<CallConnectionsHandler>(),
+        ),
+        permanent: true,
+      )
       ..put(
         CallRequestsProcessor(
           connectionContractor: Get.find(),
           callStatusProvider: Get.find(),
           callConnectionsHandler: Get.find(),
         ),
+        permanent: true
       )
       ..put(
+          CallKitProvider(
+              accountInfoRepo: Get.find(),
+              contactRepository: ContactRepository(
+                cacheContractor: CacheRepository(
+                  userProvider: UserProvider(
+                      appDatabaseProvider: Get.find<AppDatabaseProvider>(),),
+                ),
+              ),
+              callRepository: Get.find<WebRTCCallRepository>(),),
+          permanent: true,)
+      ..put(
         CallStatusObserver(
-          callStatusProvider: Get.find(),
-          accountInfoRepo: Get.find(),
-          notificationsController: Get.find(),
-          contactRepository: ContactRepository(
-            cacheContractor: CacheRepository(
-              userProvider: UserProvider(
-                  appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+            callStatusProvider: Get.find(),
+            accountInfoRepo: Get.find(),
+            notificationsController: Get.find(),
+            contactRepository: ContactRepository(
+              cacheContractor: CacheRepository(
+                userProvider: UserProvider(
+                    appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+              ),
             ),
-          ),
-          appLifeCycleController: Get.find(),
-        ),
+            appLifeCycleController: Get.find(),
+            iOSCallKitProvider: Get.find()),
         permanent: true,
       )
 
@@ -389,12 +408,6 @@ class GlobalBindings extends Bindings {
             ),
           ),
         ),
-      )
-      ..put<CallRepository>(
-        WebRTCCallRepository(
-          callConnectionsHandler: Get.find(),
-        ),
-        permanent: true,
       );
   }
 }
