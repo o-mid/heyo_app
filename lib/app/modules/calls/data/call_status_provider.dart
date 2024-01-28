@@ -269,6 +269,8 @@ class CallStatusProvider {
       CallHistoryStatus.end,
       null,
     );
+    onCallStateChange?.call(getCurrentCallId(), [], CurrentCallStatus.end);
+
   }
   void reset() {
     callStatus = CurrentCallStatus.none;

@@ -3,7 +3,6 @@ import 'package:flutter_ios_call_kit/flutter_ios_call_kit.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
-import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/call_controller_provider.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
@@ -13,9 +12,9 @@ import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart'
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:uuid/uuid.dart';
 
-class IosCallControllerProvider implements CallControllerProvider {
+class CallKitProvider  {
 
-  IosCallControllerProvider({
+  CallKitProvider({
     required this.accountInfoRepo,
     required this.contactRepository,
     required this.callRepository,

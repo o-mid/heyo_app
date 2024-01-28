@@ -5,26 +5,23 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/data/call_status_provider.dart';
 import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 import 'package:heyo/app/modules/calls/data/web_rtc_call_repository.dart';
-import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/android_call_controller_provider.dart';
-import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/call_controller_provider.dart';
-import 'package:heyo/app/modules/calls/shared/data/providers/call_controller_provider/ios_call_controller_provider.dart';
+import 'package:heyo/app/modules/calls/data/ios_call_kit/ios_call_kit_provider.dart';
 import 'package:heyo/app/modules/notifications/controllers/notifications_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/app_lifecyle_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
+import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
-
 class CallStatusObserver extends GetxController with WidgetsBindingObserver {
-
-  CallStatusObserver({
-    required this.callStatusProvider,
-    required this.accountInfoRepo,
-    required this.notificationsController,
-    required this.contactRepository,
-    required this.appLifeCycleController,
-  }) {
+  CallStatusObserver(
+      {required this.callStatusProvider,
+      required this.accountInfoRepo,
+      required this.notificationsController,
+      required this.contactRepository,
+      required this.appLifeCycleController,
+      required this.iOSCallKitProvider}) {
     init();
   }
 
@@ -39,19 +36,11 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
   final callHistoryState = Rxn<CallHistoryState>();
   final removeStream = Rxn<MediaStream>();
 
-  late final CallControllerProvider callController;
+  final CallKitProvider iOSCallKitProvider;
 
   Future<void> init() async {
     observeCallStatus();
 
-    // TODO: Move it to up layer as dependency
-    if (Platform.isIOS){
-      callController = IosCallControllerProvider(accountInfoRepo: accountInfoRepo,
-          contactRepository: contactRepository,
-          callRepository: Get.put(WebRTCCallRepository(callConnectionsHandler: Get.find())));
-    }else{
-      callController = AndroidCallControllerProvider(accountInfoRepo: accountInfoRepo, contactRepository: contactRepository);
-    }
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -59,10 +48,11 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
     callStatusProvider
       ..onCallHistoryStatusEvent = (callId, call, state, isAudioCall) async {
         callHistoryState.value = CallHistoryState(
-            callId: callId,
-            remote: call,
-            callHistoryStatus: state,
-            isAudioCall: isAudioCall,);
+          callId: callId,
+          remote: call,
+          callHistoryStatus: state,
+          isAudioCall: isAudioCall,
+        );
       }
       ..onCallStateChange = (callId, calls, state) async {
         print('Call State changed, state is: $state');
@@ -70,10 +60,9 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
           await handleCallStateRinging(callId: callId, calls: calls);
         }
         if (state == CurrentCallStatus.end) {
-
           // TODO: - fix it later
-          if (WebRTC.platformIsIOS == true){
-            await callController.declineCall();
+          if (Platform.isIOS) {
+            await iOSCallKitProvider.declineCall();
           }
           if (Get.currentRoute == Routes.CALL) {
             Get.until((route) => Get.currentRoute != Routes.CALL);
@@ -97,15 +86,24 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
     required CallId callId,
     required List<CallInfo> calls,
   }) async {
-
     final userModel = await contactRepository
         .getContactById(calls.first.remotePeer.remoteCoreId);
-    if (WebRTC.platformIsAndroid){
-
+    if (WebRTC.platformIsAndroid) {
       await appLifeCycleController.waitForResumeState();
     }
-    await _notifyReceivedCall(callInfo: calls.first);
-    await callController.incomingCall(callId, calls);
+    //await _notifyReceivedCall(callInfo: calls.first);
+    if (Platform.isIOS) {
+      await iOSCallKitProvider.incomingCall(callId, calls);
+    } else if (Platform.isAndroid) {
+      await Get.toNamed(
+        Routes.INCOMING_CALL,
+        arguments: IncomingCallViewArguments(
+          callId: callId,
+          isAudioCall: calls.first.isAudioCall,
+          members: calls.map((e) => e.remotePeer.remoteCoreId).toList(),
+        ),
+      );
+    }
   }
 
   Future<void> _notifyReceivedCall({required CallInfo callInfo}) async {
@@ -123,7 +121,6 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
 
   @override
   void dispose() {
-
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
