@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/calls/data/web_rtc_call_repository.dart';
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_availability_use_case.dart';
 import 'package:heyo/app/modules/calls/usecase/get_contact_user_use_case.dart';
@@ -12,7 +13,7 @@ class CallBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<CallController>(
       () => CallController(
-        callRepository: Get.find(),
+        callRepository: Get.find<WebRTCCallRepository>(),
         accountInfo: Get.find(),
         getContactUserUseCase: GetContactUserUseCase(
           contactRepository: ContactRepository(
