@@ -184,12 +184,7 @@ class GlobalBindings extends Bindings {
         ),
         permanent: true,
       )
-      ..put<CallRepository>(
-        WebRTCCallRepository(
-          callConnectionsHandler: Get.find(),
-        ),
-        permanent: true,
-      )
+
       // data base provider dependencies
       ..put(AppDatabaseProvider(), permanent: true)
       ..put(
@@ -218,6 +213,12 @@ class GlobalBindings extends Bindings {
           singleCallWebRTCBuilder: SingleCallWebRTCBuilder(
             connectionContractor: Get.find(),
           ),
+        ),
+        permanent: true,
+      )
+      ..put<WebRTCCallRepository>(
+        WebRTCCallRepository(
+          callConnectionsHandler: Get.find<CallConnectionsHandler>(),
         ),
         permanent: true,
       )
