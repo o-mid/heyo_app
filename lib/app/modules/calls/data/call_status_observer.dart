@@ -59,16 +59,14 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
         if (state == CurrentCallStatus.inComingCall) {
           await handleCallStateRinging(callId: callId, calls: calls);
         }
-        if (state == CurrentCallStatus.end) {
+        if (state == CurrentCallStatus.end || state == CurrentCallStatus.none) {
           // TODO: - fix it later
-          if (Platform.isIOS) {
-            await iOSCallKitProvider.declineCall();
-          }
           if (Get.currentRoute == Routes.CALL) {
-            Get.until((route) => Get.currentRoute != Routes.CALL);
+           Get.back();
           } else if (Get.currentRoute == Routes.INCOMING_CALL) {
             Get.until((route) => Get.currentRoute != Routes.INCOMING_CALL);
           }
+
         }
         /*  if (state == CallState.callStateRinging) {
 
@@ -88,7 +86,7 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
   }) async {
     final userModel = await contactRepository
         .getContactById(calls.first.remotePeer.remoteCoreId);
-    if (WebRTC.platformIsAndroid) {
+    if (Platform.isAndroid) {
       await appLifeCycleController.waitForResumeState();
     }
     //await _notifyReceivedCall(callInfo: calls.first);

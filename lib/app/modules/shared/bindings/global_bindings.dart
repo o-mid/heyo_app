@@ -228,6 +228,7 @@ class GlobalBindings extends Bindings {
           callStatusProvider: Get.find(),
           callConnectionsHandler: Get.find(),
         ),
+        permanent: true
       )
       ..put(
           CallKitProvider(

@@ -103,6 +103,7 @@ class CallKitProvider  {
 
   Future<void> acceptCall() async {
 
+ /*   FlutterIosCallKit.setCallConnected(_uuid);
     await callRepository.acceptCall(callId);
     //TODO farzam, accept
     Get.offNamed(
@@ -112,7 +113,18 @@ class CallKitProvider  {
         isAudioCall: callInfo.first.isAudioCall,
         members: callInfo.map((e) => e.remotePeer.remoteCoreId).toList(),
       ),
+    );*/
+    //TODO shoul be refactor :D
+    await Get.toNamed(
+      Routes.INCOMING_CALL,
+      arguments: IncomingCallViewArguments(
+        callId: callId,
+        isAudioCall: callInfo.first.isAudioCall,
+        members: callInfo.map((e) => e.remotePeer.remoteCoreId).toList(),
+      ),
     );
+    await FlutterIosCallKit.endCall(_uuid);
+
     print("🟩 acceptCall");
   }
 
@@ -147,7 +159,7 @@ class CallKitProvider  {
           case Event.actionCallEnded:
           // TODO: ended an incoming/outgoing call
             print("🟩 IosCallController: Event.actionCallEnded");
-            callRepository.endOrCancelCall(callId);
+           // callRepository.endOrCancelCall(callId);
             await FlutterIosCallKit.endCall(_uuid);
             break;
           case Event.actionCallTimeout:
