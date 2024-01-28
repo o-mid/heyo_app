@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
@@ -16,6 +17,7 @@ class AddContactsController extends GetxController {
     required this.contactRepository,
     required this.chatHistoryRepo,
     required this.callHistoryRepo,
+    required this.messagesRepo,
   });
 
   late AddContactsViewArgumentsModel args;
@@ -28,6 +30,8 @@ class AddContactsController extends GetxController {
   final ContactRepository contactRepository;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final CallHistoryAbstractRepo callHistoryRepo;
+
+  final MessagesAbstractRepo messagesRepo;
 
   @override
   void onInit() async {
@@ -101,17 +105,35 @@ class AddContactsController extends GetxController {
     await _updateChatHistory(userModel: userModel);
     await _updateCallHistory(userModel: userModel);
 
-    Get.back();
+    Get.back(
+      result: userModel.name,
+    );
   }
 
   Future<void> _updateChatHistory({required UserModel userModel}) async {
-    await chatHistoryRepo.getChat(userModel.coreId).then((chatModel) {
-      if (chatModel != null) {
-        chatHistoryRepo.updateChat(chatModel.copyWith(
-          name: userModel.nickname,
-        ));
-      }
-    });
+    final chatHistoryList = await chatHistoryRepo.getChatsFromUserId(userModel.coreId);
+
+    for (final chat in chatHistoryList) {
+      final updatedParticipants = chat.participants
+          .map(
+            (participant) => participant.coreId == userModel.coreId
+                ? participant.copyWith(name: userModel.name)
+                : participant,
+          )
+          .toList();
+      await chatHistoryRepo.updateChat(
+        chat.copyWith(
+          name: chat.isGroupChat ? chat.name : userModel.name,
+          participants: updatedParticipants,
+        ),
+      );
+
+      await _updateMessagesRepo(
+        chatId: chat.id,
+        coreId: userModel.coreId,
+        newSenderName: userModel.name,
+      );
+    }
   }
 
   Future<void> _updateCallHistory({required UserModel userModel}) async {
@@ -145,5 +167,11 @@ class AddContactsController extends GetxController {
         await callHistoryRepo.updateCall(updatedCall);
       }
     }
+  }
+
+  Future<void> _updateMessagesRepo(
+      {required String chatId, required String coreId, required String newSenderName}) async {
+    await messagesRepo.updateMessagesSenderName(
+        chatId: chatId, coreId: coreId, newSenderName: newSenderName);
   }
 }

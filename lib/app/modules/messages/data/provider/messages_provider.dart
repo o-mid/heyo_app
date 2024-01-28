@@ -208,4 +208,24 @@ class MessagesProvider implements MessagesAbstractProvider {
   Future<void> deleteAllMessages(String chatId) async {
     await _store.record(chatId).delete(await _db);
   }
+
+  @override
+  Future<void> updateMessagesSenderName(
+      {required String chatId, required String coreId, required String newSenderName}) async {
+    var updated = false;
+
+    var messages = await getMessages(chatId);
+
+    for (var i = 0; i < messages.length; i++) {
+      if (messages[i].senderAvatar == coreId) {
+        messages[i] = messages[i].copyWith(senderName: newSenderName);
+
+        updated = true;
+      }
+    }
+
+    if (updated) {
+      await _store.record(chatId).put(await _db, messages.map((m) => m.toJson()).toList());
+    }
+  }
 }

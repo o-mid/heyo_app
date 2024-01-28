@@ -44,14 +44,16 @@ class MessagesListViewWidget extends StatelessWidget {
                 // reverse index
                 final reverseIndex = controller.messages.length - index;
                 if (reverseIndex == 0) {
-                  return BeginningOfMessagesHeaderWidget(
-                    participantsCoreIds: controller.isGroupChat
-                        ? controller.participants.value.map((e) => e.coreId).toList()
-                        : [
-                            controller.participants.first.coreId,
-                          ],
-                    chatName: controller.chatName.value,
-                  );
+                  return Obx(() {
+                    return BeginningOfMessagesHeaderWidget(
+                      participantsCoreIds: controller.isGroupChat
+                          ? controller.participants.value.map((e) => e.coreId).toList()
+                          : [
+                              controller.participants.first.coreId,
+                            ],
+                      chatName: controller.chatName.value,
+                    );
+                  });
                 } else {
                   return MessageItemWidget(index: reverseIndex - 1);
                 }

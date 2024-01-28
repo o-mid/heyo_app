@@ -26,4 +26,7 @@ abstract class MessagesAbstractProvider {
   Future<List<MessageModel?>> getUnsentMessages(String chatId);
 
   Future<void> deleteAllMessages(String chatId);
+
+  Future<void> updateMessagesSenderName(
+      {required String chatId, required String coreId, required String newSenderName});
 }

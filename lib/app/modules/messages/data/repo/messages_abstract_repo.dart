@@ -40,4 +40,10 @@ abstract class MessagesAbstractRepo {
   Future<void> markAllMessagesAsRead({required String chatId});
 
   Future<List<MessageModel?>> getUnsentMessages(String chatId);
+  // get all the messages from a coreID and update the sender name
+  Future<void> updateMessagesSenderName({
+    required String chatId,
+    required String coreId,
+    required String newSenderName,
+  });
 }

@@ -74,15 +74,18 @@ class UserStateRepositoryImpl implements UserStateRepository {
     final selfCoreID = await accountInfo.getUserAddress();
 
     for (final element in userInstances) {
+      if (element.coreId != selfCoreID) {
+        users.add(await getUserContact(userInstance: element));
+      }
+      final user = await contactRepository.getContactById(element.coreId);
+
       participants.add(
         MessagingParticipantModel(
           coreId: element.coreId,
           chatId: userStates.chatId,
+          name: user?.name,
         ),
       );
-      if (element.coreId != selfCoreID) {
-        users.add(await getUserContact(userInstance: element));
-      }
     }
 
     // final UserModel user = await getUserContact(userInstance: userInstance);
@@ -92,6 +95,8 @@ class UserStateRepositoryImpl implements UserStateRepository {
     int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
 
     final ChatModel? chatModel = await chatHistoryRepo.getChat(chatId);
+
+    final bool isGroupChat = users.length > 1;
 
     if (chatModel == null) {
       final updatedChatModel = ChatModel(
@@ -109,7 +114,7 @@ class UserStateRepositoryImpl implements UserStateRepository {
       await chatHistoryRepo.updateChat(
         chatModel.copyWith(
           id: chatId,
-          name: chatName,
+          name: isGroupChat ? chatName : chatModel.name,
           lastReadMessageId: lastReadRemoteMessagesId,
           scrollPosition: scrollPositionMessagesId,
           lastMessage: lastMessagePreview,
