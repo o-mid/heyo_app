@@ -11,20 +11,23 @@ class ContactListWidget extends GetView<NewCallController> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Divider(thickness: 8, color: COLORS.kBrightBlueColor),
-        Padding(
-          padding: CustomSizes.mainContentPadding,
-          child: Obx(() {
-            if (controller.inputText.value.isNotEmpty) {
-              return const SearchResultWidget();
-            } else {
-              return const GroupedContactListWidget();
-            }
-          }),
-        ),
-      ],
+    return Expanded(
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          const Divider(thickness: 8, color: COLORS.kBrightBlueColor),
+          Padding(
+            padding: CustomSizes.mainContentPadding,
+            child: Obx(() {
+              if (controller.inputText.value.isNotEmpty) {
+                return const SearchResultWidget();
+              } else {
+                return const GroupedContactListWidget();
+              }
+            }),
+          ),
+        ],
+      ),
     );
   }
 }
