@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import 'package:heyo/app/modules/calls/call_history/utils/call_utils.dart';
 import 'package:heyo/app/modules/calls/call_history/views/models/call_history_participant_view_model/call_history_participant_view_model.dart';
 import 'package:heyo/app/modules/calls/call_history/views/models/call_history_view_model/call_history_view_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
-import 'package:heyo/app/modules/calls/shared/utils/call_utils.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';

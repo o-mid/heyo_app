@@ -1,16 +1,17 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'package:heyo/app/modules/calls/call_history/utils/call_utils.dart';
 import 'package:heyo/app/modules/calls/call_history/views/models/call_history_participant_view_model/call_history_participant_view_model.dart';
 import 'package:heyo/app/modules/calls/call_history/views/models/call_history_view_model/call_history_view_model.dart';
-
 import 'package:heyo/app/modules/calls/call_history/widgets/call_history_list_tile_widget.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/delete_all_calls_bottom_sheet.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/delete_call_history_dialog.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
-import 'package:heyo/app/modules/calls/shared/utils/call_utils.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 
 class CallHistoryController extends GetxController {
