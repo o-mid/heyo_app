@@ -135,10 +135,15 @@ flutter_gen:
   integrations:
     flutter_svg: true
 
-flutter_icons:
-  android: true
+flutter_launcher_icons:
+  android: "launcher_icon"
+  adaptive_icon_background: "#22CEC4"
+  adaptive_icon_foreground: "assets/png/icon-android.png"
+  adaptive_icon_padding: true
   ios: true
-  image_path: "assets/png/icon.png"
+  image_path_ios: "assets/png/icon.png"
+  image_path_android: "assets/png/icon-android.png"
+  remove_alpha_ios: true
 
 flutter_native_splash:
   image: "assets/png/splash.png"

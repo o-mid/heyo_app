@@ -10,6 +10,7 @@ import 'package:heyo/app/modules/shared/data/repository/account/account_reposito
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/messages/utils/message_to_send_message_type.dart';
 
+import '../../chats/data/models/chat_model.dart';
 import 'multiple_connections.dart';
 
 class SyncMessages {
@@ -39,29 +40,35 @@ class SyncMessages {
   void _sendUnsentMessages() {
     multipleConnectionHandler.onRTCSessionConnected = (rtcSession) async {
       print("syncMessages: onRTCSessionConnected: ${rtcSession.connectionId} ");
-      List<MessageModel?> unsentMessages =
-          (await messagesRepo.getUnsentMessages(rtcSession.remotePeer.remoteCoreId));
-      print("syncMessages: size : ${unsentMessages.length} ");
+      List<ChatModel> userChats =
+          await chatHistoryRepo.getChatsFromUserId(rtcSession.remotePeer.remoteCoreId);
 
-      for (var message in unsentMessages) {
-        print("syncMessages: message: ${rtcSession.connectionId} ");
+      for (final chat in userChats) {
+        final chatId = chat.id;
 
-        if (message != null) {
-          print("syncMessages: sendMessageType: ${rtcSession.connectionId} ");
+        final List<MessageModel?> unsentMessages = await messagesRepo.getUnsentMessages(chatId);
 
-          SendMessageType? sendMessageType =
-              message.getSendMessageType(rtcSession.remotePeer.remoteCoreId);
-          if (sendMessageType != null) {
-            print("syncMessages: execute: ${rtcSession.connectionId} ");
+        print("syncMessages: size : ${unsentMessages.length} ");
 
-            await sendMessageUseCase.execute(
-                messageConnectionType: MessageConnectionType.RTC_DATA_CHANNEL,
-                sendMessageType: sendMessageType,
-                chatName: '',
-                remoteCoreIds: [rtcSession.remotePeer.remoteCoreId],
-                isUpdate: true,
-                messageModel: message);
-            print("syncMessages: Message sent ");
+        for (var message in unsentMessages) {
+          print("syncMessages: message: ${rtcSession.connectionId} ");
+
+          if (message != null) {
+            print("syncMessages: sendMessageType: ${rtcSession.connectionId} ");
+
+            SendMessageType? sendMessageType = message.getSendMessageType(chatId);
+            if (sendMessageType != null) {
+              print("syncMessages: execute: ${rtcSession.connectionId} ");
+
+              await sendMessageUseCase.execute(
+                  messageConnectionType: MessageConnectionType.RTC_DATA_CHANNEL,
+                  sendMessageType: sendMessageType,
+                  chatName: '',
+                  remoteCoreIds: chat.participants.map((e) => e.coreId).toList(),
+                  isUpdate: true,
+                  messageModel: message);
+              print("syncMessages: Message sent ");
+            }
           }
         }
       }
