@@ -56,10 +56,10 @@ dependencies:
   pointycastle: ^3.6.0
   flutter_local_notifications: ^16.3.0
   flutter_p2p_communicator:
-    #path: ../flutter_p2p_communicator/
-    git:
-      url: git@ssh.git.energy:corepass/flutter_p2p_communicator.git
-      ref: f04315ab
+    path: ../flutter_p2p_communicator/
+    # git:
+    #   url: git@ssh.git.energy:corepass/flutter_p2p_communicator.git
+    #   ref: f04315ab
 
   flutter_ios_call_kit:
     path: ./heyo-plugin/flutter_ios_call_kit
@@ -135,10 +135,15 @@ flutter_gen:
   integrations:
     flutter_svg: true
 
-flutter_icons:
-  android: true
+flutter_launcher_icons:
+  android: "launcher_icon"
+  adaptive_icon_background: "#22CEC4"
+  adaptive_icon_foreground: "assets/png/icon-android.png"
+  adaptive_icon_padding: true
   ios: true
-  image_path: "assets/png/icon.png"
+  image_path_ios: "assets/png/icon.png"
+  image_path_android: "assets/png/icon-android.png"
+  remove_alpha_ios: true
 
 flutter_native_splash:
   image: "assets/png/splash.png"
