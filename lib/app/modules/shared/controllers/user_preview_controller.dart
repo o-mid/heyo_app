@@ -25,8 +25,8 @@ class UserPreview extends GetxController {
     bool isWifiDirect = false,
     required String coreId,
     required String name,
-    required bool isVerified,
-    required bool isContact,
+    //required bool isVerified,
+    //required bool isContact,
   }) async {
     isWifiDirectConnection.value = isWifiDirect;
     print("openUserPreviewBottomSheet");
@@ -37,8 +37,8 @@ class UserPreview extends GetxController {
       UserPreviewWidget(
         coreId: coreId,
         name: name,
-        isVerified: isVerified,
-        isContact: isContact,
+        //isVerified: isVerified,
+        //isContact: isContact,
       ),
       backgroundColor: COLORS.kWhiteColor,
       isDismissible: true,
