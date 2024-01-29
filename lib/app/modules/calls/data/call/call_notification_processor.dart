@@ -27,6 +27,7 @@ class CallProcessor {
   }) {
     final callData = NotificationCallModel.fromJson(data);
 
+    print("CALL Notification : $isBackgroundNotification");
     if ([Routes.INCOMING_CALL, Routes.CALL].contains(Get.currentRoute)) {
       /// could be moved to call requests processor
       /// in future, we have to show a missed call if caller is different from

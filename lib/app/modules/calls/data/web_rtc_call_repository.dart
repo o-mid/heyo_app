@@ -6,6 +6,7 @@ import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
 class WebRTCCallRepository implements CallRepository {
+
   WebRTCCallRepository({required this.callConnectionsHandler}) {
     callConnectionsHandler
       ..onLocalStream = (stream) {

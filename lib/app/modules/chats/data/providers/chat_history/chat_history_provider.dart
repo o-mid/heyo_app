@@ -84,14 +84,24 @@ class ChatHistoryProvider implements ChatHistoryLocalAbstractProvider {
       await _db,
       finder: Finder(
         sortOrders: [SortOrder('timestamp', false)],
-        filter: Filter.equals(
-          'walletAddress',
-          userId,
-        ),
       ),
     );
 
-    return records.map((e) => ChatModel.fromJson(e.value)).toList();
+    final List<ChatModel> chats = [];
+
+    for (var record in records) {
+      final chatJson = record.value;
+      final chatModel = ChatModel.fromJson(chatJson);
+
+      for (final participant in chatModel.participants) {
+        if (participant.coreId == userId) {
+          chats.add(chatModel);
+          break;
+        }
+      }
+    }
+
+    return chats;
   }
 
   @override

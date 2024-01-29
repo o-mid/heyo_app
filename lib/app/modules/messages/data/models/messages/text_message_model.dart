@@ -40,13 +40,14 @@ class TextMessageModel extends MessageModel {
     bool? isSelected,
     String? senderAvatar,
     bool clearReply = false,
+    String? senderName,
   }) {
     return TextMessageModel(
       text: text ?? this.text,
       messageId: messageId ?? this.messageId,
       chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
-      senderName: senderName,
+      senderName: senderName ?? this.senderName,
       senderAvatar: senderAvatar ?? this.senderAvatar,
       status: status ?? this.status,
       isFromMe: isFromMe ?? this.isFromMe,

@@ -269,6 +269,7 @@ class CallStatusProvider {
       CallHistoryStatus.end,
       null,
     );
+
   }
   void reset() {
     callStatus = CurrentCallStatus.none;

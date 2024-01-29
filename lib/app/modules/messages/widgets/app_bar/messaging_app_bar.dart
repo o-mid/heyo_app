@@ -42,7 +42,7 @@ class MessagingAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: ScaleAnimatedSwitcher(
             child: controller.selectedMessages.isNotEmpty
                 ? const _SelectionModeAppBar()
-                : const _DefaultAppBar(),
+                : _DefaultAppBar(),
           ),
         ),
       ),
@@ -84,13 +84,12 @@ class _SelectionModeAppBar extends StatelessWidget {
 }
 
 class _DefaultAppBar extends StatelessWidget {
-  const _DefaultAppBar({
+  _DefaultAppBar({
     Key? key,
   }) : super(key: key);
-
+  final controller = Get.find<MessagesController>();
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<MessagesController>();
     return Obx(() {
       return Row(
         children: [
@@ -104,7 +103,7 @@ class _DefaultAppBar extends StatelessWidget {
           ),
           if (controller.isGroupChat)
             StackedAvatars(
-              avatarSize: 24,
+              avatarSize: 21,
               coreId1: controller.participants.first.coreId,
               coreId2: controller.participants.last.coreId,
             )
@@ -165,10 +164,12 @@ class _DefaultAppBar extends StatelessWidget {
                 icon: Assets.svg.verticalMenuIcon.svg(),
                 size: 22,
                 onPressed: () {
-                  _openAppBarActionBottomSheet(
-                    coreId: controller.users.first.coreId,
-                    isContact: controller.users.first.isContact,
-                  );
+                  if (!controller.isGroupChat) {
+                    _openAppBarActionBottomSheet(
+                      coreId: controller.users.first.coreId,
+                      isContact: controller.users.first.isContact,
+                    );
+                  }
                 },
               ),
             ],
@@ -176,6 +177,52 @@ class _DefaultAppBar extends StatelessWidget {
         ],
       );
     });
+  }
+
+  void _openAppBarActionBottomSheet({
+    required String coreId,
+    required bool isContact,
+  }) {
+    Get.bottomSheet(
+        Padding(
+          padding: CustomSizes.iconListPadding,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextButton(
+                onPressed: controller.navigateToAddContacts,
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: COLORS.kBrightBlueColor,
+                      ),
+                      child: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
+                    ),
+                    CustomSizes.mediumSizedBoxWidth,
+                    Text(
+                      isContact
+                          ? LocaleKeys.AddContacts_Edit_Contact.tr
+                          : LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
+                      style: TEXTSTYLES.kLinkBig.copyWith(
+                        color: COLORS.kDarkBlueColor,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              CustomSizes.mediumSizedBoxHeight,
+            ],
+          ),
+        ),
+        backgroundColor: COLORS.kWhiteColor,
+        isDismissible: true,
+        enableDrag: true,
+        shape: const RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))));
   }
 }
 
@@ -277,59 +324,4 @@ class _BuildChatName extends StatelessWidget {
       ),
     );
   }
-}
-
-void _openAppBarActionBottomSheet({
-  required String coreId,
-  required bool isContact,
-}) {
-  Get.bottomSheet(
-      Padding(
-        padding: CustomSizes.iconListPadding,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextButton(
-              onPressed: () {
-                Get
-                  ..back()
-                  ..toNamed(
-                    Routes.ADD_CONTACTS,
-                    arguments: AddContactsViewArgumentsModel(
-                      coreId: coreId,
-                    ),
-                  );
-              },
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: COLORS.kBrightBlueColor,
-                    ),
-                    child: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
-                  ),
-                  CustomSizes.mediumSizedBoxWidth,
-                  Text(
-                    isContact
-                        ? LocaleKeys.AddContacts_Edit_Contact.tr
-                        : LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
-                    style: TEXTSTYLES.kLinkBig.copyWith(
-                      color: COLORS.kDarkBlueColor,
-                    ),
-                  )
-                ],
-              ),
-            ),
-            CustomSizes.mediumSizedBoxHeight,
-          ],
-        ),
-      ),
-      backgroundColor: COLORS.kWhiteColor,
-      isDismissible: true,
-      enableDrag: true,
-      shape: const RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))));
 }

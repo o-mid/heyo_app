@@ -147,6 +147,7 @@ class DataHandler {
         await messagesRepo.getMessageById(messageId: receivedMessage.messageId, chatId: chatId);
 
     bool isNewMessage = (_currentMsg == null);
+    UserModel? contact = await contactRepository.getContactById(coreId);
 
     if (isNewMessage) {
       await messagesRepo.createMessage(
@@ -154,6 +155,7 @@ class DataHandler {
           isFromMe: false,
           status: receivedMessage.status.deliveredStatus(),
           senderAvatar: coreId,
+          senderName: contact?.name,
         ),
         chatId: chatId,
       );

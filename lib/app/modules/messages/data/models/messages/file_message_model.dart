@@ -42,13 +42,14 @@ class FileMessageModel extends MessageModel {
     String? senderAvatar,
     bool? isSelected,
     bool clearReply = false,
+    String? senderName,
   }) {
     return FileMessageModel(
       metadata: metadata ?? this.metadata,
       messageId: messageId ?? this.messageId,
       chatId: chatId ?? this.chatId,
       timestamp: timestamp ?? this.timestamp,
-      senderName: senderName,
+      senderName: senderName ?? this.senderName,
       senderAvatar: senderAvatar ?? this.senderAvatar,
       status: status ?? this.status,
       isFromMe: isFromMe ?? this.isFromMe,
