@@ -7,6 +7,7 @@ import 'package:heyo/app/modules/calls/call_history/views/models/call_history_vi
 import 'package:heyo/app/modules/calls/call_history/widgets/call_history_list_tile_widget.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/delete_all_calls_bottom_sheet.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/delete_call_history_dialog.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/shared/utils/call_utils.dart';
@@ -24,7 +25,7 @@ class CallHistoryController extends GetxController {
   final calls = <CallHistoryViewModel>[].obs;
   final animatedListKey = GlobalKey<AnimatedListState>();
 
-  late StreamSubscription _callsStreamSubscription;
+  late StreamSubscription<List<CallHistoryModel>> _callsStreamSubscription;
 
   RxBool loading = true.obs;
 
