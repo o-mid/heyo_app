@@ -17,7 +17,7 @@ class PeerCallWidget extends GetView<CallController> {
     final remoteParticipate = controller.connectedRemoteParticipates;
     return Obx(() {
       final changeCallerWidgetSize = controller.showCallerOptions.value &
-          controller.isVideoPositionsFlipped.isFalse;
+          controller.isVideoPositionsFlipped.isTrue;
 
       if (remoteParticipate.isEmpty || localParticipate.value == null) {
         return const Center(child: Text('No remote videos available.'));

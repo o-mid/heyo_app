@@ -8,6 +8,7 @@ import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -140,6 +141,8 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
 
       if (inputText.value == "") {
         searchSuggestions.value = newContacts;
+      }else {
+        searchUsers(inputText.value);
       }
     });
     nearbyUsers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
@@ -157,7 +160,7 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
         //TODO update fields based on correct data
         searchSuggestions.value = [
           UserModel(
-            name: 'unknown',
+            name: query.shortenCoreId,
             walletAddress: query,
             coreId: query,
           )
