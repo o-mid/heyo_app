@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/controllers/user_preview_controller.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 
@@ -17,6 +19,14 @@ class CallHistoryDetailListTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: () {
+        //* Close keyboard before opening bottom sheet
+        FocusScope.of(context).unfocus();
+        Get.find<UserPreview>().openUserPreview(
+          coreId: coreId,
+          name: name,
+        );
+      },
       //dense: true,
       visualDensity: const VisualDensity(vertical: -4),
       leading: CustomCircleAvatar(
