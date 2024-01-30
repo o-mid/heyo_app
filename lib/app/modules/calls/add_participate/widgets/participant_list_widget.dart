@@ -21,7 +21,7 @@ class ParticipantListWidget extends GetView<AddParticipateController> {
           Padding(
             padding: CustomSizes.mainContentPadding,
             child: Obx(() {
-              if (controller.inputText.value.isNotEmpty) {
+              if (controller.inputController.value.text.isNotEmpty) {
                 return const SearchResultWidget();
               } else {
                 return const GroupedContactListWidget();
