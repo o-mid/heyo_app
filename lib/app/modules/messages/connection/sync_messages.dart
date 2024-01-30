@@ -24,6 +24,7 @@ class SyncMessages {
   }) {
     _init();
   }
+
   final P2PState p2pState;
   final MultipleConnectionHandler multipleConnectionHandler;
   final AccountRepository accountInfo;
@@ -40,13 +41,15 @@ class SyncMessages {
   void _sendUnsentMessages() {
     multipleConnectionHandler.onRTCSessionConnected = (rtcSession) async {
       print("syncMessages: onRTCSessionConnected: ${rtcSession.connectionId} ");
-      List<ChatModel> userChats =
-          await chatHistoryRepo.getChatsFromUserId(rtcSession.remotePeer.remoteCoreId);
+      await Future.delayed(Duration(seconds: 5));
+      List<ChatModel> userChats = await chatHistoryRepo
+          .getChatsFromUserId(rtcSession.remotePeer.remoteCoreId);
 
       for (final chat in userChats) {
         final chatId = chat.id;
 
-        final List<MessageModel?> unsentMessages = await messagesRepo.getUnsentMessages(chatId);
+        final List<MessageModel?> unsentMessages =
+            await messagesRepo.getUnsentMessages(chatId);
 
         print("syncMessages: size : ${unsentMessages.length} ");
 
@@ -56,7 +59,8 @@ class SyncMessages {
           if (message != null) {
             print("syncMessages: sendMessageType: ${rtcSession.connectionId} ");
 
-            SendMessageType? sendMessageType = message.getSendMessageType(chatId);
+            SendMessageType? sendMessageType =
+                message.getSendMessageType(chatId);
             if (sendMessageType != null) {
               print("syncMessages: execute: ${rtcSession.connectionId} ");
 
@@ -64,10 +68,12 @@ class SyncMessages {
                   messageConnectionType: MessageConnectionType.RTC_DATA_CHANNEL,
                   sendMessageType: sendMessageType,
                   chatName: '',
-                  remoteCoreIds: chat.participants.map((e) => e.coreId).toList(),
+                  remoteCoreIds:
+                      chat.participants.map((e) => e.coreId).toList(),
                   isUpdate: true,
                   messageModel: message);
-              print("syncMessages: Message sent ");
+              print(
+                  "syncMessages: Message sent: $sendMessageType : ${chat.participants.toList()} ");
             }
           }
         }
@@ -75,7 +81,17 @@ class SyncMessages {
     };
   }
 
-  _initiateConnections() async {
+  void _initiateConnections() async {
+    p2pState.advertise.listen((advertised) async {
+      if (advertised) {
+        for (final value in await chatHistoryRepo.getAllChats()) {
+          print('syncMessages : _initiateConnections : getConnection');
+          for (final element in value.participants) {
+            multipleConnectionHandler.getConnection(element.coreId);
+          }
+        }
+      }
+    });
     //  wait until getting advertised
     // await p2pState.advertise
     //     .waitForResult(condition: (advertise) => advertise == true);

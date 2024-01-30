@@ -262,8 +262,7 @@ class DataHandler {
             .where(
               (element) =>
                   element.isFromMe == true &&
-                  (element.status == MessageStatus.delivered ||
-                      element.status == MessageStatus.sending),
+                  (element.status == MessageStatus.delivered),
             )
             .toList();
         // update the status of the messages that need to be update to read
