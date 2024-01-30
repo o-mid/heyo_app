@@ -49,9 +49,9 @@ class CallKitProvider {
 
     final params = CallKitParams(
         id: _uuid,
-        nameCaller: userModel?.name.tr,
+        nameCaller: userModel?.name,
         appName: "Heyo",
-        type: (callInfo.first.isAudioCall) ? 0 : 1);
+        type: (callInfo.first.isAudioCall) ? 0 : 1,);
     await FlutterIosCallKit.showCallkitIncoming(params);
     print('🟩 IosCallController: incoming Call');
   }
