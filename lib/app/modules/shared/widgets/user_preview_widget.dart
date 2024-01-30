@@ -78,10 +78,17 @@ class UserPreviewWidget extends GetView<UserPreviewController> {
                     return;
                   } else {
                     Get.back();
-                    print('UserPreviewWidget isWifiDirect $isWifiDirect');
                     isWifiDirect
                         ? Get.toNamed(
                             Routes.WIFI_DIRECT_CONNECT,
+                            arguments: MessagesViewArgumentsModel(
+                                connectionType: MessagingConnectionType.wifiDirect,
+                                participants: [
+                                  MessagingParticipantModel(
+                                    coreId: coreId,
+                                    chatId: ChatIdGenerator.generate(),
+                                  )
+                                ]),
                           )
                         : Get.toNamed(
                             Routes.MESSAGES,
