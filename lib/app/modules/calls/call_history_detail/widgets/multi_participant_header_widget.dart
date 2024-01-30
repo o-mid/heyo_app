@@ -29,25 +29,32 @@ class MultiParticipantHeaderWidget
               .toList(),
         ),
         CustomSizes.mediumSizedBoxHeight,
-        Text(
-          controller.callHistoryViewModel!.value!.participants.obs
-              .map((element) => element.name)
-              .toList()
-              .join(', '),
-          style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          child: Text(
+            controller.callHistoryViewModel!.value!.participants.obs
+                .map((element) => element.name)
+                .toList()
+                .join(', '),
+            style:
+                TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
         ),
         SizedBox(height: 4.h),
-        Text(
-          controller.callHistoryViewModel!.value!.participants
-              .map((element) => element.coreId.shortenCoreId)
-              .toList()
-              .join(', '),
-          style:
-              TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          child: Text(
+            controller.callHistoryViewModel!.value!.participants
+                .map((element) => element.coreId.shortenCoreId)
+                .toList()
+                .join(', '),
+            style: TEXTSTYLES.kBodySmall
+                .copyWith(color: COLORS.kTextSoftBlueColor),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
         ),
         SizedBox(height: 40.h),
         Row(
