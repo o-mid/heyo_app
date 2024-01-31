@@ -63,7 +63,7 @@ class CallHistoryDetailController extends GetxController {
       }
 
       //* Convert the call history data model to view model
-      callHistoryViewModel!.value = CallHistoryViewModel(
+      final newCallHistoryModel = CallHistoryViewModel(
         callId: callHistoryDataModel.callId,
         type: CallUtils.callStatus(callHistoryDataModel),
         status: CallUtils.callTitle(callHistoryDataModel.status),
@@ -71,6 +71,12 @@ class CallHistoryDetailController extends GetxController {
         startDate: callHistoryDataModel.startDate,
         endDate: callHistoryDataModel.endDate,
       );
+
+      if (callHistoryViewModel == null) {
+        callHistoryViewModel = newCallHistoryModel.obs;
+      } else {
+        callHistoryViewModel!.value = newCallHistoryModel;
+      }
     } catch (e) {
       debugPrint(e.toString());
     }
