@@ -20,91 +20,95 @@ class SingleParticipantHeder extends GetView<CallHistoryDetailController> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: 40.h),
-        CustomCircleAvatar(
-          coreId:
-              controller.callHistoryViewModel!.value!.participants[0].coreId,
-          size: 64,
-        ),
-        CustomSizes.mediumSizedBoxHeight,
-        GestureDetector(
-          onTap: () => controller.saveCoreIdToClipboard(),
-          child: Text(
-            controller.callHistoryViewModel!.value!.participants[0].name,
-            style:
-                TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+    return Obx(() {
+      return Column(
+        children: [
+          SizedBox(height: 40.h),
+          CustomCircleAvatar(
+            coreId:
+                controller.callHistoryViewModel!.value!.participants[0].coreId,
+            size: 64,
           ),
-        ),
-        SizedBox(height: 4.h),
-        GestureDetector(
-          onTap: () => controller.saveCoreIdToClipboard(),
-          child: Text(
-            controller.callHistoryViewModel!.value!.participants[0].coreId
-                .shortenCoreId,
-            style: TEXTSTYLES.kBodySmall
-                .copyWith(color: COLORS.kTextSoftBlueColor),
+          CustomSizes.mediumSizedBoxHeight,
+          GestureDetector(
+            onTap: () => controller.saveCoreIdToClipboard(),
+            child: Text(
+              controller.callHistoryViewModel!.value!.participants[0].name,
+              style: TEXTSTYLES.kHeaderLarge
+                  .copyWith(color: COLORS.kDarkBlueColor),
+            ),
           ),
-        ),
-        SizedBox(height: 40.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleIconButton(
-              backgroundColor: COLORS.kBrightBlueColor,
-              padding: EdgeInsets.all(14.w),
-              onPressed: () => Get.toNamed(
-                Routes.CALL,
-                arguments: CallViewArgumentsModel(
-                  callId: null,
-                  isAudioCall: true,
-                  members: controller.args.participants,
-                ),
-              ),
-              icon: Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor),
+          SizedBox(height: 4.h),
+          GestureDetector(
+            onTap: () => controller.saveCoreIdToClipboard(),
+            child: Text(
+              controller.callHistoryViewModel!.value!.participants[0].coreId
+                  .shortenCoreId,
+              style: TEXTSTYLES.kBodySmall
+                  .copyWith(color: COLORS.kTextSoftBlueColor),
             ),
-            SizedBox(width: 24.w),
-            CircleIconButton(
-              backgroundColor: COLORS.kBrightBlueColor,
-              padding: EdgeInsets.all(14.w),
-              onPressed: () => Get.toNamed(
-                Routes.CALL,
-                arguments: CallViewArgumentsModel(
-                  callId: null,
-                  members: controller.args.participants,
-                  isAudioCall: false,
-                ),
-              ),
-              icon: Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
-            ),
-            SizedBox(width: 24.w),
-            // Todo Omid : add go to messaging screen
-            CircleIconButton(
-              backgroundColor: COLORS.kBrightBlueColor,
-              padding: EdgeInsets.all(14.w),
-              onPressed: () {
-                Get.toNamed(
-                  Routes.MESSAGES,
-                  arguments: MessagesViewArgumentsModel(
-                    connectionType: MessagingConnectionType.internet,
-                    participants: [
-                      MessagingParticipantModel(
-                        coreId: controller.callHistoryViewModel!.value!
-                            .participants[0].coreId,
-                        chatId: controller.callHistoryViewModel!.value!
-                            .participants[0].coreId,
-                      ),
-                    ],
+          ),
+          SizedBox(height: 40.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleIconButton(
+                backgroundColor: COLORS.kBrightBlueColor,
+                padding: EdgeInsets.all(14.w),
+                onPressed: () => Get.toNamed(
+                  Routes.CALL,
+                  arguments: CallViewArgumentsModel(
+                    callId: null,
+                    isAudioCall: true,
+                    members: controller.args.participants,
                   ),
-                );
-              },
-              icon: Assets.svg.chatOutlined.svg(color: COLORS.kDarkBlueColor),
-            ),
-          ],
-        ),
-        SizedBox(height: 40.h),
-      ],
-    );
+                ),
+                icon:
+                    Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor),
+              ),
+              SizedBox(width: 24.w),
+              CircleIconButton(
+                backgroundColor: COLORS.kBrightBlueColor,
+                padding: EdgeInsets.all(14.w),
+                onPressed: () => Get.toNamed(
+                  Routes.CALL,
+                  arguments: CallViewArgumentsModel(
+                    callId: null,
+                    members: controller.args.participants,
+                    isAudioCall: false,
+                  ),
+                ),
+                icon:
+                    Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
+              ),
+              SizedBox(width: 24.w),
+              // Todo Omid : add go to messaging screen
+              CircleIconButton(
+                backgroundColor: COLORS.kBrightBlueColor,
+                padding: EdgeInsets.all(14.w),
+                onPressed: () {
+                  Get.toNamed(
+                    Routes.MESSAGES,
+                    arguments: MessagesViewArgumentsModel(
+                      connectionType: MessagingConnectionType.internet,
+                      participants: [
+                        MessagingParticipantModel(
+                          coreId: controller.callHistoryViewModel!.value!
+                              .participants[0].coreId,
+                          chatId: controller.callHistoryViewModel!.value!
+                              .participants[0].coreId,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                icon: Assets.svg.chatOutlined.svg(color: COLORS.kDarkBlueColor),
+              ),
+            ],
+          ),
+          SizedBox(height: 40.h),
+        ],
+      );
+    });
   }
 }

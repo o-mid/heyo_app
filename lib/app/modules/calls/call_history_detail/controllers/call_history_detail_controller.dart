@@ -43,6 +43,7 @@ class CallHistoryDetailController extends GetxController {
 
   Future<void> getData() async {
     try {
+      loading.value = true;
       final callHistoryDataModel =
           await callHistoryRepo.getOneCall(args.callId);
 
@@ -62,14 +63,14 @@ class CallHistoryDetailController extends GetxController {
       }
 
       //* Convert the call history data model to view model
-      callHistoryViewModel = CallHistoryViewModel(
+      callHistoryViewModel!.value = CallHistoryViewModel(
         callId: callHistoryDataModel.callId,
         type: CallUtils.callStatus(callHistoryDataModel),
         status: CallUtils.callTitle(callHistoryDataModel.status),
         participants: participantViewList,
         startDate: callHistoryDataModel.startDate,
         endDate: callHistoryDataModel.endDate,
-      ).obs;
+      );
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -134,18 +135,21 @@ class CallHistoryDetailController extends GetxController {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextButton(
-              onPressed: () {
+              onPressed: () async {
+                //* Close bottom sheet
                 Get.back();
 
                 final userModel = participant.mapToUserModel();
 
-                Get.toNamed(
+                //* push to add_contact page but wait for receiving data
+                await Get.toNamed(
                   Routes.ADD_CONTACTS,
                   arguments: AddContactsViewArgumentsModel(
                     //  user: userModel,
                     coreId: userModel.coreId,
                   ),
                 );
+                await getData();
               },
               child: Row(
                 children: [
