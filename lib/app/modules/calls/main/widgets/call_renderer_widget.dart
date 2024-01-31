@@ -21,7 +21,6 @@ class CallRendererWidget extends StatelessWidget {
           ? RTCVideoView(
               participantModel.rtcVideoRenderer!,
               objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-              mirror: true,
             )
           : Row(
               mainAxisAlignment: MainAxisAlignment.center,

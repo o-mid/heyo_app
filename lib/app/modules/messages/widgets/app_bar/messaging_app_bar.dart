@@ -103,7 +103,7 @@ class _DefaultAppBar extends StatelessWidget {
           ),
           if (controller.isGroupChat)
             StackedAvatars(
-              avatarSize: 21,
+              avatarSize: 20,
               coreId1: controller.participants.first.coreId,
               coreId2: controller.participants.last.coreId,
             )
@@ -310,7 +310,7 @@ class _BuildChatName extends StatelessWidget {
             name,
             style: TEXTSTYLES.kButtonBasic.copyWith(
               color: COLORS.kWhiteColor,
-              height: 1,
+              height: 0.5,
             ),
           ),
           SizedBox(width: 5.w),

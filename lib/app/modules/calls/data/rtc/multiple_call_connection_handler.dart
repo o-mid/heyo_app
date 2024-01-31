@@ -3,6 +3,7 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:heyo/app/modules/calls/data/call_status_provider.dart';
 import 'package:heyo/app/modules/calls/data/rtc/models.dart';
 import 'package:heyo/app/modules/calls/data/rtc/session/call_rtc_session.dart';
+import 'package:heyo/app/modules/calls/data/signaling/call_signaling.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/calls/data/rtc/single_call_web_rtc_connection.dart';
 import 'package:heyo/app/modules/web-rtc/web_rtc_call_connection_manager.dart';
@@ -19,8 +20,10 @@ class CallConnectionsHandler {
   CallConnectionsHandler({
     required this.singleCallWebRTCBuilder,
     required this.callStatusProvider,
+    required this.callSignaling
   });
 
+  final CallSignaling callSignaling;
   SingleCallWebRTCBuilder singleCallWebRTCBuilder;
   MediaStream? _localStream;
   Function(MediaStream stream)? onLocalStream;
@@ -49,7 +52,7 @@ class CallConnectionsHandler {
     callRTCSession.onAddRemoteStream = (stream) {
       onAddRemoteStream?.call(callRTCSession);
     };
-    singleCallWebRTCBuilder.requestCall(
+    callSignaling.requestCall(
       callRTCSession.callId,
       RemotePeer(remoteCoreId: remoteCoreId, remotePeerId: null),
       callStatusProvider.getCurrentCallSessions().first.isAudioCall,
@@ -147,7 +150,7 @@ class CallConnectionsHandler {
           ),
           _localStream!,
           callStatusProvider.getCurrentCall()!.sessions.first.isAudioCall,
-          callId);
+          callId,);
       callRTCSession.onAddRemoteStream = (stream) {
         onAddRemoteStream?.call(callRTCSession);
       };

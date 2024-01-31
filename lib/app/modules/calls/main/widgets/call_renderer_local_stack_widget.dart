@@ -30,6 +30,7 @@ class CallRendererLocalStackWidget extends StatelessWidget {
       child: participantModel.videoMode.isTrue
           ? RTCVideoView(
               participantModel.rtcVideoRenderer!,
+              mirror: true,
               objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
             )
           : Row(

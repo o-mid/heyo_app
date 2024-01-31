@@ -214,6 +214,7 @@ class GlobalBindings extends Bindings {
           singleCallWebRTCBuilder: SingleCallWebRTCBuilder(
             connectionContractor: Get.find(),
           ),
+          callSignaling: Get.find()
         ),
         permanent: true,
       )
