@@ -28,6 +28,13 @@ class CallHistoryDetailBinding extends Bindings {
             ),
           ),
         ),
+        contactRepository: ContactRepository(
+          cacheContractor: CacheRepository(
+            userProvider: UserProvider(
+              appDatabaseProvider: Get.find<AppDatabaseProvider>(),
+            ),
+          ),
+        ),
       ),
     );
   }

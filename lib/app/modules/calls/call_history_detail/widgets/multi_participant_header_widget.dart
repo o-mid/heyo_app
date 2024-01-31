@@ -29,18 +29,22 @@ class MultiParticipantHeaderWidget
               .toList(),
         ),
         CustomSizes.mediumSizedBoxHeight,
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-          child: Text(
-            controller.callHistoryViewModel!.value!.participants.obs
-                .map((element) => element.name)
-                .toList()
-                .join(', '),
-            style:
-                TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ),
+        Obx(
+          () {
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: Text(
+                controller.callHistoryViewModel!.value!.participants.obs
+                    .map((element) => element.name)
+                    .toList()
+                    .join(', '),
+                style: TEXTSTYLES.kHeaderLarge
+                    .copyWith(color: COLORS.kDarkBlueColor),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            );
+          },
         ),
         SizedBox(height: 4.h),
         Padding(
