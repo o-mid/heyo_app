@@ -182,21 +182,19 @@ class CallHistoryDetailController extends GetxController {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextButton(
-              onPressed: () async {
+              onPressed: () {
                 //* Close bottom sheet
                 Get.back();
 
                 final userModel = participant.mapToUserModel();
 
-                //* push to add_contact page but wait for receiving data
-                await Get.toNamed(
+                Get.toNamed(
                   Routes.ADD_CONTACTS,
                   arguments: AddContactsViewArgumentsModel(
                     //  user: userModel,
                     coreId: userModel.coreId,
                   ),
                 );
-                await getData();
               },
               child: Row(
                 children: [
