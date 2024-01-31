@@ -78,6 +78,7 @@ class CallHistoryDetailController extends GetxController {
     //* If the length is equal to one it means the call is p2p
     //* and app should show the user call history
     if (args.participants.length == 1) {
+      recentCalls.value = [];
       final calls =
           await callHistoryRepo.getCallsFromUserId(args.participants[0]);
 
