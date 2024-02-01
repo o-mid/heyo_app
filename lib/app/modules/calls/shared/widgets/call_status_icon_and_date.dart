@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/calls/call_history/views/models/call_history_view_model/call_history_view_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -12,20 +13,20 @@ import 'package:intl/intl.dart';
 class CallStatusIconAndDate extends StatelessWidget {
   const CallStatusIconAndDate({required this.call, super.key});
 
-  final CallHistoryModel call;
+  final CallHistoryViewModel call;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _buildCallStatus(),
+        _callStatusIcon(),
         SizedBox(width: 4.w),
         _buildCallDate(),
       ],
     );
   }
 
-  Widget _buildCallStatus() {
+  Widget _callStatusIcon() {
     switch (call.status) {
       case CallStatus.outgoingAnswered:
       case CallStatus.outgoingCanceled:
@@ -37,6 +38,8 @@ class CallStatusIconAndDate extends StatelessWidget {
       case CallStatus.incomingDeclined:
         return Assets.svg.incomingCall.svg(color: COLORS.kTextSoftBlueColor);
       case CallStatus.incomingMissed:
+        return Assets.svg.missedCall.svg(color: COLORS.kStatesErrorColor);
+      default:
         return Assets.svg.missedCall.svg(color: COLORS.kStatesErrorColor);
     }
   }

@@ -14,6 +14,7 @@ import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
+import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
 import 'package:heyo/app/modules/connection/data/libp2p_connection_contractor.dart';
 import 'package:heyo/app/modules/connection/domain/connection_contractor.dart';
@@ -406,6 +407,15 @@ class GlobalBindings extends Bindings {
           callHistoryRepo: CallHistoryRepo(
             callHistoryProvider: CallHistoryProvider(
               appDatabaseProvider: Get.find<AppDatabaseProvider>(),
+            ),
+          ),
+          contactNameUseCase: ContactNameUseCase(
+            contactRepository: ContactRepository(
+              cacheContractor: CacheRepository(
+                userProvider: UserProvider(
+                  appDatabaseProvider: Get.find<AppDatabaseProvider>(),
+                ),
+              ),
             ),
           ),
         ),

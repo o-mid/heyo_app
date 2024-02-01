@@ -38,7 +38,8 @@ class CallHistoryDetailView extends GetView<CallHistoryDetailController> {
         if (controller.loading.isTrue) {
           return const CallHistoryDetailLoadingWidget();
         } else {
-          if (controller.callHistoryModel!.value!.participants.length == 1) {
+          if (controller.callHistoryViewModel!.value!.participants.length ==
+              1) {
             return const CallHistorySingleParticipantWidget();
           } else {
             return const CallHistoryMultiParticipantWidget();

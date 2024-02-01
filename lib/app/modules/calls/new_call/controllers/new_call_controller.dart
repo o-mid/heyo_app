@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/usecase/get_contact_user_use_case.dart';
 
+import 'package:heyo/app/modules/calls/usecase/get_contact_user_use_case.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
-import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
+import 'package:heyo/app/modules/shared/widgets/qr_scan_view.dart';
+import 'package:heyo/generated/locales.g.dart';
 
 class NewCallController extends GetxController {
   NewCallController({
@@ -76,7 +77,18 @@ class NewCallController extends GetxController {
   RxBool isTextInputFocused = false.obs;
 
   void qrBottomSheet() {
-    openQrScannerBottomSheet(handleScannedValue);
+    Get.bottomSheet(
+      FractionallySizedBox(
+        heightFactor: 1,
+        child: QrScanView(
+          title: LocaleKeys.NewCallPage_appBarTitle.tr,
+          hasBackButton: true,
+          onDetect: handleScannedValue,
+          subtitle: '',
+        ),
+      ),
+      isScrollControlled: true,
+    );
   }
 
   void inviteBottomSheet() {

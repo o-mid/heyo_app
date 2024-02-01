@@ -41,7 +41,7 @@ class ChatsController extends GetxController {
 
   Future<void> init() async {
     chats.clear();
-    chats.value = await chatHistoryRepo.getAllChats();
+    //chats.value = await chatHistoryRepo.getAllChats();
     chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
     await listenToChatsStream();
@@ -61,7 +61,8 @@ class ChatsController extends GetxController {
   }
 
   Future<void> listenToChatsStream() async {
-    Stream<List<ChatModel>> chatsStream = await chatHistoryRepo.getChatsStream();
+    Stream<List<ChatModel>> chatsStream =
+        await chatHistoryRepo.getChatsStream();
     _chatsStreamSubscription = chatsStream.listen((newChats) {
       List<ChatModel> removed = [];
       List<ChatModel> added = [];

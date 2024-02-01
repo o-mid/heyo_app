@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:sembast/sembast.dart';
-
 
 class UserProvider {
   final AppDatabaseProvider appDatabaseProvider;
@@ -31,12 +31,17 @@ class UserProvider {
   Future update(UserModel user) async {
     // For filtering by key (ID), RegEx, greater than, and many other criteria,
     // we use a Finder.
-    final finder = Finder(filter: Filter.byKey(user.coreId));
-    await _userStore.update(
-      await _db,
-      user.toJson(),
-      finder: finder,
-    );
+    try {
+      final finder = Finder(filter: Filter.byKey(user.coreId));
+      final i = await _userStore.update(
+        await _db,
+        user.toJson(),
+        finder: finder,
+      );
+      print(i);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   Future delete(UserModel user) async {

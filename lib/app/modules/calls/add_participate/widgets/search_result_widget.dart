@@ -24,16 +24,14 @@ class SearchResultWidget extends GetView<AddParticipateController> {
             ),
           ),
           CustomSizes.smallSizedBoxHeight,
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: controller.searchItems.length,
-              itemBuilder: (context, index) {
-                return AddableUserWidget(
-                  user: controller.searchItems[index],
-                );
-              },
-            ),
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: controller.searchItems.length,
+            itemBuilder: (context, index) {
+              return AddableUserWidget(
+                user: controller.searchItems[index],
+              );
+            },
           ),
         ],
       );

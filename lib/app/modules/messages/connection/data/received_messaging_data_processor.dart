@@ -20,6 +20,7 @@ class ReceivedMessageDataProcessor {
   void _init() {
     dataChannelMessagingConnection.getMessageStream().listen((event) async {
       //await dataHandler.createUserChatModel(sessioncid: event.remoteCoreId);
+      print("DEBUG REVCEIVE: getMessageStream onDataReceived ");
       onDataReceived(event, MessageConnectionType.RTC_DATA_CHANNEL);
     });
   }
@@ -33,6 +34,7 @@ class ReceivedMessageDataProcessor {
   ) async {
     var wrappedMessageModel =
         WrappedMessageModel.fromJson(messagingConnectionReceivedData.receivedJson);
+    print("DEBUG REVCEIVE: onDataReceived ");
 
     await dataHandler.createChatModel(
         chatId: wrappedMessageModel.chatId,
@@ -56,6 +58,7 @@ class ReceivedMessageDataProcessor {
   }) async {
     WrappedMessageModel wrappedMessageModel = WrappedMessageModel.fromJson(receivedJson);
     final selfId = await dataHandler.accountInfoRepo.getUserAddress();
+    print("DEBUG REVCEIVE: onDataReceived ");
 
     List<String> newRemoteCoreIds = wrappedMessageModel.remoteCoreIds;
     if (newRemoteCoreIds.contains(selfId)) {

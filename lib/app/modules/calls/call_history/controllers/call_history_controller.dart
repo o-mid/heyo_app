@@ -1,22 +1,32 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'package:heyo/app/modules/calls/call_history/utils/call_utils.dart';
+import 'package:heyo/app/modules/calls/call_history/views/models/call_history_participant_view_model/call_history_participant_view_model.dart';
+import 'package:heyo/app/modules/calls/call_history/views/models/call_history_view_model/call_history_view_model.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/call_history_list_tile_widget.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/delete_all_calls_bottom_sheet.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/delete_call_history_dialog.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
+import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 
 class CallHistoryController extends GetxController {
-  CallHistoryController({required this.callHistoryRepo});
+  CallHistoryController({
+    required this.callHistoryRepo,
+    required this.contactNameUseCase,
+  });
 
   final CallHistoryAbstractRepo callHistoryRepo;
+  final ContactNameUseCase contactNameUseCase;
 
-  final calls = <CallHistoryModel>[].obs;
+  final calls = <CallHistoryViewModel>[].obs;
   final animatedListKey = GlobalKey<AnimatedListState>();
 
-  late StreamSubscription _callsStreamSubscription;
+  late StreamSubscription<List<CallHistoryModel>> _callsStreamSubscription;
 
   RxBool loading = true.obs;
 
@@ -40,12 +50,12 @@ class CallHistoryController extends GetxController {
   }
 
   Future<void> init() async {
-    calls.value = await callHistoryRepo.getAllCalls();
-    loading.value = false;
+    //calls.value = await callHistoryRepo.getAllCalls();
+
     _callsStreamSubscription =
-        (await callHistoryRepo.getCallsStream()).listen((newCalls) {
+        (await callHistoryRepo.getCallsStream()).listen((newCalls) async {
       // remove the deleted calls
-      for (int i = 0; i < calls.length; i++) {
+      for (var i = 0; i < calls.length; i++) {
         if (!newCalls.any((call) => call.callId == calls[i].callId)) {
           _removeAtAnimatedList(i, calls[i]);
           calls.removeAt(i);
@@ -53,32 +63,71 @@ class CallHistoryController extends GetxController {
       }
 
       // add new calls
-      for (int i = 0; i < newCalls.length; i++) {
+      for (var i = 0; i < newCalls.length; i++) {
         if (!calls.any((call) => call.callId == newCalls[i].callId)) {
-          calls.insert(i, newCalls[i]);
+          final participantViewList = <CallHistoryParticipantViewModel>[];
+
+          //* Loop on participants data model to get their name from contact
+          //* And convert them to participants view model
+          for (final participant in newCalls[i].participants) {
+            final name = await contactNameUseCase.execute(participant.coreId);
+            participantViewList.add(
+              participant.mapToCallHistoryParticipantViewModel(name),
+            );
+          }
+
+          final callViewModel = CallHistoryViewModel(
+            callId: newCalls[i].callId,
+            type: CallUtils.callTitle(newCalls[i].status),
+            status: CallUtils.callStatus(newCalls[i]),
+            participants: participantViewList,
+            startDate: newCalls[i].startDate,
+            endDate: newCalls[i].endDate,
+          );
+          calls.insert(i, callViewModel);
           animatedListKey.currentState?.insertItem(i);
         }
       }
 
       // update calls to latest changes
-      for (int i = 0; i < newCalls.length; i++) {
-        calls[i] = newCalls[i];
+      for (var i = 0; i < newCalls.length; i++) {
+        final participantViewList = <CallHistoryParticipantViewModel>[];
+
+        //* Loop on participants data model to get their name from contact
+        //* And convert them to participants view model
+        for (final participant in newCalls[i].participants) {
+          final name = await contactNameUseCase.execute(participant.coreId);
+          participantViewList.add(
+            participant.mapToCallHistoryParticipantViewModel(name),
+          );
+        }
+
+        final callViewModel = CallHistoryViewModel(
+          callId: newCalls[i].callId,
+          type: CallUtils.callTitle(newCalls[i].status),
+          status: CallUtils.callStatus(newCalls[i]),
+          participants: participantViewList,
+          startDate: newCalls[i].startDate,
+          endDate: newCalls[i].endDate,
+        );
+        calls[i] = callViewModel;
       }
     });
+    loading.value = false;
   }
 
-  Future<void> deleteCall(CallHistoryModel call) async {
+  Future<void> deleteCall(CallHistoryViewModel call) async {
     await callHistoryRepo.deleteOneCall(call.callId);
   }
 
-  Future<bool> showDeleteCallDialog(CallHistoryModel call) async {
+  Future<bool> showDeleteCallDialog(CallHistoryViewModel call) async {
     await Get.dialog<bool>(
       DeleteCallHistoryDialog(deleteCall: () => deleteCall(call)),
     );
     return false;
   }
 
-  void _removeAtAnimatedList(int index, CallHistoryModel call) {
+  void _removeAtAnimatedList(int index, CallHistoryViewModel call) {
     animatedListKey.currentState?.removeItem(
       index,
       (context, animation) => SizeTransition(

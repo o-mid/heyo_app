@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:heyo/app/modules/calls/call_history/views/models/call_history_view_model/call_history_view_model.dart';
 import 'package:heyo/app/modules/calls/call_history/widgets/group_call_circle_avatar.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 
 class CallHistoryAvatarWidget extends StatelessWidget {
   const CallHistoryAvatarWidget({required this.callHistoryModel, super.key});
-  final CallHistoryModel callHistoryModel;
+  final CallHistoryViewModel callHistoryModel;
 
   @override
   Widget build(BuildContext context) {
