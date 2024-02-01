@@ -210,12 +210,11 @@ class GlobalBindings extends Bindings {
       ..put(CallStatusProvider(callSignaling: Get.find()), permanent: true)
       ..put(
         CallConnectionsHandler(
-          callStatusProvider: Get.find(),
-          singleCallWebRTCBuilder: SingleCallWebRTCBuilder(
-            connectionContractor: Get.find(),
-          ),
-          callSignaling: Get.find()
-        ),
+            callStatusProvider: Get.find(),
+            singleCallWebRTCBuilder: SingleCallWebRTCBuilder(
+              connectionContractor: Get.find(),
+            ),
+            callSignaling: Get.find()),
         permanent: true,
       )
       ..put<WebRTCCallRepository>(
@@ -225,24 +224,26 @@ class GlobalBindings extends Bindings {
         permanent: true,
       )
       ..put(
-        CallRequestsProcessor(
-          connectionContractor: Get.find(),
-          callStatusProvider: Get.find(),
-          callConnectionsHandler: Get.find(),
-        ),
-        permanent: true
-      )
+          CallRequestsProcessor(
+            connectionContractor: Get.find(),
+            callStatusProvider: Get.find(),
+            callConnectionsHandler: Get.find(),
+          ),
+          permanent: true)
       ..put(
-          CallKitProvider(
-              accountInfoRepo: Get.find(),
-              contactRepository: ContactRepository(
-                cacheContractor: CacheRepository(
-                  userProvider: UserProvider(
-                      appDatabaseProvider: Get.find<AppDatabaseProvider>(),),
-                ),
+        CallKitProvider(
+          accountInfoRepo: Get.find(),
+          contactRepository: ContactRepository(
+            cacheContractor: CacheRepository(
+              userProvider: UserProvider(
+                appDatabaseProvider: Get.find<AppDatabaseProvider>(),
               ),
-              callRepository: Get.find<WebRTCCallRepository>(),),
-          permanent: true,)
+            ),
+          ),
+          callRepository: Get.find<WebRTCCallRepository>(),
+        ),
+        permanent: true,
+      )
       ..put(
         CallStatusObserver(
             callStatusProvider: Get.find(),
@@ -415,6 +416,13 @@ class GlobalBindings extends Bindings {
                 userProvider: UserProvider(
                   appDatabaseProvider: Get.find<AppDatabaseProvider>(),
                 ),
+              ),
+            ),
+          ),
+          contactRepository: ContactRepository(
+            cacheContractor: CacheRepository(
+              userProvider: UserProvider(
+                appDatabaseProvider: Get.find<AppDatabaseProvider>(),
               ),
             ),
           ),
