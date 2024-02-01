@@ -35,8 +35,7 @@ class ContactsWidget extends StatelessWidget {
                 isTextInputFocused.value
                     ? LocaleKeys.forwardMassagesPage_contacts.tr
                     : LocaleKeys.forwardMassagesPage_OtherContacts.tr,
-                style: TEXTSTYLES.kLinkSmall
-                    .copyWith(color: COLORS.kTextBlueColor),
+                style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextBlueColor),
               ),
               ListView.builder(
                 itemCount: searchSuggestions.length,
@@ -45,13 +44,11 @@ class ContactsWidget extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   //this will grab the current user and
                   // extract the first character from its name
-                  String currentUsernameFirstChar =
-                      searchSuggestions[index].name.characters.first;
+                  String currentUsernameFirstChar = searchSuggestions[index].name.characters.first;
                   //this will grab the next user in the list if its not null and
                   // extract the first character from its name
                   String nextUsernameFirstChar =
-                      searchSuggestions.indexOf(searchSuggestions.last) >
-                              index + 1
+                      searchSuggestions.indexOf(searchSuggestions.last) > index + 1
                           ? searchSuggestions[index + 1].name.characters.first
                           : "";
                   return Padding(
@@ -63,18 +60,21 @@ class ContactsWidget extends StatelessWidget {
                       children: [
                         currentUsernameFirstChar != nextUsernameFirstChar
                             ? ListHeaderWidget(
-                                title: searchSuggestions[index]
-                                    .name
-                                    .characters
-                                    .first
-                                    .toUpperCase())
+                                title: searchSuggestions[index].name.characters.first.toUpperCase(),
+                              )
                             : const SizedBox(),
                         InkWell(
                           borderRadius: BorderRadius.circular(8),
                           onTap: () {
                             userSelect(searchSuggestions[index]);
                           },
-                          child: UserWidget(user: searchSuggestions[index]),
+                          child: UserWidget(
+                            coreId: searchSuggestions[index].coreId,
+                            name: searchSuggestions[index].name,
+                            walletAddress: searchSuggestions[index].walletAddress,
+                            isOnline: searchSuggestions[index].isOnline,
+                            isVerified: searchSuggestions[index].isVerified,
+                          ),
                         ),
                       ],
                     ),

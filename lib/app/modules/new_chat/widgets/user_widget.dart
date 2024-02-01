@@ -14,12 +14,21 @@ import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/generated/assets.gen.dart';
 
 class UserWidget extends StatelessWidget {
-  final UserModel user;
+  final String coreId;
+  final String name;
+  final String walletAddress;
+  final bool isOnline;
+  final bool isVerified;
   final bool showAudioCallButton;
   final bool showVideoCallButton;
+
   const UserWidget({
     Key? key,
-    required this.user,
+    required this.coreId,
+    required this.name,
+    required this.walletAddress,
+    this.isOnline = false,
+    this.isVerified = false,
     this.showAudioCallButton = false,
     this.showVideoCallButton = false,
   }) : super(key: key);
@@ -30,9 +39,9 @@ class UserWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         CustomCircleAvatar(
-          coreId: user.coreId,
+          coreId: coreId,
           size: 48,
-          isOnline: user.isOnline,
+          isOnline: isOnline,
         ),
         CustomSizes.mediumSizedBoxWidth,
         Column(
@@ -43,60 +52,60 @@ class UserWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  user.name,
+                  name,
                   style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kDarkBlueColor),
                 ),
                 CustomSizes.smallSizedBoxWidth,
-                if (user.isVerified) Assets.svg.verifiedWithBluePadding.svg(),
+                if (isVerified) Assets.svg.verifiedWithBluePadding.svg(),
               ],
             ),
             const SizedBox(height: 4),
             Text(
-              user.walletAddress.shortenCoreId,
+              walletAddress
+                  .shortenCoreId, // Assuming `shortenCoreId` is available or implement accordingly
               maxLines: 1,
               style: TEXTSTYLES.kChatText.copyWith(color: COLORS.kTextBlueColor),
             ),
           ],
         ),
         const Spacer(),
-        if (showAudioCallButton)
+        if (showAudioCallButton) ...[
           CircleIconButton(
-            onPressed: () {
-              Get.toNamed(
-                Routes.CALL,
-                arguments: CallViewArgumentsModel(
-                  // convert userModel to callUserModel
-                  members: [user.toCallUserModel().coreId],
-                  callId: null,
-                  isAudioCall: true,
-                ),
-              );
-            },
+            onPressed: _handleAudioCallButtonPressed,
             backgroundColor: COLORS.kBrightBlueColor,
-            icon: Assets.svg.audioCallIcon.svg(
-              color: COLORS.kDarkBlueColor,
-            ),
+            icon: Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor),
           ),
-        CustomSizes.mediumSizedBoxWidth,
+          CustomSizes.mediumSizedBoxWidth,
+        ],
         if (showVideoCallButton)
           CircleIconButton(
-            onPressed: () {
-              Get.toNamed(
-                Routes.CALL,
-                arguments: CallViewArgumentsModel(
-                  // convert userModel to callUserModel
-                  members: [user.toCallUserModel().coreId],
-                  callId: null,
-                  isAudioCall: false,
-                ),
-              );
-            },
+            onPressed: _handleVideoCallButtonPressed,
             backgroundColor: COLORS.kBrightBlueColor,
-            icon: Assets.svg.videoCallIcon.svg(
-              color: COLORS.kDarkBlueColor,
-            ),
+            icon: Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
           ),
       ],
+    );
+  }
+
+  void _handleAudioCallButtonPressed() {
+    Get.toNamed(
+      Routes.CALL,
+      arguments: CallViewArgumentsModel(
+        members: [coreId],
+        callId: null,
+        isAudioCall: true,
+      ),
+    );
+  }
+
+  void _handleVideoCallButtonPressed() {
+    Get.toNamed(
+      Routes.CALL,
+      arguments: CallViewArgumentsModel(
+        members: [coreId],
+        callId: null,
+        isAudioCall: false,
+      ),
     );
   }
 }

@@ -59,23 +59,26 @@ class ContactListWithHeader extends GetView<NewChatController> {
                       )
                     : const SizedBox(),
                 InkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  onTap: () {
-                    controller.inputFocusNode.unfocus();
-                    var contact = contacts[index];
-                    Get.find<UserPreview>().openUserPreview(
-                      coreId: contact.coreId,
-                      name: contact.name,
-                      isVerified: contact.isVerified,
-                      isContact: contact.isContact,
-                    );
-                  },
-                  child: UserWidget(
-                    user: suggestedUser,
-                    showAudioCallButton: showAudioCallButton,
-                    showVideoCallButton: showVideoCallButton,
-                  ),
-                ),
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () {
+                      controller.inputFocusNode.unfocus();
+                      var contact = contacts[index];
+                      Get.find<UserPreview>().openUserPreview(
+                        coreId: contact.coreId,
+                        name: contact.name,
+                        isVerified: contact.isVerified,
+                        isContact: contact.isContact,
+                      );
+                    },
+                    child: UserWidget(
+                      coreId: suggestedUser.coreId,
+                      name: suggestedUser.name,
+                      walletAddress: suggestedUser.walletAddress,
+                      isOnline: suggestedUser.isOnline,
+                      isVerified: suggestedUser.isVerified,
+                      showAudioCallButton: showAudioCallButton,
+                      showVideoCallButton: showVideoCallButton,
+                    )),
               ],
             );
           },

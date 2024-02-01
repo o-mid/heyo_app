@@ -28,7 +28,11 @@ class GroupedContactListWidget extends GetView<NewCallController> {
                           children: [
                             const SizedBox(height: 10),
                             UserWidget(
-                              user: p,
+                              coreId: p.coreId,
+                              name: p.name,
+                              walletAddress: p.walletAddress,
+                              isOnline: p.isOnline,
+                              isVerified: p.isVerified,
                               showAudioCallButton: true,
                               showVideoCallButton: true,
                             ),

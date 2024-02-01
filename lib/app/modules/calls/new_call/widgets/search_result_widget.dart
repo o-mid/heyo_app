@@ -32,7 +32,11 @@ class SearchResultWidget extends GetView<NewCallController> {
                 children: [
                   const SizedBox(height: 10),
                   UserWidget(
-                    user: controller.searchItems[index],
+                    coreId: controller.searchItems[index].coreId,
+                    name: controller.searchItems[index].name,
+                    walletAddress: controller.searchItems[index].walletAddress,
+                    isOnline: controller.searchItems[index].isOnline,
+                    isVerified: controller.searchItems[index].isVerified,
                     showAudioCallButton: true,
                     showVideoCallButton: true,
                   ),

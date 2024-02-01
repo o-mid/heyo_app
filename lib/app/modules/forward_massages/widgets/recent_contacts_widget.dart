@@ -9,8 +9,7 @@ import '../../../../generated/locales.g.dart';
 import '../../new_chat/widgets/user_widget.dart';
 
 class RecentContactsWidget extends StatelessWidget {
-  const RecentContactsWidget(
-      {Key? key, required this.users, required this.userSelect})
+  const RecentContactsWidget({Key? key, required this.users, required this.userSelect})
       : super(key: key);
   final Function(UserModel user) userSelect;
   final RxList<UserModel> users;
@@ -28,8 +27,7 @@ class RecentContactsWidget extends StatelessWidget {
             children: [
               Text(
                 LocaleKeys.forwardMassagesPage_recentContacts.tr,
-                style: TEXTSTYLES.kLinkSmall
-                    .copyWith(color: COLORS.kTextBlueColor),
+                style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextBlueColor),
               ),
               CustomSizes.smallSizedBoxHeight,
               ListView.builder(
@@ -47,7 +45,13 @@ class RecentContactsWidget extends StatelessWidget {
                       onTap: () {
                         userSelect(users[index]);
                       },
-                      child: UserWidget(user: users[index]),
+                      child: UserWidget(
+                        coreId: users[index].coreId,
+                        name: users[index].name,
+                        walletAddress: users[index].walletAddress,
+                        isOnline: users[index].isOnline,
+                        isVerified: users[index].isVerified,
+                      ),
                     ),
                   );
                 },
