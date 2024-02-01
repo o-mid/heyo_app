@@ -5,6 +5,7 @@ import 'package:flutter_p2p_communicator/model/addr_model.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/p2p_node/models.dart';
+import 'package:heyo/app/modules/shared/data/providers/events/send_event_provider.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
@@ -16,14 +17,17 @@ class P2PNodeResponseStream {
     required this.p2pState,
     required this.libP2PStorageProvider,
     required this.accountRepository,
+    required this.sendEventProvider,
   }) {
     //_checkAddressJob();
   }
 
+  SendEventProvider sendEventProvider;
   StreamSubscription<P2PReqResNodeModel?>? _nodeResponseSubscription;
   bool advertiseRequested = false;
   final P2PState p2pState;
- //bool shouldCheckAddrs = false;
+
+  //bool shouldCheckAddrs = false;
   LibP2PStorageProvider libP2PStorageProvider;
 
   /// temporarily added here since there is nothing to determine this class is in
@@ -61,6 +65,18 @@ class P2PNodeResponseStream {
       '_onNewResponseEvent ${event.name} : ${event.id} : ',
     );
 
+    if (event.error != null) {
+      unawaited(
+        sendEventProvider.sendErrorEvent(
+          event.error.toString(),
+          {
+            'event': event.name.toString(),
+            'advertised': p2pState.advertise.value.toString(),
+          },
+        ),
+      );
+    }
+
     p2pState.responses.add(event);
     print('_onNewResponseEvent : eventId is: ${event.id.toString()}');
     print('_onNewResponseEvent : eventName is: ${event.name.toString()}');
@@ -80,11 +96,11 @@ class P2PNodeResponseStream {
 
       await FlutterP2pCommunicator.sendRequest(
           info: P2PReqResNodeModel(name: P2PReqResNodeNames.addrs));
-
     } else if (event.name == P2PReqResNodeNames.advertise &&
         event.error == null) {
       // now you can start talking or communicating to others
       p2pState.advertise.value = true;
+
     } else if (event.name == P2PReqResNodeNames.addDelegatedCoreID &&
         event.error != null &&
         event.error!.contains('invalid')) {
@@ -94,7 +110,7 @@ class P2PNodeResponseStream {
       p2pState.address.value = (event.body!["addrs"] as List<dynamic>)
           .map((e) => e.toString())
           .toList();
-     // _checkAddrs(p2pState.address.value);
+      // _checkAddrs(p2pState.address.value);
     }
     if (event.name == P2PReqResNodeNames.peerID && event.error == null) {
       p2pState.peerId.value = event.body!["peerID"].toString();
