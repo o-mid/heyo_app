@@ -6,12 +6,11 @@ import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/calls/usecase/get_contact_user_use_case.dart';
-import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
-import 'package:heyo/app/modules/new_chat/widgets/qr_scan_view.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
+import 'package:heyo/app/modules/shared/widgets/qr_scan_view.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 class AddParticipateController extends GetxController {
@@ -33,6 +32,7 @@ class AddParticipateController extends GetxController {
   RxList<AllParticipantModel> searchItems = <AllParticipantModel>[].obs;
   Rx<TextEditingController> inputController = TextEditingController().obs;
 
+  //final inputText = ''.obs;
   final profileLink = 'https://heyo.core/m6ljkB4KJ';
 
   @override
@@ -175,7 +175,6 @@ class AddParticipateController extends GetxController {
     clearRxList();
   }
 
-
   void qrBottomSheet() {
     Get.bottomSheet(
       FractionallySizedBox(
@@ -201,7 +200,7 @@ class AddParticipateController extends GetxController {
       final coreId = barcodeValue.getCoreId();
 
       Get.back();
-      isTextInputFocused.value = true;
+      //isTextInputFocused.value = true;
       // this will set the input field to the scanned value and serach for users
       inputController.value.text = coreId;
       await searchByCoreId(coreId);

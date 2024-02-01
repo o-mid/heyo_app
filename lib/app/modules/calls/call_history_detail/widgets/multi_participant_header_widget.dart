@@ -24,30 +24,41 @@ class MultiParticipantHeaderWidget
       children: [
         SizedBox(height: 40.h),
         CallHistoryDetailAvatarWidget(
-          participants: controller.callHistoryModel!.value!.participants
+          participants: controller.callHistoryViewModel!.value!.participants
               .map((e) => e.coreId)
               .toList(),
         ),
         CustomSizes.mediumSizedBoxHeight,
-        Text(
-          controller.callHistoryModel!.value!.participants.obs
-              .map((element) => element.name)
-              .toList()
-              .join(', '),
-          style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
+        Obx(
+          () {
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: Text(
+                controller.callHistoryViewModel!.value!.participants.obs
+                    .map((element) => element.name)
+                    .toList()
+                    .join(', '),
+                style: TEXTSTYLES.kHeaderLarge
+                    .copyWith(color: COLORS.kDarkBlueColor),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            );
+          },
         ),
         SizedBox(height: 4.h),
-        Text(
-          controller.callHistoryModel!.value!.participants
-              .map((element) => element.coreId.shortenCoreId)
-              .toList()
-              .join(', '),
-          style:
-              TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          child: Text(
+            controller.callHistoryViewModel!.value!.participants
+                .map((element) => element.coreId.shortenCoreId)
+                .toList()
+                .join(', '),
+            style: TEXTSTYLES.kBodySmall
+                .copyWith(color: COLORS.kTextSoftBlueColor),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
         ),
         SizedBox(height: 40.h),
         Row(

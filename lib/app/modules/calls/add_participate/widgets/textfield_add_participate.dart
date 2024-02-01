@@ -16,7 +16,7 @@ class TextfieldAddParticipate extends GetView<AddParticipateController> {
       padding: CustomSizes.mainContentPadding,
       child: CustomTextField(
         //autofocus: true,
-        //textController: controller.inputController.value,
+        textController: controller.inputController.value,
         labelText: LocaleKeys.newChat_usernameInput.tr,
         onChanged: (query) => controller.searchUsers(query),
         rightWidget: IconButton(

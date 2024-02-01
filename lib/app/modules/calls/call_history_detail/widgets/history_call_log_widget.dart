@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
+
+import 'package:heyo/app/modules/calls/call_history/views/models/call_history_view_model/call_history_view_model.dart';
 import 'package:heyo/app/modules/calls/shared/widgets/call_status_icon_and_date.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/generated/locales.g.dart';
 
 class HistoryCallLogWidget extends StatelessWidget {
   const HistoryCallLogWidget({required this.call, super.key});
 
-  final CallHistoryModel call;
+  final CallHistoryViewModel call;
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +19,14 @@ class HistoryCallLogWidget extends StatelessWidget {
         Row(
           children: [
             Text(
-              _callTitle(),
+              call.type,
               style: TEXTSTYLES.kChatName.copyWith(
                 color: COLORS.kDarkBlueColor,
               ),
             ),
             const Spacer(),
             Text(
-              _callStatus(),
+              call.status,
               style: TEXTSTYLES.kBodySmall.copyWith(
                 color: COLORS.kTextBlueColor,
               ),
@@ -49,39 +48,5 @@ class HistoryCallLogWidget extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  String _callTitle() {
-    switch (call.status) {
-      case CallStatus.incomingMissed:
-        return LocaleKeys.CallHistory_missedCall.tr;
-      case CallStatus.incomingAnswered:
-      case CallStatus.incomingDeclined:
-        return LocaleKeys.CallHistory_incoming.tr;
-      case CallStatus.outgoingAnswered:
-      case CallStatus.outgoingCanceled:
-      case CallStatus.outgoingDeclined:
-      case CallStatus.outgoingNotAnswered:
-        return LocaleKeys.CallHistory_outgoing.tr;
-    }
-  }
-
-  String _callStatus() {
-    switch (call.status) {
-      case CallStatus.outgoingDeclined:
-        return LocaleKeys.CallHistory_callDeclined.tr;
-      case CallStatus.outgoingNotAnswered:
-        return LocaleKeys.CallHistory_notAnswered.tr;
-      case CallStatus.outgoingCanceled:
-        return LocaleKeys.CallHistory_callCanceled.tr;
-
-      case CallStatus.incomingAnswered:
-      case CallStatus.outgoingAnswered:
-        final duration = call.endDate!.difference(call.startDate);
-        return "${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, "0")}";
-
-      default:
-        return '';
-    }
   }
 }

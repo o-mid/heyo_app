@@ -267,7 +267,6 @@ class CallHistoryObserver extends GetxController {
       callHistoryParticipant = user.mapToCallHistoryParticipantModel();
     } else {
       callHistoryParticipant = CallHistoryParticipantModel(
-        name: coreId.shortenCoreId,
         coreId: coreId,
         startDate: DateTime.now(),
       );
