@@ -107,16 +107,15 @@ class AddContactsController extends GetxController {
 
   Future<void> updateUserChatMode({required UserModel userModel}) async {
     // check if user is already in contact
-    var user = await _getContactWith(userModel.coreId);
+    final user = await _getContactWith(userModel.coreId);
 
     if (user == null) {
       await contactRepository.addContact(userModel);
     } else {
-      await contactRepository.deleteContactById(userModel.coreId);
-      await contactRepository.addContact(userModel);
+      await contactRepository.updateUserContact(userModel);
     }
     await _updateChatHistory(userModel: userModel);
-    await _updateCallHistory(userModel: userModel);
+    //await _updateCallHistory(userModel: userModel);
 
     Get.back(
       result: userModel.name,
