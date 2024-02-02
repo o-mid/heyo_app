@@ -112,7 +112,7 @@ class _GalleryGridViewState extends State<GalleryGridView> {
 
                 /// render thumbnail
                 itemBuilder: (context, index) => _buildItem(context, index, widget.provider),
-                itemCount: widget.path!.assetCount,
+                itemCount: 0,
                 addRepaintBoundaries: true,
               ),
             ),
