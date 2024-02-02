@@ -32,10 +32,7 @@ class UserListTileWidget extends StatelessWidget {
       onTap: () {
         //* Close keyboard before opening bottom sheet
         FocusScope.of(context).unfocus();
-        Get.find<UserPreview>().openUserPreview(
-          coreId: coreId,
-          name: name,
-        );
+        Get.find<UserPreviewController>().openUserPreview(coreId: coreId);
       },
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
