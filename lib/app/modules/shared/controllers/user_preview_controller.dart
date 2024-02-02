@@ -1,45 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/transitions_constant.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/user_preview_widget.dart';
 
-class UserPreview extends GetxController {
-  final ContactRepository contactRepository;
-  final RxBool isWifiDirectConnection = false.obs;
-  final CallHistoryAbstractRepo callHistoryRepo;
-  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
-
-  UserPreview({
+class UserPreviewController extends GetxController {
+  UserPreviewController({
     required this.contactRepository,
     required this.callHistoryRepo,
     required this.chatHistoryRepo,
   });
 
+  final ContactRepository contactRepository;
+  final RxBool isWifiDirectConnection = false.obs;
+  final CallHistoryAbstractRepo callHistoryRepo;
+  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
+  RxBool isContact = false.obs;
+  RxString name = ''.obs;
+
   Future<void> openUserPreview({
     bool isWifiDirect = false,
     required String coreId,
-    required String name,
+    //required String name,
     //required bool isVerified,
     //required bool isContact,
   }) async {
+    await contactAvailability(coreId);
+
     isWifiDirectConnection.value = isWifiDirect;
     print("openUserPreviewBottomSheet");
 
     await Get.bottomSheet(
+      UserPreviewWidget(coreId: coreId),
       enterBottomSheetDuration: TRANSITIONS.newChat_EnterBottomSheetDuration,
       exitBottomSheetDuration: TRANSITIONS.newChat_ExitBottomSheetDuration,
-      UserPreviewWidget(
-        coreId: coreId,
-        name: name,
-        //isVerified: isVerified,
-        //isContact: isContact,
-      ),
       backgroundColor: COLORS.kWhiteColor,
       isDismissible: true,
       isScrollControlled: true,
@@ -51,6 +50,17 @@ class UserPreview extends GetxController {
         ),
       ),
     );
+  }
+
+  Future<void> contactAvailability(String coreId) async {
+    final contact = await contactRepository.getContactById(coreId);
+    if (contact == null) {
+      isContact.value = false;
+      name.value = coreId.shortenCoreId;
+    } else {
+      name.value = contact.name;
+      isContact.value = true;
+    }
   }
 
   Future<void> deleteContact(String userCoreId) async {

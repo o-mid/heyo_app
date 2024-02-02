@@ -68,9 +68,9 @@ class ContactListWithHeader extends GetView<NewChatController> {
                   onTap: () {
                     controller.inputFocusNode.unfocus();
                     var contact = contacts[index];
-                    Get.find<UserPreview>().openUserPreview(
+                    Get.find<UserPreviewController>().openUserPreview(
                       coreId: contact.coreId,
-                      name: contact.name,
+                      //name: contact.name,
                       //isVerified: contact.isVerified,
                       //isContact: contact.isContact,
                     );
