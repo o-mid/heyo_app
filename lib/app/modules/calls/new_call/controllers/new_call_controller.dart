@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -28,11 +30,19 @@ class NewCallController extends GetxController {
   RxList<UserModel> contactList = <UserModel>[].obs;
   RxList<UserModel> searchItems = <UserModel>[].obs;
   RxMap<String, List<UserModel>> groupedContact = RxMap();
+  late StreamSubscription<List<UserModel>> _contactsStreamSubscription;
 
   @override
   Future<void> onInit() async {
     await getContact();
+    unawaited(_listenToContactsToUpdateName());
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    _contactsStreamSubscription.cancel();
+    super.onClose();
   }
 
   final profileLink = 'https://heyo.core/m6ljkB4KJ';
@@ -55,6 +65,53 @@ class NewCallController extends GetxController {
       groupedContact[firstChar]!.add(contact);
     }
     print(groupedContact);
+  }
+
+  Future<void> _listenToContactsToUpdateName() async {
+    _contactsStreamSubscription =
+        (await contactRepository.getContactsStream()).listen(_updateName);
+  }
+
+  Future<void> _updateName(List<UserModel> newContacts) async {
+    //* First we should loop throw all contacts and update their names
+    updateContactName(newContacts);
+
+    //* Second we should loop throw all search result and update their names
+    updateSearchResultName(newContacts);
+  }
+
+  void updateContactName(List<UserModel> newContacts) {
+    final newContactList = <UserModel>[];
+    for (final contact in contactList) {
+      // Check if there is a matching contact for the participant
+      final matchingContact = newContacts.firstWhereOrNull(
+        (contact) => contact.coreId == contact.coreId,
+      );
+
+      newContactList.add(
+        matchingContact != null
+            ? contact.copyWith(name: matchingContact.name)
+            : contact,
+      );
+    }
+    contactList.value = newContactList;
+  }
+
+  void updateSearchResultName(List<UserModel> newContacts) {
+    final newSearchList = <UserModel>[];
+    for (final item in searchItems) {
+      //* Check if there is a matching contact for the participant
+      final matchingContact = newContacts.firstWhereOrNull(
+        (contact) => contact.coreId == contact.coreId,
+      );
+
+      newSearchList.add(
+        matchingContact != null
+            ? item.copyWith(name: matchingContact.name)
+            : item,
+      );
+    }
+    searchItems.value = newSearchList;
   }
 
   Future<void> searchUsers(String query) async {
