@@ -364,7 +364,7 @@ class GlobalBindings extends Bindings {
         ),
       )
       ..put(
-        UserPreview(
+        UserPreviewController(
           contactRepository: Get.find<ContactRepository>(),
           callHistoryRepo: Get.find<CallHistoryAbstractRepo>(),
           chatHistoryRepo: Get.find<ChatHistoryLocalRepo>(),

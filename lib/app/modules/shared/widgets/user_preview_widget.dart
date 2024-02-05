@@ -1,48 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/contacts/widgets/removeContactsDialog.dart';
 import 'package:heyo/app/modules/messages/utils/chat_Id_generator.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/controllers/user_preview_controller.dart';
 import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
+import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
-import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
+import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-import '../data/models/messaging_participant_model.dart';
-
-class UserPreviewWidget extends GetView<UserPreview> {
-  final String coreId;
-  final String name;
-  final bool isVerified;
-  final bool isContact;
-
+class UserPreviewWidget extends GetView<UserPreviewController> {
   const UserPreviewWidget({
-    super.key,
     required this.coreId,
-    required this.name,
-    this.isVerified = false,
-    this.isContact = false,
+    //required this.name,
+    super.key,
+    //this.isVerified = false,
+    //this.isContact = false,
   });
+
+  final String coreId;
+  //final String name;
+  //final bool isVerified;
+  //final bool isContact;
 
   @override
   Widget build(BuildContext context) {
     final isWifiDirect = controller.isWifiDirectConnection.value;
     return SingleChildScrollView(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomSizes.largeSizedBoxHeight,
@@ -52,20 +47,26 @@ class UserPreviewWidget extends GetView<UserPreview> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                name,
-                style: TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+                controller.name.value,
+                style: TEXTSTYLES.kHeaderLarge
+                    .copyWith(color: COLORS.kDarkBlueColor),
               ),
-              CustomSizes.smallSizedBoxWidth,
-              isVerified
-                  ? Assets.svg.verifiedWithBluePadding
-                  .svg(alignment: Alignment.center, height: 24.w, width: 24.w)
-                  : const SizedBox(),
+              //CustomSizes.smallSizedBoxWidth,
+              //if (isVerified)
+              //  Assets.svg.verifiedWithBluePadding.svg(
+              //    height: 24.w,
+              //    width: 24.w,
+              //  )
+              //else
+              //  const SizedBox(),
             ],
           ),
           CustomSizes.smallSizedBoxHeight,
           Text(
             coreId.shortenCoreId,
-            style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextBlueColor),
+            style: TEXTSTYLES.kBodySmall.copyWith(
+              color: COLORS.kTextBlueColor,
+            ),
           ),
           CustomSizes.largeSizedBoxHeight,
           Row(
@@ -85,13 +86,13 @@ class UserPreviewWidget extends GetView<UserPreview> {
                         : Get.toNamed(
                             Routes.MESSAGES,
                             arguments: MessagesViewArgumentsModel(
-                                connectionType: MessagingConnectionType.internet,
-                                participants: [
-                                  MessagingParticipantModel(
-                                    coreId: coreId,
-                                    chatId: ChatIdGenerator.generate(),
-                                  )
-                                ]),
+                              participants: [
+                                MessagingParticipantModel(
+                                  coreId: coreId,
+                                  chatId: ChatIdGenerator.generate(),
+                                ),
+                              ],
+                            ),
                           );
                   }
                 },
@@ -172,7 +173,7 @@ class UserPreviewWidget extends GetView<UserPreview> {
                 _buildIconTextButton(
                   //Todo: Add User Info onPressed
                   onPressed: () {
-                    if (isContact == true) {
+                    if (controller.isContact.isTrue) {
                       Get.toNamed(
                         Routes.ADD_CONTACTS,
                         arguments: AddContactsViewArgumentsModel(
@@ -182,65 +183,53 @@ class UserPreviewWidget extends GetView<UserPreview> {
                     }
                   },
                   icon: Assets.svg.infoIcon.svg(width: 20, height: 20),
-                  title: isContact
+                  title: controller.isContact.isTrue
                       ? LocaleKeys.newChat_userBottomSheet_contactInfo.tr
                       : LocaleKeys.newChat_userBottomSheet_userInfo.tr,
                 ),
-                !isContact
-                    ? _buildIconTextButton(
-                        onPressed: () {
-                          Get.back();
+                if (controller.isContact.isFalse)
+                  _buildIconTextButton(
+                    onPressed: () {
+                      Get
+                        ..back()
+                        ..toNamed(
+                          Routes.ADD_CONTACTS,
+                          arguments: AddContactsViewArgumentsModel(
+                            coreId: coreId,
+                          ),
+                        );
+                    },
+                    icon: Assets.svg.addToContactsIcon.svg(
+                      width: 20,
+                      height: 20,
+                    ),
+                    title: LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
+                  )
+                else
+                  _buildIconTextButton(
+                    onPressed: () async {
+                      Get.back();
+                      await Get.dialog(
+                        RemoveContactsDialog(
+                          userName: controller.name.value,
+                        ),
+                      ).then((result) async {
+                        if (result is bool && result == true) {
+                          print("result   $result");
 
-                          Get.toNamed(
-                            Routes.ADD_CONTACTS,
-                            arguments: AddContactsViewArgumentsModel(
-                              coreId: coreId,
-                            ),
-                          );
-                        },
-                        icon: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
-                        title: LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
-                      )
-                    : _buildIconTextButton(
-                        onPressed: () async {
-                          Get.back();
-                          await Get.dialog(
-                            RemoveContactsDialog(
-                              userName: name,
-                            ),
-                          ).then((result) async {
-                            if (result is bool && result == true) {
-                              print("result   $result");
-
-                              await controller.deleteContact(coreId);
-                            }
-                          });
-                        },
-                        icon: Assets.svg.removeContact.svg(width: 20, height: 20),
-                        title: LocaleKeys.newChat_userBottomSheet_RemoveFromContacts.tr,
-                      ),
+                          await controller.deleteContact(coreId);
+                        }
+                      });
+                    },
+                    icon: Assets.svg.removeContact.svg(width: 20, height: 20),
+                    title: LocaleKeys
+                        .newChat_userBottomSheet_RemoveFromContacts.tr,
+                  ),
                 _buildIconTextButton(
                   onPressed: () {
                     //Todo:  Blocking Implimentation
-                    Get.rawSnackbar(
-                      messageText: Text(
-                        "Blocking feature is in development phase",
-                        style: TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kDarkBlueColor),
-                        textAlign: TextAlign.center,
-                      ),
-                      //  padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
-                      backgroundColor: COLORS.kAppBackground,
-                      snackPosition: SnackPosition.TOP,
-                      snackStyle: SnackStyle.FLOATING,
-                      margin: const EdgeInsets.only(top: 20),
-                      boxShadows: [
-                        BoxShadow(
-                          color: const Color(0xFF466087).withOpacity(0.1),
-                          offset: const Offset(0, 3),
-                          blurRadius: 10,
-                        ),
-                      ],
-                      borderRadius: 8,
+                    SnackBarWidget.info(
+                      message: 'Blocking feature is in development phase',
                     );
                     return;
                   },
@@ -259,9 +248,9 @@ class UserPreviewWidget extends GetView<UserPreview> {
 }
 
 Widget _buildIconTextButton({
-  VoidCallback? onPressed,
   required String title,
   required Widget icon,
+  VoidCallback? onPressed,
   Color iconBgColor = COLORS.kBrightBlueColor,
 }) {
   return TextButton(
@@ -285,7 +274,7 @@ Widget _buildIconTextButton({
           style: TEXTSTYLES.kLinkBig.copyWith(
             color: COLORS.kDarkBlueColor,
           ),
-        )
+        ),
       ],
     ),
   );
