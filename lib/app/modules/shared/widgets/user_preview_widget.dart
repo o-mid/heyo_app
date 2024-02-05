@@ -82,7 +82,8 @@ class UserPreviewWidget extends GetView<UserPreviewController> {
                         ? Get.toNamed(
                             Routes.WIFI_DIRECT_CONNECT,
                             arguments: MessagesViewArgumentsModel(
-                                connectionType: MessagingConnectionType.wifiDirect,
+                                connectionType:
+                                    MessagingConnectionType.wifiDirect,
                                 participants: [
                                   MessagingParticipantModel(
                                     coreId: coreId,
@@ -217,17 +218,17 @@ class UserPreviewWidget extends GetView<UserPreviewController> {
                 else
                   _buildIconTextButton(
                     onPressed: () async {
-                      await Get.dialog(
+                      final result = await Get.dialog(
                         RemoveContactsDialog(
                           userName: controller.name.value,
                         ),
-                      ).then((result) async {
-                        if (result is bool && result == true) {
-                          print("result   $result");
+                      );
 
-                          await controller.deleteContact(coreId);
-                        }
-                      });
+                      if (result is bool && result == true) {
+                        print("result   $result");
+                        await controller.deleteContact(coreId);
+                        Get.back();
+                      }
                     },
                     icon: Assets.svg.removeContact.svg(width: 20, height: 20),
                     title: LocaleKeys
