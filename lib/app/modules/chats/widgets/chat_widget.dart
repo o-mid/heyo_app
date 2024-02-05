@@ -21,28 +21,40 @@ import 'package:intl/intl.dart';
 import '../../shared/widgets/stacked_avatars_widget.dart';
 
 class ChatWidget extends GetView<ChatsController> {
-  final ChatModel chat;
+  final String chatId;
+  final String name;
+  final String lastMessage;
+  final DateTime timestamp;
+  final List<MessagingParticipantModel> participants;
+  final int notificationCount;
+  final bool isGroupChat;
+
   const ChatWidget({
     Key? key,
-    required this.chat,
+    required this.chatId,
+    required this.name,
+    required this.lastMessage,
+    required this.timestamp,
+    required this.participants,
+    this.notificationCount = 0,
+    this.isGroupChat = false,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    final isGroupChat = chat.participants.length > 2;
+    final isGroupChat = participants.length > 2;
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
       child: SlidableWidget(
-        key: Key(chat.id),
-        onDismissed: () => controller.deleteChat(chat),
-        confirmDismiss: () => controller.showDeleteChatDialog(chat),
+        key: Key(chatId),
+        onDismissed: () => controller.deleteChat(chatId),
+        confirmDismiss: () => controller.showDeleteChatDialog(chatId),
         child: InkWell(
           onTap: () {
             Get.toNamed(
               Routes.MESSAGES,
               arguments: MessagesViewArgumentsModel(
-                participants: chat.participants,
-                chatName: chat.name,
+                participants: participants,
+                chatName: name,
               ),
             );
           },
@@ -54,12 +66,12 @@ class ChatWidget extends GetView<ChatsController> {
                 if (isGroupChat)
                   StackedAvatars(
                     avatarSize: 24,
-                    coreId1: chat.participants.first.coreId,
-                    coreId2: chat.participants.last.coreId,
+                    coreId1: participants.first.coreId,
+                    coreId2: participants.last.coreId,
                   )
                 else
                   CustomCircleAvatar(
-                    coreId: chat.participants.first.coreId,
+                    coreId: participants.first.coreId,
                     size: 48,
                     isOnline: true,
                   ),
@@ -73,16 +85,15 @@ class ChatWidget extends GetView<ChatsController> {
                           Row(
                             children: [
                               Text(
-                                chat.name,
+                                name,
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontFamily: FONTS.interFamily,
-                                  fontWeight:
-                                      chat.notificationCount > 0 ? FONTS.Bold : FONTS.Medium,
+                                  fontWeight: notificationCount > 0 ? FONTS.Bold : FONTS.Medium,
                                 ),
                               ),
                               const SizedBox(width: 6),
-                              // if (chat.isVerified)
+                              // if (isVerified)
                               //   Assets.svg.verified.svg(
                               //     width: 12.w,
                               //     height: 12.w,
@@ -90,11 +101,11 @@ class ChatWidget extends GetView<ChatsController> {
                             ],
                           ),
                           Text(
-                            DateHelpers(chat.timestamp).isToday()
-                                ? DateFormat.Hm().format(chat.timestamp)
-                                : DateHelpers(chat.timestamp).isYesterday()
+                            DateHelpers(timestamp).isToday()
+                                ? DateFormat.Hm().format(timestamp)
+                                : DateHelpers(timestamp).isYesterday()
                                     ? LocaleKeys.yesterday.tr
-                                    : DateFormat('d/m/yy').format(chat.timestamp),
+                                    : DateFormat('d/m/yy').format(timestamp),
                             style: TextStyle(
                               fontFamily: FONTS.interFamily,
                               fontWeight: FONTS.Medium,
@@ -109,23 +120,23 @@ class ChatWidget extends GetView<ChatsController> {
                         children: [
                           Expanded(
                             child: Text(
-                              chat.lastMessage,
+                              lastMessage,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TEXTSTYLES.kBodySmall.copyWith(
-                                color: chat.notificationCount > 0
+                                color: notificationCount > 0
                                     ? COLORS.kDarkBlueColor
                                     : COLORS.kTextSoftBlueColor,
-                                fontWeight: chat.notificationCount > 0 ? FONTS.SemiBold : null,
+                                fontWeight: notificationCount > 0 ? FONTS.SemiBold : null,
                               ),
                             ),
                           ),
-                          if (chat.notificationCount > 0)
+                          if (notificationCount > 0)
                             Container(
                               margin: EdgeInsets.only(left: 8.w),
                               child: NotificationCountBadge(
                                 backgroundColor: COLORS.kGreenMainColor,
-                                count: chat.notificationCount,
+                                count: notificationCount,
                               ),
                             ),
                         ],

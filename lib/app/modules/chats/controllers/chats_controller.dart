@@ -61,8 +61,7 @@ class ChatsController extends GetxController {
   }
 
   Future<void> listenToChatsStream() async {
-    Stream<List<ChatModel>> chatsStream =
-        await chatHistoryRepo.getChatsStream();
+    Stream<List<ChatModel>> chatsStream = await chatHistoryRepo.getChatsStream();
     _chatsStreamSubscription = chatsStream.listen((newChats) {
       List<ChatModel> removed = [];
       List<ChatModel> added = [];
@@ -97,15 +96,15 @@ class ChatsController extends GetxController {
   // the callback to be called when chats are updated sent to the view
   void Function(List<ChatModel> removed, List<ChatModel> added)? onChatsUpdated;
 
-  Future<void> deleteChat(ChatModel chat) async {
-    await chatHistoryRepo.deleteChat(chat.id);
-    await messagesRepo.deleteAllMessages(chat.id);
+  Future<void> deleteChat(String chatId) async {
+    await chatHistoryRepo.deleteChat(chatId);
+    await messagesRepo.deleteAllMessages(chatId);
   }
 
-  Future<bool> showDeleteChatDialog(ChatModel chat) async {
+  Future<bool> showDeleteChatDialog(String chatId) async {
     await Get.dialog<bool>(
       DeleteChatDialog(
-        deleteChat: () => deleteChat(chat),
+        deleteChat: () => deleteChat(chatId),
       ),
     );
     return false;

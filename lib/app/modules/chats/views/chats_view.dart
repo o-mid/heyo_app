@@ -46,15 +46,26 @@ class ChatsView extends GetView<ChatsController> {
 
   Widget _buildAnimatedList() {
     return SlidableAutoCloseBehavior(
-      child: AnimatedList(
-          key: controller.animatedListKey,
-          initialItemCount: controller.chats.length,
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          itemBuilder: (context, index, animation) => SlideTransition(
-                position: _slideAnimation(animation),
-                child: ChatWidget(chat: controller.chats[index]),
-              )),
-    );
+        child: AnimatedList(
+      key: controller.animatedListKey,
+      initialItemCount: controller.chats.length,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      itemBuilder: (context, index, animation) {
+        final chat = controller.chats[index];
+        return SlideTransition(
+          position: _slideAnimation(animation),
+          child: ChatWidget(
+            chatId: chat.id,
+            name: chat.name,
+            lastMessage: chat.lastMessage,
+            timestamp: chat.timestamp,
+            participants: chat.participants,
+            notificationCount: chat.notificationCount,
+            isGroupChat: chat.isGroupChat,
+          ),
+        );
+      },
+    ));
   }
 
   Animation<Offset> _slideAnimation(Animation<double> animation) {
@@ -113,7 +124,15 @@ class ChatsView extends GetView<ChatsController> {
   Widget _buildRemovedItem(ChatModel chat, Animation<double> animation) {
     return SlideTransition(
       position: _slideAnimation(animation),
-      child: ChatWidget(chat: chat),
+      child: ChatWidget(
+        chatId: chat.id,
+        name: chat.name,
+        lastMessage: chat.lastMessage,
+        timestamp: chat.timestamp,
+        participants: chat.participants,
+        notificationCount: chat.notificationCount,
+        isGroupChat: chat.isGroupChat,
+      ),
     );
   }
 }
