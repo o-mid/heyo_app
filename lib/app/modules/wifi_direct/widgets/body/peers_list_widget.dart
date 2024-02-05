@@ -18,56 +18,52 @@ class PeersListWidget extends GetView<WifiDirectController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return Column(
-          children: [
-            CustomSizes.largeSizedBoxHeight,
-            if (controller.availableDirectUsers.isEmpty)
-              Center(
-                child: EmptyUsersBody(
-                  infoText: LocaleKeys.wifiDirect_emptyPeersTitle.tr,
-                ),
-              )
-            else
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    LocaleKeys.wifiDirect_availablePeers.tr,
-                    style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextSoftBlueColor),
-                  ),
-                  CustomSizes.mediumSizedBoxHeight,
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: controller.availableDirectUsers.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Column(
-                        children: [
-                          InkWell(
-                            borderRadius: BorderRadius.circular(8),
-                            onTap: () {
-                              Get.find<UserPreview>()
-                                  .openUserPreview(
-                                coreId: controller.availableDirectUsers[index].coreId,
-                                name: controller.availableDirectUsers[index].nickname,
-                                isVerified: controller.availableDirectUsers[index].isVerified,
-                                isContact: controller.availableDirectUsers[index].isContact,
-                                // userModel: controller.availableDirectUsers[index],
-                                isWifiDirect: true,
-                              );
-                            },
-                            child: UserWidget(
-                              user: controller.availableDirectUsers[index],
-                            ),
-                          ),
-                          CustomSizes.mediumSizedBoxHeight,
-                        ],
-                      );
-                    },
-                  ),
-                ],
+      return Column(children: [
+        CustomSizes.largeSizedBoxHeight,
+        if (controller.availableDirectUsers.isEmpty)
+          Center(
+            child: EmptyUsersBody(
+              infoText: LocaleKeys.wifiDirect_emptyPeersTitle.tr,
+            ),
+          )
+        else
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                LocaleKeys.wifiDirect_availablePeers.tr,
+                style: TEXTSTYLES.kLinkSmall
+                    .copyWith(color: COLORS.kTextSoftBlueColor),
               ),
-            CustomSizes.largeSizedBoxHeight,
-          ]);
+              CustomSizes.mediumSizedBoxHeight,
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: controller.availableDirectUsers.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      InkWell(
+                        borderRadius: BorderRadius.circular(8),
+                        onTap: () {
+                          Get.find<UserPreviewController>().openUserPreview(
+                            coreId:
+                                controller.availableDirectUsers[index].coreId,
+                            isWifiDirect: true,
+                          );
+                        },
+                        child: UserWidget(
+                          user: controller.availableDirectUsers[index],
+                        ),
+                      ),
+                      CustomSizes.mediumSizedBoxHeight,
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
+        CustomSizes.largeSizedBoxHeight,
+      ]);
     });
   }
 }
