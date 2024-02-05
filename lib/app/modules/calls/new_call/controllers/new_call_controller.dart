@@ -48,6 +48,10 @@ class NewCallController extends GetxController {
   final profileLink = 'https://heyo.core/m6ljkB4KJ';
 
   Future<void> getContact() async {
+    contactList.value = [];
+    searchItems.value = [];
+    groupedContact.value = {};
+
     final contacts = await getContactUserUseCase.execute();
 
     contactList
@@ -73,45 +77,8 @@ class NewCallController extends GetxController {
   }
 
   Future<void> _updateName(List<UserModel> newContacts) async {
-    //* First we should loop throw all contacts and update their names
-    updateContactName(newContacts);
-
-    //* Second we should loop throw all search result and update their names
-    updateSearchResultName(newContacts);
-  }
-
-  void updateContactName(List<UserModel> newContacts) {
-    final newContactList = <UserModel>[];
-    for (final contact in contactList) {
-      // Check if there is a matching contact for the participant
-      final matchingContact = newContacts.firstWhereOrNull(
-        (contact) => contact.coreId == contact.coreId,
-      );
-
-      newContactList.add(
-        matchingContact != null
-            ? contact.copyWith(name: matchingContact.name)
-            : contact,
-      );
-    }
-    contactList.value = newContactList;
-  }
-
-  void updateSearchResultName(List<UserModel> newContacts) {
-    final newSearchList = <UserModel>[];
-    for (final item in searchItems) {
-      //* Check if there is a matching contact for the participant
-      final matchingContact = newContacts.firstWhereOrNull(
-        (contact) => contact.coreId == contact.coreId,
-      );
-
-      newSearchList.add(
-        matchingContact != null
-            ? item.copyWith(name: matchingContact.name)
-            : item,
-      );
-    }
-    searchItems.value = newSearchList;
+    await getContact();
+    await searchUsers(inputText.value);
   }
 
   Future<void> searchUsers(String query) async {
