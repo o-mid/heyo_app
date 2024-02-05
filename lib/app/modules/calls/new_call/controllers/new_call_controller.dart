@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -28,16 +30,28 @@ class NewCallController extends GetxController {
   RxList<UserModel> contactList = <UserModel>[].obs;
   RxList<UserModel> searchItems = <UserModel>[].obs;
   RxMap<String, List<UserModel>> groupedContact = RxMap();
+  late StreamSubscription<List<UserModel>> _contactsStreamSubscription;
 
   @override
   Future<void> onInit() async {
     await getContact();
+    unawaited(_listenToContactsToUpdateName());
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    _contactsStreamSubscription.cancel();
+    super.onClose();
   }
 
   final profileLink = 'https://heyo.core/m6ljkB4KJ';
 
   Future<void> getContact() async {
+    contactList.value = [];
+    searchItems.value = [];
+    groupedContact.value = {};
+
     final contacts = await getContactUserUseCase.execute();
 
     contactList
@@ -55,6 +69,16 @@ class NewCallController extends GetxController {
       groupedContact[firstChar]!.add(contact);
     }
     print(groupedContact);
+  }
+
+  Future<void> _listenToContactsToUpdateName() async {
+    _contactsStreamSubscription =
+        (await contactRepository.getContactsStream()).listen(_updateName);
+  }
+
+  Future<void> _updateName(List<UserModel> newContacts) async {
+    await getContact();
+    await searchUsers(inputText.value);
   }
 
   Future<void> searchUsers(String query) async {
