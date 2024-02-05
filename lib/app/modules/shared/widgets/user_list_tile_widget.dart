@@ -35,7 +35,7 @@ class UserListTileWidget extends StatelessWidget {
         Get.find<UserPreviewController>().openUserPreview(coreId: coreId);
       },
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+        padding: const EdgeInsets.fromLTRB(0, 16, 16, 0),
         child: Row(
           children: [
             CustomCircleAvatar(
