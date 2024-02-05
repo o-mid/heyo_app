@@ -174,12 +174,14 @@ class UserPreviewWidget extends GetView<UserPreviewController> {
                   //Todo: Add User Info onPressed
                   onPressed: () {
                     if (controller.isContact.isTrue) {
-                      Get.toNamed(
-                        Routes.ADD_CONTACTS,
-                        arguments: AddContactsViewArgumentsModel(
-                          coreId: coreId,
-                        ),
-                      );
+                      Get
+                        ..back()
+                        ..toNamed(
+                          Routes.ADD_CONTACTS,
+                          arguments: AddContactsViewArgumentsModel(
+                            coreId: coreId,
+                          ),
+                        );
                     }
                   },
                   icon: Assets.svg.infoIcon.svg(width: 20, height: 20),
@@ -208,7 +210,6 @@ class UserPreviewWidget extends GetView<UserPreviewController> {
                 else
                   _buildIconTextButton(
                     onPressed: () async {
-                      Get.back();
                       await Get.dialog(
                         RemoveContactsDialog(
                           userName: controller.name.value,
