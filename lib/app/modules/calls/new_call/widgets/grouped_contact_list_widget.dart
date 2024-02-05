@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/new_call/controllers/new_call_controller.dart';
 import 'package:heyo/app/modules/new_chat/widgets/user_widget.dart';
+import 'package:heyo/app/modules/shared/controllers/user_preview_controller.dart';
 import 'package:heyo/app/modules/shared/widgets/animate_list_widget.dart';
 import 'package:heyo/app/modules/shared/widgets/list_header_widget.dart';
 
@@ -27,10 +28,18 @@ class GroupedContactListWidget extends GetView<NewCallController> {
                         (p) => Column(
                           children: [
                             const SizedBox(height: 10),
-                            UserWidget(
-                              user: p,
-                              showAudioCallButton: true,
-                              showVideoCallButton: true,
+                            InkWell(
+                              onTap: () {
+                                //* Close keyboard before opening bottom sheet
+                                FocusScope.of(context).unfocus();
+                                Get.find<UserPreviewController>()
+                                    .openUserPreview(coreId: p.coreId);
+                              },
+                              child: UserWidget(
+                                user: p,
+                                showAudioCallButton: true,
+                                showVideoCallButton: true,
+                              ),
                             ),
                           ],
                         ),
