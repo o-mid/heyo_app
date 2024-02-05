@@ -13,22 +13,22 @@ class SearchResultWidget extends GetView<NewCallController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomSizes.smallSizedBoxHeight,
-          Text(
-            LocaleKeys.newChat_searchResults.tr,
-            style: TEXTSTYLES.kLinkSmall.copyWith(
-              color: COLORS.kTextSoftBlueColor,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CustomSizes.smallSizedBoxHeight,
+        Text(
+          LocaleKeys.newChat_searchResults.tr,
+          style: TEXTSTYLES.kLinkSmall.copyWith(
+            color: COLORS.kTextSoftBlueColor,
           ),
-          CustomSizes.smallSizedBoxHeight,
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: controller.searchItems.length,
-            itemBuilder: (context, index) {
+        ),
+        CustomSizes.smallSizedBoxHeight,
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: controller.searchItems.length,
+          itemBuilder: (context, index) {
+            return Obx(() {
               return Column(
                 children: [
                   const SizedBox(height: 10),
@@ -40,10 +40,10 @@ class SearchResultWidget extends GetView<NewCallController> {
                   ),
                 ],
               );
-            },
-          ),
-        ],
-      );
-    });
+            });
+          },
+        ),
+      ],
+    );
   }
 }
