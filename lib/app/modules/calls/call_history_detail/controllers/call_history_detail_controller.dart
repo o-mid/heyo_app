@@ -58,6 +58,7 @@ class CallHistoryDetailController extends GetxController {
   Future<void> getData() async {
     try {
       loading.value = true;
+      recentCalls.value = [];
       final callHistoryDataModel =
           await callHistoryRepo.getOneCall(args.callId);
 
@@ -124,24 +125,7 @@ class CallHistoryDetailController extends GetxController {
   }
 
   Future<void> _updateName(List<UserModel> newContacts) async {
-    final participantViewList = <CallHistoryParticipantViewModel>[];
-
-    for (final participant in callHistoryViewModel!.value!.participants) {
-      // Check if there is a matching contact for the participant
-      final matchingContact = newContacts.firstWhereOrNull(
-        (contact) => participant.coreId == contact.coreId,
-      );
-
-      // Add the participant with updated name (if matched contact), or original participant
-      participantViewList.add(
-        matchingContact != null
-            ? participant.copyWith(name: matchingContact.name)
-            : participant,
-      );
-    }
-
-    callHistoryViewModel!.value = callHistoryViewModel!.value!
-        .copyWith(participants: participantViewList);
+    await getData();
   }
 
   Future<void> saveCoreIdToClipboard() async {
