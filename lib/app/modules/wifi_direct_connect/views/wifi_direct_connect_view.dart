@@ -14,12 +14,12 @@ class WifiDirectConnectView extends GetView<WifiDirectConnectController> {
       body: Center(
         child: Column(
           children: [
-            Text(
-              controller.user.name,
-              style: const TextStyle(fontSize: 20),
+            const Text(
+              'Connection to...',
+              style: TextStyle(fontSize: 20),
             ),
             Text(
-              controller.user.coreId,
+              controller.coreId,
               style: const TextStyle(fontSize: 12),
             ),
             SizedBox(
