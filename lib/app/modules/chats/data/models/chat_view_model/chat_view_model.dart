@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../../shared/data/models/messaging_participant_model.dart';
+
 part 'chat_view_model.freezed.dart';
 part 'chat_view_model.g.dart'; // For JSON serialization
 
@@ -11,7 +13,7 @@ class ChatViewModel with _$ChatViewModel {
     required String name,
     required String lastMessage,
     required DateTime timestamp,
-    required List<String> participantsIds,
+    required List<MessagingParticipantModel> participants,
     @Default(0) int notificationCount,
     @Default(false) bool isGroupChat,
   }) = _ChatViewModel;

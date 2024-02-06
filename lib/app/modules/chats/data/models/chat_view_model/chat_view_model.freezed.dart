@@ -24,7 +24,8 @@ mixin _$ChatViewModel {
   String get name => throw _privateConstructorUsedError;
   String get lastMessage => throw _privateConstructorUsedError;
   DateTime get timestamp => throw _privateConstructorUsedError;
-  List<String> get participantsIds => throw _privateConstructorUsedError;
+  List<MessagingParticipantModel> get participants =>
+      throw _privateConstructorUsedError;
   int get notificationCount => throw _privateConstructorUsedError;
   bool get isGroupChat => throw _privateConstructorUsedError;
 
@@ -45,7 +46,7 @@ abstract class $ChatViewModelCopyWith<$Res> {
       String name,
       String lastMessage,
       DateTime timestamp,
-      List<String> participantsIds,
+      List<MessagingParticipantModel> participants,
       int notificationCount,
       bool isGroupChat});
 }
@@ -67,7 +68,7 @@ class _$ChatViewModelCopyWithImpl<$Res, $Val extends ChatViewModel>
     Object? name = null,
     Object? lastMessage = null,
     Object? timestamp = null,
-    Object? participantsIds = null,
+    Object? participants = null,
     Object? notificationCount = null,
     Object? isGroupChat = null,
   }) {
@@ -88,10 +89,10 @@ class _$ChatViewModelCopyWithImpl<$Res, $Val extends ChatViewModel>
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      participantsIds: null == participantsIds
-          ? _value.participantsIds
-          : participantsIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+      participants: null == participants
+          ? _value.participants
+          : participants // ignore: cast_nullable_to_non_nullable
+              as List<MessagingParticipantModel>,
       notificationCount: null == notificationCount
           ? _value.notificationCount
           : notificationCount // ignore: cast_nullable_to_non_nullable
@@ -117,7 +118,7 @@ abstract class _$$ChatViewModelImplCopyWith<$Res>
       String name,
       String lastMessage,
       DateTime timestamp,
-      List<String> participantsIds,
+      List<MessagingParticipantModel> participants,
       int notificationCount,
       bool isGroupChat});
 }
@@ -137,7 +138,7 @@ class __$$ChatViewModelImplCopyWithImpl<$Res>
     Object? name = null,
     Object? lastMessage = null,
     Object? timestamp = null,
-    Object? participantsIds = null,
+    Object? participants = null,
     Object? notificationCount = null,
     Object? isGroupChat = null,
   }) {
@@ -158,10 +159,10 @@ class __$$ChatViewModelImplCopyWithImpl<$Res>
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      participantsIds: null == participantsIds
-          ? _value._participantsIds
-          : participantsIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+      participants: null == participants
+          ? _value._participants
+          : participants // ignore: cast_nullable_to_non_nullable
+              as List<MessagingParticipantModel>,
       notificationCount: null == notificationCount
           ? _value.notificationCount
           : notificationCount // ignore: cast_nullable_to_non_nullable
@@ -183,10 +184,10 @@ class _$ChatViewModelImpl implements _ChatViewModel {
       required this.name,
       required this.lastMessage,
       required this.timestamp,
-      required final List<String> participantsIds,
+      required final List<MessagingParticipantModel> participants,
       this.notificationCount = 0,
       this.isGroupChat = false})
-      : _participantsIds = participantsIds;
+      : _participants = participants;
 
   factory _$ChatViewModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChatViewModelImplFromJson(json);
@@ -199,12 +200,12 @@ class _$ChatViewModelImpl implements _ChatViewModel {
   final String lastMessage;
   @override
   final DateTime timestamp;
-  final List<String> _participantsIds;
+  final List<MessagingParticipantModel> _participants;
   @override
-  List<String> get participantsIds {
-    if (_participantsIds is EqualUnmodifiableListView) return _participantsIds;
+  List<MessagingParticipantModel> get participants {
+    if (_participants is EqualUnmodifiableListView) return _participants;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_participantsIds);
+    return EqualUnmodifiableListView(_participants);
   }
 
   @override
@@ -216,7 +217,7 @@ class _$ChatViewModelImpl implements _ChatViewModel {
 
   @override
   String toString() {
-    return 'ChatViewModel(id: $id, name: $name, lastMessage: $lastMessage, timestamp: $timestamp, participantsIds: $participantsIds, notificationCount: $notificationCount, isGroupChat: $isGroupChat)';
+    return 'ChatViewModel(id: $id, name: $name, lastMessage: $lastMessage, timestamp: $timestamp, participants: $participants, notificationCount: $notificationCount, isGroupChat: $isGroupChat)';
   }
 
   @override
@@ -231,7 +232,7 @@ class _$ChatViewModelImpl implements _ChatViewModel {
             (identical(other.timestamp, timestamp) ||
                 other.timestamp == timestamp) &&
             const DeepCollectionEquality()
-                .equals(other._participantsIds, _participantsIds) &&
+                .equals(other._participants, _participants) &&
             (identical(other.notificationCount, notificationCount) ||
                 other.notificationCount == notificationCount) &&
             (identical(other.isGroupChat, isGroupChat) ||
@@ -246,7 +247,7 @@ class _$ChatViewModelImpl implements _ChatViewModel {
       name,
       lastMessage,
       timestamp,
-      const DeepCollectionEquality().hash(_participantsIds),
+      const DeepCollectionEquality().hash(_participants),
       notificationCount,
       isGroupChat);
 
@@ -270,7 +271,7 @@ abstract class _ChatViewModel implements ChatViewModel {
       required final String name,
       required final String lastMessage,
       required final DateTime timestamp,
-      required final List<String> participantsIds,
+      required final List<MessagingParticipantModel> participants,
       final int notificationCount,
       final bool isGroupChat}) = _$ChatViewModelImpl;
 
@@ -286,7 +287,7 @@ abstract class _ChatViewModel implements ChatViewModel {
   @override
   DateTime get timestamp;
   @override
-  List<String> get participantsIds;
+  List<MessagingParticipantModel> get participants;
   @override
   int get notificationCount;
   @override

@@ -12,8 +12,9 @@ _$ChatViewModelImpl _$$ChatViewModelImplFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       lastMessage: json['lastMessage'] as String,
       timestamp: DateTime.parse(json['timestamp'] as String),
-      participantsIds: (json['participantsIds'] as List<dynamic>)
-          .map((e) => e as String)
+      participants: (json['participants'] as List<dynamic>)
+          .map((e) =>
+              MessagingParticipantModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       notificationCount: json['notificationCount'] as int? ?? 0,
       isGroupChat: json['isGroupChat'] as bool? ?? false,
@@ -25,7 +26,7 @@ Map<String, dynamic> _$$ChatViewModelImplToJson(_$ChatViewModelImpl instance) =>
       'name': instance.name,
       'lastMessage': instance.lastMessage,
       'timestamp': instance.timestamp.toIso8601String(),
-      'participantsIds': instance.participantsIds,
+      'participants': instance.participants.map((e) => e.toJson()).toList(),
       'notificationCount': instance.notificationCount,
       'isGroupChat': instance.isGroupChat,
     };
