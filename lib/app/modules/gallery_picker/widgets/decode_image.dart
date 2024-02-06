@@ -16,23 +16,23 @@ class DecodeImage extends ImageProvider<DecodeImage> {
     this.index = 0,
   });
 
-  @override
-  ImageStreamCompleter load(DecodeImage key, DecoderCallback decode) {
-    return MultiFrameImageStreamCompleter(
-      codec: _loadAsync(key, decode),
-      scale: key.scale,
-    );
-  }
+  // @override
+  // ImageStreamCompleter load(DecodeImage key) {
+  //   return MultiFrameImageStreamCompleter(
+  //     codec: _loadAsync(key, decode),
+  //     scale: key.scale,
+  //   );
+  // }
 
-  Future<ui.Codec> _loadAsync(DecodeImage key, DecoderCallback decode) async {
-    assert(key == this);
-
-    final coverEntity = (await key.entity.getAssetListRange(start: index, end: index + 1))[0];
-
-    final bytes = await coverEntity.thumbnailDataWithSize(ThumbnailSize(thumbSize, thumbSize));
-
-    return decode(bytes!);
-  }
+  // Future<ui.Codec> _loadAsync(DecodeImage key) async {
+  //   assert(key == this);
+  //
+  //   final coverEntity = (await key.entity.getAssetListRange(start: index, end: index + 1))[0];
+  //
+  //   final bytes = await coverEntity.thumbnailDataWithSize(ThumbnailSize(thumbSize, thumbSize));
+  //
+  //   return decode();
+  // }
 
   @override
   Future<DecodeImage> obtainKey(ImageConfiguration configuration) async {
