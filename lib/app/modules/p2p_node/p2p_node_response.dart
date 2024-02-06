@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_p2p_communicator/flutter_p2p_communicator.dart';
 import 'package:flutter_p2p_communicator/model/addr_model.dart';
 import 'package:flutter_p2p_communicator/model/req_res_model.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/p2p_node/models.dart';
+import 'package:heyo/app/modules/shared/controllers/connection_controller.dart';
 import 'package:heyo/app/modules/shared/data/providers/events/send_event_provider.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
@@ -29,6 +31,7 @@ class P2PNodeResponseStream {
 
   //bool shouldCheckAddrs = false;
   LibP2PStorageProvider libP2PStorageProvider;
+  ConnectionController connectionController;
 
   /// temporarily added here since there is nothing to determine this class is in
   /// data or domain layer
@@ -72,6 +75,9 @@ class P2PNodeResponseStream {
           {
             'event': event.name.toString(),
             'advertised': p2pState.advertise.value.toString(),
+            'connection_status':
+                connectionController.currentConnectionStatus.value.toString(),
+            'network_type' : (await Connectivity().checkConnectivity()).name,
           },
         ),
       );
@@ -100,7 +106,6 @@ class P2PNodeResponseStream {
         event.error == null) {
       // now you can start talking or communicating to others
       p2pState.advertise.value = true;
-
     } else if (event.name == P2PReqResNodeNames.addDelegatedCoreID &&
         event.error != null &&
         event.error!.contains('invalid')) {
