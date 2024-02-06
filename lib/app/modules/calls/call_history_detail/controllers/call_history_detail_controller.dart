@@ -11,6 +11,7 @@ import 'package:heyo/app/modules/calls/call_history/views/models/call_history_vi
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
+import 'package:heyo/app/modules/contacts/widgets/removeContactsDialog.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
@@ -58,6 +59,7 @@ class CallHistoryDetailController extends GetxController {
   Future<void> getData() async {
     try {
       loading.value = true;
+      recentCalls.value = [];
       final callHistoryDataModel =
           await callHistoryRepo.getOneCall(args.callId);
 
@@ -124,24 +126,7 @@ class CallHistoryDetailController extends GetxController {
   }
 
   Future<void> _updateName(List<UserModel> newContacts) async {
-    final participantViewList = <CallHistoryParticipantViewModel>[];
-
-    for (final participant in callHistoryViewModel!.value!.participants) {
-      // Check if there is a matching contact for the participant
-      final matchingContact = newContacts.firstWhereOrNull(
-        (contact) => participant.coreId == contact.coreId,
-      );
-
-      // Add the participant with updated name (if matched contact), or original participant
-      participantViewList.add(
-        matchingContact != null
-            ? participant.copyWith(name: matchingContact.name)
-            : participant,
-      );
-    }
-
-    callHistoryViewModel!.value = callHistoryViewModel!.value!
-        .copyWith(participants: participantViewList);
+    await getData();
   }
 
   Future<void> saveCoreIdToClipboard() async {
@@ -172,22 +157,68 @@ class CallHistoryDetailController extends GetxController {
     );
   }
 
+  Future<bool> contactAvailability(String coreId) async {
+    final contact = await contactRepository.getContactById(coreId);
+    if (contact == null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   Future<void> openAppBarActionBottomSheet({
     required CallHistoryParticipantViewModel participant,
   }) async {
+    final isContact = await contactAvailability(participant.coreId);
+
+    Widget bottomSheetItem({
+      void Function()? onTap,
+      required String title,
+      required Widget icon,
+    }) {
+      return TextButton(
+        onPressed: onTap,
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: COLORS.kBrightBlueColor,
+              ),
+              child: icon,
+            ),
+            CustomSizes.mediumSizedBoxWidth,
+            Text(
+              title,
+              style: TEXTSTYLES.kLinkBig.copyWith(
+                color: COLORS.kDarkBlueColor,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     await Get.bottomSheet(
       Padding(
         padding: CustomSizes.iconListPadding,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextButton(
-              onPressed: () {
+            bottomSheetItem(
+              title: isContact
+                  ? LocaleKeys.newChat_userBottomSheet_contactInfo.tr
+                  : LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
+              icon: Assets.svg.addToContactsIcon.svg(
+                color: COLORS.kDarkBlueColor,
+                width: 20,
+                height: 20,
+              ),
+              onTap: () {
                 //* Close bottom sheet
                 Get.back();
-
                 final userModel = participant.mapToUserModel();
-
                 Get.toNamed(
                   Routes.ADD_CONTACTS,
                   arguments: AddContactsViewArgumentsModel(
@@ -196,29 +227,30 @@ class CallHistoryDetailController extends GetxController {
                   ),
                 );
               },
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: COLORS.kBrightBlueColor,
-                    ),
-                    child: Assets.svg.addToContactsIcon.svg(
-                      width: 20,
-                      height: 20,
-                    ),
-                  ),
-                  CustomSizes.mediumSizedBoxWidth,
-                  Text(
-                    LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
-                    style: TEXTSTYLES.kLinkBig.copyWith(
-                      color: COLORS.kDarkBlueColor,
-                    ),
-                  ),
-                ],
-              ),
             ),
+            if (isContact)
+              bottomSheetItem(
+                title: LocaleKeys.newChat_userBottomSheet_RemoveFromContacts.tr,
+                icon: Assets.svg.deleteIcon.svg(
+                  color: COLORS.kDarkBlueColor,
+                  width: 20,
+                  height: 20,
+                ),
+                onTap: () async {
+                  final result = await Get.dialog(
+                    RemoveContactsDialog(
+                      userName: participant.name,
+                    ),
+                  );
+
+                  if (result is bool && result == true) {
+                    print("result   $result");
+                    await contactRepository
+                        .deleteContactById(participant.coreId);
+                    Get.back();
+                  }
+                },
+              ),
             CustomSizes.mediumSizedBoxHeight,
           ],
         ),

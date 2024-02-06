@@ -73,16 +73,16 @@ class UserPreviewController extends GetxController {
       await chatHistoryRepo
           .updateChat(chatModel.copyWith(name: userCoreId.shortenCoreId));
     }
-    final calls = await callHistoryRepo.getCallsFromUserId(userCoreId);
-    calls.forEach((call) async {
-      //TODO:(Aliazim) update model why delete and create !?
-      await callHistoryRepo.deleteOneCall(call.callId);
-      await callHistoryRepo.addCallToHistory(
-        call.copyWith(
-          //TODO:(Aliazim) the call history participant will change
-          participants: [call.participants[0]],
-        ),
-      );
-    });
+    //final calls = await callHistoryRepo.getCallsFromUserId(userCoreId);
+    //calls.forEach((call) async {
+    //  //TODO:(Aliazim) update model why delete and create !?
+    //  await callHistoryRepo.deleteOneCall(call.callId);
+    //  await callHistoryRepo.addCallToHistory(
+    //    call.copyWith(
+    //      //TODO:(Aliazim) the call history participant will change
+    //      participants: [call.participants[0]],
+    //    ),
+    //  );
+    //});
   }
 }

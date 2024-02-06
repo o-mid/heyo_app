@@ -15,6 +15,7 @@ import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_histo
 import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
 class CallHistoryController extends GetxController {
   CallHistoryController({
@@ -40,7 +41,7 @@ class CallHistoryController extends GetxController {
     super.onInit();
 
     // _addMockData();
-    init();
+    getData();
     unawaited(_listenToContactsToUpdateName());
   }
 
@@ -56,7 +57,7 @@ class CallHistoryController extends GetxController {
     super.onClose();
   }
 
-  Future<void> init() async {
+  Future<void> getData() async {
     //calls.value = await callHistoryRepo.getAllCalls();
 
     _callsStreamSubscription =
@@ -143,7 +144,7 @@ class CallHistoryController extends GetxController {
         participantViewList.add(
           matchingContact != null
               ? participant.copyWith(name: matchingContact.name)
-              : participant,
+              : participant.copyWith(name: participant.coreId.shortenCoreId),
         );
       }
 
