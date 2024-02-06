@@ -20,6 +20,7 @@ class P2PNodeResponseStream {
     required this.libP2PStorageProvider,
     required this.accountRepository,
     required this.sendEventProvider,
+    required this.connectionController,
   }) {
     //_checkAddressJob();
   }

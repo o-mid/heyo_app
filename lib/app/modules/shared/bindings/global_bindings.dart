@@ -149,12 +149,14 @@ class GlobalBindings extends Bindings {
         ),
         permanent: true,
       )
+      ..put(ConnectionController(p2pState: Get.find()))
       ..put(
         P2PNodeResponseStream(
           p2pState: Get.find(),
           libP2PStorageProvider: Get.find(),
           accountRepository: Get.find(),
           sendEventProvider: Get.find(),
+          connectionController: Get.find(),
         ),
         permanent: true,
       )
@@ -324,7 +326,6 @@ class GlobalBindings extends Bindings {
       ..put(AudioMessageController())
       ..put(VideoMessageController())
       ..put(LiveLocationController())
-      ..put(ConnectionController(p2pState: Get.find()))
       ..put(
           DataChannelMessagingConnection(multipleConnectionHandler: Get.find()))
       ..put(
