@@ -6,6 +6,9 @@ class NOTIFICATIONS {
   static const callsChannelName = 'Calls Channel';
   static const callsChannelDescription = 'Notification channel for calls';
 
+  static const missedCallChannelName = 'Missed Calls';
+  static const missedCallChannelKey = 'missed_calls';
+
   static const messagesChannelKey = 'messages_channel';
   static const messagesChannelName = 'Messages Channel';
   static const messagesChannelDescription = 'Notification channel for messages';
