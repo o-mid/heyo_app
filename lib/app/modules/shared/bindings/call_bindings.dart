@@ -51,13 +51,7 @@ class CallBindings with NormalPriorityBindings {
       ..put(
         CallKitProvider(
           accountInfoRepo: Get.find(),
-          contactRepository: ContactRepository(
-            cacheContractor: CacheRepository(
-              userProvider: UserProvider(
-                appDatabaseProvider: Get.find<AppDatabaseProvider>(),
-              ),
-            ),
-          ),
+          contactRepository: Get.find(),
           callRepository: Get.find<WebRTCCallRepository>(),
         ),
         permanent: true,
@@ -67,12 +61,7 @@ class CallBindings with NormalPriorityBindings {
             callStatusProvider: Get.find(),
             accountInfoRepo: Get.find(),
             notificationsController: Get.find(),
-            contactRepository: ContactRepository(
-              cacheContractor: CacheRepository(
-                userProvider: UserProvider(
-                    appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-              ),
-            ),
+            contactRepository: Get.find(),
             appLifeCycleController: Get.find(),
             iOSCallKitProvider: Get.find()),
         permanent: true,
@@ -86,12 +75,7 @@ class CallBindings with NormalPriorityBindings {
                 appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
           callStatusObserver: Get.find(),
-          contactRepository: ContactRepository(
-            cacheContractor: CacheRepository(
-              userProvider: UserProvider(
-                  appDatabaseProvider: Get.find<AppDatabaseProvider>()),
-            ),
-          ),
+          contactRepository: Get.find(),
         ),
       )
       ..put<CallHistoryAbstractRepo>(
@@ -108,21 +92,9 @@ class CallBindings with NormalPriorityBindings {
             ),
           ),
           contactNameUseCase: ContactNameUseCase(
-            contactRepository: ContactRepository(
-              cacheContractor: CacheRepository(
-                userProvider: UserProvider(
-                  appDatabaseProvider: Get.find<AppDatabaseProvider>(),
-                ),
-              ),
-            ),
+            contactRepository: Get.find(),
           ),
-          contactRepository: ContactRepository(
-            cacheContractor: CacheRepository(
-              userProvider: UserProvider(
-                appDatabaseProvider: Get.find<AppDatabaseProvider>(),
-              ),
-            ),
-          ),
+          contactRepository: Get.find(),
         ),
       );
   }
