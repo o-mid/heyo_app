@@ -215,7 +215,7 @@ class CallConnectionsHandler {
       }
     }
     if (_localStream != null) {
-      _localStream!.getVideoTracks()[0].enabled = videMode;
+      // _localStream!.getVideoTracks()[0].enabled = videMode;
     }
   }
 

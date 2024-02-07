@@ -24,11 +24,7 @@ class AddContactsBinding extends Bindings {
             ),
           ),
         ),
-        chatHistoryRepo: ChatHistoryLocalRepo(
-          chatHistoryProvider: ChatHistoryProvider(
-            appDatabaseProvider: Get.find(),
-          ),
-        ),
+        chatHistoryRepo: Get.find(),
         callHistoryRepo: CallHistoryRepo(
           callHistoryProvider: CallHistoryProvider(
             appDatabaseProvider: Get.find<AppDatabaseProvider>(),
