@@ -61,30 +61,31 @@ class GroupCallWidget extends GetView<CallController> {
               );
             },
           ),
-          DraggableVideo(
-            child: AnimatedSize(
-              clipBehavior: Clip.hardEdge,
-              curve: TRANSITIONS.callPage_DraggableVideoAnimatedSizeCurve,
-              alignment: Alignment.bottomLeft,
-              duration: controller.callerScaleDuration,
-              reverseDuration: controller.callerScaleReverseDuration,
-              child: SizedBox(
-                width: changeCallerWidgetSize ? 200.w : 120.w,
-                height: changeCallerWidgetSize ? 250.h : 170.h,
-                child: GestureDetector(
-                  //TODO: AliAzim => check if we need this onTap & onDoubleTap or not
-                  onTap: controller.changeCallerOptions,
-                  onDoubleTap: controller.flipVideoPositions,
-                  child: Container(
-                    margin: const EdgeInsets.all(5),
-                    child: CallRendererLocalStackWidget(
-                      participantModel: localParticipate.value!,
+          if (localParticipate.value!.videoMode.isTrue)
+            DraggableVideo(
+              child: AnimatedSize(
+                clipBehavior: Clip.hardEdge,
+                curve: TRANSITIONS.callPage_DraggableVideoAnimatedSizeCurve,
+                alignment: Alignment.bottomLeft,
+                duration: controller.callerScaleDuration,
+                reverseDuration: controller.callerScaleReverseDuration,
+                child: SizedBox(
+                  width: changeCallerWidgetSize ? 200.w : 120.w,
+                  height: changeCallerWidgetSize ? 250.h : 170.h,
+                  child: GestureDetector(
+                    //TODO: AliAzim => check if we need this onTap & onDoubleTap or not
+                    onTap: controller.changeCallerOptions,
+                    onDoubleTap: controller.flipVideoPositions,
+                    child: Container(
+                      margin: const EdgeInsets.all(5),
+                      child: CallRendererLocalStackWidget(
+                        participantModel: localParticipate.value!,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
         ],
       );
     });

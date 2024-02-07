@@ -17,11 +17,10 @@ enum CallState {
 }
 
 class CallConnectionsHandler {
-  CallConnectionsHandler({
-    required this.singleCallWebRTCBuilder,
-    required this.callStatusProvider,
-    required this.callSignaling
-  });
+  CallConnectionsHandler(
+      {required this.singleCallWebRTCBuilder,
+      required this.callStatusProvider,
+      required this.callSignaling});
 
   final CallSignaling callSignaling;
   SingleCallWebRTCBuilder singleCallWebRTCBuilder;
@@ -130,10 +129,8 @@ class CallConnectionsHandler {
       _localStream = null;
     }
     if (callStatusProvider.getCurrentCall() != null) {
-
       for (final element in callStatusProvider.getCurrentCall()!.sessions) {
         await element.dispose();
-
       }
       callStatusProvider.getCurrentCall()!.sessions.clear();
     }
@@ -144,13 +141,14 @@ class CallConnectionsHandler {
     final member = data["newMemer"] as Map<String, dynamic>;
     if (callId == callStatusProvider.getCurrentCall()?.callId) {
       CallRTCSession callRTCSession = await callStatusProvider.addSession(
-          RemotePeer(
-            remoteCoreId: member["member"] as String,
-            remotePeerId: null,
-          ),
-          _localStream!,
-          callStatusProvider.getCurrentCall()!.sessions.first.isAudioCall,
-          callId,);
+        RemotePeer(
+          remoteCoreId: member["member"] as String,
+          remotePeerId: null,
+        ),
+        _localStream!,
+        callStatusProvider.getCurrentCall()!.sessions.first.isAudioCall,
+        callId,
+      );
       callRTCSession.onAddRemoteStream = (stream) {
         onAddRemoteStream?.call(callRTCSession);
       };
@@ -212,6 +210,7 @@ class CallConnectionsHandler {
     if (sendSignal) {
       for (var element in callStatusProvider.getCurrentCall()!.sessions) {
         singleCallWebRTCBuilder.updateCamera(videMode, element);
+        //onCameraStateChanged(callStatusProvider.getCurrentCall()!.callId, data, remotePeer)
       }
     }
     if (_localStream != null) {
@@ -247,6 +246,7 @@ class CallConnectionsHandler {
       callStatusProvider.getCurrentCall()?.sessions.forEach((element) {
         if (element.remotePeer.remoteCoreId == remotePeer.remoteCoreId) {
           element.setCameraState(!isVideMode);
+          onAudioStateChanged?.call(element);
         }
       });
     }
