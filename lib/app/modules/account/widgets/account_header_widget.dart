@@ -16,6 +16,7 @@ class AccountHeaderWidget extends GetView<AccountController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.getVersion();
     return Column(
       children: [
         SizedBox(height: 23.h),
@@ -47,7 +48,8 @@ class AccountHeaderWidget extends GetView<AccountController> {
           style:
               TEXTSTYLES.kBodySmall.copyWith(color: COLORS.kTextSoftBlueColor),
         ),
-        SizedBox(height: 60.h),
+        SizedBox(height: 30.h),
+        ObxValue((version) => Text(version.value), controller.appVersion),
         const Divider(
           color: COLORS.kChatStroke,
           thickness: 1,

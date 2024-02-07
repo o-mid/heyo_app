@@ -44,6 +44,8 @@ import 'package:heyo/app/modules/shared/data/providers/blockchain/blockchain_pro
 import 'package:heyo/app/modules/shared/data/providers/blockchain/blockchain_provider_impl.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/events/send_event_provider.dart';
+import 'package:heyo/app/modules/shared/data/providers/events/send_event_provider_impl.dart';
 import 'package:heyo/app/modules/shared/data/providers/kyc_vault/kyc_vault_provider.dart';
 import 'package:heyo/app/modules/shared/data/providers/kyc_vault/kyc_vault_provilder_impl.dart';
 import 'package:heyo/app/modules/shared/controllers/app_lifecyle_controller.dart';
@@ -102,6 +104,7 @@ class GlobalBindings extends Bindings {
   @override
   void dependencies() {
     Get
+      ..put<SendEventProvider>(SendEventProviderImpl())
       ..put(AppLifeCycleController())
       ..put<Registry>(
         Registry(
@@ -146,11 +149,14 @@ class GlobalBindings extends Bindings {
         ),
         permanent: true,
       )
+      ..put(ConnectionController(p2pState: Get.find()))
       ..put(
         P2PNodeResponseStream(
           p2pState: Get.find(),
           libP2PStorageProvider: Get.find(),
           accountRepository: Get.find(),
+          sendEventProvider: Get.find(),
+          connectionController: Get.find(),
         ),
         permanent: true,
       )
@@ -320,7 +326,6 @@ class GlobalBindings extends Bindings {
       ..put(AudioMessageController())
       ..put(VideoMessageController())
       ..put(LiveLocationController())
-      ..put(ConnectionController(p2pState: Get.find()))
       ..put(
           DataChannelMessagingConnection(multipleConnectionHandler: Get.find()))
       ..put(
