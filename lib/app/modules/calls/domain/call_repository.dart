@@ -19,7 +19,7 @@ abstract class CallRepository {
   //void notifyParticipantsChange(AllParticipantModel participant);
 
   //UI events and actions
-  void showLocalVideoStream(bool videMode,bool sendSignal);
+  void showLocalVideoStream(bool videMode, bool sendSignal);
 
   Future<String> startCall(String remoteId, bool isAudioCall);
 
@@ -36,4 +36,8 @@ abstract class CallRepository {
   void rejectIncomingCall(String callId);
 
   void muteMic();
+
+  void setAudioSource(String deviceId);
+
+  Future<List<MediaDeviceInfo>> getAudioOutputs();
 }

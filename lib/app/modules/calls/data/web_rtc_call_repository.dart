@@ -210,4 +210,14 @@ class WebRTCCallRepository implements CallRepository {
             .getUserMedia(mediaConstraints);
     return stream;
   }
+
+  @override
+  void setAudioSource(String deviceId) {
+    Helper.selectAudioOutput(deviceId);
+  }
+
+  @override
+  Future<List<MediaDeviceInfo>> getAudioOutputs() async {
+    return Helper.audiooutputs;
+  }
 }

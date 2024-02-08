@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_beep/flutter_beep.dart';
+import 'package:get/get.dart' hide navigator;
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:get/get.dart';
+import 'package:heyo/app/modules/calls/data/media_sources.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
@@ -42,6 +43,9 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   //* CallViewArgumentsModel will not effect the UI
   late CallViewArgumentsModel args;
+
+  RxList<MediaDeviceInfo> audioOutputs = RxList();
+  Rxn<MediaDeviceInfo> selectedAudioOutput = Rxn();
 
   RxList<ConnectedParticipantModel> connectedRemoteParticipates =
       RxList<ConnectedParticipantModel>();
@@ -85,7 +89,10 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   String getConnectedParticipantsName() {
     //* This item will loop all call connected user
     //* Return their name as string and split them with comma
-    return connectedRemoteParticipates.map((element) => element.name).toList().join(', ');
+    return connectedRemoteParticipates
+        .map((element) => element.name)
+        .toList()
+        .join(', ');
   }
 
   Future<void> initLocalRenderer() async {
@@ -147,7 +154,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   }
 
   void onCallTick(Timer timer) {
-    localParticipate.value!.callDurationInSecond.value = stopwatch.elapsed.inSeconds;
+    localParticipate.value!.callDurationInSecond.value =
+        stopwatch.elapsed.inSeconds;
   }
 
   void stopCallTimer() {
@@ -166,6 +174,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       //* This mean you join the call (You are callee)
       await inCallSetUp();
     }
+    await getAudioSources();
+    setDefaultAudioSource();
     await observeRemoteStreams();
 
     print("Call type ${(args.isAudioCall)}");
@@ -194,7 +204,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     int index,
     ConnectedParticipantModel connectedParticipantModel,
   ) async {
-    if (connectedParticipantModel.rtcVideoRenderer == null && callStream.remoteStream != null) {
+    if (connectedParticipantModel.rtcVideoRenderer == null &&
+        callStream.remoteStream != null) {
       final renderer = RTCVideoRenderer();
       await renderer.initialize();
       renderer.srcObject = callStream.remoteStream;
@@ -213,8 +224,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       );
       connectedRemoteParticipates[index] = remoteParticipate;
     } else {
-      connectedRemoteParticipates[index] =
-          connectedRemoteParticipates[index].copyWith(videoMode: (!callStream.isAudioCall).obs);
+      connectedRemoteParticipates[index] = connectedRemoteParticipates[index]
+          .copyWith(videoMode: (!callStream.isAudioCall).obs);
     }
   }
 
@@ -235,7 +246,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     connectedRemoteParticipates.add(
       ConnectedParticipantModel(
         audioMode: true.obs,
-        videoMode: (renderer == null) ? false.obs : (!callStream.isAudioCall).obs,
+        videoMode:
+            (renderer == null) ? false.obs : (!callStream.isAudioCall).obs,
         coreId: callStream.coreId,
         name: userContact.name,
         stream: callStream.remoteStream,
@@ -298,7 +310,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     );
 
     //* check if the participant is already in list or not
-    final participantIndex = participants.indexWhere((item) => item.coreId == coreId);
+    final participantIndex =
+        participants.indexWhere((item) => item.coreId == coreId);
 
     if (participantIndex == -1) {
       participants.add(participant.copyWith(name: userContact.name));
@@ -309,7 +322,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   Future<void> removeFromAllParticipate(String coreId) async {
     //* check if the participant is already in list or not
-    final participantIndex = participants.indexWhere((item) => item.coreId == coreId);
+    final participantIndex =
+        participants.indexWhere((item) => item.coreId == coreId);
 
     if (participantIndex != -1) {
       participants.removeAt(participantIndex);
@@ -340,9 +354,12 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
         );
       }
       ..onRemoveStream = (coreId) {
-        for (var index = 0; index < connectedRemoteParticipates.length; index++) {
+        for (var index = 0;
+            index < connectedRemoteParticipates.length;
+            index++) {
           if (connectedRemoteParticipates[index].coreId == coreId) {
-            connectedRemoteParticipates.remove(connectedRemoteParticipates[index]);
+            connectedRemoteParticipates
+                .remove(connectedRemoteParticipates[index]);
             break;
           }
         }
@@ -357,12 +374,13 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   // Todo
   void toggleMuteMic() {
     callRepository.muteMic();
-    localParticipate.value!.audioMode.value = !localParticipate.value!.audioMode.value;
+    localParticipate.value!.audioMode.value =
+        !localParticipate.value!.audioMode.value;
     //micEnabled.value = !micEnabled.value;
   }
 
   // Todo
-  void toggleMuteCall() {}
+  void switchAudioSource() {}
 
   Future<void> endCall() async {
     if (args.callId == null) {
@@ -413,7 +431,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   //void updateCallViewType(CallViewType type) => callViewType.value = type;
 
-  void flipVideoPositions() => isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
+  void flipVideoPositions() =>
+      isVideoPositionsFlipped.value = !isVideoPositionsFlipped.value;
 
   Future<void> disposeRTCRender() async {
     for (var participate in connectedRemoteParticipates) {
@@ -499,4 +518,33 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   }
 
   void switchFullSCreenMode() => fullScreenMode.value = !fullScreenMode.value;
+
+  Future<void> getAudioSources() async {
+    audioOutputs
+      ..clear()
+      ..addAll(await callRepository.getAudioOutputs());
+  }
+
+  void setDefaultAudioSource() {
+    final earpieceInfo = audioOutputs
+        .firstWhereOrNull((p0) => p0.label == AudioOutputSources.earpiece.name);
+    if (earpieceInfo == null) {
+      final firstSource = audioOutputs.first;
+      selectedAudioOutput.value = firstSource;
+      print("Output selected 1");
+      callRepository.setAudioSource(firstSource.deviceId);
+    } else {
+      selectedAudioOutput.value = earpieceInfo;
+      print("Output selected 2");
+      callRepository.setAudioSource(earpieceInfo.deviceId);
+    }
+  }
+
+  void onSelectAudioOutput(String deviceId) {
+    selectedAudioOutput.value = audioOutputs.firstWhereOrNull(
+      (element) => element.deviceId == deviceId,
+    );
+    callRepository.setAudioSource(deviceId);
+  }
+
 }

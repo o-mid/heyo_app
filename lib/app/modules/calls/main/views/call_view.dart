@@ -1,6 +1,7 @@
 import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/calls/data/media_sources.dart';
 
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/calls/main/widgets/call_bottom_sheet_expanded_body.dart';
@@ -33,10 +34,21 @@ class CallView extends GetView<CallController> {
               //color: COLORS.kWhiteColor,
             ),
             actions: [
-              IconButton(
-                onPressed: controller.toggleMuteCall,
-                splashRadius: 18,
-                icon: Assets.svg.volumeUp.svg(),
+              Obx(
+                () => PopupMenuButton<String>(
+                  initialValue: controller.selectedAudioOutput.value?.deviceId,
+                  onSelected: controller.onSelectAudioOutput,
+                  icon: getAudioSourceIcon(),
+                  itemBuilder: (context) {
+                    return List.generate(
+                      controller.audioOutputs.length,
+                      (index) => PopupMenuItem(
+                        value: controller.audioOutputs[index].deviceId,
+                        child: Text(controller.audioOutputs[index].label),
+                      ),
+                    );
+                  },
+                ),
               ),
               IconButton(
                 onPressed: controller.switchCamera,
@@ -65,5 +77,16 @@ class CallView extends GetView<CallController> {
         ),
       );
     });
+  }
+
+  Widget getAudioSourceIcon() {
+    final selectedOutput = controller.selectedAudioOutput.value?.deviceId;
+    if (selectedOutput?.toLowerCase() == AudioOutputSources.earpiece.name) {
+      return Assets.svg.audioCallIcon.svg();
+    }
+    if (selectedOutput?.toLowerCase() == AudioOutputSources.speaker.name) {
+      return Assets.svg.volumeUp.svg();
+    }
+    return const SizedBox();
   }
 }

@@ -1,0 +1,4 @@
+enum AudioOutputSources {
+  earpiece,
+  speaker;
+}
