@@ -115,7 +115,7 @@ void initApp() {
         // translationsKeys: AppTranslation.translations,
         title: 'Heyo',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(),
+        theme: ThemeData(useMaterial3: false),
         locale: const Locale('en', 'EN'),
         fallbackLocale: const Locale(
           'en',

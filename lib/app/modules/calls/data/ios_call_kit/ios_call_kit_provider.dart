@@ -98,7 +98,8 @@ class CallKitProvider {
 
   @override
   Future<void> declineCall() async {
-    //await callRepository.endOrCancelCall(callId);
+
+    await callRepository.endOrCancelCall(callId);
     await FlutterIosCallKit.endCall(_uuid);
     print('🟩 IosCallController: declineCall');
   }

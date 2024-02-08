@@ -19,12 +19,14 @@ class UserListTileWidget extends StatelessWidget {
     super.key,
     this.showAudioCallButton = false,
     this.showVideoCallButton = false,
+    this.padding,
   });
 
   final String coreId;
   final String name;
   final bool showAudioCallButton;
   final bool showVideoCallButton;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +34,10 @@ class UserListTileWidget extends StatelessWidget {
       onTap: () {
         //* Close keyboard before opening bottom sheet
         FocusScope.of(context).unfocus();
-        Get.find<UserPreview>().openUserPreview(
-          coreId: coreId,
-          name: name,
-        );
+        Get.find<UserPreviewController>().openUserPreview(coreId: coreId);
       },
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+        padding: padding ?? const EdgeInsets.fromLTRB(0, 16, 16, 0),
         child: Row(
           children: [
             CustomCircleAvatar(

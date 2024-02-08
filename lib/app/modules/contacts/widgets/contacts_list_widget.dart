@@ -37,6 +37,7 @@ class ContactsListWidget extends GetView<ContactsController> {
               name: contact.name,
               showAudioCallButton: true,
               showVideoCallButton: true,
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
             ),
           ),
         ],

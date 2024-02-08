@@ -13,20 +13,26 @@ import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/cal
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
+import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
 class CallHistoryController extends GetxController {
   CallHistoryController({
     required this.callHistoryRepo,
     required this.contactNameUseCase,
+    required this.contactRepository,
   });
 
   final CallHistoryAbstractRepo callHistoryRepo;
   final ContactNameUseCase contactNameUseCase;
+  final ContactRepository contactRepository;
 
   final calls = <CallHistoryViewModel>[].obs;
   final animatedListKey = GlobalKey<AnimatedListState>();
 
   late StreamSubscription<List<CallHistoryModel>> _callsStreamSubscription;
+  late StreamSubscription<List<UserModel>> _contactsStreamSubscription;
 
   RxBool loading = true.obs;
 
@@ -35,7 +41,8 @@ class CallHistoryController extends GetxController {
     super.onInit();
 
     // _addMockData();
-    init();
+    getData();
+    unawaited(_listenToContactsToUpdateName());
   }
 
   //@override
@@ -46,10 +53,11 @@ class CallHistoryController extends GetxController {
   @override
   void onClose() {
     _callsStreamSubscription.cancel();
+    _contactsStreamSubscription.cancel();
     super.onClose();
   }
 
-  Future<void> init() async {
+  Future<void> getData() async {
     //calls.value = await callHistoryRepo.getAllCalls();
 
     _callsStreamSubscription =
@@ -114,6 +122,35 @@ class CallHistoryController extends GetxController {
       }
     });
     loading.value = false;
+  }
+
+  Future<void> _listenToContactsToUpdateName() async {
+    _contactsStreamSubscription =
+        (await contactRepository.getContactsStream()).listen(_updateName);
+  }
+
+  Future<void> _updateName(List<UserModel> newContacts) async {
+    final newCalls = <CallHistoryViewModel>[];
+    for (final call in calls) {
+      final participantViewList = <CallHistoryParticipantViewModel>[];
+
+      for (final participant in call.participants) {
+        // Check if there is a matching contact for the participant
+        final matchingContact = newContacts.firstWhereOrNull(
+          (contact) => participant.coreId == contact.coreId,
+        );
+
+        // Add the participant with updated name (if matched contact), or original participant
+        participantViewList.add(
+          matchingContact != null
+              ? participant.copyWith(name: matchingContact.name)
+              : participant.copyWith(name: participant.coreId.shortenCoreId),
+        );
+      }
+
+      newCalls.add(call.copyWith(participants: participantViewList));
+    }
+    calls.value = newCalls;
   }
 
   Future<void> deleteCall(CallHistoryViewModel call) async {

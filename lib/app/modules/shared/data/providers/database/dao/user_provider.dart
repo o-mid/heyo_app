@@ -28,24 +28,23 @@ class UserProvider {
     );
   }
 
-  Future update(UserModel user) async {
+  Future<void> update(UserModel user) async {
     // For filtering by key (ID), RegEx, greater than, and many other criteria,
     // we use a Finder.
     try {
-      final finder = Finder(filter: Filter.byKey(user.coreId));
-      final i = await _userStore.update(
+      final finder = Finder(filter: Filter.equals('coreId', user.coreId));
+      await _userStore.update(
         await _db,
         user.toJson(),
         finder: finder,
       );
-      print(i);
     } catch (e) {
       debugPrint(e.toString());
     }
   }
 
-  Future delete(UserModel user) async {
-    final finder = Finder(filter: Filter.byKey(user.coreId));
+  Future<void> delete(UserModel user) async {
+    final finder = Finder(filter: Filter.equals('coreId', user.coreId));
     await _userStore.delete(
       await _db,
       finder: finder,
@@ -53,12 +52,15 @@ class UserProvider {
   }
 
   Future<void> deleteContactById(String userCoreId) async {
-    final finder = Finder(filter: Filter.equals('coreId', userCoreId));
-    print("finder delete contact id: " + finder.toString());
-    await _userStore.delete(
-      await _db,
-      finder: finder,
-    );
+    try {
+      final finder = Finder(filter: Filter.equals('coreId', userCoreId));
+      await _userStore.delete(
+        await _db,
+        finder: finder,
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   Future<List<UserModel>> getAllSortedByName() async {

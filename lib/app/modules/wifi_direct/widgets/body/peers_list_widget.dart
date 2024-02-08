@@ -12,99 +12,58 @@ import '../../../shared/utils/constants/textStyles.dart';
 import '../../../shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../controllers/wifi_direct_controller.dart';
 
-/*
 class PeersListWidget extends GetView<WifiDirectController> {
   const PeersListWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+      return Column(children: [
         CustomSizes.largeSizedBoxHeight,
         if (controller.availableDirectUsers.isEmpty)
           Center(
-                child: EmptyUsersBody(
-                  infoText: LocaleKeys.wifiDirect_emptyPeersTitle.tr,
-                ),
-              )
+            child: EmptyUsersBody(
+              infoText: LocaleKeys.wifiDirect_emptyPeersTitle.tr,
+            ),
+          )
         else
           Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    LocaleKeys.wifiDirect_availablePeers.tr,
-                    style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextSoftBlueColor),
-                  ),
-                  CustomSizes.mediumSizedBoxHeight,
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: controller.availableDirectUsers.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Column(
-                        children: [
-                          InkWell(
-                            borderRadius: BorderRadius.circular(8),
-                            onTap: () {
-                              Get.find<UserPreview>()
-                                  .openUserPreview(
-                                userModel: controller.availableDirectUsers[index],
-                                isWifiDirect: true,
-                              );
-                            },
-                            child: UserWidget(
-                              user: controller.availableDirectUsers[index],
-                            ),
-                          ),
-                          CustomSizes.mediumSizedBoxHeight,
-                        ],
-                      );
-                    },
-                  ),
-                ],
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                LocaleKeys.wifiDirect_availablePeers.tr,
+                style: TEXTSTYLES.kLinkSmall
+                    .copyWith(color: COLORS.kTextSoftBlueColor),
               ),
-            )
-          else
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  LocaleKeys.wifiDirect_availablePeers.tr,
-                  style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextSoftBlueColor),
-                ),
-                CustomSizes.mediumSizedBoxHeight,
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: controller.availableDirectUsers.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Column(
-                      children: [
-                        InkWell(
-                          borderRadius: BorderRadius.circular(8),
-                          onTap: () {
-                            var user = controller.availableDirectUsers[index];
-                            Get.find<UserPreview>().openUserPreview(
-                              coreId: user.coreId,
-                              name: user.name,
-                              isVerified: user.isVerified,
-                              isContact: user.isContact,
-                              isWifiDirect: true,
-                            );
-                          },
-                          child: UserWidget(
-                            user: controller.availableDirectUsers[index],
-                          ),
+              CustomSizes.mediumSizedBoxHeight,
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: controller.availableDirectUsers.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      InkWell(
+                        borderRadius: BorderRadius.circular(8),
+                        onTap: () {
+                          Get.find<UserPreviewController>().openUserPreview(
+                            coreId:
+                                controller.availableDirectUsers[index].coreId,
+                            isWifiDirect: true,
+                          );
+                        },
+                        child: UserWidget(
+                          user: controller.availableDirectUsers[index],
                         ),
-                        CustomSizes.mediumSizedBoxHeight,
-                      ],
-                    );
-                  },
-                ),
-              ],
-            ),
-          CustomSizes.largeSizedBoxHeight,
-        ],
-      );
+                      ),
+                      CustomSizes.mediumSizedBoxHeight,
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
+        CustomSizes.largeSizedBoxHeight,
+      ]);
     });
   }
 }
-*/
