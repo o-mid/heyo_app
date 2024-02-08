@@ -24,24 +24,28 @@ class MessagesBinding extends Bindings {
     // Determine the connection type
     final args = Get.arguments as MessagesViewArgumentsModel;
     // todo farzam
-    final connectionType = args.connectionType == MessagingConnectionType.internet
-        ? MessagingConnectionType.internet
-        : MessagingConnectionType.wifiDirect;
-    final connectionRepository = connectionType == MessagingConnectionType.internet
-        ? RTCMessagingConnectionRepository(
-            dataHandler: Get.find(),
-            dataChannelMessagingConnection: Get.find(),
-          )
-        : WifiDirectConnectionRepository(
-            dataHandler: Get.find(),
-            wifiDirectMessagingConnection: Get.find(),
-          );
+    final connectionType =
+        args.connectionType == MessagingConnectionType.internet
+            ? MessagingConnectionType.internet
+            : MessagingConnectionType.wifiDirect;
+    final connectionRepository =
+        connectionType == MessagingConnectionType.internet
+            ? RTCMessagingConnectionRepository(
+                dataHandler: Get.find(),
+                dataChannelMessagingConnection: Get.find(),
+              )
+            : WifiDirectConnectionRepository(
+                dataHandler: Get.find(),
+                wifiDirectMessagingConnection: Get.find(),
+              );
 
     Get.lazyPut<MessagesController>(
       () => MessagesController(
-        readMessageUseCase:
-            ReadMessageUseCase(dataHandler: Get.find(), connectionRepository: connectionRepository),
-        initMessageUseCase: InitMessageUseCase(connectionRepository: connectionRepository),
+        readMessageUseCase: ReadMessageUseCase(
+            dataHandler: Get.find(),
+            connectionRepository: connectionRepository),
+        initMessageUseCase:
+            InitMessageUseCase(connectionRepository: connectionRepository),
         messageRepository: MessageRepositoryImpl(
           messagesRepo: MessagesRepo(
             messagesProvider: MessagesProvider(
@@ -57,11 +61,7 @@ class MessagesBinding extends Bindings {
               appDatabaseProvider: Get.find(),
             ),
           ),
-          chatHistoryRepo: ChatHistoryLocalRepo(
-            chatHistoryProvider: ChatHistoryProvider(
-              appDatabaseProvider: Get.find(),
-            ),
-          ),
+          chatHistoryRepo: Get.find(),
         ),
         sendMessageUseCase: SendMessageUseCase(
           messagesRepo: Get.find(),
@@ -80,8 +80,8 @@ class MessagesBinding extends Bindings {
         ),
         deleteMessageUseCase: DeleteMessageUseCase(
           messagesRepo: MessagesRepo(
-            messagesProvider:
-                MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+            messagesProvider: MessagesProvider(
+                appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
           connectionRepository: connectionRepository,
           processor: MessageProcessor(),

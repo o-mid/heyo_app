@@ -4,6 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/data/call_requests_processor.dart';
 import 'package:heyo/app/modules/calls/data/model/notification_call_model.dart';
+import 'package:heyo/app/modules/shared/utils/constants/notifications_constant.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/map.extension.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 
@@ -50,6 +51,7 @@ class CallProcessor {
   }
 
   Future<void> _showNotification({
+    required String id,
     required String channelName,
     required String title,
     required String body,
@@ -60,7 +62,7 @@ class CallProcessor {
     bool important = false,
   }) async {
     final androidNotificationDetails = AndroidNotificationDetails(
-      '0',
+      id,
       channelName,
       fullScreenIntent: fullScreen,
       actions: actions,
@@ -97,7 +99,8 @@ class CallProcessor {
   void _showMissedCall(NotificationCallModel data,
       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) {
     _showNotification(
-      channelName: 'MissedCalls',
+      id:NOTIFICATIONS.missedCallChannelKey,
+      channelName: NOTIFICATIONS.missedCallChannelName,
       title: 'Missed Call',
       fullScreen: false,
       body: 'Missed call from ${data.messageFrom ?? ''}',
@@ -113,14 +116,15 @@ class CallProcessor {
   ) {
     _showNotification(
       flutterLocalNotificationPlugin: flutterLocalNotificationsPlugin,
-      channelName: 'Calls',
+      channelName: NOTIFICATIONS.callsChannelName,
+      id: NOTIFICATIONS.callsChannelKey,
       title: 'Heyo',
       body: 'Incoming Call from Heyo',
       fullScreen: true,
       important: true,
       actions: [
-        AndroidNotificationAction('1', 'Accept', showsUserInterface: true),
-        AndroidNotificationAction('2', 'Deny')
+        const AndroidNotificationAction('1', 'Accept', showsUserInterface: true),
+        const AndroidNotificationAction('2', 'Deny')
       ],
       payload: jsonEncode(data.toJson()),
     );
