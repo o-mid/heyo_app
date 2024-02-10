@@ -42,7 +42,7 @@ Future<CreateAccountResult> _createAccount() async {
   // generate the mnemonic from the cryptographyKeyGenerator
 
   final cryptographyKeyGenerator =
-      Web3Keys(web3client: GlobalBindings.web3Client);
+      Web3Keys(web3client: Get.find());
 
   final phrases = cryptographyKeyGenerator.generate_mnemonic();
 

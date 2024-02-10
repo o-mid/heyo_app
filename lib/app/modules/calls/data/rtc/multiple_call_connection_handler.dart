@@ -210,11 +210,10 @@ class CallConnectionsHandler {
     if (sendSignal) {
       for (var element in callStatusProvider.getCurrentCall()!.sessions) {
         singleCallWebRTCBuilder.updateCamera(videMode, element);
-        //onCameraStateChanged(callStatusProvider.getCurrentCall()!.callId, data, remotePeer)
       }
     }
     if (_localStream != null) {
-      _localStream!.getVideoTracks()[0].enabled = videMode;
+       _localStream!.getVideoTracks()[0].enabled = videMode;
     }
   }
 
