@@ -8,82 +8,45 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import '../../../../generated/locales.g.dart';
 import '../../new_chat/widgets/user_widget.dart';
 import '../../shared/widgets/list_header_widget.dart';
+import '../controllers/forward_massages_controller.dart';
 
 class ContactsWidget extends StatelessWidget {
-  const ContactsWidget({
-    Key? key,
-    required this.searchSuggestions,
-    required this.isTextInputFocused,
-    required this.userSelect,
-  }) : super(key: key);
-  final RxList<UserModel> searchSuggestions;
-  final RxBool isTextInputFocused;
-  final Function(UserModel user) userSelect;
+  ContactsWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ForwardMassagesController>();
     return Column(
       children: [
-        CustomSizes.largeSizedBoxHeight,
-        Padding(
-          padding: CustomSizes.contentPaddingWidth,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                isTextInputFocused.value
-                    ? LocaleKeys.forwardMassagesPage_contacts.tr
-                    : LocaleKeys.forwardMassagesPage_OtherContacts.tr,
-                style: TEXTSTYLES.kLinkSmall
-                    .copyWith(color: COLORS.kTextBlueColor),
-              ),
-              ListView.builder(
-                itemCount: searchSuggestions.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (BuildContext context, int index) {
-                  //this will grab the current user and
-                  // extract the first character from its name
-                  String currentUsernameFirstChar =
-                      searchSuggestions[index].name.characters.first;
-                  //this will grab the next user in the list if its not null and
-                  // extract the first character from its name
-                  String nextUsernameFirstChar =
-                      searchSuggestions.indexOf(searchSuggestions.last) >
-                              index + 1
-                          ? searchSuggestions[index + 1].name.characters.first
-                          : "";
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      bottom: 8.h,
-                      top: 8.h,
-                    ),
-                    child: Column(
-                      children: [
-                        currentUsernameFirstChar != nextUsernameFirstChar
-                            ? ListHeaderWidget(
-                                title: searchSuggestions[index]
-                                    .name
-                                    .characters
-                                    .first
-                                    .toUpperCase())
-                            : const SizedBox(),
-                        InkWell(
-                          borderRadius: BorderRadius.circular(8),
-                          onTap: () {
-                            userSelect(searchSuggestions[index]);
-                          },
-                          child: UserWidget(user: searchSuggestions[index]),
+        Obx(() => Expanded(
+              child: ListView.builder(
+                itemCount: controller.searchSuggestions.length,
+                itemBuilder: (context, index) {
+                  final user = controller.searchSuggestions[index];
+                  bool showHeader = index == 0 ||
+                      controller.searchSuggestions[index - 1].name[0].toUpperCase() !=
+                          user.name[0].toUpperCase();
+
+                  return Column(
+                    children: [
+                      if (showHeader) ListHeaderWidget(title: user.name[0].toUpperCase()),
+                      InkWell(
+                        onTap: () => controller.setSelectedUser(
+                          user.coreId,
                         ),
-                      ],
-                    ),
+                        child: UserWidget(
+                          coreId: user.coreId,
+                          name: user.name,
+                          walletAddress: user.walletAddress,
+                          isOnline: user.isOnline,
+                          isVerified: user.isVerified,
+                        ),
+                      ),
+                    ],
                   );
                 },
               ),
-            ],
-          ),
-        ),
+            )),
       ],
     );
   }

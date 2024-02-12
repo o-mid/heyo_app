@@ -69,6 +69,10 @@ class $AssetsPngGen {
   AssetGenImage get heyoLogoCircle =>
       const AssetGenImage('assets/png/heyo_logo_circle.png');
 
+  /// File path: assets/png/icon-android.png
+  AssetGenImage get iconAndroid =>
+      const AssetGenImage('assets/png/icon-android.png');
+
   /// File path: assets/png/icon.png
   AssetGenImage get icon => const AssetGenImage('assets/png/icon.png');
 
@@ -114,6 +118,7 @@ class $AssetsPngGen {
         greenChecked,
         groupCall,
         heyoLogoCircle,
+        iconAndroid,
         icon,
         keys,
         newChatEmptyState,

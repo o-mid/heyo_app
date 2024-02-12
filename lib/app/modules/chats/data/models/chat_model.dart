@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 
+import 'chat_view_model/chat_view_model.dart';
+
 part 'chat_model.freezed.dart';
 part 'chat_model.g.dart';
 
@@ -21,4 +23,18 @@ class ChatModel with _$ChatModel {
   }) = _ChatModel;
 
   factory ChatModel.fromJson(Map<String, dynamic> json) => _$ChatModelFromJson(json);
+}
+
+extension ChatModelExtension on ChatModel {
+  ChatViewModel toViewModel() {
+    return ChatViewModel(
+      id: id,
+      name: name,
+      lastMessage: lastMessage,
+      timestamp: timestamp,
+      participants: participants,
+      notificationCount: notificationCount,
+      isGroupChat: isGroupChat,
+    );
+  }
 }

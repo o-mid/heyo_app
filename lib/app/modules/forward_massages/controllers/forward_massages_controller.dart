@@ -72,9 +72,10 @@ class ForwardMassagesController extends GetxController {
     searchSuggestions.refresh();
   }
 
-  void setSelectedUser(UserModel user) {
-    selectedUser = user;
-    selectedUserName.value = user.name;
+  void setSelectedUser(String userCoreId) {
+    selectedUser = searchSuggestions.where((user) => user.coreId == userCoreId).first;
+
+    selectedUserName.value = selectedUser!.name;
   }
 
   void increment() => count.value++;

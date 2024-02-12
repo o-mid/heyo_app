@@ -28,18 +28,14 @@ class GroupedContactListWidget extends GetView<NewCallController> {
                         (p) => Column(
                           children: [
                             const SizedBox(height: 10),
-                            InkWell(
-                              onTap: () {
-                                //* Close keyboard before opening bottom sheet
-                                FocusScope.of(context).unfocus();
-                                Get.find<UserPreviewController>()
-                                    .openUserPreview(coreId: p.coreId);
-                              },
-                              child: UserWidget(
-                                user: p,
-                                showAudioCallButton: true,
-                                showVideoCallButton: true,
-                              ),
+                            UserWidget(
+                              coreId: p.coreId,
+                              name: p.name,
+                              walletAddress: p.walletAddress,
+                              isOnline: p.isOnline,
+                              isVerified: p.isVerified,
+                              showAudioCallButton: true,
+                              showVideoCallButton: true,
                             ),
                           ],
                         ),

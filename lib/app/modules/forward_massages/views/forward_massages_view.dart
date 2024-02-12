@@ -72,99 +72,94 @@ class ForwardMassagesView extends GetView<ForwardMassagesController> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     //dont show recent Contacts when the input is focused and its searching for users
-                    controller.isTextInputFocused.value
-                        ? const SizedBox()
-                        : RecentContactsWidget(
-                            users: controller.users,
-                            userSelect: controller.setSelectedUser,
-                          ),
-                    ContactsWidget(
-                      isTextInputFocused: controller.isTextInputFocused,
-                      searchSuggestions: controller.searchSuggestions,
-                      userSelect: controller.setSelectedUser,
-                    ),
+                    if (controller.isTextInputFocused.value)
+                      const SizedBox()
+                    else
+                      const RecentContactsWidget(),
+                    ContactsWidget(),
                     CustomSizes.largeSizedBoxHeight,
                   ],
                 ),
               ),
             ),
-            controller.selectedUserName.isNotEmpty
-                ? Container(
-                    decoration: const BoxDecoration(
-                      color: COLORS.kComposeMessageBackgroundColor,
-                      border: Border(
-                        top: BorderSide(
-                          width: 1,
-                          color: COLORS.kComposeMessageBorderColor,
-                        ),
-                      ),
+            if (controller.selectedUserName.isNotEmpty)
+              Container(
+                decoration: const BoxDecoration(
+                  color: COLORS.kComposeMessageBackgroundColor,
+                  border: Border(
+                    top: BorderSide(
+                      width: 1,
+                      color: COLORS.kComposeMessageBorderColor,
                     ),
-                    padding: EdgeInsets.symmetric(
-                      vertical: 12.h,
-                      horizontal: 20.w,
-                    ),
-                    child: Column(
+                  ),
+                ),
+                padding: EdgeInsets.symmetric(
+                  vertical: 12.h,
+                  horizontal: 20.w,
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Assets.svg.forwardTo.svg(
-                              width: 19.w,
-                              height: 17.w,
-                              color: COLORS.kDarkBlueColor,
-                            ),
-                            CustomSizes.mediumSizedBoxWidth,
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    LocaleKeys.forwardMassagesPage_bottomBar_forwardTO.tr +
-                                        controller.selectedUserName.value,
-                                    style: TEXTSTYLES.kChatText.copyWith(
-                                      color: COLORS.kDarkBlueColor,
-                                      fontWeight: FONTS.SemiBold,
-                                    ),
-                                  ),
-                                  Text(
-                                    controller.selectedMessages.length.toString() +
-                                        LocaleKeys.forwardMassagesPage_bottomBar_messages.tr,
-                                    style: TEXTSTYLES.kChatText.copyWith(
-                                      color: COLORS.kTextBlueColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                if (controller.selectedUser != null) {
-                                  Get.offNamedUntil(
-                                    Routes.MESSAGES,
-                                    ModalRoute.withName(Routes.HOME),
-                                    arguments: MessagesViewArgumentsModel(
-                                        forwardedMessages: controller.selectedMessages,
-                                        participants: [
-                                          MessagingParticipantModel(
-                                            coreId: controller.selectedUser!.coreId,
-                                            chatId: controller.selectedUser!.coreId,
-                                          )
-                                        ]),
-                                  );
-                                }
-                              },
-                              child: Assets.svg.sendIcon.svg(
-                                width: 19.w,
-                                height: 17.w,
-                              ),
-                            )
-                          ],
+                        Assets.svg.forwardTo.svg(
+                          width: 19.w,
+                          height: 17.w,
+                          color: COLORS.kDarkBlueColor,
                         ),
-                        CustomSizes.largeSizedBoxHeight,
+                        CustomSizes.mediumSizedBoxWidth,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                LocaleKeys.forwardMassagesPage_bottomBar_forwardTO.tr +
+                                    controller.selectedUserName.value,
+                                style: TEXTSTYLES.kChatText.copyWith(
+                                  color: COLORS.kDarkBlueColor,
+                                  fontWeight: FONTS.SemiBold,
+                                ),
+                              ),
+                              Text(
+                                controller.selectedMessages.length.toString() +
+                                    LocaleKeys.forwardMassagesPage_bottomBar_messages.tr,
+                                style: TEXTSTYLES.kChatText.copyWith(
+                                  color: COLORS.kTextBlueColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            if (controller.selectedUser != null) {
+                              Get.offNamedUntil(
+                                Routes.MESSAGES,
+                                ModalRoute.withName(Routes.HOME),
+                                arguments: MessagesViewArgumentsModel(
+                                    forwardedMessages: controller.selectedMessages,
+                                    participants: [
+                                      MessagingParticipantModel(
+                                        coreId: controller.selectedUser!.coreId,
+                                        chatId: controller.selectedUser!.coreId,
+                                      )
+                                    ]),
+                              );
+                            }
+                          },
+                          child: Assets.svg.sendIcon.svg(
+                            width: 19.w,
+                            height: 17.w,
+                          ),
+                        )
                       ],
                     ),
-                  )
-                : const SizedBox(),
+                    CustomSizes.largeSizedBoxHeight,
+                  ],
+                ),
+              )
+            else
+              const SizedBox(),
           ],
         );
       }),

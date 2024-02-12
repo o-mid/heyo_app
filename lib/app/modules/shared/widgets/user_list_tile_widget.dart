@@ -21,7 +21,7 @@ class UserListTileWidget extends StatelessWidget {
     this.showVideoCallButton = false,
     this.padding,
   });
-  //final UserModel user;
+
   final String coreId;
   final String name;
   final bool showAudioCallButton;
@@ -53,8 +53,7 @@ class UserListTileWidget extends StatelessWidget {
                   children: [
                     Text(
                       name,
-                      style: TEXTSTYLES.kChatName
-                          .copyWith(color: COLORS.kDarkBlueColor),
+                      style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kDarkBlueColor),
                     ),
                     CustomSizes.smallSizedBoxWidth,
                   ],
@@ -63,8 +62,7 @@ class UserListTileWidget extends StatelessWidget {
                 Text(
                   coreId.shortenCoreId,
                   maxLines: 1,
-                  style: TEXTSTYLES.kChatText
-                      .copyWith(color: COLORS.kTextBlueColor),
+                  style: TEXTSTYLES.kChatText.copyWith(color: COLORS.kTextBlueColor),
                 ),
               ],
             ),

@@ -32,8 +32,7 @@ class PeersListWidget extends GetView<WifiDirectController> {
             children: [
               Text(
                 LocaleKeys.wifiDirect_availablePeers.tr,
-                style: TEXTSTYLES.kLinkSmall
-                    .copyWith(color: COLORS.kTextSoftBlueColor),
+                style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextSoftBlueColor),
               ),
               CustomSizes.mediumSizedBoxHeight,
               ListView.builder(
@@ -46,13 +45,17 @@ class PeersListWidget extends GetView<WifiDirectController> {
                         borderRadius: BorderRadius.circular(8),
                         onTap: () {
                           Get.find<UserPreviewController>().openUserPreview(
-                            coreId:
-                                controller.availableDirectUsers[index].coreId,
+                            coreId: controller.availableDirectUsers[index].coreId,
                             isWifiDirect: true,
                           );
                         },
                         child: UserWidget(
-                          user: controller.availableDirectUsers[index],
+                          coreId: controller.availableDirectUsers[index].coreId,
+                          name: controller.availableDirectUsers[index].name,
+                          isOnline: controller.availableDirectUsers[index].isOnline,
+                          showAudioCallButton: true,
+                          showVideoCallButton: true,
+                          walletAddress: controller.availableDirectUsers[index].coreId,
                         ),
                       ),
                       CustomSizes.mediumSizedBoxHeight,

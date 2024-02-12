@@ -7,16 +7,14 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import '../../../../generated/locales.g.dart';
 import '../../new_chat/widgets/user_widget.dart';
+import '../controllers/forward_massages_controller.dart';
 
 class RecentContactsWidget extends StatelessWidget {
-  const RecentContactsWidget(
-      {Key? key, required this.users, required this.userSelect})
-      : super(key: key);
-  final Function(UserModel user) userSelect;
-  final RxList<UserModel> users;
+  const RecentContactsWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ForwardMassagesController>();
     return Column(
       children: [
         CustomSizes.largeSizedBoxHeight,
@@ -28,29 +26,32 @@ class RecentContactsWidget extends StatelessWidget {
             children: [
               Text(
                 LocaleKeys.forwardMassagesPage_recentContacts.tr,
-                style: TEXTSTYLES.kLinkSmall
-                    .copyWith(color: COLORS.kTextBlueColor),
+                style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextBlueColor),
               ),
               CustomSizes.smallSizedBoxHeight,
-              ListView.builder(
-                itemCount: users.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      bottom: 8.h,
-                      top: 8.h,
-                    ),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(8),
-                      onTap: () {
-                        userSelect(users[index]);
-                      },
-                      child: UserWidget(user: users[index]),
-                    ),
-                  );
-                },
+              Obx(
+                () => ListView.builder(
+                  itemCount: controller.users.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (BuildContext context, int index) {
+                    final user = controller.users[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8, top: 8),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(8),
+                        onTap: () => controller.setSelectedUser(user.coreId),
+                        child: UserWidget(
+                          coreId: user.coreId,
+                          name: user.name,
+                          walletAddress: user.walletAddress,
+                          isOnline: user.isOnline,
+                          isVerified: user.isVerified,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),

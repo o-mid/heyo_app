@@ -16,6 +16,11 @@ import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart'
 
 import '../../shared/data/models/messaging_participant_model.dart';
 
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../data/models/chat_view_model/chat_view_model.dart';
+
 class ChatsController extends GetxController {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final MessagesAbstractRepo messagesRepo;
@@ -28,10 +33,8 @@ class ChatsController extends GetxController {
   });
 
   final animatedListKey = GlobalKey<AnimatedListState>();
-
   late StreamSubscription _chatsStreamSubscription;
-
-  final chats = <ChatModel>[].obs;
+  final chats = <ChatViewModel>[].obs; // Use ChatViewModel instead of ChatModel
 
   @override
   void onInit() {
@@ -41,12 +44,11 @@ class ChatsController extends GetxController {
 
   Future<void> init() async {
     chats.clear();
-    //chats.value = await chatHistoryRepo.getAllChats();
-    chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-
+    var chatModels = await chatHistoryRepo.getAllChats();
+    chats
+      ..assignAll(chatModels.map((chatModel) => chatModel.toViewModel()).toList())
+      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
     await listenToChatsStream();
-
-    // addMockChats();
   }
 
   @override
@@ -61,51 +63,50 @@ class ChatsController extends GetxController {
   }
 
   Future<void> listenToChatsStream() async {
-    Stream<List<ChatModel>> chatsStream =
-        await chatHistoryRepo.getChatsStream();
+    final chatsStream = await chatHistoryRepo.getChatsStream();
     _chatsStreamSubscription = chatsStream.listen((newChats) {
-      List<ChatModel> removed = [];
-      List<ChatModel> added = [];
+      List<ChatViewModel> removed = [];
+      List<ChatViewModel> added = [];
 
-      for (var chat in newChats) {
-        // Find and animate added chats
-        if (!chats.any((element) => element.id == chat.id)) {
-          added.add(chat);
+      for (final chatModel in newChats) {
+        var chatViewModel = chatModel.toViewModel();
+        if (!chats.any((element) => element.id == chatViewModel.id)) {
+          added.add(chatViewModel);
         } else {
-          // Update existing chats
-          int index = chats.indexWhere((element) => element.id == chat.id);
-          chats[index] = chat;
+          int index = chats.indexWhere((element) => element.id == chatViewModel.id);
+          chats[index] = chatViewModel;
         }
       }
 
-      // Find and animate removed chats
-      for (int i = chats.length - 1; i >= 0; i--) {
-        final chat = chats[i];
-        if (!newChats.any((newChat) => newChat.id == chat.id)) {
-          removed.add(chat);
+      for (var i = chats.length - 1; i >= 0; i--) {
+        final chatViewModel = chats[i];
+        if (!newChats.any((newChatModel) => newChatModel.id == chatViewModel.id)) {
+          removed.add(chatViewModel);
         }
       }
+
       if (onChatsUpdated != null) {
         onChatsUpdated!(removed, added);
       }
     });
 
-    chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    chats.refresh();
+    chats
+      ..sort((a, b) => b.timestamp.compareTo(a.timestamp))
+      ..refresh();
   }
 
   // the callback to be called when chats are updated sent to the view
-  void Function(List<ChatModel> removed, List<ChatModel> added)? onChatsUpdated;
+  void Function(List<ChatViewModel> removed, List<ChatViewModel> added)? onChatsUpdated;
 
-  Future<void> deleteChat(ChatModel chat) async {
-    await chatHistoryRepo.deleteChat(chat.id);
-    await messagesRepo.deleteAllMessages(chat.id);
+  Future<void> deleteChat(String chatId) async {
+    await chatHistoryRepo.deleteChat(chatId);
+    await messagesRepo.deleteAllMessages(chatId);
   }
 
-  Future<bool> showDeleteChatDialog(ChatModel chat) async {
+  Future<bool> showDeleteChatDialog(String chatId) async {
     await Get.dialog<bool>(
       DeleteChatDialog(
-        deleteChat: () => deleteChat(chat),
+        deleteChat: () => deleteChat(chatId),
       ),
     );
     return false;
@@ -122,85 +123,5 @@ class ChatsController extends GetxController {
         chats.clear();
       },
     );
-  }
-
-// add a single mock chats to the chat history with the given duration
-  addMockChats({Duration duration = const Duration(seconds: 5)}) async {
-    var mockchats = <ChatModel>[
-      ChatModel(
-        id: '1',
-        name: "John ",
-        lastMessage: "",
-        lastReadMessageId: "",
-        timestamp: DateTime.now(),
-        participants: [
-          MessagingParticipantModel(
-            coreId: '1',
-            chatId: ChatIdGenerator.generate(),
-          ),
-        ],
-      ),
-      ChatModel(
-        id: '2',
-        name: "emmy",
-        lastMessage: "",
-        lastReadMessageId: "",
-        timestamp: DateTime.now(),
-        participants: [
-          MessagingParticipantModel(
-            coreId: '2',
-            chatId: ChatIdGenerator.generate(),
-          ),
-        ],
-      ),
-      ChatModel(
-        id: '3',
-        name: "dow",
-        lastMessage: "",
-        lastReadMessageId: "",
-        timestamp: DateTime.now(),
-        participants: [
-          MessagingParticipantModel(
-            coreId: '3',
-            chatId: ChatIdGenerator.generate(),
-          ),
-        ],
-      ),
-      ChatModel(
-        id: '4',
-        name: "docs",
-        lastMessage: "",
-        lastReadMessageId: "",
-        timestamp: DateTime.now(),
-        participants: [
-          MessagingParticipantModel(
-            coreId: '4',
-            chatId: ChatIdGenerator.generate(),
-          ),
-        ],
-      ),
-      ChatModel(
-        id: '5',
-        name: "joseef boran",
-        lastMessage: "",
-        lastReadMessageId: "",
-        timestamp: DateTime.now(),
-        participants: [
-          MessagingParticipantModel(
-            coreId: '5',
-            chatId: ChatIdGenerator.generate(),
-          ),
-        ],
-      ),
-    ];
-
-    for (int i = 0; i < mockchats.length; i++) {
-      await Future.delayed(duration, () {
-        chatHistoryRepo.addChatToHistory(mockchats[i].copyWith(
-            timestamp: DateTime.now(),
-            lastMessage: "${DateTime.now()}"
-                " ${mockchats[i].name}"));
-      });
-    }
   }
 }
