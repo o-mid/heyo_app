@@ -1,4 +1,5 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:heyo/app/modules/calls/data/media_sources.dart';
 import 'package:heyo/app/modules/calls/data/rtc/multiple_call_connection_handler.dart';
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
 import 'package:heyo/app/modules/calls/domain/models.dart';
@@ -208,5 +209,23 @@ class WebRTCCallRepository implements CallRepository {
         : await RTCFactoryNative.instance.navigator.mediaDevices
             .getUserMedia(mediaConstraints);
     return stream;
+  }
+
+  @override
+  void setAudioSource(String deviceId) {
+    Helper.selectAudioOutput(deviceId);
+  }
+
+  @override
+  Future<List<MediaDeviceInfo>> getAudioOutputs() async {
+    return Helper.audiooutputs.then(
+      (value) => value
+          .where(
+            (element) => AudioOutputSources.values
+                .map((e) => e.name.toLowerCase())
+                .contains(element.deviceId.toLowerCase()),
+          )
+          .toList(),
+    );
   }
 }
