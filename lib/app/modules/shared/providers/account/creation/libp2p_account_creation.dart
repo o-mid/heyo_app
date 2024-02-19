@@ -22,7 +22,8 @@ class LibP2PAccountCreation extends AccountCreation {
 
   @override
   Future<CreateAccountResult> createAccount() async {
-    return compute((_) => _createAccount(), null);
+    final web3Keys = Web3Keys(web3client: Get.find());
+    return compute((_) => _createAccount(web3Keys), null);
   }
 
   @override
@@ -38,11 +39,9 @@ class LibP2PAccountCreation extends AccountCreation {
   }
 }
 
-Future<CreateAccountResult> _createAccount() async {
+Future<CreateAccountResult> _createAccount(Web3Keys cryptographyKeyGenerator) async {
   // generate the mnemonic from the cryptographyKeyGenerator
 
-  final cryptographyKeyGenerator =
-      Web3Keys(web3client: Get.find());
 
   final phrases = cryptographyKeyGenerator.generate_mnemonic();
 
