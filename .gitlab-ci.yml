@@ -53,7 +53,7 @@ flutter_stage_build:
     - curl -L https://github.com/prasmussen/gdrive/releases/download/2.1.0/gdrive-linux-x64 -o /usr/bin/gdrive
     - chmod +x /usr/bin/gdrive
 
-    - apk update && apk add python3 py3-pip
+    - apt-get update && apt-get install -y openssh-client python3 python3-pip
     - pip3 install --upgrade google-api-python-client oauth2client
     - echo $GDRIVE_SERVICE_ACCOUNT | base64 -d > /tmp/gdrive-service-account.json
     - gcloud auth activate-service-account --key-file /tmp/gdrive-service-account.json
