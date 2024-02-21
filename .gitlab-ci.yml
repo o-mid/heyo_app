@@ -1,46 +1,75 @@
-# image: cirrusci/flutter:stable
+image: ghcr.io/cirruslabs/flutter:3.16.9
 
-# stages:
-#   - build
+stages:
+  - dev_build
+  - stage_build
+  - upload
 
-# flutter_build:
-#   stage: build
-#   before_script:
-#     - flutter clean
-#     - "which ssh-agent || ( apk add --update openssh )"
-#     - eval $(ssh-agent -s)
-#     - echo "$SSH_PRIVATE_KEY"
-#     - echo "$SSH_PRIVATE_KEY" | ssh-add -
-#     - mkdir -p ~/.ssh
-#     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-#     - flutter pub get
+flutter_dev_build:
+  stage: dev_build
+  before_script:
+    - flutter clean
+    - "which ssh-agent || ( apk add --update openssh )"
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY"
+    - echo "$SSH_PRIVATE_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - flutter pub get
+  script:
+    - flutter analyze
+    - . dev_build.sh
+    - >
+      for ABI in armeabi-v7a arm64-v8a x86_64; do
+      mv build/app/outputs/flutter-apk/app-$ABI-release.apk build/app/outputs/apk/release/${APPLICATION_NAME}${APPLICATION_VERSION}-$ABI.apk;
+      done
 
-#   script:
-#     - flutter analyze
-#     - flutter build apk --split-per-abi
-#     - mv build/app/outputs/apk/release/app-armeabi-v7a-release.apk build/app/outputs/apk/release/${APPLICATION_NAME}${APPLICATION_VERSION}.apk
-#     - curl -F document=@"build/app/outputs/apk/release/${APPLICATION_NAME}${APPLICATION_VERSION}.apk" -F caption="${TELEGRAM_MESSAGE_CAPTION}" https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument?chat_id=${TELEGRAM_CHAT_ID}
+  only:
+    refs:
+      - development
+      - Ci_build
+  artifacts:
+    paths:
+      - build/app/outputs/apk/release/*.apk
+    expire_in: 1 week
+  variables:
+    APPLICATION_VERSION: "1.0.0_dev"
+    APPLICATION_NAME: "Heyo_Dev_V_"
 
-#   artifacts:
-#     paths:
-#       - build/app/outputs/apk/release/${APPLICATION_NAME}${APPLICATION_VERSION}.apk
-#   only:
-#     refs:
-#       - development
-#       - GitlabCi
+flutter_stage_build:
+  stage: stage_build
+  before_script:
+    - flutter clean
+    - "which ssh-agent || ( apk add --update openssh )"
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY"
+    - echo "$SSH_PRIVATE_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - flutter pub get
+  script:
+    - . release_build.sh
+    - mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${APPLICATION_NAME}${APPLICATION_VERSION}_release.apk
+    - curl -L https://github.com/prasmussen/gdrive/releases/download/2.1.0/gdrive-linux-x64 -o /usr/bin/gdrive
+    - chmod +x /usr/bin/gdrive
+    # - echo $GDRIVE_SERVICE_ACCOUNT | base64 -d > /tmp/gdrive-service-account.json
+    # - gcloud auth activate-service-account --key-file /tmp/gdrive-service-account.json || { echo "Failed to authenticate"; exit 1; }
+    # - ACCESS_TOKEN=$(gcloud auth print-access-token)
+    # - >-
+    #   for APK in build/app/outputs/flutter-apk/*.apk; do
+    #     gdrive upload --parent "12zWRlxtvVF4BeeddTEmTGU008kf7KXIa" --access-token $ACCESS_TOKEN $APK || { echo "Failed to upload $APK"; continue; };
+    #     echo "$APK uploaded successfully.";
+    #   done
 
-#   variables:
-#     # APPLICATION VERSION
-#     APPLICATION_VERSION: "1.0.0"
+  only:
+    refs:
+      - development
+      - Ci_build
 
-#     # APPLICATION NAME
-#     APPLICATION_NAME: "HEYO_V_"
-
-#     # CHANNEL CHAT ID
-#     TELEGRAM_CHAT_ID: "-1001798546440"
-
-#     # BOT TOKEN
-#     TELEGRAM_BOT_TOKEN: "5540564812:AAE3ZBitZEhOA9aHq5mHJ3w9KJJa34_Tbmw"
-
-#     # DISCRIPTION
-#     TELEGRAM_MESSAGE_CAPTION: "New Heyo Build!"
+  artifacts:
+    paths:
+      - build/app/outputs/flutter-apk/*.apk
+    expire_in: 1 week
+  variables:
+    APPLICATION_VERSION: "1.0.0_stage"
+    APPLICATION_NAME: "Heyo_Stage_V_"
