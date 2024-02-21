@@ -1,8 +1,8 @@
 image: ghcr.io/cirruslabs/flutter:3.16.9
 
 stages:
-  - dev_build
   - stage_build
+  - dev_build
   - upload
 
 flutter_dev_build:
@@ -52,14 +52,20 @@ flutter_stage_build:
     - mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${APPLICATION_NAME}${APPLICATION_VERSION}_release.apk
     - curl -L https://github.com/prasmussen/gdrive/releases/download/2.1.0/gdrive-linux-x64 -o /usr/bin/gdrive
     - chmod +x /usr/bin/gdrive
-    # - echo $GDRIVE_SERVICE_ACCOUNT | base64 -d > /tmp/gdrive-service-account.json
-    # - gcloud auth activate-service-account --key-file /tmp/gdrive-service-account.json || { echo "Failed to authenticate"; exit 1; }
-    # - ACCESS_TOKEN=$(gcloud auth print-access-token)
-    # - >-
-    #   for APK in build/app/outputs/flutter-apk/*.apk; do
-    #     gdrive upload --parent "12zWRlxtvVF4BeeddTEmTGU008kf7KXIa" --access-token $ACCESS_TOKEN $APK || { echo "Failed to upload $APK"; continue; };
-    #     echo "$APK uploaded successfully.";
-    #   done
+
+    - apk update && apk add python3 py3-pip
+    - pip3 install --upgrade google-api-python-client oauth2client
+    - echo $GDRIVE_SERVICE_ACCOUNT | base64 -d > /tmp/gdrive-service-account.json
+    - gcloud auth activate-service-account --key-file /tmp/gdrive-service-account.json
+    - ACCESS_TOKEN=$(gcloud auth print-access-token)
+    - python3 upload_script.py --access-token $ACCESS_TOKEN --file-path build/app/outputs/flutter-apk/${APPLICATION_NAME}${APPLICATION_VERSION}_release.apk --folder-id "YourGoogleDriveFolderID"
+
+    - >-
+      for APK in build/app/outputs/flutter-apk/*.apk; do
+        python3 upload_script.py --access-token $ACCESS_TOKEN --file-path $APK --folder-id "12zWRlxtvVF4BeeddTEmTGU008kf7KXIa";
+
+        echo "$APK uploaded successfully.";
+      done
 
   only:
     refs:
