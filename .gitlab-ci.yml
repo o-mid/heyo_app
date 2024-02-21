@@ -1,46 +1,46 @@
-image: cirrusci/flutter:stable
+# image: cirrusci/flutter:stable
 
-stages:
-  - build
+# stages:
+#   - build
 
-flutter_build:
-  stage: build
-  before_script:
-    - flutter clean
-    - "which ssh-agent || ( apk add --update openssh )"
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY"
-    - echo "$SSH_PRIVATE_KEY" | ssh-add -
-    - mkdir -p ~/.ssh
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - flutter pub get
+# flutter_build:
+#   stage: build
+#   before_script:
+#     - flutter clean
+#     - "which ssh-agent || ( apk add --update openssh )"
+#     - eval $(ssh-agent -s)
+#     - echo "$SSH_PRIVATE_KEY"
+#     - echo "$SSH_PRIVATE_KEY" | ssh-add -
+#     - mkdir -p ~/.ssh
+#     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+#     - flutter pub get
 
-  script:
-    - flutter analyze
-    - flutter build apk --split-per-abi
-    - mv build/app/outputs/apk/release/app-armeabi-v7a-release.apk build/app/outputs/apk/release/${APPLICATION_NAME}${APPLICATION_VERSION}.apk
-    - curl -F document=@"build/app/outputs/apk/release/${APPLICATION_NAME}${APPLICATION_VERSION}.apk" -F caption="${TELEGRAM_MESSAGE_CAPTION}" https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument?chat_id=${TELEGRAM_CHAT_ID}
+#   script:
+#     - flutter analyze
+#     - flutter build apk --split-per-abi
+#     - mv build/app/outputs/apk/release/app-armeabi-v7a-release.apk build/app/outputs/apk/release/${APPLICATION_NAME}${APPLICATION_VERSION}.apk
+#     - curl -F document=@"build/app/outputs/apk/release/${APPLICATION_NAME}${APPLICATION_VERSION}.apk" -F caption="${TELEGRAM_MESSAGE_CAPTION}" https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument?chat_id=${TELEGRAM_CHAT_ID}
 
-  artifacts:
-    paths:
-      - build/app/outputs/apk/release/${APPLICATION_NAME}${APPLICATION_VERSION}.apk
-  only:
-    refs:
-      - development
-      - GitlabCi
+#   artifacts:
+#     paths:
+#       - build/app/outputs/apk/release/${APPLICATION_NAME}${APPLICATION_VERSION}.apk
+#   only:
+#     refs:
+#       - development
+#       - GitlabCi
 
-  variables:
-    # APPLICATION VERSION
-    APPLICATION_VERSION: "1.0.0"
+#   variables:
+#     # APPLICATION VERSION
+#     APPLICATION_VERSION: "1.0.0"
 
-    # APPLICATION NAME
-    APPLICATION_NAME: "HEYO_V_"
+#     # APPLICATION NAME
+#     APPLICATION_NAME: "HEYO_V_"
 
-    # CHANNEL CHAT ID
-    TELEGRAM_CHAT_ID: "-1001798546440"
+#     # CHANNEL CHAT ID
+#     TELEGRAM_CHAT_ID: "-1001798546440"
 
-    # BOT TOKEN
-    TELEGRAM_BOT_TOKEN: "5540564812:AAE3ZBitZEhOA9aHq5mHJ3w9KJJa34_Tbmw"
+#     # BOT TOKEN
+#     TELEGRAM_BOT_TOKEN: "5540564812:AAE3ZBitZEhOA9aHq5mHJ3w9KJJa34_Tbmw"
 
-    # DISCRIPTION
-    TELEGRAM_MESSAGE_CAPTION: "New Heyo Build!"
+#     # DISCRIPTION
+#     TELEGRAM_MESSAGE_CAPTION: "New Heyo Build!"
