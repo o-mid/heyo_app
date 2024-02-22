@@ -47,6 +47,7 @@ flutter_stage_build:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - flutter pub get
+    - apt-get update && apt-get install -y python3 python3-pip
     - pip3 install --upgrade google-api-python-client oauth2client
     - apt-get install -y apt-transport-https ca-certificates gnupg
     - echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
