@@ -40,7 +40,8 @@ class P2PNode {
     required this.web3client,
   });
 
-  void _setUpP2PNode(void Function(P2PReqResNodeModel model) onNewRequestReceived) {
+  void _setUpP2PNode(
+      void Function(P2PReqResNodeModel model) onNewRequestReceived) {
     // setup the p2p ResponseStream and RequestStream and listen to them
     _listenToStreams(onNewRequestReceived);
 
@@ -85,10 +86,12 @@ class P2PNode {
 
     await FlutterP2pCommunicator.startNode(
       peerSeed: peerSeed!,
-      enableStaticRelays: true,
+      enableProd: false,
       networkId: networkId.toString(),
+      printLogs: true,
     );
 
+    p2pState.advertise.value = true;
     final coreIdSetResult = await _addCoreId();
 
     /// if we cannot set core id means go_com is not functional
@@ -98,33 +101,11 @@ class P2PNode {
     if (await libP2PStorageProvider.getSignature() != null) {
       await applyDelegatedAuth();
     }
-
-    _applyConnectRequest();
-  }
-
-  Future<void> _applyConnectRequest() async {
-    await Future.forEach(libP2PNodes, (P2PAddrModel element) async {
-      unawaited(_sendConnectRequest(element));
-    });
-  }
-
-  Future<void> _sendConnectRequest(P2PAddrModel element) async {
-    final info = P2PReqResNodeModel(
-      name: P2PReqResNodeNames.connect,
-      body: element.toJson(),
-    );
-
-    final result = await p2pState
-        .trackRequest(await FlutterP2pCommunicator.sendRequest(info: info));
-    if (result != true) {
-      Future.delayed(const Duration(seconds: 4), () async {
-        unawaited(_sendConnectRequest(element));
-      });
-    }
   }
 
   void _listenToStreams(
-      void Function(P2PReqResNodeModel model) onNewRequestReceived,) {
+    void Function(P2PReqResNodeModel model) onNewRequestReceived,
+  ) {
     p2pNodeResponseStream.setUp();
     p2pNodeRequestStream.setUp(onNewRequestReceived);
   }
