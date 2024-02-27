@@ -1,8 +1,9 @@
 image: ghcr.io/cirruslabs/flutter:3.16.9
 
 stages:
-  - dev_build
   - release_build
+
+  - dev_build
 
 flutter_dev_build:
   stage: dev_build
@@ -73,7 +74,7 @@ flutter_stage_build:
     - >-
       for APK in build/app/outputs/flutter-apk/*.apk; do
         APK_NAME=$(basename "$APK")
-        if [[ "$APK_NAME" =~ ^${APPLICATION_NAME}${APPLICATION_VERSION}-.*\.apk$ ]]; then
+        if [[ "$APK_NAME" =~ ^${APPLICATION_NAME}${APPLICATION_VERSION}.*\.apk$ ]]; then
           python3 upload_script.py --file-path $APK --folder-id "11AxQ9Xftb4kKBKvWMvuGdbmlIs2I-4Nh" --service-account-file /tmp/gdrive-service-account.json
           echo "$APK_NAME uploaded successfully."
         else
