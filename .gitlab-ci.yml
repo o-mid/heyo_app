@@ -33,7 +33,7 @@ flutter_dev_build:
       for APK in build/app/outputs/apk/release/*.apk; do
         APK_NAME=$(basename "$APK")
         if [[ "$APK_NAME" =~ ^${APPLICATION_NAME}${APPLICATION_VERSION}-.*\.apk$ ]]; then
-          python3 upload_script.py --file-path $APK --folder-id "1oGPkTBL0aSukcUz3N95L0XB6t2k8Eh_S" --service-account-file /tmp/gdrive-service-account.json
+          python3 upload_script.py --file-path $APK --folder-id "1ySx6SGjpoq5GfDRz2LzZoTm-9jBi6QoY" --service-account-file /tmp/gdrive-service-account.json
           echo "$APK_NAME uploaded successfully."
         else
           echo "Skipping $APK_NAME as it does not match the naming convention."
