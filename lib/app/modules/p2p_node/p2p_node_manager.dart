@@ -20,13 +20,14 @@ class P2PNodeController {
     void Function(P2PReqResNodeModel model) onNewRequestReceived,
   ) async {
     this.onNewRequestReceived = onNewRequestReceived;
-    final connectionStatus = await Connectivity().checkConnectivity();
-    startNode(connectionStatus);
+    _setUpP2PNode();
+ /*   final connectionStatus = await Connectivity().checkConnectivity();
+    startNode(connectionStatus);*/
     // this only calls startNode when status gets changed.
-    Connectivity().onConnectivityChanged.listen((connectivityResult) async {
+   /* Connectivity().onConnectivityChanged.listen((connectivityResult) async {
       debugPrint('onConnectivityChanged: $connectivityResult');
       startNode(connectionStatus);
-    });
+    });*/
   }
 
   void startNode(ConnectivityResult connectionStatus) async{

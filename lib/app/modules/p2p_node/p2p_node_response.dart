@@ -90,14 +90,14 @@ class P2PNodeResponseStream {
     print('_onNewResponseEvent : body is: ${event.body.toString()}');
     print('_onNewResponseEvent : error is: ${event.error.toString()}');
 
-    if (event.name == P2PReqResNodeNames.connect && event.error == null) {
+  /*  if (event.name == P2PReqResNodeNames.connect && event.error == null) {
       final info = P2PReqResNodeModel(name: P2PReqResNodeNames.advertise);
       Future.delayed(const Duration(seconds: 1), () async {
         final id = await FlutterP2pCommunicator.sendRequest(info: info);
       });
-      /* -------------------------------------------------------------------------- */
-      /*                                  get addrs                                 */
-      /* -------------------------------------------------------------------------- */
+      *//* -------------------------------------------------------------------------- *//*
+      *//*                                  get addrs                                 *//*
+      *//* -------------------------------------------------------------------------- *//*
       await FlutterP2pCommunicator.sendRequest(
           info: P2PReqResNodeModel(name: P2PReqResNodeNames.peerID));
 
@@ -107,7 +107,7 @@ class P2PNodeResponseStream {
         event.error == null) {
       // now you can start talking or communicating to others
       p2pState.advertise.value = true;
-    } else if (event.name == P2PReqResNodeNames.addDelegatedCoreID &&
+    } else*/ if (event.name == P2PReqResNodeNames.addDelegatedCoreID &&
         event.error != null &&
         event.error!.contains('invalid')) {
       await accountRepository.logout();
