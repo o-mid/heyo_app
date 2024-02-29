@@ -1,10 +1,56 @@
-image: cirrusci/flutter:stable
+image: ghcr.io/cirruslabs/flutter:3.16.9
 
 stages:
-  - build
+  - release_build
 
-flutter_build:
-  stage: build
+  - dev_build
+
+flutter_dev_build:
+  stage: dev_build
+  before_script:
+    - flutter clean
+    - "which ssh-agent || ( apk add --update openssh )"
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY"
+    - echo "$SSH_PRIVATE_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - apt-get update && apt-get install -y python3 python3-pip
+    - apk update && apk add python3 py-pip
+    - echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+    - apt-get install -y apt-transport-https ca-certificates gnupg
+    - curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add
+    - apt-get update && apt-get install -y google-cloud-sdk
+    - pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
+    - flutter pub get
+  script:
+    - . dev_build.sh
+    - >
+      for ABI in armeabi-v7a arm64-v8a x86_64; do
+      mv build/app/outputs/flutter-apk/app-$ABI-release.apk build/app/outputs/apk/release/${APPLICATION_NAME}${APPLICATION_VERSION}-$ABI.apk;
+      done
+    - echo $HEYO_GDRIVE_SERVICE_ACCOUNT_KEY | base64 -d > /tmp/gdrive-service-account.json
+    - >
+      for APK in build/app/outputs/apk/release/*.apk; do
+        APK_NAME=$(basename "$APK")
+        if [[ "$APK_NAME" =~ ^${APPLICATION_NAME}${APPLICATION_VERSION}-.*\.apk$ ]]; then
+          python3 upload_script.py --file-path $APK --folder-id "1ySx6SGjpoq5GfDRz2LzZoTm-9jBi6QoY" --service-account-file /tmp/gdrive-service-account.json
+          echo "$APK_NAME uploaded successfully."
+        else
+          echo "Skipping $APK_NAME as it does not match the naming convention."
+        fi
+      done
+  only:
+    refs:
+      - development
+      - Ci_build
+
+  variables:
+    APPLICATION_VERSION: "1.0.0"
+    APPLICATION_NAME: "Heyo_Dev"
+
+flutter_stage_build:
+  stage: release_build
   before_script:
     - flutter clean
     - "which ssh-agent || ( apk add --update openssh )"
@@ -14,33 +60,33 @@ flutter_build:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - flutter pub get
-
+    - apt-get update && apt-get install -y python3 python3-pip
+    - apk update && apk add python3 py-pip
+    - echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+    - apt-get install -y apt-transport-https ca-certificates gnupg
+    - curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add
+    - apt-get update && apt-get install -y google-cloud-sdk
+    - pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
   script:
-    - flutter analyze
-    - flutter build apk --split-per-abi
-    - mv build/app/outputs/apk/release/app-armeabi-v7a-release.apk build/app/outputs/apk/release/${APPLICATION_NAME}${APPLICATION_VERSION}.apk
-    - curl -F document=@"build/app/outputs/apk/release/${APPLICATION_NAME}${APPLICATION_VERSION}.apk" -F caption="${TELEGRAM_MESSAGE_CAPTION}" https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument?chat_id=${TELEGRAM_CHAT_ID}
+    - . release_build.sh
+    - mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${APPLICATION_NAME}${APPLICATION_VERSION}_release.apk
+    - echo $HEYO_GDRIVE_SERVICE_ACCOUNT_KEY | base64 -d > /tmp/gdrive-service-account.json
+    - >-
+      for APK in build/app/outputs/flutter-apk/*.apk; do
+        APK_NAME=$(basename "$APK")
+        if [[ "$APK_NAME" =~ ^${APPLICATION_NAME}${APPLICATION_VERSION}.*\.apk$ ]]; then
+          python3 upload_script.py --file-path $APK --folder-id "11AxQ9Xftb4kKBKvWMvuGdbmlIs2I-4Nh" --service-account-file /tmp/gdrive-service-account.json
+          echo "$APK_NAME uploaded successfully."
+        else
+          echo "Skipping $APK_NAME as it does not match the naming convention."
+        fi
+      done
 
-  artifacts:
-    paths:
-      - build/app/outputs/apk/release/${APPLICATION_NAME}${APPLICATION_VERSION}.apk
   only:
     refs:
       - development
-      - GitlabCi
+      - Ci_build
 
   variables:
-    # APPLICATION VERSION
     APPLICATION_VERSION: "1.0.0"
-
-    # APPLICATION NAME
-    APPLICATION_NAME: "HEYO_V_"
-
-    # CHANNEL CHAT ID
-    TELEGRAM_CHAT_ID: "-1001798546440"
-
-    # BOT TOKEN
-    TELEGRAM_BOT_TOKEN: "5540564812:AAE3ZBitZEhOA9aHq5mHJ3w9KJJa34_Tbmw"
-
-    # DISCRIPTION
-    TELEGRAM_MESSAGE_CAPTION: "New Heyo Build!"
+    APPLICATION_NAME: "Heyo_release"
