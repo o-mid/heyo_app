@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:heyo/app/modules/calls/incoming_call/controllers/incoming_call_model.dart';
+import 'package:heyo/modules/call/presentation/incoming_call/incoming_call_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 

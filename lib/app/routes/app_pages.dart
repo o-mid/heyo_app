@@ -1,23 +1,25 @@
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/auth/pinCode/bindings/pin_code_binding.dart';
 
 import '../modules/account/views/account_view.dart';
 import '../modules/add_contacts/bindings/add_contacts_binding.dart';
 import '../modules/add_contacts/views/add_contacts_view.dart';
-import '../modules/calls/add_participate/bindings/add_participate_binding.dart';
-import '../modules/calls/add_participate/views/add_participate_view.dart';
 import '../modules/auth/generatePrivateKeys/bindings/generate_private_keys_binding.dart';
 import '../modules/auth/generatePrivateKeys/views/generate_private_keys_view.dart';
-import '../modules/auth/pinCode/bindings/pin_code_binding.dart';
 import '../modules/auth/pinCode/views/pin_code_view.dart';
 import '../modules/auth/sing-up/bindings/sing_up_binding.dart';
 import '../modules/auth/sing-up/views/sing_up_view.dart';
+import '../modules/calls/add_participate/bindings/add_participate_binding.dart';
+import '../modules/calls/add_participate/views/add_participate_view.dart';
 import '../modules/calls/call_history/views/call_history_view.dart';
-import '../modules/calls/incoming_call/bindings/incoming_call_binding.dart';
-import '../modules/calls/incoming_call/views/incoming_call_view.dart';
-import '../modules/calls/main/bindings/call_binding.dart';
-import '../modules/calls/main/views/call_view.dart';
 import '../modules/calls/call_history_detail/bindings/call_history_detail_binding.dart';
 import '../modules/calls/call_history_detail/views/call_history_detail_view.dart';
+import '../../modules/call/presentation/incoming_call/di/incoming_call_binding.dart';
+import '../../modules/call/presentation/incoming_call/incoming_call_page.dart';
+import '../modules/calls/main/bindings/call_binding.dart';
+import '../modules/calls/main/views/call_view.dart';
+import '../modules/calls/new_call/bindings/new_call_binding.dart';
+import '../modules/calls/new_call/views/new_call_view.dart';
 import '../modules/contacts/bindings/contacts_binding.dart';
 import '../modules/contacts/views/contacts_view.dart';
 import '../modules/forward_massages/bindings/forward_massages_binding.dart';
@@ -34,8 +36,6 @@ import '../modules/media_view/bindings/media_view_binding.dart';
 import '../modules/media_view/views/media_view.dart';
 import '../modules/messages/bindings/messages_binding.dart';
 import '../modules/messages/views/messages_view.dart';
-import '../modules/calls/new_call/bindings/new_call_binding.dart';
-import '../modules/calls/new_call/views/new_call_view.dart';
 import '../modules/new_chat/bindings/new_chat_binding.dart';
 import '../modules/new_chat/views/new_chat_view.dart';
 import '../modules/new_group_chat/bindings/new_group_chat_binding.dart';
@@ -79,7 +79,7 @@ class AppPages {
       name: _Paths.INTRO,
       page: () => IntroView(),
       binding: IntroBinding(),
-      transition: TRANSITIONS.navigation_generalPageTransition,
+  transition: TRANSITIONS.navigation_generalPageTransition,
       transitionDuration: TRANSITIONS.navigation_generalPageTransitionDurtion,
       curve: TRANSITIONS.navigation_generalPageTransitionCurve,
     ),
@@ -219,7 +219,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.INCOMING_CALL,
-      page: () => IncomingCallView(),
+      page: () => IncomingCallPage(),
       binding: IncomingCallBinding(),
       transition: TRANSITIONS.navigation_generalPageTransition,
       transitionDuration: TRANSITIONS.navigation_generalPageTransitionDurtion,

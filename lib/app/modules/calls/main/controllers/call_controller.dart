@@ -511,7 +511,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   CallUserModel getMockUser() {
     return CallUserModel(
       name: '',
-      iconUrl: 'https://avatars.githubusercontent.com/u/6645136?v=4',
       walletAddress: args.members.first,
       coreId: args.members.first,
     );

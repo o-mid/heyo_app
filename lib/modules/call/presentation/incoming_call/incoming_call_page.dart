@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:heyo/app/modules/calls/incoming_call/controllers/incoming_call_controller.dart';
-import 'package:heyo/app/modules/calls/incoming_call/widgets/multiple_caller_info_widget.dart';
+import 'package:heyo/modules/call/presentation/incoming_call/incoming_call_controller.dart';
+import 'package:heyo/modules/call/presentation/incoming_call/widgets/multiple_caller_info_widget.dart';
 import 'package:heyo/app/modules/calls/shared/widgets/callee_or_caller_info_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -11,8 +11,8 @@ import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-class IncomingCallView extends GetView<IncomingCallController> {
-  const IncomingCallView({super.key});
+class IncomingCallPage extends GetView<IncomingCallController> {
+  const IncomingCallPage({super.key});
 
   @override
   Widget build(BuildContext context) {

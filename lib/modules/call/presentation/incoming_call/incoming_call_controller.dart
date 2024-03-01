@@ -2,7 +2,7 @@ import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/domain/call_repository.dart';
-import 'package:heyo/app/modules/calls/incoming_call/controllers/incoming_call_model.dart';
+import 'package:heyo/modules/call/presentation/incoming_call/incoming_call_model.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_availability_use_case.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
