@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/add_participate/controllers/add_participate_controller.dart';
-import 'package:heyo/app/modules/calls/add_participate/widgets/filter_bottom_sheet.dart';
+import 'package:heyo/modules/call/presentation/add_participate/add_participate_controller.dart';
 import 'package:heyo/app/modules/shared/widgets/appbar_widget.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:heyo/modules/call/presentation/add_participate/widgets/filter_bottom_sheet.dart';
 
 class AppBarAddParticipate extends AppBarWidget {
   AppBarAddParticipate(this.controller, {super.key})

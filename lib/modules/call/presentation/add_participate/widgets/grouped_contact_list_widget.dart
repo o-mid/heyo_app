@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/add_participate/controllers/add_participate_controller.dart';
-import 'package:heyo/app/modules/calls/add_participate/widgets/addable_user_widget.dart';
+import 'package:heyo/modules/call/presentation/add_participate/add_participate_controller.dart';
 import 'package:heyo/app/modules/shared/widgets/animate_list_widget.dart';
 import 'package:heyo/app/modules/shared/widgets/list_header_widget.dart';
+import 'package:heyo/modules/call/presentation/add_participate/widgets/addable_user_widget.dart';
 
 class GroupedContactListWidget extends GetView<AddParticipateController> {
   const GroupedContactListWidget({super.key});

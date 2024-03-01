@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import 'package:heyo/app/modules/calls/add_participate/controllers/add_participate_controller.dart';
+import 'package:heyo/modules/call/presentation/add_participate/add_participate_controller.dart';
 import 'package:heyo/app/modules/calls/data/web_rtc_call_repository.dart';
 import 'package:heyo/app/modules/calls/usecase/get_contact_user_use_case.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';

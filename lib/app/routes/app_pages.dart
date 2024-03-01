@@ -9,8 +9,8 @@ import '../modules/auth/generatePrivateKeys/views/generate_private_keys_view.dar
 import '../modules/auth/pinCode/views/pin_code_view.dart';
 import '../modules/auth/sing-up/bindings/sing_up_binding.dart';
 import '../modules/auth/sing-up/views/sing_up_view.dart';
-import '../modules/calls/add_participate/bindings/add_participate_binding.dart';
-import '../modules/calls/add_participate/views/add_participate_view.dart';
+import '../../modules/call/presentation/add_participate/di/add_participate_binding.dart';
+import '../../modules/call/presentation/add_participate/add_participate_page.dart';
 import '../modules/calls/call_history/views/call_history_view.dart';
 import '../modules/calls/call_history_detail/bindings/call_history_detail_binding.dart';
 import '../modules/calls/call_history_detail/views/call_history_detail_view.dart';
@@ -269,7 +269,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ADD_PARTICIPATE,
-      page: () => const AddParticipateView(),
+      page: () => const AddParticipatePage(),
       binding: AddParticipateBinding(),
     ),
     GetPage(
