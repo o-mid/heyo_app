@@ -6,10 +6,9 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/widgets/bottom_sheet.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:heyo/modules/call/presentation/call_history/widgets/delete_all_call_history_dialog.dart';
 
-import 'delete_all_chats_dialog.dart';
-
-void openDeleteAllChatsBottomSheet({required VoidCallback onDelete}) {
+void openDeleteAllCallHistoryBottomSheet({required VoidCallback onDelete}) {
   Get.bottomSheet(
     backgroundColor: COLORS.kWhiteColor,
     shape: const RoundedRectangleBorder(
@@ -18,14 +17,13 @@ void openDeleteAllChatsBottomSheet({required VoidCallback onDelete}) {
         topRight: Radius.circular(20),
       ),
     ),
-    DeleteAllChatsBottomSheet(onDelete: onDelete),
+    DeleteAllCallHistoryBottomSheet(onDelete: onDelete),
   );
 }
 
-class DeleteAllChatsBottomSheet extends StatelessWidget {
+class DeleteAllCallHistoryBottomSheet extends StatelessWidget {
+  const DeleteAllCallHistoryBottomSheet({required this.onDelete, super.key});
   final VoidCallback onDelete;
-  const DeleteAllChatsBottomSheet({Key? key, required this.onDelete})
-      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +33,8 @@ class DeleteAllChatsBottomSheet extends StatelessWidget {
         children: [
           TextButton(
             onPressed: () async {
-              final result = await Get.dialog(const DeleteAllChatsDialog());
+              final result =
+                  await Get.dialog(const DeleteAllCallHistoryDialog());
               if (result is bool && result) {
                 onDelete();
               }
@@ -56,7 +55,7 @@ class DeleteAllChatsBottomSheet extends StatelessWidget {
                 ),
                 SizedBox(width: 20.w),
                 Text(
-                  LocaleKeys.HomePage_Chats_bottomSheet_deleteAllchats.tr,
+                  LocaleKeys.HomePage_Calls_bottomSheet_deleteAllCalls.tr,
                   style: TEXTSTYLES.kLinkBig
                       .copyWith(color: COLORS.kDarkBlueColor),
                 ),

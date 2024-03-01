@@ -1,7 +1,6 @@
 import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/data/media_sources.dart';
 
 import 'package:heyo/app/modules/calls/main/controllers/call_controller.dart';
 import 'package:heyo/app/modules/calls/main/widgets/call_bottom_sheet_expanded_body.dart';
@@ -14,6 +13,7 @@ import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/widgets/appbar_widget.dart';
 import 'package:heyo/generated/assets.gen.dart';
+import 'package:heyo/modules/call/data/media_sources.dart';
 
 class CallView extends GetView<CallController> {
   const CallView({super.key});

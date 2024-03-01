@@ -1,5 +1,4 @@
-import 'package:heyo/app/modules/calls/data/call_status_provider.dart';
-import 'package:heyo/app/modules/calls/data/rtc/models.dart';
+import 'package:heyo/modules/call/data/call_status_provider.dart';
 
 class CallHistoryState {
   CallHistoryState({
