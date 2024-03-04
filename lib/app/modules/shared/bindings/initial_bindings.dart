@@ -8,7 +8,7 @@ import 'package:heyo/app/modules/shared/bindings/storage_bindings.dart';
 
 class InitialBindings extends Bindings {
   @override
-  Future<void> dependencies() async {
+  void dependencies() {
     // p2p related bindings
 
     StorageBindings().executeHighPriorityBindings();
