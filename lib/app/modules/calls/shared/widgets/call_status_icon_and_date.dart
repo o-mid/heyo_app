@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/call_history/views/models/call_history_view_model/call_history_view_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:heyo/modules/call/presentation/call_history/call_history_view_model/call_history_view_model.dart';
 import 'package:intl/intl.dart';
 
 class CallStatusIconAndDate extends StatelessWidget {

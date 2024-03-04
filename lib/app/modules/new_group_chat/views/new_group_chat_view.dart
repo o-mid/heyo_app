@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/new_group_chat/widgets/group_confirmation_widget.dart';
 
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/empty_users_body.dart';
-import 'package:heyo/app/modules/shared/widgets/contact_list_with_header.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
-import 'package:heyo/app/modules/calls/add_participate/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/new_group_chat/widgets/contact_list_widget.dart';
 import 'package:heyo/app/modules/new_group_chat/controllers/new_group_chat_controller.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-import '../../shared/utils/constants/textStyles.dart';
 import '../../shared/utils/screen-utils/inputs/custom_text_field.dart';
-import '../../shared/widgets/curtom_circle_avatar.dart';
-import '../../shared/widgets/curtom_circle_button.dart';
 
 class NewGroupChatView extends GetView<NewGroupChatController> {
   const NewGroupChatView({super.key});

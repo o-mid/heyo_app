@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:get/get.dart' hide navigator;
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:heyo/app/modules/calls/data/media_sources.dart';
-import 'package:heyo/app/modules/calls/domain/call_repository.dart';
-import 'package:heyo/app/modules/calls/domain/models.dart';
+import 'package:heyo/modules/call/data/media_sources.dart';
+import 'package:heyo/modules/call/domain/call_repository.dart';
+import 'package:heyo/modules/call/domain/models.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/connected_participant_model/connected_participant_model.dart';
@@ -511,7 +511,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   CallUserModel getMockUser() {
     return CallUserModel(
       name: '',
-      iconUrl: 'https://avatars.githubusercontent.com/u/6645136?v=4',
       walletAddress: args.members.first,
       coreId: args.members.first,
     );
