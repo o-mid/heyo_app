@@ -1,13 +1,13 @@
+import 'package:core_web3dart/web3dart.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/cryptography_key_generator.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/web3_keys.dart';
-import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/modules/shared/data/models/create_account_result.dart';
 import 'package:heyo/app/modules/shared/data/providers/secure_storage/local_storages_abstract.dart';
 import 'package:heyo/app/modules/shared/providers/account/creation/account_creation.dart';
 import 'package:heyo/app/modules/shared/providers/crypto/storage/libp2p_storage_provider.dart';
-import 'dart:isolate';
+import 'package:heyo/app/modules/shared/utils/constants/web3client_constant.dart';
+import 'package:http/http.dart' as http;
 
 class LibP2PAccountCreation extends AccountCreation {
   final LocalStorageAbstractProvider localProvider;
@@ -22,8 +22,7 @@ class LibP2PAccountCreation extends AccountCreation {
 
   @override
   Future<CreateAccountResult> createAccount() async {
-    final web3Keys = Web3Keys(web3client: Get.find());
-    return compute((_) => _createAccount(web3Keys), null);
+    return compute((_) => _createAccount(), null);
   }
 
   @override
@@ -39,9 +38,14 @@ class LibP2PAccountCreation extends AccountCreation {
   }
 }
 
-Future<CreateAccountResult> _createAccount(Web3Keys cryptographyKeyGenerator) async {
+Future<CreateAccountResult> _createAccount() async {
   // generate the mnemonic from the cryptographyKeyGenerator
-
+  final cryptographyKeyGenerator = Web3Keys(web3client:  Web3Client(
+    WEB3CLIENT.url,
+    http.Client(),
+    WEB3CLIENT.username,
+    WEB3CLIENT.password,
+  ));
 
   final phrases = cryptographyKeyGenerator.generate_mnemonic();
 
