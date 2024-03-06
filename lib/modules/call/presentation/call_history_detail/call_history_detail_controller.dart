@@ -9,7 +9,6 @@ import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_histo
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 import 'package:heyo/app/modules/contacts/widgets/removeContactsDialog.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
@@ -54,10 +53,10 @@ class CallHistoryDetailController
   final ContactRepository contactRepository;
 
   late UserCallHistoryViewArgumentsModel args;
-  final recentCalls = <CallHistoryViewModel>[].obs;
+  List<CallHistoryViewModel> recentCalls = [];
 
-  RxBool loading = true.obs;
-  late StreamSubscription<List<UserModel>> _contactsStreamSubscription;
+  //RxBool loading = true.obs;
+  //late StreamSubscription<List<UserModel>> _contactsStreamSubscription;
 
   //RxList<CallHistoryDetailParticipantModel> participants = RxList();
 
@@ -65,13 +64,14 @@ class CallHistoryDetailController
   FutureOr<CallHistoryViewModel?> build() {
     args = Get.arguments as UserCallHistoryViewArgumentsModel;
     unawaited(_listenToContactsToUpdateName());
+    unawaited(_listenToCallRepository());
     return getData();
   }
 
   FutureOr<CallHistoryViewModel?> getData() async {
     CallHistoryViewModel? callHistoryViewModel;
     try {
-      recentCalls.value = [];
+      recentCalls = [];
       final callHistoryDataModel =
           await callHistoryRepo.getOneCall(args.callId);
 
@@ -108,7 +108,7 @@ class CallHistoryDetailController
     //* If the length is equal to one it means the call is p2p
     //* and app should show the user call history
     if (args.participants.length == 1) {
-      recentCalls.value = [];
+      recentCalls = [];
       final calls =
           await callHistoryRepo.getCallsFromUserId(args.participants[0]);
 
@@ -132,6 +132,13 @@ class CallHistoryDetailController
 
   Future<void> _listenToContactsToUpdateName() async {
     (await contactRepository.getContactsStream()).listen((event) {
+      //*
+      getData();
+    });
+  }
+
+  Future<void> _listenToCallRepository() async {
+    (await callHistoryRepo.getCallsStream()).listen((newCalls) async {
       //*
       getData();
     });
@@ -259,9 +266,6 @@ class CallHistoryDetailController
   bool isGroupCall() => state.value!.participants.length > 1;
 
   void appBarAction() {
-    if (loading.isTrue) {
-      return;
-    }
     if (isGroupCall()) {
       debugPrint('Nothing yet');
     } else {

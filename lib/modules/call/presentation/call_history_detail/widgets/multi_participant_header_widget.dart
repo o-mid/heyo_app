@@ -27,7 +27,7 @@ class MultiParticipantHeaderWidget extends ConsumerWidget {
         SizedBox(height: 40.h),
         CallHistoryDetailAvatarWidget(
           participants:
-              callHistory!.value!.participants.map((e) => e.coreId).toList(),
+              callHistory.value!.participants.map((e) => e.coreId).toList(),
         ),
         CustomSizes.mediumSizedBoxHeight,
         Padding(
