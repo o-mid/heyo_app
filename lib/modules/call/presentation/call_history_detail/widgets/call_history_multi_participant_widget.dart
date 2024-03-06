@@ -10,16 +10,18 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:heyo/modules/call/presentation/call_history_detail/call_history_detail_controller.dart';
 import 'package:heyo/modules/call/presentation/call_history_detail/widgets/call_history_detail_list_tile_widget.dart';
 import 'package:heyo/modules/call/presentation/call_history_detail/widgets/multi_participant_header_widget.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class CallHistoryMultiParticipantWidget
-    extends GetView<CallHistoryDetailController> {
+class CallHistoryMultiParticipantWidget extends ConsumerWidget {
   const CallHistoryMultiParticipantWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final callHistory = ref.watch(callHistoryDetailNotifierProvider);
+
     return SingleChildScrollView(
       child: Obx(() {
-        if (controller.callHistoryViewModel!.value!.participants.isEmpty) {
+        if (callHistory.value!.participants.isEmpty) {
           return const SizedBox.shrink();
         }
         return AnimateListWidget(
@@ -38,8 +40,7 @@ class CallHistoryMultiParticipantWidget
               ),
             ),
             CustomSizes.smallSizedBoxHeight,
-            ...controller.callHistoryViewModel!.value!.participants
-                .map((participant) {
+            ...callHistory.value!.participants.map((participant) {
               return CallHistoryDetailListTileWidget(
                 coreId: participant.coreId,
                 name: participant.name,

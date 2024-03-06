@@ -12,20 +12,22 @@ import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/modules/call/presentation/call_history_detail/call_history_detail_controller.dart';
 import 'package:heyo/modules/call/presentation/call_history_detail/widgets/call_history_detail_avatar_widget.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class MultiParticipantHeaderWidget
-    extends GetView<CallHistoryDetailController> {
+class MultiParticipantHeaderWidget extends ConsumerWidget {
   const MultiParticipantHeaderWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final callHistory = ref.watch(callHistoryDetailNotifierProvider);
+    final controller = ref.read(callHistoryDetailNotifierProvider.notifier);
+
     return Column(
       children: [
         SizedBox(height: 40.h),
         CallHistoryDetailAvatarWidget(
-          participants: controller.callHistoryViewModel!.value!.participants
-              .map((e) => e.coreId)
-              .toList(),
+          participants:
+              callHistory!.value!.participants.map((e) => e.coreId).toList(),
         ),
         CustomSizes.mediumSizedBoxHeight,
         Obx(
@@ -33,7 +35,7 @@ class MultiParticipantHeaderWidget
             return Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: Text(
-                controller.callHistoryViewModel!.value!.participants.obs
+                callHistory.value!.participants.obs
                     .map((element) => element.name)
                     .toList()
                     .join(', '),
@@ -49,7 +51,7 @@ class MultiParticipantHeaderWidget
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
           child: Text(
-            controller.callHistoryViewModel!.value!.participants
+            callHistory.value!.participants
                 .map((element) => element.coreId.shortenCoreId)
                 .toList()
                 .join(', '),

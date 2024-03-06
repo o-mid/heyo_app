@@ -107,6 +107,8 @@ dependencies:
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
   flutter_animate: ^4.4.0
+  hooks_riverpod: ^2.4.10
+
 dependency_overrides:
   device_info_plus: 9.1.2
   win32: ^5.2.0

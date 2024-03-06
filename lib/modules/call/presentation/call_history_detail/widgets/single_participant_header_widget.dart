@@ -14,36 +14,37 @@ import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/modules/call/presentation/call_history_detail/call_history_detail_controller.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class SingleParticipantHeder extends GetView<CallHistoryDetailController> {
+class SingleParticipantHeder extends ConsumerWidget {
   const SingleParticipantHeder({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final callHistory = ref.watch(callHistoryDetailNotifierProvider);
+    final controller = ref.read(callHistoryDetailNotifierProvider.notifier);
     return Obx(() {
       return Column(
         children: [
           SizedBox(height: 40.h),
           CustomCircleAvatar(
-            coreId:
-                controller.callHistoryViewModel!.value!.participants[0].coreId,
+            coreId: callHistory.value!.participants[0].coreId,
             size: 64,
           ),
           CustomSizes.mediumSizedBoxHeight,
           GestureDetector(
-            onTap: () => controller.saveCoreIdToClipboard(),
+            onTap: controller.saveCoreIdToClipboard,
             child: Text(
-              controller.callHistoryViewModel!.value!.participants[0].name,
+              callHistory.value!.participants[0].name,
               style: TEXTSTYLES.kHeaderLarge
                   .copyWith(color: COLORS.kDarkBlueColor),
             ),
           ),
           SizedBox(height: 4.h),
           GestureDetector(
-            onTap: () => controller.saveCoreIdToClipboard(),
+            onTap: controller.saveCoreIdToClipboard,
             child: Text(
-              controller.callHistoryViewModel!.value!.participants[0].coreId
-                  .shortenCoreId,
+              callHistory.value!.participants[0].coreId.shortenCoreId,
               style: TEXTSTYLES.kBodySmall
                   .copyWith(color: COLORS.kTextSoftBlueColor),
             ),
@@ -93,10 +94,8 @@ class SingleParticipantHeder extends GetView<CallHistoryDetailController> {
                       connectionType: MessagingConnectionType.internet,
                       participants: [
                         MessagingParticipantModel(
-                          coreId: controller.callHistoryViewModel!.value!
-                              .participants[0].coreId,
-                          chatId: controller.callHistoryViewModel!.value!
-                              .participants[0].coreId,
+                          coreId: callHistory.value!.participants[0].coreId,
+                          chatId: callHistory.value!.participants[0].coreId,
                         ),
                       ],
                     ),
