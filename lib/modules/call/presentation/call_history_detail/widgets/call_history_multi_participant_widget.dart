@@ -20,38 +20,35 @@ class CallHistoryMultiParticipantWidget extends ConsumerWidget {
     final callHistory = ref.watch(callHistoryDetailNotifierProvider);
 
     return SingleChildScrollView(
-      child: Obx(() {
-        if (callHistory.value!.participants.isEmpty) {
-          return const SizedBox.shrink();
-        }
-        return AnimateListWidget(
-          children: [
-            const MultiParticipantHeaderWidget(),
-            SizedBox(height: 40.h),
-            Container(color: COLORS.kBrightBlueColor, height: 8.h),
-            SizedBox(height: 24.h),
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Text(
-                LocaleKeys.CallHistory_appbar.tr,
-                style: TEXTSTYLES.kLinkSmall
-                    .copyWith(color: COLORS.kTextBlueColor),
-              ),
+      child: callHistory.value!.participants.isEmpty
+          ? const SizedBox.shrink()
+          : AnimateListWidget(
+              children: [
+                const MultiParticipantHeaderWidget(),
+                SizedBox(height: 40.h),
+                Container(color: COLORS.kBrightBlueColor, height: 8.h),
+                SizedBox(height: 24.h),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Text(
+                    LocaleKeys.CallHistory_appbar.tr,
+                    style: TEXTSTYLES.kLinkSmall
+                        .copyWith(color: COLORS.kTextBlueColor),
+                  ),
+                ),
+                CustomSizes.smallSizedBoxHeight,
+                ...callHistory.value!.participants.map((participant) {
+                  return CallHistoryDetailListTileWidget(
+                    coreId: participant.coreId,
+                    name: participant.name,
+                    trailing: participant.startDate
+                        .formattedDifference(participant.endDate),
+                  );
+                }),
+                CustomSizes.mediumSizedBoxHeight,
+              ],
             ),
-            CustomSizes.smallSizedBoxHeight,
-            ...callHistory.value!.participants.map((participant) {
-              return CallHistoryDetailListTileWidget(
-                coreId: participant.coreId,
-                name: participant.name,
-                trailing: participant.startDate
-                    .formattedDifference(participant.endDate),
-              );
-            }),
-            CustomSizes.mediumSizedBoxHeight,
-          ],
-        );
-      }),
     );
   }
 }

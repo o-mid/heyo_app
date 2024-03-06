@@ -23,18 +23,16 @@ class CallHistoryDetailPage extends ConsumerWidget {
         backgroundColor: COLORS.kGreenMainColor,
         title: LocaleKeys.CallHistory_callParticipant.tr,
         actions: [
-          Obx(() {
-            if (callHistory.hasValue) {
-              return InkWell(
-                onTap: controller.appBarAction,
-                child: Container(
-                  margin: EdgeInsets.fromLTRB(26.w, 0, 26.w, 0),
-                  child: Assets.svg.verticalMenuIcon.svg(),
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          }),
+          if (callHistory.hasValue)
+            InkWell(
+              onTap: controller.appBarAction,
+              child: Container(
+                margin: EdgeInsets.fromLTRB(26.w, 0, 26.w, 0),
+                child: Assets.svg.verticalMenuIcon.svg(),
+              ),
+            )
+          else
+            const SizedBox.shrink(),
         ],
       ),
       body: callHistory.when(

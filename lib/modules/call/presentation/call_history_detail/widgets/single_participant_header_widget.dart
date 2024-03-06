@@ -23,91 +23,87 @@ class SingleParticipantHeder extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final callHistory = ref.watch(callHistoryDetailNotifierProvider);
     final controller = ref.read(callHistoryDetailNotifierProvider.notifier);
-    return Obx(() {
-      return Column(
-        children: [
-          SizedBox(height: 40.h),
-          CustomCircleAvatar(
-            coreId: callHistory.value!.participants[0].coreId,
-            size: 64,
+    return Column(
+      children: [
+        SizedBox(height: 40.h),
+        CustomCircleAvatar(
+          coreId: callHistory.value!.participants[0].coreId,
+          size: 64,
+        ),
+        CustomSizes.mediumSizedBoxHeight,
+        GestureDetector(
+          onTap: controller.saveCoreIdToClipboard,
+          child: Text(
+            callHistory.value!.participants[0].name,
+            style:
+                TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
           ),
-          CustomSizes.mediumSizedBoxHeight,
-          GestureDetector(
-            onTap: controller.saveCoreIdToClipboard,
-            child: Text(
-              callHistory.value!.participants[0].name,
-              style: TEXTSTYLES.kHeaderLarge
-                  .copyWith(color: COLORS.kDarkBlueColor),
-            ),
+        ),
+        SizedBox(height: 4.h),
+        GestureDetector(
+          onTap: controller.saveCoreIdToClipboard,
+          child: Text(
+            callHistory.value!.participants[0].coreId.shortenCoreId,
+            style: TEXTSTYLES.kBodySmall
+                .copyWith(color: COLORS.kTextSoftBlueColor),
           ),
-          SizedBox(height: 4.h),
-          GestureDetector(
-            onTap: controller.saveCoreIdToClipboard,
-            child: Text(
-              callHistory.value!.participants[0].coreId.shortenCoreId,
-              style: TEXTSTYLES.kBodySmall
-                  .copyWith(color: COLORS.kTextSoftBlueColor),
-            ),
-          ),
-          SizedBox(height: 40.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleIconButton(
-                backgroundColor: COLORS.kBrightBlueColor,
-                padding: EdgeInsets.all(14.w),
-                onPressed: () => Get.toNamed(
-                  Routes.CALL,
-                  arguments: CallViewArgumentsModel(
-                    callId: null,
-                    isAudioCall: true,
-                    members: controller.args.participants,
-                  ),
+        ),
+        SizedBox(height: 40.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleIconButton(
+              backgroundColor: COLORS.kBrightBlueColor,
+              padding: EdgeInsets.all(14.w),
+              onPressed: () => Get.toNamed(
+                Routes.CALL,
+                arguments: CallViewArgumentsModel(
+                  callId: null,
+                  isAudioCall: true,
+                  members: controller.args.participants,
                 ),
-                icon:
-                    Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor),
               ),
-              SizedBox(width: 24.w),
-              CircleIconButton(
-                backgroundColor: COLORS.kBrightBlueColor,
-                padding: EdgeInsets.all(14.w),
-                onPressed: () => Get.toNamed(
-                  Routes.CALL,
-                  arguments: CallViewArgumentsModel(
-                    callId: null,
-                    members: controller.args.participants,
-                    isAudioCall: false,
-                  ),
+              icon: Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor),
+            ),
+            SizedBox(width: 24.w),
+            CircleIconButton(
+              backgroundColor: COLORS.kBrightBlueColor,
+              padding: EdgeInsets.all(14.w),
+              onPressed: () => Get.toNamed(
+                Routes.CALL,
+                arguments: CallViewArgumentsModel(
+                  callId: null,
+                  members: controller.args.participants,
+                  isAudioCall: false,
                 ),
-                icon:
-                    Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
               ),
-              SizedBox(width: 24.w),
-              // Todo Omid : add go to messaging screen
-              CircleIconButton(
-                backgroundColor: COLORS.kBrightBlueColor,
-                padding: EdgeInsets.all(14.w),
-                onPressed: () {
-                  Get.toNamed(
-                    Routes.MESSAGES,
-                    arguments: MessagesViewArgumentsModel(
-                      connectionType: MessagingConnectionType.internet,
-                      participants: [
-                        MessagingParticipantModel(
-                          coreId: callHistory.value!.participants[0].coreId,
-                          chatId: callHistory.value!.participants[0].coreId,
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                icon: Assets.svg.chatOutlined.svg(color: COLORS.kDarkBlueColor),
-              ),
-            ],
-          ),
-          SizedBox(height: 40.h),
-        ],
-      );
-    });
+              icon: Assets.svg.videoCallIcon.svg(color: COLORS.kDarkBlueColor),
+            ),
+            SizedBox(width: 24.w),
+            // Todo Omid : add go to messaging screen
+            CircleIconButton(
+              backgroundColor: COLORS.kBrightBlueColor,
+              padding: EdgeInsets.all(14.w),
+              onPressed: () {
+                Get.toNamed(
+                  Routes.MESSAGES,
+                  arguments: MessagesViewArgumentsModel(
+                    connectionType: MessagingConnectionType.internet,
+                    participants: [
+                      MessagingParticipantModel(
+                        coreId: callHistory.value!.participants[0].coreId,
+                        chatId: callHistory.value!.participants[0].coreId,
+                      ),
+                    ],
+                  ),
+                );
+              },
+              icon: Assets.svg.chatOutlined.svg(color: COLORS.kDarkBlueColor),
+            ),
+          ],
+        ),
+        SizedBox(height: 40.h),
+      ],
+    );
   }
 }

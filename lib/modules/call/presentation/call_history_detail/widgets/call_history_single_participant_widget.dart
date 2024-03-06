@@ -19,35 +19,33 @@ class CallHistorySingleParticipantWidget extends ConsumerWidget {
     final callHistory = ref.watch(callHistoryDetailNotifierProvider);
     final controller = ref.read(callHistoryDetailNotifierProvider.notifier);
 
-    return Obx(() {
-      if (callHistory.value!.participants.isEmpty) {
-        return const SizedBox.shrink();
-      }
-      return AnimateListWidget(
-        children: [
-          const SingleParticipantHeder(),
-          Container(color: COLORS.kBrightBlueColor, height: 8.h),
-          SizedBox(height: 24.h),
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Text(
-              LocaleKeys.CallHistory_appbar.tr,
-              style:
-                  TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextBlueColor),
-            ),
-          ),
-          CustomSizes.smallSizedBoxHeight,
-          ...controller.recentCalls.map(
-            (call) => Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-              child: HistoryCallLogWidget(call: call),
-            ),
-          ),
-          CustomSizes.mediumSizedBoxHeight,
-        ],
-      );
-    });
+    return callHistory.value!.participants.isEmpty
+        ? const SizedBox.shrink()
+        : AnimateListWidget(
+            children: [
+              const SingleParticipantHeder(),
+              Container(color: COLORS.kBrightBlueColor, height: 8.h),
+              SizedBox(height: 24.h),
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Text(
+                  LocaleKeys.CallHistory_appbar.tr,
+                  style: TEXTSTYLES.kLinkSmall
+                      .copyWith(color: COLORS.kTextBlueColor),
+                ),
+              ),
+              CustomSizes.smallSizedBoxHeight,
+              ...controller.recentCalls.map(
+                (call) => Container(
+                  width: double.infinity,
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                  child: HistoryCallLogWidget(call: call),
+                ),
+              ),
+              CustomSizes.mediumSizedBoxHeight,
+            ],
+          );
   }
 }

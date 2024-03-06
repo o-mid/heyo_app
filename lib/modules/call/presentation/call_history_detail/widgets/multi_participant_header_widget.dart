@@ -30,22 +30,18 @@ class MultiParticipantHeaderWidget extends ConsumerWidget {
               callHistory!.value!.participants.map((e) => e.coreId).toList(),
         ),
         CustomSizes.mediumSizedBoxHeight,
-        Obx(
-          () {
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-              child: Text(
-                callHistory.value!.participants.obs
-                    .map((element) => element.name)
-                    .toList()
-                    .join(', '),
-                style: TEXTSTYLES.kHeaderLarge
-                    .copyWith(color: COLORS.kDarkBlueColor),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-            );
-          },
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          child: Text(
+            callHistory.value!.participants.obs
+                .map((element) => element.name)
+                .toList()
+                .join(', '),
+            style:
+                TEXTSTYLES.kHeaderLarge.copyWith(color: COLORS.kDarkBlueColor),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
         ),
         SizedBox(height: 4.h),
         Padding(
