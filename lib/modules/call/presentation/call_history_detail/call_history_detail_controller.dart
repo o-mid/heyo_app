@@ -3,24 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
-import 'package:heyo/app/modules/contacts/widgets/removeContactsDialog.dart';
-import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
-import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
-import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
-import 'package:heyo/app/routes/app_pages.dart';
-import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:heyo/modules/call/presentation/call_history/call_history_participant_view_model/call_history_participant_view_model.dart';
 import 'package:heyo/modules/call/presentation/call_history/call_history_view_model/call_history_view_model.dart';
@@ -190,116 +182,5 @@ class CallHistoryDetailController
     }
   }
 
-  Future<void> openAppBarActionBottomSheet({
-    required CallHistoryParticipantViewModel participant,
-  }) async {
-    final isContact = await contactAvailability(participant.coreId);
-
-    Widget bottomSheetItem({
-      required String title,
-      required Widget icon,
-      void Function()? onTap,
-    }) {
-      return TextButton(
-        onPressed: onTap,
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: COLORS.kBrightBlueColor,
-              ),
-              child: icon,
-            ),
-            CustomSizes.mediumSizedBoxWidth,
-            Text(
-              title,
-              style: TEXTSTYLES.kLinkBig.copyWith(
-                color: COLORS.kDarkBlueColor,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    await Get.bottomSheet<void>(
-      Padding(
-        padding: CustomSizes.iconListPadding,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            bottomSheetItem(
-              title: isContact
-                  ? LocaleKeys.newChat_userBottomSheet_contactInfo.tr
-                  : LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
-              icon: Assets.svg.addToContactsIcon.svg(
-                color: COLORS.kDarkBlueColor,
-                width: 20,
-                height: 20,
-              ),
-              onTap: () {
-                //* Close bottom sheet
-                Get.back();
-                final userModel = participant.mapToUserModel();
-                Get.toNamed(
-                  Routes.ADD_CONTACTS,
-                  arguments: AddContactsViewArgumentsModel(
-                    //  user: userModel,
-                    coreId: userModel.coreId,
-                  ),
-                );
-              },
-            ),
-            if (isContact)
-              bottomSheetItem(
-                title: LocaleKeys.newChat_userBottomSheet_RemoveFromContacts.tr,
-                icon: Assets.svg.deleteIcon.svg(
-                  color: COLORS.kDarkBlueColor,
-                  width: 20,
-                  height: 20,
-                ),
-                onTap: () async {
-                  final result = await Get.dialog(
-                    RemoveContactsDialog(
-                      userName: participant.name,
-                    ),
-                  );
-
-                  if (result is bool && result == true) {
-                    print("result   $result");
-                    await contactRepository
-                        .deleteContactById(participant.coreId);
-                    Get.back();
-                  }
-                },
-              ),
-            CustomSizes.mediumSizedBoxHeight,
-          ],
-        ),
-      ),
-      backgroundColor: COLORS.kWhiteColor,
-      isDismissible: true,
-      enableDrag: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-      ),
-    );
-  }
-
   bool isGroupCall() => state.value!.participants.length > 1;
-
-  void appBarAction() {
-    if (isGroupCall()) {
-      debugPrint('Nothing yet');
-    } else {
-      openAppBarActionBottomSheet(
-        participant: state.value!.participants[0],
-      );
-    }
-  }
 }

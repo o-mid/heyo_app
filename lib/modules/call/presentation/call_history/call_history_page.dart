@@ -20,7 +20,6 @@ class CallHistoryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final calls = ref.watch(callHistoryNotifierProvider);
-    final controller = ref.read(callHistoryNotifierProvider.notifier);
 
     return Scaffold(
       backgroundColor: COLORS.kAppBackground,
