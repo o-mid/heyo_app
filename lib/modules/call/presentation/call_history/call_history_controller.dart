@@ -14,8 +14,6 @@ import 'package:heyo/modules/call/presentation/call_history/call_history_partici
 import 'package:heyo/modules/call/presentation/call_history/call_history_view_model/call_history_view_model.dart';
 import 'package:heyo/modules/call/presentation/call_history/call_utils.dart';
 import 'package:heyo/modules/call/presentation/call_history/widgets/call_history_list_tile_widget.dart';
-import 'package:heyo/modules/call/presentation/call_history/widgets/delete_all_calls_bottom_sheet.dart';
-import 'package:heyo/modules/call/presentation/call_history/widgets/delete_call_history_dialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final callHistoryNotifierProvider = AutoDisposeAsyncNotifierProvider<
@@ -185,13 +183,6 @@ class CallHistoryController
     await callHistoryRepo.deleteOneCall(call.callId);
   }
 
-  Future<bool> showDeleteCallDialog(CallHistoryViewModel call) async {
-    await Get.dialog<bool>(
-      DeleteCallHistoryDialog(deleteCall: () => deleteCall(call)),
-    );
-    return false;
-  }
-
   void _removeAtAnimatedList(int index, CallHistoryViewModel call) {
     animatedListKey.currentState?.removeItem(
       index,
@@ -202,12 +193,16 @@ class CallHistoryController
     );
   }
 
-  void showDeleteAllCallsBottomSheet() {
-    openDeleteAllCallHistoryBottomSheet(
-      onDelete: () async {
-        await callHistoryRepo.deleteAllCalls();
-        state = const AsyncData([]);
-      },
-    );
+  Future<void> deleteAllCalls() async {
+    await callHistoryRepo.deleteAllCalls();
   }
+
+  //void showDeleteAllCallsBottomSheet() {
+  //  openDeleteAllCallHistoryBottomSheet(
+  //    onDelete: () async {
+
+  //      state = const AsyncData([]);
+  //    },
+  //  );
+  //}
 }

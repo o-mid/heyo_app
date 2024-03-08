@@ -9,7 +9,9 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:heyo/modules/call/presentation/call_history/call_history_controller.dart';
 import 'package:heyo/modules/call/presentation/call_history/widgets/call_history_list_tile_widget.dart';
 import 'package:heyo/modules/call/presentation/call_history/widgets/call_history_loading_widget.dart';
+import 'package:heyo/modules/call/presentation/call_history/widgets/delete_all_calls_bottom_sheet.dart';
 import 'package:heyo/modules/call/presentation/call_history/widgets/empty_call_history_widget.dart';
+import 'package:heyo/modules/core-ui/widgets/bottom_sheet_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class CallHistoryPage extends ConsumerWidget {
@@ -28,7 +30,10 @@ class CallHistoryPage extends ConsumerWidget {
           if (calls.hasValue)
             IconButton(
               splashRadius: 18,
-              onPressed: controller.showDeleteAllCallsBottomSheet,
+              onPressed: () => bottomSheetWidget(
+                context,
+                const DeleteAllCallHistoryBottomSheet(),
+              ),
               icon: Assets.svg.verticalMenuIcon.svg(),
             )
           else

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heyo/generated/locales.g.dart';
 
 import 'package:heyo/modules/call/presentation/call_history/call_history_controller.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
@@ -14,6 +15,7 @@ import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/modules/call/presentation/call_history/call_history_view_model/call_history_view_model.dart';
 import 'package:heyo/modules/call/presentation/call_history/widgets/call_history_avatar_widget.dart';
+import 'package:heyo/modules/core-ui/widgets/custom_dialog_widget.dart';
 
 class CallHistoryListTitleWidget extends GetView<CallHistoryController> {
   const CallHistoryListTitleWidget({required this.call, super.key});
@@ -22,7 +24,7 @@ class CallHistoryListTitleWidget extends GetView<CallHistoryController> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Get.toNamed(
+      onTap: () => Get.toNamed<void>(
         Routes.USER_CALL_HISTORY,
         arguments: UserCallHistoryViewArgumentsModel(
           callId: call.callId,
@@ -32,7 +34,22 @@ class CallHistoryListTitleWidget extends GetView<CallHistoryController> {
       child: SlidableWidget(
         key: Key(call.callId),
         onDismissed: () => controller.deleteCall(call),
-        confirmDismiss: () => controller.showDeleteCallDialog(call),
+        confirmDismiss: () async {
+          await showCustomDialog(
+            context,
+            title: LocaleKeys.HomePage_Calls_deleteAllCallsDialog_title.tr,
+            confirmTitle:
+                LocaleKeys.HomePage_Calls_deleteAllCallsDialog_delete.tr,
+            indicatorIcon:
+                Assets.svg.deleteIcon.svg(color: COLORS.kDarkBlueColor),
+            onConfirm: () {
+              controller.deleteCall(call);
+              Get.back<void>();
+            },
+            onCancel: () => Get.back<void>(),
+          );
+          return false;
+        },
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
           child: Row(

@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
+import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
@@ -79,28 +81,8 @@ class CallHistoryDetailController
         return null;
       }
 
-      final participantViewList = <CallHistoryParticipantViewModel>[];
-
-      //* Loop on participants data model to get their name from contact
-      //* And convert them to participants view model
-      for (final participant in callHistoryDataModel.participants) {
-        final name = await contactNameUseCase.execute(participant.coreId);
-        participantViewList.add(
-          participant.mapToCallHistoryParticipantViewModel(name),
-        );
-      }
-
-      //* Convert the call history data model to view model
-      final newCallHistoryModel = CallHistoryViewModel(
-        callId: callHistoryDataModel.callId,
-        type: CallUtils.callStatus(callHistoryDataModel),
-        status: CallUtils.callTitle(callHistoryDataModel.status),
-        participants: participantViewList,
-        startDate: callHistoryDataModel.startDate,
-        endDate: callHistoryDataModel.endDate,
-      );
-
-      callHistoryViewModel = newCallHistoryModel;
+      callHistoryViewModel =
+          await convertToCallHistoryViewModel(callHistoryDataModel);
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -131,17 +113,63 @@ class CallHistoryDetailController
   }
 
   Future<void> _listenToContactsToUpdateName() async {
-    (await contactRepository.getContactsStream()).listen((event) {
-      //*
-      getData();
+    (await contactRepository.getContactsStream()).listen((newUsers) {
+      if (state.isLoading) {
+        return;
+      }
+      //* Fill the below list for updating call history participant
+      final callHistoryNewParticipant = <CallHistoryParticipantViewModel>[];
+
+      for (var i = 0; i < state.value!.participants.length; i++) {
+        //* Add all the participant to list
+        callHistoryNewParticipant.add(state.value!.participants[i]);
+        for (var j = 0; j < newUsers.length; j++) {
+          if (state.value!.participants[i].coreId == newUsers[j].coreId) {
+            //* updated contact found in list
+            // update participant with new contact name
+            callHistoryNewParticipant[i] =
+                state.value!.participants[i].copyWith(name: newUsers[j].name);
+          }
+        }
+      }
+      state = AsyncData(
+        state.value!.copyWith(participants: callHistoryNewParticipant),
+      );
     });
   }
 
   Future<void> _listenToCallRepository() async {
     (await callHistoryRepo.getCallsStream()).listen((newCalls) async {
-      //*
+      if (state.isLoading) {
+        return;
+      }
       getData();
     });
+  }
+
+  Future<CallHistoryViewModel> convertToCallHistoryViewModel(
+    CallHistoryModel callHistoryDataModel,
+  ) async {
+    final participantViewList = <CallHistoryParticipantViewModel>[];
+
+    //* Loop on participants data model to get their name from contact
+    //* And convert them to participants view model
+    for (final participant in callHistoryDataModel.participants) {
+      final name = await contactNameUseCase.execute(participant.coreId);
+      participantViewList.add(
+        participant.mapToCallHistoryParticipantViewModel(name),
+      );
+    }
+
+    //* Convert the call history data model to view model
+    return CallHistoryViewModel(
+      callId: callHistoryDataModel.callId,
+      type: CallUtils.callStatus(callHistoryDataModel),
+      status: CallUtils.callTitle(callHistoryDataModel.status),
+      participants: participantViewList,
+      startDate: callHistoryDataModel.startDate,
+      endDate: callHistoryDataModel.endDate,
+    );
   }
 
   Future<void> saveCoreIdToClipboard() async {
