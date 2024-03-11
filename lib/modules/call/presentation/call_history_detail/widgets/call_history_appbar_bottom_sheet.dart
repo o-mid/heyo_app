@@ -96,7 +96,7 @@ class CallHistoryAppBarBottomSheetWidgetState
               //* Close bottom sheet
               Get.back<void>();
               //* Push to Add contact page
-              controller.pushToAddContact(widget.callHistoryParticipant);
+              controller.pushToAddContact(widget.callHistoryParticipant.coreId);
             },
           ),
           if (isContact)
@@ -113,7 +113,7 @@ class CallHistoryAppBarBottomSheetWidgetState
                   indicatorIcon: Assets.svg.removeContact.svg(
                     color: COLORS.kDarkBlueColor,
                   ),
-                  title: '${LocaleKeys.newChat_userBottomSheet_remove.tr}'
+                  title: '${LocaleKeys.newChat_userBottomSheet_remove.tr} '
                       '${widget.callHistoryParticipant.name} '
                       '${LocaleKeys.newChat_userBottomSheet_fromContactsList.tr}',
                   confirmTitle: LocaleKeys.newChat_userBottomSheet_remove.tr,
@@ -121,9 +121,12 @@ class CallHistoryAppBarBottomSheetWidgetState
                     await controller.deleteContactById(
                       widget.callHistoryParticipant.coreId,
                     );
+                    //* Close Dialog
                     Get.back<void>();
                   },
                 );
+                //* Close BottomSheet
+                Get.back<void>();
               },
             ),
           CustomSizes.mediumSizedBoxHeight,

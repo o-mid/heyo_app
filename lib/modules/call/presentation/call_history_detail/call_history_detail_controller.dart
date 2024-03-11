@@ -13,6 +13,7 @@ import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/locales.g.dart';
@@ -114,17 +115,27 @@ class CallHistoryDetailController
       //* Fill the below list for updating call history participant
       final callHistoryNewParticipant = <CallHistoryParticipantViewModel>[];
 
-      for (var i = 0; i < state.value!.participants.length; i++) {
-        //* Add all the participant to list
-        callHistoryNewParticipant.add(state.value!.participants[i]);
-        for (var j = 0; j < newUsers.length; j++) {
-          if (state.value!.participants[i].coreId == newUsers[j].coreId) {
-            //* updated contact found in list
-            // update participant with new contact name
-            callHistoryNewParticipant[i] =
-                state.value!.participants[i].copyWith(name: newUsers[j].name);
+      if (newUsers.isNotEmpty) {
+        for (var i = 0; i < state.value!.participants.length; i++) {
+          //* Add all the participant to list
+          callHistoryNewParticipant.add(state.value!.participants[i]);
+          for (var j = 0; j < newUsers.length; j++) {
+            if (state.value!.participants[i].coreId == newUsers[j].coreId) {
+              //* updated contact found in list
+              // update participant with new contact name
+              callHistoryNewParticipant[i] =
+                  state.value!.participants[i].copyWith(name: newUsers[j].name);
+            }
           }
         }
+      } else {
+        //* It's mean the contact deleted from call history detail
+        // the name of user should change to it coreId
+        callHistoryNewParticipant.add(
+          state.value!.participants[0].copyWith(
+            name: state.value!.participants[0].coreId.shortenCoreId,
+          ),
+        );
       }
       state = AsyncData(
         state.value!.copyWith(participants: callHistoryNewParticipant),
@@ -191,15 +202,11 @@ class CallHistoryDetailController
   }
 
   Future<void> pushToAddContact(
-    CallHistoryParticipantViewModel callHistoryParticipant,
+    String coreId,
   ) async {
-    final userModel = callHistoryParticipant.mapToUserModel();
     await Get.toNamed<void>(
       Routes.ADD_CONTACTS,
-      arguments: AddContactsViewArgumentsModel(
-        //  user: userModel,
-        coreId: userModel.coreId,
-      ),
+      arguments: AddContactsViewArgumentsModel(coreId: coreId),
     );
   }
 }

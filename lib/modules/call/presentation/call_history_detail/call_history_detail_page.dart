@@ -28,9 +28,9 @@ class CallHistoryDetailPage extends ConsumerWidget {
         actions: [
           if (callHistory.hasValue)
             InkWell(
-              onTap: () {
+              onTap: () async {
                 if (!controller.isGroupCall()) {
-                  bottomSheetWidget(
+                  await bottomSheetWidget(
                     context,
                     CallHistoryAppBarBottomSheetWidget(
                       callHistoryParticipant:
