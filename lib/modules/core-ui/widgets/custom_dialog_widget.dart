@@ -46,6 +46,7 @@ class CustomDialogWidget extends StatelessWidget {
         indicatorIcon: indicatorIcon,
         indicatorBackgroundColor: COLORS.kBrightBlueColor,
         title: title,
+        titleAlignment: TextAlign.center,
         buttons: [
           CustomButton(
             onTap: onConfirm ?? Get.back<void>,
