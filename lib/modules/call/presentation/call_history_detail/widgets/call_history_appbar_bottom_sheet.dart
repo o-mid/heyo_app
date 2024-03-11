@@ -7,15 +7,43 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:heyo/modules/call/presentation/call_history/call_history_participant_view_model/call_history_participant_view_model.dart';
 import 'package:heyo/modules/call/presentation/call_history_detail/call_history_detail_controller.dart';
+import 'package:heyo/modules/core-ui/widgets/custom_dialog_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class CallHistoryAppBarBottomSheetWidget extends ConsumerWidget {
+class CallHistoryAppBarBottomSheetWidget extends ConsumerStatefulWidget {
   const CallHistoryAppBarBottomSheetWidget({
     required this.callHistoryParticipant,
     super.key,
   });
 
   final CallHistoryParticipantViewModel callHistoryParticipant;
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return CallHistoryAppBarBottomSheetWidgetState();
+  }
+}
+
+class CallHistoryAppBarBottomSheetWidgetState
+    extends ConsumerState<CallHistoryAppBarBottomSheetWidget> {
+  bool isContact = false;
+
+  @override
+  void initState() {
+    checkContactAvailability();
+    super.initState();
+  }
+
+  Future<void> checkContactAvailability() async {
+    final checkContact = await ref
+        .read(callHistoryDetailNotifierProvider.notifier)
+        .contactAvailability(
+          widget.callHistoryParticipant.coreId,
+        );
+    setState(() {
+      isContact = checkContact;
+    });
+  }
 
   Widget bottomSheetItem({
     required String title,
@@ -47,11 +75,9 @@ class CallHistoryAppBarBottomSheetWidget extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isContact =
-      await  ref.read(callHistoryDetailNotifierProvider.notifier).isContact(
-              callHistoryParticipant.coreId,
-            );
+  Widget build(BuildContext context) {
+    final controller = ref.read(callHistoryDetailNotifierProvider.notifier);
+
     return Padding(
       padding: CustomSizes.iconListPadding,
       child: Column(
@@ -68,15 +94,9 @@ class CallHistoryAppBarBottomSheetWidget extends ConsumerWidget {
             ),
             onTap: () {
               //* Close bottom sheet
-              Get.back();
-              final userModel = participant.mapToUserModel();
-              Get.toNamed(
-                Routes.ADD_CONTACTS,
-                arguments: AddContactsViewArgumentsModel(
-                  //  user: userModel,
-                  coreId: userModel.coreId,
-                ),
-              );
+              Get.back<void>();
+              //* Push to Add contact page
+              controller.pushToAddContact(widget.callHistoryParticipant);
             },
           ),
           if (isContact)
@@ -88,17 +108,22 @@ class CallHistoryAppBarBottomSheetWidget extends ConsumerWidget {
                 height: 20,
               ),
               onTap: () async {
-                final result = await Get.dialog(
-                  RemoveContactsDialog(
-                    userName: participant.name,
+                await showCustomDialog(
+                  context,
+                  indicatorIcon: Assets.svg.removeContact.svg(
+                    color: COLORS.kDarkBlueColor,
                   ),
+                  title: '${LocaleKeys.newChat_userBottomSheet_remove.tr}'
+                      '${widget.callHistoryParticipant.name} '
+                      '${LocaleKeys.newChat_userBottomSheet_fromContactsList.tr}',
+                  confirmTitle: LocaleKeys.newChat_userBottomSheet_remove.tr,
+                  onConfirm: () async {
+                    await controller.deleteContactById(
+                      widget.callHistoryParticipant.coreId,
+                    );
+                    Get.back<void>();
+                  },
                 );
-
-                if (result is bool && result == true) {
-                  print("result   $result");
-                  await contactRepository.deleteContactById(participant.coreId);
-                  Get.back();
-                }
               },
             ),
           CustomSizes.mediumSizedBoxHeight,

@@ -9,10 +9,12 @@ import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_h
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
+import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:heyo/modules/call/presentation/call_history/call_history_participant_view_model/call_history_participant_view_model.dart';
 import 'package:heyo/modules/call/presentation/call_history/call_history_view_model/call_history_view_model.dart';
@@ -183,4 +185,21 @@ class CallHistoryDetailController
   }
 
   bool isGroupCall() => state.value!.participants.length > 1;
+
+  Future<void> deleteContactById(String coreId) async {
+    await contactRepository.deleteContactById(coreId);
+  }
+
+  Future<void> pushToAddContact(
+    CallHistoryParticipantViewModel callHistoryParticipant,
+  ) async {
+    final userModel = callHistoryParticipant.mapToUserModel();
+    await Get.toNamed<void>(
+      Routes.ADD_CONTACTS,
+      arguments: AddContactsViewArgumentsModel(
+        //  user: userModel,
+        coreId: userModel.coreId,
+      ),
+    );
+  }
 }
