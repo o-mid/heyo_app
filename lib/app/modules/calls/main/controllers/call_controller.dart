@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_beep/flutter_beep.dart';
+import 'package:flutter_ios_call_kit/entities/call_event.dart';
 import 'package:get/get.dart' hide navigator;
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:heyo/modules/call/data/ios_call_kit/ios_call_kit_provider.dart';
 import 'package:heyo/modules/call/data/media_sources.dart';
 import 'package:heyo/modules/call/domain/call_repository.dart';
 import 'package:heyo/modules/call/domain/models.dart';
@@ -34,12 +37,14 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     required this.accountInfo,
     required this.getContactUserUseCase,
     required this.contactAvailabilityUseCase,
+    required this.iOSCallKitProvider,
   });
 
   final CallRepository callRepository;
   final AccountRepository accountInfo;
   final GetContactUserUseCase getContactUserUseCase;
   final ContactAvailabilityUseCase contactAvailabilityUseCase;
+  final CallKitProvider iOSCallKitProvider;
 
   //* CallViewArgumentsModel will not effect the UI
   late CallViewArgumentsModel args;
@@ -146,6 +151,21 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       vsync: this,
       duration: const Duration(milliseconds: 400),
     );
+
+    iOSCallKitProvider.onCallKitNewEvent = (event) {
+
+      switch (event.event) {
+        case Event.actionCallEnded:
+          print("✅ CallController: Event.actionCallEnded");
+          endCall();
+        case Event.actionCallToggleMute:
+          // TODO: only iOS
+          print("✅ CallController: Event.actionCallToggleMute");
+          toggleMuteMic();
+        default:
+          print('✅ CallController: unhandle event');
+      }
+    };
   }
 
   void startCallTimer() {
@@ -389,6 +409,10 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       await callRepository.endOrCancelCall(args.callId!);
     }
     _stopWatingBeep();
+    if (Platform.isIOS){
+      await iOSCallKitProvider.endAllCalls();
+      debugPrint('➡️ CallController: endCall');
+    }
     Get.back();
   }
 

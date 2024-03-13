@@ -2,6 +2,7 @@ import 'package:flutter_ios_call_kit/entities/entities.dart';
 import 'package:flutter_ios_call_kit/flutter_ios_call_kit.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
@@ -13,6 +14,7 @@ import 'package:heyo/modules/call/domain/call_repository.dart';
 import 'package:uuid/uuid.dart';
 
 class CallKitProvider {
+
   CallKitProvider({
     required this.accountInfoRepo,
     required this.contactRepository,
@@ -26,21 +28,21 @@ class CallKitProvider {
   final CallRepository callRepository;
   late CallId callId;
   late List<CallInfo> callInfo;
-
-  late IncomingCallViewArguments args;
-
+  
   String _uuid = Uuid().v4();
 
   // MARK: On Call kit call back event
-  final onCallKitNewEvent = Rxn<CallEvent>();
+  // final onCallKitNewEvent = Rxn<CallEvent>();
+  Function(CallEvent event)? onCallKitNewEvent;
 
   void _onNewEventRecived(CallEvent event) {
-    onCallKitNewEvent.value = event;
-    print('🟩 IosCallController: on Call Kit New Event');
+
+    onCallKitNewEvent?.call(event);
   }
 
   @override
   Future<void> incomingCall(CallId callId, List<CallInfo> calls) async {
+
     this.callId = callId;
     callInfo = calls;
     _uuid = const Uuid().v4();
@@ -56,18 +58,17 @@ class CallKitProvider {
     print('🟩 IosCallController: incoming Call');
   }
 
-  Future<void> makeCall(CallId callId, List<CallInfo> calls) async {
+  Future<void> makeCall(CallId callId, UserModel user) async {
+
     // Do implementation for make call with call kit
-    final userModel = await contactRepository
-        .getContactById(calls.first.remotePeer.remoteCoreId);
     final params = CallKitParams(
       id: _uuid,
-      nameCaller: userModel!.nickname.isEmpty
-          ? userModel.coreId.shortenCoreId
-          : userModel.nickname.tr,
+      nameCaller: user.nickname.isEmpty
+          ? user.coreId.shortenCoreId
+          : user.nickname.tr,
       handle: '0123456789',
       type: 1,
-      extra: <String, dynamic>{'userId': userModel.coreId},
+      extra: <String, dynamic>{'userId': user.coreId},
       ios: const IOSParams(handleType: 'number'),
     );
     await FlutterIosCallKit.startCall(params);
@@ -75,17 +76,20 @@ class CallKitProvider {
   }
 
   Future<void> activeCalls() async {
+
     var calls = await FlutterIosCallKit.activeCalls();
-    print(calls);
     print('🟩 IosCallController: active Call');
   }
 
   Future<void> endCurrentCall() async {
+
     await FlutterIosCallKit.endCall(_uuid!);
     print('🟩 IosCallController: end Current Call');
   }
 
   Future<void> endAllCalls() async {
+
+    await callRepository.endOrCancelCall(callId);
     await FlutterIosCallKit.endAllCalls();
     print('🟩 IosCallController: end All Calls');
   }
@@ -105,28 +109,17 @@ class CallKitProvider {
   }
 
   Future<void> acceptCall() async {
-    /*   FlutterIosCallKit.setCallConnected(_uuid);
+
     await callRepository.acceptCall(callId);
     //TODO farzam, accept
-    Get.offNamed(
+    Get.toNamed(
       Routes.CALL,
       arguments: CallViewArgumentsModel(
         callId: callId,
         isAudioCall: callInfo.first.isAudioCall,
         members: callInfo.map((e) => e.remotePeer.remoteCoreId).toList(),
       ),
-    );*/
-    //TODO shoul be refactor :D
-    await Get.toNamed(
-      Routes.INCOMING_CALL,
-      arguments: IncomingCallViewArguments(
-        callId: callId,
-        isAudioCall: callInfo.first.isAudioCall,
-        members: callInfo.map((e) => e.remotePeer.remoteCoreId).toList(),
-      ),
     );
-    await FlutterIosCallKit.endCall(_uuid);
-
     print("🟩 acceptCall");
   }
 

@@ -8,6 +8,8 @@ import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart'
 import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart';
 import 'package:heyo/modules/call/data/web_rtc_call_repository.dart';
 
+import '../../../../../modules/call/data/ios_call_kit/ios_call_kit_provider.dart';
+
 class CallBinding extends Bindings {
   @override
   void dependencies() {
@@ -33,6 +35,7 @@ class CallBinding extends Bindings {
             ),
           ),
         ),
+        iOSCallKitProvider: Get.find(),
       ),
     );
   }
