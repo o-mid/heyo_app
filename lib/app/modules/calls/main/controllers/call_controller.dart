@@ -216,6 +216,10 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       args.isAudioCall,
     );
 
+    if (Platform.isIOS){
+      await iOSCallKitProvider.makeCall(requestedCallId, args.isAudioCall, args.members);
+    }
+
     isInCall.value = false;
     _playWatingBeep();
   }
@@ -367,6 +371,9 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
           isInCall.value = true;
           _stopWatingBeep();
           startCallTimer();
+          if (Platform.isIOS){
+            iOSCallKitProvider.setCallConnected();
+          }
         }
 
         onNewParticipateReceived(callStateView);

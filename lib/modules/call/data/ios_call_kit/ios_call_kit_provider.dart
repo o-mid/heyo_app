@@ -52,24 +52,23 @@ class CallKitProvider {
 
     final params = CallKitParams(
         id: _uuid,
-        nameCaller: userModel?.name,
+        nameCaller: calls.first.remotePeer.remoteCoreId.shortenCoreId.endOfCoreId,
         appName: "Heyo",
-        type: (callInfo.first.isAudioCall) ? 0 : 1,);
+        type: (callInfo.first.isAudioCall) ? 0 : 1,
+        extra: <String, dynamic>{'userId': calls.first.remotePeer.remoteCoreId.shortenCoreId.endOfCoreId},);
     await FlutterIosCallKit.showCallkitIncoming(params);
     debugPrint('🟩 CallKitProvider: incoming Call');
   }
 
-  Future<void> makeCall(CallId callId, UserModel user) async {
+  Future<void> makeCall(CallId callId , bool isAudioCall, List<String> members) async {
 
     // Do implementation for make call with call kit
     final params = CallKitParams(
       id: _uuid,
-      nameCaller: user.nickname.isEmpty
-          ? user.coreId.shortenCoreId
-          : user.nickname.tr,
-      handle: user.coreId.shortenCoreId,
-      type: 1,
-      extra: <String, dynamic>{'userId': user.coreId},
+      nameCaller: members.first.endOfCoreId,
+      handle: members.first.shortenCoreId,
+      type: isAudioCall ? 0 : 1,
+      extra: <String, dynamic>{'userId': members.first.shortenCoreId},
       ios: const IOSParams(handleType: 'generic')
     );
     await FlutterIosCallKit.startCall(params);
@@ -86,6 +85,12 @@ class CallKitProvider {
 
     await FlutterIosCallKit.endCall(_uuid!);
     debugPrint('🟩 CallKitProvider: end Current Call');
+  }
+
+  Future<void> setCallConnected() async {
+
+    await FlutterIosCallKit.setCallConnected(_uuid!);
+    debugPrint('🟩 CallKitProvider: setCallConnected');
   }
 
   Future<void> endAllCalls(CallId callId) async {
