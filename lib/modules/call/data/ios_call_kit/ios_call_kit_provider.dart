@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_ios_call_kit/entities/entities.dart';
 import 'package:flutter_ios_call_kit/flutter_ios_call_kit.dart';
 import 'package:get/get.dart';
@@ -55,7 +56,7 @@ class CallKitProvider {
         appName: "Heyo",
         type: (callInfo.first.isAudioCall) ? 0 : 1,);
     await FlutterIosCallKit.showCallkitIncoming(params);
-    print('🟩 IosCallController: incoming Call');
+    debugPrint('🟩 CallKitProvider: incoming Call');
   }
 
   Future<void> makeCall(CallId callId, UserModel user) async {
@@ -66,46 +67,48 @@ class CallKitProvider {
       nameCaller: user.nickname.isEmpty
           ? user.coreId.shortenCoreId
           : user.nickname.tr,
-      handle: '0123456789',
+      handle: user.coreId.shortenCoreId,
       type: 1,
       extra: <String, dynamic>{'userId': user.coreId},
-      ios: const IOSParams(handleType: 'number'),
+      ios: const IOSParams(handleType: 'generic')
     );
     await FlutterIosCallKit.startCall(params);
-    print('🟩 IosCallController: make Call');
+    debugPrint('🟩 CallKitProvider: make Call');
   }
 
   Future<void> activeCalls() async {
 
     var calls = await FlutterIosCallKit.activeCalls();
-    print('🟩 IosCallController: active Call');
+    debugPrint('🟩 CallKitProvider: active Call');
   }
 
   Future<void> endCurrentCall() async {
 
     await FlutterIosCallKit.endCall(_uuid!);
-    print('🟩 IosCallController: end Current Call');
+    debugPrint('🟩 CallKitProvider: end Current Call');
   }
 
-  Future<void> endAllCalls() async {
+  Future<void> endAllCalls(CallId callId) async {
 
     await callRepository.endOrCancelCall(callId);
     await FlutterIosCallKit.endAllCalls();
-    print('🟩 IosCallController: end All Calls');
+    debugPrint('🟩 CallKitProvider: end All Calls');
   }
 
   Future<void> getDevicePushTokenVoIP() async {
-    var devicePushTokenVoIP = await FlutterIosCallKit.getDevicePushTokenVoIP();
-    print(devicePushTokenVoIP);
-    print('🟩 IosCallController: get Device Push Token VoIP');
+
+    final devicePushTokenVoIP = await FlutterIosCallKit.getDevicePushTokenVoIP();
+    debugPrint('🟩 CallKitProvider:  Push Token VoIP');
+    debugPrint('------------------ Push Token VoIP ---------------------');
+    debugPrint(devicePushTokenVoIP.toString());
   }
 
   @override
-  Future<void> declineCall() async {
+  Future<void> declineCall(CallId callId) async {
 
     await callRepository.endOrCancelCall(callId);
     await FlutterIosCallKit.endCall(_uuid);
-    print('🟩 IosCallController: declineCall');
+    debugPrint('🟩 CallKitProvider: declineCall');
   }
 
   Future<void> acceptCall() async {
@@ -120,40 +123,35 @@ class CallKitProvider {
         members: callInfo.map((e) => e.remotePeer.remoteCoreId).toList(),
       ),
     );
-    print("🟩 acceptCall");
+    debugPrint("🟩 CallKitProvider: acceptCall");
   }
 
   Future<void> listenerEvent(void Function(CallEvent) callback) async {
     try {
       FlutterIosCallKit.onEvent.listen((event) async {
-        print('🟩 IosCallController: event: $event');
+
+        debugPrint('🟩 CallKitProvider: event: $event');
         _onNewEventRecived(event!);
 
         switch (event!.event) {
           case Event.actionCallIncoming:
             // TODO: received an incoming call
-            print("🟩 IosCallController: Event.actionCallIncoming");
             break;
           case Event.actionCallStart:
             // TODO: started an outgoing call
             // TODO: show screen calling in Flutter
-            print("🟩 IosCallController: Event.actionCallStart");
             break;
           case Event.actionCallAccept:
             // TODO: accepted an incoming call
-            print("🟩 IosCallController: Event.actionCallAccept");
             acceptCall();
             break;
           case Event.actionCallDecline:
             // TODO: declined an incoming call
-            print("🟩 IosCallController: Event.actionCallDecline");
             callRepository.rejectIncomingCall(callId);
             await FlutterIosCallKit.endCall(_uuid);
             break;
           case Event.actionCallEnded:
             // TODO: ended an incoming/outgoing call
-            print("🟩 IosCallController: Event.actionCallEnded");
-            // callRepository.endOrCancelCall(callId);
             await FlutterIosCallKit.endCall(_uuid);
             break;
           case Event.actionCallTimeout:
@@ -211,7 +209,7 @@ Future<void> showMockCallkitIncoming(String uuid) async {
     extra: <String, dynamic>{'userId': '1a2b3c4d'},
     headers: <String, dynamic>{'apiKey': 'Abc@123!', 'platform': 'flutter'},
     ios: const IOSParams(
-      iconName: 'CallKitLogo',
+      iconName: 'AppIcon',
       handleType: '',
       supportsVideo: true,
       maximumCallGroups: 2,

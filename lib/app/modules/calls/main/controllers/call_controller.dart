@@ -152,20 +152,22 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       duration: const Duration(milliseconds: 400),
     );
 
-    iOSCallKitProvider.onCallKitNewEvent = (event) {
+    if (Platform.isIOS){
 
-      switch (event.event) {
-        case Event.actionCallEnded:
-          print("✅ CallController: Event.actionCallEnded");
-          endCall();
-        case Event.actionCallToggleMute:
+      iOSCallKitProvider.onCallKitNewEvent = (event) {
+
+        debugPrint('➡️ CallController: onCallKitNewEvent');
+        switch (event.event) {
+          case Event.actionCallEnded:
+            endCall();
+          case Event.actionCallToggleMute:
           // TODO: only iOS
-          print("✅ CallController: Event.actionCallToggleMute");
-          toggleMuteMic();
-        default:
-          print('✅ CallController: unhandle event');
-      }
-    };
+            toggleMuteMic();
+          default:
+        }
+      };
+    }
+
   }
 
   void startCallTimer() {
@@ -403,16 +405,21 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   void switchAudioSource() {}
 
   Future<void> endCall() async {
+
     if (args.callId == null) {
       await callRepository.endOrCancelCall(requestedCallId);
+      if (Platform.isIOS){
+        await iOSCallKitProvider.endAllCalls(requestedCallId);
+        debugPrint('➡️ CallController: endCall');
+      }
     } else {
       await callRepository.endOrCancelCall(args.callId!);
+      if (Platform.isIOS){
+        await iOSCallKitProvider.endAllCalls(args.callId!);
+        debugPrint('➡️ CallController: endCall');
+      }
     }
     _stopWatingBeep();
-    if (Platform.isIOS){
-      await iOSCallKitProvider.endAllCalls();
-      debugPrint('➡️ CallController: endCall');
-    }
     Get.back();
   }
 
