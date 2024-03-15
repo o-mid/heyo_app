@@ -6,17 +6,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
 import 'package:heyo/app/modules/shared/bindings/initial_bindings.dart';
 import 'package:heyo/app/modules/shared/utils/constants/strings_constant.dart';
 import 'package:heyo/app/routes/app_pages.dart';
+import 'package:heyo/core/di/injector_provider.dart';
 import 'package:heyo/firebase_options.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:heyo/modules/call/data/call_background_request.dart';
 import 'package:heyo/modules/call/data/notification_processor.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -27,6 +28,8 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   InitialBindings().dependencies();
+  // Get_it DI setup
+  await setupInjection();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
