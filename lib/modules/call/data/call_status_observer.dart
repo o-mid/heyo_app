@@ -61,7 +61,7 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
         if (state == CurrentCallStatus.end || state == CurrentCallStatus.none) {
           // TODO: - fix it later
           if (Platform.isIOS) {
-            await iOSCallKitProvider.declineCall();
+            await iOSCallKitProvider.declineCall(callId);
           }
           if (Get.currentRoute == Routes.CALL) {
            Get.back();
