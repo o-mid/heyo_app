@@ -579,14 +579,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.3.2"
-  flutter_hooks:
-    dependency: transitive
-    description:
-      name: flutter_hooks
-      sha256: cde36b12f7188c85286fba9b38cc5a902e7279f36dd676967106c041dc9dde70
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.20.5"
   flutter_ios_call_kit:
     dependency: "direct main"
     description:
@@ -732,13 +724,13 @@ packages:
     source: hosted
     version: "3.2.0"
   flutter_riverpod:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_riverpod
-      sha256: "4bce556b7ecbfea26109638d5237684538d4abc509d253e6c5c4c5733b360098"
+      sha256: "0f1974eff5bbe774bf1d870e406fc6f29e3d6f1c46bd9c58e7172ff68a785d7d"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.10"
+    version: "2.5.1"
   flutter_screenutil:
     dependency: "direct main"
     description:
@@ -917,6 +909,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.6.6"
+  get_it:
+    dependency: "direct main"
+    description:
+      name: get_it
+      sha256: e6017ce7fdeaf218dc51a100344d8cb70134b80e28b760f8bb23c242437bafd7
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.6.7"
   glob:
     dependency: transitive
     description:
@@ -925,6 +925,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  go_router:
+    dependency: "direct main"
+    description:
+      name: go_router
+      sha256: "170c46e237d6eb0e6e9f0e8b3f56101e14fb64f787016e42edd74c39cf8b176a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "13.2.0"
   google_polyline_algorithm:
     dependency: transitive
     description:
@@ -958,14 +966,6 @@ packages:
       url: "git@ssh.git.energy:heyo/heyo_wifi_direct.git"
     source: git
     version: "0.0.1"
-  hooks_riverpod:
-    dependency: "direct main"
-    description:
-      name: hooks_riverpod
-      sha256: "758b07eba336e3cbacbd81dba481f2228a14102083fdde07045e8514e8054c49"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.4.10"
   html:
     dependency: transitive
     description:
@@ -1514,10 +1514,10 @@ packages:
     dependency: transitive
     description:
       name: riverpod
-      sha256: "548e2192eb7aeb826eb89387f814edb76594f3363e2c0bb99dd733d795ba3589"
+      sha256: f21b32ffd26a36555e501b04f4a5dca43ed59e16343f1a30c13632b2351dfa4d
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.0"
+    version: "2.5.1"
   routing_client_dart:
     dependency: transitive
     description:

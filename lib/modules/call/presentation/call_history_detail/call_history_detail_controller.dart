@@ -2,38 +2,31 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
-import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_provider.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
-import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
+import 'package:heyo/core/di/injector_provider.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:heyo/modules/call/presentation/call_history/call_history_participant_view_model/call_history_participant_view_model.dart';
 import 'package:heyo/modules/call/presentation/call_history/call_history_view_model/call_history_view_model.dart';
 import 'package:heyo/modules/call/presentation/call_history/call_utils.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final callHistoryDetailNotifierProvider = AutoDisposeAsyncNotifierProvider<
     CallHistoryDetailController, CallHistoryViewModel?>(
   () => CallHistoryDetailController(
-    callHistoryRepo: CallHistoryRepo(
-      callHistoryProvider: CallHistoryProvider(
-        appDatabaseProvider: Get.find<AppDatabaseProvider>(),
-      ),
-    ),
-    contactNameUseCase: ContactNameUseCase(
-      contactRepository: Get.find(),
-    ),
-    contactRepository: Get.find(),
+    callHistoryRepo: inject.get<CallHistoryRepo>(),
+    contactNameUseCase: inject.get<ContactNameUseCase>(),
+    contactRepository: inject.get<ContactRepository>(),
   ),
 );
 

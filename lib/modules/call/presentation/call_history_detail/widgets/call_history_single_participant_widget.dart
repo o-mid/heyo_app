@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -9,7 +10,6 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:heyo/modules/call/presentation/call_history_detail/call_history_detail_controller.dart';
 import 'package:heyo/modules/call/presentation/call_history_detail/widgets/history_call_log_widget.dart';
 import 'package:heyo/modules/call/presentation/call_history_detail/widgets/single_participant_header_widget.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class CallHistorySingleParticipantWidget extends ConsumerWidget {
   const CallHistorySingleParticipantWidget({super.key});

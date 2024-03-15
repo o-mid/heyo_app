@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/utils.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/widgets/animate_list_widget.dart';
@@ -12,7 +13,6 @@ import 'package:heyo/modules/call/presentation/call_history/widgets/call_history
 import 'package:heyo/modules/call/presentation/call_history/widgets/delete_all_calls_bottom_sheet.dart';
 import 'package:heyo/modules/call/presentation/call_history/widgets/empty_call_history_widget.dart';
 import 'package:heyo/modules/core-ui/widgets/bottom_sheet_widget.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class CallHistoryPage extends ConsumerWidget {
   const CallHistoryPage({super.key});
