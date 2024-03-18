@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/bindings/global_bindings.dart';
@@ -18,8 +19,7 @@ import 'modules/call/data/call_background_request.dart';
 import 'app/modules/shared/utils/constants/strings_constant.dart';
 import 'firebase_options.dart';
 
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -61,8 +61,7 @@ void firebaseSetup() {
 }
 
 void localNotificationSetup() {
-  const initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
+  const initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
   final initializationSettingsDarwin = DarwinInitializationSettings(
     notificationCategories: [
       DarwinNotificationCategory(
@@ -101,36 +100,38 @@ void localNotificationSetup() {
 
 void initApp() {
   runApp(
-    ScreenUtilInit(
-      //  Width and height from figma design
-      designSize: const Size(375, 712),
+    ProviderScope(
+      child: ScreenUtilInit(
+        //  Width and height from figma design
+        designSize: const Size(375, 712),
 
-      builder: (_, child) => GetMaterialApp(
-        navigatorObservers: [
-          SentryNavigatorObserver(),
-        ],
+        builder: (_, child) => GetMaterialApp(
+          navigatorObservers: [
+            SentryNavigatorObserver(),
+          ],
 
-        /// about ```translationsKeys``` see the Getx package on internationalization https://pub.dev/packages/get#internationalization
-        // translationsKeys: AppTranslation.translations,
-        title: 'Heyo',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(useMaterial3: false),
-        locale: const Locale('en', 'EN'),
-        fallbackLocale: const Locale(
-          'en',
-          'EN',
+          /// about ```translationsKeys``` see the Getx package on internationalization https://pub.dev/packages/get#internationalization
+          // translationsKeys: AppTranslation.translations,
+          title: 'Heyo',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(useMaterial3: false),
+          locale: const Locale('en', 'EN'),
+          fallbackLocale: const Locale(
+            'en',
+            'EN',
+          ),
+
+          translationsKeys: AppTranslation.translations,
+          builder: (context, child) {
+            /// we use this widget to have global overlay over the app, like a global loading. etc
+            return Container(child: child);
+          },
+
+          /// we use this for any use of Controllers that need to be put in the ```Get``` state manager and live through the life cycle of the application.
+          initialBinding: GlobalBindings(),
+          initialRoute: AppPages.INITIAL,
+          getPages: AppPages.routes,
         ),
-
-        translationsKeys: AppTranslation.translations,
-        builder: (context, child) {
-          /// we use this widget to have global overlay over the app, like a global loading. etc
-          return Container(child: child);
-        },
-
-        /// we use this for any use of Controllers that need to be put in the ```Get``` state manager and live through the life cycle of the application.
-        initialBinding: GlobalBindings(),
-        initialRoute: AppPages.INITIAL,
-        getPages: AppPages.routes,
       ),
     ),
   );
