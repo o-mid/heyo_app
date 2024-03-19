@@ -1,38 +1,41 @@
 import 'package:get_it/get_it.dart';
-import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_abstract_provider.dart';
-import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_provider.dart';
-import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
-import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
-import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
-import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provider.dart';
+import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
+import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import 'package:heyo/app/modules/shared/controllers/live_location_controller.dart';
+import 'package:heyo/app/modules/shared/controllers/user_preview_controller.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
-import 'package:heyo/app/modules/shared/data/repository/db/cache_contractor.dart';
-import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart';
+import 'package:heyo/core/di/account_injector.dart';
+import 'package:heyo/core/di/application_injector.dart';
+import 'package:heyo/core/di/call_injector.dart';
+import 'package:heyo/core/di/messaging_injector.dart';
+import 'package:heyo/core/di/network_injector.dart';
+import 'package:heyo/core/di/notification_injector.dart';
+import 'package:heyo/core/di/p2p_injector.dart';
+import 'package:heyo/core/di/storage_injector.dart';
 
 final GetIt inject = GetIt.instance;
 
 Future<void> setupInjection() async {
-  // Register dependencies first
-  inject
-    ..registerSingleton<AppDatabaseProvider>(AppDatabaseProvider())
-    ..registerSingleton<UserProvider>(
-      UserProvider(appDatabaseProvider: inject.get()),
-    )
-    ..registerSingleton<CacheContractor>(
-      CacheRepository(userProvider: inject.get()),
-    )
-    ..registerSingleton<CallHistoryAbstractProvider>(
-      CallHistoryProvider(appDatabaseProvider: inject.get()),
-    )
-    ..registerSingleton<ContactRepository>(
-      ContactRepository(cacheContractor: inject.get()),
-    )
-    ..registerSingleton<ContactNameUseCase>(
-      ContactNameUseCase(contactRepository: inject.get()),
-    )
+  StorageInjector().executeHighPriorityInjector();
+  AccountInjector().executeHighPriorityInjector();
+  P2PInjector().executeHighPriorityInjector();
+  NetworkInjector().executeHighPriorityInjector();
+  MessagingInjector().executeHighPriorityInjector();
 
-    // Register repositories and use cases
-    ..registerSingleton<CallHistoryRepo>(
-      CallHistoryRepo(callHistoryProvider: inject.get()),
+  ApplicationInjector().executeNormalPriorityInjector();
+  AccountInjector().executeNormalPriorityInjector();
+  P2PInjector().executeNormalPriorityInjector();
+  NotificationInjector().executeNormalPriorityInjector();
+  CallInjector().executeNormalPriorityInjector();
+  MessagingInjector().executeNormalPriorityInjector();
+
+  inject
+    ..registerSingleton(LiveLocationController())
+    ..registerSingleton(
+      UserPreviewController(
+        contactRepository: inject.get<ContactRepository>(),
+        callHistoryRepo: inject.get<CallHistoryAbstractRepo>(),
+        chatHistoryRepo: inject.get<ChatHistoryLocalAbstractRepo>(),
+      ),
     );
 }
