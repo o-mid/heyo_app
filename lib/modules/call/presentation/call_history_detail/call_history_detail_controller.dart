@@ -24,7 +24,7 @@ import 'package:heyo/modules/call/presentation/call_history/call_utils.dart';
 final callHistoryDetailNotifierProvider = AutoDisposeAsyncNotifierProvider<
     CallHistoryDetailController, CallHistoryViewModel?>(
   () => CallHistoryDetailController(
-    callHistoryRepo: inject.get<CallHistoryRepo>(),
+    callHistoryRepo: inject.get<CallHistoryAbstractRepo>(),
     contactNameUseCase: inject.get<ContactNameUseCase>(),
     contactRepository: inject.get<ContactRepository>(),
   ),
