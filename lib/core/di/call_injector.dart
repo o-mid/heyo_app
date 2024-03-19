@@ -4,11 +4,6 @@ import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_histo
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 import 'package:heyo/app/modules/shared/controllers/call_history_observer.dart';
-import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
-import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provider.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
-import 'package:heyo/app/modules/shared/data/repository/db/cache_contractor.dart';
-import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart';
 import 'package:heyo/core/di/injector_provider.dart';
 import 'package:heyo/core/di/priority_injector_interface.dart';
 import 'package:heyo/modules/call/data/call_requests_processor.dart';
