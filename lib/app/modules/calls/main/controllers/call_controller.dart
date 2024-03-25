@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_beep/flutter_beep.dart';
+import 'package:flutter_ios_call_kit/entities/call_event.dart';
 import 'package:get/get.dart' hide navigator;
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:heyo/modules/call/data/ios_call_kit/ios_call_kit_provider.dart';
 import 'package:heyo/modules/call/data/media_sources.dart';
 import 'package:heyo/modules/call/domain/call_repository.dart';
 import 'package:heyo/modules/call/domain/models.dart';
@@ -34,12 +37,14 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     required this.accountInfo,
     required this.getContactUserUseCase,
     required this.contactAvailabilityUseCase,
+    required this.iOSCallKitProvider,
   });
 
   final CallRepository callRepository;
   final AccountRepository accountInfo;
   final GetContactUserUseCase getContactUserUseCase;
   final ContactAvailabilityUseCase contactAvailabilityUseCase;
+  final CallKitProvider iOSCallKitProvider;
 
   //* CallViewArgumentsModel will not effect the UI
   late CallViewArgumentsModel args;
@@ -146,6 +151,23 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       vsync: this,
       duration: const Duration(milliseconds: 400),
     );
+
+    if (Platform.isIOS){
+
+      iOSCallKitProvider.onCallKitNewEvent = (event) {
+
+        debugPrint('➡️ CallController: onCallKitNewEvent');
+        switch (event.event) {
+          case Event.actionCallEnded:
+            endCall();
+          case Event.actionCallToggleMute:
+          // TODO: only iOS
+            toggleMuteMic();
+          default:
+        }
+      };
+    }
+
   }
 
   void startCallTimer() {
@@ -193,6 +215,10 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       args.members.first,
       args.isAudioCall,
     );
+
+    if (Platform.isIOS){
+      await iOSCallKitProvider.makeCall(requestedCallId, args.isAudioCall, args.members);
+    }
 
     isInCall.value = false;
     _playWatingBeep();
@@ -345,6 +371,9 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
           isInCall.value = true;
           _stopWatingBeep();
           startCallTimer();
+          if (Platform.isIOS){
+            iOSCallKitProvider.setCallConnected();
+          }
         }
 
         onNewParticipateReceived(callStateView);
@@ -383,10 +412,19 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   void switchAudioSource() {}
 
   Future<void> endCall() async {
+
     if (args.callId == null) {
       await callRepository.endOrCancelCall(requestedCallId);
+      if (Platform.isIOS){
+        await iOSCallKitProvider.endAllCalls(requestedCallId);
+        debugPrint('➡️ CallController: endCall');
+      }
     } else {
       await callRepository.endOrCancelCall(args.callId!);
+      if (Platform.isIOS){
+        await iOSCallKitProvider.endAllCalls(args.callId!);
+        debugPrint('➡️ CallController: endCall');
+      }
     }
     _stopWatingBeep();
     Get.back();
