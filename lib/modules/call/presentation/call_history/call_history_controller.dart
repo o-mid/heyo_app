@@ -14,8 +14,8 @@ import 'package:heyo/modules/call/presentation/call_history/call_history_view_mo
 import 'package:heyo/modules/call/presentation/call_history/call_utils.dart';
 import 'package:heyo/modules/call/presentation/call_history/widgets/call_history_list_tile_widget.dart';
 
-final callHistoryNotifierProvider = AutoDisposeAsyncNotifierProvider<
-    CallHistoryController, List<CallHistoryViewModel>>(
+final callHistoryNotifierProvider =
+    AsyncNotifierProvider<CallHistoryController, List<CallHistoryViewModel>>(
   () => CallHistoryController(
     callHistoryRepo: inject.get<CallHistoryAbstractRepo>(),
     contactNameUseCase: inject.get<ContactNameUseCase>(),
@@ -23,8 +23,7 @@ final callHistoryNotifierProvider = AutoDisposeAsyncNotifierProvider<
   ),
 );
 
-class CallHistoryController
-    extends AutoDisposeAsyncNotifier<List<CallHistoryViewModel>> {
+class CallHistoryController extends AsyncNotifier<List<CallHistoryViewModel>> {
   CallHistoryController({
     required this.callHistoryRepo,
     required this.contactNameUseCase,
