@@ -9,10 +9,10 @@ import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/core/di/injector_provider.dart';
-import 'package:heyo/modules/call/presentation/call_history/call_history_participant_view_model/call_history_participant_view_model.dart';
-import 'package:heyo/modules/call/presentation/call_history/call_history_view_model/call_history_view_model.dart';
-import 'package:heyo/modules/call/presentation/call_history/call_utils.dart';
-import 'package:heyo/modules/call/presentation/call_history/widgets/call_history_list_tile_widget.dart';
+import 'package:heyo/modules/features/call_history/call_utils.dart';
+import 'package:heyo/modules/features/call_history/models/call_history_participant_view_model/call_history_participant_view_model.dart';
+import 'package:heyo/modules/features/call_history/models/call_history_view_model/call_history_view_model.dart';
+import 'package:heyo/modules/features/call_history/widgets/call_history_list_tile_widget.dart';
 
 final callHistoryNotifierProvider =
     AsyncNotifierProvider<CallHistoryController, List<CallHistoryViewModel>>(

@@ -11,8 +11,8 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/app/modules/shared/widgets/circle_icon_button.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
-import 'package:heyo/modules/call/presentation/call_history_detail/call_history_detail_controller.dart';
-import 'package:heyo/modules/call/presentation/call_history_detail/widgets/call_history_detail_avatar_widget.dart';
+import 'package:heyo/modules/features/call_history/controllers/call_history_detail_controller.dart';
+import 'package:heyo/modules/features/call_history/widgets/call_history_detail_avatar_widget.dart';
 
 class MultiParticipantHeaderWidget extends ConsumerWidget {
   const MultiParticipantHeaderWidget({super.key});

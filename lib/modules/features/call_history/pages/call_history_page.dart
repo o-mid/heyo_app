@@ -7,12 +7,12 @@ import 'package:heyo/app/modules/shared/widgets/appbar_widget.dart';
 import 'package:heyo/app/modules/shared/widgets/connection_status.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-import 'package:heyo/modules/call/presentation/call_history/call_history_controller.dart';
-import 'package:heyo/modules/call/presentation/call_history/widgets/call_history_list_tile_widget.dart';
-import 'package:heyo/modules/call/presentation/call_history/widgets/call_history_loading_widget.dart';
-import 'package:heyo/modules/call/presentation/call_history/widgets/delete_all_calls_bottom_sheet.dart';
-import 'package:heyo/modules/call/presentation/call_history/widgets/empty_call_history_widget.dart';
 import 'package:heyo/modules/core-ui/widgets/bottom_sheet_widget.dart';
+import 'package:heyo/modules/features/call_history/controllers/call_history_controller.dart';
+import 'package:heyo/modules/features/call_history/widgets/call_history_list_tile_widget.dart';
+import 'package:heyo/modules/features/call_history/widgets/call_history_loading_widget.dart';
+import 'package:heyo/modules/features/call_history/widgets/delete_all_calls_bottom_sheet.dart';
+import 'package:heyo/modules/features/call_history/widgets/empty_call_history_widget.dart';
 
 class CallHistoryPage extends ConsumerWidget {
   const CallHistoryPage({super.key});

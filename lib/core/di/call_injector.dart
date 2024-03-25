@@ -14,7 +14,7 @@ import 'package:heyo/modules/call/data/rtc/multiple_call_connection_handler.dart
 import 'package:heyo/modules/call/data/rtc/single_call_web_rtc_connection.dart';
 import 'package:heyo/modules/call/data/signaling/call_signaling.dart';
 import 'package:heyo/modules/call/data/web_rtc_call_repository.dart';
-import 'package:heyo/modules/call/presentation/call_history/call_history_controller.dart';
+import 'package:heyo/modules/features/call_history/controllers/call_history_controller.dart';
 
 class CallInjector with NormalPriorityInjector {
   @override

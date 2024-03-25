@@ -16,9 +16,9 @@ import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/core/di/injector_provider.dart';
 import 'package:heyo/generated/locales.g.dart';
-import 'package:heyo/modules/call/presentation/call_history/call_history_participant_view_model/call_history_participant_view_model.dart';
-import 'package:heyo/modules/call/presentation/call_history/call_history_view_model/call_history_view_model.dart';
-import 'package:heyo/modules/call/presentation/call_history/call_utils.dart';
+import 'package:heyo/modules/features/call_history/call_utils.dart';
+import 'package:heyo/modules/features/call_history/models/call_history_participant_view_model/call_history_participant_view_model.dart';
+import 'package:heyo/modules/features/call_history/models/call_history_view_model/call_history_view_model.dart';
 
 final callHistoryDetailNotifierProvider = AutoDisposeAsyncNotifierProvider<
     CallHistoryDetailController, CallHistoryViewModel?>(

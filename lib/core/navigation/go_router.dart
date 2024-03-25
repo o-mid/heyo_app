@@ -27,9 +27,9 @@ import 'package:heyo/app/modules/wallet/views/wallet_view.dart';
 import 'package:heyo/app/modules/wifi_direct/views/wifi_direct_view.dart';
 import 'package:heyo/app/modules/wifi_direct_connect/views/wifi_direct_connect_view.dart';
 import 'package:heyo/modules/call/presentation/add_participate/add_participate_page.dart';
-import 'package:heyo/modules/call/presentation/call_history/call_history_page.dart';
-import 'package:heyo/modules/call/presentation/call_history_detail/call_history_detail_page.dart';
 import 'package:heyo/modules/call/presentation/incoming_call/incoming_call_page.dart';
+import 'package:heyo/modules/features/call_history/pages/call_history_detail_page.dart';
+import 'package:heyo/modules/features/call_history/pages/call_history_page.dart';
 
 part 'route_paths.dart';
 

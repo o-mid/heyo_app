@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:heyo/generated/locales.g.dart';
 
-import 'package:heyo/modules/call/presentation/call_history/call_history_controller.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/widgets/call_status_icon_and_date.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
@@ -13,9 +11,11 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/app/modules/shared/widgets/slidable_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
-import 'package:heyo/modules/call/presentation/call_history/call_history_view_model/call_history_view_model.dart';
-import 'package:heyo/modules/call/presentation/call_history/widgets/call_history_avatar_widget.dart';
+import 'package:heyo/generated/locales.g.dart';
 import 'package:heyo/modules/core-ui/widgets/custom_dialog_widget.dart';
+import 'package:heyo/modules/features/call_history/controllers/call_history_controller.dart';
+import 'package:heyo/modules/features/call_history/models/call_history_view_model/call_history_view_model.dart';
+import 'package:heyo/modules/features/call_history/widgets/call_history_avatar_widget.dart';
 
 class CallHistoryListTitleWidget extends GetView<CallHistoryController> {
   const CallHistoryListTitleWidget({required this.call, super.key});

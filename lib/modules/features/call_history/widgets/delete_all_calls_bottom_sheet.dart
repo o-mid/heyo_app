@@ -7,8 +7,8 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/widgets/bottom_sheet.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-import 'package:heyo/modules/call/presentation/call_history/call_history_controller.dart';
 import 'package:heyo/modules/core-ui/widgets/custom_dialog_widget.dart';
+import 'package:heyo/modules/features/call_history/controllers/call_history_controller.dart';
 
 class DeleteAllCallHistoryBottomSheet extends ConsumerWidget {
   const DeleteAllCallHistoryBottomSheet({super.key});

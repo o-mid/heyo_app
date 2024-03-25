@@ -7,7 +7,7 @@ import 'package:heyo/app/modules/shared/data/providers/database/app_database.dar
 import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provider.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart';
-import 'package:heyo/modules/call/presentation/call_history_detail/call_history_detail_controller.dart';
+import 'package:heyo/modules/features/call_history/controllers/call_history_detail_controller.dart';
 
 class CallHistoryDetailBinding extends Bindings {
   @override

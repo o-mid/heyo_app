@@ -1,7 +1,8 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/auth/pinCode/bindings/pin_code_binding.dart';
-import 'package:heyo/modules/call/presentation/call_history_detail/call_history_detail_page.dart';
-import 'package:heyo/modules/call/presentation/call_history_detail/di/call_history_detail_binding.dart';
+import 'package:heyo/modules/features/call_history/pages/call_history_detail_page.dart';
+import 'package:heyo/modules/features/call_history/di/call_history_detail_binding.dart';
+import 'package:heyo/modules/features/call_history/pages/call_history_page.dart';
 
 import '../modules/account/views/account_view.dart';
 import '../modules/add_contacts/bindings/add_contacts_binding.dart';
@@ -13,7 +14,6 @@ import '../modules/auth/sing-up/bindings/sing_up_binding.dart';
 import '../modules/auth/sing-up/views/sing_up_view.dart';
 import '../../modules/call/presentation/add_participate/di/add_participate_binding.dart';
 import '../../modules/call/presentation/add_participate/add_participate_page.dart';
-import '../../modules/call/presentation/call_history/call_history_page.dart';
 import '../../modules/call/presentation/incoming_call/di/incoming_call_binding.dart';
 import '../../modules/call/presentation/incoming_call/incoming_call_page.dart';
 import '../modules/calls/main/bindings/call_binding.dart';
@@ -79,7 +79,7 @@ class AppPages {
       name: _Paths.INTRO,
       page: () => IntroView(),
       binding: IntroBinding(),
-  transition: TRANSITIONS.navigation_generalPageTransition,
+      transition: TRANSITIONS.navigation_generalPageTransition,
       transitionDuration: TRANSITIONS.navigation_generalPageTransitionDurtion,
       curve: TRANSITIONS.navigation_generalPageTransitionCurve,
     ),
