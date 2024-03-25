@@ -8,9 +8,9 @@ import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
 import 'package:heyo/app/modules/shared/widgets/animate_list_widget.dart';
 import 'package:heyo/generated/locales.g.dart';
-import 'package:heyo/modules/features/call_history/controllers/call_history_detail_controller.dart';
-import 'package:heyo/modules/features/call_history/widgets/call_history_detail_list_tile_widget.dart';
-import 'package:heyo/modules/features/call_history/widgets/multi_participant_header_widget.dart';
+import 'package:heyo/modules/features/call_history/presentation/controllers/call_history_detail_controller.dart';
+import 'package:heyo/modules/features/call_history/presentation/widgets/call_history_detail_list_tile_widget.dart';
+import 'package:heyo/modules/features/call_history/presentation/widgets/multi_participant_header_widget.dart';
 
 class CallHistoryMultiParticipantWidget extends ConsumerWidget {
   const CallHistoryMultiParticipantWidget({super.key});

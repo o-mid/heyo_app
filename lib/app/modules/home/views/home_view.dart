@@ -9,7 +9,7 @@ import 'package:heyo/app/modules/shared/widgets/bottom_navigation_bar.dart';
 import 'package:heyo/app/modules/wallet/views/wallet_view.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
-import 'package:heyo/modules/features/call_history/pages/call_history_page.dart';
+import 'package:heyo/modules/features/call_history/presentation/pages/call_history_page.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {

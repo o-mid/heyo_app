@@ -8,8 +8,8 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:heyo/modules/core-ui/widgets/custom_dialog_widget.dart';
-import 'package:heyo/modules/features/call_history/controllers/call_history_detail_controller.dart';
-import 'package:heyo/modules/features/call_history/models/call_history_participant_view_model/call_history_participant_view_model.dart';
+import 'package:heyo/modules/features/call_history/presentation/controllers/call_history_detail_controller.dart';
+import 'package:heyo/modules/features/call_history/presentation/models/call_history_participant_view_model/call_history_participant_view_model.dart';
 
 class CallHistoryAppBarBottomSheetWidget extends ConsumerStatefulWidget {
   const CallHistoryAppBarBottomSheetWidget({

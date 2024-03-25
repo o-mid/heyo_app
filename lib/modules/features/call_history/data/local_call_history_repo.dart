@@ -1,9 +1,9 @@
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_abstract_provider.dart';
-import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
+import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
 
-class CallHistoryRepo implements CallHistoryAbstractRepo {
-  CallHistoryRepo({required this.callHistoryProvider});
+class LocalCallHistoryRepo implements CallHistoryRepo {
+  LocalCallHistoryRepo({required this.callHistoryProvider});
 
   final CallHistoryAbstractProvider callHistoryProvider;
 

@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heyo/app/modules/calls/shared/widgets/call_status_icon_and_date.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
-import 'package:heyo/modules/features/call_history/models/call_history_view_model/call_history_view_model.dart';
+import 'package:heyo/modules/features/call_history/presentation/models/call_history_view_model/call_history_view_model.dart';
 
 class HistoryCallLogWidget extends StatelessWidget {
   const HistoryCallLogWidget({required this.call, super.key});

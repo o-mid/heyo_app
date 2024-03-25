@@ -7,11 +7,11 @@ import 'package:heyo/app/modules/shared/widgets/appbar_widget.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:heyo/modules/core-ui/widgets/bottom_sheet_widget.dart';
-import 'package:heyo/modules/features/call_history/controllers/call_history_detail_controller.dart';
-import 'package:heyo/modules/features/call_history/widgets/call_history_appbar_bottom_sheet.dart';
-import 'package:heyo/modules/features/call_history/widgets/call_history_loading_widget.dart';
-import 'package:heyo/modules/features/call_history/widgets/call_history_multi_participant_widget.dart';
-import 'package:heyo/modules/features/call_history/widgets/call_history_single_participant_widget.dart';
+import 'package:heyo/modules/features/call_history/presentation/controllers/call_history_detail_controller.dart';
+import 'package:heyo/modules/features/call_history/presentation/widgets/call_history_appbar_bottom_sheet.dart';
+import 'package:heyo/modules/features/call_history/presentation/widgets/call_history_loading_widget.dart';
+import 'package:heyo/modules/features/call_history/presentation/widgets/call_history_multi_participant_widget.dart';
+import 'package:heyo/modules/features/call_history/presentation/widgets/call_history_single_participant_widget.dart';
 
 class CallHistoryDetailPage extends ConsumerWidget {
   const CallHistoryDetailPage({super.key});

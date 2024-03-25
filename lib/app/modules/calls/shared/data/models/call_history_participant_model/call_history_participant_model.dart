@@ -3,7 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
-import 'package:heyo/modules/features/call_history/models/call_history_participant_view_model/call_history_participant_view_model.dart';
+import 'package:heyo/modules/features/call_history/presentation/models/call_history_participant_view_model/call_history_participant_view_model.dart';
 
 part 'call_history_participant_model.freezed.dart';
 part 'call_history_participant_model.g.dart';

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:heyo/modules/call/data/call_status_observer.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
-import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
+import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
@@ -17,7 +17,7 @@ class CallHistoryObserver extends GetxController {
     required this.contactRepository,
   });
 
-  final CallHistoryAbstractRepo callHistoryRepo;
+  final CallHistoryRepo callHistoryRepo;
   final CallStatusObserver callStatusObserver;
   final ContactRepository contactRepository;
 

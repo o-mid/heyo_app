@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
-import 'package:heyo/modules/features/call_history/models/call_history_view_model/call_history_view_model.dart';
-import 'package:heyo/modules/features/call_history/widgets/group_call_circle_avatar.dart';
+import 'package:heyo/modules/features/call_history/presentation/models/call_history_view_model/call_history_view_model.dart';
+import 'package:heyo/modules/features/call_history/presentation/widgets/group_call_circle_avatar.dart';
 
 class CallHistoryAvatarWidget extends StatelessWidget {
   const CallHistoryAvatarWidget({required this.callHistoryModel, super.key});

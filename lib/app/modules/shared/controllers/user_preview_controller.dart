@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
+import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -18,7 +18,7 @@ class UserPreviewController extends GetxController {
 
   final ContactRepository contactRepository;
   final RxBool isWifiDirectConnection = false.obs;
-  final CallHistoryAbstractRepo callHistoryRepo;
+  final CallHistoryRepo callHistoryRepo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   RxBool isContact = false.obs;
   RxString name = ''.obs;

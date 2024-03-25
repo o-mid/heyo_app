@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:heyo/modules/features/call_history/controllers/call_history_detail_controller.dart';
-import 'package:heyo/modules/features/call_history/widgets/history_call_log_widget.dart';
+import 'package:heyo/modules/features/call_history/presentation/controllers/call_history_detail_controller.dart';
+import 'package:heyo/modules/features/call_history/presentation/widgets/history_call_log_widget.dart';
 
 class CallHistoryDetailRecentCallWidget extends ConsumerWidget {
   const CallHistoryDetailRecentCallWidget({super.key});

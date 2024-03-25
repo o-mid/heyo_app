@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/auth/pinCode/bindings/pin_code_binding.dart';
-import 'package:heyo/modules/features/call_history/pages/call_history_detail_page.dart';
+import 'package:heyo/modules/features/call_history/presentation/pages/call_history_detail_page.dart';
 import 'package:heyo/modules/features/call_history/di/call_history_detail_binding.dart';
-import 'package:heyo/modules/features/call_history/pages/call_history_page.dart';
+import 'package:heyo/modules/features/call_history/presentation/pages/call_history_page.dart';
 
 import '../modules/account/views/account_view.dart';
 import '../modules/add_contacts/bindings/add_contacts_binding.dart';

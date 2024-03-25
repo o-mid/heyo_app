@@ -1,6 +1,6 @@
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 
-abstract class CallHistoryAbstractRepo {
+abstract class CallHistoryRepo {
   Future<void> addCallToHistory(CallHistoryModel call);
 
   Future<List<CallHistoryModel>> getAllCalls();
