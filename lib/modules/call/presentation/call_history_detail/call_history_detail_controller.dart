@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
-import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
@@ -30,6 +29,13 @@ final callHistoryDetailNotifierProvider = AutoDisposeAsyncNotifierProvider<
   ),
 );
 
+final callHistoryDetailRecentCallProvider = AutoDisposeAsyncNotifierProvider<
+    CallHistoryDetailRecentCallController, List<CallHistoryViewModel>>(
+  () => CallHistoryDetailRecentCallController(
+    callHistoryRepo: inject.get<CallHistoryAbstractRepo>(),
+  ),
+);
+
 class CallHistoryDetailController
     extends AutoDisposeAsyncNotifier<CallHistoryViewModel?> {
   CallHistoryDetailController({
@@ -43,7 +49,6 @@ class CallHistoryDetailController
   final ContactRepository contactRepository;
 
   late UserCallHistoryViewArgumentsModel args;
-  List<CallHistoryViewModel> recentCalls = [];
 
   //RxBool loading = true.obs;
   //late StreamSubscription<List<UserModel>> _contactsStreamSubscription;
@@ -54,14 +59,12 @@ class CallHistoryDetailController
   FutureOr<CallHistoryViewModel?> build() {
     args = Get.arguments as UserCallHistoryViewArgumentsModel;
     unawaited(_listenToContactsToUpdateName());
-    unawaited(_listenToCallRepository());
     return getData();
   }
 
   FutureOr<CallHistoryViewModel?> getData() async {
     CallHistoryViewModel? callHistoryViewModel;
     try {
-      recentCalls = [];
       final callHistoryDataModel =
           await callHistoryRepo.getOneCall(args.callId);
 
@@ -75,28 +78,6 @@ class CallHistoryDetailController
       debugPrint(e.toString());
     }
 
-    //* If the length is equal to one it means the call is p2p
-    //* and app should show the user call history
-    if (args.participants.length == 1) {
-      recentCalls = [];
-      final calls =
-          await callHistoryRepo.getCallsFromUserId(args.participants[0]);
-
-      for (final call in calls) {
-        recentCalls.add(
-          CallHistoryViewModel(
-            callId: call.callId,
-            type: CallUtils.callStatus(call),
-            status: CallUtils.callTitle(call.status),
-            participants: [],
-            startDate: call.startDate,
-            endDate: call.endDate,
-          ),
-        );
-      }
-    }
-
-    state = AsyncData(callHistoryViewModel);
     return callHistoryViewModel;
   }
 
@@ -133,15 +114,6 @@ class CallHistoryDetailController
       state = AsyncData(
         state.value!.copyWith(participants: callHistoryNewParticipant),
       );
-    });
-  }
-
-  Future<void> _listenToCallRepository() async {
-    (await callHistoryRepo.getCallsStream()).listen((newCalls) async {
-      if (state.isLoading) {
-        return;
-      }
-      getData();
     });
   }
 
@@ -201,5 +173,66 @@ class CallHistoryDetailController
       Routes.ADD_CONTACTS,
       arguments: AddContactsViewArgumentsModel(coreId: coreId),
     );
+  }
+}
+
+class CallHistoryDetailRecentCallController
+    extends AutoDisposeAsyncNotifier<List<CallHistoryViewModel>> {
+  CallHistoryDetailRecentCallController({
+    required this.callHistoryRepo,
+  });
+
+  final CallHistoryAbstractRepo callHistoryRepo;
+
+  late UserCallHistoryViewArgumentsModel args;
+
+  //RxBool loading = true.obs;
+  //late StreamSubscription<List<UserModel>> _contactsStreamSubscription;
+
+  //RxList<CallHistoryDetailParticipantModel> participants = RxList();
+
+  @override
+  FutureOr<List<CallHistoryViewModel>> build() {
+    args = Get.arguments as UserCallHistoryViewArgumentsModel;
+
+    unawaited(_listenToCallRepository());
+    return getData();
+  }
+
+  FutureOr<List<CallHistoryViewModel>> getData() async {
+    var recentCalls = <CallHistoryViewModel>[];
+
+    //* If the length is equal to one it means the call is p2p
+    //* and app should show the user call history
+    if (args.participants.length == 1) {
+      recentCalls = [];
+      final calls =
+          await callHistoryRepo.getCallsFromUserId(args.participants[0]);
+
+      for (final call in calls) {
+        recentCalls.add(
+          CallHistoryViewModel(
+            callId: call.callId,
+            type: CallUtils.callStatus(call),
+            status: CallUtils.callTitle(call.status),
+            participants: [],
+            startDate: call.startDate,
+            endDate: call.endDate,
+          ),
+        );
+      }
+    }
+
+    state = AsyncData(recentCalls);
+    return recentCalls;
+  }
+
+  Future<void> _listenToCallRepository() async {
+    (await callHistoryRepo.getCallsStream()).listen((newCalls) async {
+      if (state.isLoading) {
+        return;
+      }
+      getData();
+    });
   }
 }

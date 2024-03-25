@@ -8,7 +8,7 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.d
 import 'package:heyo/app/modules/shared/widgets/animate_list_widget.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:heyo/modules/call/presentation/call_history_detail/call_history_detail_controller.dart';
-import 'package:heyo/modules/call/presentation/call_history_detail/widgets/history_call_log_widget.dart';
+import 'package:heyo/modules/call/presentation/call_history_detail/widgets/call_history_detail_recent_call_widget.dart';
 import 'package:heyo/modules/call/presentation/call_history_detail/widgets/single_participant_header_widget.dart';
 
 class CallHistorySingleParticipantWidget extends ConsumerWidget {
@@ -17,7 +17,6 @@ class CallHistorySingleParticipantWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final callHistory = ref.watch(callHistoryDetailNotifierProvider);
-    final controller = ref.read(callHistoryDetailNotifierProvider.notifier);
 
     return callHistory.value!.participants.isEmpty
         ? const SizedBox.shrink()
@@ -36,14 +35,7 @@ class CallHistorySingleParticipantWidget extends ConsumerWidget {
                 ),
               ),
               CustomSizes.smallSizedBoxHeight,
-              ...controller.recentCalls.map(
-                (call) => Container(
-                  width: double.infinity,
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-                  child: HistoryCallLogWidget(call: call),
-                ),
-              ),
+              const CallHistoryDetailRecentCallWidget(),
               CustomSizes.mediumSizedBoxHeight,
             ],
           );
