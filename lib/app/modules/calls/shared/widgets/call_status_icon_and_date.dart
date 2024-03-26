@@ -7,7 +7,7 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/datetime.extension.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-import 'package:heyo/modules/call/presentation/call_history/call_history_view_model/call_history_view_model.dart';
+import 'package:heyo/modules/features/call_history/presentation/models/call_history_view_model/call_history_view_model.dart';
 import 'package:intl/intl.dart';
 
 class CallStatusIconAndDate extends StatelessWidget {
