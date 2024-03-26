@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
-import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
+import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
@@ -28,7 +28,7 @@ class AddContactsController extends GetxController {
 
   final ContactRepository contactRepository;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
-  final CallHistoryAbstractRepo callHistoryRepo;
+  final CallHistoryRepo callHistoryRepo;
 
   final MessagesAbstractRepo messagesRepo;
 

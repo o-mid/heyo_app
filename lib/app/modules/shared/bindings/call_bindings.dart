@@ -5,12 +5,11 @@ import 'package:heyo/modules/call/data/rtc/multiple_call_connection_handler.dart
 import 'package:heyo/modules/call/data/rtc/single_call_web_rtc_connection.dart';
 import 'package:heyo/modules/call/data/signaling/call_signaling.dart';
 import 'package:heyo/modules/call/data/web_rtc_call_repository.dart';
-import 'package:heyo/modules/call/presentation/call_history/call_history_controller.dart';
 import 'package:heyo/modules/call/data/call_requests_processor.dart';
 import 'package:heyo/modules/call/data/call_status_observer.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_provider.dart';
-import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
-import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_repo.dart';
+import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
+import 'package:heyo/modules/features/call_history/data/local_call_history_repo.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 import 'package:heyo/app/modules/shared/bindings/priority_bindings_interface.dart';
 import 'package:heyo/app/modules/shared/controllers/call_history_observer.dart';
@@ -18,6 +17,7 @@ import 'package:heyo/app/modules/shared/data/providers/database/app_database.dar
 import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provider.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart';
+import 'package:heyo/modules/features/call_history/presentation/controllers/call_history_controller.dart';
 
 class CallBindings with NormalPriorityBindings {
   @override
@@ -70,7 +70,7 @@ class CallBindings with NormalPriorityBindings {
       // call related dependencies
       ..put(
         CallHistoryObserver(
-          callHistoryRepo: CallHistoryRepo(
+          callHistoryRepo: LocalCallHistoryRepo(
             callHistoryProvider: CallHistoryProvider(
                 appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
@@ -78,15 +78,15 @@ class CallBindings with NormalPriorityBindings {
           contactRepository: Get.find(),
         ),
       )
-      ..put<CallHistoryAbstractRepo>(
-        CallHistoryRepo(
+      ..put<CallHistoryRepo>(
+        LocalCallHistoryRepo(
           callHistoryProvider: CallHistoryProvider(
               appDatabaseProvider: Get.find<AppDatabaseProvider>()),
         ),
       )
       ..put(
         CallHistoryController(
-          callHistoryRepo: CallHistoryRepo(
+          callHistoryRepo: LocalCallHistoryRepo(
             callHistoryProvider: CallHistoryProvider(
               appDatabaseProvider: Get.find<AppDatabaseProvider>(),
             ),

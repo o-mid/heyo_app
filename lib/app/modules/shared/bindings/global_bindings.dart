@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/shared/data/repos/call_history/call_history_abstract_repo.dart';
+import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import 'package:heyo/app/modules/shared/bindings/account_bindings.dart';
 import 'package:heyo/app/modules/shared/bindings/application_bindings.dart';
@@ -25,7 +25,7 @@ class GlobalBindings extends Bindings {
       ..put(LiveLocationController())
       ..put(UserPreviewController(
         contactRepository: Get.find<ContactRepository>(),
-        callHistoryRepo: Get.find<CallHistoryAbstractRepo>(),
+        callHistoryRepo: Get.find<CallHistoryRepo>(),
         chatHistoryRepo: Get.find<ChatHistoryLocalAbstractRepo>(),
       ));
   }
