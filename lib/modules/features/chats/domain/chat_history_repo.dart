@@ -1,6 +1,6 @@
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 
-abstract class ChatHistoryLocalAbstractRepo {
+abstract class ChatHistoryRepo {
   Future<void> addChatToHistory(ChatModel chat);
 
   Future<List<ChatModel>> getAllChats();

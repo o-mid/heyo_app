@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
-import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
 import 'package:heyo/app/modules/chats/widgets/chat_widget.dart';
 import 'package:heyo/app/modules/chats/widgets/delete_all_chats_bottom_sheet.dart';
 import 'package:heyo/app/modules/chats/widgets/delete_chat_dialog.dart';
@@ -27,7 +27,7 @@ import '../data/models/chat_view_model/chat_view_model.dart';
 final chatsControllerProvider =
     AutoDisposeAsyncNotifierProvider<ChatsController, List<ChatViewModel>>(
   () => ChatsController(
-    chatHistoryRepo: Get.find<ChatHistoryLocalAbstractRepo>(),
+    chatHistoryRepo: Get.find<ChatHistoryRepo>(),
     messagesRepo: MessagesRepo(
       messagesProvider: MessagesProvider(
         appDatabaseProvider: Get.find<AppDatabaseProvider>(),
@@ -38,7 +38,7 @@ final chatsControllerProvider =
 );
 
 class ChatsController extends AutoDisposeAsyncNotifier<List<ChatViewModel>> {
-  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
+  final ChatHistoryRepo chatHistoryRepo;
   final MessagesAbstractRepo messagesRepo;
   final ContactRepository contactRepository;
 

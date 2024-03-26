@@ -1,12 +1,12 @@
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
-import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
 
-import '../../providers/chat_history/chat_history_abstract_provider.dart';
+import '../../../../app/modules/chats/data/providers/chat_history/chat_history_abstract_provider.dart';
 
-class ChatHistoryLocalRepo implements ChatHistoryLocalAbstractRepo {
+class LocalChatHistoryRepo implements ChatHistoryRepo {
   final ChatHistoryLocalAbstractProvider chatHistoryProvider;
 
-  ChatHistoryLocalRepo({required this.chatHistoryProvider});
+  LocalChatHistoryRepo({required this.chatHistoryProvider});
 
   @override
   Future<void> addChatToHistory(ChatModel chat) async {

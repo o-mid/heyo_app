@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
-import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
 import 'package:heyo/app/modules/shared/controllers/live_location_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/user_preview_controller.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
@@ -35,7 +35,7 @@ Future<void> setupInjection() async {
       UserPreviewController(
         contactRepository: inject.get<ContactRepository>(),
         callHistoryRepo: inject.get<CallHistoryRepo>(),
-        chatHistoryRepo: inject.get<ChatHistoryLocalAbstractRepo>(),
+        chatHistoryRepo: inject.get<ChatHistoryRepo>(),
       ),
     );
 }

@@ -15,7 +15,7 @@ import 'package:heyo/app/modules/shared/utils/screen-utils/mocks/random_avatar_i
 import 'package:tuple/tuple.dart';
 
 import '../../chats/data/models/chat_model.dart';
-import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import '../../../../modules/features/chats/domain/chat_history_repo.dart';
 import '../../shared/data/repository/account/account_repository.dart';
 import '../data/models/messages/confirm_message_model.dart';
 import '../data/models/messages/delete_message_model.dart';
@@ -30,7 +30,7 @@ import 'models/data_channel_message_model.dart';
 
 class DataHandler {
   final MessagesRepo messagesRepo;
-  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
+  final ChatHistoryRepo chatHistoryRepo;
   final NotificationsController notificationsController;
   final ContactRepository contactRepository;
   final AccountRepository accountInfoRepo;
@@ -260,9 +260,7 @@ class DataHandler {
         final messagesToUpdate = messages
             .sublist(0, index + 1)
             .where(
-              (element) =>
-                  element.isFromMe == true &&
-                  (element.status == MessageStatus.delivered),
+              (element) => element.isFromMe == true && (element.status == MessageStatus.delivered),
             )
             .toList();
         // update the status of the messages that need to be update to read

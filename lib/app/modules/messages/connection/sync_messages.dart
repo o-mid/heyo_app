@@ -1,7 +1,7 @@
 // ignore_for_file: require_trailing_commas
 
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/message_model.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/usecases/send_message_usecase.dart';
@@ -28,7 +28,7 @@ class SyncMessages {
   final P2PState p2pState;
   final MultipleConnectionHandler multipleConnectionHandler;
   final AccountRepository accountInfo;
-  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
+  final ChatHistoryRepo chatHistoryRepo;
   final MessagesAbstractRepo messagesRepo;
   final SendMessageUseCase sendMessageUseCase;
 
@@ -42,14 +42,13 @@ class SyncMessages {
     multipleConnectionHandler.onRTCSessionConnected = (rtcSession) async {
       print("syncMessages: onRTCSessionConnected: ${rtcSession.connectionId} ");
       await Future.delayed(Duration(seconds: 5));
-      List<ChatModel> userChats = await chatHistoryRepo
-          .getChatsFromUserId(rtcSession.remotePeer.remoteCoreId);
+      List<ChatModel> userChats =
+          await chatHistoryRepo.getChatsFromUserId(rtcSession.remotePeer.remoteCoreId);
 
       for (final chat in userChats) {
         final chatId = chat.id;
 
-        final List<MessageModel?> unsentMessages =
-            await messagesRepo.getUnsentMessages(chatId);
+        final List<MessageModel?> unsentMessages = await messagesRepo.getUnsentMessages(chatId);
 
         print("syncMessages: size : ${unsentMessages.length} ");
 
@@ -59,8 +58,7 @@ class SyncMessages {
           if (message != null) {
             print("syncMessages: sendMessageType: ${rtcSession.connectionId} ");
 
-            SendMessageType? sendMessageType =
-                message.getSendMessageType(chatId);
+            SendMessageType? sendMessageType = message.getSendMessageType(chatId);
             if (sendMessageType != null) {
               print("syncMessages: execute: ${rtcSession.connectionId} ");
 
@@ -68,8 +66,7 @@ class SyncMessages {
                   messageConnectionType: MessageConnectionType.RTC_DATA_CHANNEL,
                   sendMessageType: sendMessageType,
                   chatName: '',
-                  remoteCoreIds:
-                      chat.participants.map((e) => e.coreId).toList(),
+                  remoteCoreIds: chat.participants.map((e) => e.coreId).toList(),
                   isUpdate: true,
                   messageModel: message);
               print(

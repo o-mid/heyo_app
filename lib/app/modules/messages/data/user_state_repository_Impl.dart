@@ -8,13 +8,13 @@ import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
-import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import '../../../../modules/features/chats/domain/chat_history_repo.dart';
 import '../../new_chat/data/models/user_model/user_model.dart';
 import '../../shared/data/repository/contact_repository.dart';
 import '../domain/message_repository_models.dart';
 
 class UserStateRepositoryImpl implements UserStateRepository {
-  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
+  final ChatHistoryRepo chatHistoryRepo;
   final ContactRepository contactRepository;
   final MessagesAbstractRepo messagesRepo;
   final AccountRepository accountInfo;

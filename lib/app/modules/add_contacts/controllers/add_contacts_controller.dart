@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
-import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
@@ -19,15 +19,14 @@ class AddContactsController extends GetxController {
   });
 
   late AddContactsViewArgumentsModel args;
-  static String DefaultAvatarPath =
-      'https://avatars.githubusercontent.com/u/2345136?v=4';
+  static String DefaultAvatarPath = 'https://avatars.githubusercontent.com/u/2345136?v=4';
   RxString nickname = ''.obs;
   RxBool isContact = false.obs;
   RxBool isVerified = false.obs;
   TextEditingController myNicknameController = TextEditingController();
 
   final ContactRepository contactRepository;
-  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
+  final ChatHistoryRepo chatHistoryRepo;
   final CallHistoryRepo callHistoryRepo;
 
   final MessagesAbstractRepo messagesRepo;
@@ -82,9 +81,7 @@ class AddContactsController extends GetxController {
       await updateUserChatMode(
         userModel: user.copyWith(
           nickname: nickname.value,
-          name: nickname.value.isEmpty
-              ? args.coreId.shortenCoreId
-              : nickname.value,
+          name: nickname.value.isEmpty ? args.coreId.shortenCoreId : nickname.value,
           isContact: true,
         ),
       );
@@ -123,8 +120,7 @@ class AddContactsController extends GetxController {
   }
 
   Future<void> _updateChatHistory({required UserModel userModel}) async {
-    final chatHistoryList =
-        await chatHistoryRepo.getChatsFromUserId(userModel.coreId);
+    final chatHistoryList = await chatHistoryRepo.getChatsFromUserId(userModel.coreId);
 
     for (final chat in chatHistoryList) {
       final updatedParticipants = chat.participants
@@ -150,8 +146,7 @@ class AddContactsController extends GetxController {
   }
 
   Future<void> _updateCallHistory({required UserModel userModel}) async {
-    final callHistoryList =
-        await callHistoryRepo.getCallsFromUserId(userModel.coreId);
+    final callHistoryList = await callHistoryRepo.getCallsFromUserId(userModel.coreId);
 
     //* For loop for all stored call history
     for (final call in callHistoryList) {
@@ -168,8 +163,7 @@ class AddContactsController extends GetxController {
         final updatedParticipant = call.participants[index];
 
         // Create a copy of the list
-        final newParticipantList =
-            List<CallHistoryParticipantModel>.from(call.participants);
+        final newParticipantList = List<CallHistoryParticipantModel>.from(call.participants);
 
         // Replace the old item with the new one
         newParticipantList[index] = updatedParticipant;
@@ -183,9 +177,7 @@ class AddContactsController extends GetxController {
   }
 
   Future<void> _updateMessagesRepo(
-      {required String chatId,
-      required String coreId,
-      required String newSenderName}) async {
+      {required String chatId, required String coreId, required String newSenderName}) async {
     await messagesRepo.updateMessagesSenderName(
         chatId: chatId, coreId: coreId, newSenderName: newSenderName);
   }

@@ -52,7 +52,7 @@ import 'package:heyo/generated/locales.g.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import '../../../../modules/features/chats/domain/chat_history_repo.dart';
 import '../../new_chat/data/models/user_model/user_model.dart';
 import '../../shared/data/models/add_contacts_view_arguments_model.dart';
 import '../connection/wifi_direct_connection_controller.dart';
