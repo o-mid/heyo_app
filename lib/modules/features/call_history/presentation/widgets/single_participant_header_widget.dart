@@ -14,6 +14,7 @@ import 'package:heyo/app/modules/shared/widgets/curtom_circle_avatar.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/modules/features/call_history/presentation/controllers/call_history_detail_controller.dart';
+import 'package:heyo/modules/features/call_history/utils/call_history_utils.dart';
 
 class SingleParticipantHeder extends ConsumerWidget {
   const SingleParticipantHeder({super.key});
@@ -21,7 +22,7 @@ class SingleParticipantHeder extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final callHistory = ref.watch(callHistoryDetailNotifierProvider);
-    final controller = ref.read(callHistoryDetailNotifierProvider.notifier);
+
     return Column(
       children: [
         SizedBox(height: 40.h),
@@ -31,7 +32,9 @@ class SingleParticipantHeder extends ConsumerWidget {
         ),
         CustomSizes.mediumSizedBoxHeight,
         GestureDetector(
-          onTap: controller.saveCoreIdToClipboard,
+          onTap: () => CallHistoryUtils.saveCoreIdToClipboard(
+            callHistory.value!.participants[0].coreId,
+          ),
           child: Text(
             callHistory.value!.participants[0].name,
             style:
@@ -40,7 +43,9 @@ class SingleParticipantHeder extends ConsumerWidget {
         ),
         SizedBox(height: 4.h),
         GestureDetector(
-          onTap: controller.saveCoreIdToClipboard,
+          onTap: () => CallHistoryUtils.saveCoreIdToClipboard(
+            callHistory.value!.participants[0].coreId,
+          ),
           child: Text(
             callHistory.value!.participants[0].coreId.shortenCoreId,
             style: TEXTSTYLES.kBodySmall
@@ -54,12 +59,16 @@ class SingleParticipantHeder extends ConsumerWidget {
             CircleIconButton(
               backgroundColor: COLORS.kBrightBlueColor,
               padding: EdgeInsets.all(14.w),
-              onPressed: () => Get.toNamed(
+              onPressed: () => Get.toNamed<void>(
                 Routes.CALL,
                 arguments: CallViewArgumentsModel(
                   callId: null,
                   isAudioCall: true,
-                  members: controller.args.participants,
+                  // Convert CallHistoryParticipantViewModel
+                  // to participant coreId List
+                  members: callHistory.value!.participants
+                      .map((e) => e.coreId)
+                      .toList(),
                 ),
               ),
               icon: Assets.svg.audioCallIcon.svg(color: COLORS.kDarkBlueColor),
@@ -68,11 +77,15 @@ class SingleParticipantHeder extends ConsumerWidget {
             CircleIconButton(
               backgroundColor: COLORS.kBrightBlueColor,
               padding: EdgeInsets.all(14.w),
-              onPressed: () => Get.toNamed(
+              onPressed: () => Get.toNamed<void>(
                 Routes.CALL,
                 arguments: CallViewArgumentsModel(
                   callId: null,
-                  members: controller.args.participants,
+                  // Convert CallHistoryParticipantViewModel
+                  // to participant coreId List
+                  members: callHistory.value!.participants
+                      .map((e) => e.coreId)
+                      .toList(),
                   isAudioCall: false,
                 ),
               ),
@@ -84,7 +97,7 @@ class SingleParticipantHeder extends ConsumerWidget {
               backgroundColor: COLORS.kBrightBlueColor,
               padding: EdgeInsets.all(14.w),
               onPressed: () {
-                Get.toNamed(
+                Get.toNamed<void>(
                   Routes.MESSAGES,
                   arguments: MessagesViewArgumentsModel(
                     connectionType: MessagingConnectionType.internet,

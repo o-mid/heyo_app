@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/sizing/custom_sizes.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:heyo/modules/core-ui/widgets/custom_dialog_widget.dart';
@@ -95,9 +97,15 @@ class CallHistoryAppBarBottomSheetWidgetState
             ),
             onTap: () {
               //* Close bottom sheet
-              Get.back<void>();
-              //* Push to Add contact page
-              controller.pushToAddContact(widget.callHistoryParticipant.coreId);
+              Get
+                ..back<void>()
+                //* Push to Add contact page
+                ..toNamed<void>(
+                  Routes.ADD_CONTACTS,
+                  arguments: AddContactsViewArgumentsModel(
+                    coreId: widget.callHistoryParticipant.coreId,
+                  ),
+                );
             },
           ),
           if (isContact)
