@@ -4,13 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
+import 'package:heyo/modules/features/chats/presentation/widgets/delete_all_chats_bottom_sheet.dart';
 import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
-import 'package:heyo/app/modules/chats/widgets/chat_widget.dart';
+import 'package:heyo/modules/features/chats/presentation/widgets/chat_widget.dart';
 
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 
+import '../widgets/delete_chat_dialog.dart';
 import '../../../../../core/di/injector_provider.dart';
 
 import 'dart:async';
@@ -83,25 +85,41 @@ class ChatsController extends AsyncNotifier<List<ChatViewModel>> {
     });
   }
 
-  void showDeleteAllChatsBottomSheet() {
-//     openDeleteAllChatsBottomSheet(
-//       onDelete: () async {
-//         for (final element in chats) {
-//           await messagesRepo.deleteAllMessages(element.id);
-//         }
-//         await chatHistoryRepo.deleteAllChats();
+  Future<void> deleteChat(String chatId) async {
+    await chatHistoryRepo.deleteChat(chatId);
+    await messagesRepo.deleteAllMessages(chatId);
 
-//         chats.clear();
-//       },
-//     );
+    chats.removeWhere((chat) => chat.id == chatId);
+  }
 
-    Future<void> showDeleteAllChatsBottomSheet() async {}
+  void showDeleteAllChatsBottomSheet(BuildContext context) {
+    openDeleteAllChatsBottomSheet(
+        onDelete: () async {
+          for (final element in chats) {
+            await messagesRepo.deleteAllMessages(element.id);
+          }
+          await chatHistoryRepo.deleteAllChats();
 
-    Future<void> deleteChat(String chatId) async {
-      await chatHistoryRepo.deleteChat(chatId);
-      await messagesRepo.deleteAllMessages(chatId);
+          chats.clear();
+        },
+        context: context);
+  }
 
-      chats.removeWhere((chat) => chat.id == chatId);
-    }
+  Future<bool> showDeleteChatDialog(
+    BuildContext context,
+    String chatId,
+  ) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return DeleteChatDialog(
+              deleteChat: () {
+                deleteChat(chatId);
+                Navigator.of(context).pop(true);
+              },
+            );
+          },
+        ) ??
+        false;
   }
 }

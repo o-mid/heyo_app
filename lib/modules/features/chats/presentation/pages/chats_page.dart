@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 import 'package:heyo/modules/features/chats/presentation/controllers/chats_controller.dart';
 
-import 'package:heyo/app/modules/chats/widgets/chat_widget.dart';
+import 'package:heyo/modules/features/chats/presentation/widgets/chat_widget.dart';
 import 'package:heyo/app/modules/chats/widgets/empty_chats_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/widgets/appbar_widget.dart';
@@ -14,10 +14,10 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/models/chat_view_model/chat_view_model.dart';
+import '../../../../../app/modules/chats/data/models/chat_view_model/chat_view_model.dart';
 
-class ChatsView extends ConsumerWidget {
-  const ChatsView({super.key});
+class ChatsPage extends ConsumerWidget {
+  const ChatsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -60,7 +60,9 @@ class ChatsView extends ConsumerWidget {
         if (chats.hasValue)
           IconButton(
             splashRadius: 18,
-            onPressed: controller.showDeleteAllChatsBottomSheet,
+            onPressed: () {
+              controller.showDeleteAllChatsBottomSheet(context);
+            },
             icon: Assets.svg.verticalMenuIcon.svg(),
           )
         else
