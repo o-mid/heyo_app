@@ -9,7 +9,7 @@ import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/core/di/injector_provider.dart';
-import 'package:heyo/modules/features/call_history/call_utils.dart';
+import 'package:heyo/modules/features/call_history/utils/call_history_utils.dart';
 import 'package:heyo/modules/features/call_history/presentation/models/call_history_participant_view_model/call_history_participant_view_model.dart';
 import 'package:heyo/modules/features/call_history/presentation/models/call_history_view_model/call_history_view_model.dart';
 import 'package:heyo/modules/features/call_history/presentation/widgets/call_history_list_tile_widget.dart';
@@ -33,9 +33,6 @@ class CallHistoryController extends AsyncNotifier<List<CallHistoryViewModel>> {
   final CallHistoryRepo callHistoryRepo;
   final ContactNameUseCase contactNameUseCase;
   final ContactRepository contactRepository;
-
-  //final calls = <CallHistoryViewModel>[].obs;
-  final animatedListKey = GlobalKey<AnimatedListState>();
 
   @override
   FutureOr<List<CallHistoryViewModel>> build() {
@@ -64,14 +61,13 @@ class CallHistoryController extends AsyncNotifier<List<CallHistoryViewModel>> {
 
         final callViewModel = CallHistoryViewModel(
           callId: callHistoryModel[i].callId,
-          type: CallUtils.callTitle(callHistoryModel[i].status),
-          status: CallUtils.callStatus(callHistoryModel[i]),
+          type: CallHistoryUtils.callTitle(callHistoryModel[i].status),
+          status: CallHistoryUtils.callStatus(callHistoryModel[i]),
           participants: participantViewList,
           startDate: callHistoryModel[i].startDate,
           endDate: callHistoryModel[i].endDate,
         );
         calls.insert(i, callViewModel);
-        animatedListKey.currentState?.insertItem(i);
       }
     }
 
@@ -85,7 +81,6 @@ class CallHistoryController extends AsyncNotifier<List<CallHistoryViewModel>> {
       // remove the deleted calls
       for (var i = 0; i < calls.length; i++) {
         if (!newCalls.any((call) => call.callId == calls[i].callId)) {
-          _removeAtAnimatedList(i, calls[i]);
           calls.removeAt(i);
         }
       }
@@ -106,14 +101,13 @@ class CallHistoryController extends AsyncNotifier<List<CallHistoryViewModel>> {
 
           final callViewModel = CallHistoryViewModel(
             callId: newCalls[i].callId,
-            type: CallUtils.callTitle(newCalls[i].status),
-            status: CallUtils.callStatus(newCalls[i]),
+            type: CallHistoryUtils.callTitle(newCalls[i].status),
+            status: CallHistoryUtils.callStatus(newCalls[i]),
             participants: participantViewList,
             startDate: newCalls[i].startDate,
             endDate: newCalls[i].endDate,
           );
           calls.insert(i, callViewModel);
-          animatedListKey.currentState?.insertItem(i);
         }
       }
 
@@ -132,8 +126,8 @@ class CallHistoryController extends AsyncNotifier<List<CallHistoryViewModel>> {
 
         final callViewModel = CallHistoryViewModel(
           callId: newCalls[i].callId,
-          type: CallUtils.callTitle(newCalls[i].status),
-          status: CallUtils.callStatus(newCalls[i]),
+          type: CallHistoryUtils.callTitle(newCalls[i].status),
+          status: CallHistoryUtils.callStatus(newCalls[i]),
           participants: participantViewList,
           startDate: newCalls[i].startDate,
           endDate: newCalls[i].endDate,
@@ -175,16 +169,6 @@ class CallHistoryController extends AsyncNotifier<List<CallHistoryViewModel>> {
 
   Future<void> deleteCall(CallHistoryViewModel call) async {
     await callHistoryRepo.deleteOneCall(call.callId);
-  }
-
-  void _removeAtAnimatedList(int index, CallHistoryViewModel call) {
-    animatedListKey.currentState?.removeItem(
-      index,
-      (context, animation) => SizeTransition(
-        sizeFactor: animation,
-        child: CallHistoryListTitleWidget(call: call),
-      ),
-    );
   }
 
   Future<void> deleteAllCalls() async {
