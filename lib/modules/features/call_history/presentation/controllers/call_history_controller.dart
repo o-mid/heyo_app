@@ -34,9 +34,6 @@ class CallHistoryController extends AsyncNotifier<List<CallHistoryViewModel>> {
   final ContactNameUseCase contactNameUseCase;
   final ContactRepository contactRepository;
 
-  //final calls = <CallHistoryViewModel>[].obs;
-  final animatedListKey = GlobalKey<AnimatedListState>();
-
   @override
   FutureOr<List<CallHistoryViewModel>> build() {
     unawaited(_listenToContactsToUpdateName());
@@ -71,7 +68,6 @@ class CallHistoryController extends AsyncNotifier<List<CallHistoryViewModel>> {
           endDate: callHistoryModel[i].endDate,
         );
         calls.insert(i, callViewModel);
-        animatedListKey.currentState?.insertItem(i);
       }
     }
 
@@ -85,7 +81,6 @@ class CallHistoryController extends AsyncNotifier<List<CallHistoryViewModel>> {
       // remove the deleted calls
       for (var i = 0; i < calls.length; i++) {
         if (!newCalls.any((call) => call.callId == calls[i].callId)) {
-          _removeAtAnimatedList(i, calls[i]);
           calls.removeAt(i);
         }
       }
@@ -113,7 +108,6 @@ class CallHistoryController extends AsyncNotifier<List<CallHistoryViewModel>> {
             endDate: newCalls[i].endDate,
           );
           calls.insert(i, callViewModel);
-          animatedListKey.currentState?.insertItem(i);
         }
       }
 
@@ -175,16 +169,6 @@ class CallHistoryController extends AsyncNotifier<List<CallHistoryViewModel>> {
 
   Future<void> deleteCall(CallHistoryViewModel call) async {
     await callHistoryRepo.deleteOneCall(call.callId);
-  }
-
-  void _removeAtAnimatedList(int index, CallHistoryViewModel call) {
-    animatedListKey.currentState?.removeItem(
-      index,
-      (context, animation) => SizeTransition(
-        sizeFactor: animation,
-        child: CallHistoryListTitleWidget(call: call),
-      ),
-    );
   }
 
   Future<void> deleteAllCalls() async {
