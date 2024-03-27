@@ -8,7 +8,6 @@ import 'package:heyo/app/modules/auth/pinCode/views/pin_code_view.dart';
 import 'package:heyo/app/modules/auth/sing-up/views/sing_up_view.dart';
 import 'package:heyo/app/modules/calls/main/views/call_view.dart';
 import 'package:heyo/app/modules/calls/new_call/views/new_call_view.dart';
-import 'package:heyo/app/modules/contacts/views/contacts_view.dart';
 import 'package:heyo/app/modules/forward_massages/views/forward_massages_view.dart';
 import 'package:heyo/app/modules/gallery_picker/views/gallery_picker_view.dart';
 import 'package:heyo/app/modules/home/views/home_view.dart';
@@ -30,6 +29,7 @@ import 'package:heyo/modules/call/presentation/add_participate/add_participate_p
 import 'package:heyo/modules/call/presentation/incoming_call/incoming_call_page.dart';
 import 'package:heyo/modules/features/call_history/presentation/pages/call_history_detail_page.dart';
 import 'package:heyo/modules/features/call_history/presentation/pages/call_history_page.dart';
+import 'package:heyo/modules/features/contact/presentation/pages/contact_view.dart';
 
 part 'route_paths.dart';
 
@@ -126,7 +126,7 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: RoutePaths.CONTACTS,
-      builder: (context, state) => const ContactsView(),
+      builder: (context, state) => const ContactView(),
     ),
     GoRoute(
       path: RoutePaths.NEW_CALL,
