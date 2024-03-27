@@ -1,4 +1,4 @@
-import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
+import 'package:heyo/modules/features/chats/presentation/controllers/chats_controller.dart';
 import 'package:heyo/app/modules/chats/data/providers/chat_history/chat_history_provider.dart';
 import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
 import 'package:heyo/modules/features/chats/data/local_chat_history_repo.dart';

@@ -6,54 +6,43 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
 import 'package:heyo/app/modules/chats/widgets/chat_widget.dart';
-import 'package:heyo/app/modules/chats/widgets/delete_all_chats_bottom_sheet.dart';
-import 'package:heyo/app/modules/chats/widgets/delete_chat_dialog.dart';
-import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
-import 'package:heyo/app/modules/messages/utils/chat_Id_generator.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
-import '../../messages/data/provider/messages_provider.dart';
-import '../../messages/data/repo/messages_repo.dart';
-import '../../shared/data/models/messaging_participant_model.dart';
+import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
+
+import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+
+import '../../../../../core/di/injector_provider.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import '../../shared/data/providers/database/app_database.dart';
-import '../data/models/chat_view_model/chat_view_model.dart';
 
-final chatsControllerProvider =
-    AutoDisposeAsyncNotifierProvider<ChatsController, List<ChatViewModel>>(
+import '../../../../../app/modules/chats/data/models/chat_view_model/chat_view_model.dart';
+
+final chatsNotifierProvider = AsyncNotifierProvider<ChatsController, List<ChatViewModel>>(
   () => ChatsController(
-    chatHistoryRepo: Get.find<ChatHistoryRepo>(),
-    messagesRepo: MessagesRepo(
-      messagesProvider: MessagesProvider(
-        appDatabaseProvider: Get.find<AppDatabaseProvider>(),
-      ),
-    ),
-    contactRepository: Get.find<ContactRepository>(),
+    chatHistoryRepo: inject.get<ChatHistoryRepo>(),
+    messagesRepo: inject.get<MessagesAbstractRepo>(),
+    contactRepository: inject.get<ContactRepository>(),
   ),
 );
 
-class ChatsController extends AutoDisposeAsyncNotifier<List<ChatViewModel>> {
-  final ChatHistoryRepo chatHistoryRepo;
-  final MessagesAbstractRepo messagesRepo;
-  final ContactRepository contactRepository;
-
-  List<ChatViewModel> chats = [];
-
+class ChatsController extends AsyncNotifier<List<ChatViewModel>> {
   ChatsController({
     required this.chatHistoryRepo,
     required this.messagesRepo,
     required this.contactRepository,
   });
+  final ChatHistoryRepo chatHistoryRepo;
+  final MessagesAbstractRepo messagesRepo;
+  final ContactRepository contactRepository;
 
+  List<ChatViewModel> chats = [];
+  final animatedListKey = GlobalKey<AnimatedListState>();
   @override
   FutureOr<List<ChatViewModel>> build() async {
     unawaited(_fetchInitialChats());
-    await listenToChatsUpdates();
+    unawaited(listenToChatsUpdates());
+
     return chats;
   }
 
