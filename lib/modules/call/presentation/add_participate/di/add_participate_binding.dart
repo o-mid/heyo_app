@@ -5,7 +5,7 @@ import 'package:heyo/modules/call/presentation/add_participate/add_participate_c
 import 'package:heyo/app/modules/calls/usecase/get_contact_user_use_case.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provider.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart';
 
 class AddParticipateBinding extends Bindings {
@@ -16,7 +16,7 @@ class AddParticipateBinding extends Bindings {
         accountInfoRepo: Get.find(),
         callRepository: Get.find<WebRTCCallRepository>(),
         getContactUserUseCase: GetContactUserUseCase(
-          contactRepository: ContactRepository(
+          contactRepository: LocalContactRepo(
             cacheContractor: CacheRepository(
               userProvider: UserProvider(
                 appDatabaseProvider: Get.find<AppDatabaseProvider>(),

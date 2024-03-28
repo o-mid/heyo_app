@@ -9,7 +9,7 @@ import 'package:heyo/app/modules/shared/bindings/notification_bindings.dart';
 import 'package:heyo/app/modules/shared/bindings/p2p_bindings.dart';
 import 'package:heyo/app/modules/shared/controllers/live_location_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/user_preview_controller.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 
 class GlobalBindings extends Bindings {
   @override
@@ -24,7 +24,7 @@ class GlobalBindings extends Bindings {
     Get
       ..put(LiveLocationController())
       ..put(UserPreviewController(
-        contactRepository: Get.find<ContactRepository>(),
+        contactRepository: Get.find<LocalContactRepo>(),
         callHistoryRepo: Get.find<CallHistoryRepo>(),
         chatHistoryRepo: Get.find<ChatHistoryLocalAbstractRepo>(),
       ));

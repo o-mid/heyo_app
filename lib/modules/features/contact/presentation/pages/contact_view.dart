@@ -7,8 +7,8 @@ import 'package:heyo/app/modules/shared/widgets/appbar_widget.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:heyo/modules/features/contact/presentation/controllers/contact_controller.dart';
 import 'package:heyo/modules/features/contact/presentation/widgets/blocked_contact_widget.dart';
-import 'package:heyo/modules/features/contact/presentation/widgets/contacts_list_widget.dart';
-import 'package:heyo/modules/features/contact/presentation/widgets/contacts_loading_widget.dart';
+import 'package:heyo/modules/features/contact/presentation/widgets/contact_list_widget.dart';
+import 'package:heyo/modules/features/contact/presentation/widgets/contact_loading_widget.dart';
 
 class ContactView extends ConsumerWidget {
   const ContactView({super.key});

@@ -5,7 +5,7 @@ import 'package:heyo/app/modules/calls/usecase/contact_availability_use_case.dar
 import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provider.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart';
 import 'package:heyo/modules/features/call_history/presentation/controllers/call_history_detail_controller.dart';
 
@@ -20,7 +20,7 @@ class CallHistoryDetailBinding extends Bindings {
           ),
         ),
         contactNameUseCase: ContactNameUseCase(
-          contactRepository: ContactRepository(
+          contactRepository: LocalContactRepo(
             cacheContractor: CacheRepository(
               userProvider: UserProvider(
                 appDatabaseProvider: Get.find<AppDatabaseProvider>(),
@@ -28,7 +28,7 @@ class CallHistoryDetailBinding extends Bindings {
             ),
           ),
         ),
-        contactRepository: ContactRepository(
+        contactRepository: LocalContactRepo(
           cacheContractor: CacheRepository(
             userProvider: UserProvider(
               appDatabaseProvider: Get.find<AppDatabaseProvider>(),

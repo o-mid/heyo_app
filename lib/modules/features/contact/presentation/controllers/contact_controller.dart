@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/core/di/injector_provider.dart';
+import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 
 final contactNotifierProvider =
     AsyncNotifierProvider<ContactController, List<UserModel>>(
   () => ContactController(
-    contactRepo: inject.get<ContactRepository>(),
+    contactRepo: inject.get<ContactRepo>(),
   ),
 );
 
@@ -16,7 +16,7 @@ class ContactController extends AsyncNotifier<List<UserModel>> {
   ContactController({required this.contactRepo});
 
   final blockedContacts = <UserModel>[];
-  final ContactRepository contactRepo;
+  final ContactRepo contactRepo;
 
   @override
   FutureOr<List<UserModel>> build() {

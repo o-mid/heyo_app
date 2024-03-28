@@ -7,20 +7,20 @@ import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/cal
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/core/di/injector_provider.dart';
 import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
 import 'package:heyo/modules/features/call_history/presentation/models/call_history_participant_view_model/call_history_participant_view_model.dart';
 import 'package:heyo/modules/features/call_history/presentation/models/call_history_view_model/call_history_view_model.dart';
 import 'package:heyo/modules/features/call_history/utils/call_history_utils.dart';
+import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 
 final callHistoryDetailNotifierProvider = AutoDisposeAsyncNotifierProvider<
     CallHistoryDetailController, CallHistoryViewModel?>(
   () => CallHistoryDetailController(
     callHistoryRepo: inject.get<CallHistoryRepo>(),
     contactNameUseCase: inject.get<ContactNameUseCase>(),
-    contactRepository: inject.get<ContactRepository>(),
+    contactRepository: inject.get<ContactRepo>(),
   ),
 );
 
@@ -41,7 +41,7 @@ class CallHistoryDetailController
 
   final CallHistoryRepo callHistoryRepo;
   final ContactNameUseCase contactNameUseCase;
-  final ContactRepository contactRepository;
+  final ContactRepo contactRepository;
 
   late UserCallHistoryViewArgumentsModel args;
 

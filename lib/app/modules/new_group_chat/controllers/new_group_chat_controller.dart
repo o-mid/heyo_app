@@ -11,15 +11,16 @@ import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import '../../../routes/app_pages.dart';
 import '../../messages/utils/chat_Id_generator.dart';
 import '../../shared/data/models/messages_view_arguments_model.dart';
-import '../../shared/data/repository/contact_repository.dart';
+import '../../../../modules/features/contact/data/local_contact_repo.dart';
 import '../../shared/data/repository/account/account_repository.dart';
 import '../../shared/utils/constants/colors.dart';
 import '../../shared/utils/constants/textStyles.dart';
 
 class NewGroupChatController extends GetxController {
-  NewGroupChatController({required this.contactRepository, required this.accountInfoRepo});
+  NewGroupChatController(
+      {required this.contactRepository, required this.accountInfoRepo});
 
-  final ContactRepository contactRepository;
+  final LocalContactRepo contactRepository;
   final AccountRepository accountInfoRepo;
   final inputFocusNode = FocusNode();
   final confirmationScreenInputFocusNode = FocusNode();
@@ -91,7 +92,8 @@ class NewGroupChatController extends GetxController {
     await processSearchResults(searchedItems, query);
   }
 
-  Future<void> processSearchResults(List<UserModel> results, String query) async {
+  Future<void> processSearchResults(
+      List<UserModel> results, String query) async {
     if (results.isEmpty && query.isValidCoreId()) {
       await handleEmptySearchResults(query);
     } else {
@@ -329,7 +331,8 @@ class NewGroupChatController extends GetxController {
     ].obs;
     await Future.delayed(const Duration(seconds: 2), () async {
       for (var i = 0; i < _mockUsers.length; i++) {
-        if (searchSuggestions.any((element) => element.coreId == _mockUsers[i].coreId)) {
+        if (searchSuggestions
+            .any((element) => element.coreId == _mockUsers[i].coreId)) {
           return;
         } else {
           await contactRepository.addContact(_mockUsers[i]);

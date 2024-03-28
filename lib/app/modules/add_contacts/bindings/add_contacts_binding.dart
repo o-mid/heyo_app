@@ -4,7 +4,7 @@ import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_h
 import 'package:heyo/modules/features/call_history/data/local_call_history_repo.dart';
 import 'package:heyo/app/modules/chats/data/providers/chat_history/chat_history_provider.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_repo.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/app/modules/shared/data/repository/db/cache_repository.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/dao/user_provider.dart';
@@ -17,7 +17,7 @@ class AddContactsBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<AddContactsController>(
       () => AddContactsController(
-        contactRepository: ContactRepository(
+        contactRepository: LocalContactRepo(
           cacheContractor: CacheRepository(
             userProvider: UserProvider(
               appDatabaseProvider: Get.find<AppDatabaseProvider>(),

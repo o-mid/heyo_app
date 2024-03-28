@@ -18,7 +18,7 @@ import 'package:heyo/app/modules/shared/controllers/audio_message_controller.dar
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/video_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/core/di/injector_provider.dart';
 import 'package:heyo/core/di/priority_injector_interface.dart';
 
@@ -55,7 +55,7 @@ class MessagingInjector with NormalPriorityInjector, HighPriorityInjector {
               appDatabaseProvider: inject.get<AppDatabaseProvider>(),
             ),
           ),
-          contactRepository: inject.get<ContactRepository>(),
+          contactRepository: inject.get<LocalContactRepo>(),
         ),
       )
       ..registerSingleton(GlobalMessageController())

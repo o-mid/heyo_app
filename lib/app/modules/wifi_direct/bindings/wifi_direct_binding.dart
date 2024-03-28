@@ -4,7 +4,7 @@ import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dar
 import '../../messages/connection/wifi_direct_connection_controller.dart';
 import '../../p2p_node/data/key/web3_keys.dart';
 import '../../shared/bindings/global_bindings.dart';
-import '../../shared/data/repository/contact_repository.dart';
+import '../../../../modules/features/contact/data/local_contact_repo.dart';
 import '../../shared/data/repository/db/cache_repository.dart';
 import '../../shared/data/providers/database/app_database.dart';
 import '../../shared/data/providers/database/dao/user_provider.dart';
@@ -18,11 +18,12 @@ class WifiDirectBinding extends Bindings {
       () => WifiDirectController(
         accountInfoRepo: Get.find(),
         // wifiDirectConnectionController: Get.find<UnifiedConnectionController>(),
-        contactRepository: ContactRepository(
+        contactRepository: LocalContactRepo(
           cacheContractor: CacheRepository(
-              userProvider: UserProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>())),
+              userProvider: UserProvider(
+                  appDatabaseProvider: Get.find<AppDatabaseProvider>())),
         ),
-          ),
+      ),
     );
   }
 }

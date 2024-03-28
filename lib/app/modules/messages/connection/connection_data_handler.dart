@@ -25,14 +25,14 @@ import '../data/models/reaction_model.dart';
 import '../data/repo/messages_repo.dart';
 import '../utils/message_from_json.dart';
 import '../../notifications/controllers/notifications_controller.dart';
-import '../../shared/data/repository/contact_repository.dart';
+import '../../../../modules/features/contact/data/local_contact_repo.dart';
 import 'models/data_channel_message_model.dart';
 
 class DataHandler {
   final MessagesRepo messagesRepo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final NotificationsController notificationsController;
-  final ContactRepository contactRepository;
+  final LocalContactRepo contactRepository;
   final AccountRepository accountInfoRepo;
 
   DataHandler({
@@ -96,7 +96,8 @@ class DataHandler {
         chatName = currentChatModel.name;
       }
     } else {
-      final userModel = await contactRepository.getContactById(remoteCoreIds.first);
+      final userModel =
+          await contactRepository.getContactById(remoteCoreIds.first);
       chatName = (userModel == null)
           ? '${remoteCoreIds.first.characters.take(4).string}...${remoteCoreIds.first.characters.takeLast(4).string}'
           : userModel.name;
@@ -110,8 +111,9 @@ class DataHandler {
       lastReadMessageId: "",
       timestamp: DateTime.now(),
       isGroupChat: isGroupChat,
-      participants:
-          remoteCoreIds.map((e) => MessagingParticipantModel(coreId: e, chatId: chatId)).toList(),
+      participants: remoteCoreIds
+          .map((e) => MessagingParticipantModel(coreId: e, chatId: chatId))
+          .toList(),
     );
 
     if (currentChatModel == null) {
@@ -143,8 +145,8 @@ class DataHandler {
     required List<String> remoteCoreIds,
   }) async {
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
-    MessageModel? _currentMsg =
-        await messagesRepo.getMessageById(messageId: receivedMessage.messageId, chatId: chatId);
+    MessageModel? _currentMsg = await messagesRepo.getMessageById(
+        messageId: receivedMessage.messageId, chatId: chatId);
 
     bool isNewMessage = (_currentMsg == null);
     UserModel? contact = await contactRepository.getContactById(coreId);
@@ -189,9 +191,11 @@ class DataHandler {
     required Map<String, dynamic> receivedDeleteJson,
     required String chatId,
   }) async {
-    DeleteMessageModel deleteMessage = DeleteMessageModel.fromJson(receivedDeleteJson);
+    DeleteMessageModel deleteMessage =
+        DeleteMessageModel.fromJson(receivedDeleteJson);
 
-    await messagesRepo.deleteMessages(messageIds: deleteMessage.messageIds, chatId: chatId);
+    await messagesRepo.deleteMessages(
+        messageIds: deleteMessage.messageIds, chatId: chatId);
   }
 
   Future<void> updateReceivedMessage({
@@ -207,8 +211,10 @@ class DataHandler {
     );
 
     if (currentMessage != null) {
-      final receivedReactions = updateMessage.message.reactions.map((key, value) {
-        ReactionModel? existingReaction = currentMessage.reactions[key] as ReactionModel?;
+      final receivedReactions =
+          updateMessage.message.reactions.map((key, value) {
+        ReactionModel? existingReaction =
+            currentMessage.reactions[key] as ReactionModel?;
         bool isReactedByMe = value.users.contains(localCoreID);
 
         if (existingReaction is ReactionModel) {
@@ -236,12 +242,13 @@ class DataHandler {
     required Map<String, dynamic> receivedconfirmJson,
     required String chatId,
   }) async {
-    ConfirmMessageModel confirmMessage = ConfirmMessageModel.fromJson(receivedconfirmJson);
+    ConfirmMessageModel confirmMessage =
+        ConfirmMessageModel.fromJson(receivedconfirmJson);
 
     final String messageId = confirmMessage.messageId;
     if (confirmMessage.status == ConfirmMessageStatus.delivered) {
-      MessageModel? currentMessage =
-          await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
+      MessageModel? currentMessage = await messagesRepo.getMessageById(
+          messageId: messageId, chatId: chatId);
 
       // check if message is found and update the Message status
       if (currentMessage != null) {
@@ -253,8 +260,10 @@ class DataHandler {
         }
       }
     } else {
-      final List<MessageModel> messages = await messagesRepo.getMessages(chatId);
-      final index = messages.lastIndexWhere((element) => element.messageId == messageId);
+      final List<MessageModel> messages =
+          await messagesRepo.getMessages(chatId);
+      final index =
+          messages.lastIndexWhere((element) => element.messageId == messageId);
 
       if (index != -1) {
         final messagesToUpdate = messages
@@ -283,7 +292,8 @@ class DataHandler {
   }) async {
     final bigPicture = await _getBigPicture(receivedMessage, chatId);
 
-    final payload = _createNotificationPayload(receivedMessage, chatId, senderName);
+    final payload =
+        _createNotificationPayload(receivedMessage, chatId, senderName);
 
     await notificationsController.receivedMessageNotify(
       chatId: chatId,
@@ -341,8 +351,9 @@ class DataHandler {
       timestamp: receivedMessage.timestamp.toLocal(),
       isGroupChat: isGroupChat,
       name: isGroupChat ? chatName : chatmodel.name,
-      participants:
-          remoteCoreIds.map((e) => MessagingParticipantModel(coreId: e, chatId: chatId)).toList(),
+      participants: remoteCoreIds
+          .map((e) => MessagingParticipantModel(coreId: e, chatId: chatId))
+          .toList(),
     );
 
     if (chatmodel != null) {

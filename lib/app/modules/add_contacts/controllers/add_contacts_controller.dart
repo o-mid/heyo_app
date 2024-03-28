@@ -7,7 +7,7 @@ import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abst
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
 class AddContactsController extends GetxController {
@@ -26,7 +26,7 @@ class AddContactsController extends GetxController {
   RxBool isVerified = false.obs;
   TextEditingController myNicknameController = TextEditingController();
 
-  final ContactRepository contactRepository;
+  final LocalContactRepo contactRepository;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final CallHistoryRepo callHistoryRepo;
 

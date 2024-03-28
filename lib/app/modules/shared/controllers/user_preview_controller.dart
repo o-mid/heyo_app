@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/transitions_constant.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
@@ -16,7 +16,7 @@ class UserPreviewController extends GetxController {
     required this.chatHistoryRepo,
   });
 
-  final ContactRepository contactRepository;
+  final LocalContactRepo contactRepository;
   final RxBool isWifiDirectConnection = false.obs;
   final CallHistoryRepo callHistoryRepo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;

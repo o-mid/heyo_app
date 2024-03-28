@@ -17,7 +17,7 @@ import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
-import 'package:heyo/modules/features/contact/presentation/widgets/removeContactsDialog.dart';
+import 'package:heyo/modules/features/contact/presentation/widgets/remove_contact_dialog.dart';
 
 class UserPreviewWidget extends GetView<UserPreviewController> {
   const UserPreviewWidget({
