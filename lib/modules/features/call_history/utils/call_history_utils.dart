@@ -1,8 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
+import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/generated/locales.g.dart';
 
-class CallUtils {
+class CallHistoryUtils {
   static String callTitle(CallStatus status) {
     switch (status) {
       case CallStatus.incomingMissed:
@@ -38,5 +41,13 @@ class CallUtils {
       default:
         return '';
     }
+  }
+
+  static Future<void> saveCoreIdToClipboard(String remoteCoreId) async {
+    debugPrint('Core ID : $remoteCoreId');
+    await Clipboard.setData(ClipboardData(text: remoteCoreId));
+    SnackBarWidget.info(
+      message: LocaleKeys.ShareableQrPage_copiedToClipboardText.tr,
+    );
   }
 }

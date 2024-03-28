@@ -1,24 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
-import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
 import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
-import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
-import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
-import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/core/di/injector_provider.dart';
-import 'package:heyo/generated/locales.g.dart';
-import 'package:heyo/modules/features/call_history/call_utils.dart';
+import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
 import 'package:heyo/modules/features/call_history/presentation/models/call_history_participant_view_model/call_history_participant_view_model.dart';
 import 'package:heyo/modules/features/call_history/presentation/models/call_history_view_model/call_history_view_model.dart';
+import 'package:heyo/modules/features/call_history/utils/call_history_utils.dart';
 
 final callHistoryDetailNotifierProvider = AutoDisposeAsyncNotifierProvider<
     CallHistoryDetailController, CallHistoryViewModel?>(
@@ -49,11 +44,6 @@ class CallHistoryDetailController
   final ContactRepository contactRepository;
 
   late UserCallHistoryViewArgumentsModel args;
-
-  //RxBool loading = true.obs;
-  //late StreamSubscription<List<UserModel>> _contactsStreamSubscription;
-
-  //RxList<CallHistoryDetailParticipantModel> participants = RxList();
 
   @override
   FutureOr<CallHistoryViewModel?> build() {
@@ -134,23 +124,15 @@ class CallHistoryDetailController
     //* Convert the call history data model to view model
     return CallHistoryViewModel(
       callId: callHistoryDataModel.callId,
-      type: CallUtils.callStatus(callHistoryDataModel),
-      status: CallUtils.callTitle(callHistoryDataModel.status),
+      type: CallHistoryUtils.callStatus(callHistoryDataModel),
+      status: CallHistoryUtils.callTitle(callHistoryDataModel.status),
       participants: participantViewList,
       startDate: callHistoryDataModel.startDate,
       endDate: callHistoryDataModel.endDate,
     );
   }
 
-  Future<void> saveCoreIdToClipboard() async {
-    final remoteCoreId = args.participants[0];
-    debugPrint('Core ID : $remoteCoreId');
-    await Clipboard.setData(ClipboardData(text: remoteCoreId));
-    SnackBarWidget.info(
-      message: LocaleKeys.ShareableQrPage_copiedToClipboardText.tr,
-    );
-  }
-
+  // TODO(AliAzim): we can move this method to other provider
   Future<bool> contactAvailability(String coreId) async {
     final contact = await contactRepository.getContactById(coreId);
     if (contact == null) {
@@ -164,15 +146,6 @@ class CallHistoryDetailController
 
   Future<void> deleteContactById(String coreId) async {
     await contactRepository.deleteContactById(coreId);
-  }
-
-  Future<void> pushToAddContact(
-    String coreId,
-  ) async {
-    await Get.toNamed<void>(
-      Routes.ADD_CONTACTS,
-      arguments: AddContactsViewArgumentsModel(coreId: coreId),
-    );
   }
 }
 
@@ -213,8 +186,8 @@ class CallHistoryDetailRecentCallController
         recentCalls.add(
           CallHistoryViewModel(
             callId: call.callId,
-            type: CallUtils.callStatus(call),
-            status: CallUtils.callTitle(call.status),
+            type: CallHistoryUtils.callStatus(call),
+            status: CallHistoryUtils.callTitle(call.status),
             participants: [],
             startDate: call.startDate,
             endDate: call.endDate,

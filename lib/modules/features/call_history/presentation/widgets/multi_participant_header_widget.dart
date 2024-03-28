@@ -64,7 +64,7 @@ class MultiParticipantHeaderWidget extends ConsumerWidget {
             CircleIconButton(
               backgroundColor: COLORS.kBrightBlueColor,
               padding: EdgeInsets.all(14.w),
-              onPressed: () => Get.toNamed(
+              onPressed: () => Get.toNamed<void>(
                 Routes.CALL,
                 arguments: CallViewArgumentsModel(
                   callId: null,
@@ -78,7 +78,7 @@ class MultiParticipantHeaderWidget extends ConsumerWidget {
             CircleIconButton(
               backgroundColor: COLORS.kBrightBlueColor,
               padding: EdgeInsets.all(14.w),
-              onPressed: () => Get.toNamed(
+              onPressed: () => Get.toNamed<void>(
                 Routes.CALL,
                 arguments: CallViewArgumentsModel(
                   callId: null,
