@@ -10,11 +10,11 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 class DeleteChatDialog extends StatelessWidget {
-  final VoidCallback deleteChat;
   const DeleteChatDialog({
-    Key? key,
     required this.deleteChat,
-  }) : super(key: key);
+    super.key,
+  });
+  final VoidCallback deleteChat;
 
   @override
   Widget build(BuildContext context) {
@@ -29,19 +29,19 @@ class DeleteChatDialog extends StatelessWidget {
           CustomButton(
             onTap: () {
               deleteChat();
-              Get.back();
+              Navigator.of(context).pop();
             },
             title: LocaleKeys.HomePage_Chats_deleteChatDialog_delete.tr,
-            textStyle:
-                TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
+            textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
             backgroundColor: COLORS.kPinCodeDeactivateColor,
           ),
           CustomSizes.smallSizedBoxHeight,
           CustomButton(
-            onTap: Get.back,
+            onTap: () {
+              Navigator.of(context).pop();
+            },
             title: LocaleKeys.HomePage_Chats_deleteChatDialog_cancel.tr,
-            textStyle:
-                TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
+            textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
           ),
         ],
       ),
