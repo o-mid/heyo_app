@@ -11,7 +11,7 @@ import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.
 
 import '../../../routes/app_pages.dart';
 import '../../../../modules/call/presentation/incoming_call/incoming_call_controller.dart';
-import '../../chats/data/providers/chat_history/chat_history_provider.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_model.dart';
 import '../../../../modules/features/chats/domain/chat_history_repo.dart';
 import '../../../../modules/features/chats/data/local_chat_history_repo.dart';
 import '../../messages/controllers/messages_controller.dart';

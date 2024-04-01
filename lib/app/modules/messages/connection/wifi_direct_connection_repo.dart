@@ -6,7 +6,6 @@ import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dar
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 
 import 'package:heyo/app/routes/app_pages.dart';
-import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/messages/data/models/messages/confirm_message_model.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/messages/connection/models/data_channel_message_model.dart';

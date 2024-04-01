@@ -12,9 +12,9 @@ import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.
 import 'package:heyo/app/modules/shared/utils/constants/notifications_constant.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/mocks/random_avatar_icon.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_model.dart';
 import 'package:tuple/tuple.dart';
 
-import '../../chats/data/models/chat_model.dart';
 import '../../../../modules/features/chats/domain/chat_history_repo.dart';
 import '../../shared/data/repository/account/account_repository.dart';
 import '../data/models/messages/confirm_message_model.dart';

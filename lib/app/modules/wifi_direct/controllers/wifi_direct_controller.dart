@@ -10,18 +10,16 @@ import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../generated/assets.gen.dart';
 import '../../../../generated/locales.g.dart';
-import '../../chats/data/models/chat_model.dart';
 import '../../messages/connection/wifi_direct_connection_repo.dart';
 import '../../messages/connection/wifi_direct_connection_controller.dart';
 import '../../shared/data/repository/contact_repository.dart';
 
 class WifiDirectController extends GetxController {
-
   WifiDirectController(
-      {required  AccountRepository accountInfoRepo,
+      {required AccountRepository accountInfoRepo,
       // required this.wifiDirectConnectionController,
-      required this.contactRepository}) :
-    _accountInfoRepo = accountInfoRepo;
+      required this.contactRepository})
+      : _accountInfoRepo = accountInfoRepo;
 
   final AccountRepository _accountInfoRepo;
 
@@ -32,8 +30,7 @@ class WifiDirectController extends GetxController {
   bool isLocationPermissionGranted = false;
   final wifiDirectEnabled = false.obs;
   RxList<UserModel> availableDirectUsers = <UserModel>[].obs;
-    // _heyoWifiDirect = wifiDirectConnectionController.wifiDirectWrapper!.pluginInstance;
-
+  // _heyoWifiDirect = wifiDirectConnectionController.wifiDirectWrapper!.pluginInstance;
 
   final coreId = "".obs;
   final visibleName = "".obs;

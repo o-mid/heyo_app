@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguments_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
@@ -141,7 +141,7 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
 
       if (inputText.value == "") {
         searchSuggestions.value = newContacts;
-      }else {
+      } else {
         searchUsers(inputText.value);
       }
     });

@@ -9,8 +9,8 @@ import 'package:heyo/app/modules/messages/connection/models/data_channel_message
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/p2p_node/p2p_state.dart';
 import 'package:heyo/app/modules/messages/utils/message_to_send_message_type.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_model.dart';
 
-import '../../chats/data/models/chat_model.dart';
 import 'multiple_connections.dart';
 
 class SyncMessages {
