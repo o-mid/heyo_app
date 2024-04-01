@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
-
-import 'chat_view_model/chat_view_model.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_view_model/chat_view_model.dart';
 
 part 'chat_model.freezed.dart';
 part 'chat_model.g.dart';

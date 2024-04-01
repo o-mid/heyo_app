@@ -6,7 +6,6 @@ import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.
 
 import 'package:heyo/app/modules/shared/widgets/slidable_widget.dart';
 import 'package:heyo/modules/features/chats/presentation/controllers/chats_controller.dart';
-import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -52,7 +51,7 @@ class ChatWidget extends ConsumerWidget {
         confirmDismiss: () => controller.showDeleteChatDialog(context, chatId),
         child: InkWell(
           onTap: () {
-            Get.toNamed(
+            Get.toNamed<void>(
               Routes.MESSAGES,
               arguments: MessagesViewArgumentsModel(
                 participants: participants,

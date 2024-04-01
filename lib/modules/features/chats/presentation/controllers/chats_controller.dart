@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_model.dart';
 
-import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/modules/features/chats/presentation/widgets/delete_all_chats_bottom_sheet.dart';
 import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
 import 'package:heyo/modules/features/chats/presentation/widgets/chat_widget.dart';
@@ -12,13 +12,12 @@ import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart'
 
 import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 
+import '../models/chat_view_model/chat_view_model.dart';
 import '../widgets/delete_chat_dialog.dart';
 import '../../../../../core/di/injector_provider.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-
-import '../../../../../app/modules/chats/data/models/chat_view_model/chat_view_model.dart';
 
 final chatsNotifierProvider = AsyncNotifierProvider<ChatsController, List<ChatViewModel>>(
   () => ChatsController(

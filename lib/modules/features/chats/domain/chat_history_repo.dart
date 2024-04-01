@@ -1,4 +1,4 @@
-import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_model.dart';
 
 abstract class ChatHistoryRepo {
   Future<void> addChatToHistory(ChatModel chat);

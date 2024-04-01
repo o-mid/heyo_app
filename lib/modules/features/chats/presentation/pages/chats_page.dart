@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:heyo/modules/features/chats/presentation/controllers/chats_controller.dart';
 
 import 'package:heyo/modules/features/chats/presentation/widgets/chat_widget.dart';
-import 'package:heyo/app/modules/chats/widgets/empty_chats_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/widgets/appbar_widget.dart';
 import 'package:heyo/app/modules/shared/widgets/connection_status.dart';
@@ -14,7 +13,8 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../app/modules/chats/data/models/chat_view_model/chat_view_model.dart';
+import '../models/chat_view_model/chat_view_model.dart';
+import '../widgets/empty_chats_widget.dart';
 
 class ChatsPage extends ConsumerWidget {
   const ChatsPage({super.key});

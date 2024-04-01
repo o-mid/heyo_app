@@ -6,21 +6,8 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/widgets/bottom_sheet.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:heyo/modules/features/chats/presentation/widgets/delete_all_chats_dialog.dart';
 
-import '../../../../../app/modules/chats/widgets/delete_all_chats_dialog.dart';
-
-// void openDeleteAllChatsBottomSheet({required VoidCallback onDelete}) {
-//   Get.bottomSheet(
-//     backgroundColor: COLORS.kWhiteColor,
-//     shape: const RoundedRectangleBorder(
-//       borderRadius: BorderRadius.only(
-//         topLeft: Radius.circular(20),
-//         topRight: Radius.circular(20),
-//       ),
-//     ),
-//     DeleteAllChatsBottomSheet(onDelete: onDelete),
-//   );
-// }
 void openDeleteAllChatsBottomSheet({
   required BuildContext context,
   required VoidCallback onDelete,
