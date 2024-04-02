@@ -64,9 +64,7 @@ class UserPreviewController extends GetxController {
   }
 
   Future<void> deleteContact(String userCoreId) async {
-    await contactRepository
-        .deleteContactById(userCoreId)
-        .then((value) => print("object deleted  $value "));
+    await contactRepository.deleteContactById(userCoreId);
 
     final chatModel = await chatHistoryRepo.getChat(userCoreId);
     if (chatModel != null) {

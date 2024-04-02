@@ -9,6 +9,7 @@ import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart
 import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
+import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 
 class AddContactsController extends GetxController {
   AddContactsController({
@@ -59,92 +60,83 @@ class AddContactsController extends GetxController {
     nickname.value = name;
   }
 
-  Future<UserModel?> _getContactWith(String id) async {
+  Future<ContactModel?> _getContactById(String id) async {
     return contactRepository.getContactById(id);
   }
 
-  Future<UserModel> _cloneUserModel() async {
-    return UserModel(
+  Future<ContactModel> _cloneContactModel() async {
+    return ContactModel(
       coreId: args.coreId,
       name: args.coreId.shortenCoreId,
-      isOnline: true,
-      isContact: isContact.value,
-      walletAddress: args.coreId,
     );
   }
 
   Future<void> updateContact() async {
-    var user = await _getContactWith(args.coreId);
-    if (user == null) {
-      user = await _cloneUserModel();
-      await contactRepository.addContact(user);
+    var contact = await _getContactById(args.coreId);
+    if (contact == null) {
+      contact = await _cloneContactModel();
+      await contactRepository.addContact(contact);
     } else {
-      await updateUserChatMode(
-        userModel: user.copyWith(
-          nickname: nickname.value,
-          name: nickname.value.isEmpty
-              ? args.coreId.shortenCoreId
-              : nickname.value,
-          isContact: true,
-        ),
+      final newContact = contact.copyWith(
+        name:
+            nickname.value.isEmpty ? args.coreId.shortenCoreId : nickname.value,
       );
+      await updateUserChatMode(newContact);
     }
   }
 
   Future<void> _initUserContact() async {
     // check if user is already in contact
-    var createdUser = await _getContactWith(args.coreId);
+    var createdContact = await _getContactById(args.coreId);
 
-    if (createdUser == null) {
-      createdUser = await _cloneUserModel();
-      await contactRepository.addContact(createdUser);
+    if (createdContact == null) {
+      createdContact = await _cloneContactModel();
+      await contactRepository.addContact(createdContact);
     } else {
-      isContact.value = createdUser.isContact;
-      nickname.value = createdUser.nickname;
-      myNicknameController.text = createdUser.nickname;
+      isContact.value = true;
+      nickname.value = createdContact.name;
+      myNicknameController.text = createdContact.name;
     }
   }
 
-  Future<void> updateUserChatMode({required UserModel userModel}) async {
+  Future<void> updateUserChatMode(ContactModel contact) async {
     // check if user is already in contact
-    final user = await _getContactWith(userModel.coreId);
+    final user = await _getContactById(contact.coreId);
 
     if (user == null) {
-      await contactRepository.addContact(userModel);
+      await contactRepository.addContact(contact);
     } else {
-      await contactRepository.updateUserContact(userModel);
+      await contactRepository.updateUserContact(contact);
     }
-    await _updateChatHistory(userModel: userModel);
+    await _updateChatHistory(contact);
     //await _updateCallHistory(userModel: userModel);
 
-    Get.back(
-      result: userModel.name,
-    );
+    Get.back(result: contact.name);
   }
 
-  Future<void> _updateChatHistory({required UserModel userModel}) async {
+  Future<void> _updateChatHistory(ContactModel contact) async {
     final chatHistoryList =
-        await chatHistoryRepo.getChatsFromUserId(userModel.coreId);
+        await chatHistoryRepo.getChatsFromUserId(contact.coreId);
 
     for (final chat in chatHistoryList) {
       final updatedParticipants = chat.participants
           .map(
-            (participant) => participant.coreId == userModel.coreId
-                ? participant.copyWith(name: userModel.name)
+            (participant) => participant.coreId == contact.coreId
+                ? participant.copyWith(name: contact.name)
                 : participant,
           )
           .toList();
       await chatHistoryRepo.updateChat(
         chat.copyWith(
-          name: chat.isGroupChat ? chat.name : userModel.name,
+          name: chat.isGroupChat ? chat.name : contact.name,
           participants: updatedParticipants,
         ),
       );
 
       await _updateMessagesRepo(
         chatId: chat.id,
-        coreId: userModel.coreId,
-        newSenderName: userModel.name,
+        coreId: contact.coreId,
+        newSenderName: contact.name,
       );
     }
   }

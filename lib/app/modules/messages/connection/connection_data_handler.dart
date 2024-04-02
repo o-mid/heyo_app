@@ -44,7 +44,7 @@ class DataHandler {
   });
 
   createUserChatModel({required String sessioncid}) async {
-    UserModel? userModel = await contactRepository.getContactById(sessioncid);
+    final userModel = await contactRepository.getContactById(sessioncid);
 
     final userChatModel = ChatModel(
       id: sessioncid,
@@ -149,7 +149,7 @@ class DataHandler {
         messageId: receivedMessage.messageId, chatId: chatId);
 
     bool isNewMessage = (_currentMsg == null);
-    UserModel? contact = await contactRepository.getContactById(coreId);
+    final contact = await contactRepository.getContactById(coreId);
 
     if (isNewMessage) {
       await messagesRepo.createMessage(

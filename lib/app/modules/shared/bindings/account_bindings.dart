@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/account/controllers/account_controller.dart';
+import 'package:heyo/core/di/injector_provider.dart';
 import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
 import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import 'package:heyo/app/modules/p2p_node/data/key/web3_keys.dart';
@@ -33,20 +34,12 @@ class AccountBindings with HighPriorityBindings, NormalPriorityBindings {
     Get
       ..put<ContactRepo>(
         LocalContactRepo(
-          cacheContractor: CacheRepository(
-            userProvider: UserProvider(
-              appDatabaseProvider: Get.find<AppDatabaseProvider>(),
-            ),
-          ),
+          appDatabaseProvider: inject.get<AppDatabaseProvider>(),
         ),
       )
       ..put<LocalContactRepo>(
         LocalContactRepo(
-          cacheContractor: CacheRepository(
-            userProvider: UserProvider(
-              appDatabaseProvider: Get.find<AppDatabaseProvider>(),
-            ),
-          ),
+          appDatabaseProvider: inject.get<AppDatabaseProvider>(),
         ),
       )
       ..put<AccountCreation>(
