@@ -26,19 +26,14 @@ class DeleteChatDialog extends StatelessWidget {
         title: LocaleKeys.HomePage_Chats_deleteChatDialog_title.tr,
         buttons: [
           CustomButton(
-            onTap: () {
-              deleteChat();
-              Navigator.of(context).pop();
-            },
+            onTap: deleteChat,
             title: LocaleKeys.HomePage_Chats_deleteChatDialog_delete.tr,
             textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
             backgroundColor: COLORS.kPinCodeDeactivateColor,
           ),
           CustomSizes.smallSizedBoxHeight,
           CustomButton(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
+            onTap: () {},
             title: LocaleKeys.HomePage_Chats_deleteChatDialog_cancel.tr,
             textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
           ),

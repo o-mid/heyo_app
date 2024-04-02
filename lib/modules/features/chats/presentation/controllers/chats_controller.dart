@@ -112,8 +112,8 @@ class ChatsController extends AsyncNotifier<List<ChatViewModel>> {
           context: context,
           builder: (BuildContext context) {
             return DeleteChatDialog(
-              deleteChat: () {
-                deleteChat(chatId);
+              deleteChat: () async {
+                await deleteChat(chatId);
                 Navigator.of(context).pop(true);
               },
             );
