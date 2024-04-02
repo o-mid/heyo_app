@@ -29,7 +29,7 @@ import 'package:heyo/modules/call/presentation/add_participate/add_participate_p
 import 'package:heyo/modules/call/presentation/incoming_call/incoming_call_page.dart';
 import 'package:heyo/modules/features/call_history/presentation/pages/call_history_detail_page.dart';
 import 'package:heyo/modules/features/call_history/presentation/pages/call_history_page.dart';
-import 'package:heyo/modules/features/contact/presentation/pages/contact_view.dart';
+import 'package:heyo/modules/features/contact/presentation/pages/contact_page.dart';
 
 part 'route_paths.dart';
 
@@ -126,7 +126,7 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: RoutePaths.CONTACTS,
-      builder: (context, state) => const ContactView(),
+      builder: (context, state) => const ContactPage(),
     ),
     GoRoute(
       path: RoutePaths.NEW_CALL,

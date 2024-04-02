@@ -3,7 +3,7 @@ import 'package:heyo/app/modules/auth/pinCode/bindings/pin_code_binding.dart';
 import 'package:heyo/modules/features/call_history/presentation/pages/call_history_detail_page.dart';
 import 'package:heyo/modules/features/call_history/di/call_history_detail_binding.dart';
 import 'package:heyo/modules/features/call_history/presentation/pages/call_history_page.dart';
-import 'package:heyo/modules/features/contact/presentation/pages/contact_view.dart';
+import 'package:heyo/modules/features/contact/presentation/pages/contact_page.dart';
 
 import '../modules/account/views/account_view.dart';
 import '../modules/add_contacts/bindings/add_contacts_binding.dart';
@@ -243,7 +243,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CONTACTS,
-      page: () => const ContactView(),
+      page: () => const ContactPage(),
       binding: ContactsBinding(),
       transition: TRANSITIONS.navigation_generalPageTransition,
       transitionDuration: TRANSITIONS.navigation_generalPageTransitionDurtion,

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'contact_view_model.dart';
+part of 'contact_dto.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,29 +14,34 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
+ContactDTO _$ContactDTOFromJson(Map<String, dynamic> json) {
+  return _ContactDTO.fromJson(json);
+}
+
 /// @nodoc
-mixin _$ContactViewModel {
+mixin _$ContactDTO {
   String get coreId => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
 
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ContactViewModelCopyWith<ContactViewModel> get copyWith =>
+  $ContactDTOCopyWith<ContactDTO> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ContactViewModelCopyWith<$Res> {
-  factory $ContactViewModelCopyWith(
-          ContactViewModel value, $Res Function(ContactViewModel) then) =
-      _$ContactViewModelCopyWithImpl<$Res, ContactViewModel>;
+abstract class $ContactDTOCopyWith<$Res> {
+  factory $ContactDTOCopyWith(
+          ContactDTO value, $Res Function(ContactDTO) then) =
+      _$ContactDTOCopyWithImpl<$Res, ContactDTO>;
   @useResult
   $Res call({String coreId, String name});
 }
 
 /// @nodoc
-class _$ContactViewModelCopyWithImpl<$Res, $Val extends ContactViewModel>
-    implements $ContactViewModelCopyWith<$Res> {
-  _$ContactViewModelCopyWithImpl(this._value, this._then);
+class _$ContactDTOCopyWithImpl<$Res, $Val extends ContactDTO>
+    implements $ContactDTOCopyWith<$Res> {
+  _$ContactDTOCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -63,22 +68,22 @@ class _$ContactViewModelCopyWithImpl<$Res, $Val extends ContactViewModel>
 }
 
 /// @nodoc
-abstract class _$$ContactViewModelImplCopyWith<$Res>
-    implements $ContactViewModelCopyWith<$Res> {
-  factory _$$ContactViewModelImplCopyWith(_$ContactViewModelImpl value,
-          $Res Function(_$ContactViewModelImpl) then) =
-      __$$ContactViewModelImplCopyWithImpl<$Res>;
+abstract class _$$ContactDTOImplCopyWith<$Res>
+    implements $ContactDTOCopyWith<$Res> {
+  factory _$$ContactDTOImplCopyWith(
+          _$ContactDTOImpl value, $Res Function(_$ContactDTOImpl) then) =
+      __$$ContactDTOImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String coreId, String name});
 }
 
 /// @nodoc
-class __$$ContactViewModelImplCopyWithImpl<$Res>
-    extends _$ContactViewModelCopyWithImpl<$Res, _$ContactViewModelImpl>
-    implements _$$ContactViewModelImplCopyWith<$Res> {
-  __$$ContactViewModelImplCopyWithImpl(_$ContactViewModelImpl _value,
-      $Res Function(_$ContactViewModelImpl) _then)
+class __$$ContactDTOImplCopyWithImpl<$Res>
+    extends _$ContactDTOCopyWithImpl<$Res, _$ContactDTOImpl>
+    implements _$$ContactDTOImplCopyWith<$Res> {
+  __$$ContactDTOImplCopyWithImpl(
+      _$ContactDTOImpl _value, $Res Function(_$ContactDTOImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -87,7 +92,7 @@ class __$$ContactViewModelImplCopyWithImpl<$Res>
     Object? coreId = null,
     Object? name = null,
   }) {
-    return _then(_$ContactViewModelImpl(
+    return _then(_$ContactDTOImpl(
       coreId: null == coreId
           ? _value.coreId
           : coreId // ignore: cast_nullable_to_non_nullable
@@ -102,8 +107,12 @@ class __$$ContactViewModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ContactViewModelImpl implements _ContactViewModel {
-  const _$ContactViewModelImpl({required this.coreId, required this.name});
+@JsonSerializable(explicitToJson: true)
+class _$ContactDTOImpl implements _ContactDTO {
+  const _$ContactDTOImpl({required this.coreId, required this.name});
+
+  factory _$ContactDTOImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ContactDTOImplFromJson(json);
 
   @override
   final String coreId;
@@ -112,33 +121,43 @@ class _$ContactViewModelImpl implements _ContactViewModel {
 
   @override
   String toString() {
-    return 'ContactViewModel(coreId: $coreId, name: $name)';
+    return 'ContactDTO(coreId: $coreId, name: $name)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ContactViewModelImpl &&
+            other is _$ContactDTOImpl &&
             (identical(other.coreId, coreId) || other.coreId == coreId) &&
             (identical(other.name, name) || other.name == name));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, coreId, name);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ContactViewModelImplCopyWith<_$ContactViewModelImpl> get copyWith =>
-      __$$ContactViewModelImplCopyWithImpl<_$ContactViewModelImpl>(
-          this, _$identity);
+  _$$ContactDTOImplCopyWith<_$ContactDTOImpl> get copyWith =>
+      __$$ContactDTOImplCopyWithImpl<_$ContactDTOImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ContactDTOImplToJson(
+      this,
+    );
+  }
 }
 
-abstract class _ContactViewModel implements ContactViewModel {
-  const factory _ContactViewModel(
+abstract class _ContactDTO implements ContactDTO {
+  const factory _ContactDTO(
       {required final String coreId,
-      required final String name}) = _$ContactViewModelImpl;
+      required final String name}) = _$ContactDTOImpl;
+
+  factory _ContactDTO.fromJson(Map<String, dynamic> json) =
+      _$ContactDTOImpl.fromJson;
 
   @override
   String get coreId;
@@ -146,6 +165,6 @@ abstract class _ContactViewModel implements ContactViewModel {
   String get name;
   @override
   @JsonKey(ignore: true)
-  _$$ContactViewModelImplCopyWith<_$ContactViewModelImpl> get copyWith =>
+  _$$ContactDTOImplCopyWith<_$ContactDTOImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

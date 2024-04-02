@@ -1,21 +1,21 @@
-import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
+import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 
 abstract class ContactRepo {
-  Future<List<UserModel>> getContacts();
+  Future<List<ContactModel>> getContacts();
 
-  Future<void> addContact(UserModel userModel);
+  Future<void> addContact(ContactModel contact);
 
-  Future<List<UserModel>> search(String query);
+  Future<List<ContactModel>> search(String query);
 
-  Future<void> deleteUserContact(UserModel user);
+  Future<void> deleteUserContact(ContactModel contact);
 
-  Future<dynamic> deleteContactById(String userCoreId);
+  Future<dynamic> deleteContactById(String contactCoreId);
 
-  Future<void> updateUserContact(UserModel user);
+  Future<void> updateUserContact(ContactModel contact);
 
-  Future<UserModel?> getContactById(String userCoreId);
+  Future<ContactModel?> getContactById(String contactCoreId);
 
-  Future<List<UserModel>> getBlockedContacts();
+  //Future<List<ContactModel>> getBlockedContacts();
 
-  Future<Stream<List<UserModel>>> getContactsStream();
+  Future<Stream<List<ContactModel>>> getContactsStream();
 }

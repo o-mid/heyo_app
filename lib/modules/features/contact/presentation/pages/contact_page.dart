@@ -10,8 +10,8 @@ import 'package:heyo/modules/features/contact/presentation/widgets/blocked_conta
 import 'package:heyo/modules/features/contact/presentation/widgets/contact_list_widget.dart';
 import 'package:heyo/modules/features/contact/presentation/widgets/contact_loading_widget.dart';
 
-class ContactView extends ConsumerWidget {
-  const ContactView({super.key});
+class ContactPage extends ConsumerWidget {
+  const ContactPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -3,53 +3,43 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heyo/core/di/injector_provider.dart';
 import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
-import 'package:heyo/modules/features/contact/presentation/models/contact_view_model/contact_view_model.dart';
+import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 
 final contactNotifierProvider =
-    AsyncNotifierProvider<ContactController, List<ContactViewModel>>(
+    AsyncNotifierProvider<ContactController, List<ContactModel>>(
   () => ContactController(
     contactRepo: inject.get<ContactRepo>(),
   ),
 );
 
-class ContactController extends AsyncNotifier<List<ContactViewModel>> {
+class ContactController extends AsyncNotifier<List<ContactModel>> {
   ContactController({required this.contactRepo});
 
-  //final blockedContacts = <ContactViewModel>[];
+  //final blockedContacts = <ContactModel>[];
   final ContactRepo contactRepo;
 
   @override
-  FutureOr<List<ContactViewModel>> build() {
+  FutureOr<List<ContactModel>> build() {
     unawaited(listenToContactsStream());
 
     return getContacts();
   }
 
-  Future<List<ContactViewModel>> getContacts() async {
-    final contactUserModels = await contactRepo.getContacts();
+  Future<List<ContactModel>> getContacts() async {
     //blockedContacts.clear();
     //blockedContacts =
     //    contacts.where((element) => element.isBlocked).toList();
 
-    final contacts = contactUserModels
-        .map((contact) => contact.mapToContactViewModel())
-        .toList();
-
-    return contacts;
+    return contactRepo.getContacts();
   }
 
   Future<void> listenToContactsStream() async {
     final contacts = state.value ?? [];
 
-    (await contactRepo.getContactsStream()).listen((newContactUserModel) {
-      // convert userModel to contactViewModel
-      final contactViewModelList = newContactUserModel
-          .map((contact) => contact.mapToContactViewModel())
-          .toList();
-
+    (await contactRepo.getContactsStream()).listen((newContact) {
       // Add it to contact and sort it alphabetic
       contacts
-        ..addAll(contactViewModelList)
+        ..addAll(newContact)
         ..sort((a, b) => b.name.compareTo(a.name));
 
       state = AsyncData(contacts);
