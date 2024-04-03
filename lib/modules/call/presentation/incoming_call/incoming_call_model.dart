@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
+import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 
 class IncomingCallModel {
   String name;
@@ -44,7 +45,7 @@ class IncomingCallModel {
   String toString() => 'IncomingCallModel(name: $name, coreId: $coreId)';
 }
 
-extension UserModelToIncomingCallModel on UserModel {
+extension UserModelToIncomingCallModel on ContactModel {
   IncomingCallModel toIncomingCallModel() {
     return IncomingCallModel(
       name: name,

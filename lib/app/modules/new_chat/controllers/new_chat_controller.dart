@@ -10,6 +10,7 @@ import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
+import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../data/models/filter_model.dart';
@@ -88,20 +89,20 @@ class NewChatController extends GetxController
 
 // Mock data for the users
   final nearbyUsers = <UserModel>[
-    UserModel(
+    const UserModel(
       name: "Crapps Wallbanger",
       walletAddress: 'CB92...969A',
       coreId: 'CB92...969A',
       nickname: "Nickname",
     ),
-    UserModel(
+    const UserModel(
       name: "Fancy Potato",
       walletAddress: 'CB21...C325',
       coreId: 'CB21...C325',
       isOnline: true,
       isVerified: true,
     ),
-    UserModel(
+    const UserModel(
       name: "manly Cupholder",
       walletAddress: 'CB42...324E',
       coreId: 'CB42...324E',
@@ -130,7 +131,7 @@ class NewChatController extends GetxController
     refreshController.refreshCompleted();
   }
 
-  RxList<UserModel> searchSuggestions = <UserModel>[].obs;
+  RxList<ContactModel> searchSuggestions = <ContactModel>[].obs;
 
   listenToContacts() async {
     inputController.addListener(() {
@@ -155,8 +156,7 @@ class NewChatController extends GetxController
 
   void searchUsers(String query) async {
     //TODO icon and chatmodel should be filled with correct data
-    List<UserModel> searchedItems =
-        (await contactRepository.search(query)).toList();
+    final searchedItems = (await contactRepository.search(query)).toList();
 
     if (searchedItems.isEmpty) {
       final currentUserCoreId = await accountInfoRepo.getUserAddress();
@@ -164,11 +164,10 @@ class NewChatController extends GetxController
         //its a new user
         //TODO update fields based on correct data
         searchSuggestions.value = [
-          UserModel(
+          ContactModel(
             name: query.shortenCoreId,
-            walletAddress: query,
             coreId: query,
-          )
+          ),
         ];
       } else {
         searchSuggestions.value = [];

@@ -20,6 +20,7 @@ import 'package:heyo/app/modules/messages/connection/domain/messaging_connection
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
+import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -187,11 +188,12 @@ class MessagesController extends GetxController {
   }
 
   Future<void> _getUserContact() async {
-    users.first = await userStateRepository.getUserContact(
+    final contact = await userStateRepository.getUserContact(
       userInstance: UserInstance(
         coreId: users.first.coreId,
       ),
     );
+    users.first = contact.toUserModel();
     if (!isGroupChat) {
       chatName.value = users.first.name;
     }

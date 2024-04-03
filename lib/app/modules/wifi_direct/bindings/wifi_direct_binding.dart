@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
+import 'package:heyo/core/di/injector_provider.dart';
 
 import '../../messages/connection/wifi_direct_connection_controller.dart';
 import '../../p2p_node/data/key/web3_keys.dart';
@@ -19,9 +20,7 @@ class WifiDirectBinding extends Bindings {
         accountInfoRepo: Get.find(),
         // wifiDirectConnectionController: Get.find<UnifiedConnectionController>(),
         contactRepository: LocalContactRepo(
-          cacheContractor: CacheRepository(
-              userProvider: UserProvider(
-                  appDatabaseProvider: Get.find<AppDatabaseProvider>())),
+          appDatabaseProvider: inject.get<AppDatabaseProvider>(),
         ),
       ),
     );

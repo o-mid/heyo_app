@@ -7,6 +7,7 @@ import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
+import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../messages/utils/chat_Id_generator.dart';
@@ -33,9 +34,9 @@ class NewGroupChatController extends GetxController {
   RxBool allowAddingMembers = false.obs;
   RxBool isTextInputFocused = false.obs;
   RxBool isconfirmationTextInputFocused = false.obs;
-  RxList<UserModel> searchSuggestions = <UserModel>[].obs;
+  RxList<ContactModel> searchSuggestions = <ContactModel>[].obs;
   final String profileLink = 'https://heyo.core/m6ljkB4KJ';
-  RxList<UserModel> selectedCoreids = <UserModel>[].obs;
+  RxList<ContactModel> selectedCoreids = <ContactModel>[].obs;
 
   @override
   Future<void> onInit() async {
@@ -79,7 +80,7 @@ class NewGroupChatController extends GetxController {
     });
   }
 
-  void _updateSearchSuggestions(List<UserModel> newContacts) {
+  void _updateSearchSuggestions(List<ContactModel> newContacts) {
     if (inputText.value.isEmpty) {
       searchSuggestions
         ..value = newContacts
@@ -93,7 +94,9 @@ class NewGroupChatController extends GetxController {
   }
 
   Future<void> processSearchResults(
-      List<UserModel> results, String query) async {
+    List<ContactModel> results,
+    String query,
+  ) async {
     if (results.isEmpty && query.isValidCoreId()) {
       await handleEmptySearchResults(query);
     } else {
@@ -107,9 +110,8 @@ class NewGroupChatController extends GetxController {
     if (currentUserCoreId != query) {
       // Add logic for new user
       searchSuggestions.value = [
-        UserModel(
+        ContactModel(
           name: 'Unknown',
-          walletAddress: query,
           coreId: query,
         ),
       ];
@@ -130,23 +132,24 @@ class NewGroupChatController extends GetxController {
     inputController.text = coreId;
   }
 
-  Future<void> handleItemTap(UserModel user) async {
-    await updateSelectedCoreIds(user);
-    await updateContactRepository(user);
+  Future<void> handleItemTap(ContactModel contact) async {
+    await updateSelectedCoreIds(contact);
+    await updateContactRepository(contact);
   }
 
-  Future<void> updateSelectedCoreIds(UserModel user) async {
-    if (selectedCoreids.any((element) => element.coreId == user.coreId)) {
-      selectedCoreids.removeWhere((element) => element.coreId == user.coreId);
+  Future<void> updateSelectedCoreIds(ContactModel contact) async {
+    if (selectedCoreids.any((element) => element.coreId == contact.coreId)) {
+      selectedCoreids
+          .removeWhere((element) => element.coreId == contact.coreId);
     } else {
-      selectedCoreids.add(user);
+      selectedCoreids.add(contact);
     }
   }
 
-  Future<void> updateContactRepository(UserModel user) async {
-    final contact = await contactRepository.getContactById(user.coreId);
-    if (contact == null) {
-      await contactRepository.addContact(user);
+  Future<void> updateContactRepository(ContactModel contact) async {
+    final checkContact = await contactRepository.getContactById(contact.coreId);
+    if (checkContact == null) {
+      await contactRepository.addContact(contact);
     }
   }
 
@@ -288,7 +291,7 @@ class NewGroupChatController extends GetxController {
   }
 
   Future<void> _addMockUsers() async {
-    final _mockUsers = <UserModel>[
+    final _mockUsers = <ContactModel>[
       // UserModel(
       //   name: 'testApi33',
       //   walletAddress: 'ab68f7423e57d266d5a7061e3e166f5004e7353e841e',
