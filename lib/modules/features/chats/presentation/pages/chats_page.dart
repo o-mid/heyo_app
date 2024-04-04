@@ -23,51 +23,24 @@ class ChatsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final chats = ref.watch(chatsNotifierProvider);
     final controller = ref.read(chatsNotifierProvider.notifier);
-    // controller.onChatsUpdated = _handleChatsUpdate;
-
-    void _addNewChats(List<ChatViewModel> added) {
-      for (final chat in added) {
-        final index = controller.chats.length;
-        controller.animatedListKey.currentState?.insertItem(
-          index,
-          duration: const Duration(milliseconds: 200),
-        );
-        controller.chats.insert(index, chat);
-      }
-    }
-
-    void _removeChats(List<ChatViewModel> removed) {
-      for (final chat in removed) {
-        final index = controller.chats.indexOf(chat);
-        controller.animatedListKey.currentState?.removeItem(
-          index,
-          (context, animation) => _buildRemovedItem(chat, animation),
-          duration: const Duration(milliseconds: 200),
-        );
-        controller.chats.removeAt(index);
-      }
-    }
-
-    void _handleChatsUpdate(List<ChatViewModel> removed, List<ChatViewModel> added) {
-      _addNewChats(added);
-      _removeChats(removed);
-      controller.chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    }
 
     return Scaffold(
       backgroundColor: COLORS.kAppBackground,
-      appBar: AppBarWidget(title: LocaleKeys.HomePage_navbarItems_chats.tr, actions: [
-        if (chats.hasValue)
-          IconButton(
-            splashRadius: 18,
-            onPressed: () {
-              controller.showDeleteAllChatsBottomSheet(context);
-            },
-            icon: Assets.svg.verticalMenuIcon.svg(),
-          )
-        else
-          const SizedBox.shrink(),
-      ]),
+      appBar: AppBarWidget(
+        title: LocaleKeys.HomePage_navbarItems_chats.tr,
+        actions: [
+          if (chats.hasValue)
+            IconButton(
+              splashRadius: 18,
+              onPressed: () {
+                controller.showDeleteAllChatsBottomSheet(context);
+              },
+              icon: Assets.svg.verticalMenuIcon.svg(),
+            )
+          else
+            const SizedBox.shrink(),
+        ],
+      ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -79,15 +52,12 @@ class ChatsPage extends ConsumerWidget {
                   return const EmptyChatsWidget();
                 } else {
                   return SlidableAutoCloseBehavior(
-                      child: AnimatedList(
-                    key: controller.animatedListKey,
-                    initialItemCount: data.length,
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    itemBuilder: (context, index, animation) {
-                      final chat = data[index];
-                      return SlideTransition(
-                        position: _slideAnimation(animation),
-                        child: ChatWidget(
+                    child: ListView.builder(
+                      itemCount: data.length,
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      itemBuilder: (context, index) {
+                        final chat = data[index];
+                        return ChatWidget(
                           chatId: chat.id,
                           name: chat.name,
                           lastMessage: chat.lastMessage,
@@ -95,10 +65,10 @@ class ChatsPage extends ConsumerWidget {
                           participants: chat.participants,
                           notificationCount: chat.notificationCount,
                           isGroupChat: chat.isGroupChat,
-                        ),
-                      );
-                    },
-                  ));
+                        );
+                      },
+                    ),
+                  );
                 }
               },
               error: (error, stackTrace) => Center(child: Text(error.toString())),

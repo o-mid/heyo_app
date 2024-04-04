@@ -38,7 +38,7 @@ class ChatsController extends AsyncNotifier<List<ChatViewModel>> {
   final ContactRepository contactRepository;
 
   List<ChatViewModel> chats = [];
-  final animatedListKey = GlobalKey<AnimatedListState>();
+
   @override
   FutureOr<List<ChatViewModel>> build() async {
     unawaited(_fetchInitialChats());
