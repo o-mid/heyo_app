@@ -25,11 +25,11 @@ class AllParticipantModel with _$AllParticipantModel {
       _$AllParticipantModelFromJson(json);
 }
 
-extension UserModelMapper on UserModel {
-  AllParticipantModel mapToAllParticipantModel() {
-    return AllParticipantModel(
-      name: name,
-      coreId: coreId,
-    );
-  }
-}
+//extension UserModelMapper on UserModel {
+//  AllParticipantModel mapToAllParticipantModel() {
+//    return AllParticipantModel(
+//      name: name,
+//      coreId: coreId,
+//    );
+//  }
+//}

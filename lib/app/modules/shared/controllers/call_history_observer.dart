@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:heyo/modules/call/data/call_status_observer.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
-import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
-import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
+import 'package:heyo/modules/call/data/call_status_observer.dart';
 import 'package:heyo/modules/call/data/call_status_provider.dart';
+import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
+import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 
 class CallHistoryObserver extends GetxController {
   CallHistoryObserver({
@@ -19,7 +18,7 @@ class CallHistoryObserver extends GetxController {
 
   final CallHistoryRepo callHistoryRepo;
   final CallStatusObserver callStatusObserver;
-  final ContactRepository contactRepository;
+  final LocalContactRepo contactRepository;
 
   /// maps session id of a call to the time it started so that when it ends
   /// we can calculate the duration of call
@@ -259,11 +258,11 @@ class CallHistoryObserver extends GetxController {
   }
 
   Future<CallHistoryParticipantModel> _getUserFromCoreId(String coreId) async {
-    final user = await contactRepository.getContactById(coreId);
+    final contact = await contactRepository.getContactById(coreId);
     CallHistoryParticipantModel callHistoryParticipant;
 
-    if (user != null) {
-      callHistoryParticipant = user.mapToCallHistoryParticipantModel();
+    if (contact != null) {
+      callHistoryParticipant = contact.mapToCallHistoryParticipantModel();
     } else {
       callHistoryParticipant = CallHistoryParticipantModel(
         coreId: coreId,

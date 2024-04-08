@@ -20,6 +20,7 @@ import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_model.dart';
+import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +64,7 @@ import '../../shared/utils/constants/transitions_constant.dart';
 import '../../shared/utils/scroll_to_index.dart';
 import '../data/usecases/delete_message_usecase.dart';
 import '../data/usecases/update_message_usecase.dart';
-import '../../shared/data/repository/contact_repository.dart';
+import '../../../../modules/features/contact/data/local_contact_repo.dart';
 import '../domain/message_repository.dart';
 
 class MessagesController extends GetxController {
@@ -185,11 +186,12 @@ class MessagesController extends GetxController {
   }
 
   Future<void> _getUserContact() async {
-    users.first = await userStateRepository.getUserContact(
+    final contact = await userStateRepository.getUserContact(
       userInstance: UserInstance(
         coreId: users.first.coreId,
       ),
     );
+    users.first = contact.toUserModel();
     if (!isGroupChat) {
       chatName.value = users.first.name;
     }

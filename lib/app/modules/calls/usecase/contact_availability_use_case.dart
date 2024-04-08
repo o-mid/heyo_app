@@ -1,27 +1,26 @@
-import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
+import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
+import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 
 class ContactAvailabilityUseCase {
   ContactAvailabilityUseCase({required this.contactRepository});
 
-  final ContactRepository contactRepository;
+  final LocalContactRepo contactRepository;
 
-  Future<UserModel> execute({
+  Future<ContactModel> execute({
     required String coreId,
     String? name,
     String? iconUrl,
   }) async {
-    final userModel = await contactRepository.getContactById(coreId);
-    if (userModel != null) {
+    final contact = await contactRepository.getContactById(coreId);
+    if (contact != null) {
       //* The user is in contact
-      return userModel;
+      return contact;
     } else {
       //* The user is not in contact
-      return UserModel(
+      return ContactModel(
         coreId: coreId,
         name: name ?? coreId.shortenCoreId,
-        walletAddress: coreId,
       );
     }
   }

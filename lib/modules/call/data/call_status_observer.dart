@@ -7,7 +7,7 @@ import 'package:heyo/app/modules/shared/controllers/app_lifecyle_controller.dart
 import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/modules/call/data/call_status_provider.dart';
 import 'package:heyo/modules/call/data/ios_call_kit/ios_call_kit_provider.dart';
@@ -30,7 +30,7 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
   final CallStatusProvider callStatusProvider;
   final AccountRepository accountInfoRepo;
   final NotificationsController notificationsController;
-  final ContactRepository contactRepository;
+  final LocalContactRepo contactRepository;
   final AppLifeCycleController appLifeCycleController;
   final callHistoryState = Rxn<CallHistoryState>();
   final removeStream = Rxn<MediaStream>();
@@ -64,11 +64,10 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
             await iOSCallKitProvider.declineCall(callId);
           }
           if (Get.currentRoute == Routes.CALL) {
-           Get.back();
+            Get.back();
           } else if (Get.currentRoute == Routes.INCOMING_CALL) {
             Get.until((route) => Get.currentRoute != Routes.INCOMING_CALL);
           }
-
         }
         /*  if (state == CallState.callStateRinging) {
 

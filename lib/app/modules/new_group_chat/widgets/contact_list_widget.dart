@@ -30,8 +30,9 @@ class ContactListWidget extends StatelessWidget {
             shrinkWrap: true,
             itemCount: contacts.length,
             scrollDirection: Axis.vertical,
-            separatorBuilder: (_, __) =>
-                searchMode ? CustomSizes.mediumSizedBoxHeight : const SizedBox.shrink(),
+            separatorBuilder: (_, __) => searchMode
+                ? CustomSizes.mediumSizedBoxHeight
+                : const SizedBox.shrink(),
             itemBuilder: (context, index) => _buildContactListItem(index),
           ),
         ],
@@ -44,7 +45,8 @@ class ContactListWidget extends StatelessWidget {
       children: [
         Text(
           LocaleKeys.newChat_searchResults.tr,
-          style: TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextSoftBlueColor),
+          style:
+              TEXTSTYLES.kLinkSmall.copyWith(color: COLORS.kTextSoftBlueColor),
         ),
         CustomSizes.mediumSizedBoxHeight,
       ],
@@ -85,7 +87,7 @@ class ContactListWidget extends StatelessWidget {
               CustomCircleAvatar(
                 coreId: suggestedUser.coreId,
                 size: 48,
-                isOnline: suggestedUser.isOnline,
+                //isOnline: suggestedUser.isOnline,
               ),
               CustomSizes.mediumSizedBoxWidth,
               Column(
@@ -97,17 +99,19 @@ class ContactListWidget extends StatelessWidget {
                     children: [
                       Text(
                         suggestedUser.name,
-                        style: TEXTSTYLES.kChatName.copyWith(color: COLORS.kDarkBlueColor),
+                        style: TEXTSTYLES.kChatName
+                            .copyWith(color: COLORS.kDarkBlueColor),
                       ),
                       CustomSizes.smallSizedBoxWidth,
-                      if (suggestedUser.isVerified) Assets.svg.verifiedWithBluePadding.svg(),
+                      //if (suggestedUser.isVerified) Assets.svg.verifiedWithBluePadding.svg(),
                     ],
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    suggestedUser.walletAddress.shortenCoreId,
+                    suggestedUser.coreId.shortenCoreId,
                     maxLines: 1,
-                    style: TEXTSTYLES.kChatText.copyWith(color: COLORS.kTextBlueColor),
+                    style: TEXTSTYLES.kChatText
+                        .copyWith(color: COLORS.kTextBlueColor),
                   ),
                 ],
               ),

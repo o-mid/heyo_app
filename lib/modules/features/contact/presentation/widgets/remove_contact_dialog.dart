@@ -9,11 +9,8 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 class RemoveContactsDialog extends StatelessWidget {
+  const RemoveContactsDialog({required this.userName, super.key});
   final String userName;
-  const RemoveContactsDialog({
-    required this.userName,
-    Key? key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,22 +21,24 @@ class RemoveContactsDialog extends StatelessWidget {
         ),
         indicatorBackgroundColor: COLORS.kBrightBlueColor,
         titleAlignment: TextAlign.center,
-        title:
-            "${LocaleKeys.newChat_userBottomSheet_remove.tr} $userName ${LocaleKeys.newChat_userBottomSheet_fromContactsList.tr}",
+        title: '${LocaleKeys.newChat_userBottomSheet_remove.tr} $userName'
+            ' ${LocaleKeys.newChat_userBottomSheet_fromContactsList.tr}',
         buttons: [
           CustomButton(
             onTap: () {
               Get.back(result: true);
             },
             title: LocaleKeys.newChat_userBottomSheet_remove.tr,
-            textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
+            textStyle:
+                TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
             backgroundColor: COLORS.kPinCodeDeactivateColor,
           ),
           CustomSizes.smallSizedBoxHeight,
           CustomButton(
             onTap: () => Get.back(result: false),
             title: LocaleKeys.newChat_userBottomSheet_cancel.tr,
-            textStyle: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
+            textStyle:
+                TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
           ),
         ],
       ),

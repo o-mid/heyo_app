@@ -6,27 +6,30 @@ import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_
 import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguments_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
+import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../data/models/filter_model.dart';
 import '../data/models/user_model/user_model.dart';
 import '../widgets/invite_bttom_sheet.dart';
 
-class NewChatController extends GetxController with GetSingleTickerProviderStateMixin {
+class NewChatController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   late AnimationController animController;
   late Animation<double> animation;
   late TextEditingController inputController;
-  final ContactRepository contactRepository;
+  final LocalContactRepo contactRepository;
   final AccountRepository accountInfoRepo;
   final inputFocusNode = FocusNode();
   final inputText = "".obs;
   late StreamSubscription _contactasStreamSubscription;
 
-  NewChatController({required this.contactRepository, required this.accountInfoRepo});
+  NewChatController(
+      {required this.contactRepository, required this.accountInfoRepo});
 
 // in nearby users Tab after 3 seconds the refresh button will be visible
   RxBool refreshBtnVisibility = false.obs;
@@ -86,20 +89,20 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
 
 // Mock data for the users
   final nearbyUsers = <UserModel>[
-    UserModel(
+    const UserModel(
       name: "Crapps Wallbanger",
       walletAddress: 'CB92...969A',
       coreId: 'CB92...969A',
       nickname: "Nickname",
     ),
-    UserModel(
+    const UserModel(
       name: "Fancy Potato",
       walletAddress: 'CB21...C325',
       coreId: 'CB21...C325',
       isOnline: true,
       isVerified: true,
     ),
-    UserModel(
+    const UserModel(
       name: "manly Cupholder",
       walletAddress: 'CB42...324E',
       coreId: 'CB42...324E',
@@ -119,7 +122,8 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
     ),
   ].obs;
 
-  RefreshController refreshController = RefreshController(initialRefresh: false);
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
 
   void onRefresh() async {
     await Future.delayed(const Duration(milliseconds: 1000));
@@ -127,7 +131,7 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
     refreshController.refreshCompleted();
   }
 
-  RxList<UserModel> searchSuggestions = <UserModel>[].obs;
+  RxList<ContactModel> searchSuggestions = <ContactModel>[].obs;
 
   listenToContacts() async {
     inputController.addListener(() {
@@ -145,13 +149,14 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
         searchUsers(inputText.value);
       }
     });
-    nearbyUsers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    nearbyUsers
+        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     super.onInit();
   }
 
   void searchUsers(String query) async {
     //TODO icon and chatmodel should be filled with correct data
-    List<UserModel> searchedItems = (await contactRepository.search(query)).toList();
+    final searchedItems = (await contactRepository.search(query)).toList();
 
     if (searchedItems.isEmpty) {
       final currentUserCoreId = await accountInfoRepo.getUserAddress();
@@ -159,11 +164,10 @@ class NewChatController extends GetxController with GetSingleTickerProviderState
         //its a new user
         //TODO update fields based on correct data
         searchSuggestions.value = [
-          UserModel(
+          ContactModel(
             name: query.shortenCoreId,
-            walletAddress: query,
             coreId: query,
-          )
+          ),
         ];
       } else {
         searchSuggestions.value = [];

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import 'package:heyo/app/modules/calls/new_call/controllers/new_call_controller.dart';
 import 'package:heyo/app/modules/new_chat/widgets/user_widget.dart';
-import 'package:heyo/app/modules/shared/controllers/user_preview_controller.dart';
 import 'package:heyo/app/modules/shared/widgets/animate_list_widget.dart';
 import 'package:heyo/app/modules/shared/widgets/list_header_widget.dart';
 
@@ -31,9 +30,7 @@ class GroupedContactListWidget extends GetView<NewCallController> {
                             UserWidget(
                               coreId: p.coreId,
                               name: p.name,
-                              walletAddress: p.walletAddress,
-                              isOnline: p.isOnline,
-                              isVerified: p.isVerified,
+                              walletAddress: p.coreId,
                               showAudioCallButton: true,
                               showVideoCallButton: true,
                             ),
