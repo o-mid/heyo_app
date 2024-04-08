@@ -6,10 +6,10 @@ import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguments_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
-import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
+import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -22,7 +22,7 @@ class NewChatController extends GetxController
   late AnimationController animController;
   late Animation<double> animation;
   late TextEditingController inputController;
-  final LocalContactRepo contactRepository;
+  final ContactRepo contactRepository;
   final AccountRepository accountInfoRepo;
   final inputFocusNode = FocusNode();
   final inputText = "".obs;

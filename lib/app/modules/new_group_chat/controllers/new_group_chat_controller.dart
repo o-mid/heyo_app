@@ -7,6 +7,7 @@ import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
+import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 
 import '../../../routes/app_pages.dart';
@@ -21,7 +22,7 @@ class NewGroupChatController extends GetxController {
   NewGroupChatController(
       {required this.contactRepository, required this.accountInfoRepo});
 
-  final LocalContactRepo contactRepository;
+  final ContactRepo contactRepository;
   final AccountRepository accountInfoRepo;
   final inputFocusNode = FocusNode();
   final confirmationScreenInputFocusNode = FocusNode();

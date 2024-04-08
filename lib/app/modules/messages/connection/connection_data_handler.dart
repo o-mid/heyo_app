@@ -12,6 +12,7 @@ import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.
 import 'package:heyo/app/modules/shared/utils/constants/notifications_constant.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/mocks/random_avatar_icon.dart';
+import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../chats/data/models/chat_model.dart';
@@ -25,14 +26,13 @@ import '../data/models/reaction_model.dart';
 import '../data/repo/messages_repo.dart';
 import '../utils/message_from_json.dart';
 import '../../notifications/controllers/notifications_controller.dart';
-import '../../../../modules/features/contact/data/local_contact_repo.dart';
 import 'models/data_channel_message_model.dart';
 
 class DataHandler {
   final MessagesRepo messagesRepo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final NotificationsController notificationsController;
-  final LocalContactRepo contactRepository;
+  final ContactRepo contactRepository;
   final AccountRepository accountInfoRepo;
 
   DataHandler({

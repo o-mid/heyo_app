@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/usecase/get_contact_user_use_case.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
@@ -11,7 +10,7 @@ import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart'
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/qr_scan_view.dart';
 import 'package:heyo/generated/locales.g.dart';
-import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
+import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 
 class NewCallController extends GetxController {
@@ -21,7 +20,7 @@ class NewCallController extends GetxController {
     required this.getContactUserUseCase,
   });
 
-  final LocalContactRepo contactRepository;
+  final ContactRepo contactRepository;
   final AccountRepository accountInfoRepo;
   final GetContactUserUseCase getContactUserUseCase;
 

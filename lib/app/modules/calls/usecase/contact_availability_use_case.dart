@@ -1,11 +1,11 @@
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
-import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
+import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 
 class ContactAvailabilityUseCase {
   ContactAvailabilityUseCase({required this.contactRepository});
 
-  final LocalContactRepo contactRepository;
+  final ContactRepo contactRepository;
 
   Future<ContactModel> execute({
     required String coreId,
