@@ -6,8 +6,8 @@ import 'package:heyo/modules/features/call_history/presentation/pages/call_histo
 import 'package:heyo/modules/features/contact/presentation/pages/contact_page.dart';
 
 import '../modules/account/views/account_view.dart';
-import '../modules/add_contacts/bindings/add_contacts_binding.dart';
-import '../modules/add_contacts/views/add_contacts_view.dart';
+import '../../modules/features/contact/di/add_contact_binding.dart';
+import '../../modules/features/contact/presentation/pages/add_contact_page.dart';
 import '../modules/auth/generatePrivateKeys/bindings/generate_private_keys_binding.dart';
 import '../modules/auth/generatePrivateKeys/views/generate_private_keys_view.dart';
 import '../modules/auth/pinCode/views/pin_code_view.dart';
@@ -163,7 +163,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ADD_CONTACTS,
-      page: () => AddContactsView(),
+      page: () => AddContactsPage(),
       binding: AddContactsBinding(),
       transition: TRANSITIONS.navigation_generalPageTransition,
       transitionDuration: TRANSITIONS.navigation_generalPageTransitionDurtion,

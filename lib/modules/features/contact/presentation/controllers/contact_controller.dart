@@ -6,13 +6,13 @@ import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 
 final contactNotifierProvider =
-    AsyncNotifierProvider<ContactController, List<ContactModel>>(
+    AutoDisposeAsyncNotifierProvider<ContactController, List<ContactModel>>(
   () => ContactController(
     contactRepo: inject.get<ContactRepo>(),
   ),
 );
 
-class ContactController extends AsyncNotifier<List<ContactModel>> {
+class ContactController extends AutoDisposeAsyncNotifier<List<ContactModel>> {
   ContactController({required this.contactRepo});
 
   //final blockedContacts = <ContactModel>[];

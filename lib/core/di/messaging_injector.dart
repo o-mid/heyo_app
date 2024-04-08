@@ -112,12 +112,20 @@ class MessagingInjector with NormalPriorityInjector, HighPriorityInjector {
 
   @override
   void executeHighPriorityInjector() {
-    inject.registerSingleton<ChatHistoryLocalAbstractRepo>(
-      ChatHistoryLocalRepo(
-        chatHistoryProvider: ChatHistoryProvider(
-          appDatabaseProvider: inject.get(),
+    inject
+      ..registerSingleton<ChatHistoryLocalAbstractRepo>(
+        ChatHistoryLocalRepo(
+          chatHistoryProvider: ChatHistoryProvider(
+            appDatabaseProvider: inject.get(),
+          ),
         ),
-      ),
-    );
+      )
+      ..registerSingleton<ChatHistoryLocalRepo>(
+        ChatHistoryLocalRepo(
+          chatHistoryProvider: ChatHistoryProvider(
+            appDatabaseProvider: inject.get(),
+          ),
+        ),
+      );
   }
 }
