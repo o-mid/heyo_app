@@ -9,8 +9,7 @@ import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
 import 'package:heyo/modules/features/chats/presentation/widgets/chat_widget.dart';
 
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
-
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 
 import '../models/chat_view_model/chat_view_model.dart';
 import '../widgets/delete_chat_dialog.dart';
@@ -23,7 +22,7 @@ final chatsNotifierProvider = AsyncNotifierProvider<ChatsController, List<ChatVi
   () => ChatsController(
     chatHistoryRepo: inject.get<ChatHistoryRepo>(),
     messagesRepo: inject.get<MessagesAbstractRepo>(),
-    contactRepository: inject.get<ContactRepository>(),
+    contactRepository: inject.get<LocalContactRepo>(),
   ),
 );
 
@@ -35,7 +34,7 @@ class ChatsController extends AsyncNotifier<List<ChatViewModel>> {
   });
   final ChatHistoryRepo chatHistoryRepo;
   final MessagesAbstractRepo messagesRepo;
-  final ContactRepository contactRepository;
+  final LocalContactRepo contactRepository;
 
   List<ChatViewModel> chats = [];
 
