@@ -21,7 +21,7 @@ import 'package:heyo/app/modules/shared/controllers/audio_message_controller.dar
 import 'package:heyo/app/modules/shared/controllers/global_message_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/video_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 
 class MessagingBindings with NormalPriorityBindings, HighPriorityBindings {
   @override
@@ -54,7 +54,7 @@ class MessagingBindings with NormalPriorityBindings, HighPriorityBindings {
             messagesProvider: MessagesProvider(
                 appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
-          contactRepository: Get.find<ContactRepository>(),
+          contactRepository: Get.find<LocalContactRepo>(),
         ),
       )
       ..put(GlobalMessageController())

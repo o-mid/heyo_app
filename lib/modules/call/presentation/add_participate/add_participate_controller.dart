@@ -12,6 +12,7 @@ import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart'
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/qr_scan_view.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 
 class AddParticipateController extends GetxController {
   AddParticipateController({
@@ -81,7 +82,7 @@ class AddParticipateController extends GetxController {
     }
 
     participateItems
-      ..value = contacts.map((e) => e.mapToAllParticipantModel()).toList()
+      ..value = contacts.map((e) => e.toAllParticipantModel()).toList()
       //* Sort the The list alphabetically
       ..sort((a, b) => a.name.compareTo(b.name));
 

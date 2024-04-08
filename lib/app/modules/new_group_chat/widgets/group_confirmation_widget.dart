@@ -143,7 +143,7 @@ class GroupConfirmationWidget extends StatelessWidget {
                       CustomCircleAvatar(
                         coreId: controller.selectedCoreids[index].coreId,
                         size: 48,
-                        isOnline: controller.selectedCoreids[index].isOnline,
+                        //isOnline: controller.selectedCoreids[index].isOnline,
                       ),
                       CustomSizes.mediumSizedBoxWidth,
                       Column(
@@ -158,14 +158,14 @@ class GroupConfirmationWidget extends StatelessWidget {
                                     .copyWith(color: COLORS.kDarkBlueColor),
                               ),
                               CustomSizes.smallSizedBoxWidth,
-                              if (controller.selectedCoreids[index].isVerified)
-                                Assets.svg.verifiedWithBluePadding.svg(),
+                              //if (controller.selectedCoreids[index].isVerified)
+                              //  Assets.svg.verifiedWithBluePadding.svg(),
                             ],
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            controller.selectedCoreids[index].walletAddress
-                                .shortenCoreId,
+                            controller
+                                .selectedCoreids[index].coreId.shortenCoreId,
                             maxLines: 1,
                             style: TEXTSTYLES.kChatText
                                 .copyWith(color: COLORS.kTextBlueColor),

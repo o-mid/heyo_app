@@ -11,7 +11,7 @@ import 'package:heyo/app/modules/chats/widgets/delete_chat_dialog.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/utils/chat_Id_generator.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
-import 'package:heyo/app/modules/shared/data/repository/contact_repository.dart';
+import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 
 import '../../shared/data/models/messaging_participant_model.dart';
@@ -24,7 +24,7 @@ import '../data/models/chat_view_model/chat_view_model.dart';
 class ChatsController extends GetxController {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final MessagesAbstractRepo messagesRepo;
-  final ContactRepository contactRepository;
+  final LocalContactRepo contactRepository;
 
   ChatsController({
     required this.chatHistoryRepo,
@@ -46,7 +46,8 @@ class ChatsController extends GetxController {
     chats.clear();
     var chatModels = await chatHistoryRepo.getAllChats();
     chats
-      ..assignAll(chatModels.map((chatModel) => chatModel.toViewModel()).toList())
+      ..assignAll(
+          chatModels.map((chatModel) => chatModel.toViewModel()).toList())
       ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
     await listenToChatsStream();
   }
@@ -73,14 +74,16 @@ class ChatsController extends GetxController {
         if (!chats.any((element) => element.id == chatViewModel.id)) {
           added.add(chatViewModel);
         } else {
-          int index = chats.indexWhere((element) => element.id == chatViewModel.id);
+          int index =
+              chats.indexWhere((element) => element.id == chatViewModel.id);
           chats[index] = chatViewModel;
         }
       }
 
       for (var i = chats.length - 1; i >= 0; i--) {
         final chatViewModel = chats[i];
-        if (!newChats.any((newChatModel) => newChatModel.id == chatViewModel.id)) {
+        if (!newChats
+            .any((newChatModel) => newChatModel.id == chatViewModel.id)) {
           removed.add(chatViewModel);
         }
       }
@@ -96,7 +99,8 @@ class ChatsController extends GetxController {
   }
 
   // the callback to be called when chats are updated sent to the view
-  void Function(List<ChatViewModel> removed, List<ChatViewModel> added)? onChatsUpdated;
+  void Function(List<ChatViewModel> removed, List<ChatViewModel> added)?
+      onChatsUpdated;
 
   Future<void> deleteChat(String chatId) async {
     await chatHistoryRepo.deleteChat(chatId);

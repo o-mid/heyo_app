@@ -92,10 +92,9 @@ class IncomingCallController extends GetxController {
 
   Future<void> getUserData() async {
     for (final coreId in args.members) {
-      final userModel =
-          await contactAvailabilityUseCase.execute(coreId: coreId);
+      final contact = await contactAvailabilityUseCase.execute(coreId: coreId);
 
-      incomingCallers.add(userModel.toIncomingCallModel());
+      incomingCallers.add(contact.toIncomingCallModel());
     }
   }
 }

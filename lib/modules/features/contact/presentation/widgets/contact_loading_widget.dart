@@ -121,7 +121,9 @@ class ContactLoadingWidget extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _loadingTextWidget(
-                          width: double.infinity, height: 10),
+                        width: double.infinity,
+                        height: 10,
+                      ),
                     ),
                     const Spacer(flex: 2),
                   ],
@@ -131,7 +133,9 @@ class ContactLoadingWidget extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _loadingTextWidget(
-                          width: double.infinity, height: 10),
+                        width: double.infinity,
+                        height: 10,
+                      ),
                     ),
                     const Spacer(),
                   ],

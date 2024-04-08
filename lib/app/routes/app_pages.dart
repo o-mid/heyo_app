@@ -3,10 +3,11 @@ import 'package:heyo/app/modules/auth/pinCode/bindings/pin_code_binding.dart';
 import 'package:heyo/modules/features/call_history/presentation/pages/call_history_detail_page.dart';
 import 'package:heyo/modules/features/call_history/di/call_history_detail_binding.dart';
 import 'package:heyo/modules/features/call_history/presentation/pages/call_history_page.dart';
+import 'package:heyo/modules/features/contact/presentation/pages/contact_page.dart';
 
 import '../modules/account/views/account_view.dart';
-import '../modules/add_contacts/bindings/add_contacts_binding.dart';
-import '../modules/add_contacts/views/add_contacts_view.dart';
+import '../../modules/features/contact/di/add_contact_binding.dart';
+import '../../modules/features/contact/presentation/pages/add_contact_page.dart';
 import '../modules/auth/generatePrivateKeys/bindings/generate_private_keys_binding.dart';
 import '../modules/auth/generatePrivateKeys/views/generate_private_keys_view.dart';
 import '../modules/auth/pinCode/views/pin_code_view.dart';
@@ -20,8 +21,7 @@ import '../modules/calls/main/bindings/call_binding.dart';
 import '../modules/calls/main/views/call_view.dart';
 import '../modules/calls/new_call/bindings/new_call_binding.dart';
 import '../modules/calls/new_call/views/new_call_view.dart';
-import '../modules/contacts/bindings/contacts_binding.dart';
-import '../modules/contacts/views/contacts_view.dart';
+import '../../modules/features/contact/di/contact_binding.dart';
 import '../modules/forward_massages/bindings/forward_massages_binding.dart';
 import '../modules/forward_massages/views/forward_massages_view.dart';
 import '../modules/gallery_picker/bindings/gallery_picker_binding.dart';
@@ -163,7 +163,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ADD_CONTACTS,
-      page: () => AddContactsView(),
+      page: () => AddContactsPage(),
       binding: AddContactsBinding(),
       transition: TRANSITIONS.navigation_generalPageTransition,
       transitionDuration: TRANSITIONS.navigation_generalPageTransitionDurtion,
@@ -243,7 +243,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CONTACTS,
-      page: () => const ContactsView(),
+      page: () => const ContactPage(),
       binding: ContactsBinding(),
       transition: TRANSITIONS.navigation_generalPageTransition,
       transitionDuration: TRANSITIONS.navigation_generalPageTransitionDurtion,
