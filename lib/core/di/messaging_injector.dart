@@ -21,6 +21,7 @@ import 'package:heyo/app/modules/shared/data/providers/database/app_database.dar
 import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/core/di/injector_provider.dart';
 import 'package:heyo/core/di/priority_injector_interface.dart';
+import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 
 class MessagingInjector with NormalPriorityInjector, HighPriorityInjector {
   @override
@@ -55,7 +56,7 @@ class MessagingInjector with NormalPriorityInjector, HighPriorityInjector {
               appDatabaseProvider: inject.get<AppDatabaseProvider>(),
             ),
           ),
-          contactRepository: inject.get<LocalContactRepo>(),
+          contactRepository: inject.get<ContactRepo>(),
         ),
       )
       ..registerSingleton(GlobalMessageController())
