@@ -58,36 +58,9 @@ class AddContactsController extends AutoDisposeAsyncNotifier<ContactModel?> {
       newContact = state.value!.copyWith(name: name);
       await contactRepo.updateUserContact(newContact);
     }
-    // TODO(AliAzim): make sure this update is requires.
-    await updateUserChatMode(newContact);
-  }
-
-  //Future<void> _initUserContact() async {
-  //  // check if user is already in contact
-  //  var createdContact = await contactRepo.getContactById(args.coreId);
-
-  //  if (createdContact == null) {
-  //    createdContact = await _cloneContactModel();
-  //    await contactRepo.addContact(createdContact);
-  //  } else {
-  //    nickname.value = createdContact.name;
-  //    myNicknameController.text = createdContact.name;
-  //  }
-  //}
-
-  Future<void> updateUserChatMode(ContactModel contact) async {
-    // check if user is already in contact
-    final user = await contactRepo.getContactById(contact.coreId);
-
-    if (user == null) {
-      await contactRepo.addContact(contact);
-    } else {
-      await contactRepo.updateUserContact(contact);
-    }
-    await _updateChatHistory(contact);
-    //await _updateCallHistory(userModel: userModel);
-
-    Get.back(result: contact.name);
+    // TODO(AliAzim): This should be removed after refactoring chat feature.
+    await _updateChatHistory(newContact);
+    Get.back(result: newContact.name);
   }
 
   Future<void> _updateChatHistory(ContactModel contact) async {
@@ -108,57 +81,11 @@ class AddContactsController extends AutoDisposeAsyncNotifier<ContactModel?> {
           participants: updatedParticipants,
         ),
       );
-
-      await _updateMessagesRepo(
+      await messagesRepo.updateMessagesSenderName(
         chatId: chat.id,
         coreId: contact.coreId,
         newSenderName: contact.name,
       );
     }
-  }
-
-  //Future<void> _updateCallHistory({required UserModel userModel}) async {
-  //  final callHistoryList =
-  //      await callHistoryRepo.getCallsFromUserId(userModel.coreId);
-
-  //  //* For loop for all stored call history
-  //  for (final call in callHistoryList) {
-  //    debugPrint('_updateCallHistory: ${call.callId}');
-
-  //    final index = call.participants.indexWhere(
-  //      (participant) => participant.coreId == userModel.coreId,
-  //    );
-
-  //    //* Check if the item was found
-  //    if (index != -1) {
-  //      //final newParticipants = call.participants.fi
-
-  //      final updatedParticipant = call.participants[index];
-
-  //      // Create a copy of the list
-  //      final newParticipantList =
-  //          List<CallHistoryParticipantModel>.from(call.participants);
-
-  //      // Replace the old item with the new one
-  //      newParticipantList[index] = updatedParticipant;
-
-  //      // Create a new instance of the call with the updated list
-  //      final updatedCall = call.copyWith(participants: newParticipantList);
-
-  //      await callHistoryRepo.updateCall(updatedCall);
-  //    }
-  //  }
-  //}
-
-  Future<void> _updateMessagesRepo({
-    required String chatId,
-    required String coreId,
-    required String newSenderName,
-  }) async {
-    await messagesRepo.updateMessagesSenderName(
-      chatId: chatId,
-      coreId: coreId,
-      newSenderName: newSenderName,
-    );
   }
 }

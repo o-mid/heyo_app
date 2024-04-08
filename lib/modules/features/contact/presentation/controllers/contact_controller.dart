@@ -34,13 +34,9 @@ class ContactController extends AutoDisposeAsyncNotifier<List<ContactModel>> {
   }
 
   Future<void> listenToContactsStream() async {
-    final contacts = state.value ?? [];
-
     (await contactRepo.getContactsStream()).listen((newContact) {
       // Add it to contact and sort it alphabetic
-      contacts
-        ..addAll(newContact)
-        ..sort((a, b) => b.name.compareTo(a.name));
+      final contacts = newContact..sort((a, b) => b.name.compareTo(a.name));
 
       state = AsyncData(contacts);
 
