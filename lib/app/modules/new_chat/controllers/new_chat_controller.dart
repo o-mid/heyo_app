@@ -11,7 +11,7 @@ import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart'
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 import 'package:heyo/modules/features/contact/usecase/contact_listener_use_case.dart';
-import 'package:heyo/modules/features/contact/usecase/serach_contacts_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/search_contacts_use_case.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../data/models/filter_model.dart';

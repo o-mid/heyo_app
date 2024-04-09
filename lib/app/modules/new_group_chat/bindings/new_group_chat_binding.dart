@@ -6,7 +6,7 @@ import 'package:heyo/modules/features/contact/usecase/add_contacts_use_case.dart
 import 'package:heyo/modules/features/contact/usecase/contact_listener_use_case.dart';
 import 'package:heyo/modules/features/contact/usecase/delete_contact_use_case.dart';
 import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
-import 'package:heyo/modules/features/contact/usecase/serach_contacts_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/search_contacts_use_case.dart';
 
 class NewGroupChatBinding extends Bindings {
   @override
