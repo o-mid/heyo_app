@@ -10,7 +10,7 @@ class WifiDirectBinding extends Bindings {
       () => WifiDirectController(
         accountInfoRepo: Get.find(),
         // wifiDirectConnectionController: Get.find<UnifiedConnectionController>(),
-        contactRepository: inject.get<ContactRepo>(),
+        //contactRepository: inject.get<ContactRepo>(),
       ),
     );
   }

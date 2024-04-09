@@ -12,7 +12,6 @@ import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart'
 import 'package:heyo/app/modules/messages/utils/chat_Id_generator.dart';
 import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
-import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 
 import '../../shared/data/models/messaging_participant_model.dart';
 
@@ -24,12 +23,12 @@ import '../data/models/chat_view_model/chat_view_model.dart';
 class ChatsController extends GetxController {
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final MessagesAbstractRepo messagesRepo;
-  final ContactRepo contactRepository;
+  //final ContactRepo contactRepository;
 
   ChatsController({
     required this.chatHistoryRepo,
     required this.messagesRepo,
-    required this.contactRepository,
+    //required this.contactRepository,
   });
 
   final animatedListKey = GlobalKey<AnimatedListState>();

@@ -2,7 +2,10 @@ import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_h
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_provider.dart';
 import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
 import 'package:heyo/modules/features/call_history/data/local_call_history_repo.dart';
-import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
+import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
+import 'package:heyo/modules/features/contact/usecase/contact_listener_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_name_by_id_use_case.dart';
 import 'package:heyo/app/modules/shared/controllers/call_history_observer.dart';
 import 'package:heyo/core/di/injector_provider.dart';
 import 'package:heyo/core/di/priority_injector_interface.dart';
@@ -57,7 +60,9 @@ class CallInjector with NormalPriorityInjector {
       ..registerSingleton(
         CallKitProvider(
           accountInfoRepo: inject.get(),
-          contactRepository: inject.get(),
+          getContactByIdUseCase: GetContactByIdUseCase(
+            contactRepository: inject.get<ContactRepo>(),
+          ),
           callRepository: inject.get<WebRTCCallRepository>(),
         ),
         //permanent: true,
@@ -67,7 +72,9 @@ class CallInjector with NormalPriorityInjector {
           callStatusProvider: inject.get(),
           accountInfoRepo: inject.get(),
           notificationsController: inject.get(),
-          contactRepository: inject.get(),
+          getContactByIdUseCase: GetContactByIdUseCase(
+            contactRepository: inject.get<ContactRepo>(),
+          ),
           appLifeCycleController: inject.get(),
           iOSCallKitProvider: inject.get(),
         ),
@@ -88,19 +95,23 @@ class CallInjector with NormalPriorityInjector {
         CallHistoryObserver(
           callHistoryRepo: inject.get(),
           callStatusObserver: inject.get(),
-          contactRepository: inject.get(),
+          getContactByIdUseCase: GetContactByIdUseCase(
+            contactRepository: inject.get<ContactRepo>(),
+          ),
         ),
       )
       //..registerSingleton<AppDatabaseProvider>(AppDatabaseProvider())
 
-      ..registerSingleton<ContactNameUseCase>(
-        ContactNameUseCase(contactRepository: inject.get()),
+      ..registerSingleton<GetContactNameByIdUseCase>(
+        GetContactNameByIdUseCase(contactRepository: inject.get()),
       )
       ..registerSingleton(
         CallHistoryController(
           callHistoryRepo: inject.get(),
           contactNameUseCase: inject.get(),
-          contactRepository: inject.get(),
+          contactListenerUseCase: ContactListenerUseCase(
+            contactRepository: inject.get<ContactRepo>(),
+          ),
         ),
       );
   }

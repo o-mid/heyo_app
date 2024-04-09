@@ -16,16 +16,16 @@ import '../../messages/connection/wifi_direct_connection_repo.dart';
 import '../../messages/connection/wifi_direct_connection_controller.dart';
 
 class WifiDirectController extends GetxController {
-  WifiDirectController(
-      {required AccountRepository accountInfoRepo,
-      // required this.wifiDirectConnectionController,
-      required this.contactRepository})
-      : _accountInfoRepo = accountInfoRepo;
+  WifiDirectController({
+    required AccountRepository accountInfoRepo,
+    // required this.wifiDirectConnectionController,
+    //required this.contactRepository,
+  }) : _accountInfoRepo = accountInfoRepo;
 
   final AccountRepository _accountInfoRepo;
 
   // final AccountInfo accountInfo;
-  final ContactRepo contactRepository;
+  //final ContactRepo contactRepository;
 
   HeyoWifiDirect? _heyoWifiDirect;
   bool isLocationPermissionGranted = false;

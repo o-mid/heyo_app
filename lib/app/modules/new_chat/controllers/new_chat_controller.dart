@@ -9,8 +9,9 @@ import 'package:heyo/app/modules/shared/data/repository/account/account_reposito
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
-import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
+import 'package:heyo/modules/features/contact/usecase/contact_listener_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/serach_contacts_use_case.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../data/models/filter_model.dart';
@@ -22,14 +23,18 @@ class NewChatController extends GetxController
   late AnimationController animController;
   late Animation<double> animation;
   late TextEditingController inputController;
-  final ContactRepo contactRepository;
+  final SearchContactsUseCase searchContactsUseCase;
+  final ContactListenerUseCase contactListenerUseCase;
   final AccountRepository accountInfoRepo;
   final inputFocusNode = FocusNode();
   final inputText = "".obs;
   late StreamSubscription _contactasStreamSubscription;
 
-  NewChatController(
-      {required this.contactRepository, required this.accountInfoRepo});
+  NewChatController({
+    required this.searchContactsUseCase,
+    required this.contactListenerUseCase,
+    required this.accountInfoRepo,
+  });
 
 // in nearby users Tab after 3 seconds the refresh button will be visible
   RxBool refreshBtnVisibility = false.obs;
@@ -140,7 +145,7 @@ class NewChatController extends GetxController
     });
 
     _contactasStreamSubscription =
-        (await contactRepository.getContactsStream()).listen((newContacts) {
+        (await contactListenerUseCase.execute()).listen((newContacts) {
       // remove the deleted contacts from the list
 
       if (inputText.value == "") {
@@ -156,7 +161,7 @@ class NewChatController extends GetxController
 
   void searchUsers(String query) async {
     //TODO icon and chatmodel should be filled with correct data
-    final searchedItems = (await contactRepository.search(query)).toList();
+    final searchedItems = (await searchContactsUseCase.execute(query)).toList();
 
     if (searchedItems.isEmpty) {
       final currentUserCoreId = await accountInfoRepo.getUserAddress();

@@ -12,13 +12,14 @@ import 'package:heyo/modules/call/data/call_status_provider.dart';
 import 'package:heyo/modules/call/data/ios_call_kit/ios_call_kit_provider.dart';
 import 'package:heyo/modules/call/data/rtc/models.dart';
 import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 
 class CallStatusObserver extends GetxController with WidgetsBindingObserver {
   CallStatusObserver(
       {required this.callStatusProvider,
       required this.accountInfoRepo,
       required this.notificationsController,
-      required this.contactRepository,
+      required this.getContactByIdUseCase,
       required this.appLifeCycleController,
       required this.iOSCallKitProvider}) {
     init();
@@ -30,7 +31,7 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
   final CallStatusProvider callStatusProvider;
   final AccountRepository accountInfoRepo;
   final NotificationsController notificationsController;
-  final ContactRepo contactRepository;
+  final GetContactByIdUseCase getContactByIdUseCase;
   final AppLifeCycleController appLifeCycleController;
   final callHistoryState = Rxn<CallHistoryState>();
   final removeStream = Rxn<MediaStream>();
@@ -85,8 +86,8 @@ class CallStatusObserver extends GetxController with WidgetsBindingObserver {
     required CallId callId,
     required List<CallInfo> calls,
   }) async {
-    final userModel = await contactRepository
-        .getContactById(calls.first.remotePeer.remoteCoreId);
+    final contact = await getContactByIdUseCase
+        .execute(calls.first.remotePeer.remoteCoreId);
     if (Platform.isAndroid) {
       await appLifeCycleController.waitForResumeState();
     }

@@ -22,6 +22,7 @@ import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/core/di/injector_provider.dart';
 import 'package:heyo/core/di/priority_injector_interface.dart';
 import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 
 class MessagingInjector with NormalPriorityInjector, HighPriorityInjector {
   @override
@@ -36,7 +37,9 @@ class MessagingInjector with NormalPriorityInjector, HighPriorityInjector {
           ),
           chatHistoryRepo: inject.get(),
           notificationsController: inject.get(),
-          contactRepository: inject.get(),
+          getContactByIdUseCase: GetContactByIdUseCase(
+            contactRepository: inject.get<ContactRepo>(),
+          ),
           accountInfoRepo: inject.get(),
         ),
         //permanent: true,
@@ -56,7 +59,6 @@ class MessagingInjector with NormalPriorityInjector, HighPriorityInjector {
               appDatabaseProvider: inject.get<AppDatabaseProvider>(),
             ),
           ),
-          contactRepository: inject.get<ContactRepo>(),
         ),
       )
       ..registerSingleton(GlobalMessageController())

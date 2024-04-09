@@ -13,6 +13,7 @@ import 'package:heyo/app/modules/shared/utils/constants/notifications_constant.d
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../chats/data/models/chat_model.dart';
@@ -32,25 +33,25 @@ class DataHandler {
   final MessagesRepo messagesRepo;
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
   final NotificationsController notificationsController;
-  final ContactRepo contactRepository;
+  final GetContactByIdUseCase getContactByIdUseCase;
   final AccountRepository accountInfoRepo;
 
   DataHandler({
     required this.messagesRepo,
     required this.chatHistoryRepo,
     required this.notificationsController,
-    required this.contactRepository,
+    required this.getContactByIdUseCase,
     required this.accountInfoRepo,
   });
 
   createUserChatModel({required String sessioncid}) async {
-    final userModel = await contactRepository.getContactById(sessioncid);
+    final contact = await getContactByIdUseCase.execute(sessioncid);
 
     final userChatModel = ChatModel(
       id: sessioncid,
-      name: (userModel == null)
+      name: (contact == null)
           ? "${sessioncid.characters.take(4).string}...${sessioncid.characters.takeLast(4).string}"
-          : userModel.name,
+          : contact.name,
       lastMessage: "",
       lastReadMessageId: "",
       timestamp: DateTime.now(),
@@ -96,11 +97,10 @@ class DataHandler {
         chatName = currentChatModel.name;
       }
     } else {
-      final userModel =
-          await contactRepository.getContactById(remoteCoreIds.first);
-      chatName = (userModel == null)
+      final contact = await getContactByIdUseCase.execute(remoteCoreIds.first);
+      chatName = (contact == null)
           ? '${remoteCoreIds.first.characters.take(4).string}...${remoteCoreIds.first.characters.takeLast(4).string}'
-          : userModel.name;
+          : contact.name;
     }
 
     remoteCoreIds.add(selfCoreId!);
@@ -149,7 +149,7 @@ class DataHandler {
         messageId: receivedMessage.messageId, chatId: chatId);
 
     bool isNewMessage = (_currentMsg == null);
-    final contact = await contactRepository.getContactById(coreId);
+    final contact = await getContactByIdUseCase.execute(coreId);
 
     if (isNewMessage) {
       await messagesRepo.createMessage(

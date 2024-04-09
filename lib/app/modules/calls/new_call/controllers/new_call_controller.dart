@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/new_call/usecase/contact_listener_use_case.dart';
-import 'package:heyo/app/modules/calls/usecase/get_contact_user_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/contact_listener_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contacts_use_case.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
@@ -22,7 +22,7 @@ class NewCallController extends GetxController {
 
   final ContactListenerUseCase contactListenerUseCase;
   final AccountRepository accountInfoRepo;
-  final GetContactUserUseCase getContactUserUseCase;
+  final GetContactsUseCase getContactUserUseCase;
 
   final inputText = ''.obs;
 
