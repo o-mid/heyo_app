@@ -6,7 +6,7 @@ import 'package:heyo/app/modules/shared/utils/constants/transitions_constant.dar
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/user_preview_widget.dart';
 import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
-import 'package:heyo/modules/features/contact/usecase/delete_contacts_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/delete_contact_use_case.dart';
 import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 
 class UserPreviewController extends GetxController {
@@ -17,7 +17,7 @@ class UserPreviewController extends GetxController {
     required this.chatHistoryRepo,
   });
 
-  final DeleteContactsUseCase deleteContactsUseCase;
+  final DeleteContactUseCase deleteContactsUseCase;
   final GetContactByIdUseCase getContactByIdUseCase;
   final RxBool isWifiDirectConnection = false.obs;
   final CallHistoryRepo callHistoryRepo;

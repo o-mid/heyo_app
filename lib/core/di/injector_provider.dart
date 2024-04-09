@@ -13,7 +13,7 @@ import 'package:heyo/core/di/notification_injector.dart';
 import 'package:heyo/core/di/p2p_injector.dart';
 import 'package:heyo/core/di/storage_injector.dart';
 import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
-import 'package:heyo/modules/features/contact/usecase/delete_contacts_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/delete_contact_use_case.dart';
 import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 
 final GetIt inject = GetIt.instance;
@@ -39,7 +39,7 @@ Future<void> setupInjection() async {
         getContactByIdUseCase: GetContactByIdUseCase(
           contactRepository: inject.get<ContactRepo>(),
         ),
-        deleteContactsUseCase: DeleteContactsUseCase(
+        deleteContactsUseCase: DeleteContactUseCase(
           contactRepository: inject.get<ContactRepo>(),
         ),
         callHistoryRepo: inject.get<CallHistoryRepo>(),

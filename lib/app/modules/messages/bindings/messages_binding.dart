@@ -17,6 +17,8 @@ import 'package:heyo/app/modules/messages/data/user_state_repository_Impl.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
+import 'package:heyo/modules/features/contact/usecase/add_contacts_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 
 class MessagesBinding extends Bindings {
   @override
@@ -54,7 +56,12 @@ class MessagesBinding extends Bindings {
           ),
         ),
         userStateRepository: UserStateRepositoryImpl(
-          contactRepository: Get.find(),
+          addContactUseCase: AddContactUseCase(
+            contactRepository: Get.find(),
+          ),
+          getContactByIdUseCase: GetContactByIdUseCase(
+            contactRepository: Get.find(),
+          ),
           accountInfo: Get.find<AccountRepository>(),
           messagesRepo: MessagesRepo(
             messagesProvider: MessagesProvider(

@@ -14,7 +14,7 @@ import 'package:heyo/modules/features/call_history/presentation/models/call_hist
 import 'package:heyo/modules/features/call_history/utils/call_history_utils.dart';
 import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 import 'package:heyo/modules/features/contact/usecase/contact_listener_use_case.dart';
-import 'package:heyo/modules/features/contact/usecase/delete_contacts_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/delete_contact_use_case.dart';
 import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 
 final callHistoryDetailNotifierProvider = AutoDisposeAsyncNotifierProvider<
@@ -27,7 +27,7 @@ final callHistoryDetailNotifierProvider = AutoDisposeAsyncNotifierProvider<
     contactListenerUseCase: ContactListenerUseCase(
       contactRepository: inject.get<ContactRepo>(),
     ),
-    deleteContactsUseCase: DeleteContactsUseCase(
+    deleteContactsUseCase: DeleteContactUseCase(
       contactRepository: inject.get<ContactRepo>(),
     ),
   ),
@@ -51,7 +51,7 @@ class CallHistoryDetailController
 
   final CallHistoryRepo callHistoryRepo;
   final GetContactByIdUseCase getContactByIdUseCase;
-  final DeleteContactsUseCase deleteContactsUseCase;
+  final DeleteContactUseCase deleteContactsUseCase;
   final ContactListenerUseCase contactListenerUseCase;
 
   late UserCallHistoryViewArgumentsModel args;

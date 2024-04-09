@@ -6,7 +6,7 @@ import 'package:heyo/modules/features/call_history/data/local_call_history_repo.
 import 'package:heyo/modules/features/call_history/presentation/controllers/call_history_detail_controller.dart';
 import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 import 'package:heyo/modules/features/contact/usecase/contact_listener_use_case.dart';
-import 'package:heyo/modules/features/contact/usecase/delete_contacts_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/delete_contact_use_case.dart';
 import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 
 class CallHistoryDetailBinding extends Bindings {
@@ -22,7 +22,7 @@ class CallHistoryDetailBinding extends Bindings {
         contactListenerUseCase: ContactListenerUseCase(
           contactRepository: inject.get<ContactRepo>(),
         ),
-        deleteContactsUseCase: DeleteContactsUseCase(
+        deleteContactsUseCase: DeleteContactUseCase(
           contactRepository: inject.get<ContactRepo>(),
         ),
         getContactByIdUseCase: GetContactByIdUseCase(

@@ -10,7 +10,7 @@ import 'package:heyo/app/modules/shared/bindings/p2p_bindings.dart';
 import 'package:heyo/app/modules/shared/controllers/live_location_controller.dart';
 import 'package:heyo/app/modules/shared/controllers/user_preview_controller.dart';
 import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
-import 'package:heyo/modules/features/contact/usecase/delete_contacts_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/delete_contact_use_case.dart';
 import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 
 class GlobalBindings extends Bindings {
@@ -26,7 +26,7 @@ class GlobalBindings extends Bindings {
     Get
       ..put(LiveLocationController())
       ..put(UserPreviewController(
-        deleteContactsUseCase: DeleteContactsUseCase(
+        deleteContactsUseCase: DeleteContactUseCase(
           contactRepository: Get.find<LocalContactRepo>(),
         ),
         getContactByIdUseCase: GetContactByIdUseCase(

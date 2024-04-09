@@ -8,28 +8,33 @@ import 'package:heyo/app/modules/messages/domain/user_state_repository.dart';
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
-import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
+import 'package:heyo/modules/features/contact/usecase/add_contacts_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 
 class UserStateRepositoryImpl implements UserStateRepository {
+  UserStateRepositoryImpl({
+    required this.chatHistoryRepo,
+    required this.addContactUseCase,
+    required this.getContactByIdUseCase,
+    required this.messagesRepo,
+    required this.accountInfo,
+  });
+
   final ChatHistoryLocalAbstractRepo chatHistoryRepo;
-  final ContactRepo contactRepository;
+  final AddContactUseCase addContactUseCase;
+  final GetContactByIdUseCase getContactByIdUseCase;
   final MessagesAbstractRepo messagesRepo;
   final AccountRepository accountInfo;
 
-  UserStateRepositoryImpl(
-      {required this.chatHistoryRepo,
-      required this.contactRepository,
-      required this.messagesRepo,
-      required this.accountInfo});
-
   @override
-  Future<ContactModel> getUserContact(
-      {required UserInstance userInstance}) async {
+  Future<ContactModel> getUserContact({
+    required UserInstance userInstance,
+  }) async {
     final String coreId = userInstance.coreId;
 
     // check if user is already in contact
-    var createdContact = await contactRepository.getContactById(coreId);
+    var createdContact = await getContactByIdUseCase.execute(coreId);
 
     if (createdContact == null) {
       createdContact = ContactModel(
@@ -38,7 +43,7 @@ class UserStateRepositoryImpl implements UserStateRepository {
       );
 
       // adds the new user to the repo and update the UserModel
-      await contactRepository.addContact(createdContact);
+      await addContactUseCase.execute(createdContact);
     }
     return createdContact;
   }
@@ -73,7 +78,7 @@ class UserStateRepositoryImpl implements UserStateRepository {
       if (element.coreId != selfCoreID) {
         users.add(await getUserContact(userInstance: element));
       }
-      final user = await contactRepository.getContactById(element.coreId);
+      final user = await getContactByIdUseCase.execute(element.coreId);
 
       participants.add(
         MessagingParticipantModel(
