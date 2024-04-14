@@ -11,14 +11,13 @@ import 'package:heyo/modules/features/chats/presentation/widgets/chat_widget.dar
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 
-import '../models/chat_view_model/chat_view_model.dart';
 import '../widgets/delete_chat_dialog.dart';
 import '../../../../../core/di/injector_provider.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-final chatsNotifierProvider = AsyncNotifierProvider<ChatsController, List<ChatViewModel>>(
+final chatsNotifierProvider = AsyncNotifierProvider<ChatsController, List<ChatModel>>(
   () => ChatsController(
     chatHistoryRepo: inject.get<ChatHistoryRepo>(),
     messagesRepo: inject.get<MessagesAbstractRepo>(),
@@ -26,7 +25,7 @@ final chatsNotifierProvider = AsyncNotifierProvider<ChatsController, List<ChatVi
   ),
 );
 
-class ChatsController extends AsyncNotifier<List<ChatViewModel>> {
+class ChatsController extends AsyncNotifier<List<ChatModel>> {
   ChatsController({
     required this.chatHistoryRepo,
     required this.messagesRepo,
@@ -36,10 +35,10 @@ class ChatsController extends AsyncNotifier<List<ChatViewModel>> {
   final MessagesAbstractRepo messagesRepo;
   final LocalContactRepo contactRepository;
 
-  List<ChatViewModel> chats = [];
+  List<ChatModel> chats = [];
 
   @override
-  FutureOr<List<ChatViewModel>> build() async {
+  FutureOr<List<ChatModel>> build() async {
     unawaited(_fetchInitialChats());
     unawaited(listenToChatsUpdates());
 
@@ -49,18 +48,17 @@ class ChatsController extends AsyncNotifier<List<ChatViewModel>> {
   Future<void> _fetchInitialChats() async {
     final chats = await chatHistoryRepo.getAllChats();
 
-    state = AsyncData(chats.map((chat) => chat.toViewModel()).toList());
+    state = AsyncData(chats.map((chat) => chat).toList());
   }
 
   Future<void> listenToChatsUpdates() async {
     final chatsStream = await chatHistoryRepo.getChatsStream();
     chatsStream.listen((newChats) {
-      List<ChatViewModel> updatedChats = [];
-      Map<String, ChatViewModel> updatedChatsMap = {};
+      List<ChatModel> updatedChats = [];
+      Map<String, ChatModel> updatedChatsMap = {};
 
       for (final chatModel in newChats) {
-        var chatViewModel = chatModel.toViewModel();
-        updatedChatsMap[chatViewModel.id] = chatViewModel;
+        updatedChatsMap[chatModel.id] = chatModel;
       }
 
       // Check for removed chats

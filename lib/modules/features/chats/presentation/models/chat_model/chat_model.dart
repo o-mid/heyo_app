@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/modules/features/chats/data/chat_history_dto/chat_history_dto.dart';
-import 'package:heyo/modules/features/chats/presentation/models/chat_view_model/chat_view_model.dart';
 
 part 'chat_model.freezed.dart';
 part 'chat_model.g.dart';
@@ -26,17 +25,17 @@ class ChatModel with _$ChatModel {
 }
 
 extension ContactModelMapper on ChatModel {
-  ChatViewModel toViewModel() {
-    return ChatViewModel(
-      id: id,
-      name: name,
-      lastMessage: lastMessage,
-      timestamp: timestamp,
-      participants: participants,
-      notificationCount: notificationCount,
-      isGroupChat: isGroupChat,
-    );
-  }
+  // ChatModel toViewModel() {
+  //   return ChatModel(
+  //     id: id,
+  //     name: name,
+  //     lastMessage: lastMessage,
+  //     timestamp: timestamp,
+  //     participants: participants,
+  //     notificationCount: notificationCount,
+  //     isGroupChat: isGroupChat,
+  //   );
+  //}
 
   ChatHistoryDTO toChatHistoryDTO() {
     return ChatHistoryDTO(

@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 
 import 'package:heyo/modules/features/chats/presentation/controllers/chats_controller.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_model.dart';
 
 import 'package:heyo/modules/features/chats/presentation/widgets/chat_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -13,7 +14,6 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/chat_view_model/chat_view_model.dart';
 import '../widgets/empty_chats_widget.dart';
 
 class ChatsPage extends ConsumerWidget {
@@ -89,7 +89,7 @@ class ChatsPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildRemovedItem(ChatViewModel chat, Animation<double> animation) {
+  Widget _buildRemovedItem(ChatModel chat, Animation<double> animation) {
     return SlideTransition(
       position: _slideAnimation(animation),
       child: ChatWidget(
