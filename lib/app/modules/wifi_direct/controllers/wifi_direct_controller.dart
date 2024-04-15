@@ -10,7 +10,6 @@ import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../generated/assets.gen.dart';
 import '../../../../generated/locales.g.dart';
-import '../../chats/data/models/chat_model.dart';
 import '../../messages/connection/wifi_direct_connection_repo.dart';
 import '../../messages/connection/wifi_direct_connection_controller.dart';
 import '../../../../modules/features/contact/data/local_contact_repo.dart';

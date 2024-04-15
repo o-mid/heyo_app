@@ -163,7 +163,7 @@ class WifiDirectConnectionController
   }
 
   _startIncomingMessaging() async {
-    ChatModel? userChatModel;
+    ChatHistoryModel? userChatModel;
 
     await chatHistoryRepo.getChat(remoteId!).then((value) {
       userChatModel = value;

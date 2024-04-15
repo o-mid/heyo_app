@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 
 import 'package:heyo/app/modules/shared/widgets/slidable_widget.dart';
-import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
-import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
+import 'package:heyo/modules/features/chats/presentation/controllers/chat_history_controller.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/fonts.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
@@ -18,9 +18,9 @@ import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 import 'package:intl/intl.dart';
 
-import '../../shared/widgets/stacked_avatars_widget.dart';
+import '../../../../../app/modules/shared/widgets/stacked_avatars_widget.dart';
 
-class ChatWidget extends GetView<ChatsController> {
+class ChatWidget extends ConsumerWidget {
   final String chatId;
   final String name;
   final String lastMessage;
@@ -40,17 +40,18 @@ class ChatWidget extends GetView<ChatsController> {
     this.isGroupChat = false,
   }) : super(key: key);
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.read(chatsNotifierProvider.notifier);
     final isGroupChat = participants.length > 2;
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
       child: SlidableWidget(
         key: Key(chatId),
         onDismissed: () => controller.deleteChat(chatId),
-        confirmDismiss: () => controller.showDeleteChatDialog(chatId),
+        confirmDismiss: () => controller.showDeleteChatDialog(context, chatId),
         child: InkWell(
           onTap: () {
-            Get.toNamed(
+            Get.toNamed<void>(
               Routes.MESSAGES,
               arguments: MessagesViewArgumentsModel(
                 participants: participants,

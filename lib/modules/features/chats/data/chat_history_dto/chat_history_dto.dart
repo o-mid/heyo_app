@@ -1,15 +1,14 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_history_model.dart';
 
-import 'chat_view_model/chat_view_model.dart';
-
-part 'chat_model.freezed.dart';
-part 'chat_model.g.dart';
+part 'chat_history_dto.freezed.dart';
+part 'chat_history_dto.g.dart';
 
 @freezed
-class ChatModel with _$ChatModel {
+class ChatHistoryDTO with _$ChatHistoryDTO {
   @JsonSerializable(explicitToJson: true)
-  const factory ChatModel({
+  const factory ChatHistoryDTO({
     required String id,
     required String name,
     required String lastMessage,
@@ -20,21 +19,24 @@ class ChatModel with _$ChatModel {
     @Default('') String scrollPosition,
     @Default(false) bool isGroupChat,
     @Default('') String creatorCoreId,
-  }) = _ChatModel;
+  }) = _ChatHistoryDTO;
 
-  factory ChatModel.fromJson(Map<String, dynamic> json) => _$ChatModelFromJson(json);
+  factory ChatHistoryDTO.fromJson(Map<String, dynamic> json) => _$ChatHistoryDTOFromJson(json);
 }
 
-extension ChatModelExtension on ChatModel {
-  ChatViewModel toViewModel() {
-    return ChatViewModel(
+extension ChatDTOMapper on ChatHistoryDTO {
+  ChatHistoryModel toChatModel() {
+    return ChatHistoryModel(
       id: id,
       name: name,
       lastMessage: lastMessage,
       timestamp: timestamp,
+      lastReadMessageId: lastReadMessageId,
       participants: participants,
       notificationCount: notificationCount,
+      scrollPosition: scrollPosition,
       isGroupChat: isGroupChat,
+      creatorCoreId: creatorCoreId,
     );
   }
 }

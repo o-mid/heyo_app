@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
-import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
+
 import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/transitions_constant.dart';
@@ -19,7 +20,7 @@ class UserPreviewController extends GetxController {
   final LocalContactRepo contactRepository;
   final RxBool isWifiDirectConnection = false.obs;
   final CallHistoryRepo callHistoryRepo;
-  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
+  final ChatHistoryRepo chatHistoryRepo;
   RxBool isContact = false.obs;
   RxString name = ''.obs;
 
@@ -68,8 +69,7 @@ class UserPreviewController extends GetxController {
 
     final chatModel = await chatHistoryRepo.getChat(userCoreId);
     if (chatModel != null) {
-      await chatHistoryRepo
-          .updateChat(chatModel.copyWith(name: userCoreId.shortenCoreId));
+      await chatHistoryRepo.updateChat(chatModel.copyWith(name: userCoreId.shortenCoreId));
     }
     //final calls = await callHistoryRepo.getCallsFromUserId(userCoreId);
     //calls.forEach((call) async {

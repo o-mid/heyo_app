@@ -20,8 +20,7 @@ import 'package:heyo/modules/call/data/call_background_request.dart';
 import 'package:heyo/modules/call/data/notification_processor.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -65,8 +64,7 @@ void firebaseSetup() {
 }
 
 void localNotificationSetup() {
-  const initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
+  const initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
   final initializationSettingsDarwin = DarwinInitializationSettings(
     notificationCategories: [
       DarwinNotificationCategory(
