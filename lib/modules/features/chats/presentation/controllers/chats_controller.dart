@@ -1,3 +1,5 @@
+// ignore_for_file: require_trailing_commas
+
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
@@ -35,27 +37,24 @@ class ChatsController extends AsyncNotifier<List<ChatModel>> {
   final MessagesAbstractRepo messagesRepo;
   final LocalContactRepo contactRepository;
 
-  List<ChatModel> chats = [];
-
   @override
   FutureOr<List<ChatModel>> build() async {
-    unawaited(_fetchInitialChats());
     unawaited(listenToChatsUpdates());
 
-    return chats;
+    return _fetchInitialChats();
   }
 
-  Future<void> _fetchInitialChats() async {
+  Future<List<ChatModel>> _fetchInitialChats() async {
     final chats = await chatHistoryRepo.getAllChats();
 
-    state = AsyncData(chats.map((chat) => chat).toList());
+    return chats.map((chat) => chat).toList();
   }
 
   Future<void> listenToChatsUpdates() async {
     final chatsStream = await chatHistoryRepo.getChatsStream();
+    final chats = state.value ?? [];
     chatsStream.listen((newChats) {
-      List<ChatModel> updatedChats = [];
-      Map<String, ChatModel> updatedChatsMap = {};
+      final updatedChatsMap = <String, ChatModel>{};
 
       for (final chatModel in newChats) {
         updatedChatsMap[chatModel.id] = chatModel;
@@ -84,11 +83,10 @@ class ChatsController extends AsyncNotifier<List<ChatModel>> {
   Future<void> deleteChat(String chatId) async {
     await chatHistoryRepo.deleteChat(chatId);
     await messagesRepo.deleteAllMessages(chatId);
-
-    chats.removeWhere((chat) => chat.id == chatId);
   }
 
   void showDeleteAllChatsBottomSheet(BuildContext context) {
+    final chats = state.value ?? [];
     openDeleteAllChatsBottomSheet(
         onDelete: () async {
           for (final element in chats) {
@@ -99,6 +97,7 @@ class ChatsController extends AsyncNotifier<List<ChatModel>> {
           chats.clear();
         },
         context: context);
+    state = AsyncData(chats);
   }
 
   Future<bool> showDeleteChatDialog(
