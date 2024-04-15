@@ -1,12 +1,9 @@
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 
-class WifiDirectConnectionProvider{
-
-
-
-  void handleWifiDirectEvents(WifiDirectEvent event,String remoteId) {
-  /*  print('WifiDirectConnectionController(remoteId $remoteId): WifiDirect event: ${event.type}');
+class WifiDirectConnectionProvider {
+  void handleWifiDirectEvents(WifiDirectEvent event, String remoteId) {
+    /*  print('WifiDirectConnectionController(remoteId $remoteId): WifiDirect event: ${event.type}');
     switch (event.type) {
       case EventType.linkedPeer:
         remoteId = (event.message as Peer).coreID;
@@ -19,7 +16,7 @@ class WifiDirectConnectionProvider{
     }*/
   }
   _startIncomingWiFiDirectMessaging() async {
-/*    ChatModel? userChatModel;
+/*    ChatHistoryModel? userChatModel;
 
     await dataHandler.chatHistoryRepo.getChat(remoteId!).then((value) {
       userChatModel = value;
@@ -41,9 +38,8 @@ class WifiDirectConnectionProvider{
     setConnectivityOnline();*/
   }
 
-
   handleWifiDirectConnectionClose() {
-  /*  if (Get.currentRoute == Routes.MESSAGES) {
+    /*  if (Get.currentRoute == Routes.MESSAGES) {
       Get.until((route) => Get.currentRoute != Routes.MESSAGES);
     }*/
   }

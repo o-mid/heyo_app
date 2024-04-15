@@ -2,13 +2,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/modules/features/chats/data/chat_history_dto/chat_history_dto.dart';
 
-part 'chat_model.freezed.dart';
-part 'chat_model.g.dart';
+part 'chat_history_model.freezed.dart';
+part 'chat_history_model.g.dart';
 
 @freezed
-class ChatModel with _$ChatModel {
+class ChatHistoryModel with _$ChatHistoryModel {
   @JsonSerializable(explicitToJson: true)
-  const factory ChatModel({
+  const factory ChatHistoryModel({
     required String id,
     required String name,
     required String lastMessage,
@@ -19,14 +19,14 @@ class ChatModel with _$ChatModel {
     @Default('') String scrollPosition,
     @Default(false) bool isGroupChat,
     @Default('') String creatorCoreId,
-  }) = _ChatModel;
+  }) = _ChatHistoryModel;
 
-  factory ChatModel.fromJson(Map<String, dynamic> json) => _$ChatModelFromJson(json);
+  factory ChatHistoryModel.fromJson(Map<String, dynamic> json) => _$ChatHistoryModelFromJson(json);
 }
 
-extension ContactModelMapper on ChatModel {
-  // ChatModel toViewModel() {
-  //   return ChatModel(
+extension ContactModelMapper on ChatHistoryModel {
+  // ChatHistoryModel toViewModel() {
+  //   return ChatHistoryModel(
   //     id: id,
   //     name: name,
   //     lastMessage: lastMessage,

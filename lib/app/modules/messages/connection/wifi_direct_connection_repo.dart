@@ -155,7 +155,7 @@ class WiFiDirectConnectionRepoImpl extends ConnectionRepository {
   }
 
   _startIncomingWiFiDirectMessaging() async {
-    ChatModel? userChatModel;
+    ChatHistoryModel? userChatModel;
 
     await dataHandler.chatHistoryRepo.getChat(remoteId!).then((value) {
       userChatModel = value;

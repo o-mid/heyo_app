@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:heyo/modules/features/chats/data/chat_history_dto/chat_history_dto.dart';
 import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
-import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_model.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_history_model.dart';
 import 'package:sembast/sembast.dart';
 
 class LocalChatHistoryRepo implements ChatHistoryRepo {
@@ -16,7 +16,7 @@ class LocalChatHistoryRepo implements ChatHistoryRepo {
   Future<Database> get _db async => await appDatabaseProvider.database;
 
   @override
-  Future<void> addChatToHistory(ChatModel chat) async {
+  Future<void> addChatToHistory(ChatHistoryModel chat) async {
     final chatDTO = chat.toChatHistoryDTO();
     await _store.add(await _db, chatDTO.toJson());
   }
@@ -37,7 +37,7 @@ class LocalChatHistoryRepo implements ChatHistoryRepo {
   }
 
   @override
-  Future<List<ChatModel>> getAllChats() async {
+  Future<List<ChatHistoryModel>> getAllChats() async {
     final records = await _store.find(
       await _db,
       finder: Finder(sortOrders: [SortOrder('timestamp', false)]),
@@ -55,7 +55,7 @@ class LocalChatHistoryRepo implements ChatHistoryRepo {
   }
 
   @override
-  Future<ChatModel?> getChat(String chatId) async {
+  Future<ChatHistoryModel?> getChat(String chatId) async {
     final records = await _store.find(
       await _db,
       finder: Finder(filter: Filter.equals('id', chatId)),
@@ -66,11 +66,11 @@ class LocalChatHistoryRepo implements ChatHistoryRepo {
     }
 
     final chatJson = records.first.value;
-    return ChatModel.fromJson(chatJson);
+    return ChatHistoryModel.fromJson(chatJson);
   }
 
   @override
-  Future<void> updateChat(ChatModel chat) async {
+  Future<void> updateChat(ChatHistoryModel chat) async {
     final chatDTO = chat.toChatHistoryDTO();
     final records = await _store.find(
       await _db,
@@ -89,7 +89,7 @@ class LocalChatHistoryRepo implements ChatHistoryRepo {
   }
 
   @override
-  Future<List<ChatModel>> getChatsFromUserId(String userId) async {
+  Future<List<ChatHistoryModel>> getChatsFromUserId(String userId) async {
     final records = await _store.find(
       await _db,
       finder: Finder(
@@ -120,7 +120,7 @@ class LocalChatHistoryRepo implements ChatHistoryRepo {
   }
 
   @override
-  Future<Stream<List<ChatModel>>> getChatsStream() async {
+  Future<Stream<List<ChatHistoryModel>>> getChatsStream() async {
     final query = _store.query(
       finder: Finder(sortOrders: [SortOrder('timestamp', false)]),
     );

@@ -1,19 +1,19 @@
-import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_model.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_history_model.dart';
 
 abstract class ChatHistoryRepo {
-  Future<void> addChatToHistory(ChatModel chat);
+  Future<void> addChatToHistory(ChatHistoryModel chat);
 
-  Future<List<ChatModel>> getAllChats();
+  Future<List<ChatHistoryModel>> getAllChats();
 
-  Future<ChatModel?> getChat(String chatId);
+  Future<ChatHistoryModel?> getChat(String chatId);
 
-  Future<List<ChatModel>> getChatsFromUserId(String userId);
+  Future<List<ChatHistoryModel>> getChatsFromUserId(String userId);
 
   Future<void> deleteAllChats();
 
   Future<void> deleteChat(String chatId);
 
-  Future<Stream<List<ChatModel>>> getChatsStream();
+  Future<Stream<List<ChatHistoryModel>>> getChatsStream();
 
-  Future<void> updateChat(ChatModel chat);
+  Future<void> updateChat(ChatHistoryModel chat);
 }

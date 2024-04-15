@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_model.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_history_model.dart';
 
 import 'package:heyo/modules/features/chats/presentation/widgets/delete_all_chats_bottom_sheet.dart';
 import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
@@ -19,16 +19,16 @@ import '../../../../../core/di/injector_provider.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-final chatsNotifierProvider = AsyncNotifierProvider<ChatsController, List<ChatModel>>(
-  () => ChatsController(
+final chatsNotifierProvider = AsyncNotifierProvider<ChatHistoryController, List<ChatHistoryModel>>(
+  () => ChatHistoryController(
     chatHistoryRepo: inject.get<ChatHistoryRepo>(),
     messagesRepo: inject.get<MessagesAbstractRepo>(),
     contactRepository: inject.get<LocalContactRepo>(),
   ),
 );
 
-class ChatsController extends AsyncNotifier<List<ChatModel>> {
-  ChatsController({
+class ChatHistoryController extends AsyncNotifier<List<ChatHistoryModel>> {
+  ChatHistoryController({
     required this.chatHistoryRepo,
     required this.messagesRepo,
     required this.contactRepository,
@@ -38,13 +38,13 @@ class ChatsController extends AsyncNotifier<List<ChatModel>> {
   final LocalContactRepo contactRepository;
 
   @override
-  FutureOr<List<ChatModel>> build() async {
+  FutureOr<List<ChatHistoryModel>> build() async {
     unawaited(listenToChatsUpdates());
 
     return _fetchInitialChats();
   }
 
-  Future<List<ChatModel>> _fetchInitialChats() async {
+  Future<List<ChatHistoryModel>> _fetchInitialChats() async {
     final chats = await chatHistoryRepo.getAllChats();
 
     return chats.map((chat) => chat).toList();
@@ -54,7 +54,7 @@ class ChatsController extends AsyncNotifier<List<ChatModel>> {
     final chatsStream = await chatHistoryRepo.getChatsStream();
     final chats = state.value ?? [];
     chatsStream.listen((newChats) {
-      final updatedChatsMap = <String, ChatModel>{};
+      final updatedChatsMap = <String, ChatHistoryModel>{};
 
       for (final chatModel in newChats) {
         updatedChatsMap[chatModel.id] = chatModel;

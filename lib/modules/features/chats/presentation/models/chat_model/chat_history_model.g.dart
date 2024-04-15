@@ -1,13 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'chat_model.dart';
+part of 'chat_history_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ChatModelImpl _$$ChatModelImplFromJson(Map<String, dynamic> json) =>
-    _$ChatModelImpl(
+_$ChatHistoryModelImpl _$$ChatHistoryModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ChatHistoryModelImpl(
       id: json['id'] as String,
       name: json['name'] as String,
       lastMessage: json['lastMessage'] as String,
@@ -23,7 +24,8 @@ _$ChatModelImpl _$$ChatModelImplFromJson(Map<String, dynamic> json) =>
       creatorCoreId: json['creatorCoreId'] as String? ?? '',
     );
 
-Map<String, dynamic> _$$ChatModelImplToJson(_$ChatModelImpl instance) =>
+Map<String, dynamic> _$$ChatHistoryModelImplToJson(
+        _$ChatHistoryModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,

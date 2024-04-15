@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
-import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_model.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_history_model.dart';
 
 part 'chat_history_dto.freezed.dart';
 part 'chat_history_dto.g.dart';
@@ -25,8 +25,8 @@ class ChatHistoryDTO with _$ChatHistoryDTO {
 }
 
 extension ChatDTOMapper on ChatHistoryDTO {
-  ChatModel toChatModel() {
-    return ChatModel(
+  ChatHistoryModel toChatModel() {
+    return ChatHistoryModel(
       id: id,
       name: name,
       lastMessage: lastMessage,

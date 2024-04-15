@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_model.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_history_model.dart';
 import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguments_model.dart';
 import 'package:heyo/app/modules/new_chat/widgets/new_chat_qr_scanner.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
@@ -17,8 +17,7 @@ import '../data/models/filter_model.dart';
 import '../data/models/user_model/user_model.dart';
 import '../widgets/invite_bttom_sheet.dart';
 
-class NewChatController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class NewChatController extends GetxController with GetSingleTickerProviderStateMixin {
   late AnimationController animController;
   late Animation<double> animation;
   late TextEditingController inputController;
@@ -28,8 +27,7 @@ class NewChatController extends GetxController
   final inputText = "".obs;
   late StreamSubscription _contactasStreamSubscription;
 
-  NewChatController(
-      {required this.contactRepository, required this.accountInfoRepo});
+  NewChatController({required this.contactRepository, required this.accountInfoRepo});
 
 // in nearby users Tab after 3 seconds the refresh button will be visible
   RxBool refreshBtnVisibility = false.obs;
@@ -122,8 +120,7 @@ class NewChatController extends GetxController
     ),
   ].obs;
 
-  RefreshController refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController refreshController = RefreshController(initialRefresh: false);
 
   void onRefresh() async {
     await Future.delayed(const Duration(milliseconds: 1000));
@@ -149,8 +146,7 @@ class NewChatController extends GetxController
         searchUsers(inputText.value);
       }
     });
-    nearbyUsers
-        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    nearbyUsers.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     super.onInit();
   }
 

@@ -19,7 +19,7 @@ import 'package:heyo/app/modules/messages/connection/domain/messaging_connection
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
-import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_model.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_history_model.dart';
 import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
@@ -118,7 +118,7 @@ class MessagesController extends GetxController {
   late String sessionId;
   late KeyboardVisibilityController keyboardController;
 
-  late ChatModel? chatModel;
+  late ChatHistoryModel? chatModel;
 
   RxList<MessagingParticipantModel> participants =
       (Get.arguments as MessagesViewArgumentsModel).participants.obs;
@@ -824,7 +824,7 @@ class MessagesController extends GetxController {
       isListLoaded.value = true;
       print("ListLoaded");
 
-      chatModel = ChatModel(
+      chatModel = ChatHistoryModel(
         id: chatId,
         name: chatName.value,
         lastMessage: "",

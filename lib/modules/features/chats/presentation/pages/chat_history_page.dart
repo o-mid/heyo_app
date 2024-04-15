@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 
-import 'package:heyo/modules/features/chats/presentation/controllers/chats_controller.dart';
-import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_model.dart';
+import 'package:heyo/modules/features/chats/presentation/controllers/chat_history_controller.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_history_model.dart';
 
 import 'package:heyo/modules/features/chats/presentation/widgets/chat_widget.dart';
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
@@ -16,8 +16,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../widgets/empty_chats_widget.dart';
 
-class ChatsPage extends ConsumerWidget {
-  const ChatsPage({super.key});
+class ChatHistoryPage extends ConsumerWidget {
+  const ChatHistoryPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -89,7 +89,7 @@ class ChatsPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildRemovedItem(ChatModel chat, Animation<double> animation) {
+  Widget _buildRemovedItem(ChatHistoryModel chat, Animation<double> animation) {
     return SlideTransition(
       position: _slideAnimation(animation),
       child: ChatWidget(

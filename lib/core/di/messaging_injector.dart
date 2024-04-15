@@ -1,4 +1,4 @@
-import 'package:heyo/modules/features/chats/presentation/controllers/chats_controller.dart';
+import 'package:heyo/modules/features/chats/presentation/controllers/chat_history_controller.dart';
 import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
 import 'package:heyo/modules/features/chats/data/local_chat_history_repo.dart';
 import 'package:heyo/app/modules/messages/connection/connection_data_handler.dart';
@@ -47,7 +47,7 @@ class MessagingInjector with NormalPriorityInjector, HighPriorityInjector {
         ),
       )
       ..registerSingleton(
-        ChatsController(
+        ChatHistoryController(
           chatHistoryRepo: inject.get(),
           messagesRepo: MessagesRepo(
             messagesProvider: MessagesProvider(
