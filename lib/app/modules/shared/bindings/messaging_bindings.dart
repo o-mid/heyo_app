@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:heyo/modules/domain/chat_history/chat_history_provider.dart';
 import 'package:heyo/modules/features/chats/presentation/controllers/chat_history_controller.dart';
 import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
 import 'package:heyo/modules/features/chats/data/local_chat_history_repo.dart';
@@ -109,9 +108,7 @@ class MessagingBindings with NormalPriorityBindings, HighPriorityBindings {
   void executeHighPriorityBindings() {
     Get.put<ChatHistoryRepo>(
       LocalChatHistoryRepo(
-        chatHistoryProvider: ChatHistoryProvider(
-          appDatabaseProvider: Get.find(),
-        ),
+        appDatabaseProvider: Get.find(),
       ),
     );
   }
