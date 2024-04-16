@@ -6,6 +6,8 @@ import 'package:heyo/app/modules/messages/domain/user_state_repository.dart';
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
+import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_history_model.dart';
 import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 import 'package:heyo/modules/features/contact/usecase/add_contacts_use_case.dart';
 import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
@@ -19,7 +21,7 @@ class UserStateRepositoryImpl implements UserStateRepository {
     required this.accountInfo,
   });
 
-  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
+  final ChatHistoryRepo chatHistoryRepo;
   final AddContactUseCase addContactUseCase;
   final GetContactByIdUseCase getContactByIdUseCase;
   final MessagesAbstractRepo messagesRepo;
