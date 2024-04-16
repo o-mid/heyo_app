@@ -2,28 +2,20 @@
 
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_history_model.dart';
-
-import 'package:heyo/modules/features/chats/presentation/widgets/delete_all_chats_bottom_sheet.dart';
-import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
-import 'package:heyo/modules/features/chats/presentation/widgets/chat_widget.dart';
-
-import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
-import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
-
-import '../widgets/delete_chat_dialog.dart';
-import '../../../../../core/di/injector_provider.dart';
-
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
+import 'package:heyo/core/di/injector_provider.dart';
+import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_history_model.dart';
+import 'package:heyo/modules/features/chats/presentation/widgets/delete_all_chats_bottom_sheet.dart';
+import 'package:heyo/modules/features/chats/presentation/widgets/delete_chat_dialog.dart';
 
-final chatsNotifierProvider = AsyncNotifierProvider<ChatHistoryController, List<ChatHistoryModel>>(
+final chatsNotifierProvider =
+    AsyncNotifierProvider<ChatHistoryController, List<ChatHistoryModel>>(
   () => ChatHistoryController(
     chatHistoryRepo: inject.get<ChatHistoryRepo>(),
     messagesRepo: inject.get<MessagesAbstractRepo>(),
-    contactRepository: inject.get<LocalContactRepo>(),
   ),
 );
 
@@ -31,11 +23,9 @@ class ChatHistoryController extends AsyncNotifier<List<ChatHistoryModel>> {
   ChatHistoryController({
     required this.chatHistoryRepo,
     required this.messagesRepo,
-    required this.contactRepository,
   });
   final ChatHistoryRepo chatHistoryRepo;
   final MessagesAbstractRepo messagesRepo;
-  final LocalContactRepo contactRepository;
 
   @override
   FutureOr<List<ChatHistoryModel>> build() async {
@@ -61,7 +51,8 @@ class ChatHistoryController extends AsyncNotifier<List<ChatHistoryModel>> {
       }
 
       // Check for removed chats
-      chats.removeWhere((existingChat) => !updatedChatsMap.containsKey(existingChat.id));
+      chats.removeWhere(
+          (existingChat) => !updatedChatsMap.containsKey(existingChat.id));
 
       // Update existing chats or add new chats
       for (var chatId in updatedChatsMap.keys) {
