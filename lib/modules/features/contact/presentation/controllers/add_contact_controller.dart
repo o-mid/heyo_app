@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/shared/data/models/add_contacts_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/widgets/snackbar_widget.dart';
 import 'package:heyo/core/di/injector_provider.dart';
+import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
 import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 
@@ -15,7 +15,7 @@ final addContactNotifierProvider =
     AutoDisposeAsyncNotifierProvider<AddContactsController, ContactModel?>(
   () => AddContactsController(
     contactRepo: inject.get<ContactRepo>(),
-    chatHistoryRepo: inject.get<ChatHistoryLocalAbstractRepo>(),
+    chatHistoryRepo: inject.get<ChatHistoryRepo>(),
     messagesRepo: inject.get<MessagesAbstractRepo>(),
   ),
 );
@@ -27,7 +27,7 @@ class AddContactsController extends AutoDisposeAsyncNotifier<ContactModel?> {
     required this.messagesRepo,
   });
   final ContactRepo contactRepo;
-  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
+  final ChatHistoryRepo chatHistoryRepo;
   final MessagesAbstractRepo messagesRepo;
 
   late AddContactsViewArgumentsModel args;
@@ -64,8 +64,7 @@ class AddContactsController extends AutoDisposeAsyncNotifier<ContactModel?> {
   }
 
   Future<void> _updateChatHistory(ContactModel contact) async {
-    final chatHistoryList =
-        await chatHistoryRepo.getChatsFromUserId(contact.coreId);
+    final chatHistoryList = await chatHistoryRepo.getChatsFromUserId(contact.coreId);
 
     for (final chat in chatHistoryList) {
       final updatedParticipants = chat.participants

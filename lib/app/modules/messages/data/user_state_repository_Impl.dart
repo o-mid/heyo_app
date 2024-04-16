@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:heyo/app/modules/chats/data/models/chat_model.dart';
-import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/data/repo/messages_abstract_repo.dart';
 import 'package:heyo/app/modules/messages/domain/message_repository_models.dart';
 import 'package:heyo/app/modules/messages/domain/user_state_repository.dart';
@@ -95,12 +93,12 @@ class UserStateRepositoryImpl implements UserStateRepository {
     // print("saving scrollPositionMessagesId.value: ${scrollPositionMessagesId}");
     int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
 
-    final ChatModel? chatModel = await chatHistoryRepo.getChat(chatId);
+    final ChatHistoryModel? chatModel = await chatHistoryRepo.getChat(chatId);
 
     final bool isGroupChat = users.length > 1;
 
     if (chatModel == null) {
-      final updatedChatModel = ChatModel(
+      final updatedChatModel = ChatHistoryModel(
         id: chatId,
         name: chatName,
         lastReadMessageId: lastReadRemoteMessagesId,
@@ -128,8 +126,8 @@ class UserStateRepositoryImpl implements UserStateRepository {
   }
 
   @override
-  Future<ChatModel?> getUserChatModel({required String chatId}) async {
-    ChatModel? user = await chatHistoryRepo.getChat(chatId);
+  Future<ChatHistoryModel?> getUserChatModel({required String chatId}) async {
+    ChatHistoryModel? user = await chatHistoryRepo.getChat(chatId);
     return user;
   }
 }

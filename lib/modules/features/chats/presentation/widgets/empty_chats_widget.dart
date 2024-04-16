@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heyo/app/modules/new_chat/data/models/new_chat_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
+import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
 
 import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 
-import '../../../routes/app_pages.dart';
-import '../../new_chat/data/models/new_chat_view_arguments_model.dart';
-import '../../shared/utils/screen-utils/buttons/custom_button.dart';
+import '../../../../../app/modules/shared/utils/screen-utils/buttons/custom_button.dart';
 
 class EmptyChatsWidget extends StatelessWidget {
   const EmptyChatsWidget({Key? key}) : super(key: key);

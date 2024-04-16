@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'chat_model.dart';
+part of 'chat_history_dto.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-ChatModel _$ChatModelFromJson(Map<String, dynamic> json) {
-  return _ChatModel.fromJson(json);
+ChatHistoryDTO _$ChatHistoryDTOFromJson(Map<String, dynamic> json) {
+  return _ChatHistoryDTO.fromJson(json);
 }
 
 /// @nodoc
-mixin _$ChatModel {
+mixin _$ChatHistoryDTO {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get lastMessage => throw _privateConstructorUsedError;
@@ -34,14 +34,15 @@ mixin _$ChatModel {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ChatModelCopyWith<ChatModel> get copyWith =>
+  $ChatHistoryDTOCopyWith<ChatHistoryDTO> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ChatModelCopyWith<$Res> {
-  factory $ChatModelCopyWith(ChatModel value, $Res Function(ChatModel) then) =
-      _$ChatModelCopyWithImpl<$Res, ChatModel>;
+abstract class $ChatHistoryDTOCopyWith<$Res> {
+  factory $ChatHistoryDTOCopyWith(
+          ChatHistoryDTO value, $Res Function(ChatHistoryDTO) then) =
+      _$ChatHistoryDTOCopyWithImpl<$Res, ChatHistoryDTO>;
   @useResult
   $Res call(
       {String id,
@@ -57,9 +58,9 @@ abstract class $ChatModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ChatModelCopyWithImpl<$Res, $Val extends ChatModel>
-    implements $ChatModelCopyWith<$Res> {
-  _$ChatModelCopyWithImpl(this._value, this._then);
+class _$ChatHistoryDTOCopyWithImpl<$Res, $Val extends ChatHistoryDTO>
+    implements $ChatHistoryDTOCopyWith<$Res> {
+  _$ChatHistoryDTOCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -126,11 +127,11 @@ class _$ChatModelCopyWithImpl<$Res, $Val extends ChatModel>
 }
 
 /// @nodoc
-abstract class _$$ChatModelImplCopyWith<$Res>
-    implements $ChatModelCopyWith<$Res> {
-  factory _$$ChatModelImplCopyWith(
-          _$ChatModelImpl value, $Res Function(_$ChatModelImpl) then) =
-      __$$ChatModelImplCopyWithImpl<$Res>;
+abstract class _$$ChatHistoryDTOImplCopyWith<$Res>
+    implements $ChatHistoryDTOCopyWith<$Res> {
+  factory _$$ChatHistoryDTOImplCopyWith(_$ChatHistoryDTOImpl value,
+          $Res Function(_$ChatHistoryDTOImpl) then) =
+      __$$ChatHistoryDTOImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -147,11 +148,11 @@ abstract class _$$ChatModelImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$ChatModelImplCopyWithImpl<$Res>
-    extends _$ChatModelCopyWithImpl<$Res, _$ChatModelImpl>
-    implements _$$ChatModelImplCopyWith<$Res> {
-  __$$ChatModelImplCopyWithImpl(
-      _$ChatModelImpl _value, $Res Function(_$ChatModelImpl) _then)
+class __$$ChatHistoryDTOImplCopyWithImpl<$Res>
+    extends _$ChatHistoryDTOCopyWithImpl<$Res, _$ChatHistoryDTOImpl>
+    implements _$$ChatHistoryDTOImplCopyWith<$Res> {
+  __$$ChatHistoryDTOImplCopyWithImpl(
+      _$ChatHistoryDTOImpl _value, $Res Function(_$ChatHistoryDTOImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -168,7 +169,7 @@ class __$$ChatModelImplCopyWithImpl<$Res>
     Object? isGroupChat = null,
     Object? creatorCoreId = null,
   }) {
-    return _then(_$ChatModelImpl(
+    return _then(_$ChatHistoryDTOImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -216,8 +217,8 @@ class __$$ChatModelImplCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true)
-class _$ChatModelImpl implements _ChatModel {
-  const _$ChatModelImpl(
+class _$ChatHistoryDTOImpl implements _ChatHistoryDTO {
+  const _$ChatHistoryDTOImpl(
       {required this.id,
       required this.name,
       required this.lastMessage,
@@ -230,8 +231,8 @@ class _$ChatModelImpl implements _ChatModel {
       this.creatorCoreId = ''})
       : _participants = participants;
 
-  factory _$ChatModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ChatModelImplFromJson(json);
+  factory _$ChatHistoryDTOImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ChatHistoryDTOImplFromJson(json);
 
   @override
   final String id;
@@ -266,14 +267,14 @@ class _$ChatModelImpl implements _ChatModel {
 
   @override
   String toString() {
-    return 'ChatModel(id: $id, name: $name, lastMessage: $lastMessage, timestamp: $timestamp, lastReadMessageId: $lastReadMessageId, participants: $participants, notificationCount: $notificationCount, scrollPosition: $scrollPosition, isGroupChat: $isGroupChat, creatorCoreId: $creatorCoreId)';
+    return 'ChatHistoryDTO(id: $id, name: $name, lastMessage: $lastMessage, timestamp: $timestamp, lastReadMessageId: $lastReadMessageId, participants: $participants, notificationCount: $notificationCount, scrollPosition: $scrollPosition, isGroupChat: $isGroupChat, creatorCoreId: $creatorCoreId)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ChatModelImpl &&
+            other is _$ChatHistoryDTOImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.lastMessage, lastMessage) ||
@@ -312,19 +313,20 @@ class _$ChatModelImpl implements _ChatModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ChatModelImplCopyWith<_$ChatModelImpl> get copyWith =>
-      __$$ChatModelImplCopyWithImpl<_$ChatModelImpl>(this, _$identity);
+  _$$ChatHistoryDTOImplCopyWith<_$ChatHistoryDTOImpl> get copyWith =>
+      __$$ChatHistoryDTOImplCopyWithImpl<_$ChatHistoryDTOImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ChatModelImplToJson(
+    return _$$ChatHistoryDTOImplToJson(
       this,
     );
   }
 }
 
-abstract class _ChatModel implements ChatModel {
-  const factory _ChatModel(
+abstract class _ChatHistoryDTO implements ChatHistoryDTO {
+  const factory _ChatHistoryDTO(
       {required final String id,
       required final String name,
       required final String lastMessage,
@@ -334,10 +336,10 @@ abstract class _ChatModel implements ChatModel {
       final int notificationCount,
       final String scrollPosition,
       final bool isGroupChat,
-      final String creatorCoreId}) = _$ChatModelImpl;
+      final String creatorCoreId}) = _$ChatHistoryDTOImpl;
 
-  factory _ChatModel.fromJson(Map<String, dynamic> json) =
-      _$ChatModelImpl.fromJson;
+  factory _ChatHistoryDTO.fromJson(Map<String, dynamic> json) =
+      _$ChatHistoryDTOImpl.fromJson;
 
   @override
   String get id;
@@ -361,6 +363,6 @@ abstract class _ChatModel implements ChatModel {
   String get creatorCoreId;
   @override
   @JsonKey(ignore: true)
-  _$$ChatModelImplCopyWith<_$ChatModelImpl> get copyWith =>
+  _$$ChatHistoryDTOImplCopyWith<_$ChatHistoryDTOImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

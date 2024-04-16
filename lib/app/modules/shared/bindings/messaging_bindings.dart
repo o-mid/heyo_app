@@ -1,8 +1,7 @@
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/chats/controllers/chats_controller.dart';
-import 'package:heyo/app/modules/chats/data/providers/chat_history/chat_history_provider.dart';
-import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_abstract_repo.dart';
-import 'package:heyo/app/modules/chats/data/repos/chat_history/chat_history_repo.dart';
+import 'package:heyo/modules/features/chats/presentation/controllers/chat_history_controller.dart';
+import 'package:heyo/modules/features/chats/domain/chat_history_repo.dart';
+import 'package:heyo/modules/features/chats/data/local_chat_history_repo.dart';
 import 'package:heyo/app/modules/messages/connection/connection_data_handler.dart';
 import 'package:heyo/app/modules/messages/connection/connection_repo.dart';
 import 'package:heyo/app/modules/messages/connection/data/data_channel_messaging_connection.dart';
@@ -46,24 +45,22 @@ class MessagingBindings with NormalPriorityBindings, HighPriorityBindings {
       )
       ..put<MessagesAbstractRepo>(
         MessagesRepo(
-          messagesProvider: MessagesProvider(
-              appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+          messagesProvider: MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
         ),
       )
       ..put(
-        ChatsController(
+        ChatHistoryController(
           chatHistoryRepo: Get.find(),
           messagesRepo: MessagesRepo(
-            messagesProvider: MessagesProvider(
-                appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+            messagesProvider:
+                MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
         ),
       )
       ..put(GlobalMessageController())
       ..put(AudioMessageController())
       ..put(VideoMessageController())
-      ..put(
-          DataChannelMessagingConnection(multipleConnectionHandler: Get.find()))
+      ..put(DataChannelMessagingConnection(multipleConnectionHandler: Get.find()))
       ..put(
         RTCMessagingConnectionRepository(
           dataHandler: Get.find(),
@@ -93,16 +90,15 @@ class MessagingBindings with NormalPriorityBindings, HighPriorityBindings {
             accountInfo: Get.find(),
             chatHistoryRepo: Get.find(),
             messagesRepo: MessagesRepo(
-              messagesProvider: MessagesProvider(
-                  appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+              messagesProvider:
+                  MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
             ),
             sendMessageUseCase: SendMessageUseCase(
               messagesRepo: MessagesRepo(
-                messagesProvider: MessagesProvider(
-                    appDatabaseProvider: Get.find<AppDatabaseProvider>()),
+                messagesProvider:
+                    MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
               ),
-              connectionRepository:
-                  Get.find<RTCMessagingConnectionRepository>(),
+              connectionRepository: Get.find<RTCMessagingConnectionRepository>(),
               processor: MessageProcessor(),
             ),
           ),
@@ -112,11 +108,9 @@ class MessagingBindings with NormalPriorityBindings, HighPriorityBindings {
 
   @override
   void executeHighPriorityBindings() {
-    Get.put<ChatHistoryLocalAbstractRepo>(
-      ChatHistoryLocalRepo(
-        chatHistoryProvider: ChatHistoryProvider(
-          appDatabaseProvider: Get.find(),
-        ),
+    Get.put<ChatHistoryRepo>(
+      LocalChatHistoryRepo(
+        appDatabaseProvider: Get.find(),
       ),
     );
   }

@@ -6,11 +6,14 @@ import 'package:heyo/app/modules/shared/utils/constants/textStyles.dart';
 import 'package:heyo/app/modules/shared/widgets/bottom_sheet.dart';
 import 'package:heyo/generated/assets.gen.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:heyo/modules/features/chats/presentation/widgets/delete_all_chats_dialog.dart';
 
-import 'delete_all_chats_dialog.dart';
-
-void openDeleteAllChatsBottomSheet({required VoidCallback onDelete}) {
-  Get.bottomSheet(
+void openDeleteAllChatsBottomSheet({
+  required BuildContext context,
+  required VoidCallback onDelete,
+}) {
+  showModalBottomSheet(
+    context: context,
     backgroundColor: COLORS.kWhiteColor,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
@@ -18,14 +21,17 @@ void openDeleteAllChatsBottomSheet({required VoidCallback onDelete}) {
         topRight: Radius.circular(20),
       ),
     ),
-    DeleteAllChatsBottomSheet(onDelete: onDelete),
+    builder: (BuildContext context) {
+      return DeleteAllChatsBottomSheet(
+        onDelete: onDelete,
+      );
+    },
   );
 }
 
 class DeleteAllChatsBottomSheet extends StatelessWidget {
+  const DeleteAllChatsBottomSheet({Key? key, required this.onDelete}) : super(key: key);
   final VoidCallback onDelete;
-  const DeleteAllChatsBottomSheet({Key? key, required this.onDelete})
-      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +41,17 @@ class DeleteAllChatsBottomSheet extends StatelessWidget {
         children: [
           TextButton(
             onPressed: () async {
-              final result = await Get.dialog(const DeleteAllChatsDialog());
-              if (result is bool && result) {
+              final result = await showDialog<bool>(
+                context: context,
+                builder: (BuildContext context) {
+                  return const DeleteAllChatsDialog();
+                },
+              );
+              if (result != null && result) {
                 onDelete();
               }
-              Get.back();
+
+              Navigator.of(context).pop();
             },
             child: Row(
               children: [
@@ -51,14 +63,12 @@ class DeleteAllChatsBottomSheet extends StatelessWidget {
                     color: COLORS.kBrightBlueColor,
                     shape: BoxShape.circle,
                   ),
-                  child:
-                      Assets.svg.deleteIcon.svg(color: COLORS.kDarkBlueColor),
+                  child: Assets.svg.deleteIcon.svg(color: COLORS.kDarkBlueColor),
                 ),
                 SizedBox(width: 20.w),
                 Text(
                   LocaleKeys.HomePage_Chats_bottomSheet_deleteAllchats.tr,
-                  style: TEXTSTYLES.kLinkBig
-                      .copyWith(color: COLORS.kDarkBlueColor),
+                  style: TEXTSTYLES.kLinkBig.copyWith(color: COLORS.kDarkBlueColor),
                 ),
               ],
             ),

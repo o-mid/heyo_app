@@ -12,12 +12,12 @@ import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.
 import 'package:heyo/app/modules/shared/utils/constants/notifications_constant.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/mocks/random_avatar_icon.dart';
+import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_history_model.dart';
 import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 import 'package:tuple/tuple.dart';
 
-import '../../chats/data/models/chat_model.dart';
-import '../../chats/data/repos/chat_history/chat_history_abstract_repo.dart';
+import '../../../../modules/features/chats/domain/chat_history_repo.dart';
 import '../../shared/data/repository/account/account_repository.dart';
 import '../data/models/messages/confirm_message_model.dart';
 import '../data/models/messages/delete_message_model.dart';
@@ -31,7 +31,7 @@ import 'models/data_channel_message_model.dart';
 
 class DataHandler {
   final MessagesRepo messagesRepo;
-  final ChatHistoryLocalAbstractRepo chatHistoryRepo;
+  final ChatHistoryRepo chatHistoryRepo;
   final NotificationsController notificationsController;
   final GetContactByIdUseCase getContactByIdUseCase;
   final AccountRepository accountInfoRepo;
@@ -47,7 +47,7 @@ class DataHandler {
   createUserChatModel({required String sessioncid}) async {
     final contact = await getContactByIdUseCase.execute(sessioncid);
 
-    final userChatModel = ChatModel(
+    final userChatModel = ChatHistoryModel(
       id: sessioncid,
       name: (contact == null)
           ? "${sessioncid.characters.take(4).string}...${sessioncid.characters.takeLast(4).string}"
@@ -104,7 +104,7 @@ class DataHandler {
     }
 
     remoteCoreIds.add(selfCoreId!);
-    final chatModel = ChatModel(
+    final chatModel = ChatHistoryModel(
       id: chatId,
       name: chatName,
       lastMessage: "",
@@ -334,7 +334,7 @@ class DataHandler {
     required List<String> remoteCoreIds,
   }) async {
     bool isGroupChat = false;
-    ChatModel? chatmodel = await chatHistoryRepo.getChat(chatId);
+    ChatHistoryModel? chatmodel = await chatHistoryRepo.getChat(chatId);
 
     int unReadMessagesCount = await messagesRepo.getUnReadMessagesCount(chatId);
 

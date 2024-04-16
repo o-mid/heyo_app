@@ -168,6 +168,7 @@ class _DefaultAppBar extends StatelessWidget {
                     _openAppBarActionBottomSheet(
                       coreId: controller.users.first.coreId,
                       isContact: controller.users.first.isContact,
+                      context: context,
                     );
                   }
                 },
@@ -179,12 +180,68 @@ class _DefaultAppBar extends StatelessWidget {
     });
   }
 
+  // void _openAppBarActionBottomSheet({
+  //   required String coreId,
+  //   required bool isContact,
+  // }) {
+  //   Get.bottomSheet(
+  //       Padding(
+  //         padding: CustomSizes.iconListPadding,
+  //         child: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             TextButton(
+  //               onPressed: controller.navigateToAddContacts,
+  //               child: Row(
+  //                 children: [
+  //                   Container(
+  //                     padding: const EdgeInsets.all(10),
+  //                     decoration: BoxDecoration(
+  //                       borderRadius: BorderRadius.circular(100),
+  //                       color: COLORS.kBrightBlueColor,
+  //                     ),
+  //                     child: Assets.svg.addToContactsIcon.svg(width: 20, height: 20),
+  //                   ),
+  //                   CustomSizes.mediumSizedBoxWidth,
+  //                   Text(
+  //                     isContact
+  //                         ? LocaleKeys.AddContacts_Edit_Contact.tr
+  //                         : LocaleKeys.newChat_userBottomSheet_addToContacts.tr,
+  //                     style: TEXTSTYLES.kLinkBig.copyWith(
+  //                       color: COLORS.kDarkBlueColor,
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //             CustomSizes.mediumSizedBoxHeight,
+  //           ],
+  //         ),
+  //       ),
+  //       backgroundColor: COLORS.kWhiteColor,
+  //       isDismissible: true,
+  //       enableDrag: true,
+  //       shape: const RoundedRectangleBorder(
+  //           borderRadius:
+  //               BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))));
+  // }
+
   void _openAppBarActionBottomSheet({
+    required BuildContext context,
     required String coreId,
     required bool isContact,
   }) {
-    Get.bottomSheet(
-        Padding(
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: COLORS.kWhiteColor,
+      isDismissible: true,
+      enableDrag: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
           padding: CustomSizes.iconListPadding,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -216,13 +273,9 @@ class _DefaultAppBar extends StatelessWidget {
               CustomSizes.mediumSizedBoxHeight,
             ],
           ),
-        ),
-        backgroundColor: COLORS.kWhiteColor,
-        isDismissible: true,
-        enableDrag: true,
-        shape: const RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))));
+        );
+      },
+    );
   }
 }
 
