@@ -21,6 +21,7 @@ import 'package:heyo/app/modules/shared/controllers/global_message_controller.da
 import 'package:heyo/app/modules/shared/controllers/video_message_controller.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
 import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 
 class MessagingBindings with NormalPriorityBindings, HighPriorityBindings {
   @override
@@ -35,7 +36,9 @@ class MessagingBindings with NormalPriorityBindings, HighPriorityBindings {
           ),
           chatHistoryRepo: Get.find(),
           notificationsController: Get.find(),
-          contactRepository: Get.find(),
+          getContactByIdUseCase: GetContactByIdUseCase(
+            contactRepository: Get.find(),
+          ),
           accountInfoRepo: Get.find(),
         ),
         permanent: true,
@@ -52,7 +55,6 @@ class MessagingBindings with NormalPriorityBindings, HighPriorityBindings {
             messagesProvider:
                 MessagesProvider(appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
-          contactRepository: Get.find<LocalContactRepo>(),
         ),
       )
       ..put(GlobalMessageController())

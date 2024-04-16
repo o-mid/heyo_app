@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_model/call_history_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
-import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 import 'package:heyo/app/modules/shared/data/models/user_call_history_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/core/di/injector_provider.dart';
@@ -14,13 +13,23 @@ import 'package:heyo/modules/features/call_history/presentation/models/call_hist
 import 'package:heyo/modules/features/call_history/presentation/models/call_history_view_model/call_history_view_model.dart';
 import 'package:heyo/modules/features/call_history/utils/call_history_utils.dart';
 import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
+import 'package:heyo/modules/features/contact/usecase/contact_listener_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/delete_contact_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 
 final callHistoryDetailNotifierProvider = AutoDisposeAsyncNotifierProvider<
     CallHistoryDetailController, CallHistoryViewModel?>(
   () => CallHistoryDetailController(
     callHistoryRepo: inject.get<CallHistoryRepo>(),
-    contactNameUseCase: inject.get<ContactNameUseCase>(),
-    contactRepository: inject.get<ContactRepo>(),
+    getContactByIdUseCase: GetContactByIdUseCase(
+      contactRepository: inject.get<ContactRepo>(),
+    ),
+    contactListenerUseCase: ContactListenerUseCase(
+      contactRepository: inject.get<ContactRepo>(),
+    ),
+    deleteContactsUseCase: DeleteContactUseCase(
+      contactRepository: inject.get<ContactRepo>(),
+    ),
   ),
 );
 
@@ -35,13 +44,15 @@ class CallHistoryDetailController
     extends AutoDisposeAsyncNotifier<CallHistoryViewModel?> {
   CallHistoryDetailController({
     required this.callHistoryRepo,
-    required this.contactNameUseCase,
-    required this.contactRepository,
+    required this.getContactByIdUseCase,
+    required this.contactListenerUseCase,
+    required this.deleteContactsUseCase,
   });
 
   final CallHistoryRepo callHistoryRepo;
-  final ContactNameUseCase contactNameUseCase;
-  final ContactRepo contactRepository;
+  final GetContactByIdUseCase getContactByIdUseCase;
+  final DeleteContactUseCase deleteContactsUseCase;
+  final ContactListenerUseCase contactListenerUseCase;
 
   late UserCallHistoryViewArgumentsModel args;
 
@@ -72,7 +83,7 @@ class CallHistoryDetailController
   }
 
   Future<void> _listenToContactsToUpdateName() async {
-    (await contactRepository.getContactsStream()).listen((newUsers) {
+    (await contactListenerUseCase.execute()).listen((newUsers) {
       if (state.isLoading) {
         return;
       }
@@ -115,9 +126,11 @@ class CallHistoryDetailController
     //* Loop on participants data model to get their name from contact
     //* And convert them to participants view model
     for (final participant in callHistoryDataModel.participants) {
-      final name = await contactNameUseCase.execute(participant.coreId);
+      final contact = await getContactByIdUseCase.execute(participant.coreId);
       participantViewList.add(
-        participant.mapToCallHistoryParticipantViewModel(name),
+        participant.mapToCallHistoryParticipantViewModel(
+          contact != null ? contact.name : participant.coreId,
+        ),
       );
     }
 
@@ -134,7 +147,7 @@ class CallHistoryDetailController
 
   // TODO(AliAzim): we can move this method to other provider
   Future<bool> contactAvailability(String coreId) async {
-    final contact = await contactRepository.getContactById(coreId);
+    final contact = await getContactByIdUseCase.execute(coreId);
     if (contact == null) {
       return false;
     } else {
@@ -145,7 +158,7 @@ class CallHistoryDetailController
   bool isGroupCall() => state.value!.participants.length > 1;
 
   Future<void> deleteContactById(String coreId) async {
-    await contactRepository.deleteContactById(coreId);
+    await deleteContactsUseCase.execute(coreId);
   }
 }
 

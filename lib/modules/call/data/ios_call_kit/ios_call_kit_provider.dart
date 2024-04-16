@@ -7,24 +7,25 @@ import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
-import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/routes/app_pages.dart';
 import 'package:heyo/modules/call/data/rtc/models.dart';
 import 'package:heyo/modules/call/domain/call_repository.dart';
+import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 import 'package:uuid/uuid.dart';
 
 class CallKitProvider {
   CallKitProvider({
     required this.accountInfoRepo,
-    required this.contactRepository,
+    required this.getContactByIdUseCase,
     required this.callRepository,
   }) {
     listenerEvent(_onNewEventRecived);
   }
 
   final AccountRepository accountInfoRepo;
-  final LocalContactRepo contactRepository;
+  final GetContactByIdUseCase getContactByIdUseCase;
   final CallRepository callRepository;
   late CallId callId;
   late List<CallInfo> callInfo;
@@ -44,8 +45,8 @@ class CallKitProvider {
     this.callId = callId;
     callInfo = calls;
     _uuid = const Uuid().v4();
-    final userModel = await contactRepository
-        .getContactById(calls.first.remotePeer.remoteCoreId);
+    final contact = await getContactByIdUseCase
+        .execute(calls.first.remotePeer.remoteCoreId);
 
     final params = CallKitParams(
       id: _uuid,

@@ -4,18 +4,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:flutter_ios_call_kit/entities/call_event.dart';
-import 'package:get/get.dart' hide navigator;
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:heyo/modules/call/data/ios_call_kit/ios_call_kit_provider.dart';
-import 'package:heyo/modules/call/data/media_sources.dart';
-import 'package:heyo/modules/call/domain/call_repository.dart';
-import 'package:heyo/modules/call/domain/models.dart';
+import 'package:get/get.dart' hide navigator;
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_user_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/connected_participant_model/connected_participant_model.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/local_participant_model/local_participant_model.dart';
-import 'package:heyo/app/modules/calls/usecase/contact_availability_use_case.dart';
-import 'package:heyo/app/modules/calls/usecase/get_contact_user_use_case.dart';
 import 'package:heyo/app/modules/shared/data/models/call_view_arguments_model.dart';
 import 'package:heyo/app/modules/shared/data/models/incoming_call_view_arguments.dart';
 import 'package:heyo/app/modules/shared/data/models/messages_view_arguments_model.dart';
@@ -23,6 +17,11 @@ import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/routes/app_pages.dart';
+import 'package:heyo/modules/call/data/ios_call_kit/ios_call_kit_provider.dart';
+import 'package:heyo/modules/call/data/media_sources.dart';
+import 'package:heyo/modules/call/domain/call_repository.dart';
+import 'package:heyo/modules/call/domain/models.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_name_by_id_use_case.dart';
 import 'package:wakelock/wakelock.dart';
 
 //enum CallViewType {
@@ -35,15 +34,13 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   CallController({
     required this.callRepository,
     required this.accountInfo,
-    required this.getContactUserUseCase,
-    required this.contactAvailabilityUseCase,
+    required this.getContactNameByIdUseCase,
     required this.iOSCallKitProvider,
   });
 
   final CallRepository callRepository;
   final AccountRepository accountInfo;
-  final GetContactUserUseCase getContactUserUseCase;
-  final ContactAvailabilityUseCase contactAvailabilityUseCase;
+  final GetContactNameByIdUseCase getContactNameByIdUseCase;
   final CallKitProvider iOSCallKitProvider;
 
   //* CallViewArgumentsModel will not effect the UI
@@ -152,22 +149,19 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       duration: const Duration(milliseconds: 400),
     );
 
-    if (Platform.isIOS){
-
+    if (Platform.isIOS) {
       iOSCallKitProvider.onCallKitNewEvent = (event) {
-
         debugPrint('➡️ CallController: onCallKitNewEvent');
         switch (event.event) {
           case Event.actionCallEnded:
             endCall();
           case Event.actionCallToggleMute:
-          // TODO: only iOS
+            // TODO: only iOS
             toggleMuteMic();
           default:
         }
       };
     }
-
   }
 
   void startCallTimer() {
@@ -216,8 +210,12 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       args.isAudioCall,
     );
 
-    if (Platform.isIOS){
-      await iOSCallKitProvider.makeCall(requestedCallId, args.isAudioCall, args.members);
+    if (Platform.isIOS) {
+      await iOSCallKitProvider.makeCall(
+        requestedCallId,
+        args.isAudioCall,
+        args.members,
+      );
     }
 
     isInCall.value = false;
@@ -236,15 +234,13 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       await renderer.initialize();
       renderer.srcObject = callStream.remoteStream;
 
-      //* To get the name if current user save this coreId to contact
-      final userContact = await contactAvailabilityUseCase.execute(
-        coreId: callStream.coreId,
-      );
+      final contactName =
+          await getContactNameByIdUseCase.execute(callStream.coreId);
       final remoteParticipate = ConnectedParticipantModel(
         audioMode: true.obs,
         videoMode: (!callStream.isAudioCall).obs,
         coreId: callStream.coreId,
-        name: userContact.name,
+        name: contactName,
         stream: callStream.remoteStream,
         rtcVideoRenderer: renderer,
       );
@@ -257,17 +253,16 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   Future<void> createConnectedParticipantModel(CallStream callStream) async {
     print(
-        " createConnectedParticipantModel : ${callStream.isAudioCall} : ${callStream.remoteStream}");
+      " createConnectedParticipantModel : ${callStream.isAudioCall} : ${callStream.remoteStream}",
+    );
     RTCVideoRenderer? renderer;
     if (callStream.remoteStream != null) {
       renderer = RTCVideoRenderer();
       await renderer.initialize();
       renderer.srcObject = callStream.remoteStream;
     }
-    //* To get the name if current user save this coreId to contact
-    final userContact = await contactAvailabilityUseCase.execute(
-      coreId: callStream.coreId,
-    );
+    final contactName =
+        await getContactNameByIdUseCase.execute(callStream.coreId);
 
     connectedRemoteParticipates.add(
       ConnectedParticipantModel(
@@ -275,7 +270,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
         videoMode:
             (renderer == null) ? false.obs : (!callStream.isAudioCall).obs,
         coreId: callStream.coreId,
-        name: userContact.name,
+        name: contactName,
         stream: callStream.remoteStream,
         rtcVideoRenderer: renderer,
       ),
@@ -325,12 +320,9 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     required String coreId,
     AllParticipantStatus status = AllParticipantStatus.calling,
   }) async {
-//* To get the name if current user save this coreId to contact
-    final userContact = await contactAvailabilityUseCase.execute(
-      coreId: coreId,
-    );
+    final contactName = await getContactNameByIdUseCase.execute(coreId);
     final participant = AllParticipantModel(
-      name: userContact.name,
+      name: contactName,
       coreId: coreId,
       status: status,
     );
@@ -340,7 +332,9 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
         participants.indexWhere((item) => item.coreId == coreId);
 
     if (participantIndex == -1) {
-      participants.add(participant.copyWith(name: userContact.name));
+      participants.add(
+        participant.copyWith(name: contactName),
+      );
     } else {
       participants[participantIndex] = participant;
     }
@@ -371,7 +365,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
           isInCall.value = true;
           _stopWatingBeep();
           startCallTimer();
-          if (Platform.isIOS){
+          if (Platform.isIOS) {
             iOSCallKitProvider.setCallConnected();
           }
         }
@@ -412,16 +406,15 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   void switchAudioSource() {}
 
   Future<void> endCall() async {
-
     if (args.callId == null) {
       await callRepository.endOrCancelCall(requestedCallId);
-      if (Platform.isIOS){
+      if (Platform.isIOS) {
         await iOSCallKitProvider.endAllCalls(requestedCallId);
         debugPrint('➡️ CallController: endCall');
       }
     } else {
       await callRepository.endOrCancelCall(args.callId!);
-      if (Platform.isIOS){
+      if (Platform.isIOS) {
         await iOSCallKitProvider.endAllCalls(args.callId!);
         debugPrint('➡️ CallController: endCall');
       }
@@ -583,5 +576,4 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     );
     callRepository.setAudioSource(deviceId);
   }
-
 }

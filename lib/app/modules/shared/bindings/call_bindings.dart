@@ -10,7 +10,9 @@ import 'package:heyo/modules/call/data/call_status_observer.dart';
 import 'package:heyo/app/modules/calls/shared/data/providers/call_history/call_history_provider.dart';
 import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
 import 'package:heyo/modules/features/call_history/data/local_call_history_repo.dart';
-import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/contact_listener_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_name_by_id_use_case.dart';
 import 'package:heyo/app/modules/shared/bindings/priority_bindings_interface.dart';
 import 'package:heyo/app/modules/shared/controllers/call_history_observer.dart';
 import 'package:heyo/app/modules/shared/data/providers/database/app_database.dart';
@@ -51,7 +53,9 @@ class CallBindings with NormalPriorityBindings {
       ..put(
         CallKitProvider(
           accountInfoRepo: Get.find(),
-          contactRepository: Get.find(),
+          getContactByIdUseCase: GetContactByIdUseCase(
+            contactRepository: Get.find(),
+          ),
           callRepository: Get.find<WebRTCCallRepository>(),
         ),
         permanent: true,
@@ -61,7 +65,9 @@ class CallBindings with NormalPriorityBindings {
             callStatusProvider: Get.find(),
             accountInfoRepo: Get.find(),
             notificationsController: Get.find(),
-            contactRepository: Get.find(),
+            getContactByIdUseCase: GetContactByIdUseCase(
+              contactRepository: Get.find(),
+            ),
             appLifeCycleController: Get.find(),
             iOSCallKitProvider: Get.find()),
         permanent: true,
@@ -75,7 +81,9 @@ class CallBindings with NormalPriorityBindings {
                 appDatabaseProvider: Get.find<AppDatabaseProvider>()),
           ),
           callStatusObserver: Get.find(),
-          contactRepository: Get.find(),
+          getContactByIdUseCase: GetContactByIdUseCase(
+            contactRepository: Get.find(),
+          ),
         ),
       )
       ..put<CallHistoryRepo>(
@@ -91,10 +99,12 @@ class CallBindings with NormalPriorityBindings {
               appDatabaseProvider: Get.find<AppDatabaseProvider>(),
             ),
           ),
-          contactNameUseCase: ContactNameUseCase(
+          contactNameUseCase: GetContactNameByIdUseCase(
             contactRepository: Get.find(),
           ),
-          contactRepository: Get.find(),
+          contactListenerUseCase: ContactListenerUseCase(
+            contactRepository: Get.find(),
+          ),
         ),
       );
   }

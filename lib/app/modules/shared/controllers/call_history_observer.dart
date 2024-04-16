@@ -7,18 +7,18 @@ import 'package:heyo/app/modules/shared/data/models/call_history_status.dart';
 import 'package:heyo/modules/call/data/call_status_observer.dart';
 import 'package:heyo/modules/call/data/call_status_provider.dart';
 import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
-import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 
 class CallHistoryObserver extends GetxController {
   CallHistoryObserver({
     required this.callHistoryRepo,
     required this.callStatusObserver,
-    required this.contactRepository,
+    required this.getContactByIdUseCase,
   });
 
   final CallHistoryRepo callHistoryRepo;
   final CallStatusObserver callStatusObserver;
-  final LocalContactRepo contactRepository;
+  final GetContactByIdUseCase getContactByIdUseCase;
 
   /// maps session id of a call to the time it started so that when it ends
   /// we can calculate the duration of call
@@ -258,7 +258,7 @@ class CallHistoryObserver extends GetxController {
   }
 
   Future<CallHistoryParticipantModel> _getUserFromCoreId(String coreId) async {
-    final contact = await contactRepository.getContactById(coreId);
+    final contact = await getContactByIdUseCase.execute(coreId);
     CallHistoryParticipantModel callHistoryParticipant;
 
     if (contact != null) {

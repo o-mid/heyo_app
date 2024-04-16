@@ -9,15 +9,20 @@ import 'package:heyo/app/modules/shared/utils/constants/colors.dart';
 import 'package:heyo/app/modules/shared/utils/constants/transitions_constant.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/user_preview_widget.dart';
+import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
+import 'package:heyo/modules/features/contact/usecase/delete_contact_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 
 class UserPreviewController extends GetxController {
   UserPreviewController({
-    required this.contactRepository,
+    required this.deleteContactsUseCase,
+    required this.getContactByIdUseCase,
     required this.callHistoryRepo,
     required this.chatHistoryRepo,
   });
 
-  final LocalContactRepo contactRepository;
+  final DeleteContactUseCase deleteContactsUseCase;
+  final GetContactByIdUseCase getContactByIdUseCase;
   final RxBool isWifiDirectConnection = false.obs;
   final CallHistoryRepo callHistoryRepo;
   final ChatHistoryRepo chatHistoryRepo;
@@ -54,7 +59,7 @@ class UserPreviewController extends GetxController {
   }
 
   Future<void> contactAvailability(String coreId) async {
-    final contact = await contactRepository.getContactById(coreId);
+    final contact = await getContactByIdUseCase.execute(coreId);
     if (contact == null) {
       isContact.value = false;
       name.value = coreId.shortenCoreId;
@@ -65,22 +70,12 @@ class UserPreviewController extends GetxController {
   }
 
   Future<void> deleteContact(String userCoreId) async {
-    await contactRepository.deleteContactById(userCoreId);
+    await deleteContactsUseCase.execute(userCoreId);
 
     final chatModel = await chatHistoryRepo.getChat(userCoreId);
     if (chatModel != null) {
-      await chatHistoryRepo.updateChat(chatModel.copyWith(name: userCoreId.shortenCoreId));
+      await chatHistoryRepo
+          .updateChat(chatModel.copyWith(name: userCoreId.shortenCoreId));
     }
-    //final calls = await callHistoryRepo.getCallsFromUserId(userCoreId);
-    //calls.forEach((call) async {
-    //  //TODO:(Aliazim) update model why delete and create !?
-    //  await callHistoryRepo.deleteOneCall(call.callId);
-    //  await callHistoryRepo.addCallToHistory(
-    //    call.copyWith(
-    //      //TODO:(Aliazim) the call history participant will change
-    //      participants: [call.participants[0]],
-    //    ),
-    //  );
-    //});
   }
 }

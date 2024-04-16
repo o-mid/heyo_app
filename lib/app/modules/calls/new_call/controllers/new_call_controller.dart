@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heyo/app/modules/calls/usecase/get_contact_user_use_case.dart';
-import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart';
+import 'package:heyo/modules/features/contact/usecase/contact_listener_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contacts_use_case.dart';
 import 'package:heyo/app/modules/new_chat/widgets/invite_bttom_sheet.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
@@ -11,19 +11,18 @@ import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart'
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/qr_scan_view.dart';
 import 'package:heyo/generated/locales.g.dart';
-import 'package:heyo/modules/features/contact/data/local_contact_repo.dart';
 import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
 
 class NewCallController extends GetxController {
   NewCallController({
-    required this.contactRepository,
+    required this.contactListenerUseCase,
     required this.accountInfoRepo,
     required this.getContactUserUseCase,
   });
 
-  final LocalContactRepo contactRepository;
+  final ContactListenerUseCase contactListenerUseCase;
   final AccountRepository accountInfoRepo;
-  final GetContactUserUseCase getContactUserUseCase;
+  final GetContactsUseCase getContactUserUseCase;
 
   final inputText = ''.obs;
 
@@ -34,6 +33,7 @@ class NewCallController extends GetxController {
 
   @override
   Future<void> onInit() async {
+    //TODO(AliAzim): getContact() will call twice on init
     await getContact();
     unawaited(_listenToContactsToUpdateName());
     super.onInit();
@@ -73,7 +73,7 @@ class NewCallController extends GetxController {
 
   Future<void> _listenToContactsToUpdateName() async {
     _contactsStreamSubscription =
-        (await contactRepository.getContactsStream()).listen(_updateName);
+        (await contactListenerUseCase.execute()).listen(_updateName);
   }
 
   Future<void> _updateName(List<ContactModel> newContacts) async {

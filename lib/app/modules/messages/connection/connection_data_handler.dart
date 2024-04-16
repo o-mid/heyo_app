@@ -13,6 +13,8 @@ import 'package:heyo/app/modules/shared/utils/constants/notifications_constant.d
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/screen-utils/mocks/random_avatar_icon.dart';
 import 'package:heyo/modules/features/chats/presentation/models/chat_model/chat_history_model.dart';
+import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../../../modules/features/chats/domain/chat_history_repo.dart';
@@ -25,32 +27,31 @@ import '../data/models/reaction_model.dart';
 import '../data/repo/messages_repo.dart';
 import '../utils/message_from_json.dart';
 import '../../notifications/controllers/notifications_controller.dart';
-import '../../../../modules/features/contact/data/local_contact_repo.dart';
 import 'models/data_channel_message_model.dart';
 
 class DataHandler {
   final MessagesRepo messagesRepo;
   final ChatHistoryRepo chatHistoryRepo;
   final NotificationsController notificationsController;
-  final LocalContactRepo contactRepository;
+  final GetContactByIdUseCase getContactByIdUseCase;
   final AccountRepository accountInfoRepo;
 
   DataHandler({
     required this.messagesRepo,
     required this.chatHistoryRepo,
     required this.notificationsController,
-    required this.contactRepository,
+    required this.getContactByIdUseCase,
     required this.accountInfoRepo,
   });
 
   createUserChatModel({required String sessioncid}) async {
-    final userModel = await contactRepository.getContactById(sessioncid);
+    final contact = await getContactByIdUseCase.execute(sessioncid);
 
     final userChatModel = ChatHistoryModel(
       id: sessioncid,
-      name: (userModel == null)
+      name: (contact == null)
           ? "${sessioncid.characters.take(4).string}...${sessioncid.characters.takeLast(4).string}"
-          : userModel.name,
+          : contact.name,
       lastMessage: "",
       lastReadMessageId: "",
       timestamp: DateTime.now(),
@@ -96,10 +97,10 @@ class DataHandler {
         chatName = currentChatModel.name;
       }
     } else {
-      final userModel = await contactRepository.getContactById(remoteCoreIds.first);
-      chatName = (userModel == null)
+      final contact = await getContactByIdUseCase.execute(remoteCoreIds.first);
+      chatName = (contact == null)
           ? '${remoteCoreIds.first.characters.take(4).string}...${remoteCoreIds.first.characters.takeLast(4).string}'
-          : userModel.name;
+          : contact.name;
     }
 
     remoteCoreIds.add(selfCoreId!);
@@ -110,8 +111,9 @@ class DataHandler {
       lastReadMessageId: "",
       timestamp: DateTime.now(),
       isGroupChat: isGroupChat,
-      participants:
-          remoteCoreIds.map((e) => MessagingParticipantModel(coreId: e, chatId: chatId)).toList(),
+      participants: remoteCoreIds
+          .map((e) => MessagingParticipantModel(coreId: e, chatId: chatId))
+          .toList(),
     );
 
     if (currentChatModel == null) {
@@ -143,11 +145,11 @@ class DataHandler {
     required List<String> remoteCoreIds,
   }) async {
     MessageModel receivedMessage = messageFromJson(receivedMessageJson);
-    MessageModel? _currentMsg =
-        await messagesRepo.getMessageById(messageId: receivedMessage.messageId, chatId: chatId);
+    MessageModel? _currentMsg = await messagesRepo.getMessageById(
+        messageId: receivedMessage.messageId, chatId: chatId);
 
     bool isNewMessage = (_currentMsg == null);
-    final contact = await contactRepository.getContactById(coreId);
+    final contact = await getContactByIdUseCase.execute(coreId);
 
     if (isNewMessage) {
       await messagesRepo.createMessage(
@@ -189,9 +191,11 @@ class DataHandler {
     required Map<String, dynamic> receivedDeleteJson,
     required String chatId,
   }) async {
-    DeleteMessageModel deleteMessage = DeleteMessageModel.fromJson(receivedDeleteJson);
+    DeleteMessageModel deleteMessage =
+        DeleteMessageModel.fromJson(receivedDeleteJson);
 
-    await messagesRepo.deleteMessages(messageIds: deleteMessage.messageIds, chatId: chatId);
+    await messagesRepo.deleteMessages(
+        messageIds: deleteMessage.messageIds, chatId: chatId);
   }
 
   Future<void> updateReceivedMessage({
@@ -207,8 +211,10 @@ class DataHandler {
     );
 
     if (currentMessage != null) {
-      final receivedReactions = updateMessage.message.reactions.map((key, value) {
-        ReactionModel? existingReaction = currentMessage.reactions[key] as ReactionModel?;
+      final receivedReactions =
+          updateMessage.message.reactions.map((key, value) {
+        ReactionModel? existingReaction =
+            currentMessage.reactions[key] as ReactionModel?;
         bool isReactedByMe = value.users.contains(localCoreID);
 
         if (existingReaction is ReactionModel) {
@@ -236,12 +242,13 @@ class DataHandler {
     required Map<String, dynamic> receivedconfirmJson,
     required String chatId,
   }) async {
-    ConfirmMessageModel confirmMessage = ConfirmMessageModel.fromJson(receivedconfirmJson);
+    ConfirmMessageModel confirmMessage =
+        ConfirmMessageModel.fromJson(receivedconfirmJson);
 
     final String messageId = confirmMessage.messageId;
     if (confirmMessage.status == ConfirmMessageStatus.delivered) {
-      MessageModel? currentMessage =
-          await messagesRepo.getMessageById(messageId: messageId, chatId: chatId);
+      MessageModel? currentMessage = await messagesRepo.getMessageById(
+          messageId: messageId, chatId: chatId);
 
       // check if message is found and update the Message status
       if (currentMessage != null) {
@@ -253,14 +260,18 @@ class DataHandler {
         }
       }
     } else {
-      final List<MessageModel> messages = await messagesRepo.getMessages(chatId);
-      final index = messages.lastIndexWhere((element) => element.messageId == messageId);
+      final List<MessageModel> messages =
+          await messagesRepo.getMessages(chatId);
+      final index =
+          messages.lastIndexWhere((element) => element.messageId == messageId);
 
       if (index != -1) {
         final messagesToUpdate = messages
             .sublist(0, index + 1)
             .where(
-              (element) => element.isFromMe == true && (element.status == MessageStatus.delivered),
+              (element) =>
+                  element.isFromMe == true &&
+                  (element.status == MessageStatus.delivered),
             )
             .toList();
         // update the status of the messages that need to be update to read
@@ -281,7 +292,8 @@ class DataHandler {
   }) async {
     final bigPicture = await _getBigPicture(receivedMessage, chatId);
 
-    final payload = _createNotificationPayload(receivedMessage, chatId, senderName);
+    final payload =
+        _createNotificationPayload(receivedMessage, chatId, senderName);
 
     await notificationsController.receivedMessageNotify(
       chatId: chatId,
@@ -339,8 +351,9 @@ class DataHandler {
       timestamp: receivedMessage.timestamp.toLocal(),
       isGroupChat: isGroupChat,
       name: isGroupChat ? chatName : chatmodel.name,
-      participants:
-          remoteCoreIds.map((e) => MessagingParticipantModel(coreId: e, chatId: chatId)).toList(),
+      participants: remoteCoreIds
+          .map((e) => MessagingParticipantModel(coreId: e, chatId: chatId))
+          .toList(),
     );
 
     if (chatmodel != null) {

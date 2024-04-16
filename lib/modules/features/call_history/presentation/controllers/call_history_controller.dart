@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/call_history_participant_model/call_history_participant_model.dart';
-import 'package:heyo/app/modules/calls/usecase/contact_name_use_case.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/core/di/injector_provider.dart';
 import 'package:heyo/modules/features/call_history/domain/call_history_repo.dart';
@@ -11,13 +10,17 @@ import 'package:heyo/modules/features/call_history/presentation/models/call_hist
 import 'package:heyo/modules/features/call_history/presentation/models/call_history_view_model/call_history_view_model.dart';
 import 'package:heyo/modules/features/call_history/utils/call_history_utils.dart';
 import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
+import 'package:heyo/modules/features/contact/usecase/contact_listener_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_name_by_id_use_case.dart';
 
 final callHistoryNotifierProvider =
     AsyncNotifierProvider<CallHistoryController, List<CallHistoryViewModel>>(
   () => CallHistoryController(
     callHistoryRepo: inject.get<CallHistoryRepo>(),
-    contactNameUseCase: inject.get<ContactNameUseCase>(),
-    contactRepository: inject.get<ContactRepo>(),
+    contactNameUseCase: inject.get<GetContactNameByIdUseCase>(),
+    contactListenerUseCase: ContactListenerUseCase(
+      contactRepository: inject.get<ContactRepo>(),
+    ),
   ),
 );
 
@@ -25,12 +28,12 @@ class CallHistoryController extends AsyncNotifier<List<CallHistoryViewModel>> {
   CallHistoryController({
     required this.callHistoryRepo,
     required this.contactNameUseCase,
-    required this.contactRepository,
+    required this.contactListenerUseCase,
   });
 
   final CallHistoryRepo callHistoryRepo;
-  final ContactNameUseCase contactNameUseCase;
-  final ContactRepo contactRepository;
+  final GetContactNameByIdUseCase contactNameUseCase;
+  final ContactListenerUseCase contactListenerUseCase;
 
   @override
   FutureOr<List<CallHistoryViewModel>> build() {
@@ -137,7 +140,7 @@ class CallHistoryController extends AsyncNotifier<List<CallHistoryViewModel>> {
   }
 
   Future<void> _listenToContactsToUpdateName() async {
-    (await contactRepository.getContactsStream()).listen((newContacts) async {
+    (await contactListenerUseCase.execute()).listen((newContacts) async {
       final newCalls = <CallHistoryViewModel>[];
       if (state.value == null) {
         return;

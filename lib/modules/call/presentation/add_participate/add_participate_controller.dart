@@ -2,28 +2,28 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heyo/modules/call/domain/call_repository.dart';
-import 'package:heyo/modules/call/domain/models.dart';
 import 'package:heyo/app/modules/calls/shared/data/models/all_participant_model/all_participant_model.dart';
-import 'package:heyo/app/modules/calls/usecase/get_contact_user_use_case.dart';
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/core_id.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
 import 'package:heyo/app/modules/shared/widgets/qr_scan_view.dart';
 import 'package:heyo/generated/locales.g.dart';
+import 'package:heyo/modules/call/domain/call_repository.dart';
+import 'package:heyo/modules/call/domain/models.dart';
 import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contacts_use_case.dart';
 
 class AddParticipateController extends GetxController {
   AddParticipateController({
     //required this.searchContactUserUseCase,
-    required this.getContactUserUseCase,
+    required this.getContactsUserUseCase,
     required this.callRepository,
     required this.accountInfoRepo,
   });
 
   //final SearchContactUserUseCase searchContactUserUseCase;
-  final GetContactUserUseCase getContactUserUseCase;
+  final GetContactsUseCase getContactsUserUseCase;
   final CallRepository callRepository;
   final AccountRepository accountInfoRepo;
 
@@ -60,7 +60,7 @@ class AddParticipateController extends GetxController {
   //].obs;
 
   Future<void> getContact() async {
-    final contacts = await getContactUserUseCase.execute();
+    final contacts = await getContactsUserUseCase.execute();
     //* Get the list of users who are in call
     var callStreams = <CallStream>[];
     try {

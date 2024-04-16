@@ -7,7 +7,13 @@ import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart
 import 'package:heyo/app/modules/shared/data/models/messaging_participant_model.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/barcode.extension.dart';
 import 'package:heyo/app/modules/shared/utils/extensions/string.extension.dart';
+import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 import 'package:heyo/modules/features/contact/domain/models/contact_model/contact_model.dart';
+import 'package:heyo/modules/features/contact/usecase/add_contacts_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/contact_listener_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/delete_contact_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/get_contact_by_id_use_case.dart';
+import 'package:heyo/modules/features/contact/usecase/search_contacts_use_case.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../messages/utils/chat_Id_generator.dart';
@@ -18,10 +24,20 @@ import '../../shared/utils/constants/colors.dart';
 import '../../shared/utils/constants/textStyles.dart';
 
 class NewGroupChatController extends GetxController {
-  NewGroupChatController(
-      {required this.contactRepository, required this.accountInfoRepo});
+  NewGroupChatController({
+    required this.accountInfoRepo,
+    required this.addContactUseCase,
+    required this.getContactByIdUseCase,
+    required this.deleteContactUseCase,
+    required this.contactListenerUseCase,
+    required this.searchContactsUseCase,
+  });
 
-  final LocalContactRepo contactRepository;
+  final ContactListenerUseCase contactListenerUseCase;
+  final AddContactUseCase addContactUseCase;
+  final GetContactByIdUseCase getContactByIdUseCase;
+  final DeleteContactUseCase deleteContactUseCase;
+  final SearchContactsUseCase searchContactsUseCase;
   final AccountRepository accountInfoRepo;
   final inputFocusNode = FocusNode();
   final confirmationScreenInputFocusNode = FocusNode();
@@ -75,7 +91,7 @@ class NewGroupChatController extends GetxController {
 
   Future<void> _listenToContacts() async {
     _contactsStreamSubscription =
-        (await contactRepository.getContactsStream()).listen((newContacts) {
+        (await contactListenerUseCase.execute()).listen((newContacts) {
       _updateSearchSuggestions(newContacts);
     });
   }
@@ -89,7 +105,7 @@ class NewGroupChatController extends GetxController {
   }
 
   Future<void> _searchUsers(String query) async {
-    final searchedItems = (await contactRepository.search(query)).toList();
+    final searchedItems = (await searchContactsUseCase.execute(query)).toList();
     await processSearchResults(searchedItems, query);
   }
 
@@ -147,15 +163,15 @@ class NewGroupChatController extends GetxController {
   }
 
   Future<void> updateContactRepository(ContactModel contact) async {
-    final checkContact = await contactRepository.getContactById(contact.coreId);
+    final checkContact = await getContactByIdUseCase.execute(contact.coreId);
     if (checkContact == null) {
-      await contactRepository.addContact(contact);
+      await addContactUseCase.execute(contact);
     }
   }
 
   Future<void> _clearSearchSuggestions() async {
     for (final element in searchSuggestions) {
-      await contactRepository.deleteContactById(element.coreId);
+      await deleteContactUseCase.execute(element.coreId);
     }
   }
 
@@ -338,7 +354,7 @@ class NewGroupChatController extends GetxController {
             .any((element) => element.coreId == _mockUsers[i].coreId)) {
           return;
         } else {
-          await contactRepository.addContact(_mockUsers[i]);
+          await addContactUseCase.execute(_mockUsers[i]);
         }
       }
     });

@@ -6,25 +6,25 @@ import 'package:heyo/app/modules/new_chat/data/models/user_model/user_model.dart
 import 'package:heyo/app/modules/shared/data/repository/account/account_repository.dart';
 import 'package:heyo/app/modules/shared/utils/permission_flow.dart';
 import 'package:heyo/app/modules/wifi_direct/controllers/wifi_direct_wrapper.dart';
+import 'package:heyo/modules/features/contact/domain/contact_repo.dart';
 import 'package:heyo_wifi_direct/heyo_wifi_direct.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../generated/assets.gen.dart';
 import '../../../../generated/locales.g.dart';
 import '../../messages/connection/wifi_direct_connection_repo.dart';
 import '../../messages/connection/wifi_direct_connection_controller.dart';
-import '../../../../modules/features/contact/data/local_contact_repo.dart';
 
 class WifiDirectController extends GetxController {
-  WifiDirectController(
-      {required AccountRepository accountInfoRepo,
-      // required this.wifiDirectConnectionController,
-      required this.contactRepository})
-      : _accountInfoRepo = accountInfoRepo;
+  WifiDirectController({
+    required AccountRepository accountInfoRepo,
+    // required this.wifiDirectConnectionController,
+    //required this.contactRepository,
+  }) : _accountInfoRepo = accountInfoRepo;
 
   final AccountRepository _accountInfoRepo;
 
   // final AccountInfo accountInfo;
-  final LocalContactRepo contactRepository;
+  //final ContactRepo contactRepository;
 
   HeyoWifiDirect? _heyoWifiDirect;
   bool isLocationPermissionGranted = false;
