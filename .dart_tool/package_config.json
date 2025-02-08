@@ -1,0 +1,1673 @@
+{
+  "configVersion": 2,
+  "packages": [
+    {
+      "name": "_fe_analyzer_shared",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/_fe_analyzer_shared-64.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "_flutterfire_internals",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/_flutterfire_internals-1.3.16",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "analyzer",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/analyzer-6.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "archive",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/archive-3.4.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "args",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/args-2.4.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "asn1lib",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/asn1lib-1.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "async",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/async-2.11.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "audio_session",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/audio_session-0.1.16",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "auto_start_flutter",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/auto_start_flutter-0.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "awesome_notifications",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/awesome_notifications-0.8.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "blockies",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/blockies-0.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "boolean_selector",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "build",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/build-2.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "build_config",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/build_config-1.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "build_daemon",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/build_daemon-4.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "build_resolvers",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/build_resolvers-2.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "build_runner",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/build_runner-2.4.7",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "build_runner_core",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/build_runner_core-7.2.11",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "built_collection",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/built_collection-5.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "built_value",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/built_value-8.6.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "characters",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/characters-1.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "checked_yaml",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/checked_yaml-2.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "chewie",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/chewie-1.7.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "cli_util",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/cli_util-0.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "clock",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/clock-1.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "code_builder",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/code_builder-4.7.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "collection",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/collection-1.19.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "color",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/color-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "connectivity_plus",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/connectivity_plus-2.3.9",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "connectivity_plus_linux",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/connectivity_plus_linux-1.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "connectivity_plus_macos",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/connectivity_plus_macos-1.2.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "connectivity_plus_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-1.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "connectivity_plus_web",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/connectivity_plus_web-1.2.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "connectivity_plus_windows",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/connectivity_plus_windows-1.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "convert",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/convert-3.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "core_blockies",
+      "rootUri": "file:///Users/omid/.pub-cache/git/core-blockies-c8dc3ac0e7df93ca205085be1390113719ceb08e/",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "core_flutter_lint",
+      "rootUri": "file:///Users/omid/.pub-cache/git/core_flutter_lint-676acc0c94ff82b81209b7bf03175fcac594fc17/",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
+      "name": "core_web3dart",
+      "rootUri": "file:///Users/omid/.pub-cache/git/core-web3dart-37386884ba079eb77c0affb8fb4ee80899530990/",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "cross_file",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/cross_file-0.3.3+6",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "crypto",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/crypto-3.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "csslib",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/csslib-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "cupertino_icons",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/cupertino_icons-1.0.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "dart_style",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/dart_style-2.3.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "dart_webrtc",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/dart_webrtc-1.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.13"
+    },
+    {
+      "name": "dartx",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/dartx-1.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "dbus",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/dbus-0.7.8",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "device_info_plus",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/device_info_plus-9.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "device_info_plus_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/device_info_plus_platform_interface-7.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "dio",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/dio-5.3.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "emoji_picker_flutter",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/emoji_picker_flutter-1.6.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "emojis",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/emojis-0.9.9",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "encrypt",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/encrypt-5.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "expandable_bottom_sheet",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/expandable_bottom_sheet-1.1.1+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "fake_async",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/fake_async-1.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "ffi",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/ffi-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "file",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/file-6.1.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "file_picker",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/file_picker-5.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "firebase_core",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/firebase_core-2.24.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "firebase_core_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/firebase_core_platform_interface-5.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "firebase_core_web",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/firebase_core_web-2.10.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "firebase_messaging",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/firebase_messaging-14.7.9",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "firebase_messaging_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/firebase_messaging_platform_interface-4.5.18",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "firebase_messaging_web",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/firebase_messaging_web-3.5.18",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "fixnum",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/fixnum-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "flutter",
+      "rootUri": "file:///Users/omid/development/flutter/packages/flutter",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "flutter_animate",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_animate-4.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_beep",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_beep-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_bip39",
+      "rootUri": "file:///Users/omid/.pub-cache/git/flutter_bip39-235cf67a42592057e53ec039eda2ddad62988bd6/",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_draggable_gridview",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_draggable_gridview-0.0.8",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_ed448",
+      "rootUri": "file:///Users/omid/.pub-cache/git/flutter_ed448_pure_dart-bd749d7a76dc43c26f3f5c8e6929266bb32fcc21/",
+      "packageUri": "lib/",
+      "languageVersion": "2.13"
+    },
+    {
+      "name": "flutter_gen_core",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_gen_core-5.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_gen_runner",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_gen_runner-5.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_ios_call_kit",
+      "rootUri": "../heyo-plugin/flutter_ios_call_kit",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "flutter_keyboard_visibility",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_keyboard_visibility-5.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_keyboard_visibility_linux",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_keyboard_visibility_linux-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_keyboard_visibility_macos",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_keyboard_visibility_macos-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_keyboard_visibility_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_keyboard_visibility_platform_interface-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_keyboard_visibility_web",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_keyboard_visibility_web-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_keyboard_visibility_windows",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_keyboard_visibility_windows-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_launcher_icons",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_launcher_icons-0.13.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "flutter_local_notifications",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_local_notifications-16.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_local_notifications_linux",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_local_notifications_linux-4.0.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_local_notifications_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_local_notifications_platform_interface-7.0.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_native_splash",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_native_splash-2.3.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "flutter_osm_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_osm_interface-0.6.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "flutter_osm_plugin",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_osm_plugin-0.60.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "flutter_osm_web",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_osm_web-0.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "flutter_p2p_communicator",
+      "rootUri": "file:///Users/omid/.pub-cache/git/flutter_p2p_communicator-3a3865880cdc240de1b787e683456b74689cf4cb/",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "flutter_plugin_android_lifecycle",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.16",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "flutter_ringtone_player",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_ringtone_player-3.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_riverpod",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_riverpod-2.5.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_screenutil",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_screenutil-5.9.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_secure_storage",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_secure_storage-5.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_secure_storage_linux",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_secure_storage_linux-1.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_secure_storage_macos",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_secure_storage_macos-1.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_secure_storage_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_secure_storage_platform_interface-1.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_secure_storage_web",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_secure_storage_web-1.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_secure_storage_windows",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_secure_storage_windows-1.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_slidable",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_slidable-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_svg",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_svg-2.0.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "flutter_test",
+      "rootUri": "file:///Users/omid/development/flutter/packages/flutter_test",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "flutter_web_plugins",
+      "rootUri": "file:///Users/omid/development/flutter/packages/flutter_web_plugins",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "flutter_webrtc",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/flutter_webrtc-0.9.45",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "freezed",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/freezed-2.4.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "freezed_annotation",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/freezed_annotation-2.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "frontend_server_client",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/frontend_server_client-3.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "gallery_saver",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/gallery_saver-2.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "geolocator",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/geolocator-9.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "geolocator_android",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/geolocator_android-4.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "geolocator_apple",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/geolocator_apple-2.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "geolocator_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/geolocator_platform_interface-4.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "geolocator_web",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/geolocator_web-2.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "geolocator_windows",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/geolocator_windows-0.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "get",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/get-4.6.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "get_it",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/get_it-7.6.7",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "glob",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/glob-2.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "go_router",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/go_router-13.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "google_polyline_algorithm",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/google_polyline_algorithm-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "graphs",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/graphs-2.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "hex",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/hex-0.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "heyo_wifi_direct",
+      "rootUri": "file:///Users/omid/.pub-cache/git/heyo_wifi_direct-c044a4190e70b4e2f3a1820dc8f81bc2aa6ef6c6/",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "html",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/html-0.15.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "http",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/http-0.13.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "http_multi_server",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/http_multi_server-3.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "http_parser",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/http_parser-4.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "image",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/image-4.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "image_editor",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/image_editor-1.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "image_editor_common",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/image_editor_common-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "image_editor_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/image_editor_platform_interface-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "intl",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/intl-0.18.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "io",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/io-1.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "js",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/js-0.6.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "json_annotation",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/json_annotation-4.8.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "json_rpc_2",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/json_rpc_2-3.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "json_serializable",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/json_serializable-6.7.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "just_audio",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/just_audio-0.9.35",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "just_audio_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/just_audio_platform_interface-4.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "just_audio_web",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/just_audio_web-0.4.8",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "leak_tracker",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/leak_tracker-10.0.7",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "leak_tracker_flutter_testing",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/leak_tracker_flutter_testing-3.0.8",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "leak_tracker_testing",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/leak_tracker_testing-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "logger",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/logger-2.0.2+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "logging",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/logging-1.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "matcher",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/matcher-0.12.16+1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "material_color_utilities",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/material_color_utilities-0.11.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "meta",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/meta-1.15.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "mime",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/mime-1.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "mobile_scanner",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/mobile_scanner-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "nested",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/nested-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "nm",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/nm-0.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "open_file",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/open_file-3.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "package_config",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/package_config-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "package_info_plus",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/package_info_plus-5.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "package_info_plus_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/package_info_plus_platform_interface-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "path",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/path-1.9.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "path_parsing",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/path_parsing-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "path_provider",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/path_provider-2.0.15",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "path_provider_android",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/path_provider_android-2.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "path_provider_foundation",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/path_provider_foundation-2.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "path_provider_ios",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/path_provider_ios-2.0.11",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "path_provider_linux",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/path_provider_linux-2.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "path_provider_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/path_provider_platform_interface-2.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "path_provider_windows",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/path_provider_windows-2.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "permission_handler",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/permission_handler-10.4.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "permission_handler_android",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/permission_handler_android-10.3.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "permission_handler_apple",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/permission_handler_apple-9.1.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "permission_handler_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/permission_handler_platform_interface-3.12.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "permission_handler_windows",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/permission_handler_windows-0.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "petitparser",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/petitparser-5.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "photo_manager",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/photo_manager-3.0.0-dev.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.13"
+    },
+    {
+      "name": "photo_view",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/photo_view-0.14.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "pin_code_fields",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/pin_code_fields-7.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "platform",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/platform-3.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "platform_detect",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/platform_detect-2.0.11",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "plugin_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "pointycastle",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/pointycastle-3.7.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "pool",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/pool-1.5.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "pretty_dio_logger",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/pretty_dio_logger-1.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "provider",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/provider-6.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "pub_semver",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/pub_semver-2.1.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "pubspec_parse",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/pubspec_parse-1.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "pull_to_refresh",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/pull_to_refresh-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "qr",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/qr-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
+      "name": "qr_flutter",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/qr_flutter-4.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "record",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/record-4.4.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "record_linux",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/record_linux-0.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "record_macos",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/record_macos-0.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "record_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/record_platform_interface-0.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "record_web",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/record_web-0.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "record_windows",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/record_windows-0.7.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "reorderables",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/reorderables-0.5.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "retry",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/retry-3.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "riverpod",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/riverpod-2.5.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "routing_client_dart",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/routing_client_dart-0.4.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
+      "name": "rxdart",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/rxdart-0.27.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "sdp_transform",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/sdp_transform-0.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "sembast",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/sembast-3.5.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "sentry",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/sentry-7.16.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "sentry_flutter",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/sentry_flutter-7.16.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "sha3",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/sha3-0.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "share_plus",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/share_plus-4.5.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "share_plus_linux",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/share_plus_linux-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "share_plus_macos",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/share_plus_macos-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "share_plus_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/share_plus_platform_interface-3.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "share_plus_web",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/share_plus_web-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "share_plus_windows",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/share_plus_windows-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "shared_preferences",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/shared_preferences-2.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "shared_preferences_android",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/shared_preferences_android-2.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "shared_preferences_foundation",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.3.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "shared_preferences_linux",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/shared_preferences_linux-2.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "shared_preferences_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/shared_preferences_platform_interface-2.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "shared_preferences_web",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/shared_preferences_web-2.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "shared_preferences_windows",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/shared_preferences_windows-2.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "shelf",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/shelf-1.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "shelf_web_socket",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/shelf_web_socket-1.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "shimmer",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/shimmer-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "sky_engine",
+      "rootUri": "file:///Users/omid/development/flutter/bin/cache/pkg/sky_engine",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "smooth_page_indicator",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/smooth_page_indicator-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "source_gen",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/source_gen-1.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "source_helper",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/source_helper-1.3.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "source_span",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/source_span-1.10.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "stack_trace",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/stack_trace-1.12.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "state_notifier",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/state_notifier-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "stream_channel",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/stream_channel-2.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "stream_transform",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/stream_transform-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "string_scanner",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/string_scanner-1.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "swipeable_tile",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/swipeable_tile-2.0.0+3",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
+      "name": "synchronized",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/synchronized-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "term_glyph",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/term_glyph-1.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "test_api",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/test_api-0.7.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "time",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/time-2.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "timezone",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/timezone-0.9.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "timing",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/timing-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "tuple",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/tuple-2.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "typed_data",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/typed_data-1.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "uni_links",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/uni_links-0.5.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "uni_links_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/uni_links_platform_interface-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "uni_links_web",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/uni_links_web-0.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "universal_io",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/universal_io-2.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "url_launcher",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/url_launcher-6.1.10",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "url_launcher_android",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/url_launcher_android-6.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "url_launcher_ios",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/url_launcher_ios-6.1.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "url_launcher_linux",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/url_launcher_linux-3.0.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "url_launcher_macos",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/url_launcher_macos-3.0.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "url_launcher_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/url_launcher_platform_interface-2.1.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "url_launcher_web",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/url_launcher_web-2.0.20",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "url_launcher_windows",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/url_launcher_windows-3.0.8",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "uuid",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/uuid-3.0.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "vector_graphics",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/vector_graphics-1.1.9",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "vector_graphics_codec",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/vector_graphics_codec-1.1.9",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "vector_graphics_compiler",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/vector_graphics_compiler-1.1.9",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "vector_math",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/vector_math-2.1.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "very_good_analysis",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/very_good_analysis-5.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "video_player",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/video_player-2.7.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "video_player_android",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/video_player_android-2.4.10",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "video_player_avfoundation",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/video_player_avfoundation-2.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "video_player_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/video_player_platform_interface-6.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "video_player_web",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/video_player_web-2.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "visibility_detector",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/visibility_detector-0.3.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "vm_service",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/vm_service-14.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "wakelock",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/wakelock-0.6.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "wakelock_macos",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/wakelock_macos-0.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "wakelock_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/wakelock_platform_interface-0.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "wakelock_plus",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/wakelock_plus-1.1.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "wakelock_plus_platform_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/wakelock_plus_platform_interface-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "wakelock_web",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/wakelock_web-0.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "wakelock_windows",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/wakelock_windows-0.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "watcher",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/watcher-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "web",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/web-0.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "web_socket_channel",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/web_socket_channel-2.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "webrtc_interface",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/webrtc_interface-1.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "win32",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/win32-5.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "win32_registry",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/win32_registry-1.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "xdg_directories",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/xdg_directories-1.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "xml",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/xml-6.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "yaml",
+      "rootUri": "file:///Users/omid/.pub-cache/hosted/pub.dev/yaml-3.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "heyo",
+      "rootUri": "../",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    }
+  ],
+  "generated": "2025-02-08T13:24:45.291699Z",
+  "generator": "pub",
+  "generatorVersion": "3.6.0",
+  "flutterRoot": "file:///Users/omid/development/flutter",
+  "flutterVersion": "3.27.1",
+  "pubCache": "file:///Users/omid/.pub-cache"
+}
